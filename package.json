@@ -2,10 +2,11 @@
   "name": "aolf-web",
   "version": "0.1.0",
   "private": true,
+  "cacheDirectories": [".next/cache"],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "build:analyze": "ANALYZE=true npm run build",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx}'",
