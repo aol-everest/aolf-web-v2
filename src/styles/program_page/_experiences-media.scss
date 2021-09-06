@@ -1,0 +1,16 @@
+@media screen and (max-width: 991px) {
+  .experiences {
+    padding: 60px 0;
+
+    &__title {
+      color: #1f242d;
+      font-family: Lora;
+    }
+
+    &__subtitle {
+      font-size: 14px;
+      margin: 10px auto 30px;
+      max-width: 280px;
+    }
+  }
+}

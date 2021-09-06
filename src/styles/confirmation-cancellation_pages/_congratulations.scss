@@ -1,0 +1,64 @@
+.congratulations {
+  background-image: url("../img/journey-confirmation-bg.png");
+  background-size: cover;
+  height: calc(100vh - 72px - 65px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__title {
+    text-align: center;
+    font-size: 48px;
+    line-height: 1.33;
+    margin-bottom: 40px;
+  }
+
+  &__card {
+    display: flex;
+    max-width: 780px;
+    justify-content: space-between;
+    border-radius: 8px;
+    box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+    background-color: #ffffff;
+  }
+
+  &__info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &-text {
+      font-size: 18px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: #31364e;
+      text-align: center;
+      padding: 40px 65px 30px 65px;
+
+      span {
+        font-weight: 600;
+      }
+    }
+
+    h2 {
+      font-family: Lora;
+      font-size: 36px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.33;
+      letter-spacing: normal;
+      color: #31364e;
+    }
+
+    &_bottom {
+      padding: 30px 40px;
+      text-align: center;
+      background-color: rgba(237, 153, 78, 0.1);
+    }
+  }
+}

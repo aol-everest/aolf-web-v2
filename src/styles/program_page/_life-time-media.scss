@@ -1,0 +1,31 @@
+@media screen and (max-width: 768px) {
+  .life-time {
+    padding: 60px 0;
+
+    &__block {
+      font-size: 14px;
+
+      h6 {
+        font-size: 16px;
+      }
+    }
+
+    .btn-secondary {
+      justify-content: center;
+    }
+
+    &.silent-retreat {
+      .life-time__title {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .life-time {
+    .btn-secondary {
+      width: 100%;
+    }
+  }
+}

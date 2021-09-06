@@ -1,0 +1,188 @@
+.journey-cancellation {
+  background-image: url("../img/journey-cancellation-v2-bg.png");
+  background-size: cover;
+  display: block;
+  margin-top: -70px;
+  padding: 108px 0 117px;
+
+  &__card {
+    max-width: 780px;
+    border-radius: 8px;
+    box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+    border: solid 1px #e9e9e9;
+    background-color: #ffffff;
+
+    &-info {
+      padding: 40px 80px 30px 40px;
+      .close {
+        display: none;
+      }
+    }
+
+    &-title {
+      margin-bottom: 15px;
+    }
+
+    &-text {
+      font-size: 18px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.56;
+      letter-spacing: normal;
+      color: #31364e;
+    }
+
+    &-link {
+      display: inline-block;
+      margin-bottom: 10px;
+      &.link_orange {
+        &:hover {
+          color: #e47d6c;
+        }
+      }
+    }
+
+    &-subtitle {
+      font-size: 20px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.4;
+      letter-spacing: normal;
+      color: #31364e;
+      margin: 25px 0 15px 0;
+      font-family: 'Work Sans';
+    }
+
+    &-details {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    &-details-item {
+      font-size: 18px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.56;
+      letter-spacing: normal;
+      color: #ed994e;
+
+      span {
+        color: #31364e;
+      }
+
+      &:not(:first-child) {
+        padding-top: 10px;
+      }
+    }
+
+    &-bottom-info {
+      padding: 25px;
+      background-color: rgba(237, 153, 78, 0.1);
+
+      .btn-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        button {
+          margin-left: 16px;
+          border-radius: 4px;
+          &:not(:last-child) {
+            margin-right: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.journey-cancellation_mobile {
+  height: 92vh;
+  padding-top: 60px;
+  display: none;
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.29;
+    letter-spacing: normal;
+    margin-bottom: 15px;
+  }
+
+  &__text {
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.57;
+    letter-spacing: normal;
+    color: $text-color;
+  }
+
+  &__link {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  &__subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: $text-color;
+    margin: 20px 0 10px 0;
+  }
+
+  &__details {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+
+  &__details-item {
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.57;
+    letter-spacing: normal;
+    color: $orange;
+
+    span {
+      color: $text-color;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+
+  .btn-wrapper {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    button {
+      width: 335px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+    }
+  }
+}

@@ -1,0 +1,141 @@
+@media screen and (max-width: 991px) {
+  .modal-window {
+    height: 0;
+
+    &_no-log {
+      #retreat-prerequisite {
+        padding: 0 20px;
+        opacity: 0;
+        width: 100%;
+        display: block;
+        height: 100%;
+        border-radius: unset;
+        transition: all 0.3s ease-in-out;
+
+        .close-modal {
+          position: relative;
+          top: unset;
+          right: unset;
+          left: unset;
+          bottom: unset;
+          margin: 40px 0 30px;
+          box-shadow: $blue-shadow;
+        }
+
+        .course-join-card__title {
+          text-align: left;
+        }
+
+        .course-join-card__body {
+          padding: 0;
+        }
+
+        &.active {
+          .course-join-card__footer {
+            position: absolute;
+          }
+        }
+
+        .course-join-card__footer {
+          width: 100%;
+          padding: 0;
+          background-color: transparent;
+          bottom: 30px;
+          padding: 0 20px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+    }
+  }
+
+  // .mobile-modal_no-log {
+  //     position: fixed;
+  //     &.show {
+  //         display: flex;
+  //         opacity: 1;
+  //     }
+  //     &.active {
+  //         #retreat-prerequisite {
+  //             width: 100%;
+  //             .course-join-card__footer {
+  //                 position: absolute;
+  //                 z-index: -1;
+  //                 width: 100%;
+  //                 bottom: 0;
+  //                 text-align: center;
+  //             }
+  //             .close-modal {
+  //                 margin-bottom: 30px;
+  //             }
+  //         }
+  //     }
+  // }
+}
+
+@media screen and (max-width: 425px) {
+
+  .modal-window {
+    &_no-log {
+      #retreat-prerequisite {
+        .course-join-card__text {
+          font-size: 14px;
+        }
+
+        .course-join-card__footer {
+          button {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-height: 600px) {
+
+  .modal-window {
+    &_no-log {
+      #retreat-prerequisite {
+        overflow-y: auto;
+
+        &.active {
+          .course-join-card__footer {
+            position: relative;
+            padding: 0;
+            margin: 30px 0;
+            bottom: unset;
+            left: unset;
+            transform: unset;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .course-popup {
+    .course-details-card_mobile {
+      &__footer {
+        button {
+          width: 100%;
+          text-align: center;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 325px) {
+  .mobile-modal_no-log {
+    #retreat-prerequisite {
+      button {
+        font-size: 12px;
+      }
+    }
+  }
+}

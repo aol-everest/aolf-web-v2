@@ -1,0 +1,75 @@
+.meditation-details {
+  padding: 60px 0 100px;
+  background-image: url("../img/meditation-details.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: 65%;
+  box-shadow: inset 0px -130px 89px -60px white;
+
+  &__block {
+    max-width: 653px;
+
+    &__title {
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+    }
+
+    &__text {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+    }
+  }
+
+  &__unique {
+    margin-top: 40px;
+    max-width: 653px;
+    border-radius: 8px;
+    border: solid 1px $grey-border;
+    background-color: #fff;
+    padding: 30px 25px 40px;
+
+    &__title {
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.1;
+      letter-spacing: normal;
+    }
+
+    &__list {
+      list-style-type: disc;
+      padding: 17px;
+
+      li {
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.38;
+        letter-spacing: normal;
+        color: $blue;
+
+        &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+
+        span {
+          color: $text-color;
+        }
+      }
+    }
+  }
+
+  &__img {
+    display: none;
+  }
+}

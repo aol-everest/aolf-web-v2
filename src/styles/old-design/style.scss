@@ -1,0 +1,94 @@
+@import "./404";
+.mrgb,
+figure {
+  margin-bottom: 0;
+}
+
+.aol_header {
+  position: relative;
+
+  &.is-sticky {
+    width: 100%;
+    left: 0;
+    z-index: 999;
+    position: fixed;
+    top: 0px;
+  }
+}
+
+.aol_brandLogo img {
+  max-width: 113px;
+}
+header .aol_navbar {
+  background: #ffffff;
+  -webkit-box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 0;
+
+  .navbar-nav {
+    width: auto;
+    margin: 0;
+  }
+
+  .nav-item {
+    margin: 0 10px;
+
+    flex: none;
+
+    &:before {
+      display: block;
+      content: "";
+      border-top: solid 5px #4b5487;
+      transform: scaleX(0);
+      transition: transform 250ms ease-in-out;
+    }
+
+    &:hover:before,
+    &.active:before {
+      transform: scaleX(1);
+    }
+  }
+
+  .user_navitem {
+    &:hover:before,
+    &.active:before {
+      transform: scaleX(0);
+    }
+  }
+
+  .nav-item a {
+    color: #313651;
+    font-size: 14px;
+    line-height: 30px;
+    padding: 12px 12px 16px 12px;
+
+    > {
+      img {
+        max-width: 22px;
+        margin-right: 4px;
+      }
+
+      .fa {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .user_navitem {
+    margin-left: 50px;
+
+    .userImg {
+      border-radius: 50px;
+      height: 38px;
+      width: 38px;
+      display: inline-block;
+      background: #ffffff url(../img/user.png) no-repeat center (center / cover);
+      float: right;
+      margin-left: 10px;
+      margin-top: -4px;
+    }
+  }
+}

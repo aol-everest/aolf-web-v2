@@ -1,0 +1,77 @@
+.meetsup-filter {
+  padding-top: 59px;
+
+  .search_course_form {
+    padding-bottom: 5px;
+  }
+
+  .search-form {
+    margin-top: 7px;
+
+    #switch-filter .btn[data-swicth-active]:first-child {
+      border-radius: 12px 2px 2px 12px;
+      
+    }
+
+    #switch-filter .btn[data-swicth-active]:last-child {
+      border-radius: 2px 12px 12px 2px;
+    }
+  }
+
+  .btn_outline_box {
+    min-height: 50px;
+    padding: 4px;
+    margin-right: 15px;
+    margin-bottom: 5px;
+    
+    .btn {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:first-child {
+        width: 85px;
+      }
+      &:last-child {
+        width: 115px;
+      }
+      
+    }
+  }
+
+  .upcoming_course_card {
+    margin-top: 13px;
+    margin-bottom: 12px;
+    height: 330px;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+    }
+  }
+
+  #time-tooltip {
+    padding: 17px 22px;
+  }
+
+  .tooltip-block {
+    .checkbox-list .checkbox-wrapper {
+      label {
+        margin-left: 0;
+        margin-right: 10px;
+      }
+
+      .checkbox-text {
+        margin-left: 0px;
+      }
+    }
+    
+    .custom-dropdown {
+      padding: 10px 15px;
+    }
+  }
+}

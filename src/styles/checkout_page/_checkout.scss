@@ -1,0 +1,290 @@
+#retreat-prerequisite {
+  width: 460px;
+
+  .course-join-card__title {
+    margin-bottom: 15px;
+  }
+
+  .course-join-card__body {
+    padding: 40px 31px 30px;
+  }
+
+  .course-join-card__text-container {
+    margin: 0;
+  }
+
+  .course-join-card__footer {
+    padding: 25px 31px;
+  }
+}
+
+.course-popup {
+  .course-details-card_mobile {
+    overflow: auto;
+    display: none;
+    pointer-events: none;
+    height: 0;
+    width: 100%;
+    background-color: white;
+    padding: 40px 20px;
+    transition: all 0.3s linear;
+
+    &.open {
+      display: block;
+      pointer-events: all;
+    }
+
+    &.show {
+      height: 100vh;
+    }
+
+    .close-btn {
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      outline: none;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+      background-color: #ffffff;
+      margin-bottom: 40px;
+
+      .close-line {
+        display: block;
+        height: 2px;
+        width: 12px;
+        border-radius: 1px;
+        background-color: #6f7283;
+        transition: all 0.3s ease-in-out;
+
+        &:first-child {
+          transform: rotate(45deg);
+        }
+
+        &:last-child {
+          margin-top: -2px;
+          transform: rotate(-45deg);
+        }
+      }
+
+      &:hover {
+        .close-line {
+          background-color: #3d8be8;
+        }
+      }
+
+      &:active {
+        background-color: rgba(255, 255, 255, 0.8);
+
+        .close-line {
+          background-color: #2465b3;
+        }
+      }
+
+      &:active,
+      &:hover,
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &__title {
+      margin-bottom: 30px;
+    }
+
+    &__subtitle {
+      font-size: 16px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.38;
+      letter-spacing: normal;
+      color: $text-color;
+    }
+
+    &__list {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin: 10px 0 30px 0;
+
+      &-item {
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.38;
+        letter-spacing: normal;
+        color: $orange;
+
+        span {
+          color: $text-color;
+        }
+      }
+    }
+
+    &__excludes {
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: $light-grey;
+      margin-bottom: 30px;
+    }
+
+    .link {
+      display: block;
+      text-align: center;
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: $light-grey;
+    }
+
+    &.journey-join_mobile {
+      .course-details-card_mobile__title {
+        margin-bottom: 15px;
+      }
+
+      .course-details-card_mobile__list {
+        &-item {
+          &:not(:last-child) {
+            margin-bottom: 7px;
+          }
+
+          &-tooltip {
+            position: relative;
+            cursor: pointer;
+            border-bottom: 1px $text-color dashed;
+            transition: all 0.3s ease-in-out;
+            outline: none !important;
+
+            &-block {
+              pointer-events: none;
+              position: absolute;
+              opacity: 0;
+              padding: 10px 15px;
+              width: 230px;
+              top: -50px;
+              left: 50%;
+              box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+              border: solid 1px $border-color;
+              background-color: #ffffff;
+              font-size: 12px;
+              font-weight: normal;
+              font-stretch: normal;
+              font-style: normal;
+              line-height: 1.33;
+              letter-spacing: normal;
+              text-align: center;
+              color: $text-color;
+              transform: translateX(-50%);
+              transition: all 0.3s ease-in-out;
+
+              &::after {
+                content: "";
+                position: absolute;
+                top: 95%;
+                left: 50%;
+                width: 8px;
+                height: 8px;
+                transform: rotate(45deg);
+                background-color: white;
+                border-bottom: 1px solid $border-color;
+                border-right: 1px solid $border-color;
+              }
+            }
+
+            &:focus {
+              color: $grey;
+              border-color: $grey;
+
+              .course-details-card_mobile__list-item-tooltip-block {
+                opacity: 1;
+              }
+            }
+          }
+        }
+      }
+
+      .course-join-card_mobile__text-container {
+        margin-bottom: 15px;
+      }
+
+      .course-join-card_mobile__text {
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.57;
+        letter-spacing: normal;
+        color: $text-color;
+
+        &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+      }
+
+      .course-details-card_mobile__footer {
+        padding: 20px;
+        border-radius: 8px;
+        background-color: $orange-opacity;
+
+        &-price {
+          font-size: 18px;
+          font-weight: 600;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.44;
+          letter-spacing: normal;
+          color: $text-color;
+          margin-bottom: 0;
+        }
+
+        p {
+          font-size: 12px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.33;
+          letter-spacing: normal;
+          color: $text-color;
+          margin: 10px 0 20px;
+        }
+      }
+    }
+
+    &__footer {
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.44;
+        letter-spacing: normal;
+        color: #31364e;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.modal-window {
+  &_no-log {
+    #retreat-prerequisite {
+      pointer-events: all;
+
+      &.show {
+        opacity: 1;
+      }
+    }
+  }
+}

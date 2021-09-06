@@ -1,0 +1,78 @@
+@media screen and (max-width: 1440px) {
+  .meditation-details {
+    background-position-x: 80%;
+
+    &__block {
+      max-width: 555px;
+
+      &__title {
+        font-size: 30px;
+      }
+
+      &__text {
+        //font-size: 16px;
+      }
+    }
+
+    &__unique {
+      max-width: 555px;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .meditation-details {
+    background-image: url("../img/sahaj-samadhi-mobile-bg.png");
+    padding: 20px 0 60px;
+    box-shadow: inset 0px -95px 45px -60px white;
+    background-position-y: 0;
+
+    &__img {
+      display: block;
+    }
+
+    &__block {
+      &-second {
+        margin-top: 30px;
+      }
+
+      &__title {
+        font-size: 18px;
+
+        &-main {
+          font-size: 22px;
+        }
+      }
+
+      &__text {
+        font-size: 14px;
+      }
+    }
+
+    &__unique {
+      padding: 25px 20px 20px;
+
+      &__title {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      &__list {
+        li {
+          font-size: 14px;
+          line-height: 22px;
+        }
+      }
+    }
+  }
+
+  .sahaj-details {
+    padding: 450px 0 60px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .meditation-details {
+    box-shadow: none;
+  }
+}

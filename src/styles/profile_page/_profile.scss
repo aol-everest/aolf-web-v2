@@ -1,0 +1,948 @@
+.profile {
+  min-height: calc(100vh - 72px - 65px);
+
+  &__alert {
+    display: flex;
+    justify-content: center;
+    padding: 3px 0;
+    align-items: center;
+
+    &_error {
+      background-image: linear-gradient(to left, $red-dark, $red-error);
+    }
+
+    &_close {
+      display: none;
+    }
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      text-align: left;
+
+      font-size: 15px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.33;
+      letter-spacing: normal;
+      color: #fff;
+
+      img {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  &__close-alert {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 40px;
+  }
+
+  &-header {
+    background-image: url("../img/bg-profile-header.png");
+    background-size: cover;
+    padding: 80px 0;
+
+    &__image {
+      width: 165px;
+      height: 165px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+      border: 2px solid $border-color;
+      border-radius: 50%;
+      background-color: #fff;
+      font-family: Lora, sans-serif;
+      font-size: 50px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 0.96;
+      letter-spacing: normal;
+      color: $blue;
+      margin-right: 30px;
+    }
+
+    &__full-name {
+      font-family: Lora, sans-serif;
+      font-size: 36px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.33;
+      letter-spacing: normal;
+      color: $text-color;
+      margin-bottom: 13px;
+    }
+
+    &__course {
+      font-size: 22px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.36;
+      letter-spacing: normal;
+      color: $text-color;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+    }
+
+    .btn-wrapper {
+      margin-top: 25px;
+
+      button {
+        &:not(:last-child) {
+          margin-right: 25px;
+        }
+      }
+    }
+  }
+
+  &-body {
+    padding: 60px 0 300px 0;
+
+    #profile-tabs-container {
+      width: 100%;
+      padding: 7px 0;
+      border-bottom: 2px solid $light-grey-2;
+      margin-bottom: 30px;
+    }
+
+    .profile-tab {
+      font-size: 16px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.38;
+      letter-spacing: normal;
+      text-align: center;
+      color: $light-grey-2;
+      padding: 10px 25px;
+      text-decoration: none;
+      border-bottom: 2px solid $light-grey-2;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        color: $blue-hover;
+      }
+
+      &.active {
+        color: $blue;
+        border-bottom: 2px solid $blue;
+      }
+    }
+
+    .profile-update {
+      &__title {
+        font-size: 20px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: $text-color;
+        margin: 60px 0 20px 0;
+      }
+
+      &__images-container {
+        img {
+          &:not(:last-child) {
+            margin-right: 20px;
+          }
+        }
+      }
+
+      &__form {
+        width: 653px;
+
+        &-header {
+          margin: 60px 0 20px 0;
+        }
+      }
+
+      &__card {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        max-width: 100%;
+        padding: 40px 40px 50px 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+        border: $blue-border-hover;
+        background-color: #fff;
+
+        #address,
+        #discount-code {
+          width: 100%;
+        }
+
+        .prompt-message {
+          margin-top: 8px;
+          font-size: 12px;
+          line-height: 1.33;
+          color: $light-grey-2;
+        }
+
+        .input-block {
+          position: relative;
+          width: 266px;
+
+          input:read-only {
+            border-color: $text-color;
+          }
+
+          &.validate-error {
+            input {
+              border-color: #fa4141;
+            }
+
+            .validation-message {
+              display: block;
+            }
+          }
+        }
+
+        .city-input {
+          width: 30%;
+        }
+
+        #city-input {
+          width: 35%;
+        }
+
+        #state-input {
+          width: 25%;
+        }
+
+        #zip-input {
+          width: 30%;
+        }
+
+        .validation-mobile-message {
+          display: none;
+          margin-top: 8px;
+          font-size: 12px;
+          line-height: 1.33;
+          color: #fa4141;
+        }
+
+        #cvc,
+        #mm-yy {
+          width: 113px;
+        }
+
+        input {
+          outline: none;
+          border: none;
+          width: 100%;
+          border-bottom: 1px solid $border-color;
+          background-color: transparent;
+          font-size: 16px;
+          line-height: 2;
+          color: $text-color;
+          margin-top: 30px;
+          transition: all 0.3s ease-in-out;
+
+          &::placeholder {
+            color: $light-grey;
+            transition: all 0.3s ease-in-out;
+          }
+
+          &.no-valid {
+            border-color: #fa4141;
+          }
+
+          &:hover,
+          &:focus,
+          &:active {
+            outline: none;
+          }
+
+          &:hover {
+            border-color: $blue-hover;
+          }
+
+          &:focus {
+            border-color: $blue-active;
+
+            &::placeholder {
+              color: $light-grey-2;
+            }
+          }
+        }
+      }
+    }
+
+    &__cards-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &__card {
+      position: relative;
+      border-radius: 8px;
+      box-shadow: 0 2px 50px 0 rgba(61, 139, 232, 0.2);
+      background-color: $blue;
+      margin-top: 30px;
+
+      &:not(:nth-child(4n)) {
+        margin-right: 19px;
+      }
+
+      &-img {
+        border-radius: 8px;
+      }
+
+      &-date {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: rgba(61, 139, 232, 0.5);
+        font-size: 12px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #fff;
+        padding: 9px 10px;
+        border-radius: 4px;
+      }
+
+      &-detail {
+        position: absolute;
+        left: 20px;
+        bottom: 25px;
+
+        h4 {
+          font-size: 12px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #fff;
+          margin: 0;
+        }
+
+        h2 {
+          font-size: 20px;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #fff;
+          margin: 2px 0 10px 0;
+        }
+
+        h3 {
+          font-size: 14px;
+          font-weight: 500;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #fff;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &-body_mobile {
+    padding: 40px 0;
+    overflow: hidden;
+
+    &__card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+
+      &-header {
+
+        button,
+        .btn {
+          display: inline-block;
+          outline: none;
+          box-shadow: none;
+          width: 100%;
+          font-size: 16px;
+          font-weight: 600;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.38;
+          letter-spacing: normal;
+          text-align: center;
+          color: $blue;
+          border-bottom: 0 solid $light-border;
+          transition: all 0.3s ease-in-out;
+
+          &.collapsed {
+            color: $light-grey-2;
+            border-bottom-width: 2px;
+          }
+        }
+      }
+
+      &-body {
+        .embla__container {
+          display: flex;
+          width: 294px;
+          height: 290px;
+        }
+
+        .embla__slide {
+          position: relative;
+          flex: 0 0 100%;
+          padding-right: 20px;
+        }
+
+        .profile-update__images-container {
+          img {
+            &:not(:last-child) {
+              margin-right: 20px;
+            }
+          }
+        }
+
+        .profile-update__form-header {
+          margin-bottom: 20px;
+        }
+
+        .profile-update__title {
+          font-size: 20px;
+          font-weight: 600;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: $text-color;
+        }
+
+        .profile-update__card {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          width: 100%;
+          padding: 40px 20px;
+          border-radius: 8px;
+          box-shadow: $blue-shadow;
+          border: $blue-border-hover;
+          background-color: #fff;
+
+          .prompt-message {
+            margin-top: 8px;
+            font-size: 12px;
+            line-height: 1.33;
+            color: $light-grey-2;
+          }
+
+          .input-block {
+            position: relative;
+            width: 45%;
+
+            &:not(:first-child) {
+              margin-top: 30px;
+            }
+
+            &.validate-error {
+              input {
+                border-color: #fa4141;
+              }
+
+              .validation-message {
+                display: block;
+              }
+            }
+          }
+
+          .validation-mobile-message {
+            display: none;
+            margin-top: 8px;
+            font-size: 12px;
+            line-height: 1.33;
+            color: #fa4141;
+          }
+
+          input {
+            outline: none;
+            border: none;
+            width: 100%;
+            border-bottom: $grey-border;
+            background-color: transparent;
+            font-size: 16px;
+            line-height: 2;
+            color: $text-color;
+            transition: all 0.3s ease-in-out;
+
+            &::placeholder {
+              color: $light-grey;
+              transition: all 0.3s ease-in-out;
+            }
+
+            &:read-only {
+              border-color: $text-color;
+            }
+
+            &.no-valid {
+              border-color: #fa4141;
+            }
+
+            &:hover,
+            &:focus,
+            &:active {
+              outline: none;
+            }
+
+            &:hover {
+              border-color: $blue-hover;
+            }
+
+            &:focus {
+              border-color: $blue-active;
+
+              &::placeholder {
+                color: $light-grey-2;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &__course {
+      position: relative;
+      border-radius: 8px;
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+
+      &-img {
+        border-radius: 8px;
+        width: 100%;
+        height: 100%;
+      }
+
+      &-date {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: rgba(61, 139, 232, 0.5);
+        font-size: 12px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #fff;
+        padding: 9px 10px;
+        border-radius: 4px;
+      }
+
+      &-detail {
+        position: absolute;
+        left: 20px;
+        bottom: 25px;
+
+        h4 {
+          font-size: 12px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #fff;
+          margin: 0;
+        }
+
+        h2 {
+          font-size: 20px;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #fff;
+          margin: 2px 0 10px 0;
+        }
+
+        h3 {
+          font-size: 14px;
+          font-weight: 500;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #fff;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .cards-empty {
+    display: flex;
+    align-items: center;
+
+    &__img {
+      padding: 23px 30px;
+      border-right: 1px solid $light-border;
+    }
+
+    &__text {
+      margin-left: 30px;
+      max-width: 400px;
+      font-size: 16px;
+      line-height: 1.63;
+    }
+  }
+}
+
+.profile-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  pointer-events: none;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(24, 26, 38, 0.5);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+
+  &.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .course-details-card {
+    position: relative;
+    width: 620px;
+    border-radius: 8px;
+    box-shadow: 0 2px 35px 0 rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    display: none;
+    pointer-events: none;
+
+    &.show {
+      display: block;
+      pointer-events: all;
+    }
+
+    &__title {
+      font-size: 26px;
+      line-height: 1.46;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    &__subtitle {
+      font-size: 16px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.38;
+      letter-spacing: normal;
+      color: $text-color;
+    }
+
+    &__excludes {
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: $light-grey;
+    }
+
+    &__list {
+      list-style: disc;
+      padding-left: 20px;
+      margin: 10px 0 0;
+
+      &-item {
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.38;
+        letter-spacing: normal;
+        color: $orange;
+
+        span {
+          color: $text-color;
+        }
+      }
+    }
+
+    &__body {
+      padding: 40px 25px 30px 25px;
+    }
+
+    &__footer {
+      display: block;
+      text-align: right;
+      padding: 25px;
+      background-color: $orange-opacity;
+    }
+
+    .link {
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+    }
+
+    &.digital-journey-details {
+      .course-details-card__list {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .course-join-card {
+    position: relative;
+    width: 620px;
+    width: 620px;
+    border-radius: 8px;
+    box-shadow: 0 2px 35px 0 rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    display: none;
+    pointer-events: none;
+
+    &.show {
+      display: block;
+      pointer-events: all;
+    }
+
+    &__body {
+      padding: 40px 25px 30px;
+      border-radius: 8px 8px 0 0;
+      background-color: #fff;
+    }
+
+    &__title {
+      font-size: 26px;
+      line-height: 1.46;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    &__subtitle {
+      font-size: 16px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.38;
+      letter-spacing: normal;
+      color: $text-color;
+    }
+
+    &__text-container {
+      margin-bottom: 25px;
+    }
+
+    &__text {
+      font-size: 16px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.38;
+      letter-spacing: normal;
+      color: $text-color;
+
+      &:not(:first-child) {
+        margin-top: 10px;
+      }
+    }
+
+    &__excludes {
+      margin-top: 15px;
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: $light-grey;
+    }
+
+    &__list {
+      list-style: disc;
+      padding-left: 20px;
+      margin: 10px 0 0 0;
+
+      &-item {
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.38;
+        letter-spacing: normal;
+        color: $orange;
+
+        span {
+          color: $light-grey;
+        }
+      }
+    }
+
+    &__footer {
+      padding: 25px 25px 30px;
+      text-align: right;
+      background-color: $orange-opacity;
+    }
+
+    &.digital-member-join_journey {
+      .course-join-card__title {
+        margin-bottom: 25px;
+      }
+
+      .course-join-card__list {
+        span {
+          color: $text-color;
+        }
+
+        &-item {
+          &-tooltip {
+            position: relative;
+            cursor: pointer;
+            border-bottom: 1px $text-color dashed;
+            transition: all 0.3s ease-in-out;
+
+            &-block {
+              pointer-events: none;
+              position: absolute;
+              opacity: 0;
+              padding: 10px 15px;
+              width: 230px;
+              top: -50px;
+              left: 50%;
+              box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+              border: $grey-border;
+              background-color: #fff;
+              font-size: 12px;
+              font-weight: normal;
+              font-stretch: normal;
+              font-style: normal;
+              line-height: 1.33;
+              letter-spacing: normal;
+              text-align: center;
+              color: $text-color;
+              transform: translateX(-50%);
+              transition: all 0.3s ease-in-out;
+
+              &::after {
+                content: "";
+                position: absolute;
+                top: 95%;
+                left: 50%;
+                width: 8px;
+                height: 8px;
+                transform: rotate(45deg);
+                background-color: white;
+                border-bottom: $grey-border;
+                border-right: $grey-border;
+              }
+            }
+
+            &:hover {
+              color: $grey;
+              border-color: $grey;
+
+              .course-join-card__list-item-tooltip-block {
+                opacity: 1;
+              }
+            }
+          }
+        }
+      }
+
+      .course-join-card__footer {
+        text-align: center;
+        padding: 30px 25px;
+
+        h2 {
+          font-size: 20px;
+          font-weight: 600;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+          text-align: center;
+          color: $text-color;
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+
+  .close-modal {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    outline: none;
+    top: 0;
+    right: -50px;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: white;
+
+    .close-line {
+      display: block;
+      height: 2px;
+      width: 12px;
+      border-radius: 1px;
+      background-color: $grey;
+      transition: all 0.3s ease-in-out;
+
+      &:first-child {
+        transform: rotate(45deg);
+      }
+
+      &:last-child {
+        margin-top: -2px;
+        transform: rotate(-45deg);
+      }
+    }
+
+    &:hover {
+      .close-line {
+        background-color: $blue;
+      }
+    }
+
+    &:active {
+      background-color: rgba(255, 255, 255, 0.8);
+
+      .close-line {
+        background-color: $blue-active;
+      }
+    }
+
+    &:active,
+    &:hover,
+    &:focus {
+      outline: none;
+    }
+  }
+}

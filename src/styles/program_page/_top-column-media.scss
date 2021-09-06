@@ -1,0 +1,233 @@
+@media screen and (max-width: 1440px) {
+  .top-column {
+    box-shadow: unset;
+  }
+}
+
+@media screen and (max-width: 1439px) {
+  .silent-retreat {
+    .course-details {
+      right: 50px;
+    }
+  }
+}
+
+@media screen and (max-width: 1380px) {
+  .top-column {
+    background-position-x: 35%;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .top-column {
+    padding: 190px 50px 365px 50px;
+
+    .course-details {
+      right: 50px;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .top-column {
+    background-position-x: 20%;
+
+    .mobile-modal {
+      &.active {
+        display: block;
+        opacity: 1;
+      }
+
+      &.show {
+        // height: calc(100vh - 102px);
+        height: 100vh;
+      }
+    }
+
+    .course-details {
+      width: 100%;
+      max-width: 335px;
+      min-width: unset;
+      bottom: -180px;
+      right: 50%;
+      transform: translateX(50%);
+
+      &__body {
+        padding: 30px 20px 30px 20px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      &__list {
+        .course-details__title {
+          font-size: 14px;
+        }
+
+        li {
+          font-size: 14px;
+        }
+      }
+    }
+
+    &.silent-retreat {
+      .course-details {
+        bottom: -250px;
+      }
+
+      .course-details__body {
+        padding: 30px 20px 20px 20px;
+      }
+    }
+
+    &.sahaj-samadhi {
+      padding-bottom: 80px;
+
+      .course-details {
+        bottom: -415px;
+      }
+
+      .course-name {
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .top-column {
+    padding: 60px 0 250px 0;
+    background-position: 0%;
+    background-position-x: 0%;
+    width: 100%;
+
+    .type-course {
+      font-size: 14px;
+    }
+
+    .course-name {
+      font-size: 24px;
+    }
+
+    .course-details-list {
+      li {
+        font-size: 16px;
+      }
+    }
+
+    .course-details {
+      bottom: -300px;
+      //bottom: -280px;
+      //bottom: -385px;
+    }
+
+    &.silent-retreat {
+      background-position-x: 10%;
+
+      .course-details {
+        bottom: -370px;
+
+        .course-details__footer {
+          padding: 20px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .top-column {
+    background-position-x: 20%;
+
+    .course-details-list {
+      max-width: 265px;
+    }
+
+    &.silent-retreat {
+      background-position-x: 50%;
+
+      .course-details-list {
+        max-width: 320px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .top-column {
+    background-image: url("../img/top-column-mobile-bg.png");
+    box-shadow: inset 0px -130px 89px -60px white;
+
+    // background-position-x: 100%;
+    .course-details-list {
+      max-width: 265px;
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .course-details {
+    &-list {
+      // padding: 0 37px 0 40px !important;
+      max-width: 100% !important;
+      padding-right: 40px !important;
+
+      li {
+        font-size: 16px;
+        line-height: 22px;
+      }
+    }
+  }
+
+  .course-name {
+    font-weight: normal;
+    font-size: 24px;
+  }
+
+  .top-column {
+    padding-bottom: 250px;
+
+    .course-details {
+      &__filter {
+        &__buttons {
+          flex-direction: column;
+        }
+
+        &__button {
+          width: 100%;
+        }
+      }
+    }
+
+    &.sahaj-samadhi {
+      padding-bottom: 125px;
+    }
+  }
+}
+
+@media screen and (max-width: 365px) {
+  .top-column {
+    .course-details {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+}
+
+@media (max-width: 340px) {
+  .top-column {
+    &.sahaj-samadhi {
+      .course-name {
+        display: block;
+        font-size: 20px;
+
+        span {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}

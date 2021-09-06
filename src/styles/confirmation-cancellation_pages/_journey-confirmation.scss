@@ -1,0 +1,154 @@
+.journey-confirmation {
+  background-image: url("../img/journey-confirmation-bg.png");
+  background-size: cover;
+  height: calc(100vh - 72px - 65px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__title {
+    text-align: center;
+    font-size: 48px;
+    line-height: 1.33;
+    margin-bottom: 40px;
+  }
+
+  &__image {
+    position: relative;
+    width: 263px;
+    height: 330px;
+    border-radius: 8px;
+    background-color: rgba(237, 153, 78, 0.1);
+
+    img {
+      height: 100%;
+    }
+  }
+
+  &__date {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(61, 139, 232, 0.5);
+    font-size: 12px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #ffffff;
+    padding: 9px 10px;
+    border-radius: 4px;
+  }
+
+  &__course-detail {
+    position: absolute;
+    left: 20px;
+    bottom: 35px;
+  }
+
+  &__course-type {
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  &__course-name {
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #ffffff;
+    margin: 2px 0 10px 0;
+  }
+
+  &__course-trainer {
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  &__card {
+    max-width: 940px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 8px;
+    box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+    background-color: #ffffff;
+  }
+
+  &__info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &-text {
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: #31364e;
+      padding: 40px 97px 0 40px;
+
+      span {
+        font-weight: 600;
+      }
+    }
+
+    h2 {
+      font-family: Lora;
+      font-size: 36px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.33;
+      letter-spacing: normal;
+      color: #31364e;
+    }
+
+    &_bottom {
+      padding: 30px 40px;
+      background-color: rgba(237, 153, 78, 0.1);
+    }
+  }
+
+  &__link {
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #31364e;
+    margin-left: 25px;
+  }
+
+  &_v2 {
+    .journey-confirmation__info-text {
+      padding-bottom: 70px;
+    }
+
+    .journey-confirmation__card {
+      max-width: 677px;
+    }
+  }
+}
+
+.journey-confirmation_mobile {
+  display: none;
+}

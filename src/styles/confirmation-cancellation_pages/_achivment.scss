@@ -1,0 +1,20 @@
+.achivment {
+  margin-bottom: 80px;
+  &__logo {
+    margin-bottom: 20px;
+  }
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #31364e;
+  }
+  &__text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #31364e;
+    span {
+      font-weight: 600;
+    }
+  }
+}

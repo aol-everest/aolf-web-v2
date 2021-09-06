@@ -1,0 +1,415 @@
+@media screen and (max-width: 1200px) {
+  .upcoming_course_card {
+    border-radius: 12px;
+  }
+
+  .course_complete_registration {
+    border-radius: 0 0 12px 12px;
+  }
+
+  .course_detail_box {
+    border-radius: 12px;
+  }
+
+  [data-full="true"]::after {
+    border-radius: 12px;
+  }
+
+  [data-complete="true"]::after {
+    border-radius: 12px;
+  }
+
+  .course_name {
+    font-size: 26px;
+  }
+
+  .course_complete_registration,
+  .course_complete {
+    font-size: 14px;
+  }
+
+  .details {
+    .detail {
+      @media screen and (max-width: 768px) {
+        margin-bottom: 20px;
+      }
+      .dropdown-toggle {
+        @media screen and (max-width: 768px) {
+          margin-bottom: 15px;
+        }
+        &:not(:first-child) {
+          img {
+            margin-left: 15px;
+            @media screen and (max-width: 768px) {
+              margin-left: 0px;
+            }
+          }
+        }
+      }
+    }
+    .nav-item {
+      a {
+        @media screen and (max-width: 768px) {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .courses .search-form .btn {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+
+  .btn_outline_box {
+    margin-left: 5px;
+    margin-right: 5px;
+    min-width: 100px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .courses {
+    .search_course_form_mobile {
+      .filter {
+        &--box {
+          padding: 0 38px;
+          justify-content: space-between;
+          align-items: center;
+
+          .btn_outline_box {
+            width: 46%;
+            border-radius: 16px;
+            &:hover,
+            &:focus {
+              border: 1px solid #2465b3;
+            }
+            .btn {
+              font-weight: 600;
+              color: #969aa7;
+            }
+          }
+
+          .btn_box_primary {
+            border-radius: 16px;
+          }
+
+          .btn {
+            font-size: 14px;
+          }
+
+          .full-btn {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  #switch-mobile-filter {
+    .btn {
+      width: 50%;
+    }
+  }
+
+  .courses .course_detail_btn_box {
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    padding: 10px 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    text-align: center;
+
+    .btn {
+      display: inline-flex;
+      height: unset;
+      width: unset;
+      padding: 5px 15px;
+      margin: 0;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .course_detail_box {
+    padding: 0;
+    top: unset;
+    opacity: 1;
+  }
+
+  .course_complete_registration,
+  .course_complete {
+    background-color: transparent;
+    text-transform: none;
+    font-size: 12px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-transform: uppercase;
+  }
+
+  .course_complete {
+    background: rgba($text-color, .6);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    &_registration {
+      background: rgba($blue, .6);
+      padding-left: 50px;
+      padding-right: 50px;
+      text-align: center;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  main.course-filter {
+    padding-top: 30px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .footer {
+    padding: 20px 10px;
+
+    &-navbar {
+      flex-direction: column;
+      align-items: center;
+
+      .copyright {
+        font-size: 12px;
+      }
+
+      &--item {
+        margin-right: 10px;
+
+        & a {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .about {
+    padding: 80px 0;
+  }
+
+  .upcoming_course_card {
+    margin: 7px 0;
+  }
+  .container.upcoming_course {
+    .col-6.col-lg-3.col-md-4 {
+      padding: 0 7px;
+    }
+  }
+  .rsvp-confirm,
+  .rsvp-fail {
+    padding: 60px 20px;
+    .rsvp-confirm-container,
+    .rsvp-fail-container {
+      .rsvp-confirm-details,
+      .rsvp-fail-details {
+        padding: 20px 50px;
+        h3 {
+          font-size: 20px;
+          line-height: 28px;
+          margin: 0;
+        }
+      }
+      .rsvp-confirm-container-footer,
+      .rsvp-fail-container-footer {
+        padding: 20px;
+        a {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 570px) {
+  .happines_title {
+    font-size: 24px;
+  }
+
+  .happines_subtitle {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .btn_box_primary {
+    font-size: 12px;
+  }
+
+  .btn-box-light {
+    border: solid 1px black;
+    color: black;
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .course_detail_box {
+    padding: 10px;
+  }
+
+  .upcoming_course_card:hover .course_detail_box {
+    z-index: 999;
+  }
+
+  .courses .course_detail_btn_box .btn {
+    height: 30px;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  .upcoming_course_card {
+    border-radius: 9px;
+  }
+
+  .course_complete {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    border-radius: 0 0 9px 9px;
+  }
+
+  .course_complete_registration {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    border-radius: 0 0 9px 9px;
+  }
+
+  .course_detail_box {
+    border-radius: 9px;
+  }
+
+  [data-full="true"]::after {
+    border-radius: 9px;
+  }
+
+  [data-complete="true"]::after {
+    border-radius: 9px;
+  }
+
+  .course_data {
+    top: 10px;
+    left: 10px;
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .course_info {
+    top: 50px;
+    left: 10px;
+  }
+
+  .course_name {
+    font-size: 20px;
+    margin: 5px 0;
+    line-height: 1.25;
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .courses {
+    .search_course_form_mobile {
+      .filter {
+        &--box {
+          padding: 0 18px;
+          justify-content: space-between;
+          align-items: center;
+
+          .btn_outline_box {
+            width: 46%;
+          }
+
+          .full-btn {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .btn_box_primary {
+    margin-right: 10px;
+    font-size: 12px;
+  }
+
+  .courses .course_detail_btn_box .btn {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .courses {
+    .search_course_form_mobile {
+      .filter {
+        &--box {
+          padding: 0;
+
+          .btn_outline_box {
+            width: 45%;
+            min-width: unset;
+          }
+
+          .btn {
+            padding: 5px;
+          }
+
+          .full-btn {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .course_name {
+    font-size: 14px;
+  }
+
+  .course_info {
+    top: 40px;
+  }
+
+  .course_place {
+    font-size: 10px;
+  }
+
+  .course_status {
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .courses .course_detail_btn_box .btn:not(:last-child) {
+    margin-right: 5px;
+  }
+
+  .courses .course_detail_btn_box .btn {
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .course_data {
+    padding: 5px;
+  }
+}

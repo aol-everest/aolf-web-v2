@@ -1,0 +1,340 @@
+@media screen and (max-width: 1199px) {
+  .profile {
+    &__alert {
+      span {
+        font-size: 12px;
+
+        img {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .profile {
+    &-header {
+      &__image {
+        width: 135px;
+        height: 135px;
+        font-size: 40px;
+        margin-right: 30px;
+      }
+
+      &__full-name {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+
+      &__course {
+        font-size: 18px;
+
+        &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+      }
+
+      .btn-wrapper {
+        margin-top: 20px;
+      }
+    }
+
+    &-body {
+      .profile-tab {
+        font-size: 14px;
+        padding: 11px 20px;
+      }
+    }
+  }
+
+  .profile-modal {
+    background-color: white;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: auto;
+    top: unset;
+    height: 0;
+
+    .close-modal {
+      position: relative;
+      top: unset;
+      right: unset;
+      left: unset;
+      bottom: unset;
+      margin: 40px 0 0;
+      box-shadow: $blue-shadow;
+    }
+
+    &.show {
+      display: flex;
+      pointer-events: all;
+    }
+
+    &.active {
+      height: 100vh;
+    }
+
+    .course-join-card {
+      padding: 0 20px;
+      width: 100%;
+      box-shadow: none;
+
+      &__text-container {
+        margin-bottom: 15px;
+      }
+
+      &__text {
+        font-size: 14px;
+      }
+
+      &__list {
+        &-item {
+          font-size: 14px;
+          line-height: 1.57;
+
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
+        }
+      }
+
+      &__body {
+        padding: 30px 0 25px;
+      }
+
+      &.digital-member-join_journey {
+        .course-join-card__title {
+          margin-bottom: 15px;
+        }
+
+        .course-join-card__footer {
+          padding: 20px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+
+          h6 {
+            font-size: 18px;
+          }
+
+          &-text {
+            margin-bottom: 20px;
+          }
+        }
+      }
+    }
+
+    .course-details-card {
+      width: 100%;
+      box-shadow: none;
+      padding: 0 20px;
+
+      .link {
+        font-size: 16px;
+      }
+
+      &.show {
+        display: block;
+      }
+
+      &__title {
+        text-align: left;
+        font-size: 24px;
+      }
+
+      &__body {
+        padding: 40px 0 30px;
+      }
+
+      &__footer {
+        background-color: transparent;
+        text-align: center;
+        padding: 0 0 30px;
+      }
+
+      &__list {
+        &-item {
+          &:not(:last-child) {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 991px) and (max-height: 630px) {
+  .profile-modal {
+    .course-join-card {
+      &__body {
+        padding: 25px;
+      }
+
+      &.digital-member-join_journey {
+        .course-join-card__footer {
+          padding: 15px 25px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .profile {
+    min-height: calc(100vh - 48px - 58px);
+
+    &__alert {
+      padding: 10px 0;
+    }
+
+    &__close-alert {
+      margin-right: 15px;
+    }
+
+    &-header {
+      padding: 40px 0;
+
+      &__client {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      &__image {
+        width: 85px;
+        height: 85px;
+        font-size: 32px;
+        margin-right: 20px;
+      }
+
+      &__full-name {
+        font-size: 24px;
+      }
+
+      &__course {
+        font-size: 16px;
+
+        &:not(:last-child) {
+          margin-bottom: 20px;
+        }
+      }
+    }
+
+    .cards-empty {
+      flex-direction: column;
+
+      &__img {
+        padding: 23px 30px;
+        border-right: none;
+      }
+
+      &__text {
+        font-size: 14px;
+        margin-left: 0;
+        max-width: unset;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 429px) {
+  .profile {
+    &-header {
+      &__course {
+
+        a,
+        .link {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 493px) {
+  .profile {
+    &-header {
+      &__info {
+        .btn-wrapper {
+          button {
+            margin-right: 0;
+
+            &:not(:last-child) {
+              margin-right: 0;
+              margin-bottom: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .profile {
+    &-header {
+      &__info {
+        .btn-wrapper {
+          button {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+
+  .profile-modal {
+
+    .course-join-card,
+    .course-details-card {
+      button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    .course-join-card {
+      &.digital-member-join_journey {
+        .course-join-card__footer {
+          h6 {
+            text-align: left;
+          }
+
+          &-text {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .profile {
+    &-body_mobile {
+      &__card {
+        &-body {
+          .embla__container {
+            width: 254px;
+            height: 250px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 329px) {
+  .profile {
+    &-header {
+      &__course {
+        font-size: 14px;
+      }
+    }
+  }
+}

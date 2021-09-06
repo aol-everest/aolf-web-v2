@@ -1,0 +1,33 @@
+{
+    "root": true,
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "settings": {
+        "react": {
+            "version": "detect" // Automatically detect the react version
+        }
+    },
+    "env": {
+        "node": true,
+        "browser": true,
+        "amd": true
+    },
+    "extends": ["eslint:recommended", "next", "plugin:prettier/recommended"],
+    "rules": {
+        "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
+        "react/react-in-jsx-scope": "off",
+        "jsx-a11y/anchor-is-valid": [
+            "error",
+            {
+                "components": ["Link"],
+                "specialLink": ["hrefLeft", "hrefRight"],
+                "aspects": ["invalidHref", "preferButton"]
+            }
+        ]
+    }
+}

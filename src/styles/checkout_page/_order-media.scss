@@ -1,0 +1,123 @@
+@media screen and (min-width: 1200px) {
+  .order__card__payment-select,
+  .order__card__state-select {
+    width: 250px !important;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .order {
+    &__form {
+      .details {
+        &__title {
+          font-size: 18px;
+        }
+
+        &__content {
+          font-size: 18px;
+        }
+      }
+    }
+
+    &__card {
+      input:not([type=radio]) {
+        width: 165px;
+      }
+
+      .bank-card-info {
+        flex-wrap: wrap;
+
+        #mm-yy,
+        #cvc {
+          width: 165px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .order {
+    &__card {
+      flex-direction: column;
+
+      input:not([type=radio]) {
+        width: 100%;
+        border-radius: 4px;
+        border: solid 1px #e9e9e9;
+        padding: 15px;
+      }
+
+      .validation-mobile-message {
+        &.show {
+          display: block;
+        }
+      }
+
+      .bank-card-info {
+
+        #mm-yy,
+        #cvc {
+          width: 45%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .order {
+    padding: 30px 0 0 0;
+
+    &__card {
+      padding: 20px;
+    }
+
+    .title {
+      font-size: 36px;
+    }
+
+    &__detail {
+      font-size: 18px;
+    }
+
+    &__complete_important {
+      margin-top: 10px;
+    }
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .order {
+    &__form {
+      .details {
+        flex-direction: column-reverse !important;
+        &__content {
+          margin-bottom: 1.5rem !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .order {
+    &__form {
+      .details__title {
+        font-size: 14px;
+      }
+
+      .details__content {
+        font-size: 14px;
+      }
+    }
+
+    .title {
+      font-size: 24px;
+    }
+
+    &__detail {
+      font-size: 15px;
+    }
+  }
+}

@@ -1,0 +1,132 @@
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+  .additional-information {
+    .information__blcok {
+      min-height: 184px;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .additional-information {
+    background-position: 35%;
+
+    .featured-in {
+      &__box {
+        flex-wrap: wrap;
+        padding: 20px 20px 20px 60px;
+
+        img {
+          margin-right: 40px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .additional-information {
+    padding-top: 40px;
+
+    .featured-in {
+      padding: 60px 0 140px 0;
+    }
+
+    .featured-in_with-button {
+      padding: 60px 0;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .additional-information {
+    .featured-in {
+      &__box {
+        flex-wrap: wrap;
+        padding: 20px 9px 20px 40px;
+
+        img {
+          margin-right: 31px;
+
+          &:last-child {
+            height: 72px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .additional-information {
+    .featured-in {
+      &__box {
+        flex-wrap: wrap;
+        padding: 20px 9px 20px 30px;
+
+        img {
+          margin-right: 21px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .additional-information {
+    .featured-in {
+      &__box {
+        flex-wrap: wrap;
+        padding: 20px 20px 20px 30px;
+
+        img {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .additional-information {
+    .featured-in {
+      &__box {
+        flex-wrap: wrap;
+        padding: 20px 20px 20px 30px;
+
+        img {
+          height: 50px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 355px) {
+  .additional-information {
+    .featured-in {
+      &__box {
+        img {
+          &:last-child {
+            height: 60px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 335px) {
+  .additional-information {
+    .featured-in {
+      &__box {
+        flex-wrap: wrap;
+        padding: 20px 27px 20px 30px;
+
+        img {
+          margin-right: 3px;
+        }
+      }
+    }
+  }
+}

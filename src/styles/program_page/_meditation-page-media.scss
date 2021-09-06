@@ -1,0 +1,254 @@
+@media screen and (max-width: 768px) {
+  .top-column {
+    &.meditation-page {
+      padding: 50px 15px;
+      &.insight-collection {
+        &.insight-collection2 {
+          border-bottom: 1px solid #e9e9e9;
+          .accordion {
+            .card {
+              .card-header {
+                button {
+                  font-size: 18px;
+                  line-height: 28px;
+                }
+              }
+            }
+          }
+          .collection-video {
+            margin-bottom: 0;
+            .video-insighter-play {
+              display: block;
+            }
+            .collection-video-details {
+              padding: 20px;
+              img.play ,
+              img.pause {
+                display: none;
+              }
+            }
+          }
+          .title-modules {
+            margin: 40px 0 10px;
+            text-align: left;
+          }
+          #video-insighter-list {
+            .category-slide-item {
+              .insight-item-img {
+                img.module-info {
+                  display: block;
+                  position: absolute;
+                  right: 20px;
+                  top: 20px;
+                  z-index: 3;
+                }
+              }
+              .card-title {
+                margin: 0;
+              }
+              .card-text,
+              .read-more {
+                display: none;
+              }
+
+            }
+          }
+        }
+      }
+    }
+
+    &.what-meditation {
+      padding: 40px 15px;
+
+      .container {
+        .card {
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+
+    &.last-tips {
+      padding-left: 0;
+
+      .container {
+        grid-template-columns: 1fr;
+        grid-gap: 20px;
+
+        .card {
+          width: 100%;
+          height: auto;
+          margin-bottom: 0;
+
+          &:last-child {
+            margin-bottom: 3rem;
+          }
+          .card-title {
+            font-size: 16px;
+          }
+          .card-text {
+            padding: 10px 20px;
+            font-size: 14px;
+          }
+          .btn {
+            width: 90%;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .meditation {
+    .browse-category {
+      padding-left: 30px;
+    }
+    #player {
+      height: 128px !important;
+      padding: 15px 20px;
+      .close-player {
+        bottom: 84px !important;
+      }
+      .audioplayer {
+        display: inline-block;
+        flex-direction: unset;
+        height: auto;
+      }
+      .audioplayer-playpause {
+        display: inline-block;
+        transform: translateY(-13px)
+      }
+      .player-song {
+        display: inline-block;
+        min-width: 210px;
+      }
+      .audioplayer-bar {
+        margin: 0 50px;
+        transform: translateY(-31px);
+      }
+      .audioplayer-time-current {
+        margin-left: 0;
+        line-height: 4;
+      }
+      .audioplayer-time-duration {
+        display: inline-block;
+        float: right;
+        margin-right: 0;
+        transform: translateY(-44px);
+      }
+      .expand-player {
+        display: block;
+      }
+    }
+  }
+  #modal_player {
+    .logo {
+      margin-top: 0;
+    }
+    .modal-content {
+      border: 0;
+    }
+    .mobile-wrapper {
+      padding: 0;
+      .modal-header {
+        height: 50vh;
+        flex-direction: unset;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        .close {
+          margin: 40px auto;
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+      .modal-body {
+        text-align: center;
+        height: 30vh;
+        margin: 0;
+        p {
+          font-size: 28px;
+          line-height: 40px;
+          color: #31364e;
+          font-family: 'Lora';
+          margin: 30px 0 10px;
+        }
+        span {
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 18px;
+        }
+        .audioplayer-playpause {
+          width: 40px;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+}
+#play {
+  transition: all 0.3s;
+  &[play="false"] {
+    .ic-pause-hover,
+    .ic-pause-static {
+      display: none;
+    }
+    .ic-play-hover {
+      display: none;
+    }
+    &:hover {
+      .ic-play-static {
+        display: none;
+      }
+      .ic-play-hover {
+        display: inline-block;
+      }
+    }
+  }
+  &[play="true"] {
+    .ic-play-hover,
+    .ic-play-static {
+      display: none;
+    }
+    .ic-pause-hover {
+      display: none;
+    }
+    &:hover {
+      .ic-pause-static {
+        display: none;
+      }
+      .ic-pause-hover {
+        display: inline-block;
+      }
+    }
+  }
+}
+.search_course_form_mobile {
+  @media screen and (max-width: 720px) {
+    // padding: 0 5px;
+    margin-bottom: 30px;
+  }
+}
+.ic-logo {
+  @media screen and (max-width: 720px) {
+    max-width: 88px;
+  }
+}
+.courses-dop {
+  padding: 0 20px;
+  &.courses {
+    .browse-category {
+      @media screen and (max-width: 640px) {
+        width: 100%;
+        padding: 0 !important;
+      }
+    }
+    .search_course_form_mobile {
+      .filter--box  {
+        max-width: none;
+        padding: 0px;
+      }
+    }
+  }
+}

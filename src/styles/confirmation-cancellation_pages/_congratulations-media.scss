@@ -1,0 +1,30 @@
+@media screen and (max-width: 768px) {
+  .congratulations {
+    &__title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    &__info {
+      &-text {
+        font-size: 20px;
+        text-align: left;
+        padding: 40px 21px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .congratulations {
+    &__info_bottom {
+      padding: 30px 20px;
+
+      button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+  }
+}

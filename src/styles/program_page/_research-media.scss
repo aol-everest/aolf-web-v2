@@ -1,0 +1,111 @@
+@media screen and (max-width: 1440px) {
+  .research {
+    &.sahaj-samadhi {
+      background-position-x: 50%;
+    }
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .research {
+    &__block {
+      img {
+        max-height: 40px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .research {
+    padding: 60px 0 0;
+    background-image: url("../img/bg-mobile-resuarch-block.png") !important;
+    background-size: cover;
+
+    &__title {
+      font-size: 22px;
+    }
+
+    &__list {
+      position: relative;
+      z-index: 2;
+
+      &__item {
+        h6 {
+          font-size: 16px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+
+    &__list-item {
+      margin-bottom: 30px;
+
+      &__image-link,
+      div {
+        display: block;
+        padding: 20px 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+        border: solid 1px #f7f5f4;
+        background-color: #ffffff;
+        img {
+          max-width: 100%;
+        }
+      }
+    }
+
+    &__text {
+      font-size: 14px;
+    }
+
+    &__list__mobile-img {
+      display: block;
+
+      img {
+        margin-top: -90px;
+        position: relative;
+        z-index: 0;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .research {
+    &__text {
+      max-width: 335px;
+    }
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .research {
+    &__list-item {
+      p {
+        font-size: 16px;
+      }
+
+      div {
+        padding: 15px 30px;
+
+        img {
+          height: 50px;
+        }
+      }
+    }
+
+    .swiper-pagination-bullet {
+      opacity: 0.5;
+      background-color: #efeeec;
+    }
+
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+      background-color: #efeeec;
+    }
+  }
+}

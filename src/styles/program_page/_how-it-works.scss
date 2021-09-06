@@ -1,0 +1,115 @@
+.how-it-works {
+  min-height: 900px;
+  background-color: #f7f5f4;
+  padding: 122px 0 100px 0;
+  background-image: url("../img/how-it-works-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: center;
+
+  &__title {
+    margin-bottom: 0;
+  }
+
+  &__text {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #31364e;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    max-width: 750px;
+  }
+
+  &__list {
+    max-width: 555px;
+
+    h2 {
+      font-family: Lora;
+      font-size: 30px;
+      font-weight: bold;
+      color: #31364e;
+      margin-bottom: 0;
+    }
+
+    .how-it-works__item {
+      margin-top: 25px;
+      padding: 25px 30px;
+      border-radius: 8px;
+      border: solid 1px #e9e9e9;
+      background-color: #ffffff;
+    }
+
+    .how-it-works__item,
+    .how-it-works__text {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #31364e;
+
+      p {
+        font-size: 20px;
+        line-height: 1.1;
+        margin-bottom: 15px;
+
+        span {
+          font-weight: 600;
+        }
+      }
+
+      div {
+        margin-bottom: 15px;
+      }
+
+      ul {
+        padding-left: 18px;
+        list-style-type: disc;
+
+        li {
+          margin-top: 15px;
+          color: #3d8be8;
+
+          span {
+            color: #31364e;
+          }
+        }
+      }
+    }
+  }
+
+  &.silent-retreat {
+    background-image: url("../img/how-refreshing-silent.png");
+
+    .silent-retreat__title {
+      font-size: 30px;
+    }
+
+    .silent-retreat-condition {
+      color: white;
+      display: flex;
+      margin-top: 30px;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.38;
+      color: #f7f5f4;
+
+      span {
+        margin-right: 20px;
+      }
+    }
+
+    .silent-retreat__link {
+      color: white;
+
+      &:hover {
+        color: #f7c250;
+      }
+
+      &:active {
+        color: #ed994e;
+      }
+    }
+  }
+
+  &_alt {
+    background-image: url("../img/how-it-works-bg-alt.jpg");
+  }
+}

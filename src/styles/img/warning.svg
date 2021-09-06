@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>warning</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.933333 0 0 0 0 0.521569 0 0 0 0 0.521569 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Roman-Edits" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g filter="url(#filter-1)" id="warning">
+            <g>
+                <path d="M10,0 C4.47253906,0 0,4.47292969 0,10 C0,15.5274609 4.47292969,20 10,20 C15.5274609,20 20,15.5270703 20,10 C20,4.47253906 15.5270703,0 10,0 Z M10,18.4375 C5.33621094,18.4375 1.5625,14.6634766 1.5625,10 C1.5625,5.33621094 5.33652344,1.5625 10,1.5625 C14.6637891,1.5625 18.4375,5.33652344 18.4375,10 C18.4375,14.6637891 14.6634766,18.4375 10,18.4375 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                <path d="M10,5.03425781 C9.56851562,5.03425781 9.21875,5.38402344 9.21875,5.81550781 L9.21875,10.8464844 C9.21875,11.2779687 9.56851562,11.6277344 10,11.6277344 C10.4314844,11.6277344 10.78125,11.2779687 10.78125,10.8464844 L10.78125,5.81550781 C10.78125,5.38402344 10.4314844,5.03425781 10,5.03425781 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+                <circle id="Oval" fill="#000000" fill-rule="nonzero" cx="10" cy="13.6390625" r="1.0546875"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,106 @@
+@media screen and (max-width: 1199px) {
+  .journey-starts {
+    .program-details {
+      top: -160px;
+      width: 350px;
+      padding: 30px 20px;
+
+      &__title {
+        font-size: 18px;
+      }
+
+      &__schedule {
+        &-date {
+          font-size: 14px;
+        }
+
+        &-time {
+          font-size: 14px;
+        }
+      }
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__step {
+      &-number {
+        font-size: 20px;
+      }
+
+      &-title {
+        font-size: 18px;
+      }
+
+      &-text {
+        font-size: 14px;
+      }
+    }
+
+    &__detail {
+      width: 390px;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .journey-starts {
+    margin-bottom: 81px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .journey-starts {
+    padding: 40px 0 80px 0;
+    margin-bottom: 75px;
+
+    .program-details {
+      position: relative;
+      top: unset;
+      right: unset;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .journey-starts {
+    &__step {
+      &-number {
+        min-width: 10px;
+        width: 10px;
+        height: 10px;
+        margin-top: 4px;
+        margin-right: 10px;
+
+        span {
+          display: none;
+        }
+      }
+
+      &:not(:last-child) {
+        padding-bottom: 20px;
+
+        &::after {
+          left: 5px;
+          bottom: -4px;
+        }
+      }
+
+      &-title {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      &-text {
+        font-size: 14px;
+      }
+    }
+
+    &__detail {
+      width: 100%;
+    }
+  }
+}

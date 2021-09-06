@@ -1,0 +1,28 @@
+@media screen and (max-width: 1440px) {
+  .steps {
+    background-size: cover;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .steps {
+    background-image: url('../img/easy-bg-mobile.png');
+    padding: 60px 0;
+
+    &__title {
+      font-size: 22px;
+      max-width: 335px;
+    }
+
+    &__step {
+
+      &__number {
+        padding: 5px 11px;
+      }
+
+      &__text {
+        font-size: 14px;
+      }
+    }
+  }
+}

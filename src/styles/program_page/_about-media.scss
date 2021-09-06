@@ -1,0 +1,40 @@
+@media screen and (max-width: 767px) {
+  .about {
+    padding: 60px 0;
+
+    &__card {
+      display: flex;
+      align-items: center;
+    }
+
+    &__logo {
+      margin: 0 20px 0 0;
+      width: 60px;
+      height: 60px;
+      min-width: 60px;
+      min-height: 60px;
+    }
+
+    &__text {
+      text-align: left;
+
+      span {
+        display: inline;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .about {
+    padding: 60px 0;
+
+    &__text {
+      font-size: 16px;
+
+      span {
+        font-size: 16px;
+      }
+    }
+  }
+}

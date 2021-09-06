@@ -1,0 +1,307 @@
+@media screen and (max-width: 1199px) {
+  .journey-confirmation {
+    &__info {
+      &-text {
+        padding: 40px 65px 0 40px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .journey-confirmation {
+    &__title {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    &__image {
+      max-width: 160px;
+      height: 210px;
+    }
+
+    &__date {
+      top: 15px;
+      left: 15px;
+      font-size: 12px;
+      padding: 9px 10px;
+    }
+
+    &__course-detail {
+      left: 15px;
+      bottom: 20px;
+    }
+
+    &__course-type {
+      font-size: 12px;
+    }
+
+    &__course-name {
+      font-size: 18px;
+      margin: 2px 0 8px 0;
+    }
+
+    &__course-trainer {
+      font-size: 14px;
+    }
+
+    &__info {
+      &-text {
+        font-size: 16px;
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 36px;
+      }
+
+      &_bottom {
+        padding: 20px 20px;
+      }
+    }
+
+    &__link {
+      font-size: 14px;
+      margin-left: 25px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .journey-confirmation {
+    &_v1 {
+      display: none;
+    }
+  }
+
+  .journey-confirmation_mobile {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 48px - 82px);
+
+    &__info {
+      padding: 30px 0;
+      text-align: center;
+    }
+
+    &__title {
+      font-size: 24px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    &__info-text {
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: center;
+      color: $text-color;
+
+      span {
+        font-weight: 600;
+      }
+    }
+
+    &__button {
+      display: block;
+      margin: 30px auto 25px auto;
+    }
+
+    &__link {
+      display: block;
+      margin: 0 auto;
+    }
+
+    &__image {
+      position: relative;
+      width: 400px;
+      height: auto;
+      margin: 0 auto 60px auto;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    &__date {
+      position: absolute;
+      top: 40px;
+      left: 20px;
+      background-color: rgba(61, 139, 232, 0.5);
+      font-size: 12px;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #ffffff;
+      padding: 9px 10px;
+      border-radius: 4px;
+    }
+
+    &__course-detail {
+      position: absolute;
+      left: 20px;
+      bottom: 25px;
+    }
+
+    &__course-type {
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    &__course-name {
+      font-size: 20px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.29;
+      letter-spacing: normal;
+      color: #ffffff;
+      margin: 2px 0 10px 0;
+    }
+
+    &__course-trainer {
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #ffffff;
+      margin: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .journey-confirmation {
+    height: calc(100vh - 72px - 65px);
+
+    &__title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    &__image {
+      width: 263px;
+      height: 330px;
+    }
+
+    &__date {
+      top: 20px;
+      left: 20px;
+      font-size: 12px;
+      padding: 9px 10px;
+    }
+
+    &__course-type {
+      font-size: 12px;
+      margin: 0;
+    }
+
+    &__course-name {
+      font-size: 20px;
+      margin: 2px 0 10px 0;
+    }
+
+    &__course-trainer {
+      font-size: 14px;
+    }
+
+    &__card {
+      max-width: 940px;
+    }
+
+    &__info {
+      &-text {
+        font-size: 20px;
+        padding: 40px 20px 0 20px;
+      }
+    }
+
+    h2 {
+      font-size: 36px;
+    }
+
+    &_bottom {
+      padding: 30px 40px;
+    }
+
+    &_v2 {
+      .journey-confirmation__info-text {
+        padding-bottom: 40px;
+      }
+    }
+
+    &__link {
+      font-size: 16px;
+      margin-left: 25px;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .journey-confirmation {
+    &__info_bottom {
+      button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  .journey-confirmation_mobile {
+    &__info {
+      button {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .journey-confirmation_mobile {
+    &__image {
+      position: relative;
+      width: 100%;
+      height: auto;
+      margin: 0;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .journey-confirmation_mobile {
+    &__info-text {
+      font-size: 16px;
+    }
+  }
+}
+
+@media screen and (max-height: 600px) {
+  .journey-confirmation {
+    height: unset;
+    padding: 40px 0;
+  }
+}

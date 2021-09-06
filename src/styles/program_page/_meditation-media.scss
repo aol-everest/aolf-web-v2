@@ -1,0 +1,51 @@
+@media screen and (max-width: 991px) {
+  .meditation {
+    padding: 60px 0px 0px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .meditation {
+    .browse-category {
+      padding: 0 20px !important;
+      .title-slider {
+        font-size: 16px !important;
+      }
+      .card {
+        &.image-card {
+          // width: 160px !important;
+          height: 200px !important;
+          background-size: cover !important;
+          padding: 15px 10px !important;
+        }
+        .card-title {
+          font-size: 18px !important;
+          margin-bottom: 5px !important;
+        }
+        .card-text {
+          font-size: 10px !important;
+        }
+      }
+    }
+  }
+  .meditation__title {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .meditation__quote {
+    max-width: 335px;
+  }
+
+}
+.courses.pb-4 {
+  @media screen and (max-width: 574.98px) {
+    padding-bottom: 0px !important;
+  }
+}
+.mob-none {
+  @media screen and (max-width: 767.98px) {
+    display: none;
+  }  
+}

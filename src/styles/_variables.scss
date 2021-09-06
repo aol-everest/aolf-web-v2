@@ -1,0 +1,62 @@
+//Color vars
+$peach: #e47d6c;
+$orange: #ed994e;
+$orange-opacity: rgba(237, 153, 78, 0.1);
+$yellow: #f7c250;
+$red-error: #fa5a67;
+$red-dark: #ff858f;
+$text-color: #31364e;
+$dark: #10111a;
+$backgrounds: #f7f7f7;
+$border-color: #e9e9e9;
+$light-grey-2: #c4c5cc;
+$light-grey-2-opacity: rgba(196, 197, 204, 0.1);
+$light-grey: #9598a6;
+$grey: #6f7283;
+$light-border: #ececec;
+$white: #ffffff;
+$color-grey-title: #1f242d;
+$true-grey: #dddddd;
+$shark: #20242c;
+
+$white-06-opacity: rgba(255, 255, 255, 0.6);
+
+$blue: #3d8be8;
+$blue-hover: #89beec;
+$blue-active: #2465b3;
+$piction-blue: #4191e9;
+$dodger-blue: #4287F5;
+
+//Button vars
+$button-primary: linear-gradient(to top, $blue, $blue-hover);
+$button-primary-hover: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+linear-gradient(to top, $blue, $blue-hover);
+$button-primary-active: linear-gradient(to top, #1374e8, #70bafa);
+
+$button-secondary: linear-gradient(to bottom, #ffd16f, #ff865b);
+$button-secondary-hover: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), linear-gradient(to bottom, #ffd16f, #ff865b);
+$button-secondary-active: linear-gradient(to bottom, #ffc64d, #fe6933);
+
+$header-background: linear-gradient(270deg, $blue, $blue-hover);
+
+//Border vars
+$white-border: 1px solid #fff;
+$white-border-pressed: 1px solid rgba(255, 255, 255, 0.8);
+
+$blue-border: 1px solid $blue;
+$blue-border-hover: 1px solid $blue-hover;
+$blue-border-active: 1px solid $blue-active;
+
+$grey-border: 1px solid $border-color;
+$black-border: 1px solid $text-color;
+
+$error-border: 1px solid $red-error;
+
+$border-radius-btn: 16px;
+
+//Box shadow vars
+$blue-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+
+//card headers
+$blue-card-header:rgba(61, 139, 232, 0.1);
+$yellow-card-header:rgba(237, 153, 78, 0.1);

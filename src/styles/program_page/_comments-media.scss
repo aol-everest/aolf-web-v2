@@ -1,0 +1,113 @@
+@media screen and (max-width: 991px) {
+  .comments {
+    &__subtitle {
+      font-size: 14px;
+    }
+
+    &__item {
+      padding: 30px 20px;
+    }
+
+    &__button-prev {
+      left: 40px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .comments {
+    padding: 60px 0;
+    background-color: #f7f5f4;
+
+    &__video {
+      margin: 60px auto;
+      background-color: #e6e4e3;
+    }
+
+    &__person-img {
+      width: 60px;
+      height: 60px;
+
+      span {
+        right: -15px;
+        font-size: 50px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &__name {
+      font-size: 14px;
+    }
+
+    &__person-about {
+      font-size: 14px;
+    }
+
+    &__button-next,
+    &__button-prev {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 595px) {
+  .comments {
+    &__video {
+      width: 100%;
+      height: calc(100vw - 100vw / 2.3);
+    }
+  }
+}
+
+@media screen and (max-width:390px) {
+  .comments {
+    &.sahaj-samadhi {
+      .comments__title {
+        display: block;
+
+        span {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .comments {
+    &__quote {
+      font-size: 16px;
+    }
+
+    &__text {
+      font-size: 14px;
+    }
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .comments {
+    &__person-img {
+      width: 50px;
+      height: 50px;
+      margin-right: 15px;
+
+      span {
+        right: -10px;
+        font-size: 40px;
+      }
+    }
+
+    &__item {
+      padding: 20px 15px;
+    }
+
+    &__person-about {
+      font-size: 12px;
+    }
+  }
+}

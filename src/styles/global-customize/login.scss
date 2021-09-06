@@ -1,0 +1,112 @@
+.auth {
+  .success-message-container {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    border-radius: 8px;
+    .success-message {
+      display: block;
+      position: absolute;
+      width: 100%;
+      top: 40%;
+      .icon-container {
+        color: green;
+        font-size: 45px;
+      }
+    }
+  }
+  .info {
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+  .cover-spin {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    border-radius: 8px;
+  }
+
+  .back-button {
+    left: 22px;
+    box-sizing: content-box !important;
+    background: #fff;
+    border-radius: 100px;
+    height: 10px;
+    width: 10px;
+    padding: 0;
+    position: absolute;
+    top: 71px;
+    right: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #333;
+    z-index: 100;
+    border: 6px solid #fff;
+    cursor: pointer;
+    line-height: 0;
+    &:focus {
+      outline: none;
+      box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+    }
+    &:hover {
+      outline: none;
+      box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  @-webkit-keyframes spin {
+    from {
+      -webkit-transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .cover-spin::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 44%;
+    top: 40%;
+    width: 40px;
+    height: 40px;
+    border-style: solid;
+    border-color: #3d8be8;
+    border-top-color: transparent;
+    border-width: 4px;
+    border-radius: 50%;
+    -webkit-animation: spin 0.8s linear infinite;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .auth {
+    .back-button {
+      top: 179px;
+    }
+  }
+}

@@ -1,0 +1,48 @@
+.swiper {
+  &-button-next,
+  &-button-prev {
+    outline: none;
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50%;
+    box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+    background-image: linear-gradient(to top, #3d8be8, #89beec) !important;
+    transition: all 0.3s ease-in-out;
+    &:after {
+      width: 60px;
+      height: 60px;
+      top: 50%;
+      left: 50%;
+    }
+    &:hover {
+      outline: none;
+      background-image: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.2)
+        ),
+        linear-gradient(to top, #3d8be8, #89beec);
+    }
+    &:active {
+      outline: none;
+      background-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.2),
+          rgba(0, 0, 0, 0.2)
+        ),
+        linear-gradient(to top, #3d8be8, #89beec);
+    }
+  }
+  &-button-next {
+    right: 40px;
+    &:after {
+      content: url("./../img/ic-arrow-rigth.svg") !important;
+    }
+  }
+  &-button-prev {
+    left: 40px;
+    &:after {
+      content: url("./../img/ic-arrow-left.svg") !important;
+    }
+  }
+}
