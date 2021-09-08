@@ -9,17 +9,6 @@ export const priceCalculation = ({
   let fee = "";
   let delfee = "";
 
-  console.log(
-    "agreementCMEAccepted",
-    agreementCMEAccepted,
-    discount,
-    `${process.env.REACT_APP_SKY_BREATH_MEDITATION_CTYPE}`.indexOf(
-      productTypeId,
-    ) >= 0,
-    listPrice,
-    unitPrice,
-  );
-
   if (agreementCMEAccepted) {
     fee = CMEPricing.unitPrice;
   } else if (discount) {

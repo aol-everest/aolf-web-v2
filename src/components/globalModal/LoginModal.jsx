@@ -2,9 +2,14 @@ import React, { useState } from "react";
 import { useGlobalModalContext } from "@contexts";
 import { Auth } from "aws-amplify";
 import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { useRouter } from "next/router";
+import {
+  SignupForm,
+  SigninForm,
+  ResetPasswordForm,
+  ChangePasswordForm,
+  NewPasswordForm,
+} from "./../loginForm";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";
@@ -16,25 +21,11 @@ const MESSAGE_SIGNUP_SUCCESS = "Sign up completed successfully.";
 const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
   "A verification code has been emailed to you. Please use the verification code and reset your password.";
 
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .email("Email is invalid")
-    .required("Email is required"),
-  password: yup.string().required(),
-});
-
 export const LoginModal = () => {
+  const router = useRouter();
   const { hideModal, store } = useGlobalModalContext();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-  // const { modalProps } = store || {};
-  // const { title, confirmBtn } = modalProps || {};
+  const { modalProps } = store || {};
+  const { navigateTo } = modalProps || {};
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -42,6 +33,7 @@ export const LoginModal = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [mode, setMode] = useState(LOGIN_MODE);
+  const [username, setUsername] = useState(null);
 
   const handleModalToggle = () => {
     hideModal();
@@ -52,11 +44,105 @@ export const LoginModal = () => {
     setMode(view);
   };
 
+  const getActualMessage = (message) => {
+    if (!message) {
+      return null;
+    }
+    const matches = message.match(/\[(.*?)\]/);
+    if (matches) {
+      return matches[1];
+    }
+    return message;
+  };
+
   const signIn = async ({ username, password }) => {
+    setLoading(true);
     try {
       const user = await Auth.signIn(username, password);
-      console.log(user);
-      // router.push("/client-protected");
+      if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
+        setUsername(username);
+        setMode(NEW_PASSWORD_REQUEST);
+      }
+      if (navigateTo) {
+        router.push(navigateTo);
+      }
+      hideModal();
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+      setShowMessage(true);
+    }
+    setLoading(false);
+  };
+
+  const fbLogin = () => {
+    Auth.federatedSignIn({ provider: "Facebook" });
+  };
+
+  const googleLogin = () => {
+    Auth.federatedSignIn({ provider: "Google" });
+  };
+
+  const signUp = async ({ username, password, firstName, lastName }) => {
+    setLoading(true);
+    try {
+      const { user } = await Auth.signUp({
+        username,
+        password,
+        attributes: {
+          email: username,
+          given_name: firstName,
+          family_name: lastName,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+      setShowMessage(true);
+    }
+    setLoading(false);
+  };
+
+  const resetPassword = async ({ username }) => {
+    setLoading(true);
+    try {
+      await Auth.forgotPassword(username);
+      setUsername(username);
+      setShowSuccessMessage(true);
+      setSuccessMessage(MESSAGE_VERIFICATION_CODE_SENT_SUCCESS);
+      setTimeout(() => {
+        setMode(CHANGE_PASSWORD_REQUEST);
+        setShowSuccessMessage(false);
+        setSuccessMessage(null);
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+      setShowMessage(true);
+    }
+    setLoading(false);
+  };
+
+  const changePassword = async ({ username, code, password }) => {
+    setLoading(true);
+    try {
+      await Auth.forgotPasswordSubmit(username, code, password);
+      setUsername(null);
+      setMode(LOGIN_MODE);
+    } catch (error) {
+      console.log("error signing in", error);
+      setLoading(false);
+      setMessage(error.message);
+      setShowMessage(true);
+    }
+  };
+
+  const completeNewPassword = async ({ password }) => {
+    setLoading(true);
+    try {
+      await Auth.completeNewPassword(username, password);
+      setUsername(null);
+      setMode(LOGIN_MODE);
     } catch (error) {
       console.log("error signing in", error);
       setLoading(false);
@@ -89,6 +175,43 @@ export const LoginModal = () => {
             <div class="close-line"></div>
             <div class="close-line"></div>
           </button>
+          {(mode === RESET_PASSWORD_REQUEST ||
+            mode === NEW_PASSWORD_REQUEST ||
+            mode === CHANGE_PASSWORD_REQUEST) && (
+            <span
+              role="button"
+              class="back-button"
+              onClick={switchView(LOGIN_MODE)}
+            >
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                enable-background="new 0 0 24 24"
+                version="1.0"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {" "}
+                <polyline
+                  fill="none"
+                  points="12.5,21 3.5,12 12.5,3 "
+                  stroke="#000000"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline>{" "}
+                <line
+                  fill="none"
+                  stroke="#000000"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                  x1="22"
+                  x2="3.5"
+                  y1="12"
+                  y2="12"
+                ></line>{" "}
+              </svg>
+            </span>
+          )}
           <h6 class="modal-window__subtitle">
             You’re minutes away from the next step in your journey
           </h6>
@@ -114,80 +237,55 @@ export const LoginModal = () => {
           </div>
         </div>
         <div class="modal-window__body">
-          <div class="icon-wrapper">
-            <div class="icon">
-              <img src="./img/ic-facebook.svg" alt="facebook" />
-            </div>
-            <div class="icon">
-              <img src="./img/google.svg" alt="google" />
-            </div>
-          </div>
-          <p>or</p>
-          {mode === LOGIN_MODE && (
-            <form
-              id="login-form"
-              class="active show"
-              onSubmit={handleSubmit(signIn)}
-            >
-              <input
-                {...register("username")}
-                type="email"
-                placeholder="Email"
-              />
-              {errors.username && (
-                <p class="validation-input">{errors.username.message}</p>
-              )}
-              <input
-                {...register("password")}
-                type="password"
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p class="validation-input">{errors.password.message}</p>
-              )}
-              {showMessage && <p class="validation-input">{message}</p>}
-              <a class="link" href="#">
-                Don’t remember your password?
-              </a>
-              <button class="mt-4 modal-window__btn btn-primary" type="submit">
-                Log In
-              </button>
-            </form>
+          {mode === NEW_PASSWORD_REQUEST && (
+            <NewPasswordForm
+              completeNewPassword={completeNewPassword}
+              showMessage={showMessage}
+              message={getActualMessage(message)}
+            />
           )}
-          {mode === SIGNUP_MODE && (
-            <form id="signup-form" class="active show">
-              <input type="email" class="validate" placeholder="Email" />
-              <p class="validation-input" id="validation-email">
-                This type of email does not exist. Please enter a valid one.
-              </p>
-              <input type="password" placeholder="Password" />
-              <input type="text" placeholder="First Name" />
-              <input type="text" placeholder="Last Name" />
-              <div class="checkbox-wrapper">
-                <input
-                  class="custom-checkbox"
-                  type="checkbox"
-                  name="program"
-                  id="program"
-                />
-                <label for="program"></label>
-                <p class="checkbox-text">
-                  By signing up, I agree to
-                  <a href="#" class="link">
-                    Terms of Service
-                  </a>{" "}
-                  and
-                  <a href="#" class="link">
-                    Privacy Policy
-                  </a>
-                </p>
+          {mode === RESET_PASSWORD_REQUEST && (
+            <ResetPasswordForm
+              resetPassword={resetPassword}
+              showMessage={showMessage}
+              message={getActualMessage(message)}
+            />
+          )}
+          {mode === CHANGE_PASSWORD_REQUEST && (
+            <ChangePasswordForm
+              changePassword={changePassword}
+              showMessage={showMessage}
+              message={getActualMessage(message)}
+            />
+          )}
+          {(mode === LOGIN_MODE || mode === SIGNUP_MODE) && (
+            <>
+              <div class="icon-wrapper">
+                <div class="icon" onClick={fbLogin}>
+                  <img src="./img/ic-facebook.svg" alt="facebook" />
+                </div>
+                <div class="icon" onClick={googleLogin}>
+                  <img src="./img/google.svg" alt="google" />
+                </div>
               </div>
-              <button class="mt-4 modal-window__btn btn-primary">
-                Sign Up
-              </button>
-            </form>
+              <p>or</p>
+              {mode === LOGIN_MODE && (
+                <SigninForm
+                  signIn={signIn}
+                  forgotPassword={switchView(RESET_PASSWORD_REQUEST)}
+                  showMessage={showMessage}
+                  message={getActualMessage(message)}
+                />
+              )}
+              {mode === SIGNUP_MODE && (
+                <SignupForm
+                  signUp={signUp}
+                  showMessage={showMessage}
+                  message={getActualMessage(message)}
+                />
+              )}
+            </>
           )}
-
           <button
             class="modal-window__close modal-window__close_desktop"
             onClick={handleModalToggle}

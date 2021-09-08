@@ -38,7 +38,6 @@ export const getServerSideProps = async (context) => {
       ...props,
       workshop: res.data,
     };
-    console.log(res);
   } catch (err) {
     props = {
       ...props,

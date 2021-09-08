@@ -1,0 +1,46 @@
+import React from "react";
+import classNames from "classnames";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  username: yup
+    .string()
+    .email("This type of email does not exist. Please enter a valid one.")
+    .required("Email is required"),
+});
+
+export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  return (
+    <form class="active show" onSubmit={handleSubmit(resetPassword)}>
+      <p class="info">
+        Please enter your email address. We will send you an email to reset your
+        password.
+      </p>
+      <input
+        {...register("username")}
+        type="email"
+        className={classNames({ validate: errors.username })}
+        placeholder="Email"
+      />
+      {errors.username && (
+        <p class="validation-input">{errors.username.message}</p>
+      )}
+      {showMessage && (
+        <p class="validation-input">{this.getActualMessage(message)}</p>
+      )}
+      <button type="submit" class="mt-4 modal-window__btn btn-primary v2">
+        Send email
+      </button>
+    </form>
+  );
+};

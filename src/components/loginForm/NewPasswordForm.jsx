@@ -1,0 +1,62 @@
+import React from "react";
+import classNames from "classnames";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Must Contain 8 Characters"),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
+});
+
+export const NewPasswordForm = ({
+  completeNewPassword,
+  showMessage,
+  message,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  return (
+    <form class="active show" onSubmit={handleSubmit(completeNewPassword)}>
+      <p class="info">
+        You have to change your password. Please enter your new password below.
+      </p>
+      <input
+        {...register("password")}
+        type="password"
+        placeholder="Password"
+        className={classNames({ validate: errors.password })}
+      />
+      {errors.password && (
+        <p class="validation-input">{errors.password.message}</p>
+      )}
+      <input
+        {...register("passwordConfirmation")}
+        type="password"
+        placeholder="Password"
+        className={classNames({ validate: errors.password })}
+        type="password"
+      />
+      {errors.passwordConfirmation && (
+        <p class="validation-input">{errors.passwordConfirmation.message}</p>
+      )}
+      {showMessage && (
+        <p class="validation-input">{this.getActualMessage(message)}</p>
+      )}
+      <button type="submit" class="mt-4 modal-window__btn btn-primary">
+        Change Password
+      </button>
+    </form>
+  );
+};

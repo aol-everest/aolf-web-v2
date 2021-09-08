@@ -3,21 +3,8 @@ import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import { useGlobalModalContext, useGlobalAlertContext } from "@contexts";
-import { MODAL_TYPES, ALERT_TYPES } from "@constants";
+import { MODAL_TYPES, ALERT_TYPES, ABBRS } from "@constants";
 
-const ABBRS = {
-  null: "",
-  EST: "ET",
-  EDT: "ET",
-  CST: "CT",
-  CDT: "CT",
-  MST: "MT",
-  MDT: "MT",
-  PST: "PT",
-  PDT: "PT",
-  HST: "HT",
-  HDT: "HT",
-};
 
 export const WorkshopTile = ({ data }) => {
   const { showModal } = useGlobalModalContext();

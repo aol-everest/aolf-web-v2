@@ -4,10 +4,24 @@ import { FiPhone } from "react-icons/fi";
 import classNames from "classnames";
 import { Logo, ActiveLink } from "@components";
 import { IcLogo, IcSearchBlack, IcTimerWhite } from "@components/icons";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import Style from "./Header.module.scss";
+import { FaUserCircle } from "react-icons/fa";
+import { MODAL_TYPES } from "@constants";
 
 export const Header = () => {
-  const isLoggedIn = false;
   const collapsed = true;
+  const { authenticated = false, profile } = useAuth();
+  const { showModal } = useGlobalModalContext();
+  const { userProfilePic: profilePic, first_name, last_name } = profile || {};
+  const isLoggedIn = authenticated;
+  let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
+  initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
+
+  const loginAction = () => {
+    showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/profile" });
+  };
+
   return (
     <>
       <header className="aol_header" id="site-header">
@@ -15,30 +29,6 @@ export const Header = () => {
           <IcTimerWhite />{" "}
           <span>Register soon. Course fee will go up by $100 on MM/DD</span>
         </aside> */}
-        {isLoggedIn && !isVerified && !closeAlert && false && (
-          <div className="alert alert-warning nav-alert">
-            <button
-              type="button"
-              yarn
-              add
-              classnames
-              className="close"
-              data-dismiss="alert"
-              aria-label="Close"
-              onClick={this.closeAlertAction}
-            >
-              <span aria-hidden="true" style={{ fontSize: "20px" }}>
-                ×
-              </span>
-            </button>
-            {!loading && <i className="fas fa-exclamation-triangle" />}
-            {loading && <i className="fas fa-circle-notch fa-spin" />} This
-            account is pending email confirmation.{" "}
-            <a href="#" onClick={this.resendEmailVerificationAction}>
-              resend confirmation
-            </a>
-          </div>
-        )}
         <Navbar id="navbar" expand="md" className="navbar aol_navbar ">
           <figure className="container mrgb">
             <a
@@ -90,9 +80,8 @@ export const Header = () => {
                 </NavItem>
                 {!isLoggedIn && (
                   <NavItem className="nav-item">
-                    <a href="#" className="nav-link">
-                      <i
-                        className="far fa-user-circle"
+                    <a href="#" className="nav-link" onClick={loginAction}>
+                      <FaUserCircle
                         style={{ color: "#313651", fontSize: "28px" }}
                       />{" "}
                       <span className="d-md-none">Login</span>
@@ -100,23 +89,36 @@ export const Header = () => {
                   </NavItem>
                 )}
                 {isLoggedIn && (
-                  <NavItem className="nav-item user_navitem">
+                  <NavItem
+                    className={classNames("nav-item", Style.userNavitem)}
+                  >
                     <ActiveLink activeClassName="active" href="/profile">
-                      <>
-                        {profile.first_name || profile.last_name}
-                        {profilePic && (
-                          <img
-                            src={profilePic}
-                            className="rounded-circle user-profile-pic"
-                          />
-                        )}
-                        {!profilePic && (
-                          <span className="user-profile-pic profile-header__image top-nav-bar">
-                            {" "}
-                            <span>{initials}</span>
-                          </span>
-                        )}
-                      </>
+                      <a className="nav-link">
+                        <>
+                          {first_name || last_name}
+                          {profilePic && (
+                            <img
+                              src={profilePic}
+                              className={classNames(
+                                "rounded-circle",
+                                Style.userProfilePic,
+                              )}
+                            />
+                          )}
+                          {!profilePic && (
+                            <span
+                              className={classNames(
+                                "top-nav-bar",
+                                Style.userProfilePic,
+                                Style.profileHeadeImage,
+                              )}
+                            >
+                              {" "}
+                              <span>{initials}</span>
+                            </span>
+                          )}
+                        </>
+                      </a>
                     </ActiveLink>
                   </NavItem>
                 )}

@@ -6,3 +6,5 @@ export {
   GlobalAlertContext,
   useGlobalAlertContext,
 } from "./GlobalAlertContext";
+
+export { AuthProvider, useAuth } from "./auth";

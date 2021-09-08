@@ -329,8 +329,6 @@ const Workshop = ({ workshops, authenticated, query }) => {
     enabled: hasNextPage,
   });
 
-  console.log(data);
-
   return (
     <main className="meetsup-filter">
       <NextSeo title="Workshops" />
