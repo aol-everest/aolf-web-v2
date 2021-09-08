@@ -4,7 +4,6 @@ import moment from "moment";
 import { withSSRContext } from "aws-amplify";
 import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
-import renderHTML from "react-render-html";
 import ReactTooltip from "react-tooltip";
 import classNames from "classnames";
 import Link from "next/link";
@@ -14,8 +13,10 @@ import {
   ViewCardDetail,
   ChangePassword,
   ChangeProfile,
+  ProfileHeader,
 } from "@components/profile";
 import { api } from "@utils";
+import { MEMBERSHIP_TYPES } from "@constants";
 
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
 const UPDATE_PROFILE = "UPDATE_PROFILE";
@@ -167,106 +168,10 @@ const Profile = ({ profile }) => {
               <div class="profile-header__full-name d-none d-md-block">
                 {name}
               </div>
-              {subscriptions.map((subscription) => {
-                return (
-                  <>
-                    <div class="profile-header__course">
-                      <strong>{subscription.name} member </strong>
-                      <span class="profile-header__course-date">
-                        since{" "}
-                        {moment(subscription.subscriptionStartDate).format(
-                          "MMMM DD, YYYY",
-                        )}
-                      </span>{" "}
-                      {process.env.REACT_APP_FREE_MEMBERSHIP_ID !==
-                        subscription.subscriptionMasterSfid && (
-                        <a
-                          href="#"
-                          class="link link_dark link-modal"
-                          // onClick={this.showSubscriptionDetailModal(subscription)}
-                        >
-                          <strong>See details</strong>
-                        </a>
-                      )}
-                    </div>
-                  </>
-                );
-              })}
-              {userSubscriptions.hasOwnProperty(
-                process.env.REACT_APP_BASIC_MEMBERSHIP_ID,
-              ) && (
-                <div class="btn-wrapper">
-                  <button
-                    data-href-modal="digital-member-join"
-                    class="btn-secondary link-modal v2"
-                    onClick={this.showPurchaseMembershipModalAction(
-                      process.env.REACT_APP_JOURNEY_PREMIUM,
-                    )}
-                  >
-                    Upgrade to Journey Premium Membership
-                  </button>
-                </div>
-              )}
-              {!userSubscriptions.hasOwnProperty(
-                process.env.REACT_APP_JOURNEY_PREMIUM,
-              ) &&
-                !userSubscriptions.hasOwnProperty(
-                  process.env.REACT_APP_BASIC_MEMBERSHIP_ID,
-                ) && (
-                  <>
-                    {!userSubscriptions.hasOwnProperty(
-                      process.env.REACT_APP_JOURNEY_PLUS_ID,
-                    ) &&
-                      userSubscriptions.hasOwnProperty(
-                        process.env.REACT_APP_DIGITAL_MEMBERSHIP_ID,
-                      ) && (
-                        <div class="profile-header__course">
-                          Take your journey deeper with a special offering for
-                          silent retreats.
-                        </div>
-                      )}
-                    {!userSubscriptions.hasOwnProperty(
-                      process.env.REACT_APP_JOURNEY_PLUS_ID,
-                    ) &&
-                      !userSubscriptions.hasOwnProperty(
-                        process.env.REACT_APP_DIGITAL_MEMBERSHIP_ID,
-                      ) && (
-                        <div class="profile-header__course">
-                          Take your journey deeper with two options for
-                          additional content and support
-                        </div>
-                      )}
-                    <div class="btn-wrapper">
-                      {!userSubscriptions.hasOwnProperty(
-                        process.env.REACT_APP_DIGITAL_MEMBERSHIP_ID,
-                      ) && (
-                        <button
-                          data-href-modal="digital-member-join"
-                          class="btn-secondary link-modal v2"
-                          // onClick={this.showPurchaseMembershipModalAction(
-                          //   process.env.REACT_APP_DIGITAL_MEMBERSHIP_ID,
-                          // )}
-                        >
-                          Learn about Digital Membership
-                        </button>
-                      )}
-
-                      {!userSubscriptions.hasOwnProperty(
-                        process.env.REACT_APP_JOURNEY_PLUS_ID,
-                      ) && (
-                        <button
-                          data-href-modal="journey-join"
-                          class="btn-secondary link-modal v2"
-                          // onClick={this.showPurchaseMembershipModalAction(
-                          //   process.env.REACT_APP_JOURNEY_PLUS_ID,
-                          // )}
-                        >
-                          Discover Journey +
-                        </button>
-                      )}
-                    </div>
-                  </>
-                )}
+              <ProfileHeader
+                subscriptions={subscriptions}
+                userSubscriptions={userSubscriptions}
+              />
             </div>
           </div>
         </section>

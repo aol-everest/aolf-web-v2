@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { LoginModal } from "./LoginModal";
+import { CustomModal } from "./CustomModal";
 import { MODAL_TYPES } from "@constants";
 import { GlobalModalContext } from "@contexts";
 
 const MODAL_COMPONENTS = {
   [MODAL_TYPES.LOGIN_MODAL]: LoginModal,
+  [MODAL_TYPES.CUSTOM_MODAL]: CustomModal,
 };
 
 export const GlobalModal = ({ children }) => {
