@@ -2,11 +2,12 @@ import React from "react";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useGlobalModalContext, useGlobalAlertContext } from "@contexts";
 import { MODAL_TYPES, ALERT_TYPES, ABBRS } from "@constants";
 
-
-export const WorkshopTile = ({ data }) => {
+export const WorkshopTile = ({ data, authenticated }) => {
+  const router = useRouter();
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
   const {
@@ -26,8 +27,15 @@ export const WorkshopTile = ({ data }) => {
     sfid,
   } = data || {};
 
-  const updateModal = () => {
-    showModal(MODAL_TYPES.LOGIN_MODAL);
+  const enrollAction = (workshopId) => () => {
+    if (authenticated) {
+      router.push(`/checkout/${workshopId}`);
+    } else {
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/checkout/${workshopId}`,
+      });
+    }
+
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
   };
 
@@ -90,7 +98,7 @@ export const WorkshopTile = ({ data }) => {
           <div className="course_detail_btn_box">
             <a
               className="btn btn_box_primary text-center"
-              onClick={updateModal}
+              onClick={enrollAction(sfid)}
             >
               Enroll
             </a>

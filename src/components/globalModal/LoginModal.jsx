@@ -25,7 +25,7 @@ export const LoginModal = () => {
   const router = useRouter();
   const { hideModal, store } = useGlobalModalContext();
   const { modalProps } = store || {};
-  const { navigateTo } = modalProps || {};
+  const { navigateTo, hideCloseBtn = false } = modalProps || {};
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -66,7 +66,9 @@ export const LoginModal = () => {
       if (navigateTo) {
         router.push(navigateTo);
       }
-      hideModal();
+      if (!hideCloseBtn) {
+        hideModal();
+      }
     } catch (error) {
       console.error(error);
       setMessage(error.message);
@@ -168,13 +170,15 @@ export const LoginModal = () => {
           </div>
         </div>
         <div class="modal-window__header">
-          <button
-            class="modal-window__close modal-window__close_mobile"
-            onClick={handleModalToggle}
-          >
-            <div class="close-line"></div>
-            <div class="close-line"></div>
-          </button>
+          {!hideCloseBtn && (
+            <button
+              class="modal-window__close modal-window__close_mobile"
+              onClick={handleModalToggle}
+            >
+              <div class="close-line"></div>
+              <div class="close-line"></div>
+            </button>
+          )}
           {(mode === RESET_PASSWORD_REQUEST ||
             mode === NEW_PASSWORD_REQUEST ||
             mode === CHANGE_PASSWORD_REQUEST) && (
@@ -286,13 +290,15 @@ export const LoginModal = () => {
               )}
             </>
           )}
-          <button
-            class="modal-window__close modal-window__close_desktop"
-            onClick={handleModalToggle}
-          >
-            <div class="close-line"></div>
-            <div class="close-line"></div>
-          </button>
+          {!hideCloseBtn && (
+            <button
+              class="modal-window__close modal-window__close_desktop"
+              onClick={handleModalToggle}
+            >
+              <div class="close-line"></div>
+              <div class="close-line"></div>
+            </button>
+          )}
         </div>
       </div>
     </div>

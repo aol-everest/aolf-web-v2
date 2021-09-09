@@ -17,9 +17,14 @@ export const getServerSideProps = async (context) => {
     const { Auth } = await withSSRContext(context);
     const user = await Auth.currentAuthenticatedUser();
     token = user.signInUserSession.idToken.jwtToken;
+    const res = await api.get({
+      path: "profile",
+      token,
+    });
     props = {
       authenticated: true,
       username: user.username,
+      profile: res,
     };
   } catch (err) {
     props = {
@@ -48,7 +53,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const Checkout = ({ workshop, error, authenticated, query }) => {
+const Checkout = ({ workshop, profile }) => {
   return (
     <>
       <main>
@@ -59,7 +64,7 @@ const Checkout = ({ workshop, error, authenticated, query }) => {
               The ultimate vacation for mind, body, and spirit
             </p>
             <Elements stripe={stripePromise}>
-              <PaymentForm workshop={workshop} />
+              <PaymentForm workshop={workshop} profile={profile} />
             </Elements>
           </div>
         </section>

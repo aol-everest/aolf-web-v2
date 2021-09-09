@@ -939,7 +939,11 @@ const Workshop = ({ workshops, authenticated, query }) => {
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
                   {page.data.map((workshop) => (
-                    <WorkshopTile key={workshop.sfid} data={workshop} />
+                    <WorkshopTile
+                      key={workshop.sfid}
+                      data={workshop}
+                      authenticated={authenticated}
+                    />
                   ))}
                 </React.Fragment>
               ))}

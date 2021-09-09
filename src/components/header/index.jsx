@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Collapse, Navbar, NavbarToggler, Nav, NavItem } from "reactstrap";
 import { FiPhone } from "react-icons/fi";
 import classNames from "classnames";
-import { Logo, ActiveLink } from "@components";
-import { IcLogo, IcSearchBlack, IcTimerWhite } from "@components/icons";
+import { ActiveLink } from "@components";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import Style from "./Header.module.scss";
 import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES } from "@constants";
 
 export const Header = () => {
-  const collapsed = true;
   const { authenticated = false, profile } = useAuth();
   const { showModal } = useGlobalModalContext();
   const { userProfilePic: profilePic, first_name, last_name } = profile || {};
   const isLoggedIn = authenticated;
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
+
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggle = () => setCollapsed(!collapsed);
 
   const loginAction = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/profile" });
@@ -29,7 +31,7 @@ export const Header = () => {
           <IcTimerWhite />{" "}
           <span>Register soon. Course fee will go up by $100 on MM/DD</span>
         </aside> */}
-        <Navbar id="navbar" expand="md" className="navbar aol_navbar ">
+        <Navbar expand="md" className="navbar aol_navbar ">
           <figure className="container mrgb">
             <a
               href="https://www.artofliving.org/"
@@ -37,7 +39,10 @@ export const Header = () => {
             >
               <img src="/img/ic-logo.svg" alt="logo" />
             </a>
-            <NavbarToggler className={classNames({ collapsed: !collapsed })}>
+            <NavbarToggler
+              onClick={toggle}
+              className={classNames({ collapsed: !collapsed })}
+            >
               <span className="icon-bar top-bar" />
               <span className="icon-bar middle-bar" />
               <span className="icon-bar bottom-bar" />

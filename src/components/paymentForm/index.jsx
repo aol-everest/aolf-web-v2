@@ -3,8 +3,10 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
 import renderHTML from "react-render-html";
+import { Auth } from "aws-amplify";
 import moment from "moment";
 import NumberFormat from "react-number-format";
+import { useRouter } from "next/router";
 import { isEmpty } from "lodash";
 import { PayPalButton } from "react-paypal-button-v2";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -56,9 +58,17 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
 
   const [priceType, setPriceType] = useState("");
   const [discount, setDiscount] = useQueryString("discountCode");
+  const router = useRouter();
 
   const handlePriceTypeChange = (event) => {
     setPriceType({ priceType: event.currentTarget.value });
+  };
+
+  const logout = async (event) => {
+    await Auth.signOut();
+    router.push(
+      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+    );
   };
 
   const {
@@ -282,7 +292,10 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                 <div class="details">
                   <h2 class="details__title">Account Details:</h2>
                   <p class="details__content">
-                    Already have an account? <a href="#">Login</a>
+                    This is not your account?{" "}
+                    <a href="#" className="link" onClick={logout}>
+                      Logout
+                    </a>
                   </p>
                 </div>
                 <div class="order__card">
