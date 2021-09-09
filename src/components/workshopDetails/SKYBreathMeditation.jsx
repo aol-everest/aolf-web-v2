@@ -11,6 +11,7 @@ import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
+import { useMediaQuery } from "@hooks";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
 import { HideOn } from "react-hide-on-scroll";
 import { priceCalculation } from "@utils";
@@ -50,42 +51,40 @@ export const SKYBreathMeditation = ({ data }) => {
     preventInteractionOnTransition: true,
     navigation: true,
   };
-  if (typeof window !== "undefined") {
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      swiperOption = {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        centeredSlides: true,
-        navigation: false,
-      };
-    } else if (window.matchMedia("(max-width: 1024px)").matches) {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 2,
-        spaceBetween: 30,
-        centeredSlides: true,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    } else if (window.matchMedia("(max-width: 1440px)").matches) {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 3,
-        spaceBetween: 30,
-        slidesOffsetBefore: 150,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    } else {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 4,
-        spaceBetween: 30,
-        slidesOffsetBefore: 300,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    }
+  if (useMediaQuery(768)) {
+    swiperOption = {
+      slidesPerView: 1,
+      spaceBetween: 30,
+      centeredSlides: true,
+      navigation: false,
+    };
+  } else if (useMediaQuery(1024)) {
+    swiperOption = {
+      allowTouchMove: false,
+      slidesPerView: 2,
+      spaceBetween: 30,
+      centeredSlides: true,
+      preventInteractionOnTransition: true,
+      navigation: true,
+    };
+  } else if (useMediaQuery(1440)) {
+    swiperOption = {
+      allowTouchMove: false,
+      slidesPerView: 3,
+      spaceBetween: 30,
+      slidesOffsetBefore: 150,
+      preventInteractionOnTransition: true,
+      navigation: true,
+    };
+  } else {
+    swiperOption = {
+      allowTouchMove: false,
+      slidesPerView: 4,
+      spaceBetween: 30,
+      slidesOffsetBefore: 300,
+      preventInteractionOnTransition: true,
+      navigation: true,
+    };
   }
 
   const { title, workshopTotalHours, mode } = data || {};
@@ -318,11 +317,7 @@ export const SKYBreathMeditation = ({ data }) => {
               allowfullscreen
             ></iframe>
           </div>
-          <Swiper
-            className="px-3 px-lg-0"
-            {...swiperOption}
-            // modules={[Navigation, Pagination, Scrollbar, A11y]}
-          >
+          <Swiper className="px-3 px-lg-0" {...swiperOption}>
             <SwiperSlide className="swiper-slide comments__item">
               <Comment
                 shortText="When I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before."

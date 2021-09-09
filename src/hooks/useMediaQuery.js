@@ -1,6 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
+import { isSSR } from "@utils";
 
 export const useMediaQuery = (width) => {
+  if (isSSR) {
+    return null;
+  }
   const [targetReached, setTargetReached] = useState(false);
 
   const updateTarget = useCallback((e) => {

@@ -276,9 +276,10 @@ const Profile = ({ profile }) => {
                   show: activeTab === UPDATE_PROFILE,
                 })}
               >
-                {/* <ChangeProfile
-                  updateCompleteAction={this.updateCompleteAction}
-                ></ChangeProfile> */}
+                <ChangeProfile
+                  updateCompleteAction={updateCompleteAction}
+                  profile={Profile}
+                ></ChangeProfile>
               </div>
               <div
                 class={classNames("tab-pane fade", {

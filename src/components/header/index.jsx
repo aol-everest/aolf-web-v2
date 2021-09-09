@@ -35,7 +35,7 @@ export const Header = () => {
               href="https://www.artofliving.org/"
               className="navbar-brand aol_brandLogo"
             >
-              <IcLogo width="4em" height="3em" />
+              <img src="/img/ic-logo.svg" alt="logo" />
             </a>
             <NavbarToggler className={classNames({ collapsed: !collapsed })}>
               <span className="icon-bar top-bar" />
@@ -45,7 +45,7 @@ export const Header = () => {
             </NavbarToggler>
             <Collapse isOpen={collapsed} navbar>
               <Nav className="ml-auto" navbar>
-                <ActiveLink activeClassName="active" href="/us/meditate">
+                <ActiveLink activeClassName="active" href="/">
                   <NavItem className="nav-item">
                     <a className="nav-link">
                       <img src="/img/sun-icon.png" /> Meditate
