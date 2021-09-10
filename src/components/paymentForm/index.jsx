@@ -17,35 +17,34 @@ import { CourseOptions } from "./CourseOptions";
 import { AgreementForm } from "./AgreementForm";
 import { priceCalculation } from "@utils";
 import { useQueryString } from "@hooks";
-import { PAYMENT_MODES, PAYMENT_TYPES } from "@constants";
+import { PAYMENT_MODES, PAYMENT_TYPES, ALERT_TYPES } from "@constants";
 import { CourseDetailsCard } from "./CourseDetailsCard";
+import { useGlobalAlertContext } from "@contexts";
+import { Loader } from "@components";
+import { api } from "@utils";
 
-const createOptions = (fontSize, padding) => {
-  return {
-    style: {
-      base: {
-        fontSize: "16px",
-        lineHeight: 2,
-        fontWeight: 400,
-        fontStyle: "normal",
-        color: "#303650",
-        letterSpacing: "0.025em",
+const createOptions = {
+  style: {
+    base: {
+      fontSize: "16px",
+      lineHeight: 2,
+      fontWeight: 200,
+      fontStyle: "normal",
+      color: "#303650",
+      fontFamily: "Work Sans, sans-serif",
+      "::placeholder": {
+        color: "#9598a6",
         fontFamily: "Work Sans, sans-serif",
-        "::placeholder": {
-          color: "#9598a6",
-          fontFamily: "Work Sans, sans-serif",
-          fontSize: "16px",
-        },
-        ...(padding ? { padding } : {}),
-      },
-      invalid: {
-        color: "#9e2146",
+        fontSize: "16px",
       },
     },
-  };
+    invalid: {
+      color: "#9e2146",
+    },
+  },
 };
 
-export const PaymentForm = ({ workshop = {}, profile = {} }) => {
+export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
   // const {
   //   loading,
   //   errorMessage,
@@ -56,8 +55,11 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
   // } = this.state;
   // const { isCreditCardRequired } = discount || {};
 
+  const { showAlert } = useGlobalAlertContext();
   const stripe = useStripe();
   const elements = useElements();
+  const [loading, setLoading] = useState(false);
+  const [isChangingCard, setIsChangingCard] = useState(false);
   const [priceType, setPriceType] = useState("");
   const [discount, setDiscount] = useQueryString("discountCode");
   const router = useRouter();
@@ -81,22 +83,14 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
     }
 
     const {
+      id: productId,
       isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
     } = workshop;
 
-    const { isCreditCardRequired } = this.state.discount || {};
-
-    const { formValues } = this.state;
-    if (!formValues && !values) {
-      return this.setState({
-        loading: false,
-        errorMessage: "Form is invalid.",
-        showError: true,
-      });
-    }
+    const { isCreditCardRequired } = {};
     const {
       questionnaire,
       contactPhone,
@@ -111,7 +105,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
       accommodation,
     } = values || formValues;
 
-    if (paymentMode !== STRIPE_PAYMENT_MODE && !isCCNotRequired) {
+    if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
       return null;
     }
 
@@ -126,15 +120,16 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
     const { isRegisteredStripeCustomer } = profile || {};
 
     try {
-      this.setState({ loading: true });
+      setLoading(true);
 
       let tokenizeCC = null;
       if (
         !isCCNotRequired &&
-        (!isRegisteredStripeCustomer || changingCard) &&
+        (!isRegisteredStripeCustomer || isChangingCard) &&
         isCreditCardRequired !== false
       ) {
-        let createTokenRespone = await this.props.stripe.createToken({
+        const cardElement = elements.getElement(CardElement);
+        let createTokenRespone = await stripe.createToken(cardElement, {
           name: profile.name ? profile.name : firstName + " " + lastName,
         });
         let { error, token } = createTokenRespone;
@@ -172,7 +167,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
 
       const products = isRegularOrder
         ? {
-            productType: type,
+            productType: "workshop",
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
@@ -180,7 +175,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
             productType: "bundle",
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: type,
+              productType: "workshop",
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -205,11 +200,11 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
           },
           products,
           complianceQuestionnaire,
-          isInstalmentOpted: paymentOption === LATER,
+          isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
         },
       };
 
-      if (changingCard) {
+      if (isChangingCard) {
         payLoad = {
           ...payLoad,
           shoppingRequest: {
@@ -234,7 +229,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
         };
       }
 
-      if (!isLoggedIn) {
+      if (!token) {
         payLoad = {
           ...payLoad,
           user: {
@@ -244,25 +239,19 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
         };
       }
       //token.saveCardForFuture = true;
-      let results = await secure_fetch(`${API.REST.CREATE_AND_PAY_ORDER}`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        accessToken,
-        body: JSON.stringify(payLoad),
-      });
-      if (!results.ok) {
-        throw new Error(results.statusText);
-      }
-      this.setState({ loading: false });
+
       const {
         data,
         status,
         error: errorMessage,
         isError,
-      } = await results.json();
+      } = await api.post({
+        token,
+        path: "createAndPayOrder",
+        body: JSON.stringify(payLoad),
+      });
+
+      setLoading(false);
 
       if (status === 400 || isError) {
         throw new Error(errorMessage);
@@ -276,12 +265,9 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
         couponCode || ''
       );*/
     } catch (ex) {
-      console.log(ex);
-      this.setState({
-        loading: false,
-        errorMessage: ex.message,
-        showError: true,
-      });
+      console.error(ex);
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, { children: ex.message });
     }
   };
 
@@ -384,7 +370,6 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
 
   return (
     <Formik
-      enableReinitialize
       initialValues={{
         firstName: first_name || "",
         lastName: last_name || "",
@@ -401,14 +386,8 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
         accommodation: null,
       }}
       validationSchema={Yup.object().shape({
-        firstName: Yup.string().when("isLoggedIn", {
-          is: false,
-          then: Yup.string().required("First Name is required"),
-        }),
-        lastName: Yup.string().when("isLoggedIn", {
-          is: false,
-          then: Yup.string().required("Last Name is required"),
-        }),
+        firstName: Yup.string().required("First Name is required"),
+        lastName: Yup.string().required("Last Name is required"),
         contactPhone: Yup.string()
           .required("Phone is required")
           .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })
@@ -431,8 +410,10 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
         accommodation: false
           ? Yup.object().required("ERROR!")
           : Yup.mixed().notRequired(),
+        paymentMode: Yup.string().required("Payment mode is required!"),
       })}
       onSubmit={async (values, { setSubmitting, isValid, errors }) => {
+        console.log(values);
         await completeEnrollmentAction(values);
       }}
     >
@@ -501,6 +482,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
 
         return (
           <div className="row">
+            {loading && <Loader />}
             <div className="col-lg-7 col-12">
               <form className="order__form" onSubmit={handleSubmit}>
                 <div className="details">
@@ -544,11 +526,11 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                       <>
                         {!isRegisteredStripeCustomer && (
                           <div className="card-element">
-                            <CardElement />
+                            <CardElement options={createOptions} />
                           </div>
                         )}
 
-                        {isRegisteredStripeCustomer && !changingCard && (
+                        {isRegisteredStripeCustomer && !isChangingCard && (
                           <>
                             <div className="bank-card-info">
                               <input
@@ -579,10 +561,10 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                           </>
                         )}
 
-                        {isRegisteredStripeCustomer && changingCard && (
+                        {isRegisteredStripeCustomer && isChangingCard && (
                           <>
-                            <div className="card-element v2">
-                              <CardElement {...createOptions()} />
+                            <div className="card-element">
+                              <CardElement options={createOptions} />
                             </div>
                             <div className="change-cc-detail-link">
                               <a href="#" onClick={this.toggleCardChangeDetail}>
@@ -671,9 +653,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                       <span>SSL Secured</span>
                     </p>
                   </div>
-                  <button id="test-modal" className="btn-primary">
-                    Complete Checkout
-                  </button>
+                  <button className="btn-primary">Complete Checkout</button>
                 </div>
               </form>
             </div>

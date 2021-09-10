@@ -9,3 +9,4 @@ export { MobileFilterModal } from "./mobileFilterModal";
 export { SmartDropDown } from "./smartDropDown";
 export { DateRangeInput } from "./dateRangeInput";
 export { PaymentForm } from "./paymentForm";
+export { Loader } from "./loader";

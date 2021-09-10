@@ -25,6 +25,7 @@ export const getServerSideProps = async (context) => {
       authenticated: true,
       username: user.username,
       profile: res,
+      token,
     };
   } catch (err) {
     props = {
@@ -53,7 +54,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const Checkout = ({ workshop, profile }) => {
+const Checkout = ({ workshop, profile, token }) => {
   return (
     <>
       <main>
@@ -63,8 +64,20 @@ const Checkout = ({ workshop, profile }) => {
             <p className="order__detail">
               The ultimate vacation for mind, body, and spirit
             </p>
-            <Elements stripe={stripePromise}>
-              <PaymentForm workshop={workshop} profile={profile} />
+            <Elements
+              stripe={stripePromise}
+              fonts={[
+                {
+                  cssSrc:
+                    "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                },
+              ]}
+            >
+              <PaymentForm
+                workshop={workshop}
+                profile={profile}
+                token={token}
+              />
             </Elements>
           </div>
         </section>
@@ -128,9 +141,6 @@ const Checkout = ({ workshop, profile }) => {
                   alt="tnyt"
                 />
               </div>
-              <button type="button" className="btn-primary featured-in__button">
-                <img src="/img/ic-chat.png" alt="chat" />
-              </button>
             </div>
           </div>
         </section>

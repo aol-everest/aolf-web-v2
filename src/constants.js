@@ -34,6 +34,7 @@ export const MODAL_TYPES = {
 
 export const ALERT_TYPES = {
   SUCCESS_ALERT: "SUCCESS_ALERT",
+  ERROR_ALERT: "ERROR_ALERT",
   CUSTOM_ALERT: "CUSTOM_ALERT",
 };
 

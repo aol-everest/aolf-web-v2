@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { SuccessAlert } from "./SuccessAlert";
 import { CustomAlert } from "./CustomAlert";
+import { ErrorAlert } from "./ErrorAlert";
 import { ALERT_TYPES } from "@constants";
 import { GlobalAlertContext } from "@contexts";
 
 const ALERT_COMPONENTS = {
   [ALERT_TYPES.SUCCESS_ALERT]: SuccessAlert,
   [ALERT_TYPES.CUSTOM_ALERT]: CustomAlert,
+  [ALERT_TYPES.ERROR_ALERT]: ErrorAlert,
 };
 
 export const GlobalAlert = ({ children }) => {
