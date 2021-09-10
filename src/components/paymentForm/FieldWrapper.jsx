@@ -17,7 +17,7 @@ export const FieldWrapper = ({
   >
     {children}
     {formikProps.errors[formikKey] && formikProps.touched[formikKey] && (
-      <div class="validation-message validation-mobile-message show">
+      <div className="validation-message validation-mobile-message show">
         {formikProps.errors[formikKey]}
       </div>
     )}

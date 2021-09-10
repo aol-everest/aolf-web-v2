@@ -6,7 +6,7 @@ import { PaymentForm } from "@components";
 import { api } from "@utils";
 
 const stripePromise = loadStripe(
-  "pk_test_51BTUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6ItlZZbXO6idTHE67IM007EwQ4uN3",
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
 
 export const getServerSideProps = async (context) => {

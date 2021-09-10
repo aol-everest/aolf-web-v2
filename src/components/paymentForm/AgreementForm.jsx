@@ -46,7 +46,7 @@ export const AgreementForm = ({
               value={formikProps.values.ppaAgreement}
               name="ppaAgreement"
             />
-            <label for="program"></label>
+            <label htmlFor="program"></label>
             <p className="agreement__text">
               I agree to the{" "}
               <a
@@ -72,7 +72,10 @@ export const AgreementForm = ({
         {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
           <div className="health-confirmation mt-4 d-none d-lg-block">
             {complianceQuestionnaire.map((compliance) => (
-              <div className="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
+              <div
+                key={compliance.questionSfid}
+                className="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop"
+              >
                 <Field
                   name="questionnaire"
                   validate={validateQuestionnaire(complianceQuestionnaire)}
@@ -108,7 +111,7 @@ export const AgreementForm = ({
                     );
                   }}
                 </Field>
-                <label for="health-confirmation"></label>
+                <label htmlFor="health-confirmation"></label>
                 <p className="health-confirmation__text">
                   {renderHTML(compliance.question)}
                 </p>
@@ -158,7 +161,7 @@ export const AgreementForm = ({
             value={formikProps.values.ppaAgreement}
             name="ppaAgreement"
           />
-          <label for="ppaAgreement"></label>
+          <label htmlFor="ppaAgreement"></label>
           <p className="agreement__text">
             I agree to the{" "}
             <a
@@ -220,7 +223,7 @@ export const AgreementForm = ({
                       );
                     }}
                   </Field>
-                  <label for="health"></label>
+                  <label htmlFor="health"></label>
                   <p className="agreement__text">
                     {renderHTML(compliance.question)}
                   </p>

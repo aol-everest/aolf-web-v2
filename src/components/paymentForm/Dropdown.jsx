@@ -23,11 +23,11 @@ export const Dropdown = ({
       fullWidth={fullWidth}
     >
       <div className="select-box order__card__payment-select">
-        <div tabindex="1" className="select-box__current">
+        <div tabIndex="1" className="select-box__current">
           <span className="select-box__placeholder">{placeholder}</span>
           {options.map((option) => {
             return (
-              <div className="select-box__value">
+              <div className="select-box__value" key={option.value}>
                 <Field
                   className="select-box__input"
                   type="radio"
@@ -51,9 +51,9 @@ export const Dropdown = ({
         >
           {options.map((option) => {
             return (
-              <li>
+              <li key={option.value}>
                 <label
-                  for={option.value}
+                  htmlFor={option.value}
                   aria-hidden="aria-hidden"
                   data-value="card"
                   className="select-box__option"

@@ -391,7 +391,7 @@ const Meditation = ({ workshops, authenticated }) => {
       <section className="browse-category most-popular d-none d-md-block">
         <p className="title-slider">Find a meditation</p>
         <div className="buttons-wrapper">
-          <div tabindex="1" className="tooltip-button" id="topic-button">
+          <div tabIndex="1" className="tooltip-button" id="topic-button">
             <div id="topic-type" className="clear-filter"></div>
             <a className="btn">Topic</a>
           </div>
@@ -404,7 +404,7 @@ const Meditation = ({ workshops, authenticated }) => {
             <li>Energy</li>
           </ul>
 
-          <div tabindex="2" className="tooltip-button" id="duration-button">
+          <div tabIndex="2" className="tooltip-button" id="duration-button">
             <div id="duration-type" className="clear-filter"></div>
             <a className="btn">Duration</a>
           </div>
@@ -415,7 +415,7 @@ const Meditation = ({ workshops, authenticated }) => {
             <li>15 minutes</li>
           </ul>
 
-          <div tabindex="3" className="tooltip-button" id="instructor-button">
+          <div tabIndex="3" className="tooltip-button" id="instructor-button">
             <div id="meetup-type" className="clear-filter"></div>
             <a className="btn">Instructor</a>
           </div>

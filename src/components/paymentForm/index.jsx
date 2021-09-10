@@ -56,6 +56,8 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
   // } = this.state;
   // const { isCreditCardRequired } = discount || {};
 
+  const stripe = useStripe();
+  const elements = useElements();
   const [priceType, setPriceType] = useState("");
   const [discount, setDiscount] = useQueryString("discountCode");
   const router = useRouter();
@@ -70,6 +72,8 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
+
+  const paypalBuyAcknowledgement = async () => {};
 
   const completeEnrollmentAction = async (values) => {
     if (loading) {
@@ -539,8 +543,8 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                     >
                       <>
                         {!isRegisteredStripeCustomer && (
-                          <div className="card-element v2">
-                            <CardElement {...createOptions()} />
+                          <div className="card-element">
+                            <CardElement />
                           </div>
                         )}
 
@@ -603,7 +607,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                       >
                         <PayPalButton
                           options={{
-                            clientId: process.env.REACT_APP_PAYPAL_CLIENT_ID,
+                            clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                           }}
                           style={{
                             layout: "horizontal",
@@ -628,7 +632,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                               formikProps.values,
                             );
                           }}
-                          onApprove={this.paypalBuyAcknowledgement}
+                          onApprove={paypalBuyAcknowledgement}
                         />
                       </div>
                       <div className="paypal-info__sign-out d-none">
@@ -689,7 +693,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                         value="regular"
                         checked
                       />
-                      <label for="payment-lg-regular">
+                      <label htmlFor="payment-lg-regular">
                         <span>Regular rate</span>
                         <span>
                           <span className="discount">$550</span> $450
@@ -704,7 +708,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                         id="payment-lg-premium"
                         value="premium"
                       />
-                      <label for="payment-lg-premium">
+                      <label htmlFor="payment-lg-premium">
                         <span>Premium/Journey+ rate:</span>
                         <span>
                           <span className="discount">$150</span> $50
@@ -719,7 +723,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                     Room & Board *
                   </h6>
                   <div className="select-box select-box_rounded">
-                    <div tabindex="1" className="select-box__current">
+                    <div tabIndex="1" className="select-box__current">
                       <span className="select-box__placeholder">
                         Select Room & Board
                       </span>
@@ -763,7 +767,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                     <ul className="select-box__list">
                       <li>
                         <label
-                          for="room-lg-1"
+                          htmlFor="room-lg-1"
                           aria-hidden="aria-hidden"
                           data-value="1"
                           className="select-box__option"
@@ -774,7 +778,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                       </li>
                       <li>
                         <label
-                          for="room-lg-2"
+                          htmlFor="room-lg-2"
                           aria-hidden="aria-hidden"
                           data-value="2"
                           className="select-box__option"
@@ -785,7 +789,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                       </li>
                       <li>
                         <label
-                          for="room-lg-3"
+                          htmlFor="room-lg-3"
                           aria-hidden="aria-hidden"
                           data-value="3"
                           className="select-box__option"
@@ -821,7 +825,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                         name="program"
                         id="program"
                       />
-                      <label for="program"></label>
+                      <label htmlFor="program"></label>
                       <p className="agreement__text">
                         I agree to the
                         <a href="#">
@@ -847,7 +851,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                         name="health-confirmation"
                         id="health-confirmation"
                       />
-                      <label for="health-confirmation"></label>
+                      <label htmlFor="health-confirmation"></label>
                       <p className="health-confirmation__text">
                         I represent that I am in good health, and I will inform
                         the health info desk of any limiting health conditions

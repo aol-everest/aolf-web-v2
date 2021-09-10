@@ -57,7 +57,7 @@ export const CourseOptions = ({
                           defaultChecked
                           onChange={handlePriceTypeChange}
                         />
-                        <label for="payment-lg-regular-card">
+                        <label htmlFor="payment-lg-regular-card">
                           <span>Regular rate</span>
                           <span>
                             {delfee && (
@@ -76,7 +76,7 @@ export const CourseOptions = ({
                           value="premium"
                           onChange={handlePriceTypeChange}
                         />
-                        <label for="payment-lg-premium-card">
+                        <label htmlFor="payment-lg-premium-card">
                           <span>Premium/Journey+ rate:</span>
                           <span>
                             {premiumRate &&
@@ -117,7 +117,7 @@ export const CourseOptions = ({
                                     disabled={product.isAddOnSelectionRequired}
                                   />
                                 )}
-                                <label for={product.productSfid}></label>
+                                <label htmlFor={product.productSfid}></label>
                                 <span className="ml-2">
                                   {product.productName} Required:
                                 </span>
@@ -204,7 +204,7 @@ export const CourseOptions = ({
                                   disabled={product.isAddOnSelectionRequired}
                                 />
                               )}
-                              <label for={product.productSfid}></label>
+                              <label htmlFor={product.productSfid}></label>
                               <span className="ml-2">
                                 {product.productName} Required:
                               </span>
@@ -263,7 +263,7 @@ export const CourseOptions = ({
                                 disabled={product.isAddOnSelectionRequired}
                               />
                             )}
-                            <label for={product.productSfid}></label>
+                            <label htmlFor={product.productSfid}></label>
                             <span className="ml-2">
                               {product.productName} Required:
                             </span>
@@ -292,7 +292,7 @@ export const CourseOptions = ({
                 formikProps.touched.accommodation,
             })}
           >
-            <div tabindex="1" className="select-room__current">
+            <div tabIndex="1" className="select-room__current">
               <span className="select-room__placeholder">
                 Select Room &amp; Board
               </span>
@@ -333,7 +333,7 @@ export const CourseOptions = ({
                       }
                     >
                       <label
-                        for={`${residentialAddOn.productSfid}-card`}
+                        htmlFor={`${residentialAddOn.productSfid}-card`}
                         aria-hidden="aria-hidden"
                         data-value={residentialAddOn.unitPrice}
                         className="select-room__option"

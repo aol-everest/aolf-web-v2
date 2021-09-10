@@ -28,7 +28,6 @@ export const StyledInput = ({
   isPhoneNumberMask = false,
   isReadOnly = false,
   textToUpperCase = false,
-  disabled = false,
   tooltip,
   fullWidth,
   ...rest
@@ -61,6 +60,18 @@ export const StyledInput = ({
     return phoneNumberString;
   };
 
+  let inputProps = {
+    disabled: true,
+  };
+
+  if (!isReadOnly) {
+    inputProps = {
+      onChange: onChangeAction(),
+      onFocus: onFocusAction,
+      onBlur: formikProps.handleBlur(formikKey),
+    };
+  }
+
   return (
     <FieldWrapper
       label={label}
@@ -75,9 +86,6 @@ export const StyledInput = ({
           type="tel"
           id={formikKey}
           name={formikKey}
-          onChange={onChangeAction()}
-          onFocus={onFocusAction}
-          onBlur={!isReadOnly ? formikProps.handleBlur(formikKey) : null}
           value={formikProps.values[formikKey]}
           className={
             formikProps.errors[formikKey] && formikProps.touched[formikKey]
@@ -91,12 +99,9 @@ export const StyledInput = ({
         <input
           type="text"
           id={formikKey}
-          onChange={onChangeAction()}
-          onFocus={onFocusAction}
-          onBlur={!isReadOnly ? formikProps.handleBlur(formikKey) : null}
           value={formikProps.values[formikKey]}
           name={formikKey}
-          disabled={disabled}
+          {...inputProps}
           {...rest}
         />
       )}

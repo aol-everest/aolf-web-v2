@@ -24,7 +24,6 @@ export const UserInfoForm = ({ formikProps }) => {
         formikProps={formikProps}
         formikKey="email"
         isReadOnly={true}
-        disabled
         onCut={(event) => {
           event.preventDefault();
         }}
