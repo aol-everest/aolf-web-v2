@@ -71,15 +71,15 @@ export const SahajSamadhi = ({ data }) => {
   return (
     <>
       <main>
-        <section class="top-column sahaj-samadhi">
-          <div class="container">
-            <p class="type-course">{mode}</p>
-            <h1 class="course-name">
+        <section className="top-column sahaj-samadhi">
+          <div className="container">
+            <p className="type-course">{mode}</p>
+            <h1 className="course-name">
               {title}
               <span>&trade;</span>
             </h1>
 
-            <ul class="course-details-list">
+            <ul className="course-details-list">
               <li>Discover lasting calm with clear focus</li>
               <li>Reduce stress, worry, and anxiety</li>
               <li>
@@ -89,7 +89,7 @@ export const SahajSamadhi = ({ data }) => {
             </ul>
 
             <Link
-              activeClass="active"
+              activeclassName="active"
               className="btn-secondary v2"
               to="registerNowBlock"
               spy={true}
@@ -105,13 +105,13 @@ export const SahajSamadhi = ({ data }) => {
             courseType={COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION}
           ></CourseDetailsCard>
         </section>
-        <section class="meditation-details sahaj-details">
-          <div class="container mb-4">
-            <div class="meditation-details__block">
-              <h2 class="meditation-details__block__title meditation-details__block__title-main">
+        <section className="meditation-details sahaj-details">
+          <div className="container mb-4">
+            <div className="meditation-details__block">
+              <h2 className="meditation-details__block__title meditation-details__block__title-main">
                 Meditation is easier than you think
               </h2>
-              <p class="meditation-details__block__text">
+              <p className="meditation-details__block__text">
                 Meditation doesn’t need to be difficult, either to learn or to
                 practice. In fact, it’s probably easier than you think. And the
                 science shows that meditation helps you feel and perform better
@@ -121,19 +121,19 @@ export const SahajSamadhi = ({ data }) => {
               </p>
             </div>
           </div>
-          <div class="meditation-details__img">
+          <div className="meditation-details__img">
             <img
               src="/img/sahaj-samadhi-woman-mobile.png"
-              class="w-100 h-100"
+              className="w-100 h-100"
               alt=""
             />
           </div>
-          <div class="container">
-            <div class="meditation-details__block meditation-details__block-second">
-              <h2 class="meditation-details__block__title">
+          <div className="container">
+            <div className="meditation-details__block meditation-details__block-second">
+              <h2 className="meditation-details__block__title">
                 A powerful way to meditate, naturally
               </h2>
-              <p class="meditation-details__block__text">
+              <p className="meditation-details__block__text">
                 You’ll learn a practice called “Sahaj Samadhi Meditation”. Sahaj
                 means effortless. Samadhi means a state of true meditation.
                 Simply put, it’s an effective, personalized way to easily enter
@@ -143,11 +143,11 @@ export const SahajSamadhi = ({ data }) => {
               </p>
             </div>
 
-            <div class="meditation-details__unique">
-              <h6 class="meditation-details__unique__title">
+            <div className="meditation-details__unique">
+              <h6 className="meditation-details__unique__title">
                 What makes Sahaj Samadhi Meditation unique?
               </h6>
-              <ul class="meditation-details__unique__list">
+              <ul className="meditation-details__unique__list">
                 <li>
                   <span>
                     Perfect complement to deepen and strengthen your SKY
@@ -173,53 +173,53 @@ export const SahajSamadhi = ({ data }) => {
             </div>
           </div>
         </section>
-        <section class="meditation">
-          <div class="container">
-            <h6 class="meditation__title">
+        <section className="meditation">
+          <div className="container">
+            <h6 className="meditation__title">
               Meditation: it’s a global phenomenon
             </h6>
-            <h2 class="meditation__quote">
+            <h2 className="meditation__quote">
               When you meditate, you’re not alone. You’re part of a movement
               towards mental wellness that has touched{" "}
               <span>over 40 million lives</span> worldwide.
             </h2>
           </div>
         </section>
-        <section class="steps">
-          <div class="container">
-            <h3 class="steps__title">
+        <section className="steps">
+          <div className="container">
+            <h3 className="steps__title">
               3 easy steps to start a meditation practice that works for you
             </h3>
-            <div class="steps__list">
-              <div class="steps__step">
-                <div class="steps__step__number">
+            <div className="steps__list">
+              <div className="steps__step">
+                <div className="steps__step__number">
                   <span>1</span>
                 </div>
-                <p class="steps__step__text">
+                <p className="steps__step__text">
                   Join a class LIVE ONLINE with a certified meditation
                   instructor.
                 </p>
               </div>
-              <div class="steps__step">
-                <div class="steps__step__number">
+              <div className="steps__step">
+                <div className="steps__step__number">
                   <span>2</span>
                 </div>
-                <p class="steps__step__text">
+                <p className="steps__step__text">
                   Get real time answers to your questions as you train and
                   practice together with your teacher in a small group.
                 </p>
               </div>
-              <div class="steps__step">
-                <div class="steps__step__number">
+              <div className="steps__step">
+                <div className="steps__step__number">
                   <span>3</span>
                 </div>
-                <p class="steps__step__text">
+                <p className="steps__step__text">
                   Download the app to get further content and guided practice.
                 </p>
               </div>
             </div>
             <Link
-              activeClass="active"
+              activeclassName="active"
               className="btn-secondary v2"
               to="registerNowBlock"
               spy={true}
@@ -232,12 +232,12 @@ export const SahajSamadhi = ({ data }) => {
           </div>
         </section>
 
-        <section class="comments sahaj-samadhi">
-          <div class="container">
-            <h2 class="comments__title text-center">
+        <section className="comments sahaj-samadhi">
+          <div className="container">
+            <h2 className="comments__title text-center">
               Why Sahaj Samadhi Meditation<span>&trade;</span>&nbsp;?
             </h2>
-            <p class="comments__subtitle text-center">
+            <p className="comments__subtitle text-center">
               The benefits of meditation are many. Here are some that
               participants share:
             </p>
@@ -246,19 +246,19 @@ export const SahajSamadhi = ({ data }) => {
             <SwiperSlide className="swiper-slide comments__item">
               <Comment shortText="I am enjoying the calmness and peace that comes with Sahaj Samadhi meditation.">
                 <>
-                  <div class="comments__person">
-                    <div class="comments__person-img">
+                  <div className="comments__person">
+                    <div className="comments__person-img">
                       <img src="/img/1-sahaj-comment.png" alt="comments" />
                       <span>“</span>
                     </div>
-                    <div class="comments__person-info">
-                      <h3 class="comments__name">Dr. Lewis</h3>
-                      <p class="comments__person-about">
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Dr. Lewis</h3>
+                      <p className="comments__person-about">
                         Sahaj Samadhi participant
                       </p>
                     </div>
                   </div>
-                  <p class="comments__quote">Calmness and peace</p>
+                  <p className="comments__quote">Calmness and peace</p>
                 </>
               </Comment>
             </SwiperSlide>
@@ -268,60 +268,60 @@ export const SahajSamadhi = ({ data }) => {
                                 and revitalized, like a new person."
               >
                 <>
-                  <div class="comments__person">
-                    <div class="comments__person-img">
+                  <div className="comments__person">
+                    <div className="comments__person-img">
                       <img src="/img/2-sahaj-comment.png" alt="comments" />
                       <span>“</span>
                     </div>
-                    <div class="comments__person-info">
-                      <h3 class="comments__name">Brian</h3>
-                      <p class="comments__person-about">
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Brian</h3>
+                      <p className="comments__person-about">
                         Sahaj Samadhi participant
                       </p>
                     </div>
                   </div>
-                  <p class="comments__quote">Reservoir of energy</p>
+                  <p className="comments__quote">Reservoir of energy</p>
                 </>
               </Comment>
             </SwiperSlide>
             <SwiperSlide className="swiper-slide comments__item">
               <Comment shortText="I got so happy for no reason. I hadn’t experienced that in a long time.">
                 <>
-                  <div class="comments__person">
-                    <div class="comments__person-img">
+                  <div className="comments__person">
+                    <div className="comments__person-img">
                       <img src="/img/slider-bg.png" alt="comments" />
                       <span>“</span>
                     </div>
-                    <div class="comments__person-info">
-                      <h3 class="comments__name">Phillip</h3>
-                      <p class="comments__person-about">
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Phillip</h3>
+                      <p className="comments__person-about">
                         Sahaj Samadhi participant
                       </p>
                     </div>
                   </div>
-                  <p class="comments__quote">Happy</p>
+                  <p className="comments__quote">Happy</p>
                 </>
               </Comment>
             </SwiperSlide>
           </Swiper>
         </section>
-        <section class="research sahaj-samadhi">
-          <div class="container">
-            <h2 class="research__title">The research behind meditation</h2>
-            <p class="research__text">
+        <section className="research sahaj-samadhi">
+          <div className="container">
+            <h2 className="research__title">The research behind meditation</h2>
+            <p className="research__text">
               From the cover of Time Magazine to more than 3,000 scientific
               studies, the benefits of meditation are becoming clearer and
               clearer. Sahaj Samadhi itself has been shown in independent
               research to significantly reduce anxiety and depression. Here are
               just some of the scientifically validated benefits of meditation:
             </p>
-            <div class="research__list">
-              <div class="research__list__item">
+            <div className="research__list">
+              <div className="research__list__item">
                 <h6>Experience deeper sleep</h6>
                 <p>Nix insomnia and have deeper, more restorative sleep.</p>
               </div>
 
-              <div class="research__list__item">
+              <div className="research__list__item">
                 <h6>Decrease anxiety and increase happiness</h6>
                 <p>
                   Meditation increases activity in those parts of the brain
@@ -329,7 +329,7 @@ export const SahajSamadhi = ({ data }) => {
                 </p>
               </div>
 
-              <div class="research__list__item">
+              <div className="research__list__item">
                 <h6>Improve mental focus</h6>
                 <p>
                   Meditation has been associated with increased blood flow to
@@ -338,7 +338,7 @@ export const SahajSamadhi = ({ data }) => {
                 </p>
               </div>
 
-              <div class="research__list__item">
+              <div className="research__list__item">
                 <h6>Promote longevity</h6>
                 <p>
                   Quieting the brain through meditation helps you live longer.
@@ -348,23 +348,27 @@ export const SahajSamadhi = ({ data }) => {
               </div>
             </div>
           </div>
-          <div class="research__list__mobile-img">
-            <img src="/img/bg-mobile-research.png" class="w-100 h-100" alt="" />
+          <div className="research__list__mobile-img">
+            <img
+              src="/img/bg-mobile-research.png"
+              className="w-100 h-100"
+              alt=""
+            />
           </div>
         </section>
         <Element name="registerNowBlock">
-          <section class="powerful silent-retreat">
-            <div class="container">
-              <div class="col-lg-10 p-0 m-auto" id="third">
+          <section className="powerful silent-retreat">
+            <div className="container">
+              <div className="col-lg-10 p-0 m-auto" id="third">
                 <RegisterPanel workshop={data} />
               </div>
             </div>
           </section>
         </Element>
-        <section class="experiences">
-          <div class="container">
-            <h2 class="experiences__title text-center">More experiences</h2>
-            <p class="experiences__subtitle text-center">
+        <section className="experiences">
+          <div className="container">
+            <h2 className="experiences__title text-center">More experiences</h2>
+            <p className="experiences__subtitle text-center">
               The benefits of meditation are many. Here are some that
               participants share:
             </p>
@@ -377,19 +381,19 @@ export const SahajSamadhi = ({ data }) => {
                                 happier. Also, things are smoother at work."
               >
                 <>
-                  <div class="comments__person">
-                    <div class="comments__person-img">
-                      <span class="comments__person-img_none">M</span>
+                  <div className="comments__person">
+                    <div className="comments__person-img">
+                      <span className="comments__person-img_none">M</span>
                       <span>“</span>
                     </div>
-                    <div class="comments__person-info">
-                      <h3 class="comments__name">Manu</h3>
-                      <p class="comments__person-about">
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Manu</h3>
+                      <p className="comments__person-about">
                         Sahaj Samadhi participant
                       </p>
                     </div>
                   </div>
-                  <p class="comments__quote">
+                  <p className="comments__quote">
                     Helping me to feel calmer and less anxious
                   </p>
                 </>
@@ -398,19 +402,19 @@ export const SahajSamadhi = ({ data }) => {
             <SwiperSlide className="swiper-slide comments__item">
               <Comment shortText="My mind became clear and I became more comfortable in my body.">
                 <>
-                  <div class="comments__person">
-                    <div class="comments__person-img">
-                      <span class="comments__person-img_none">P</span>
+                  <div className="comments__person">
+                    <div className="comments__person-img">
+                      <span className="comments__person-img_none">P</span>
                       <span>“</span>
                     </div>
-                    <div class="comments__person-info">
-                      <h3 class="comments__name">Patricia</h3>
-                      <p class="comments__person-about">
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Patricia</h3>
+                      <p className="comments__person-about">
                         Sahaj Samadhi participant
                       </p>
                     </div>
                   </div>
-                  <p class="comments__quote">My mind became clear</p>
+                  <p className="comments__quote">My mind became clear</p>
                 </>
               </Comment>
             </SwiperSlide>
@@ -420,20 +424,20 @@ export const SahajSamadhi = ({ data }) => {
                                 session I have less sense of the pain. It sort of overrides the physical issues."
               >
                 <>
-                  <div class="comments__person">
-                    <div class="comments__person-img">
-                      <span class="comments__person-img_none">A</span>
+                  <div className="comments__person">
+                    <div className="comments__person-img">
+                      <span className="comments__person-img_none">A</span>
                       <span>“</span>
                     </div>
-                    <div class="comments__person-info">
-                      <h3 class="comments__name">Alison</h3>
-                      <p class="comments__person-about">
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Alison</h3>
+                      <p className="comments__person-about">
                         Sahaj Samadhi participant
                       </p>
                     </div>
                   </div>
 
-                  <p class="comments__quote">
+                  <p className="comments__quote">
                     Better able to manage physical pain”
                   </p>
                 </>
@@ -442,8 +446,8 @@ export const SahajSamadhi = ({ data }) => {
           </Swiper>
         </section>
 
-        <section class="details">
-          <div class="container"></div>
+        <section className="details">
+          <div className="container"></div>
         </section>
       </main>
       <HideOn divID="third" showOnPageInit={false}>

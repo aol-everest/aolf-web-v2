@@ -34,7 +34,7 @@ export const MobileFilterModal = (props) => {
         </a>
       </div>
       <div
-        class={classNames("mobile-modal-v1 mobile-modal", {
+        className={classNames("mobile-modal-v1 mobile-modal", {
           active: !isHidden,
         })}
       >

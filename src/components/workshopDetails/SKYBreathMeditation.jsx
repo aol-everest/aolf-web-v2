@@ -665,17 +665,19 @@ export const SKYBreathMeditation = ({ data }) => {
             </div>
           </div>
         </section>
-        <section class="research text-center">
-          <div class="container">
-            <h2 class="research__title section-title">Research highlights</h2>
+        <section className="research text-center">
+          <div className="container">
+            <h2 className="research__title section-title">
+              Research highlights
+            </h2>
             <ResearchPagination></ResearchPagination>
 
             <Swiper
               className="d-lg-none research__list-container swiper-container"
               {...autoSwiperOption}
             >
-              <SwiperSlide class="research__list-item swiper-slide">
-                <p class="research__quote">
+              <SwiperSlide className="research__list-item swiper-slide">
+                <p className="research__quote">
                   "Improved immune cell counts within as little as 3 weeks"
                 </p>
                 <div>
@@ -685,8 +687,8 @@ export const SKYBreathMeditation = ({ data }) => {
                   />
                 </div>
               </SwiperSlide>
-              <SwiperSlide class="research__list-item swiper-slide">
-                <p class="research__quote">
+              <SwiperSlide className="research__list-item swiper-slide">
+                <p className="research__quote">
                   “3x more time spent in deep, restful stages of sleep.”
                 </p>
                 <div>
@@ -696,8 +698,8 @@ export const SKYBreathMeditation = ({ data }) => {
                   />
                 </div>
               </SwiperSlide>
-              <SwiperSlide class="research__list-item swiper-slide">
-                <p class="research__quote">
+              <SwiperSlide className="research__list-item swiper-slide">
+                <p className="research__quote">
                   "The Easy Breathing Technique That Can Lower Your Anxiety 44%"
                 </p>
                 <div>
@@ -707,15 +709,15 @@ export const SKYBreathMeditation = ({ data }) => {
                   />
                 </div>
               </SwiperSlide>
-              <SwiperSlide class="research__list-item swiper-slide">
-                <p class="research__quote">
+              <SwiperSlide className="research__list-item swiper-slide">
+                <p className="research__quote">
                   "Shows promise in providing relief for depression"
                 </p>
                 <div>
                   <img src="/img/research-highlights-hhp-color.png" alt="hhp" />
                 </div>
               </SwiperSlide>
-              <div class="research__list-pagination"></div>
+              <div className="research__list-pagination"></div>
             </Swiper>
           </div>
         </section>

@@ -8,21 +8,23 @@ const MembershipThankyou = ({ workshop }) => {
   return (
     <main>
       <section className={classNames(Style.congratulations, "congratulations")}>
-        <div class="container">
-          <div class="row">
-            <div class="col-12 col-md-10 mx-auto">
-              <h1 class="congratulations__title section-title">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 col-md-10 mx-auto">
+              <h1 className="congratulations__title section-title">
                 Congratulations!
               </h1>
-              <div class="congratulations__card mx-auto">
-                <div class="congratulations__info">
-                  <p class="congratulations__info-text">
+              <div className="congratulations__card mx-auto">
+                <div className="congratulations__info">
+                  <p className="congratulations__info-text">
                     Welcome to the digital membership. We hope you enjoy the
                     journey! Click here to get started with online guided
                     meditations and insights.
                   </p>
-                  <div class="congratulations__info_bottom">
-                    <button class="btn-secondary">Explore Meditations</button>
+                  <div className="congratulations__info_bottom">
+                    <button className="btn-secondary">
+                      Explore Meditations
+                    </button>
                   </div>
                 </div>
               </div>

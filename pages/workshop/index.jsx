@@ -17,6 +17,7 @@ import {
 } from "@components";
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
+import { InfiniteScrollLoader } from "@components/loader";
 import Style from "./Workshop.module.scss";
 
 const DATE_PICKER_CONFIG = {
@@ -403,7 +404,7 @@ const Workshop = ({ workshops, authenticated, query }) => {
                   )}
                 </Popup>
                 <Popup
-                  containerClass={Style.daterangepickerPopup}
+                  containerclassName={Style.daterangepickerPopup}
                   tabIndex="3"
                   value={filterStartEndDate}
                   buttonText={
@@ -889,7 +890,7 @@ const Workshop = ({ workshops, authenticated, query }) => {
                     id="location-close_mobile"
                     className="mobile-modal--close"
                   >
-                    <img src="./img/ic-close.svg" alt="close" />
+                    <img src="/img/ic-close.svg" alt="close" />
                   </div>
                   <h2 className="mobile-modal--title">Location</h2>
                   <div
@@ -951,7 +952,7 @@ const Workshop = ({ workshops, authenticated, query }) => {
           <div className="row">
             <div className="pt-3 col-12 text-center">
               <div ref={loadMoreRef}>
-                {isFetchingNextPage ? "Loading more..." : ""}
+                {isFetchingNextPage && <InfiniteScrollLoader />}
               </div>
             </div>
           </div>

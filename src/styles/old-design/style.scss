@@ -146,3 +146,73 @@ header .aol_navbar {
     }
   }
 }
+
+.inline-loader-container {
+  text-align: center;
+  .wrapper {
+    width: 106px;
+    margin: 10px auto;
+    text-align: center;
+  }
+  .circle {
+    border-radius: 50%;
+    border: 3px #4b5487 solid;
+    float: left;
+    height: 25px;
+    margin: 0 5px;
+    width: 25px;
+  }
+  .circle-1 {
+    animation: move 1s ease-in-out infinite;
+  }
+  .circle-1a {
+    animation: fade 1s ease-in-out infinite;
+  }
+  @keyframes fade {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  .circle-2 {
+    animation: move 1s ease-in-out infinite;
+  }
+  @keyframes move {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(35px);
+    }
+  }
+  .circle-1a {
+    margin-left: -30px;
+    opacity: 0;
+  }
+  .circle-3 {
+    animation: circle-3 1s ease-in-out infinite;
+    opacity: 1;
+  }
+  @keyframes circle-3 {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  h1 {
+    text-align: center;
+    color: #4b5487;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin: 10px auto;
+    padding: 10px;
+    text-transform: uppercase;
+    clear: both;
+  }
+}

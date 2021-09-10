@@ -11,6 +11,7 @@ export const Dropdown = ({
   containerClass,
   options,
   fullWidth,
+  placeholder,
   ...rest
 }) => {
   return (
@@ -18,28 +19,26 @@ export const Dropdown = ({
       label={label}
       formikKey={formikKey}
       formikProps={formikProps}
-      containerClass={containerClass}
+      containerclassName={containerClass}
       fullWidth={fullWidth}
     >
-      <div
-        class="select-box order__card__payment-select"
-        style={{ marginTop: "1.5em" }}
-      >
-        <div tabindex="1" class="select-box__current">
-          <span class="select-box__placeholder">{label}</span>
+      <div className="select-box order__card__payment-select">
+        <div tabindex="1" className="select-box__current">
+          <span className="select-box__placeholder">{placeholder}</span>
           {options.map((option) => {
             return (
-              <div class="select-box__value">
+              <div className="select-box__value">
                 <Field
-                  class="select-box__input"
+                  className="select-box__input"
                   type="radio"
                   id={option.value}
                   name={formikKey}
                   checked={formikProps.values[formikKey] === option.value}
                   value={option.value}
+                  placeholder={placeholder}
                 />
 
-                <span class="select-box__input-text">{option.label}</span>
+                <span className="select-box__input-text">{option.label}</span>
               </div>
             );
           })}
@@ -57,7 +56,7 @@ export const Dropdown = ({
                   for={option.value}
                   aria-hidden="aria-hidden"
                   data-value="card"
-                  class="select-box__option"
+                  className="select-box__option"
                 >
                   <span>{option.label}</span>
                   <img

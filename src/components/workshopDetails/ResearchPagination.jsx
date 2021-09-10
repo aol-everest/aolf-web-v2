@@ -55,11 +55,11 @@ export const ResearchPagination = () => {
   }
   return (
     <>
-      <div class="d-lg-block d-none col-10 m-auto">
-        <p class="research__quote">
+      <div className="d-lg-block d-none col-10 m-auto">
+        <p className="research__quote">
           {renderHTML(researchImgItems[activeIndex].quote)}
         </p>
-        <div class="research__block">
+        <div className="research__block">
           {researchImgItems.map((research, index) => {
             if (index === activeIndex) {
               return <img src={research.image.color} alt="ljoy" key={index} />;
@@ -68,10 +68,10 @@ export const ResearchPagination = () => {
           })}
         </div>
       </div>
-      <div class="d-lg-none research__list-container swiper-container">
-        <div class="research__list-wrapper swiper-wrapper">
-          <div class="research__list-item swiper-slide">
-            <p class="research__quote">
+      <div className="d-lg-none research__list-container swiper-container">
+        <div className="research__list-wrapper swiper-wrapper">
+          <div className="research__list-item swiper-slide">
+            <p className="research__quote">
               {renderHTML(researchImgItems[activeIndex].quote)}
             </p>
             <div>
@@ -80,7 +80,7 @@ export const ResearchPagination = () => {
           </div>
         </div>
 
-        <div class="research__list-pagination"></div>
+        <div className="research__list-pagination"></div>
       </div>
     </>
   );

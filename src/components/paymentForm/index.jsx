@@ -71,6 +71,216 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
     );
   };
 
+  const completeEnrollmentAction = async (values) => {
+    if (loading) {
+      return null;
+    }
+
+    const {
+      isCCNotRequired,
+      availableTimings,
+      isGenericWorkshop,
+      addOnProducts,
+    } = workshop;
+
+    const { isCreditCardRequired } = this.state.discount || {};
+
+    const { formValues } = this.state;
+    if (!formValues && !values) {
+      return this.setState({
+        loading: false,
+        errorMessage: "Form is invalid.",
+        showError: true,
+      });
+    }
+    const {
+      questionnaire,
+      contactPhone,
+      contactAddress,
+      contactState,
+      contactZip,
+      couponCode,
+      firstName,
+      lastName,
+      paymentOption,
+      paymentMode,
+      accommodation,
+    } = values || formValues;
+
+    if (paymentMode !== STRIPE_PAYMENT_MODE && !isCCNotRequired) {
+      return null;
+    }
+
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? "Yes" : "No",
+      }),
+      {},
+    );
+
+    const { isRegisteredStripeCustomer } = profile || {};
+
+    try {
+      this.setState({ loading: true });
+
+      let tokenizeCC = null;
+      if (
+        !isCCNotRequired &&
+        (!isRegisteredStripeCustomer || changingCard) &&
+        isCreditCardRequired !== false
+      ) {
+        let createTokenRespone = await this.props.stripe.createToken({
+          name: profile.name ? profile.name : firstName + " " + lastName,
+        });
+        let { error, token } = createTokenRespone;
+        if (error) {
+          throw error;
+        }
+        tokenizeCC = token;
+      }
+
+      const selectedAddOn = accommodation?.isExpenseAddOn
+        ? null
+        : accommodation?.productSfid || null;
+
+      let addOnProductsList = addOnProducts
+        ? addOnProducts.map((product) => {
+            if (!product.isAddOnSelectionRequired) {
+              const value = values[product.productName];
+              if (value) {
+                return product.productSfid;
+              } else {
+                return null;
+              }
+            }
+            return product.productSfid;
+          })
+        : [];
+
+      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+
+      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
+
+      const isRegularOrder = values.comboDetailId
+        ? values.comboDetailId === productId
+        : true;
+
+      const products = isRegularOrder
+        ? {
+            productType: type,
+            productSfId: productId,
+            AddOnProductIds: AddOnProductIds,
+          }
+        : {
+            productType: "bundle",
+            productSfId: values.comboDetailId,
+            childProduct: {
+              productType: type,
+              productSfId: productId,
+              AddOnProductIds: AddOnProductIds,
+              complianceQuestionnaire,
+            },
+          };
+
+      let payLoad = {
+        shoppingRequest: {
+          tokenizeCC,
+          couponCode,
+          contactAddress: {
+            contactPhone,
+            contactAddress,
+            contactState,
+            contactZip,
+          },
+          billingAddress: {
+            billingPhone: contactPhone,
+            billingAddress: contactAddress,
+            billingState: contactState,
+            billingZip: contactZip,
+          },
+          products,
+          complianceQuestionnaire,
+          isInstalmentOpted: paymentOption === LATER,
+        },
+      };
+
+      if (changingCard) {
+        payLoad = {
+          ...payLoad,
+          shoppingRequest: {
+            ...payLoad.shoppingRequest,
+            doNotStoreCC: true,
+          },
+        };
+      }
+
+      if (isGenericWorkshop) {
+        const timeSlot =
+          availableTimings &&
+          Object.values(availableTimings)[0] &&
+          Object.values(Object.values(availableTimings)[0])[0][0]
+            .genericWorkshopSlotSfid;
+        payLoad = {
+          ...payLoad,
+          shoppingRequest: {
+            ...payLoad.shoppingRequest,
+            genericWorkshopSlotSfid: timeSlot,
+          },
+        };
+      }
+
+      if (!isLoggedIn) {
+        payLoad = {
+          ...payLoad,
+          user: {
+            firstName,
+            lastName,
+          },
+        };
+      }
+      //token.saveCardForFuture = true;
+      let results = await secure_fetch(`${API.REST.CREATE_AND_PAY_ORDER}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        accessToken,
+        body: JSON.stringify(payLoad),
+      });
+      if (!results.ok) {
+        throw new Error(results.statusText);
+      }
+      this.setState({ loading: false });
+      const {
+        data,
+        status,
+        error: errorMessage,
+        isError,
+      } = await results.json();
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      } else if (data) {
+        showEnrollmentCompletionAction(data);
+      }
+      /*const { trackingActions } = this.props;
+      trackingActions.paymentConfirmation(
+        { ...product, ...data },
+        type,
+        couponCode || ''
+      );*/
+    } catch (ex) {
+      console.log(ex);
+      this.setState({
+        loading: false,
+        errorMessage: ex.message,
+        showError: true,
+      });
+    }
+  };
+
   const {
     eventStartDate,
     eventEndDate,
@@ -219,7 +429,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
           : Yup.mixed().notRequired(),
       })}
       onSubmit={async (values, { setSubmitting, isValid, errors }) => {
-        await this.completeEnrollmentAction(values);
+        await completeEnrollmentAction(values);
       }}
     >
       {(formikProps) => {
@@ -286,30 +496,30 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
         }
 
         return (
-          <div class="row">
-            <div class="col-lg-7 col-12">
-              <form class="order__form">
-                <div class="details">
-                  <h2 class="details__title">Account Details:</h2>
-                  <p class="details__content">
+          <div className="row">
+            <div className="col-lg-7 col-12">
+              <form className="order__form" onSubmit={handleSubmit}>
+                <div className="details">
+                  <h2 className="details__title">Account Details:</h2>
+                  <p className="details__content">
                     This is not your account?{" "}
                     <a href="#" className="link" onClick={logout}>
                       Logout
                     </a>
                   </p>
                 </div>
-                <div class="order__card">
+                <div className="order__card">
                   <UserInfoForm formikProps={formikProps} />
                 </div>
-                <div class="details mt-5">
-                  <h2 class="details__title">Billing Details:</h2>
-                  <p class="details__content">
+                <div className="details mt-5">
+                  <h2 className="details__title">Billing Details:</h2>
+                  <p className="details__content">
                     <img src="/img/ic-visa.svg" alt="visa" />
                     <img src="/img/ic-mc.svg" alt="mc" />
                     <img src="/img/ic-ae.svg" alt="ae" />
                   </p>
                 </div>
-                <div class="order__card">
+                <div className="order__card">
                   <BillingInfoForm formikProps={formikProps} />
                   <input
                     id="discount-code"
@@ -323,7 +533,10 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
 
                   {formikProps.values.paymentMode ===
                     PAYMENT_MODES.STRIPE_PAYMENT_MODE && (
-                    <div class="order__card__payment-method" data-method="card">
+                    <div
+                      className="order__card__payment-method"
+                      data-method="card"
+                    >
                       <>
                         {!isRegisteredStripeCustomer && (
                           <div className="card-element v2">
@@ -333,10 +546,10 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
 
                         {isRegisteredStripeCustomer && !changingCard && (
                           <>
-                            <div class="bank-card-info">
+                            <div className="bank-card-info">
                               <input
                                 id="card-number"
-                                class="full-width"
+                                className="full-width"
                                 type="text"
                                 value={`**** **** **** ${cardLast4Digit}`}
                                 placeholder="Card Number"
@@ -354,7 +567,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                                 value={`****`}
                               />
                             </div>
-                            <div class="change-cc-detail-link">
+                            <div className="change-cc-detail-link">
                               <a href="#" onClick={this.toggleCardChangeDetail}>
                                 Would you like to use a different credit card?
                               </a>
@@ -367,7 +580,7 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                             <div className="card-element v2">
                               <CardElement {...createOptions()} />
                             </div>
-                            <div class="change-cc-detail-link">
+                            <div className="change-cc-detail-link">
                               <a href="#" onClick={this.toggleCardChangeDetail}>
                                 Cancel
                               </a>
@@ -380,12 +593,12 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                   {formikProps.values.paymentMode ===
                     PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
                     <div
-                      class="order__card__payment-method paypal-info"
+                      className="order__card__payment-method paypal-info"
                       style={{ width: "150px" }}
                       data-method="paypal"
                     >
                       <div
-                        class="paypal-info__sign-in"
+                        className="paypal-info__sign-in"
                         style={{ position: "relative", zIndex: 0 }}
                       >
                         <PayPalButton
@@ -418,10 +631,10 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                           onApprove={this.paypalBuyAcknowledgement}
                         />
                       </div>
-                      <div class="paypal-info__sign-out d-none">
+                      <div className="paypal-info__sign-out d-none">
                         <button
                           type="button"
-                          class="paypal-info__link sign-out-paypal"
+                          className="paypal-info__link sign-out-paypal"
                         >
                           Log out from Paypal
                         </button>
@@ -446,30 +659,30 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                   isCorporateEvent={isCorporateEvent}
                   screen="MOBILE"
                 />
-                <div class="order__complete">
-                  <div class="order__security security">
+                <div className="order__complete">
+                  <div className="order__security security">
                     <img src="/img/ic-lock.svg" alt="lock" />
-                    <p class="security__info">
+                    <p className="security__info">
                       AES 256-B&T
                       <span>SSL Secured</span>
                     </p>
                   </div>
-                  <button id="test-modal" class="btn-primary">
+                  <button id="test-modal" className="btn-primary">
                     Complete Checkout
                   </button>
                 </div>
               </form>
             </div>
-            <div class="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-xl-1">
-              <div class="reciept d-none d-lg-block">
+            <div className="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-xl-1">
+              <div className="reciept d-none d-lg-block">
                 <CourseDetailsCard workshop={workshop} />
 
-                <div class="reciept__payment">
-                  <h6 class="reciept__payment__title">Course Options</h6>
+                <div className="reciept__payment">
+                  <h6 className="reciept__payment__title">Course Options</h6>
                   <div>
-                    <div class="reciept__payment-option">
+                    <div className="reciept__payment-option">
                       <input
-                        class="custom-radio"
+                        className="custom-radio"
                         type="radio"
                         name="payment-type"
                         id="payment-lg-regular"
@@ -479,13 +692,13 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                       <label for="payment-lg-regular">
                         <span>Regular rate</span>
                         <span>
-                          <span class="discount">$550</span> $450
+                          <span className="discount">$550</span> $450
                         </span>
                       </label>
                     </div>
-                    <div class="reciept__payment-option">
+                    <div className="reciept__payment-option">
                       <input
-                        class="custom-radio"
+                        className="custom-radio"
                         type="radio"
                         name="payment-type"
                         id="payment-lg-premium"
@@ -494,67 +707,69 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                       <label for="payment-lg-premium">
                         <span>Premium/Journey+ rate:</span>
                         <span>
-                          <span class="discount">$150</span> $50
+                          <span className="discount">$150</span> $50
                         </span>
                       </label>
                     </div>
-                    <button type="button" class="btn-outline w-100">
+                    <button type="button" className="btn-outline w-100">
                       Join Journey+
                     </button>
                   </div>
-                  <h6 class="reciept__payment__title mt-4">Room & Board *</h6>
-                  <div class="select-box select-box_rounded">
-                    <div tabindex="1" class="select-box__current">
-                      <span class="select-box__placeholder">
+                  <h6 className="reciept__payment__title mt-4">
+                    Room & Board *
+                  </h6>
+                  <div className="select-box select-box_rounded">
+                    <div tabindex="1" className="select-box__current">
+                      <span className="select-box__placeholder">
                         Select Room & Board
                       </span>
-                      <div class="select-box__value">
+                      <div className="select-box__value">
                         <input
                           type="radio"
                           id="room-lg-1"
                           value="1"
                           name="room-lg"
-                          class="select-box__input"
+                          className="select-box__input"
                         />
-                        <span class="select-box__input-text">
-                          Room 1 <span class="price">$100</span>
+                        <span className="select-box__input-text">
+                          Room 1 <span className="price">$100</span>
                         </span>
                       </div>
-                      <div class="select-box__value">
+                      <div className="select-box__value">
                         <input
                           type="radio"
                           id="room-lg-2"
                           value="2"
                           name="room-lg"
-                          class="select-box__input"
+                          className="select-box__input"
                         />
-                        <span class="select-box__input-text">
-                          Room 2 <span class="price">$150</span>
+                        <span className="select-box__input-text">
+                          Room 2 <span className="price">$150</span>
                         </span>
                       </div>
-                      <div class="select-box__value">
+                      <div className="select-box__value">
                         <input
                           type="radio"
                           id="room-lg-3"
                           value="3"
                           name="room-lg"
-                          class="select-box__input"
+                          className="select-box__input"
                         />
-                        <span class="select-box__input-text">
-                          Room 3 <span class="price">$200</span>
+                        <span className="select-box__input-text">
+                          Room 3 <span className="price">$200</span>
                         </span>
                       </div>
                     </div>
-                    <ul class="select-box__list">
+                    <ul className="select-box__list">
                       <li>
                         <label
                           for="room-lg-1"
                           aria-hidden="aria-hidden"
                           data-value="1"
-                          class="select-box__option"
+                          className="select-box__option"
                         >
                           <span>Room 1</span>
-                          <span class="price">$100</span>
+                          <span className="price">$100</span>
                         </label>
                       </li>
                       <li>
@@ -562,10 +777,10 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                           for="room-lg-2"
                           aria-hidden="aria-hidden"
                           data-value="2"
-                          class="select-box__option"
+                          className="select-box__option"
                         >
                           <span>Room 2</span>
-                          <span class="price">$150</span>
+                          <span className="price">$150</span>
                         </label>
                       </li>
                       <li>
@@ -573,41 +788,41 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                           for="room-lg-3"
                           aria-hidden="aria-hidden"
                           data-value="3"
-                          class="select-box__option"
+                          className="select-box__option"
                         >
                           <span>Room 3</span>
-                          <span class="price">$200</span>
+                          <span className="price">$200</span>
                         </label>
                       </li>
                     </ul>
                   </div>
                   {notes && (
-                    <div class="reciept__payment-tooltip reciept__payment-tooltip_small">
+                    <div className="reciept__payment-tooltip reciept__payment-tooltip_small">
                       Additional Notes: {renderHTML(notes)}
                     </div>
                   )}
                 </div>
-                <div class="reciept__total">
+                <div className="reciept__total">
                   <span>Total</span>
                   <span>$750</span>
                 </div>
-                <div class="reciept__agreement">
+                <div className="reciept__agreement">
                   <AgreementForm
                     formikProps={formikProps}
                     complianceQuestionnaire={complianceQuestionnaire}
                     isCorporateEvent={isCorporateEvent}
                     screen="DESKTOP"
                   />
-                  {/* <div class="agreement">
-                    <div class="agreement__group agreement__group_important agreement__group_important_desktop">
+                  {/* <div className="agreement">
+                    <div className="agreement__group agreement__group_important agreement__group_important_desktop">
                       <input
-                        class="custom-checkbox"
+                        className="custom-checkbox"
                         type="checkbox"
                         name="program"
                         id="program"
                       />
                       <label for="program"></label>
-                      <p class="agreement__text">
+                      <p className="agreement__text">
                         I agree to the
                         <a href="#">
                           Program Participant agreement including privacy and
@@ -615,25 +830,25 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                         </a>
                       </p>
                     </div>
-                    <div class="agreement__important agreement__important_desktop">
+                    <div className="agreement__important agreement__important_desktop">
                       <img
-                        class="agreement__important-icon"
+                        className="agreement__important-icon"
                         src="/img/warning.svg"
                         alt="warning"
                       />
                       Please check the box in order to continue
                     </div>
                   </div>
-                  <div class="health-confirmation">
-                    <div class="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
+                  <div className="health-confirmation">
+                    <div className="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
                       <input
-                        class="custom-checkbox"
+                        className="custom-checkbox"
                         type="checkbox"
                         name="health-confirmation"
                         id="health-confirmation"
                       />
                       <label for="health-confirmation"></label>
-                      <p class="health-confirmation__text">
+                      <p className="health-confirmation__text">
                         I represent that I am in good health, and I will inform
                         the health info desk of any limiting health conditions
                         before the course begins.
@@ -645,9 +860,9 @@ export const PaymentForm = ({ workshop = {}, profile = {} }) => {
                         </a>
                       </p>
                     </div>
-                    <div class="health-confirmation__important health-confirmation__important_desktop">
+                    <div className="health-confirmation__important health-confirmation__important_desktop">
                       <img
-                        class="health-confirmation__important-icon"
+                        className="health-confirmation__important-icon"
                         src="/img/warning.svg"
                         alt="warning"
                       />

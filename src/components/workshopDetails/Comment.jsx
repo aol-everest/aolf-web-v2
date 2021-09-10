@@ -12,12 +12,14 @@ export const Comment = ({ children, shortText, fullText }) => {
     <>
       {children}
       <div className="comments__text">
-        <p class={classNames("short", { "d-none": !isHidden })}>{shortText}</p>
-        <p class={classNames("full", { "d-none": isHidden })}>{fullText}</p>
+        <p className={classNames("short", { "d-none": !isHidden })}>
+          {shortText}
+        </p>
+        <p className={classNames("full", { "d-none": isHidden })}>{fullText}</p>
       </div>
       {fullText && (
         <button
-          class={classNames("comments__link link", {
+          className={classNames("comments__link link", {
             "d-none": !isHidden,
           })}
           onClick={showFull}

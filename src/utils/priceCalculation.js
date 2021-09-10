@@ -1,3 +1,4 @@
+import { COURSE_TYPES } from "@constants";
 export const priceCalculation = ({
   workshop,
   discount,
@@ -15,9 +16,7 @@ export const priceCalculation = ({
     fee = discount.newPrice;
     delfee = discount.oldPrice;
   } else if (
-    `${process.env.REACT_APP_SKY_BREATH_MEDITATION_CTYPE}`.indexOf(
-      productTypeId,
-    ) >= 0
+    `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(productTypeId) >= 0
   ) {
     fee = unitPrice;
     delfee = showPrice ? showPrice : listPrice;

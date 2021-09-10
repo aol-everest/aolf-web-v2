@@ -3,6 +3,7 @@ import moment from "moment";
 import { useEmblaCarousel } from "embla-carousel/react";
 import { ABBRS } from "@constants";
 import { tConvert } from "@utils";
+import { COURSE_TYPES } from "@constants";
 
 export const EventList = ({ isMobile, workshops }) => {
   const [emblaRef] = useEmblaCarousel({
@@ -43,6 +44,14 @@ const renderEventMobile = (workshop) => {
     meetupTimeZone,
     meetupTitle,
   } = workshop || {};
+
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+
   let imageSrc = null;
   if (eventType === "Meetup") {
     const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");
@@ -58,8 +67,8 @@ const renderEventMobile = (workshop) => {
         break;
     }
     return (
-      <div class="embla__slide">
-        <div class="profile-body_mobile__course">
+      <div className="embla__slide">
+        <div className="profile-body_mobile__course">
           <img
             src={imageSrc}
             alt="bg"
@@ -70,7 +79,7 @@ const renderEventMobile = (workshop) => {
             {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
             {`${updateMeetupDuration}`}
           </div>
-          <div class="profile-body_mobile__course-detail">
+          <div className="profile-body_mobile__course-detail">
             <h4>{mode}</h4>
             <h2>{meetupTitle}</h2>
             <h3>{primaryTeacherName}</h3>
@@ -80,50 +89,36 @@ const renderEventMobile = (workshop) => {
     );
   } else {
     return (
-      <div class="embla__slide">
-        <div class="profile-body_mobile__course">
-          {`${process.env.REACT_APP_SILENT_RETREAT_CTYPE}`.indexOf(
-            productTypeId,
-          ) >= 0 && (
+      <div className="embla__slide">
+        <div className="profile-body_mobile__course">
+          {isSilentRetreatType && (
             <img
               className="profile-body_mobile__course-img"
               src="/img/new_design/course-card-4.png"
               alt="bg"
             />
           )}
-          {`${process.env.REACT_APP_SKY_BREATH_MEDITATION_CTYPE}`.indexOf(
-            productTypeId,
-          ) >= 0 && (
+          {isSKYType && (
             <img
               className="profile-body_mobile__course-img"
               src="/img/new_design/course-card-2.png"
               alt="bg"
             />
           )}
-          {`${process.env.REACT_APP_SAHAJ_SAMADHI_CTYPE}`.indexOf(
-            productTypeId,
-          ) >= 0 && (
+          {isSahajSamadhiMeditationType && (
             <img
               className="profile-body_mobile__course-img"
               src="/img/new_design/course-card-5.png"
               alt="bg"
             />
           )}
-          {`${process.env.REACT_APP_SILENT_RETREAT_CTYPE}`.indexOf(
-            productTypeId,
-          ) < 0 &&
-            `${process.env.REACT_APP_SKY_BREATH_MEDITATION_CTYPE}`.indexOf(
-              productTypeId,
-            ) < 0 &&
-            `${process.env.REACT_APP_SAHAJ_SAMADHI_CTYPE}`.indexOf(
-              productTypeId,
-            ) < 0 && (
-              <img
-                className="profile-body_mobile__course-img"
-                src="/img/course-card-1.png"
-                alt="bg"
-              />
-            )}
+          {isSilentRetreatType && isSKYType && isSahajSamadhiMeditationType && (
+            <img
+              className="profile-body_mobile__course-img"
+              src="/img/course-card-1.png"
+              alt="bg"
+            />
+          )}
           {moment
             .utc(eventStartDate)
             .isSame(moment.utc(eventEndDate), "month") && (
@@ -142,7 +137,7 @@ const renderEventMobile = (workshop) => {
                 .format("MMMM DD, YYYY")}`}
             </div>
           )}
-          <div class="profile-body_mobile__course-detail">
+          <div className="profile-body_mobile__course-detail">
             <h4>{mode}</h4>
             <h2>{title}</h2>
             <h3>{primaryTeacherName}</h3>
@@ -181,6 +176,14 @@ const renderEvent = (workshop) => {
   } = workshop || {};
 
   let imageSrc = null;
+
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+
   if (eventType === "Meetup") {
     const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");
     switch (meetupType) {
@@ -212,27 +215,18 @@ const renderEvent = (workshop) => {
       </div>
     );
   } else {
-    if (
-      `${process.env.REACT_APP_SILENT_RETREAT_CTYPE}`.indexOf(productTypeId) >=
-      0
-    ) {
+    if (isSilentRetreatType) {
       imageSrc = "/img/new_design/course-card-4.png";
-    } else if (
-      `${process.env.REACT_APP_SKY_BREATH_MEDITATION_CTYPE}`.indexOf(
-        productTypeId,
-      ) >= 0
-    ) {
+    } else if (isSKYType) {
       imageSrc = "/img/new_design/course-card-2.png";
-    } else if (
-      `${process.env.REACT_APP_SAHAJ_SAMADHI_CTYPE}`.indexOf(productTypeId) >= 0
-    ) {
+    } else if (isSahajSamadhiMeditationType) {
       imageSrc = "/img/new_design/course-card-5.png";
     } else {
       imageSrc = "/img/new_design/course-card-1.png";
     }
     return (
       <div className="col-6 col-lg-3 col-md-4">
-        <div class="profile-body__card">
+        <div className="profile-body__card">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           {moment
             .utc(eventStartDate)

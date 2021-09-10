@@ -22,10 +22,10 @@ export const CustomAlert = () => {
     }
   };
   return (
-    <div class="alert__modal modal-window modal-window_no-log active show">
+    <div className="alert__modal modal-window modal-window_no-log active show">
       <div
         id="retreat-prerequisite"
-        class={classNames(
+        className={classNames(
           `digital-member-join digital-member-join_journey course-join-card retreat-prerequisite active show`,
           className,
         )}

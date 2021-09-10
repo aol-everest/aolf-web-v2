@@ -34,8 +34,8 @@ export const ChangePasswordForm = ({
   });
 
   return (
-    <form class="active show" onSubmit={handleSubmit(changePassword)}>
-      <p class="info">
+    <form className="active show" onSubmit={handleSubmit(changePassword)}>
+      <p className="info">
         We have sent a password reset code by email. Enter it below to reset
         your password.
       </p>
@@ -45,7 +45,7 @@ export const ChangePasswordForm = ({
         className={classNames({ validate: errors.username })}
         placeholder="Code"
       />
-      {errors.code && <p class="validation-input">{errors.code.message}</p>}
+      {errors.code && <p className="validation-input">{errors.code.message}</p>}
       <input
         {...register("password")}
         type="password"
@@ -53,7 +53,7 @@ export const ChangePasswordForm = ({
         className={classNames({ validate: errors.password })}
       />
       {errors.password && (
-        <p class="validation-input">{errors.password.message}</p>
+        <p className="validation-input">{errors.password.message}</p>
       )}
       <input
         {...register("passwordConfirmation")}
@@ -63,12 +63,14 @@ export const ChangePasswordForm = ({
         type="password"
       />
       {errors.passwordConfirmation && (
-        <p class="validation-input">{errors.passwordConfirmation.message}</p>
+        <p className="validation-input">
+          {errors.passwordConfirmation.message}
+        </p>
       )}
       {showMessage && (
-        <p class="validation-input">{this.getActualMessage(message)}</p>
+        <p className="validation-input">{this.getActualMessage(message)}</p>
       )}
-      <button type="submit" class="mt-4 modal-window__btn btn-primary">
+      <button type="submit" className="mt-4 modal-window__btn btn-primary">
         Change Password
       </button>
     </form>

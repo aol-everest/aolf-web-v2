@@ -1,6 +1,5 @@
 export { Header } from "./header";
 export { NoHeader } from "./noHeader";
-export { Logo } from "./logo";
 export { Button } from "./button";
 export { Footer } from "./footer";
 export { ActiveLink } from "./activeLink";

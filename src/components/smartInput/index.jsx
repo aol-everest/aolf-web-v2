@@ -30,11 +30,11 @@ export const SmartInput = ({
   };
 
   return (
-    <div class={classNames(containerClass, { active: !isHidden })}>
+    <div className={classNames(containerClass, { active: !isHidden })}>
       <input
         placeholder={placeholder}
         type="text"
-        class={classNames("custom-input", inputclassName)}
+        className={classNames("custom-input", inputclassName)}
         value={value}
         onChange={handleChange}
       />

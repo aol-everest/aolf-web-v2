@@ -20,20 +20,20 @@ export const CourseOptions = ({
   } = workshop;
   return (
     <>
-      <div class="order__card__payment d-block d-lg-none">
-        <h6 class="order__card__payment-title">Course options</h6>
+      <div className="order__card__payment d-block d-lg-none">
+        <h6 className="order__card__payment-title">Course options</h6>
 
         {!isInstalmentAllowed && (
           <>
             {`${COURSE_TYPES.SILENT_RETREAT}`.indexOf(productTypeId) >= 0 && (
               <div>
                 {!isEarlyBirdAllowed && (
-                  <h1 class="title reciept__item reciept__item_main">
+                  <h1 className="title reciept__item reciept__item_main">
                     <span>Register</span>
                   </h1>
                 )}
                 {isEarlyBirdAllowed && (
-                  <p class="reciept__item reciept__item_main">
+                  <p className="reciept__item reciept__item_main">
                     <span>
                       <img src="/img/ic-timer.svg" alt="timer" />
                       Limited Time Offer:
@@ -46,10 +46,10 @@ export const CourseOptions = ({
                   !userSubscriptions.hasOwnProperty(
                     MEMBERSHIP_TYPES.JOURNEY_PLUS,
                   ) && (
-                    <ul class="reciept__payment_list">
-                      <div class="reciept__payment-option">
+                    <ul className="reciept__payment_list">
+                      <div className="reciept__payment-option">
                         <input
-                          class="custom-radio"
+                          className="custom-radio"
                           type="radio"
                           name="payment-type"
                           id="payment-lg-regular-card"
@@ -60,14 +60,16 @@ export const CourseOptions = ({
                         <label for="payment-lg-regular-card">
                           <span>Regular rate</span>
                           <span>
-                            {delfee && <span class="discount">${delfee}</span>}{" "}
+                            {delfee && (
+                              <span className="discount">${delfee}</span>
+                            )}{" "}
                             ${fee}
                           </span>
                         </label>
                       </div>
-                      <div class="reciept__payment-option">
+                      <div className="reciept__payment-option">
                         <input
-                          class="custom-radio"
+                          className="custom-radio"
                           type="radio"
                           name="payment-type"
                           id="payment-lg-premium-card"
@@ -81,7 +83,7 @@ export const CourseOptions = ({
                               premiumRate.listPrice &&
                               premiumRate.listPrice !==
                                 premiumRate.unitPrice && (
-                                <span class="discount">
+                                <span className="discount">
                                   ${delfee || premiumRate.listPrice}
                                 </span>
                               )}{" "}
@@ -103,7 +105,7 @@ export const CourseOptions = ({
                                 {!product.isAddOnSelectionRequired && (
                                   <input
                                     type="checkbox"
-                                    class="custom-checkbox"
+                                    className="custom-checkbox"
                                     placeholder=" "
                                     checked={isChecked}
                                     onChange={formikProps.handleChange(
@@ -116,11 +118,11 @@ export const CourseOptions = ({
                                   />
                                 )}
                                 <label for={product.productSfid}></label>
-                                <span class="ml-2">
+                                <span className="ml-2">
                                   {product.productName} Required:
                                 </span>
                               </span>
-                              <span class="ml-2">${product.unitPrice}</span>
+                              <span className="ml-2">${product.unitPrice}</span>
                             </li>
                           );
                         }
@@ -134,9 +136,9 @@ export const CourseOptions = ({
                         !userSubscriptions.hasOwnProperty(
                           MEMBERSHIP_TYPES.JOURNEY_PLUS,
                         ) && (
-                          <li class="btn-item">
+                          <li className="btn-item">
                             <button
-                              class="btn-outline"
+                              className="btn-outline"
                               onClick={openSubscriptionPaywallPage(
                                 MEMBERSHIP_TYPES.JOURNEY_PLUS,
                               )}
@@ -153,13 +155,13 @@ export const CourseOptions = ({
                   userSubscriptions.hasOwnProperty(
                     MEMBERSHIP_TYPES.JOURNEY_PLUS,
                   )) && (
-                  <ul class="reciept__payment_list">
+                  <ul className="reciept__payment_list">
                     <li>
                       <span>Premium/Journey+ rate:</span>
                       {discount && discount.newPrice && (
                         <span>
-                          <span class="discount">${discount.oldPrice}</span> $
-                          {discount.newPrice}
+                          <span className="discount">${discount.oldPrice}</span>{" "}
+                          ${discount.newPrice}
                         </span>
                       )}
                       {discount === null && premiumRate && (
@@ -167,7 +169,7 @@ export const CourseOptions = ({
                           {premiumRate &&
                             premiumRate.listPrice &&
                             premiumRate.listPrice !== premiumRate.unitPrice && (
-                              <span class="discount">
+                              <span className="discount">
                                 ${delfee || premiumRate.listPrice}
                               </span>
                             )}{" "}
@@ -190,7 +192,7 @@ export const CourseOptions = ({
                               {!product.isAddOnSelectionRequired && (
                                 <input
                                   type="checkbox"
-                                  class="custom-checkbox"
+                                  className="custom-checkbox"
                                   placeholder=" "
                                   checked={isChecked}
                                   onChange={formikProps.handleChange(
@@ -203,11 +205,11 @@ export const CourseOptions = ({
                                 />
                               )}
                               <label for={product.productSfid}></label>
-                              <span class="ml-2">
+                              <span className="ml-2">
                                 {product.productName} Required:
                               </span>
                             </span>
-                            <span class="ml-2">${product.unitPrice}</span>
+                            <span className="ml-2">${product.unitPrice}</span>
                           </li>
                         );
                       }
@@ -219,21 +221,21 @@ export const CourseOptions = ({
 
             {`${COURSE_TYPES.SILENT_RETREAT}`.indexOf(productTypeId) < 0 && (
               <>
-                <div class="reciept__header_v1 full-padding">
+                <div className="reciept__header_v1 full-padding">
                   {delfee && (
                     <>
-                      <h1 class="title reciept__title_v1">
+                      <h1 className="title reciept__title_v1">
                         Limited Time Offer: ${fee}
                       </h1>
-                      <p class="price">
+                      <p className="price">
                         Regular Course Fee:{" "}
-                        <span class="discount">${delfee}</span>
+                        <span className="discount">${delfee}</span>
                       </p>
                     </>
                   )}
-                  {!delfee && <p class="price">Course Fee: ${fee}</p>}
+                  {!delfee && <p className="price">Course Fee: ${fee}</p>}
                 </div>
-                <ul class="reciept__payment_list">
+                <ul className="reciept__payment_list">
                   {addOnProducts.map((product) => {
                     if (
                       !product.isExpenseAddOn ||
@@ -249,7 +251,7 @@ export const CourseOptions = ({
                             {!product.isAddOnSelectionRequired && (
                               <input
                                 type="checkbox"
-                                class="custom-checkbox"
+                                className="custom-checkbox"
                                 placeholder=" "
                                 checked={isChecked}
                                 onChange={formikProps.handleChange(
@@ -262,11 +264,11 @@ export const CourseOptions = ({
                               />
                             )}
                             <label for={product.productSfid}></label>
-                            <span class="ml-2">
+                            <span className="ml-2">
                               {product.productName} Required:
                             </span>
                           </span>
-                          <span class="ml-2">${product.unitPrice}</span>
+                          <span className="ml-2">${product.unitPrice}</span>
                         </li>
                       );
                     }
@@ -279,35 +281,35 @@ export const CourseOptions = ({
       </div>
 
       {hasGroupedAddOnProducts && (
-        <div class="order__card__payment d-block d-lg-none">
-          <h6 class="order__card__payment-title">
+        <div className="order__card__payment d-block d-lg-none">
+          <h6 className="order__card__payment-title">
             Room &amp; Board {isOfflineExpense && "*"}
           </h6>
           <div
-            class={classNames("select-room", {
+            className={classNames("select-room", {
               "no-valid":
                 formikProps.errors.accommodation &&
                 formikProps.touched.accommodation,
             })}
           >
-            <div tabindex="1" class="select-room__current">
-              <span class="select-room__placeholder">
+            <div tabindex="1" className="select-room__current">
+              <span className="select-room__placeholder">
                 Select Room &amp; Board
               </span>
               {groupedAddOnProducts["Residential Add On"].map(
                 (residentialAddOn) => {
                   return (
-                    <div class="select-room__value">
+                    <div className="select-room__value">
                       <input
                         type="radio"
                         id={`${residentialAddOn.productSfid}-card`}
                         value={residentialAddOn.unitPrice}
                         name="room"
-                        class="select-room__input"
+                        className="select-room__input"
                       />
-                      <span class="select-room__input-text">
+                      <span className="select-room__input-text">
                         {residentialAddOn.productName}{" "}
-                        <span class="price">
+                        <span className="price">
                           $
                           {residentialAddOn.unitPrice +
                             (expenseAddOn?.unitPrice || 0)}
@@ -318,7 +320,7 @@ export const CourseOptions = ({
                 },
               )}
             </div>
-            <ul class="select-room__list">
+            <ul className="select-room__list">
               {groupedAddOnProducts["Residential Add On"].map(
                 (residentialAddOn) => {
                   return (
@@ -334,10 +336,10 @@ export const CourseOptions = ({
                         for={`${residentialAddOn.productSfid}-card`}
                         aria-hidden="aria-hidden"
                         data-value={residentialAddOn.unitPrice}
-                        class="select-room__option"
+                        className="select-room__option"
                       >
                         <span>{residentialAddOn.productName}</span>
-                        <span class="price">
+                        <span className="price">
                           $
                           {residentialAddOn.unitPrice +
                             (expenseAddOn?.unitPrice || 0)}
@@ -350,13 +352,13 @@ export const CourseOptions = ({
             </ul>
           </div>
           {isOfflineExpense && (
-            <div class="reciept__payment-tooltip reciept__payment-tooltip_small">
+            <div className="reciept__payment-tooltip reciept__payment-tooltip_small">
               * Expences to be collected offline
             </div>
           )}
         </div>
       )}
-      <div class="order__card__total d-lg-none">
+      <div className="order__card__total d-lg-none">
         <span>Total</span>
         <span>${totalFee}</span>
       </div>

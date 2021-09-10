@@ -31,11 +31,11 @@ export const AgreementForm = ({
   if (screen !== "MOBILE") {
     return (
       <>
-        <div class="agreement mt-4 d-none d-lg-block">
-          <div class="agreement__group agreement__group_important agreement__group_important_desktop">
+        <div className="agreement mt-4 d-none d-lg-block">
+          <div className="agreement__group agreement__group_important agreement__group_important_desktop">
             <input
               type="checkbox"
-              class={classNames("custom-checkbox", {
+              className={classNames("custom-checkbox", {
                 error:
                   formikProps.errors.ppaAgreement &&
                   formikProps.touched.ppaAgreement,
@@ -47,7 +47,7 @@ export const AgreementForm = ({
               name="ppaAgreement"
             />
             <label for="program"></label>
-            <p class="agreement__text">
+            <p className="agreement__text">
               I agree to the{" "}
               <a
                 href={isCorporateEvent ? "/us/ts-cs" : "/us/workshop-ppa"}
@@ -59,9 +59,9 @@ export const AgreementForm = ({
             </p>
           </div>
           {formikProps.errors.ppaAgreement && formikProps.touched.ppaAgreement && (
-            <div class="agreement__important agreement__important_desktop">
+            <div className="agreement__important agreement__important_desktop">
               <img
-                class="agreement__important-icon"
+                className="agreement__important-icon"
                 src="/img/warning.svg"
                 alt="warning"
               />
@@ -70,9 +70,9 @@ export const AgreementForm = ({
           )}
         </div>
         {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
-          <div class="health-confirmation mt-4 d-none d-lg-block">
+          <div className="health-confirmation mt-4 d-none d-lg-block">
             {complianceQuestionnaire.map((compliance) => (
-              <div class="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
+              <div className="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
                 <Field
                   name="questionnaire"
                   validate={validateQuestionnaire(complianceQuestionnaire)}
@@ -81,7 +81,7 @@ export const AgreementForm = ({
                     return (
                       <input
                         type="checkbox"
-                        class={classNames("custom-checkbox", {
+                        className={classNames("custom-checkbox", {
                           error:
                             formikProps.errors.questionnaire &&
                             formikProps.touched.questionnaire,
@@ -109,16 +109,16 @@ export const AgreementForm = ({
                   }}
                 </Field>
                 <label for="health-confirmation"></label>
-                <p class="health-confirmation__text">
+                <p className="health-confirmation__text">
                   {renderHTML(compliance.question)}
                 </p>
               </div>
             ))}
             {formikProps.errors.questionnaire &&
               formikProps.touched.questionnaire && (
-                <div class="health-confirmation__important health-confirmation__important_desktop">
+                <div className="health-confirmation__important health-confirmation__important_desktop">
                   <img
-                    class="health-confirmation__important-icon"
+                    className="health-confirmation__important-icon"
                     src="/img/warning.svg"
                     alt="warning"
                   />
@@ -126,8 +126,8 @@ export const AgreementForm = ({
                 </div>
               )}
 
-            <div class="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
-              <p class="health-confirmation__text">
+            <div className="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
+              <p className="health-confirmation__text">
                 <br />
                 <br />
                 For any health related questions, please contact us at{" "}
@@ -143,11 +143,11 @@ export const AgreementForm = ({
   }
   return (
     <>
-      <div class="agreement v2 mt-4 d-block d-lg-none">
-        <div class="agreement__group">
+      <div className="agreement v2 mt-4 d-block d-lg-none">
+        <div className="agreement__group">
           <input
             type="checkbox"
-            class={classNames("custom-checkbox", {
+            className={classNames("custom-checkbox", {
               error:
                 formikProps.errors.ppaAgreement &&
                 formikProps.touched.ppaAgreement,
@@ -159,7 +159,7 @@ export const AgreementForm = ({
             name="ppaAgreement"
           />
           <label for="ppaAgreement"></label>
-          <p class="agreement__text">
+          <p className="agreement__text">
             I agree to the{" "}
             <a
               href={isCorporateEvent ? "/us/ts-cs" : "/us/workshop-ppa"}
@@ -171,9 +171,9 @@ export const AgreementForm = ({
           </p>
         </div>
         {formikProps.errors.ppaAgreement && formikProps.touched.ppaAgreement && (
-          <div class="agreement__important agreement__important_desktop">
+          <div className="agreement__important agreement__important_desktop">
             <img
-              class="agreement__important-icon"
+              className="agreement__important-icon"
               src="/img/warning.svg"
               alt="warning"
             />
@@ -184,7 +184,7 @@ export const AgreementForm = ({
           <>
             {complianceQuestionnaire.map((compliance) => (
               <>
-                <div class="agreement__group mt-3">
+                <div className="agreement__group mt-3">
                   <Field
                     name="questionnaire"
                     validate={validateQuestionnaire(complianceQuestionnaire)}
@@ -193,7 +193,7 @@ export const AgreementForm = ({
                       return (
                         <input
                           type="checkbox"
-                          class={classNames("custom-checkbox", {
+                          className={classNames("custom-checkbox", {
                             error:
                               formikProps.errors.questionnaire &&
                               formikProps.touched.questionnaire,
@@ -221,15 +221,15 @@ export const AgreementForm = ({
                     }}
                   </Field>
                   <label for="health"></label>
-                  <p class="agreement__text">
+                  <p className="agreement__text">
                     {renderHTML(compliance.question)}
                   </p>
                 </div>
                 {formikProps.errors.questionnaire &&
                   formikProps.touched.questionnaire && (
-                    <div class="agreement__important agreement__important_desktop">
+                    <div className="agreement__important agreement__important_desktop">
                       <img
-                        class="agreement__important-icon"
+                        className="agreement__important-icon"
                         src="/img/warning.svg"
                         alt="warning"
                       />
@@ -238,8 +238,11 @@ export const AgreementForm = ({
                   )}
               </>
             ))}
-            <div class="agreement__group mt-3" style={{ paddingLeft: "19px" }}>
-              <p class="agreement__text">
+            <div
+              className="agreement__group mt-3"
+              style={{ paddingLeft: "19px" }}
+            >
+              <p className="agreement__text">
                 For any health related questions, please contact the health info
                 desk at{" "}
                 <a href={`mailto:healthinfo@us.artofliving.org`}>

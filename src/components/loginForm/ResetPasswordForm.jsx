@@ -21,8 +21,8 @@ export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
   });
 
   return (
-    <form class="active show" onSubmit={handleSubmit(resetPassword)}>
-      <p class="info">
+    <form className="active show" onSubmit={handleSubmit(resetPassword)}>
+      <p className="info">
         Please enter your email address. We will send you an email to reset your
         password.
       </p>
@@ -33,12 +33,12 @@ export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
         placeholder="Email"
       />
       {errors.username && (
-        <p class="validation-input">{errors.username.message}</p>
+        <p className="validation-input">{errors.username.message}</p>
       )}
       {showMessage && (
-        <p class="validation-input">{this.getActualMessage(message)}</p>
+        <p className="validation-input">{this.getActualMessage(message)}</p>
       )}
-      <button type="submit" class="mt-4 modal-window__btn btn-primary v2">
+      <button type="submit" className="mt-4 modal-window__btn btn-primary v2">
         Send email
       </button>
     </form>

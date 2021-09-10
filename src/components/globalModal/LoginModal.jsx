@@ -154,29 +154,29 @@ export const LoginModal = () => {
   };
 
   return (
-    <div class="modal-window auth show active">
-      <div class="modal-window__card show">
-        {loading && <div class="cover-spin"></div>}
+    <div className="modal-window auth show active">
+      <div className="modal-window__card show">
+        {loading && <div className="cover-spin"></div>}
         <div
-          class={classNames("success-message-container", {
+          className={classNames("success-message-container", {
             "d-none": !showSuccessMessage,
           })}
         >
-          <div class="success-message">
-            <div class="icon-container">
-              <i class="fas fa-check-circle"></i>
+          <div className="success-message">
+            <div className="icon-container">
+              <i className="fas fa-check-circle"></i>
             </div>
             {successMessage}
           </div>
         </div>
-        <div class="modal-window__header">
+        <div className="modal-window__header">
           {!hideCloseBtn && (
             <button
-              class="modal-window__close modal-window__close_mobile"
+              className="modal-window__close modal-window__close_mobile"
               onClick={handleModalToggle}
             >
-              <div class="close-line"></div>
-              <div class="close-line"></div>
+              <div className="close-line"></div>
+              <div className="close-line"></div>
             </button>
           )}
           {(mode === RESET_PASSWORD_REQUEST ||
@@ -184,7 +184,7 @@ export const LoginModal = () => {
             mode === CHANGE_PASSWORD_REQUEST) && (
             <span
               role="button"
-              class="back-button"
+              className="back-button"
               onClick={switchView(LOGIN_MODE)}
             >
               <svg
@@ -216,12 +216,12 @@ export const LoginModal = () => {
               </svg>
             </span>
           )}
-          <h6 class="modal-window__subtitle">
+          <h6 className="modal-window__subtitle">
             You’re minutes away from the next step in your journey
           </h6>
-          <div class="auth-btn-wrapper">
+          <div className="auth-btn-wrapper">
             <button
-              class={classNames("auth-btn", {
+              className={classNames("auth-btn", {
                 active: mode === LOGIN_MODE,
               })}
               id="login"
@@ -230,7 +230,7 @@ export const LoginModal = () => {
               Log In
             </button>
             <button
-              class={classNames("auth-btn", {
+              className={classNames("auth-btn", {
                 active: mode === SIGNUP_MODE,
               })}
               id="signup"
@@ -240,7 +240,7 @@ export const LoginModal = () => {
             </button>
           </div>
         </div>
-        <div class="modal-window__body">
+        <div className="modal-window__body">
           {mode === NEW_PASSWORD_REQUEST && (
             <NewPasswordForm
               completeNewPassword={completeNewPassword}
@@ -264,11 +264,11 @@ export const LoginModal = () => {
           )}
           {(mode === LOGIN_MODE || mode === SIGNUP_MODE) && (
             <>
-              <div class="icon-wrapper">
-                <div class="icon" onClick={fbLogin}>
+              <div className="icon-wrapper">
+                <div className="icon" onClick={fbLogin}>
                   <img src="./img/ic-facebook.svg" alt="facebook" />
                 </div>
-                <div class="icon" onClick={googleLogin}>
+                <div className="icon" onClick={googleLogin}>
                   <img src="./img/google.svg" alt="google" />
                 </div>
               </div>
@@ -292,11 +292,11 @@ export const LoginModal = () => {
           )}
           {!hideCloseBtn && (
             <button
-              class="modal-window__close modal-window__close_desktop"
+              className="modal-window__close modal-window__close_desktop"
               onClick={handleModalToggle}
             >
-              <div class="close-line"></div>
-              <div class="close-line"></div>
+              <div className="close-line"></div>
+              <div className="close-line"></div>
             </button>
           )}
         </div>

@@ -28,6 +28,7 @@ export const StyledInput = ({
   isPhoneNumberMask = false,
   isReadOnly = false,
   textToUpperCase = false,
+  disabled = false,
   tooltip,
   fullWidth,
   ...rest
@@ -95,12 +96,13 @@ export const StyledInput = ({
           onBlur={!isReadOnly ? formikProps.handleBlur(formikKey) : null}
           value={formikProps.values[formikKey]}
           name={formikKey}
+          disabled={disabled}
           {...rest}
         />
       )}
       {tooltip && (
-        <div class={classNames("input-tooltip", { active: showTooltip })}>
-          <div class="tooltip-arrow"></div>
+        <div className={classNames("input-tooltip", { active: showTooltip })}>
+          <div className="tooltip-arrow"></div>
           {tooltip}
         </div>
       )}

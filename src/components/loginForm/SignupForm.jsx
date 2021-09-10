@@ -27,7 +27,11 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
   });
 
   return (
-    <form id="signup-form" class="active show" onSubmit={handleSubmit(signUp)}>
+    <form
+      id="signup-form"
+      className="active show"
+      onSubmit={handleSubmit(signUp)}
+    >
       <input
         {...register("username")}
         type="email"
@@ -35,7 +39,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         placeholder="Email"
       />
       {errors.username && (
-        <p class="validation-input">{errors.username.message}</p>
+        <p className="validation-input">{errors.username.message}</p>
       )}
       <input
         {...register("password")}
@@ -44,7 +48,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         className={classNames({ validate: errors.password })}
       />
       {errors.password && (
-        <p class="validation-input">{errors.password.message}</p>
+        <p className="validation-input">{errors.password.message}</p>
       )}
       <input
         {...register("firstName")}
@@ -53,7 +57,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         className={classNames({ validate: errors.firstName })}
       />
       {errors.firstName && (
-        <p class="validation-input">{errors.firstName.message}</p>
+        <p className="validation-input">{errors.firstName.message}</p>
       )}
       <input
         {...register("lastName")}
@@ -62,26 +66,26 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         className={classNames({ validate: errors.lastName })}
       />
       {errors.lastName && (
-        <p class="validation-input">{errors.lastName.message}</p>
+        <p className="validation-input">{errors.lastName.message}</p>
       )}
-      <div class="checkbox-wrapper">
-        <p class="checkbox-text">
+      <div className="checkbox-wrapper">
+        <p className="checkbox-text">
           By signing up, I agree to{" "}
-          <a href="/us/ts-cs" target="_blank" class="link">
+          <a href="/us/ts-cs" target="_blank" className="link">
             Terms of Service
           </a>{" "}
           and{" "}
           <a
             href="https://www.artofliving.org/us-en/privacy-policy"
             target="_blank"
-            class="link"
+            className="link"
           >
             Privacy Policy
           </a>
         </p>
       </div>
-      {showMessage && <p class="validation-input">{message}</p>}
-      <button class="mt-4 modal-window__btn btn-primary" type="submit">
+      {showMessage && <p className="validation-input">{message}</p>}
+      <button className="mt-4 modal-window__btn btn-primary" type="submit">
         Sign Up
       </button>
     </form>

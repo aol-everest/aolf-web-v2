@@ -31,14 +31,14 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
   } = workshop || {};
 
   return (
-    <div class="reciept__details">
-      <div class="course">
-        <div class="course__photo" style={{ minWidth: "98px" }}>
+    <div className="reciept__details">
+      <div className="course">
+        <div className="course__photo" style={{ minWidth: "98px" }}>
           <img src="/img/rectangle.png" alt="course-photo" />
         </div>
-        <div class="course__info info">
-          <ul class="info__list">
-            <h2 class="info__title">Date:</h2>
+        <div className="course__info info">
+          <ul className="info__list">
+            <h2 className="info__title">Date:</h2>
             {moment
               .utc(eventStartDate)
               .isSame(moment.utc(eventEndDate), "month") && (
@@ -54,8 +54,8 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 .format("MMMM DD, YYYY")}`}</li>
             )}
           </ul>
-          <ul class="info__list mt-3">
-            <h2 class="info__title">Timings:</h2>
+          <ul className="info__list mt-3">
+            <h2 className="info__title">Timings:</h2>
             {timings &&
               timings.map((time) => {
                 return (
@@ -67,14 +67,14 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 );
               })}
           </ul>
-          <ul class="info__list mt-3">
-            <h2 class="info__title">Instructor(s):</h2>
+          <ul className="info__list mt-3">
+            <h2 className="info__title">Instructor(s):</h2>
             {primaryTeacherName && <li>{primaryTeacherName}</li>}
             {coTeacher1Name && <li>{coTeacher1Name}</li>}
             {coTeacher2Name && <li>{coTeacher2Name}</li>}
           </ul>
-          <ul class="info__list mt-3">
-            <h2 class="info__title">Contact details:</h2>
+          <ul className="info__list mt-3">
+            <h2 className="info__title">Contact details:</h2>
             <li>
               <a href={`tel:${phone1}`}>
                 <NumberFormat

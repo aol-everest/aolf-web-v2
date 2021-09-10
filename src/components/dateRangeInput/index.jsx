@@ -26,7 +26,7 @@ export const DateRangeInput = (props) => {
       <div
         ref={referenceRef}
         tabIndex={tabindex}
-        class={classNames({
+        className={classNames({
           "tooltip-button_active": visible,
         })}
       >
@@ -40,7 +40,7 @@ export const DateRangeInput = (props) => {
         />
         <div style={{ position: "relative" }} ref={popperRef}>
           <ul
-            class={classNames("tooltip-block", containerClass, {
+            className={classNames("tooltip-block", containerClass, {
               active: visible,
             })}
             style={{

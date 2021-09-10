@@ -41,20 +41,20 @@ export const ProfileHeader = ({
       const modalBody = (
         <>
           {modalSubscription.descriptionHeader && (
-            <div class="course-join-card__text-container">
+            <div className="course-join-card__text-container">
               {renderHTML(modalSubscription.descriptionHeader)}
             </div>
           )}
 
-          <h6 class="course-details-card__subtitle">
+          <h6 className="course-details-card__subtitle">
             {modalSubscription.name} benefits:
           </h6>
-          <div class="course-details-card__list">
+          <div className="course-details-card__list">
             {modalSubscription.description &&
               renderHTML(modalSubscription.description)}
           </div>
           {modalSubscription.condition && (
-            <p class="course-join-card__excludes d-lg-block d-none">
+            <p className="course-join-card__excludes d-lg-block d-none">
               {renderHTML(modalSubscription.condition)}
             </p>
           )}
@@ -68,13 +68,13 @@ export const ProfileHeader = ({
           className: "course-details-card",
           footer: () => {
             return (
-              <div class="course-join-card__footer">
+              <div className="course-join-card__footer">
                 {modalSubscription.subscriptionBuyingChannel !== "WEB" && (
                   <a
                     data-tip
                     data-for="Popover1"
                     href="#"
-                    class="link link_gray"
+                    className="link link_gray"
                   >
                     Cancel Membership
                   </a>
@@ -82,7 +82,7 @@ export const ProfileHeader = ({
                 {modalSubscription.subscriptionBuyingChannel === "WEB" && (
                   <a
                     href="#"
-                    class="link link_gray"
+                    className="link link_gray"
                     onClick={this.cancelMembershipAction(modalSubscription)}
                   >
                     Cancel Membership
@@ -119,7 +119,7 @@ export const ProfileHeader = ({
           className: "course-join-card",
           footer: () => {
             return (
-              <div class="course-join-card__footer">
+              <div className="course-join-card__footer">
                 {modalSubscription.activeSubscriptions &&
                   modalSubscription.activeSubscriptions.length > 0 && (
                     <h6>
@@ -129,7 +129,7 @@ export const ProfileHeader = ({
                   )}
 
                 <button
-                  class="btn-secondary v2"
+                  className="btn-secondary v2"
                   // onClick={purchaseMembershipAction(modalSubscription.sfid)}
                 >
                   Join {modalSubscription.name}
@@ -155,9 +155,9 @@ export const ProfileHeader = ({
 const subscriptionPanel = (subscription) => {
   return (
     <>
-      <div class="profile-header__course">
+      <div className="profile-header__course">
         <strong>{subscription.name} member </strong>
-        <span class="profile-header__course-date">
+        <span className="profile-header__course-date">
           since{" "}
           {moment(subscription.subscriptionStartDate).format("MMMM DD, YYYY")}
         </span>{" "}
@@ -165,7 +165,7 @@ const subscriptionPanel = (subscription) => {
           subscription.subscriptionMasterSfid && (
           <a
             href="#"
-            class="link link_dark link-modal"
+            className="link link_dark link-modal"
             // onClick={this.showSubscriptionDetailModal(subscription)}
           >
             <strong>See details</strong>
@@ -184,10 +184,10 @@ const subscriptionBuyBtnPanel = (
     userSubscriptions.hasOwnProperty(MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value)
   ) {
     return (
-      <div class="btn-wrapper">
+      <div className="btn-wrapper">
         <button
           data-href-modal="digital-member-join"
-          class="btn-secondary link-modal v2"
+          className="btn-secondary link-modal v2"
           onClick={showPurchaseMembershipModalAction(
             MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value,
           )}
@@ -217,20 +217,20 @@ const subscriptionBuyBtnPanel = (
         "Take your journey deeper with two options for additional content and support";
     }
     if (message) {
-      result = <div class="profile-header__course">{message}</div>;
+      result = <div className="profile-header__course">{message}</div>;
     }
   }
 
   return (
     <>
       {result}
-      <div class="btn-wrapper">
+      <div className="btn-wrapper">
         {!userSubscriptions.hasOwnProperty(
           MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
         ) && (
           <button
             data-href-modal="digital-member-join"
-            class="btn-secondary link-modal"
+            className="btn-secondary link-modal"
             onClick={showPurchaseMembershipModalAction(
               MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
             )}
@@ -244,7 +244,7 @@ const subscriptionBuyBtnPanel = (
         ) && (
           <button
             data-href-modal="journey-join"
-            class="btn-secondary link-modal"
+            className="btn-secondary link-modal"
             onClick={showPurchaseMembershipModalAction(
               MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
             )}

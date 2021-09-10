@@ -19,12 +19,13 @@ export const BillingInfoForm = ({ formikProps }) => {
         fullWidth
       ></StyledInput>
       <Dropdown
+        placeholder="State"
         formikProps={formikProps}
         formikKey="contactState"
         options={US_STATES}
       ></Dropdown>
       <StyledInput
-        class="zip"
+        className="zip"
         placeholder="Zip"
         formikProps={formikProps}
         formikKey="contactZip"

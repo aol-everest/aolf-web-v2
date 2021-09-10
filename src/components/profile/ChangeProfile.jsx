@@ -85,7 +85,7 @@ export const ChangeProfile = ({
 
   return (
     <>
-      {loading && <div class="cover-spin"></div>}
+      {loading && <div className="cover-spin"></div>}
       <Formik
         enableReinitialize
         initialValues={{
@@ -130,18 +130,18 @@ export const ChangeProfile = ({
             submitCount,
           } = props;
           return (
-            <form class="profile-update__form" onSubmit={handleSubmit}>
-              {!isMobile && <h6 class="profile-update__title">Profile:</h6>}
-              <div class="profile-update__card">
+            <form className="profile-update__form" onSubmit={handleSubmit}>
+              {!isMobile && <h6 className="profile-update__title">Profile:</h6>}
+              <div className="profile-update__card">
                 <div
-                  class={classNames("input-block w-100", {
+                  className={classNames("input-block w-100", {
                     "mt-0": !isMobile,
                   })}
                 >
                   <input
                     type="text"
                     placeholder="Street Address"
-                    class={classNames("mt-0 w-100", {
+                    className={classNames("mt-0 w-100", {
                       validate: errors.contactAddress && touched.contactAddress,
                     })}
                     onChange={handleChange}
@@ -150,20 +150,20 @@ export const ChangeProfile = ({
                     name="contactAddress"
                   />
                   {errors.contactAddress && touched.contactAddress && (
-                    <p class="validation-input">{errors.contactAddress}</p>
+                    <p className="validation-input">{errors.contactAddress}</p>
                   )}
                 </div>
 
                 <div
                   id="city-input"
-                  class={classNames("input-block", {
+                  className={classNames("input-block", {
                     "w-100": isMobile,
                   })}
                 >
                   <input
                     type="text"
                     placeholder="City"
-                    class={classNames({
+                    className={classNames({
                       validate: errors.contactCity && touched.contactCity,
                       "w-100": isMobile,
                     })}
@@ -173,13 +173,13 @@ export const ChangeProfile = ({
                     name="contactCity"
                   />
                   {errors.contactCity && touched.contactCity && (
-                    <p class="validation-input">{errors.contactCity}</p>
+                    <p className="validation-input">{errors.contactCity}</p>
                   )}
                 </div>
 
                 <div
                   id="state-input"
-                  class={classNames("input-block", {
+                  className={classNames("input-block", {
                     "w-100": isMobile,
                   })}
                 >
@@ -187,7 +187,7 @@ export const ChangeProfile = ({
                     type="text"
                     placeholder="State"
                     maxLength="2"
-                    class={classNames({
+                    className={classNames({
                       validate: errors.contactState && touched.contactState,
                       "w-100": isMobile,
                     })}
@@ -201,20 +201,20 @@ export const ChangeProfile = ({
                     name="contactState"
                   />
                   {errors.contactState && touched.contactState && (
-                    <p class="validation-input">{errors.contactState}</p>
+                    <p className="validation-input">{errors.contactState}</p>
                   )}
                 </div>
 
                 <div
                   id="zip-input"
-                  class={classNames("input-block", {
+                  className={classNames("input-block", {
                     "w-100": isMobile,
                   })}
                 >
                   <input
                     type="text"
                     placeholder="Zip"
-                    class={classNames({
+                    className={classNames({
                       validate: errors.contactZip && touched.contactZip,
                       "w-100": isMobile,
                     })}
@@ -224,12 +224,12 @@ export const ChangeProfile = ({
                     name="contactZip"
                   />
                   {errors.contactZip && touched.contactZip && (
-                    <p class="validation-input">{errors.contactZip}</p>
+                    <p className="validation-input">{errors.contactZip}</p>
                   )}
                 </div>
 
                 <div
-                  class={classNames("input-block", {
+                  className={classNames("input-block", {
                     "w-100": isMobile,
                   })}
                 >
@@ -237,7 +237,7 @@ export const ChangeProfile = ({
                     type="text"
                     readOnly={true}
                     placeholder="First Name"
-                    class={classNames({
+                    className={classNames({
                       "w-100": isMobile,
                     })}
                     value={values.firstName}
@@ -246,14 +246,14 @@ export const ChangeProfile = ({
                 </div>
 
                 <div
-                  class={classNames("input-block", {
+                  className={classNames("input-block", {
                     "w-100": isMobile,
                   })}
                 >
                   <input
                     type="text"
                     readOnly={true}
-                    class={classNames({
+                    className={classNames({
                       "w-100": isMobile,
                     })}
                     placeholder="Last Name"
@@ -263,14 +263,14 @@ export const ChangeProfile = ({
                 </div>
 
                 <div
-                  class={classNames("input-block", {
+                  className={classNames("input-block", {
                     "w-100": isMobile,
                   })}
                 >
                   <input
                     readOnly={true}
                     value={email}
-                    class={classNames({
+                    className={classNames({
                       "w-100": isMobile,
                     })}
                     type="email"
@@ -278,7 +278,7 @@ export const ChangeProfile = ({
                   />
                 </div>
                 <div
-                  class={classNames("input-block", {
+                  className={classNames("input-block", {
                     "w-100": isMobile,
                   })}
                 >
@@ -291,18 +291,21 @@ export const ChangeProfile = ({
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.contactPhone}
-                    class={classNames({
+                    className={classNames({
                       validate: errors.contactPhone && touched.contactPhone,
                       "w-100": isMobile,
                     })}
                   />
 
                   {errors.contactPhone && touched.contactPhone && (
-                    <p class="validation-input">{errors.contactPhone}</p>
+                    <p className="validation-input">{errors.contactPhone}</p>
                   )}
                 </div>
               </div>
-              <button type="submit" class="btn-primary d-block ml-auto mt-4 v2">
+              <button
+                type="submit"
+                className="btn-primary d-block ml-auto mt-4 v2"
+              >
                 Update Profile
               </button>
             </form>

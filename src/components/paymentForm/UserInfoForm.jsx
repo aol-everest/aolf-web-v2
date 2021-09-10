@@ -6,14 +6,14 @@ export const UserInfoForm = ({ formikProps }) => {
   return (
     <Fragment>
       <StyledInput
-        class="mt-0"
+        className="mt-0"
         placeholder="First name"
         formikProps={formikProps}
         formikKey="firstName"
         tooltip="Enter given name"
       ></StyledInput>
       <StyledInput
-        class="mt-lg-0"
+        className="mt-lg-0"
         placeholder="Last name"
         formikProps={formikProps}
         formikKey="lastName"
@@ -24,6 +24,7 @@ export const UserInfoForm = ({ formikProps }) => {
         formikProps={formikProps}
         formikKey="email"
         isReadOnly={true}
+        disabled
         onCut={(event) => {
           event.preventDefault();
         }}

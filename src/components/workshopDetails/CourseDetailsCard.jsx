@@ -146,12 +146,12 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 }
                 closeEvent={onDatesChange}
                 containerclassName="course-details__popup_calendar"
-                parentClass={classNames({
+                parentclassName={classNames({
                   "course-details__popup_block": true,
                   "course-details__popup_block_selected":
                     filterStartDate !== null,
                 })}
-                buttonTextClass={classNames({
+                buttonTextclassName={classNames({
                   "course-details__popup_btn_text": true,
                   "course-details__popup_btn_text_selected":
                     filterStartDate !== null,
@@ -172,12 +172,12 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 value={timeZoneFilter}
                 buttonText={timeZoneFilter ? timeZoneFilter.name : "Time Zone"}
                 closeEvent={onFilterChange}
-                parentClass={classNames({
+                parentclassName={classNames({
                   "course-details__popup_block": true,
                   "course-details__popup_block_selected":
                     timeZoneFilter !== null,
                 })}
-                buttonTextClass={classNames({
+                buttonTextclassName={classNames({
                   "course-details__popup_btn_text": true,
                   "course-details__popup_btn_text_selected":
                     timeZoneFilter !== null,
@@ -277,7 +277,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
         {!corporateName && (
           <div className="course_detail_btn_box d-flex mt-4 justify-content-center">
             <a
-              class={`btn btn_box_primary text-center
+              className={`btn btn_box_primary text-center
                 ${isSearchDatesDisabled && "disabled"}`}
               href="#"
               onClick={handleSearchDates}

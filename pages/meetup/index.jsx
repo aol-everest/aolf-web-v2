@@ -403,7 +403,7 @@ const Meetup = ({ meetups, authenticated, query }) => {
                   )}
                 </Popup>
                 <Popup
-                  containerClass={Style.daterangepickerPopup}
+                  containerclassName={Style.daterangepickerPopup}
                   tabIndex="3"
                   value={filterStartEndDate}
                   buttonText={

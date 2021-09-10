@@ -27,7 +27,11 @@ export const SigninForm = ({
   });
 
   return (
-    <form id="login-form" class="active show" onSubmit={handleSubmit(signIn)}>
+    <form
+      id="login-form"
+      className="active show"
+      onSubmit={handleSubmit(signIn)}
+    >
       <input
         {...register("username")}
         type="email"
@@ -35,7 +39,7 @@ export const SigninForm = ({
         className={classNames({ validate: errors.username })}
       />
       {errors.username && (
-        <p class="validation-input">{errors.username.message}</p>
+        <p className="validation-input">{errors.username.message}</p>
       )}
       <input
         {...register("password")}
@@ -44,13 +48,13 @@ export const SigninForm = ({
         className={classNames({ validate: errors.password })}
       />
       {errors.password && (
-        <p class="validation-input">{errors.password.message}</p>
+        <p className="validation-input">{errors.password.message}</p>
       )}
-      {showMessage && <p class="validation-input">{message}</p>}
-      <a class="link" href="#" onClick={forgotPassword}>
+      {showMessage && <p className="validation-input">{message}</p>}
+      <a className="link" href="#" onClick={forgotPassword}>
         Don’t remember your password?
       </a>
-      <button class="mt-4 modal-window__btn btn-primary" type="submit">
+      <button className="mt-4 modal-window__btn btn-primary" type="submit">
         Log In
       </button>
     </form>

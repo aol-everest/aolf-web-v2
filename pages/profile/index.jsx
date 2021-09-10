@@ -100,10 +100,10 @@ const Profile = ({ profile }) => {
 
   return (
     <>
-      <main class="profile">
+      <main className="profile">
         {request === "1" && (
-          <aside class="profile__alert profile__alert_error">
-            <div class="container-xl d-flex align-center">
+          <aside className="profile__alert profile__alert_error">
+            <div className="container-xl d-flex align-center">
               <span>
                 <img src="/img/ic-error.svg" alt="error" />
                 We're sorry, but an error occurred. Please contact the help desk
@@ -112,30 +112,30 @@ const Profile = ({ profile }) => {
               </span>
             </div>
             <img
-              class="profile__close-alert"
+              className="profile__close-alert"
               src="/img/ic-close-white.svg"
               alt="close"
             />
           </aside>
         )}
         {request === "2" && (
-          <aside class="profile__alert">
-            <div class="container-xl d-flex justify-content-center align-center">
+          <aside className="profile__alert">
+            <div className="container-xl d-flex justify-content-center align-center">
               <span>
                 <img src="/img/ic-check.svg" alt="check" />
                 Your membership has been cancelled.
               </span>
             </div>
             <img
-              class="profile__close-alert"
+              className="profile__close-alert"
               src="/img/ic-close-white.svg"
               alt="close"
             />
           </aside>
         )}
-        <section class="profile-header">
-          <div class="container d-flex flex-md-row flex-column align-items-md-center">
-            <div class="profile-header__client profile-pic-section">
+        <section className="profile-header">
+          <div className="container d-flex flex-md-row flex-column align-items-md-center">
+            <div className="profile-header__client profile-pic-section">
               <label htmlFor="upload-button">
                 <input
                   type="file"
@@ -144,7 +144,7 @@ const Profile = ({ profile }) => {
                   style={{ display: "none" }}
                   // onChange={this.handleOnSelectFile}
                 />
-                <div class="profile-header__image wrapper">
+                <div className="profile-header__image wrapper">
                   {profilePic && (
                     <img
                       src={profilePic}
@@ -152,17 +152,17 @@ const Profile = ({ profile }) => {
                     />
                   )}
                   {!profilePic && <span>{initials}</span>}
-                  <div class="camera-icon">
-                    <i class="fa fa-camera"></i>
+                  <div className="camera-icon">
+                    <i className="fa fa-camera"></i>
                   </div>
                 </div>
               </label>
-              <div class="profile-header__full-name d-block d-md-none">
+              <div className="profile-header__full-name d-block d-md-none">
                 {name}
               </div>
             </div>
-            <div class="profile-header__info">
-              <div class="profile-header__full-name d-none d-md-block">
+            <div className="profile-header__info">
+              <div className="profile-header__full-name d-none d-md-block">
                 {name}
               </div>
               <ProfileHeader
@@ -173,16 +173,16 @@ const Profile = ({ profile }) => {
           </div>
         </section>
 
-        <section class="profile-body d-none d-md-block">
-          <div class="container">
+        <section className="profile-body d-none d-md-block">
+          <div className="container">
             <ul
-              class="nav nav-pills"
+              className="nav nav-pills"
               id="profile-tabs-container"
               role="tablist"
             >
-              <li class="nav-item" role="presentation">
+              <li className="nav-item" role="presentation">
                 <a
-                  class={classNames("profile-tab", {
+                  className={classNames("profile-tab", {
                     active: activeTab === UPCOMING_EVENTS,
                   })}
                   onClick={switchTab(UPCOMING_EVENTS)}
@@ -190,9 +190,9 @@ const Profile = ({ profile }) => {
                   Upcoming Events
                 </a>
               </li>
-              <li class="nav-item" role="presentation">
+              <li className="nav-item" role="presentation">
                 <a
-                  class={classNames("profile-tab", {
+                  className={classNames("profile-tab", {
                     active: activeTab === UPDATE_PROFILE,
                   })}
                   onClick={switchTab(UPDATE_PROFILE)}
@@ -200,9 +200,9 @@ const Profile = ({ profile }) => {
                   Update Profile
                 </a>
               </li>
-              <li class="nav-item" role="presentation">
+              <li className="nav-item" role="presentation">
                 <a
-                  class={classNames("profile-tab", {
+                  className={classNames("profile-tab", {
                     active: activeTab === CARD_DETAILS,
                   })}
                   onClick={switchTab(CARD_DETAILS)}
@@ -210,9 +210,9 @@ const Profile = ({ profile }) => {
                   Card Details
                 </a>
               </li>
-              <li class="nav-item" role="presentation">
+              <li className="nav-item" role="presentation">
                 <a
-                  class={classNames("profile-tab", {
+                  className={classNames("profile-tab", {
                     active: activeTab === CHANGE_PASSWORD,
                   })}
                   onClick={switchTab(CHANGE_PASSWORD)}
@@ -220,21 +220,21 @@ const Profile = ({ profile }) => {
                   Change Password
                 </a>
               </li>
-              <li class="nav-item" role="presentation">
-                <a class="profile-tab" onClick={logoutAction}>
+              <li className="nav-item" role="presentation">
+                <a className="profile-tab" onClick={logoutAction}>
                   Log out
                 </a>
               </li>
             </ul>
-            <div class="tab-content" id="profile-tabContent">
+            <div className="tab-content" id="profile-tabContent">
               <div
-                class={classNames("tab-pane fade", {
+                className={classNames("tab-pane fade", {
                   active: activeTab === UPCOMING_EVENTS,
                   show: activeTab === UPCOMING_EVENTS,
                 })}
               >
                 <div
-                  class={classNames("row", {
+                  className={classNames("row", {
                     "profile-body__cards-container":
                       upcomingEvents.length !== 0,
                     "profile-body__cards-empty cards-empty":
@@ -243,20 +243,20 @@ const Profile = ({ profile }) => {
                 >
                   {upcomingEvents.length === 0 && (
                     <>
-                      <div class="cards-empty__img">
+                      <div className="cards-empty__img">
                         <img src="/img/ic-search-calendar.svg" alt="search" />
                       </div>
-                      <div class="cards-empty__text">
+                      <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
                         <Link href="/workshop">
-                          <a href="#" class="link link_orange">
+                          <a href="#" className="link link_orange">
                             course
                           </a>
                         </Link>{" "}
                         or{" "}
                         <Link href="/meetup">
-                          <a href="#" class="link link_orange">
+                          <a href="#" className="link link_orange">
                             meetup
                           </a>
                         </Link>{" "}
@@ -268,7 +268,7 @@ const Profile = ({ profile }) => {
                 </div>
               </div>
               <div
-                class={classNames("tab-pane profile-update fade", {
+                className={classNames("tab-pane profile-update fade", {
                   active: activeTab === UPDATE_PROFILE,
                   show: activeTab === UPDATE_PROFILE,
                 })}
@@ -279,7 +279,7 @@ const Profile = ({ profile }) => {
                 ></ChangeProfile>
               </div>
               <div
-                class={classNames("tab-pane fade", {
+                className={classNames("tab-pane fade", {
                   active: activeTab === CARD_DETAILS,
                   show: activeTab === CARD_DETAILS,
                 })}
@@ -300,7 +300,7 @@ const Profile = ({ profile }) => {
                 )}
               </div>
               <div
-                class={classNames("tab-pane fade", {
+                className={classNames("tab-pane fade", {
                   active: activeTab === CHANGE_PASSWORD,
                   show: activeTab === CHANGE_PASSWORD,
                 })}
@@ -313,14 +313,14 @@ const Profile = ({ profile }) => {
           </div>
         </section>
 
-        <section class="profile-body_mobile d-block d-md-none">
-          <div class="container">
-            <div class="profile-body_mobile__accordion">
-              <div class="profile-body_mobile__card">
-                <div class="profile-body_mobile__card-header">
-                  <h2 class="mb-0">
+        <section className="profile-body_mobile d-block d-md-none">
+          <div className="container">
+            <div className="profile-body_mobile__accordion">
+              <div className="profile-body_mobile__card">
+                <div className="profile-body_mobile__card-header">
+                  <h2 className="mb-0">
                     <button
-                      class={classNames("btn", {
+                      className={classNames("btn", {
                         collapsed: activeTab !== UPCOMING_EVENTS,
                       })}
                       type="button"
@@ -331,18 +331,18 @@ const Profile = ({ profile }) => {
                   </h2>
                 </div>
                 <Collapse isOpen={activeTab === UPCOMING_EVENTS}>
-                  <div class="profile-body_mobile__card-body">
+                  <div className="profile-body_mobile__card-body">
                     {upcomingEvents.length === 0 && (
-                      <div class="profile-body_mobile__cards-empty cards-empty">
-                        <div class="cards-empty__img">
+                      <div className="profile-body_mobile__cards-empty cards-empty">
+                        <div className="cards-empty__img">
                           <img src="/img/ic-search-calendar.svg" alt="search" />
                         </div>
-                        <div class="cards-empty__text">
+                        <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
                           upcoming{" "}
                           <a
                             href="#"
-                            class="link link_orange"
+                            className="link link_orange"
                             // onClick={this.navigateToCourses}
                           >
                             course
@@ -350,7 +350,7 @@ const Profile = ({ profile }) => {
                           or{" "}
                           <a
                             href="#"
-                            class="link link_orange"
+                            className="link link_orange"
                             // onClick={this.navigateToMeetups}
                           >
                             meetup
@@ -363,11 +363,11 @@ const Profile = ({ profile }) => {
                   </div>
                 </Collapse>
               </div>
-              <div class="profile-body_mobile__card">
-                <div class="profile-body_mobile__card-header">
-                  <h2 class="mb-0">
+              <div className="profile-body_mobile__card">
+                <div className="profile-body_mobile__card-header">
+                  <h2 className="mb-0">
                     <button
-                      class={classNames("btn", {
+                      className={classNames("btn", {
                         collapsed: activeTab !== UPDATE_PROFILE,
                       })}
                       type="button"
@@ -378,7 +378,7 @@ const Profile = ({ profile }) => {
                   </h2>
                 </div>
                 <Collapse isOpen={activeTab === UPDATE_PROFILE}>
-                  <div class="profile-body_mobile__card-body">
+                  <div className="profile-body_mobile__card-body">
                     <ChangeProfile
                       isMobile
                       updateCompleteAction={updateCompleteAction}
@@ -386,11 +386,11 @@ const Profile = ({ profile }) => {
                   </div>
                 </Collapse>
               </div>
-              <div class="profile-body_mobile__card">
-                <div class="profile-body_mobile__card-header">
-                  <h2 class="mb-0">
+              <div className="profile-body_mobile__card">
+                <div className="profile-body_mobile__card-header">
+                  <h2 className="mb-0">
                     <button
-                      class={classNames("btn", {
+                      className={classNames("btn", {
                         collapsed: activeTab !== CARD_DETAILS,
                       })}
                       onClick={switchTab(CARD_DETAILS)}
@@ -401,7 +401,7 @@ const Profile = ({ profile }) => {
                   </h2>
                 </div>
                 <Collapse isOpen={activeTab === CARD_DETAILS}>
-                  <div class="profile-body_mobile__card-body">
+                  <div className="profile-body_mobile__card-body">
                     {!editCardDetail && (
                       <ViewCardDetail
                         isMobile
@@ -420,11 +420,11 @@ const Profile = ({ profile }) => {
                   </div>
                 </Collapse>
               </div>
-              <div class="profile-body_mobile__card">
-                <div class="profile-body_mobile__card-header">
-                  <h2 class="mb-0">
+              <div className="profile-body_mobile__card">
+                <div className="profile-body_mobile__card-header">
+                  <h2 className="mb-0">
                     <button
-                      class={classNames("btn", {
+                      className={classNames("btn", {
                         collapsed: activeTab !== CHANGE_PASSWORD,
                       })}
                       type="button"
@@ -435,7 +435,7 @@ const Profile = ({ profile }) => {
                   </h2>
                 </div>
                 <Collapse isOpen={activeTab === CHANGE_PASSWORD}>
-                  <div class="profile-body_mobile__card-body">
+                  <div className="profile-body_mobile__card-body">
                     <ChangePassword
                       isMobile
                       updateCompleteAction={updateCompleteAction}
@@ -443,11 +443,11 @@ const Profile = ({ profile }) => {
                   </div>
                 </Collapse>
               </div>
-              <div class="profile-body_mobile__card">
-                <div class="profile-body_mobile__card-header">
-                  <h2 class="mb-0">
+              <div className="profile-body_mobile__card">
+                <div className="profile-body_mobile__card-header">
+                  <h2 className="mb-0">
                     <button
-                      class="btn collapsed"
+                      className="btn collapsed"
                       type="button"
                       onClick={logoutAction}
                     >

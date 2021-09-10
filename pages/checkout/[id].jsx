@@ -57,10 +57,10 @@ const Checkout = ({ workshop, profile }) => {
   return (
     <>
       <main>
-        <section class="order">
-          <div class="container">
-            <h1 class="title title_thin">Silent Retreat</h1>
-            <p class="order__detail">
+        <section className="order">
+          <div className="container">
+            <h1 className="title title_thin">Silent Retreat</h1>
+            <p className="order__detail">
               The ultimate vacation for mind, body, and spirit
             </p>
             <Elements stripe={stripePromise}>
@@ -68,31 +68,35 @@ const Checkout = ({ workshop, profile }) => {
             </Elements>
           </div>
         </section>
-        <section class="additional-information">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-4">
-                <div class="information__blcok">
-                  <h2 class="information__tile">UNPARALLELED CONVENIENCE</h2>
-                  <p class="information__text">
+        <section className="additional-information">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="information__blcok">
+                  <h2 className="information__tile">
+                    UNPARALLELED CONVENIENCE
+                  </h2>
+                  <p className="information__text">
                     Choose your schedule. Learn from the comfort of your own
                     home.
                   </p>
                 </div>
               </div>
-              <div class="col-lg-4 mt-3 mt-lg-0">
-                <div class="information__blcok">
-                  <h2 class="information__tile">EXPERIENCED FACILITATORS</h2>
-                  <p class="information__text">
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">
+                    EXPERIENCED FACILITATORS
+                  </h2>
+                  <p className="information__text">
                     Real-time interaction with highly trained instructors
                     (minimum of 500+ training hours)
                   </p>
                 </div>
               </div>
-              <div class="col-lg-4 mt-3 mt-lg-0">
-                <div class="information__blcok">
-                  <h2 class="information__tile">UPLIFTING COMMUNITY</h2>
-                  <p class="information__text">
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">UPLIFTING COMMUNITY</h2>
+                  <p className="information__text">
                     Form deep, authentic connections and community with your
                     fellow participants.
                   </p>
@@ -100,9 +104,9 @@ const Checkout = ({ workshop, profile }) => {
               </div>
             </div>
 
-            <div class="featured-in featured-in_with-button">
-              <h2 class="featured-in__title">Featured in</h2>
-              <div class="featured-in__box d-none d-lg-flex">
+            <div className="featured-in featured-in_with-button">
+              <h2 className="featured-in__title">Featured in</h2>
+              <div className="featured-in__box d-none d-lg-flex">
                 <img src="/img/featured-in-cnn.png" alt="cnn" />
                 <img src="/img/featured-in-yoga.png" alt="yoga" />
                 <img src="/img/featured-in-tnyt.png" alt="tnyt" />
@@ -111,7 +115,7 @@ const Checkout = ({ workshop, profile }) => {
                 <img src="/img/featured-in-forbes.png" alt="forbes" />
                 <img src="/img/featured-in-nbc.png" alt="nbc" />
               </div>
-              <div class="featured-in__box d-flex d-lg-none">
+              <div className="featured-in__box d-flex d-lg-none">
                 <img src="/img/featured-in-cnn.png" alt="cnn" />
                 <img src="/img/featured-in-yoga.png" alt="yoga" />
                 <img src="/img/featured-in-nbc.png" alt="nbc" />
@@ -119,60 +123,62 @@ const Checkout = ({ workshop, profile }) => {
                 <img src="/img/featured-in-forbes.png" alt="forbes" />
                 <img src="/img/featured-in-time.png" alt="time" />
                 <img
-                  class="m-auto"
+                  className="m-auto"
                   src="/img/featured-in-tnyt.png"
                   alt="tnyt"
                 />
               </div>
-              <button type="button" class="btn-primary featured-in__button">
+              <button type="button" className="btn-primary featured-in__button">
                 <img src="/img/ic-chat.png" alt="chat" />
               </button>
             </div>
           </div>
         </section>
       </main>
-      <div class="course-popup d-lg-none d-block">
-        <div class="course-card">
-          <div class="course-card__info">
-            <div class="course-card__info-wrapper">
-              <div class="d-flex justify-content-between align-items-center">
-                <p class="course-card__date">May 5-7, 2020</p>
-                <button id="course-details" class="link">
+      <div className="course-popup d-lg-none d-block">
+        <div className="course-card">
+          <div className="course-card__info">
+            <div className="course-card__info-wrapper">
+              <div className="d-flex justify-content-between align-items-center">
+                <p className="course-card__date">May 5-7, 2020</p>
+                <button id="course-details" className="link">
                   See details
                 </button>
               </div>
-              <h3 class="course-card__course-name">SKY Breath Meditation</h3>
+              <h3 className="course-card__course-name">
+                SKY Breath Meditation
+              </h3>
             </div>
           </div>
         </div>
-        <div class="mobile-modal">
-          <div class="mobile-modal__header">
-            <div class="close-modal">
-              <div class="close-line"></div>
-              <div class="close-line"></div>
+        <div className="mobile-modal">
+          <div className="mobile-modal__header">
+            <div className="close-modal">
+              <div className="close-line"></div>
+              <div className="close-line"></div>
             </div>
-            <div class="course-name">Sky Breath Meditation</div>
+            <div className="course-name">Sky Breath Meditation</div>
           </div>
-          <div class="mobile-modal__body">
-            <div class="course-detail">
+          <div className="mobile-modal__body">
+            <div className="course-detail">
               Your course: <span>May 5-7, 2020</span>
             </div>
-            <div class="course-detail">
+            <div className="course-detail">
               Timings:
               <span>Fr: 7-9:30 PM ET</span>
               <span>Sa: 10-12:30 PM ET</span>
               <span>Su: 10-12:30 PM ET</span>
             </div>
-            <div class="course-detail">
+            <div className="course-detail">
               Instructor(s):
               <span>Mary Walker</span>
               <span>Rajesh Moksha</span>
             </div>
-            <div class="course-detail">
+            <div className="course-detail">
               Location:
               <span>Online</span>
             </div>
-            <div class="course-detail">
+            <div className="course-detail">
               Contact details:
               <span>(809)751-1436</span>
               <span>socal@us.artofliving.org</span>

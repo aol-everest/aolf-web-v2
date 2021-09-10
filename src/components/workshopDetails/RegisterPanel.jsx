@@ -14,17 +14,17 @@ export const RegisterPanel = ({ workshop }) => {
   };
 
   return (
-    <div class="powerful__block powerful__block_bottom">
+    <div className="powerful__block powerful__block_bottom">
       <div>
-        <h6 class="powerful__block-caption_2">Limited Time Offer</h6>
-        <h5 class="powerful__block-title_3">
-          {title}: <span class="discount">${delfee}</span> ${fee}
+        <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
+        <h5 className="powerful__block-title_3">
+          {title}: <span className="discount">${delfee}</span> ${fee}
         </h5>
       </div>
-      <div class="bottom-box">
+      <div className="bottom-box">
         <img src="/img/ic-timer-orange.svg" alt="timer" />
         <p>Register soon. Course fee will go up by $100 on MM/DD</p>
-        <button class="btn-secondary" onClick={handleRegister}>
+        <button className="btn-secondary" onClick={handleRegister}>
           Register Today
         </button>
       </div>
