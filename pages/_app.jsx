@@ -5,12 +5,13 @@ import Head from "next/head";
 import { withSSRContext } from "aws-amplify";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { api } from "@utils";
+import { api, Compose } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import Layout from "@components/layout";
 import { GlobalModal } from "@components/globalModal";
 import { GlobalAlert } from "@components/globalAlert";
+import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
 import { AuthProvider } from "@contexts";
 import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
 import "nprogress/nprogress.css";
@@ -40,19 +41,20 @@ function App({ Component, pageProps, userInfo }) {
   return (
     <>
       <DefaultSeo {...SEO} />
+
       <GTMProvider state={gtmParams}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <AuthProvider userInfo={userInfo}>
-              <GlobalModal>
-                <GlobalAlert>
-                  <Layout hideHeader={Component.hideHeader}>
-                    <TopProgressBar />
-                    <Component {...pageProps} />
-                    <ReactQueryDevtools initialIsOpen={false} />
-                  </Layout>
-                </GlobalAlert>
-              </GlobalModal>
+              <Compose
+                components={[GlobalModal, GlobalAlert, GlobalAudioPlayer]}
+              >
+                <Layout hideHeader={Component.hideHeader}>
+                  <TopProgressBar />
+                  <Component {...pageProps} />
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </Layout>
+              </Compose>
             </AuthProvider>
           </Hydrate>
         </QueryClientProvider>

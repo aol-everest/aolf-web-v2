@@ -3,6 +3,7 @@ import { api, isSSR } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { useGlobalAudioPlayerContext } from "@contexts";
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
@@ -11,6 +12,16 @@ import "swiper/components/scrollbar/scrollbar.min.css";
 
 const Meditation = ({ workshops, authenticated }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+  const { showPlayer } = useGlobalAudioPlayerContext();
+
+  const testAcrion = () => {
+    showPlayer({
+      track: {
+        audioSrc:
+          "https://downloads.ctfassets.net/us20rr1wrm34/20cWFGhMXu2cw08AioEUoK/2b79636d37fd72d57c8a83085a0a0744/YOGA_NIDRA_ENG__without_Music_VOICEONLY.mp3",
+      },
+    });
+  };
 
   let slidesPerView = 5;
   if (!isSSR) {
@@ -58,7 +69,13 @@ const Meditation = ({ workshops, authenticated }) => {
           <p className="type-course">Guided Meditations</p>
           <h1 className="course-name">Breath of Relaxation</h1>
           <p className="type-guide">Alan Watts</p>
-          <button type="button" id="play" name="play" play="false">
+          <button
+            type="button"
+            id="play"
+            name="play"
+            play="false"
+            onClick={testAcrion}
+          >
             <div id="playIcon">
               <img className="ic-play-static" src="img/ic-play.svg" alt="" />
               <img
