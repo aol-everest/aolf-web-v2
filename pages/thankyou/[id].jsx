@@ -1,8 +1,88 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { api } from "@utils";
 import { withSSRContext } from "aws-amplify";
+import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 
-const Thankyou = ({ workshop }) => {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext({ req });
+  const { query, req, res } = context;
+  const { aid } = query;
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    const { data, attendeeRecord } = await api.get({
+      path: "getWorkshopByAttendee",
+      param: {
+        aid,
+        skipcheck: 1,
+      },
+      token,
+    });
+    return {
+      props: {
+        authenticated: true,
+        username: user.username,
+        workshop: data,
+        attendeeRecord,
+      },
+    };
+  } catch (err) {
+    console.error(err);
+    res.writeHead(302, { Location: "/workshop" });
+    res.end();
+  }
+  return { props: {} };
+}
+
+const Thankyou = ({ workshop, attendeeRecord }) => {
+  const sendDataToGTM = useGTMDispatch();
+
+  const {
+    meetupTitle,
+    title,
+    productTypeId,
+    unitPrice,
+    id: courseId,
+  } = workshop;
+  const { ammountPaid, orderExternalId, couponCode } = attendeeRecord;
+
+  useEffect(() => {
+    sendDataToGTM({
+      event: "transactionComplete",
+      viewType: "workshop",
+      amount: unitPrice,
+      title: meetupTitle || title,
+      ctype: productTypeId,
+      requestType: "Thankyou",
+      user,
+      ecommerce: {
+        currencyCode: "USD",
+        purchase: {
+          actionField: {
+            id: orderExternalId,
+            affiliation: "Website",
+            revenue: ammountPaid,
+            tax: "0.00",
+            shipping: "0.00",
+            coupon: couponCode || "",
+          },
+          products: [
+            {
+              id: courseId,
+              courseId: courseId,
+              name: title,
+              category: "workshop",
+              variant: "N/A",
+              brand: "Art of Living Foundation",
+              quantity: 1,
+              price: totalOrderAmount,
+            },
+          ],
+        },
+      },
+    });
+  }, []);
+
   return (
     <>
       <main>

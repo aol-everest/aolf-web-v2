@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^1.2.11",
+    "@elgorditosalsero/react-gtm-hook": "^2.0.8",
     "@hookform/resolvers": "^2.8.0",
     "@next/bundle-analyzer": "^10.0.5",
     "@stripe/react-stripe-js": "^1.4.1",

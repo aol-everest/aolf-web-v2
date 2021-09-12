@@ -4,6 +4,8 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { PaymentForm } from "@components";
 import { api } from "@utils";
+import { useRouter } from "next/router";
+import { useQueryString } from "@hooks";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -55,6 +57,25 @@ export const getServerSideProps = async (context) => {
 };
 
 const Checkout = ({ workshop, profile, token }) => {
+  const router = useRouter();
+
+  const [mbsy_source] = useQueryString("mbsy_source");
+  const [campaignid] = useQueryString("campaignid");
+  const [mbsy] = useQueryString("mbsy");
+
+  const enrollmentCompletionAction = ({ attendeeId }) => {
+    router.replace({
+      pathname: '"/thankyou"',
+      query: {
+        aid: attendeeId,
+        ctype: workshop.productTypeId,
+        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+        campaignid,
+        mbsy,
+      },
+    });
+  };
+
   return (
     <>
       <main>
@@ -77,6 +98,7 @@ const Checkout = ({ workshop, profile, token }) => {
                 workshop={workshop}
                 profile={profile}
                 token={token}
+                enrollmentCompletionAction={enrollmentCompletionAction}
               />
             </Elements>
           </div>

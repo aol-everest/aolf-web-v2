@@ -15,6 +15,7 @@ import { BillingInfoForm } from "./BillingInfoForm";
 import { PayWith } from "./PayWith";
 import { CourseOptions } from "./CourseOptions";
 import { AgreementForm } from "./AgreementForm";
+import { DiscountCodeInput } from "./DiscountCodeInput";
 import { priceCalculation } from "@utils";
 import { useQueryString } from "@hooks";
 import { PAYMENT_MODES, PAYMENT_TYPES, ALERT_TYPES } from "@constants";
@@ -44,7 +45,12 @@ const createOptions = {
   },
 };
 
-export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
+export const PaymentForm = ({
+  workshop = {},
+  profile = {},
+  token,
+  enrollmentCompletionAction = () => {},
+}) => {
   // const {
   //   loading,
   //   errorMessage,
@@ -62,6 +68,7 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [priceType, setPriceType] = useState("");
   const [discount, setDiscount] = useQueryString("discountCode");
+  const [dicountResponse, setDicountResponse] = useState(null);
   const router = useRouter();
 
   const handlePriceTypeChange = (event) => {
@@ -73,6 +80,15 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
+  };
+
+  const applyDiscount = (discount) => {
+    setDicountResponse(discount);
+  };
+
+  const toggleCardChangeDetail = (e) => {
+    if (e) e.preventDefault();
+    setIsChangingCard((isChangingCard) => !isChangingCard);
   };
 
   const paypalBuyAcknowledgement = async () => {};
@@ -248,7 +264,7 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
       } = await api.post({
         token,
         path: "createAndPayOrder",
-        body: JSON.stringify(payLoad),
+        body: payLoad,
       });
 
       setLoading(false);
@@ -256,7 +272,7 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       } else if (data) {
-        showEnrollmentCompletionAction(data);
+        enrollmentCompletionAction(data);
       }
       /*const { trackingActions } = this.props;
       trackingActions.paymentConfirmation(
@@ -272,6 +288,7 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
   };
 
   const {
+    id: productId,
     eventStartDate,
     eventEndDate,
     email: contactEmail,
@@ -378,11 +395,11 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
         contactAddress: personMailingStreet || "",
         contactState: personMailingState || "",
         contactZip: personMailingPostalCode || "",
-        // couponCode: couponCode ? couponCode : "",
+        couponCode: discount ? discount : "",
         questionnaire: questionnaire,
         ppaAgreement: false,
         paymentOption: PAYMENT_TYPES.FULL,
-        paymentMode: null,
+        paymentMode: "",
         accommodation: null,
       }}
       validationSchema={Yup.object().shape({
@@ -507,11 +524,20 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
                 </div>
                 <div className="order__card">
                   <BillingInfoForm formikProps={formikProps} />
-                  <input
+                  <DiscountCodeInput
+                    placeholder="Discount Code"
+                    formikProps={formikProps}
+                    formikKey="couponCode"
+                    product={productId}
+                    token={token}
+                    applyDiscount={applyDiscount}
+                    addOnProducts={addOnProducts}
+                  ></DiscountCodeInput>
+                  {/* <input
                     id="discount-code"
                     type="text"
                     placeholder="Discount Code"
-                  />
+                  /> */}
                   <PayWith
                     formikProps={formikProps}
                     otherPaymentOptions={otherPaymentOptions}
@@ -554,7 +580,7 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
                               />
                             </div>
                             <div className="change-cc-detail-link">
-                              <a href="#" onClick={this.toggleCardChangeDetail}>
+                              <a href="#" onClick={toggleCardChangeDetail}>
                                 Would you like to use a different credit card?
                               </a>
                             </div>
@@ -567,7 +593,7 @@ export const PaymentForm = ({ workshop = {}, profile = {}, token }) => {
                               <CardElement options={createOptions} />
                             </div>
                             <div className="change-cc-detail-link">
-                              <a href="#" onClick={this.toggleCardChangeDetail}>
+                              <a href="#" onClick={toggleCardChangeDetail}>
                                 Cancel
                               </a>
                             </div>

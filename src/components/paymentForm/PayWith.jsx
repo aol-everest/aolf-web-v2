@@ -1,11 +1,19 @@
 import React, { Fragment } from "react";
 import { Field, ErrorMessage } from "formik";
+import classNames from "classnames";
 
 const PAYPAL_PAYMENT_MODE = "PAYPAL_PAYMENT_MODE";
 const STRIPE_PAYMENT_MODE = "STRIPE_PAYMENT_MODE";
 export const PayWith = ({ formikProps, otherPaymentOptions }) => {
   return (
-    <div className="order__card__payment">
+    <div
+      className={classNames("input-block order__card__payment", {
+        error:
+          formikProps.errors.paymentMode && formikProps.touched.paymentMode,
+        "validate-error":
+          formikProps.errors.paymentMode && formikProps.touched.paymentMode,
+      })}
+    >
       <h6 className="order__card__payment-title">Pay with</h6>
       <div className="select-box order__card__payment-select">
         <div tabIndex="1" className="select-box__current">
@@ -67,6 +75,11 @@ export const PayWith = ({ formikProps, otherPaymentOptions }) => {
           )}
         </ul>
       </div>
+      {formikProps.errors.paymentMode && formikProps.touched.paymentMode && (
+        <div className="validation-message validation-mobile-message show">
+          {formikProps.errors.paymentMode}
+        </div>
+      )}
     </div>
   );
 };
