@@ -10,12 +10,15 @@ import { useGlobalAudioPlayerContext } from "@contexts";
  */
 
 import { isSSR } from "@utils";
+import classNames from "classnames";
 
 const AudioPlayer = () => {
   // State
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [dragging, setDragging] = useState(false);
+  const [isFullPlayer, setIsFullPlayer] = useState(false);
 
   const { hidePlayer, store } = useGlobalAudioPlayerContext();
 
@@ -28,10 +31,12 @@ const AudioPlayer = () => {
   if (isSSR) {
     return null;
   }
+  const isTouch = "ontouchstart" in window;
   // Refs
   const audioRef = useRef(new Audio(audioSrc));
   const intervalRef = useRef();
   const isReady = useRef(false);
+  const barRef = useRef();
 
   // Destructure for conciseness
   const { duration } = audioRef.current;
@@ -39,9 +44,33 @@ const AudioPlayer = () => {
   const currentPercentage = duration
     ? `${(trackProgress / duration) * 100}%`
     : "0%";
-  const trackStyling = `
-    -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
-  `;
+
+  const secondsToTime = (secs) => {
+    if (!secs) {
+      return "00:00";
+    }
+    var hours = Math.floor(secs / 3600),
+      minutes = Math.floor((secs % 3600) / 60),
+      seconds = Math.ceil((secs % 3600) % 60);
+    return (
+      (hours == 0
+        ? ""
+        : hours > 0 && hours.toString().length < 2
+        ? "0" + hours + ":"
+        : hours + ":") +
+      (minutes.toString().length < 2 ? "0" + minutes : minutes) +
+      ":" +
+      (seconds.toString().length < 2 ? "0" + seconds : seconds)
+    );
+  };
+
+  const onPlayPauseClick = () => {
+    setIsPlaying((isPlaying) => !isPlaying);
+  };
+
+  const toggelPlayer = () => {
+    setIsFullPlayer((isFullPlayer) => !isFullPlayer);
+  };
 
   const startTimer = () => {
     // Clear any timers already running
@@ -49,7 +78,7 @@ const AudioPlayer = () => {
 
     intervalRef.current = setInterval(() => {
       if (audioRef.current.ended) {
-        toNextTrack();
+        //toNextTrack();
       } else {
         setTrackProgress(audioRef.current.currentTime);
       }
@@ -87,6 +116,46 @@ const AudioPlayer = () => {
     }
   };
 
+  const trackerMousedown = (event) => {
+    const theRealEvent = isTouch ? event.touches[0] : event;
+    const currentTime = Math.round(
+      (duration * (theRealEvent.pageX - barRef.current.offsetLeft)) /
+        barRef.current.offsetWidth,
+    );
+    if (currentTime) {
+      audioRef.current.currentTime = currentTime;
+      setTrackProgress(audioRef.current.currentTime);
+    }
+    setDragging(true);
+  };
+
+  const trackerMouseup = (event) => {
+    setDragging(false);
+  };
+
+  const trackerMousemove = (event) => {
+    const theRealEvent = isTouch ? event.touches[0] : event;
+    if (dragging) {
+      const currentTime = Math.round(
+        (duration * (theRealEvent.pageX - barRef.current.offsetLeft)) /
+          barRef.current.offsetWidth,
+      );
+      if (currentTime) {
+        audioRef.current.currentTime = currentTime;
+        setTrackProgress(audioRef.current.currentTime);
+      }
+    }
+  };
+
+  // const adjustCurrentTime = (e) => {
+  //   const theRealEvent = isTouch ? e.originalEvent.touches[0] : e;
+  //   const currentTime = Math.round(
+  //     (duration * (theRealEvent.pageX - barRef.current.offsetLeft)) /
+  //       barRef.current.width,
+  //   );
+  //   console.log("oo", currentTime);
+  // };
+
   useEffect(() => {
     if (isPlaying) {
       audioRef.current.play();
@@ -97,21 +166,21 @@ const AudioPlayer = () => {
   }, [isPlaying]);
 
   // Handles cleanup and setup when changing tracks
-  useEffect(() => {
-    audioRef.current.pause();
+  // useEffect(() => {
+  //   audioRef.current.pause();
 
-    audioRef.current = new Audio(audioSrc);
-    setTrackProgress(audioRef.current.currentTime);
+  //   audioRef.current = new Audio(audioSrc);
+  //   setTrackProgress(audioRef.current.currentTime);
 
-    if (isReady.current) {
-      audioRef.current.play();
-      setIsPlaying(true);
-      startTimer();
-    } else {
-      // Set the isReady ref as true for the next pass
-      isReady.current = true;
-    }
-  }, [trackIndex]);
+  //   if (isReady.current) {
+  //     audioRef.current.play();
+  //     setIsPlaying(true);
+  //     startTimer();
+  //   } else {
+  //     // Set the isReady ref as true for the next pass
+  //     isReady.current = true;
+  //   }
+  // }, [trackIndex]);
 
   useEffect(() => {
     // Pause and clean up on unmount
@@ -123,47 +192,141 @@ const AudioPlayer = () => {
 
   return (
     <div className="meditation">
-      <div id="player" class="visible" style={{ bottom: 0 }}>
-        <div class="audioplayer">
-          <audio
-            preload="auto"
-            controls=""
-            id="audioHeader"
-            style={{ width: "0px", height: "0px", visibility: "hidden" }}
-          >
-            <source src={audioSrc} />
-          </audio>
-          <div class="audioplayer-playpause" title="">
-            <img src="/img/ic-play-40-hover.svg" />
+      {isFullPlayer && (
+        <div
+          id="modal_player"
+          class="modal player fixed-right fade show"
+          tabindex="-1"
+          role="dialog"
+        >
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="logo">
+                <img src="/img/ic-logo.svg" alt="logo" />
+              </div>
+              <div class="mobile-wrapper">
+                <div
+                  class="modal-header"
+                  style={{ backgroundImage: "url('/img/card-1a.png')" }}
+                >
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <img
+                      src="/img/ic-collapse.svg"
+                      class="collapse-player"
+                      onClick={toggelPlayer}
+                    />
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Gratitude</p>
+                  <span>Alan Watts</span>
+                  <div className="audioplayer">
+                    <div
+                      class="audioplayer-playpause"
+                      title=""
+                      onClick={onPlayPauseClick}
+                      style={{ width: "40px", height: "40px" }}
+                    >
+                      {!isPlaying && <img src="/img/ic-play-40-hover.svg" />}
+                      {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
+                    </div>
+                    <div class="player-song"></div>
+                    <div class="audioplayer-time audioplayer-time-current">
+                      {secondsToTime(trackProgress)}
+                    </div>
+                    <div
+                      ref={barRef}
+                      class="audioplayer-bar"
+                      onMouseDown={!isTouch ? trackerMousedown : () => {}}
+                      onMouseMove={!isTouch ? trackerMousemove : () => {}}
+                      onMouseUp={!isTouch ? trackerMouseup : () => {}}
+                      onTouchStart={isTouch ? trackerMousedown : () => {}}
+                      onTouchMove={isTouch ? trackerMousemove : () => {}}
+                      onTouchCancel={isTouch ? trackerMouseup : () => {}}
+                    >
+                      <div
+                        class="audioplayer-bar-loaded"
+                        style={{ width: "100%" }}
+                      ></div>
+                      <div
+                        class="audioplayer-bar-played"
+                        style={{ width: currentPercentage }}
+                      ></div>
+                    </div>
+                    <div class="audioplayer-time audioplayer-time-duration">
+                      {secondsToTime(duration)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="player-song">
-            <span>Alan Watts</span>
-            <p>Breath of Relaxation</p>
-          </div>
-          <div class="audioplayer-time audioplayer-time-current">00:02</div>
-          <div class="audioplayer-bar">
-            <div class="audioplayer-bar-loaded" style={{ width: "100%" }}></div>
-            <div
-              class="audioplayer-bar-played"
-              style={{ width: "10.6207%" }}
-            ></div>
-          </div>
-          <div class="audioplayer-time audioplayer-time-duration">00:17</div>
-          <div></div>
         </div>
-        <img
-          src="/img/ic-close-24-r.svg"
-          class="close-player"
-          onClick={hidePlayer}
-        />
-        <img
-          src="/img/ic-expand.svg"
-          class="expand-player"
-          data-toggle="modal"
-          data-target="#modal_player"
-        ></img>
-      </div>
-
+      )}
+      {!isFullPlayer && (
+        <div id="player" className="visible" style={{ bottom: 0 }}>
+          <div
+            className={classNames("audioplayer", {
+              "audioplayer-playing": isPlaying,
+            })}
+          >
+            <div
+              class="audioplayer-playpause"
+              title=""
+              onClick={onPlayPauseClick}
+              style={{ width: "40px" }}
+            >
+              {!isPlaying && <img src="/img/ic-play-40-hover.svg" />}
+              {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
+            </div>
+            <div class="player-song">
+              <span>Alan Watts</span>
+              <p>Breath of Relaxation</p>
+            </div>
+            <div class="audioplayer-time audioplayer-time-current">
+              {secondsToTime(trackProgress)}
+            </div>
+            <div
+              ref={barRef}
+              class="audioplayer-bar"
+              onMouseDown={!isTouch ? trackerMousedown : () => {}}
+              onMouseMove={!isTouch ? trackerMousemove : () => {}}
+              onMouseUp={!isTouch ? trackerMouseup : () => {}}
+              onTouchStart={isTouch ? trackerMousedown : () => {}}
+              onTouchMove={isTouch ? trackerMousemove : () => {}}
+              onTouchCancel={isTouch ? trackerMouseup : () => {}}
+            >
+              <div
+                class="audioplayer-bar-loaded"
+                style={{ width: "100%" }}
+              ></div>
+              <div
+                class="audioplayer-bar-played"
+                style={{ width: currentPercentage }}
+              ></div>
+            </div>
+            <div class="audioplayer-time audioplayer-time-duration">
+              {secondsToTime(duration)}
+            </div>
+            <div></div>
+          </div>
+          <img
+            src="/img/ic-close-24-r.svg"
+            class="close-player"
+            onClick={hidePlayer}
+          />
+          <img
+            src="/img/ic-expand.svg"
+            class="expand-player"
+            onClick={toggelPlayer}
+          ></img>
+        </div>
+      )}
       {/* <div className="audio-player">
         <div className="track-info">
           <img

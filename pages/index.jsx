@@ -93,18 +93,6 @@ const Meditation = ({ workshops, authenticated }) => {
           </button>
         </div>
       </section>
-      <div id="player" className="visible">
-        <audio preload="auto" controls id="audioHeader">
-          <source src="/sound/demo.mp3" />
-        </audio>
-        <img src="/img/ic-close-24-r.svg" className="close-player" />
-        <img
-          src="/img/ic-expand.svg"
-          className="expand-player"
-          data-toggle="modal"
-          data-target="#modal_player"
-        />
-      </div>
       <section className="courses courses-dop pb-4">
         <div className="search_course_form_mobile d-md-none d-block">
           <div className="">
