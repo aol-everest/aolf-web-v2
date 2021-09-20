@@ -12,6 +12,29 @@ export const ABBRS = {
   HDT: "HT",
 };
 
+export const TIME_ZONE = {
+  EST: {
+    name: "Eastern",
+    value: "EST",
+  },
+  CST: {
+    name: "Central",
+    value: "CST",
+  },
+  MST: {
+    name: "Mountain",
+    value: "MST",
+  },
+  PST: {
+    name: "Pacific",
+    value: "PST",
+  },
+  HST: {
+    name: "Hawaii",
+    value: "HST",
+  },
+};
+
 export const PAYMENT_TYPES = {
   FULL: "FULL",
   LATER: "LATER",
@@ -73,29 +96,6 @@ export const MEMBERSHIP_TYPES = {
   FREE_MEMBERSHIP: {
     name: "Free Membership",
     value: process.env.NEXT_PUBLIC_FREE_MEMBERSHIP || "",
-  },
-};
-
-export const TIME_ZONE = {
-  EST: {
-    name: "Eastern",
-    value: "EST",
-  },
-  CST: {
-    name: "Central",
-    value: "CST",
-  },
-  MST: {
-    name: "Mountain",
-    value: "MST",
-  },
-  PST: {
-    name: "Pacific",
-    value: "PST",
-  },
-  HST: {
-    name: "Hawaii",
-    value: "HST",
   },
 };
 

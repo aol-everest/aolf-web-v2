@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { api, isSSR } from "@utils";
 import { withSSRContext } from "aws-amplify";
+import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useGlobalAudioPlayerContext } from "@contexts";
@@ -13,6 +14,7 @@ import "swiper/components/scrollbar/scrollbar.min.css";
 const Meditation = ({ workshops, authenticated }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const { showPlayer } = useGlobalAudioPlayerContext();
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   const testAcrion = () => {
     showPlayer({
@@ -62,6 +64,10 @@ const Meditation = ({ workshops, authenticated }) => {
     },
   };
 
+  const toggleFilter = () => {
+    setShowFilterModal((showFilterModal) => !showFilterModal);
+  };
+
   return (
     <main className="background-image meditation">
       <section className="top-column meditation-page">
@@ -99,14 +105,18 @@ const Meditation = ({ workshops, authenticated }) => {
             <div className="row m-0 justify-content-between align-items-center">
               <p className="title mb-0">Find a Meditation</p>
               <div className="filter">
-                <div className="filter--button">
+                <div className="filter--button" onClick={toggleFilter}>
                   <img src="/img/ic-filter.svg" alt="filter" />
                   Filters
                   <span id="filter-count">0</span>
                 </div>
               </div>
             </div>
-            <div className="filter--box">
+            <div
+              className={classNames("filter--box", {
+                "d-none": !showFilterModal,
+              })}
+            >
               <div className="browse-category mb-3">
                 <div className="buttons-wrapper">
                   <div
@@ -468,7 +478,7 @@ const Meditation = ({ workshops, authenticated }) => {
               meditation are manifold. It is an essential practice for mental
               hygiene.
             </p>
-            <a href="#" className="learn-more-link">
+            <a href="https://aolf.me/sky" className="learn-more-link">
               Learn More
             </a>
           </div>
@@ -617,7 +627,12 @@ const Meditation = ({ workshops, authenticated }) => {
               Join an online, live session with a certified teacher to discover
               the secrets of meditation and your own breath.
             </p>
-            <button className="btn">Register Today</button>
+            <button
+              onClick={() => window.open("https://aolf.me/intro", "_self")}
+              className="btn"
+            >
+              Register Today
+            </button>
           </div>
           <div className="card yellow">
             <h5 className="card-title">Search Live Meditation Courses</h5>

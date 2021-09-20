@@ -4,8 +4,10 @@ import { api } from "@utils";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import { useUIDSeed } from "react-uid";
-import { WorkshopTile } from "@components/workshop/workshopTile";
+import { MeetupTile } from "@components/meetup/meetupTile";
 import { LinkedCalendar } from "@components/dateRangePicker";
+import { MeetupType } from "@components/meetup/meetupType";
+import { AddressSearch } from "@components";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
 import {
@@ -66,7 +68,7 @@ export const getServerSideProps = async (context) => {
     page = 1,
     mode = COURSE_MODES.ONLINE,
     location,
-    courseType,
+    meetupType,
     startEndDate,
     timeZone,
     instructor,
@@ -84,10 +86,10 @@ export const getServerSideProps = async (context) => {
         mode,
       };
     }
-    if (courseType && COURSE_TYPES[courseType]) {
+    if (meetupType && COURSE_TYPES[meetupType]) {
       param = {
         ...param,
-        ctype: COURSE_TYPES[courseType].value,
+        ctype: COURSE_TYPES[meetupType].value,
       };
     }
     if (timeZone && TIME_ZONE[timeZone]) {
@@ -116,17 +118,24 @@ export const getServerSideProps = async (context) => {
       token,
       param,
     });
+
+    const allMeetupMaster = await api.get({
+      path: "getAllMeetupMaster",
+      token,
+    });
+
     props = {
       ...props,
-      workshops: {
+      meetups: {
         pages: [{ data: res }],
         pageParams: [null],
       },
+      allMeetupMaster,
     };
   } catch (err) {
     props = {
       ...props,
-      workshops: {
+      meetups: {
         error: { message: err.message },
       },
     };
@@ -145,22 +154,31 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Meetup = ({ meetups, authenticated, query }) => {
+const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
   const seed = useUIDSeed();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
   });
-  const [locationFilter, setLocationFilter] = useQueryString("location");
-  const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
+  const [locationFilter, setLocationFilter] = useQueryString("location", {
+    parse: JSON.parse,
+  });
+  const [meetupTypeFilter, setMeetupTypeFilter] = useQueryString("meetupType");
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryString("startEndDate");
   const [timeZoneFilter, setTimeZoneFilter] = useQueryString("timeZone");
+  const [timesOfDayFilter, setTimesOfDayFilter] = useQueryString("timesOfDay");
   const [instructorFilter, setInstructorFilter] = useQueryString("instructor", {
     parse: JSON.parse,
   });
 
+  const [showTimeZoneDropdown, setShowTimeZoneDropdown] = useState(false);
+
   const [searchKey, setSearchKey] = useState("");
+
+  const meetupMasters = allMeetupMaster.reduce((acc, meetup) => {
+    return { ...acc, [meetup.id]: meetup };
+  }, {});
 
   const toggleActiveFilter = (newType) => () => {
     setActiveFilterType(newType);
@@ -179,13 +197,24 @@ const Meetup = ({ meetups, authenticated, query }) => {
   }));
   instructorList = (instructorList || []).slice(0, 5);
 
-  const onFilterChange = (field) => async (value) => {
+  const showTimeZoneDropdownAction = () => {
+    setShowTimeZoneDropdown((showTimeZoneDropdown) => !showTimeZoneDropdown);
+  };
+
+  const onFilterChange = (field) => (value) => {
     switch (field) {
-      case "courseTypeFilter":
-        setCourseTypeFilter(value);
+      case "meetupTypeFilter":
+        setMeetupTypeFilter(value);
         break;
       case "locationFilter":
-        setLocationFilter(JSON.stringify(value));
+        if (value) {
+          setLocationFilter(JSON.stringify(value));
+        } else {
+          setLocationFilter(null);
+        }
+        break;
+      case "timesOfDayFilter":
+        setTimesOfDayFilter(value);
         break;
       case "timeZoneFilter":
         setTimeZoneFilter(value);
@@ -202,11 +231,18 @@ const Meetup = ({ meetups, authenticated, query }) => {
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     switch (field) {
-      case "courseTypeFilter":
-        setCourseTypeFilter(value);
+      case "meetupTypeFilter":
+        setMeetupTypeFilter(value);
         break;
       case "locationFilter":
-        setLocationFilter(JSON.stringify(value));
+        if (value) {
+          setLocationFilter(JSON.stringify(value));
+        } else {
+          setLocationFilter(null);
+        }
+        break;
+      case "timesOfDayFilter":
+        setTimesOfDayFilter(value);
         break;
       case "timeZoneFilter":
         setTimeZoneFilter(value);
@@ -223,11 +259,14 @@ const Meetup = ({ meetups, authenticated, query }) => {
 
   const onFilterClearEvent = (field) => async () => {
     switch (field) {
-      case "courseTypeFilter":
-        setCourseTypeFilter(null);
+      case "meetupTypeFilter":
+        setMeetupTypeFilter(null);
         break;
       case "locationFilter":
         setLocationFilter(null);
+        break;
+      case "timesOfDayFilter":
+        setTimesOfDayFilter(null);
         break;
       case "timeZoneFilter":
         setTimeZoneFilter(null);
@@ -259,7 +298,7 @@ const Meetup = ({ meetups, authenticated, query }) => {
     [
       "meetups",
       {
-        courseTypeFilter,
+        meetupTypeFilter,
         filterStartEndDate,
         timeZoneFilter,
         instructorFilter,
@@ -362,44 +401,38 @@ const Meetup = ({ meetups, authenticated, query }) => {
                 </a>
               </div>
               <div className="switch-flter-container">
-                {false && activeFilterType === COURSE_MODES.IN_PERSON && (
-                  <Popup
-                    tabIndex="1"
-                    value={locationFilter}
-                    buttonText={locationFilter ? locationFilter : "Location"}
-                    closeEvent={onFilterChange("locationFilter")}
-                  >
-                    {({ closeHandler }) => (
-                      <SmartInput
-                        closeHandler={closeHandler}
-                        inputclassName="location-input"
-                      ></SmartInput>
-                    )}
-                  </Popup>
-                )}
-
                 <Popup
-                  tabIndex="2"
-                  value={courseTypeFilter}
+                  tabIndex="1"
+                  value={locationFilter}
                   buttonText={
-                    courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                      ? COURSE_TYPES[courseTypeFilter].name
-                      : "Course Type"
+                    locationFilter
+                      ? `${locationFilter.loactionName}`
+                      : "Location"
                   }
-                  closeEvent={onFilterChange("courseTypeFilter")}
+                  closeEvent={onFilterChange("locationFilter")}
                 >
                   {({ closeHandler }) => (
-                    <>
-                      <li onClick={closeHandler("SKY_BREATH_MEDITATION")}>
-                        {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                      </li>
-                      <li onClick={closeHandler("SILENT_RETREAT")}>
-                        {COURSE_TYPES.SILENT_RETREAT.name}
-                      </li>
-                      <li onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}>
-                        {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                      </li>
-                    </>
+                    <AddressSearch
+                      closeHandler={closeHandler}
+                      placeholder="Search for Location"
+                    />
+                  )}
+                </Popup>
+                <Popup
+                  tabIndex="2"
+                  value={meetupTypeFilter}
+                  buttonText={
+                    meetupTypeFilter
+                      ? meetupMasters[meetupTypeFilter].name
+                      : "Meetup Type"
+                  }
+                  closeEvent={onFilterChange("meetupTypeFilter")}
+                >
+                  {({ closeHandler }) => (
+                    <MeetupType
+                      closeHandler={closeHandler}
+                      meetupMasters={allMeetupMaster}
+                    />
                   )}
                 </Popup>
                 <Popup
@@ -426,35 +459,137 @@ const Meetup = ({ meetups, authenticated, query }) => {
                 </Popup>
                 <Popup
                   tabIndex="4"
-                  value={timeZoneFilter}
-                  buttonText={
-                    timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                      ? TIME_ZONE[timeZoneFilter].name
-                      : "Time Zone"
+                  showId
+                  value={timeZoneFilter || timesOfDayFilter}
+                  buttonText={`${
+                    TIME_ZONE[timeZoneFilter]
+                      ? TIME_ZONE[timeZoneFilter].name + ", "
+                      : ""
                   }
+                        ${timesOfDayFilter ? timesOfDayFilter : ""}${
+                    timeZoneFilter || timesOfDayFilter ? "" : "Time"
+                  }`}
                   closeEvent={onFilterChange("timeZoneFilter")}
                 >
                   {({ closeHandler }) => (
                     <>
-                      <li onClick={closeHandler(TIME_ZONE.EST.value)}>
-                        {TIME_ZONE.EST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.CST.value)}>
-                        {TIME_ZONE.CST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.MST.value)}>
-                        {TIME_ZONE.MST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.PST.value)}>
-                        {TIME_ZONE.PST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.HST.value)}>
-                        {TIME_ZONE.HST.name}
-                      </li>
+                      <h2>Time range</h2>
+                      <div class="checkbox-list">
+                        <div class="checkbox-wrapper">
+                          <input
+                            class="custom-checkbox"
+                            type="checkbox"
+                            checked={
+                              timesOfDayFilter
+                                ? timesOfDayFilter === "Morning"
+                                : false
+                            }
+                            name="morning"
+                            id="morning"
+                            onClick={() =>
+                              onFilterChange("timesOfDayFilter")("Morning")
+                            }
+                          />
+                          <label class="checkbox-text" for="morning">
+                            Morning
+                          </label>
+                        </div>
+                        <div class="checkbox-wrapper">
+                          <input
+                            class="custom-checkbox"
+                            type="checkbox"
+                            name="afternoon"
+                            id="afternoon"
+                            checked={
+                              timesOfDayFilter
+                                ? timesOfDayFilter === "Afternoon"
+                                : false
+                            }
+                            onClick={() =>
+                              onFilterChange("timesOfDayFilter")("Afternoon")
+                            }
+                          />
+                          <label class="checkbox-text" for="afternoon">
+                            Afternoon
+                          </label>
+                        </div>
+                        <div class="checkbox-wrapper">
+                          <input
+                            class="custom-checkbox"
+                            type="checkbox"
+                            name="evening"
+                            id="evening"
+                            checked={
+                              timesOfDayFilter
+                                ? timesOfDayFilter === "Evening"
+                                : false
+                            }
+                            onClick={() =>
+                              onFilterChange("timesOfDayFilter")("Evening")
+                            }
+                          />
+                          <label class="checkbox-text" for="evening">
+                            Evening
+                          </label>
+                        </div>
+                      </div>
+                      <h2>Time zone</h2>
+                      <div class="dropdown">
+                        <button
+                          class="custom-dropdown"
+                          type="button"
+                          id="dropdownTimeButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                          onClick={showTimeZoneDropdownAction}
+                        >
+                          {TIME_ZONE[timeZoneFilter]
+                            ? TIME_ZONE[timeZoneFilter].name
+                            : "Select time zone"}
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownTimeButton"
+                          style={
+                            showTimeZoneDropdown ? { display: "block" } : {}
+                          }
+                        >
+                          <li
+                            class="dropdown-item text-left"
+                            onClick={closeHandler(TIME_ZONE.EST.value)}
+                          >
+                            {TIME_ZONE.EST.name}
+                          </li>
+                          <li
+                            class="dropdown-item text-left"
+                            onClick={closeHandler(TIME_ZONE.CST.value)}
+                          >
+                            {TIME_ZONE.CST.name}
+                          </li>
+                          <li
+                            class="dropdown-item text-left"
+                            onClick={closeHandler(TIME_ZONE.MST.value)}
+                          >
+                            {TIME_ZONE.MST.value}
+                          </li>
+                          <li
+                            class="dropdown-item text-left"
+                            onClick={closeHandler(TIME_ZONE.PST.value)}
+                          >
+                            {TIME_ZONE.PST.value}
+                          </li>
+                          <li
+                            class="dropdown-item text-left"
+                            onClick={closeHandler(TIME_ZONE.HST.value)}
+                          >
+                            {TIME_ZONE.HST.value}
+                          </li>
+                        </ul>
+                      </div>
                     </>
                   )}
                 </Popup>
-
                 <Popup
                   tabIndex="5"
                   value={instructorFilter ? instructorFilter.label : null}
@@ -517,19 +652,19 @@ const Meetup = ({ meetups, authenticated, query }) => {
               <MobileFilterModal
                 modalTitle="Course Type"
                 buttonText={
-                  courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                    ? COURSE_TYPES[courseTypeFilter].name
+                  meetupTypeFilter && COURSE_TYPES[meetupTypeFilter]
+                    ? COURSE_TYPES[meetupTypeFilter].name
                     : "Course Type"
                 }
-                clearEvent={onFilterClearEvent("courseTypeFilter")}
+                clearEvent={onFilterClearEvent("meetupTypeFilter")}
               >
                 <div className="dropdown">
                   <SmartDropDown
-                    value={courseTypeFilter}
+                    value={meetupTypeFilter}
                     buttonText={
-                      courseTypeFilter ? courseTypeFilter : "Select Course"
+                      meetupTypeFilter ? meetupTypeFilter : "Select Course"
                     }
-                    closeEvent={onFilterChange("courseTypeFilter")}
+                    closeEvent={onFilterChange("meetupTypeFilter")}
                   >
                     {({ closeHandler }) => (
                       <>
@@ -938,8 +1073,8 @@ const Meetup = ({ meetups, authenticated, query }) => {
             {isSuccess &&
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
-                  {page.data.map((workshop) => (
-                    <WorkshopTile key={workshop.sfid} data={workshop} />
+                  {page.data.map((meetup) => (
+                    <MeetupTile key={meetup.sfid} data={meetup} />
                   ))}
                 </React.Fragment>
               ))}

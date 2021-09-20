@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
 import { api } from "@utils";
+import classNames from "classnames";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
-import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
 import { WorkshopTile } from "@components/workshop/workshopTile";
 import { LinkedCalendar } from "@components/dateRangePicker";
@@ -19,34 +19,6 @@ import {
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
-import Style from "./Workshop.module.scss";
-
-const DATE_PICKER_CONFIG = {
-  opens: "center",
-  drops: "down",
-  showDropdowns: false,
-  showISOWeekNumbers: false,
-  showWeekNumbers: false,
-  locale: {
-    cancelLabel: "Clear",
-    daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
-    monthNames: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
-  },
-  autoApply: true,
-};
 
 export const getServerSideProps = async (context) => {
   let props = {};
@@ -114,7 +86,7 @@ export const getServerSideProps = async (context) => {
     }
 
     const res = await api.get({
-      path: "workshops",
+      path: "meditations",
       token,
       param,
     });
@@ -147,20 +119,12 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Workshop = ({ workshops, authenticated, query }) => {
+const MeditationFind = ({ meditations, authenticated, query }) => {
   const seed = useUIDSeed();
 
-  const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
-    defaultValue: COURSE_MODES.ONLINE,
-  });
-  const [locationFilter, setLocationFilter] = useQueryString("location");
-  const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
-  const [filterStartEndDate, setFilterStartEndDate] =
-    useQueryString("startEndDate");
-  const [timeZoneFilter, setTimeZoneFilter] = useQueryString("timeZone");
-  const [instructorFilter, setInstructorFilter] = useQueryString("instructor", {
-    parse: JSON.parse,
-  });
+  const [category, setCategory] = useQueryString("category");
+  const [duration, setDuration] = useQueryString("duration");
+  const [teacher, setTeacher] = useQueryString("teacher");
 
   const [searchKey, setSearchKey] = useState("");
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -169,89 +133,46 @@ const Workshop = ({ workshops, authenticated, query }) => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
-  const toggleActiveFilter = (newType) => () => {
-    setActiveFilterType(newType);
-  };
-
-  let instructorResult = useQuery(["instructor", searchKey], queryInstructor, {
-    // only fetch search terms longer than 2 characters
-    enabled: searchKey.length > 0,
-    // refresh cache after 10 seconds (watch the network tab!)
-    staleTime: 10 * 1000,
-  });
-
-  let instructorList = instructorResult?.data?.map(({ id, name }) => ({
-    value: id,
-    label: name,
-  }));
-  instructorList = (instructorList || []).slice(0, 5);
-
   const onFilterChange = (field) => async (value) => {
     switch (field) {
-      case "courseTypeFilter":
-        setCourseTypeFilter(value);
+      case "category":
+        setCategory(value);
         break;
-      case "locationFilter":
-        setLocationFilter(JSON.stringify(value));
+      case "duration":
+        setDuration(value);
         break;
-      case "timeZoneFilter":
-        setTimeZoneFilter(value);
-        break;
-      case "instructorFilter":
-        if (value) {
-          setInstructorFilter(JSON.stringify(value));
-        } else {
-          setInstructorFilter(null);
-        }
+      case "teacher":
+        setTeacher(value);
         break;
     }
   };
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     switch (field) {
-      case "courseTypeFilter":
-        setCourseTypeFilter(value);
+      case "category":
+        setCategory(value);
         break;
-      case "locationFilter":
-        setLocationFilter(JSON.stringify(value));
+      case "duration":
+        setDuration(value);
         break;
-      case "timeZoneFilter":
-        setTimeZoneFilter(value);
-        break;
-      case "instructorFilter":
-        if (value) {
-          setInstructorFilter(JSON.stringify(value));
-        } else {
-          setInstructorFilter(null);
-        }
+      case "teacher":
+        setTeacher(value);
         break;
     }
   };
 
   const onFilterClearEvent = (field) => async () => {
     switch (field) {
-      case "courseTypeFilter":
-        setCourseTypeFilter(null);
+      case "category":
+        setCategory(null);
         break;
-      case "locationFilter":
-        setLocationFilter(null);
+      case "duration":
+        setDuration(null);
         break;
-      case "timeZoneFilter":
-        setTimeZoneFilter(null);
-        break;
-      case "instructorFilter":
-        setInstructorFilter(null);
+      case "teacher":
+        setTeacher(null);
         break;
     }
-  };
-
-  const onDatesChange = async (date) => {
-    const { startDate, endDate } = date || {};
-    setFilterStartEndDate(
-      startDate
-        ? startDate.format("YYYY-MM-DD") + "|" + endDate.format("YYYY-MM-DD")
-        : null,
-    );
   };
 
   const {
@@ -264,7 +185,7 @@ const Workshop = ({ workshops, authenticated, query }) => {
     hasNextPage,
   } = useInfiniteQuery(
     [
-      "workshops",
+      "meditations",
       {
         courseTypeFilter,
         filterStartEndDate,
@@ -279,41 +200,27 @@ const Workshop = ({ workshops, authenticated, query }) => {
         size: 8,
       };
 
-      if (activeFilterType) {
+      if (category) {
         param = {
           ...param,
-          mode: activeFilterType,
+          category,
         };
       }
-      if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+      if (duration) {
         param = {
           ...param,
-          ctype: COURSE_TYPES[courseTypeFilter].value,
+          duration,
         };
       }
-      if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
+      if (teacher) {
         param = {
           ...param,
-          timeZone: TIME_ZONE[timeZoneFilter].value,
-        };
-      }
-      if (instructorFilter && instructorFilter.value) {
-        param = {
-          ...param,
-          teacherId: instructorFilter.value,
-        };
-      }
-      if (filterStartEndDate) {
-        const [startDate, endDate] = filterStartEndDate.split("|");
-        param = {
-          ...param,
-          sdate: startDate,
-          eDate: endDate,
+          teacher,
         };
       }
 
       const res = await api.get({
-        path: "workshops",
+        path: "meditations",
         param,
       });
       return res;
@@ -325,7 +232,7 @@ const Workshop = ({ workshops, authenticated, query }) => {
           : page.currectPage + 1;
       },
     },
-    { initialData: workshops },
+    { initialData: meditations },
   );
 
   const loadMoreRef = React.useRef();
@@ -338,12 +245,12 @@ const Workshop = ({ workshops, authenticated, query }) => {
 
   return (
     <main className="meetsup-filter">
-      <NextSeo title="Workshops" />
+      <NextSeo title="Meditations" />
       <section className="courses">
         <div className="container search_course_form d-lg-block d-none mb-2">
           <div className="row">
             <div className="col">
-              <p className="title mb-3">Find a course </p>
+              <p className="title mb-3">Find a meditation </p>
             </div>
           </div>
           <div className="row">
@@ -369,25 +276,32 @@ const Workshop = ({ workshops, authenticated, query }) => {
                 </a>
               </div>
               <div className="switch-flter-container">
-                {false && activeFilterType === COURSE_MODES.IN_PERSON && (
-                  <Popup
-                    tabIndex="1"
-                    value={locationFilter}
-                    buttonText={locationFilter ? locationFilter : "Location"}
-                    closeEvent={onFilterChange("locationFilter")}
-                  >
-                    {({ closeHandler }) => (
-                      <SmartInput
-                        closeHandler={closeHandler}
-                        inputclassName="location-input"
-                      ></SmartInput>
-                    )}
-                  </Popup>
-                )}
-
+                <Popup
+                  tabIndex="1"
+                  value={category}
+                  buttonText={
+                    category && !isEmpty(topic) ? topic.name : "Topic"
+                  }
+                  closeEvent={this.onFilterChange("topic")}
+                >
+                  {({ closeHandler }) => (
+                    <>
+                      {meditationCategory &&
+                        meditationCategory.map((category) => (
+                          <li
+                            onClick={closeHandler({
+                              name: category.key,
+                            })}
+                          >
+                            {category.key}
+                          </li>
+                        ))}
+                    </>
+                  )}
+                </Popup>
                 <Popup
                   tabIndex="2"
-                  value={courseTypeFilter}
+                  value={category}
                   buttonText={
                     courseTypeFilter && COURSE_TYPES[courseTypeFilter]
                       ? COURSE_TYPES[courseTypeFilter].name
@@ -405,58 +319,6 @@ const Workshop = ({ workshops, authenticated, query }) => {
                       </li>
                       <li onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}>
                         {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                      </li>
-                    </>
-                  )}
-                </Popup>
-                <Popup
-                  containerclassName={Style.daterangepickerPopup}
-                  tabIndex="3"
-                  value={filterStartEndDate}
-                  buttonText={
-                    filterStartEndDate
-                      ? filterStartEndDate.split("|").join(" - ")
-                      : "Dates"
-                  }
-                  closeEvent={onDatesChange}
-                >
-                  {({ closeHandler }) => (
-                    <LinkedCalendar
-                      {...DATE_PICKER_CONFIG}
-                      noFooter
-                      noInfo
-                      noCancel
-                      onDatesChange={closeHandler}
-                      className={Style.daterangepicker}
-                    />
-                  )}
-                </Popup>
-                <Popup
-                  tabIndex="4"
-                  value={timeZoneFilter}
-                  buttonText={
-                    timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                      ? TIME_ZONE[timeZoneFilter].name
-                      : "Time Zone"
-                  }
-                  closeEvent={onFilterChange("timeZoneFilter")}
-                >
-                  {({ closeHandler }) => (
-                    <>
-                      <li onClick={closeHandler(TIME_ZONE.EST.value)}>
-                        {TIME_ZONE.EST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.CST.value)}>
-                        {TIME_ZONE.CST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.MST.value)}>
-                        {TIME_ZONE.MST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.PST.value)}>
-                        {TIME_ZONE.PST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.HST.value)}>
-                        {TIME_ZONE.HST.name}
                       </li>
                     </>
                   )}
@@ -487,7 +349,7 @@ const Workshop = ({ workshops, authenticated, query }) => {
         <div className="search_course_form_mobile d-lg-none d-block">
           <div className="container">
             <div className="row m-0 justify-content-between align-items-center">
-              <p className="title mb-0">Find a course</p>
+              <p className="title mb-0">Find a meditation</p>
               <div className="filter">
                 <div className="filter--button d-flex" onClick={toggleFilter}>
                   <img src="./img/ic-filter.svg" alt="filter" />
@@ -1021,4 +883,4 @@ const Workshop = ({ workshops, authenticated, query }) => {
 // Workshop.requiresAuth = true;
 // Workshop.redirectUnauthenticated = "/login";
 
-export default Workshop;
+export default MeditationFind;
