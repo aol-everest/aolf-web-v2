@@ -266,10 +266,10 @@ export const LoginModal = () => {
             <>
               <div className="icon-wrapper">
                 <div className="icon" onClick={fbLogin}>
-                  <img src="./img/ic-facebook.svg" alt="facebook" />
+                  <img src="/img/ic-facebook.svg" alt="facebook" />
                 </div>
                 <div className="icon" onClick={googleLogin}>
-                  <img src="./img/google.svg" alt="google" />
+                  <img src="/img/google.svg" alt="google" />
                 </div>
               </div>
               <p>or</p>

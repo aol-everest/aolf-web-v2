@@ -8,6 +8,8 @@ import { MeetupTile } from "@components/meetup/meetupTile";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import { MeetupType } from "@components/meetup/meetupType";
 import { AddressSearch } from "@components";
+import { InfiniteScrollLoader } from "@components/loader";
+import { useGeolocation } from "@hooks";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
 import {
@@ -18,7 +20,7 @@ import {
   DateRangeInput,
 } from "@components";
 import { useQueryString } from "@hooks";
-import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
+import { TIME_ZONE, COURSE_MODES } from "@constants";
 import Style from "./Meetup.module.scss";
 
 const DATE_PICKER_CONFIG = {
@@ -72,6 +74,7 @@ export const getServerSideProps = async (context) => {
     startEndDate,
     timeZone,
     instructor,
+    timesOfDay,
   } = context.query;
   // Fetch data from external API
   try {
@@ -86,16 +89,22 @@ export const getServerSideProps = async (context) => {
         mode,
       };
     }
-    if (meetupType && COURSE_TYPES[meetupType]) {
+    if (meetupType) {
       param = {
         ...param,
-        ctype: COURSE_TYPES[meetupType].value,
+        filter: meetupType,
       };
     }
     if (timeZone && TIME_ZONE[timeZone]) {
       param = {
         ...param,
         timeZone: TIME_ZONE[timeZone].value,
+      };
+    }
+    if (timesOfDay) {
+      param = {
+        ...param,
+        timesOfDay: timesOfDay,
       };
     }
     if (instructor && instructor.value) {
@@ -156,6 +165,7 @@ async function queryInstructor({ queryKey: [_, term] }) {
 
 const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
   const seed = useUIDSeed();
+  const { latitude, longitude, error: geoLocationError } = useGeolocation();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
@@ -317,16 +327,22 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
           mode: activeFilterType,
         };
       }
-      if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+      if (meetupTypeFilter) {
         param = {
           ...param,
-          ctype: COURSE_TYPES[courseTypeFilter].value,
+          filter: meetupTypeFilter,
         };
       }
       if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
         param = {
           ...param,
           timeZone: TIME_ZONE[timeZoneFilter].value,
+        };
+      }
+      if (timesOfDayFilter) {
+        param = {
+          ...param,
+          timesOfDay: timesOfDayFilter,
         };
       }
       if (instructorFilter && instructorFilter.value) {
@@ -370,7 +386,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
 
   return (
     <main className="meetsup-filter">
-      <NextSeo title="Workshops" />
+      <NextSeo title="Meetups" />
       <section className="courses">
         <div className="container search_course_form d-lg-block d-none mb-2">
           <div className="row">
@@ -650,10 +666,25 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
               </div>
 
               <MobileFilterModal
+                modalTitle="Location"
+                buttonText={
+                  locationFilter ? `${locationFilter.loactionName}` : "Location"
+                }
+                clearEvent={onFilterClearEvent("locationFilter")}
+              >
+                <div class="dropdown">
+                  <AddressSearch
+                    filter={onFilterChange("locationFilter")}
+                    placeholder="Search for Location"
+                  />
+                </div>
+              </MobileFilterModal>
+
+              <MobileFilterModal
                 modalTitle="Course Type"
                 buttonText={
-                  meetupTypeFilter && COURSE_TYPES[meetupTypeFilter]
-                    ? COURSE_TYPES[meetupTypeFilter].name
+                  meetupTypeFilter
+                    ? meetupMasters[meetupTypeFilter].name
                     : "Course Type"
                 }
                 clearEvent={onFilterClearEvent("meetupTypeFilter")}
@@ -667,26 +698,11 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                     closeEvent={onFilterChange("meetupTypeFilter")}
                   >
                     {({ closeHandler }) => (
-                      <>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SKY_BREATH_MEDITATION")}
-                        >
-                          {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SILENT_RETREAT")}
-                        >
-                          {COURSE_TYPES.SILENT_RETREAT.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
-                        >
-                          {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                        </li>
-                      </>
+                      <MeetupType
+                        closeHandler={closeHandler}
+                        meetupMasters={allMeetupMaster}
+                        applyClassName="dropdown-item"
+                      />
                     )}
                   </SmartDropDown>
                 </div>
@@ -729,6 +745,67 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                 clearEvent={onFilterClearEvent("timeZoneFilter")}
               >
                 <div className="dropdown">
+                  <h2>Time range</h2>
+                  <div class="checkbox-list">
+                    <div class="checkbox-wrapper">
+                      <input
+                        class="custom-checkbox"
+                        type="checkbox"
+                        name="morning"
+                        id="morning"
+                        checked={
+                          timesOfDayFilter
+                            ? timesOfDayFilter === "Morning"
+                            : false
+                        }
+                        onClick={onFilterChangeEvent("timesOfDayFilter")(
+                          "Morning",
+                        )}
+                      />
+                      <label class="checkbox-text" for="morning">
+                        Morning
+                      </label>
+                    </div>
+                    <div class="checkbox-wrapper">
+                      <input
+                        class="custom-checkbox"
+                        type="checkbox"
+                        name="afternoon"
+                        id="afternoon"
+                        checked={
+                          timesOfDayFilter
+                            ? timesOfDayFilter === "Afternoon"
+                            : false
+                        }
+                        onClick={onFilterChangeEvent("timesOfDayFilter")(
+                          "Afternoon",
+                        )}
+                      />
+                      <label class="checkbox-text" for="afternoon">
+                        Afternoon
+                      </label>
+                    </div>
+                    <div class="checkbox-wrapper">
+                      <input
+                        class="custom-checkbox"
+                        type="checkbox"
+                        name="evening"
+                        id="evening"
+                        checked={
+                          timesOfDayFilter
+                            ? timesOfDayFilter === "Evening"
+                            : false
+                        }
+                        onClick={onFilterChangeEvent("timesOfDayFilter")(
+                          "Evening",
+                        )}
+                      />
+                      <label class="checkbox-text" for="evening">
+                        Evening
+                      </label>
+                    </div>
+                  </div>
+                  <h2>Time zone</h2>
                   <SmartDropDown
                     value={timeZoneFilter}
                     buttonText={
@@ -792,272 +869,6 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                   closeHandler={onFilterChangeEvent("instructorFilter")}
                 ></SmartInput>
               </MobileFilterModal>
-
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                id="course-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Meetup Type{" "}
-                </a>
-              </div>
-              <div
-                id="course-modal_mobile"
-                data-course="null"
-                data-course-initial="Meetup Type"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div id="course-close_mobile" className="mobile-modal--close">
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Meetup Type</h2>
-                  <div className="dropdown">
-                    <button
-                      className="custom-dropdown"
-                      type="button"
-                      id="dropdownCourseButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Select course
-                    </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownCourseButton"
-                    >
-                      <li className="dropdown-item">SKY Breath Meditation</li>
-                      <li className="dropdown-item">Silent Retreat</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div className="btn_box_primary select-btn">Select</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box full-btn mt-3"
-                id="date-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Dates{" "}
-                </a>
-              </div>
-              <div
-                id="date-modal_mobile"
-                data-date="null"
-                data-date-initial="Dates"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div id="date-close_mobile" className="mobile-modal--close">
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Dates</h2>
-                  <div className="datepicker-block">
-                    <input
-                      className="custom-input"
-                      type="text"
-                      id="datepicker-input"
-                    />
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div className="btn_box_primary select-btn">Select</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                aria-describedby="tooltip"
-                id="time-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Time{" "}
-                </a>
-              </div>
-              <div
-                id="time-modal_mobile"
-                data-time="null"
-                data-time-initial="Time"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div id="time-close_mobile" className="mobile-modal--close">
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Time</h2>
-                  <h2>Time range</h2>
-                  <div className="checkbox-list">
-                    <div className="checkbox-wrapper">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="morning"
-                      />
-                      <label htmlFor="morning"></label>
-                      <p className="checkbox-text">Morning</p>
-                    </div>
-                    <div className="checkbox-wrapper">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="afternoon"
-                      />
-                      <label htmlFor="afternoon"></label>
-                      <p className="checkbox-text">Afternoon</p>
-                    </div>
-                    <div className="checkbox-wrapper">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="evening"
-                      />
-                      <label htmlFor="evening"></label>
-                      <p className="checkbox-text">Evening</p>
-                    </div>
-                  </div>
-
-                  <h2>Time zone</h2>
-                  <div className="dropdown">
-                    <button
-                      className="custom-dropdown"
-                      type="button"
-                      id="dropdownTimeButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Select time zone
-                    </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownTimeButton"
-                    >
-                      <li className="dropdown-item">Eastern</li>
-                      <li className="dropdown-item">Central</li>
-                      <li className="dropdown-item">Pacific</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div className="btn_box_primary select-btn">Select</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                aria-describedby="tooltip"
-                id="instructor-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Instructor{" "}
-                </a>
-              </div>
-              <div
-                id="instructor-modal_mobile"
-                data-instructor="null"
-                data-instructor-initial="Instructor"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div
-                    id="instructor-close_mobile"
-                    className="mobile-modal--close"
-                  >
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Instructor</h2>
-                  <div
-                    className="smart-input-mobile"
-                    id="instructor-mobile-input"
-                  >
-                    <input
-                      placeholder="Search instructor"
-                      type="text"
-                      name="instructor"
-                      className="custom-input"
-                    />
-                    <div className="smart-input--list">
-                      <p className="smart-input--list-item">Mary Walker</p>
-                      <p className="smart-input--list-item">Rajesh Moksha</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div
-                      id="instructor-search"
-                      className="btn_box_primary select-btn"
-                    >
-                      Select
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                id="location-button_mobile"
-                data-swicth-active="false"
-              >
-                <a className="btn" href="#">
-                  Location
-                </a>
-              </div>
-              <div
-                id="location-modal_mobile"
-                data-location="null"
-                data-location-initial="Location"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div
-                    id="location-close_mobile"
-                    className="mobile-modal--close"
-                  >
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Location</h2>
-                  <div
-                    className="smart-input-mobile"
-                    id="location-mobile-input"
-                  >
-                    <input
-                      placeholder="Search location"
-                      type="text"
-                      name="location"
-                      className="custom-input"
-                    />
-                    <div className="smart-input--list">
-                      <p className="smart-input--list-item">Los Altos</p>
-                      <p className="smart-input--list-item">Los Angeles</p>
-                      <p className="smart-input--list-item">Los Gatos</p>
-                      <p className="smart-input--list-item">Los Mochis</p>
-                      <p className="smart-input--list-item">Los Banos</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div
-                      id="location-search"
-                      className="btn_box_primary select-btn"
-                    >
-                      Select
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1082,7 +893,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
           <div className="row">
             <div className="pt-3 col-12 text-center">
               <div ref={loadMoreRef}>
-                {isFetchingNextPage ? "Loading more..." : ""}
+                {isFetchingNextPage && <InfiniteScrollLoader />}
               </div>
             </div>
           </div>

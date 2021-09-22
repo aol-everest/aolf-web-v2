@@ -26,7 +26,8 @@
       "@utils": ["src/utils"],
       "@hooks": ["src/hooks"],
       "@constants": ["src/constants"],
-      "@contexts": ["src/contexts"]
+      "@contexts": ["src/contexts"],
+      "@service": ["src/service"]
     }
   },
   "include": ["next-env.d.js", "**/*.js", "**/*.jsx"],

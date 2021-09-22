@@ -1,20 +1,125 @@
 import React, { useState } from "react";
 import { api, isSSR } from "@utils";
 import { withSSRContext } from "aws-amplify";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useGlobalAudioPlayerContext } from "@contexts";
+import { useQuery } from "react-query";
+import Link from "next/link";
+import { useQueryString } from "@hooks";
+import { Popup } from "@components";
+import { DURATION } from "@constants";
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
 import "swiper/components/a11y/a11y.min.css";
 import "swiper/components/scrollbar/scrollbar.min.css";
 
+const CATEGORY_IMAGES = [
+  "/img/card-1a.png",
+  "/img/card-2a.png",
+  "/img/card-6.png",
+  "/img/card-4a.png",
+];
+
 const Meditation = ({ workshops, authenticated }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+  const router = useRouter();
   const { showPlayer } = useGlobalAudioPlayerContext();
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [topic, setTopic] = useQueryString("topic");
+  const [duration, setDuration] = useQueryString("duration");
+  const [instructor, setInstructor] = useQueryString("instructor");
+
+  const { data: meditationCategory = [] } = useQuery(
+    "meditationCategory",
+    async () => {
+      const response = await api.get({
+        path: "meditationCategory",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const { data: instructorList = [] } = useQuery(
+    "instructorList",
+    async () => {
+      const response = await api.get({
+        path: "getAllContentTeachers",
+        param: {
+          deviceType: "web",
+        },
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const { data: recommendedMeditations = [] } = useQuery(
+    "recommendedmeds",
+    async () => {
+      const response = await api.get({
+        path: "meditations",
+        param: {
+          deviceType: "web",
+          collectionName: "Recommendedmeds",
+        },
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  let backgroundIterator = -1;
+  const pickCategoryImage = (i) => {
+    backgroundIterator = backgroundIterator + 1;
+    if (backgroundIterator <= 3) {
+      return CATEGORY_IMAGES[backgroundIterator];
+    } else {
+      backgroundIterator = 0;
+      return CATEGORY_IMAGES[backgroundIterator];
+    }
+  };
+
+  const onFilterChange = (field) => async (value) => {
+    switch (field) {
+      case "topicFilter":
+        setTopic(value);
+        break;
+      case "durationFilter":
+        setDuration(value);
+        break;
+      case "instructorFilter":
+        setInstructor(value);
+        break;
+    }
+  };
+
+  const findMeditation = () => {
+    let query = {};
+    if (topic) {
+      query = { ...query, topic };
+    }
+    if (duration) {
+      query = { ...query, duration };
+    }
+    if (instructor) {
+      query = { ...query, instructor };
+    }
+    router.push({
+      pathname: "/meditation",
+      query,
+    });
+  };
 
   const testAcrion = () => {
     showPlayer({
@@ -290,41 +395,31 @@ const Meditation = ({ workshops, authenticated }) => {
       <section className="browse-category">
         <p className="title-slider">Browse by Category</p>
         <Swiper {...swiperOption}>
-          <SwiperSlide className="category-slide-item">
-            <div className="card image-card image-card-1">
-              <h5 className="card-title">Gratitude</h5>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="category-slide-item">
-            <div className="card image-card image-card-2">
-              <h5 className="card-title">Peace</h5>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="category-slide-item">
-            <div className="card image-card image-card-3">
-              <h5 className="card-title">Calm</h5>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="category-slide-item">
-            <div className="card image-card image-card-4">
-              <h5 className="card-title">Energy</h5>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="category-slide-item">
-            <div className="card image-card image-card-3">
-              <h5 className="card-title">Beginners</h5>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="category-slide-item">
-            <div className="card image-card image-card-3">
-              <h5 className="card-title">Gratitude</h5>
-            </div>
-          </SwiperSlide>
+          {meditationCategory &&
+            meditationCategory.map((category, i) => (
+              <SwiperSlide key={i} className="category-slide-item">
+                <Link href={`/meditation/collection?topic=${category}`}>
+                  <div
+                    className="card image-card image-card-1"
+                    style={{
+                      background: `url(${pickCategoryImage(
+                        backgroundIterator,
+                      )}) no-repeat center/cover`,
+                    }}
+                  >
+                    <h5 className="card-title">{category}</h5>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
         </Swiper>
       </section>
       <section className="browse-category most-popular">
         <p className="title-slider">
-          Most Popular <span className="popular-all">All</span>
+          Most Popular{" "}
+          <Link href={`/meditation`}>
+            <span className="popular-all">All</span>
+          </Link>
         </p>
         <Swiper {...swiperOption}>
           <SwiperSlide className="popular-slide-item">
@@ -406,52 +501,69 @@ const Meditation = ({ workshops, authenticated }) => {
       <section className="browse-category most-popular d-none d-md-block">
         <p className="title-slider">Find a meditation</p>
         <div className="buttons-wrapper">
-          <div tabIndex="1" className="tooltip-button" id="topic-button">
-            <div id="topic-type" className="clear-filter"></div>
-            <a className="btn">Topic</a>
-          </div>
-          <ul id="topic-tooltip" className="tooltip-block" role="tooltip">
-            <div className="tooltip-arrow" data-popper-arrow></div>
-            <li>Gratitude</li>
-            <li>Calm</li>
-            <li>Beginners</li>
-            <li>Peace</li>
-            <li>Energy</li>
-          </ul>
+          <Popup
+            tabIndex="1"
+            value={topic}
+            buttonText={topic ? topic : "Topic"}
+            closeEvent={onFilterChange("topicFilter")}
+          >
+            {({ closeHandler }) => (
+              <>
+                {meditationCategory &&
+                  meditationCategory.map((category) => (
+                    <li onClick={closeHandler(category)}>{category}</li>
+                  ))}
+              </>
+            )}
+          </Popup>
 
-          <div tabIndex="2" className="tooltip-button" id="duration-button">
-            <div id="duration-type" className="clear-filter"></div>
-            <a className="btn">Duration</a>
-          </div>
-          <ul id="duration-tooltip" className="tooltip-block" role="tooltip">
-            <div className="tooltip-arrow" data-popper-arrow></div>
-            <li>5 minutes</li>
-            <li>10 minutes</li>
-            <li>15 minutes</li>
-          </ul>
+          <Popup
+            tabIndex="2"
+            value={duration}
+            buttonText={duration ? DURATION[duration].name : "Duration"}
+            closeEvent={onFilterChange("durationFilter")}
+          >
+            {({ closeHandler }) => (
+              <>
+                <li onClick={closeHandler("MINUTES_5")}>
+                  {DURATION.MINUTES_5.name}
+                </li>
+                <li onClick={closeHandler("MINUTES_10")}>
+                  {DURATION.MINUTES_10.name}
+                </li>
+                <li onClick={closeHandler("MINUTES_20")}>
+                  {DURATION.MINUTES_20.name}
+                </li>
+              </>
+            )}
+          </Popup>
+          <Popup
+            tabIndex="3"
+            value={instructor}
+            buttonText={instructor ? instructor : "Instructor"}
+            closeEvent={onFilterChange("instructorFilter")}
+          >
+            {({ closeHandler }) => (
+              <>
+                {instructorList &&
+                  instructorList.map((instructor) => (
+                    <li
+                      className="topic-dropdown"
+                      onClick={closeHandler(instructor.primaryTeacherName)}
+                    >
+                      {instructor.primaryTeacherName}
+                    </li>
+                  ))}
+              </>
+            )}
+          </Popup>
 
-          <div tabIndex="3" className="tooltip-button" id="instructor-button">
-            <div id="meetup-type" className="clear-filter"></div>
-            <a className="btn">Instructor</a>
-          </div>
-          <ul id="instructor-tooltip" className="tooltip-block" role="tooltip">
-            <div className="tooltip-arrow" data-popper-arrow></div>
-            <div className="smart-input">
-              <input
-                placeholder="Search instructor"
-                type="text"
-                name="location"
-                id="instructor-input"
-                className="custom-input"
-              />
-              <div className="smart-input--list">
-                <p className="smart-input--list-item">Mary Walker</p>
-                <p className="smart-input--list-item">Rajesh Moksha</p>
-              </div>
-            </div>
-          </ul>
-
-          <button className="btn tooltip-button_search">Search</button>
+          <button
+            onClick={findMeditation}
+            className="btn tooltip-button_search"
+          >
+            Search
+          </button>
         </div>
       </section>
       <section className="top-column what-meditation">

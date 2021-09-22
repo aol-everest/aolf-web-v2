@@ -99,6 +99,21 @@ export const MEMBERSHIP_TYPES = {
   },
 };
 
+export const DURATION = {
+  MINUTES_5: {
+    name: "5 minutes",
+    value: "0-300",
+  },
+  MINUTES_10: {
+    name: "10 minutes",
+    value: "300-600",
+  },
+  MINUTES_20: {
+    name: "20 + minutes",
+    value: "600-10800",
+  },
+};
+
 export const US_STATES = [
   {
     label: "Alabama",

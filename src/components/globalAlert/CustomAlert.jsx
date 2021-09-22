@@ -13,6 +13,7 @@ export const CustomAlert = () => {
     children,
     className,
     hideConfirm = false,
+    footer,
   } = alertProps || {};
 
   const handleAlertToggle = () => {
@@ -47,11 +48,15 @@ export const CustomAlert = () => {
         </div>
         {!hideConfirm && (
           <div className={classNames("course-join-card__footer", Style.footer)}>
-            <button className="btn-secondary" onClick={handleAlertToggle}>
-              {confirmBtnText}
-            </button>
+            {!footer && (
+              <button className="btn-secondary" onClick={handleAlertToggle}>
+                {confirmBtnText}
+              </button>
+            )}
+            {!!footer && footer()}
           </div>
         )}
+
         <div
           className="close-modal d-none d-lg-flex"
           onClick={handleAlertToggle}

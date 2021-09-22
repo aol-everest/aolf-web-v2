@@ -166,21 +166,21 @@ const AudioPlayer = () => {
   }, [isPlaying]);
 
   // Handles cleanup and setup when changing tracks
-  // useEffect(() => {
-  //   audioRef.current.pause();
+  useEffect(() => {
+    audioRef.current.pause();
 
-  //   audioRef.current = new Audio(audioSrc);
-  //   setTrackProgress(audioRef.current.currentTime);
+    audioRef.current = new Audio(audioSrc);
+    setTrackProgress(audioRef.current.currentTime);
 
-  //   if (isReady.current) {
-  //     audioRef.current.play();
-  //     setIsPlaying(true);
-  //     startTimer();
-  //   } else {
-  //     // Set the isReady ref as true for the next pass
-  //     isReady.current = true;
-  //   }
-  // }, [trackIndex]);
+    if (isReady.current) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      startTimer();
+    } else {
+      // Set the isReady ref as true for the next pass
+      isReady.current = true;
+    }
+  }, [audioSrc]);
 
   useEffect(() => {
     // Pause and clean up on unmount
@@ -285,8 +285,8 @@ const AudioPlayer = () => {
               {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
             </div>
             <div class="player-song">
-              <span>Alan Watts</span>
-              <p>Breath of Relaxation</p>
+              <span>{artist}</span>
+              <p>{title}</p>
             </div>
             <div class="audioplayer-time audioplayer-time-current">
               {secondsToTime(trackProgress)}

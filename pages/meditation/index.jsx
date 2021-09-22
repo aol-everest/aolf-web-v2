@@ -5,10 +5,10 @@ import classNames from "classnames";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import { useUIDSeed } from "react-uid";
-import { WorkshopTile } from "@components/workshop/workshopTile";
-import { LinkedCalendar } from "@components/dateRangePicker";
+import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
+import { useGlobalAlertContext, useGlobalAudioPlayerContext } from "@contexts";
 import {
   Popup,
   SmartInput,
@@ -17,8 +17,9 @@ import {
   DateRangeInput,
 } from "@components";
 import { useQueryString } from "@hooks";
-import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
+import { ALERT_TYPES, DURATION, MEMBERSHIP_TYPES } from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
+import { updateUserActivity } from "@service";
 
 export const getServerSideProps = async (context) => {
   let props = {};
@@ -29,59 +30,38 @@ export const getServerSideProps = async (context) => {
     token = user.signInUserSession.idToken.jwtToken;
     props = {
       authenticated: true,
-      username: user.username,
+      token,
     };
   } catch (err) {
     props = {
       authenticated: false,
     };
   }
-  const {
-    page = 1,
-    mode = COURSE_MODES.ONLINE,
-    location,
-    courseType,
-    startEndDate,
-    timeZone,
-    instructor,
-  } = context.query;
+  const { page = 1, topic, duration, instructor } = context.query;
   // Fetch data from external API
   try {
     let param = {
       page,
       size: 8,
+      deviceType: "Web",
     };
 
-    if (mode) {
+    if (topic) {
       param = {
         ...param,
-        mode,
+        category: topic,
       };
     }
-    if (courseType && COURSE_TYPES[courseType]) {
+    if (duration) {
       param = {
         ...param,
-        ctype: COURSE_TYPES[courseType].value,
+        duration: DURATION[duration].value,
       };
     }
-    if (timeZone && TIME_ZONE[timeZone]) {
+    if (instructor) {
       param = {
         ...param,
-        timeZone: TIME_ZONE[timeZone].value,
-      };
-    }
-    if (instructor && instructor.value) {
-      param = {
-        ...param,
-        teacherId: instructor.value,
-      };
-    }
-    if (startEndDate) {
-      const [startDate, endDate] = startEndDate.split("|");
-      param = {
-        ...param,
-        sdate: startDate,
-        eDate: endDate,
+        teacher: instructor,
       };
     }
 
@@ -92,7 +72,7 @@ export const getServerSideProps = async (context) => {
     });
     props = {
       ...props,
-      workshops: {
+      meditations: {
         pages: [{ data: res }],
         pageParams: [null],
       },
@@ -100,7 +80,7 @@ export const getServerSideProps = async (context) => {
   } catch (err) {
     props = {
       ...props,
-      workshops: {
+      meditations: {
         error: { message: err.message },
       },
     };
@@ -109,68 +89,251 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-async function queryInstructor({ queryKey: [_, term] }) {
-  const response = await api.get({
-    path: "cf/teachers",
-    param: {
-      query: term,
-    },
-  });
-  return response;
-}
+const RetreatPrerequisiteWarning = (warningPayload) => {
+  return (
+    <>
+      <p class="course-join-card__text">
+        {warningPayload && warningPayload.message}
+      </p>
+      <p class="course-join-card__text">
+        If our records are not accurate, please contact customer service at{" "}
+        <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
+        <a href="mailto:app.support@us.artofliving.org">
+          app.support@us.artofliving.org
+        </a>
+        . We will be happy to help you so you can sign up for the Silent
+        Retreat.
+      </p>
+    </>
+  );
+};
 
-const MeditationFind = ({ meditations, authenticated, query }) => {
+const PurchaseMembershipModal = (modalSubscription) => {
+  return (
+    <>
+      <p className="description">
+        Access even more content to support peace of mind and deep relaxation.
+        When you join Art of Living Journey's Digital Membership, you unlock a
+        growing library of meditations and insights, available ad-free. What's
+        included?
+      </p>
+      <div className="meditateMemberShip">
+        {modalSubscription.description &&
+          renderHTML(modalSubscription.description)}
+        <p className="modal-gray-text">
+          * Available to SKY Breath Meditation graduates
+        </p>
+      </div>
+    </>
+  );
+};
+
+const MeditationFind = ({ meditations, authenticated, token }) => {
   const seed = useUIDSeed();
 
-  const [category, setCategory] = useQueryString("category");
+  const { showPlayer } = useGlobalAudioPlayerContext();
+  const { showAlert } = useGlobalAlertContext();
+  const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
-  const [teacher, setTeacher] = useQueryString("teacher");
+  const [instructor, setInstructor] = useQueryString("instructor");
 
   const [searchKey, setSearchKey] = useState("");
   const [showFilterModal, setShowFilterModal] = useState(false);
+
+  const { data: meditationCategory = [] } = useQuery(
+    "meditationCategory",
+    async () => {
+      const response = await api.get({
+        path: "meditationCategory",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const { data: instructorList = [] } = useQuery(
+    "instructorList",
+    async () => {
+      const response = await api.get({
+        path: "getAllContentTeachers",
+        param: {
+          deviceType: "web",
+        },
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const { data: subsciptionCategories = [] } = useQuery(
+    "subsciption",
+    async () => {
+      const response = await api.get({
+        path: "subsciption",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
+  const markFavorite = (meditate) => async () => {
+    try {
+      const data = {
+        contentSfid: meditate.sfid,
+        removeFavourite: meditate.isFavorite ? true : false,
+      };
+      await api.post({
+        path: "markFavourite",
+        body: data,
+        token,
+      });
+      refetch({ refetchPage: (page, index) => index === 0 });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const meditateClickHandle = (meditate) => async (e) => {
+    if (e) e.preventDefault();
+
+    if (meditate.accessible) {
+      try {
+        const results = await api.get({
+          path: "meditationDetail",
+          param: { id: meditate.sfid },
+          token,
+        });
+        const {
+          data,
+          status,
+          error: errorMessage,
+          workshopPrerequisiteMessage,
+          requiredPrerequisitWorkshopIds,
+        } = results;
+
+        if (status === 400) {
+          showAlert(ALERT_TYPES.ERROR_ALERT, {
+            children: (
+              <RetreatPrerequisiteWarning
+                warningPayload={workshopPrerequisiteMessage}
+              />
+            ),
+          });
+        }
+
+        if (data) {
+          const meditateDetails = { ...data, ...meditate };
+          if (
+            meditateDetails.contentType === "Audio" ||
+            meditateDetails.contentType === "audio/x-m4a"
+          ) {
+            showPlayer({
+              track: {
+                title: meditateDetails.title,
+                artist: meditateDetails.teacher.name,
+                image: meditateDetails.coverImage.url,
+                audioSrc: meditateDetails.track.url,
+              },
+            });
+          } else if (meditateDetails.contentType === "Video") {
+            // this.setState(({ video }) => {
+            //   return {
+            //     video: { ...video, isRender: true },
+            //     videoMeditateDetails: meditateDetails,
+            //   };
+            // });
+          }
+          const { totalActivity } = await updateUserActivity(token, {
+            contentSfid: meditateDetails.sfid,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: error.message,
+        });
+      }
+      // } else if (meditate.accessible && !meditate.utilizable) {
+      //   this.setState({
+      //     retreatPrerequisiteWarningPayload: meditate,
+      //     showRetreatPrerequisiteWarning: true,
+      //   });
+    } else {
+      const allSubscriptions = subsciptionCategories.reduce(
+        (accumulator, currentValue) => {
+          return {
+            ...accumulator,
+            [currentValue.sfid]: currentValue,
+          };
+        },
+        {},
+      );
+      if (
+        allSubscriptions.hasOwnProperty(
+          MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+        )
+      ) {
+        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          children: (
+            <PurchaseMembershipModal
+              modalSubscription={
+                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
+              }
+            />
+          ),
+        });
+      }
+    }
+  };
+
   const onFilterChange = (field) => async (value) => {
     switch (field) {
-      case "category":
-        setCategory(value);
+      case "topicFilter":
+        setTopic(value);
         break;
-      case "duration":
+      case "durationFilter":
         setDuration(value);
         break;
-      case "teacher":
-        setTeacher(value);
+      case "instructorFilter":
+        setInstructor(value);
         break;
     }
   };
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     switch (field) {
-      case "category":
-        setCategory(value);
+      case "topicFilter":
+        setTopic(value);
         break;
-      case "duration":
+      case "durationFilter":
         setDuration(value);
         break;
-      case "teacher":
-        setTeacher(value);
+      case "instructorFilter":
+        setInstructor(value);
         break;
     }
   };
 
   const onFilterClearEvent = (field) => async () => {
     switch (field) {
-      case "category":
-        setCategory(null);
+      case "topicFilter":
+        setTopic(null);
         break;
-      case "duration":
+      case "durationFilter":
         setDuration(null);
         break;
-      case "teacher":
-        setTeacher(null);
+      case "instructorFilter":
+        setInstructor(null);
         break;
     }
   };
@@ -183,39 +346,39 @@ const MeditationFind = ({ meditations, authenticated, query }) => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useInfiniteQuery(
     [
       "meditations",
       {
-        courseTypeFilter,
-        filterStartEndDate,
-        timeZoneFilter,
-        instructorFilter,
-        activeFilterType,
+        topic,
+        duration,
+        instructor,
       },
     ],
     async ({ pageParam = 1 }) => {
       let param = {
         page: pageParam,
         size: 8,
+        deviceType: "Web",
       };
 
-      if (category) {
+      if (topic) {
         param = {
           ...param,
-          category,
+          category: topic,
         };
       }
       if (duration) {
         param = {
           ...param,
-          duration,
+          duration: DURATION[duration].value,
         };
       }
-      if (teacher) {
+      if (instructor) {
         param = {
           ...param,
-          teacher,
+          teacher: instructor,
         };
       }
 
@@ -255,91 +418,63 @@ const MeditationFind = ({ meditations, authenticated, query }) => {
           </div>
           <div className="row">
             <div className="search-form col-12 d-flex align-items-center">
-              <div id="switch-filter" className="btn_outline_box ml-0">
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
-                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
-                >
-                  Online
-                </a>
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={
-                    activeFilterType === COURSE_MODES.IN_PERSON
-                  }
-                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
-                >
-                  In Person
-                </a>
-              </div>
               <div className="switch-flter-container">
                 <Popup
                   tabIndex="1"
-                  value={category}
-                  buttonText={
-                    category && !isEmpty(topic) ? topic.name : "Topic"
-                  }
-                  closeEvent={this.onFilterChange("topic")}
+                  value={topic}
+                  buttonText={topic ? topic : "Topic"}
+                  closeEvent={onFilterChange("topicFilter")}
                 >
                   {({ closeHandler }) => (
                     <>
                       {meditationCategory &&
                         meditationCategory.map((category) => (
-                          <li
-                            onClick={closeHandler({
-                              name: category.key,
-                            })}
-                          >
-                            {category.key}
-                          </li>
+                          <li onClick={closeHandler(category)}>{category}</li>
                         ))}
-                    </>
-                  )}
-                </Popup>
-                <Popup
-                  tabIndex="2"
-                  value={category}
-                  buttonText={
-                    courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                      ? COURSE_TYPES[courseTypeFilter].name
-                      : "Course Type"
-                  }
-                  closeEvent={onFilterChange("courseTypeFilter")}
-                >
-                  {({ closeHandler }) => (
-                    <>
-                      <li onClick={closeHandler("SKY_BREATH_MEDITATION")}>
-                        {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                      </li>
-                      <li onClick={closeHandler("SILENT_RETREAT")}>
-                        {COURSE_TYPES.SILENT_RETREAT.name}
-                      </li>
-                      <li onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}>
-                        {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                      </li>
                     </>
                   )}
                 </Popup>
 
                 <Popup
-                  tabIndex="5"
-                  value={instructorFilter ? instructorFilter.label : null}
-                  buttonText={
-                    instructorFilter ? instructorFilter.label : "Instructor"
-                  }
+                  tabIndex="2"
+                  value={duration}
+                  buttonText={duration ? DURATION[duration].name : "Duration"}
+                  closeEvent={onFilterChange("durationFilter")}
+                >
+                  {({ closeHandler }) => (
+                    <>
+                      <li onClick={closeHandler("MINUTES_5")}>
+                        {DURATION.MINUTES_5.name}
+                      </li>
+                      <li onClick={closeHandler("MINUTES_10")}>
+                        {DURATION.MINUTES_10.name}
+                      </li>
+                      <li onClick={closeHandler("MINUTES_20")}>
+                        {DURATION.MINUTES_20.name}
+                      </li>
+                    </>
+                  )}
+                </Popup>
+                <Popup
+                  tabIndex="3"
+                  value={instructor}
+                  buttonText={instructor ? instructor : "Instructor"}
                   closeEvent={onFilterChange("instructorFilter")}
                 >
                   {({ closeHandler }) => (
-                    <SmartInput
-                      inputclassName={Style.instructor_input}
-                      onSearchKeyChange={(value) => setSearchKey(value)}
-                      dataList={instructorList}
-                      closeHandler={closeHandler}
-                      value={searchKey}
-                    ></SmartInput>
+                    <>
+                      {instructorList &&
+                        instructorList.map((instructor) => (
+                          <li
+                            className="topic-dropdown"
+                            onClick={closeHandler(
+                              instructor.primaryTeacherName,
+                            )}
+                          >
+                            {instructor.primaryTeacherName}
+                          </li>
+                        ))}
+                    </>
                   )}
                 </Popup>
               </div>
@@ -363,459 +498,116 @@ const MeditationFind = ({ meditations, authenticated, query }) => {
                 "d-none": !showFilterModal,
               })}
             >
-              <div
-                id="switch-mobile-filter"
-                className="btn_outline_box full-btn mt-3"
+              <MobileFilterModal
+                modalTitle="Topic"
+                buttonText={topic ? topic : "Topic"}
+                clearEvent={onFilterClearEvent("topicFilter")}
               >
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
-                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
-                >
-                  Online
-                </a>
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={
-                    activeFilterType === COURSE_MODES.IN_PERSON
-                  }
-                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
-                >
-                  In Person
-                </a>
-              </div>
+                <div className="dropdown">
+                  <SmartDropDown
+                    value={topic}
+                    buttonText={topic ? topic : "Select Topic"}
+                    closeEvent={onFilterChange("topicFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {meditationCategory &&
+                          meditationCategory.map((category) => (
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(category)}
+                            >
+                              {category}
+                            </li>
+                          ))}
+                      </>
+                    )}
+                  </SmartDropDown>
+                </div>
+              </MobileFilterModal>
+
+              <MobileFilterModal
+                modalTitle="Duration"
+                buttonText={duration ? DURATION[duration].name : "Duration"}
+                clearEvent={onFilterClearEvent("durationFilter")}
+              >
+                <div className="dropdown">
+                  <SmartDropDown
+                    value={duration}
+                    buttonText={duration ? DURATION[duration].name : "Duration"}
+                    closeEvent={onFilterChange("durationFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        <li
+                          className="topic-dropdown"
+                          onClick={closeHandler("MINUTES_5")}
+                        >
+                          {DURATION.MINUTES_5.name}
+                        </li>
+                        <li
+                          className="topic-dropdown"
+                          onClick={closeHandler("MINUTES_10")}
+                        >
+                          {DURATION.MINUTES_10.name}
+                        </li>
+                        <li
+                          className="topic-dropdown"
+                          onClick={closeHandler("MINUTES_20")}
+                        >
+                          {DURATION.MINUTES_20.name}
+                        </li>
+                      </>
+                    )}
+                  </SmartDropDown>
+                </div>
+              </MobileFilterModal>
 
               <MobileFilterModal
                 modalTitle="Course Type"
-                buttonText={
-                  courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                    ? COURSE_TYPES[courseTypeFilter].name
-                    : "Course Type"
-                }
-                clearEvent={onFilterClearEvent("courseTypeFilter")}
-              >
-                <div className="dropdown">
-                  <SmartDropDown
-                    value={courseTypeFilter}
-                    buttonText={
-                      courseTypeFilter ? courseTypeFilter : "Select Course"
-                    }
-                    closeEvent={onFilterChange("courseTypeFilter")}
-                  >
-                    {({ closeHandler }) => (
-                      <>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SKY_BREATH_MEDITATION")}
-                        >
-                          {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SILENT_RETREAT")}
-                        >
-                          {COURSE_TYPES.SILENT_RETREAT.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
-                        >
-                          {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                        </li>
-                      </>
-                    )}
-                  </SmartDropDown>
-                </div>
-              </MobileFilterModal>
-
-              <MobileFilterModal
-                modalTitle="Dates"
-                buttonText={
-                  filterStartEndDate
-                    ? filterStartEndDate.split("|").join(" - ")
-                    : "Dates"
-                }
-                clearEvent={onDatesChange}
-              >
-                <DateRangeInput
-                  value={filterStartEndDate}
-                  buttonText={
-                    filterStartEndDate
-                      ? filterStartEndDate.split("|").join(" - ")
-                      : "Select Dates"
-                  }
-                  closeEvent={onDatesChange}
-                >
-                  {({ closeHandler }) => (
-                    <LinkedCalendar
-                      {...DATE_PICKER_CONFIG}
-                      onDatesChange={closeHandler}
-                    />
-                  )}
-                </DateRangeInput>
-              </MobileFilterModal>
-
-              <MobileFilterModal
-                modalTitle="Time"
-                buttonText={
-                  timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                    ? TIME_ZONE[timeZoneFilter].name
-                    : "Timezone"
-                }
-                clearEvent={onFilterClearEvent("timeZoneFilter")}
-              >
-                <div className="dropdown">
-                  <SmartDropDown
-                    value={timeZoneFilter}
-                    buttonText={
-                      timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                        ? TIME_ZONE[timeZoneFilter].name
-                        : "Select Timezone"
-                    }
-                    closeEvent={onFilterChange("timeZoneFilter")}
-                  >
-                    {({ closeHandler }) => (
-                      <>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.EST.value)}
-                        >
-                          {TIME_ZONE.EST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.CST.value)}
-                        >
-                          {TIME_ZONE.CST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.MST.value)}
-                        >
-                          {TIME_ZONE.MST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.PST.value)}
-                        >
-                          {TIME_ZONE.PST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.HST.value)}
-                        >
-                          {TIME_ZONE.HST.name}
-                        </li>
-                      </>
-                    )}
-                  </SmartDropDown>
-                </div>
-              </MobileFilterModal>
-
-              <MobileFilterModal
-                modalTitle="Instructor"
-                buttonText={
-                  instructorFilter ? instructorFilter.label : "Instructor"
-                }
+                buttonText={instructor ? instructor : "Instructor"}
                 clearEvent={onFilterClearEvent("instructorFilter")}
               >
-                <SmartInput
-                  containerclassName="smart-input-mobile"
-                  placeholder="Search Instructor"
-                  value={searchKey}
-                  onSearchKeyChange={(value) => setSearchKey(value)}
-                  dataList={instructorList}
-                  closeHandler={onFilterChangeEvent("instructorFilter")}
-                ></SmartInput>
+                <div className="dropdown">
+                  <SmartDropDown
+                    value={instructor}
+                    buttonText={instructor ? instructor : "Select Instructor"}
+                    closeEvent={onFilterChange("instructorFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {instructorList &&
+                          instructorList.map((instructor) => (
+                            <li
+                              className="topic-dropdown"
+                              onClick={closeHandler(
+                                instructor.primaryTeacherName,
+                              )}
+                            >
+                              {instructor.primaryTeacherName}
+                            </li>
+                          ))}
+                      </>
+                    )}
+                  </SmartDropDown>
+                </div>
               </MobileFilterModal>
-
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                id="course-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Meetup Type{" "}
-                </a>
-              </div>
-              <div
-                id="course-modal_mobile"
-                data-course="null"
-                data-course-initial="Meetup Type"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div id="course-close_mobile" className="mobile-modal--close">
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Meetup Type</h2>
-                  <div className="dropdown">
-                    <button
-                      className="custom-dropdown"
-                      type="button"
-                      id="dropdownCourseButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Select course
-                    </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownCourseButton"
-                    >
-                      <li className="dropdown-item">SKY Breath Meditation</li>
-                      <li className="dropdown-item">Silent Retreat</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div className="btn_box_primary select-btn">Select</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box full-btn mt-3"
-                id="date-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Dates{" "}
-                </a>
-              </div>
-              <div
-                id="date-modal_mobile"
-                data-date="null"
-                data-date-initial="Dates"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div id="date-close_mobile" className="mobile-modal--close">
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Dates</h2>
-                  <div className="datepicker-block">
-                    <input
-                      className="custom-input"
-                      type="text"
-                      id="datepicker-input"
-                    />
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div className="btn_box_primary select-btn">Select</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                aria-describedby="tooltip"
-                id="time-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Time{" "}
-                </a>
-              </div>
-              <div
-                id="time-modal_mobile"
-                data-time="null"
-                data-time-initial="Time"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div id="time-close_mobile" className="mobile-modal--close">
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Time</h2>
-                  <h2>Time range</h2>
-                  <div className="checkbox-list">
-                    <div className="checkbox-wrapper">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="morning"
-                      />
-                      <label htmlFor="morning"></label>
-                      <p className="checkbox-text">Morning</p>
-                    </div>
-                    <div className="checkbox-wrapper">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="afternoon"
-                      />
-                      <label htmlFor="afternoon"></label>
-                      <p className="checkbox-text">Afternoon</p>
-                    </div>
-                    <div className="checkbox-wrapper">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="evening"
-                      />
-                      <label htmlFor="evening"></label>
-                      <p className="checkbox-text">Evening</p>
-                    </div>
-                  </div>
-
-                  <h2>Time zone</h2>
-                  <div className="dropdown">
-                    <button
-                      className="custom-dropdown"
-                      type="button"
-                      id="dropdownTimeButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Select time zone
-                    </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownTimeButton"
-                    >
-                      <li className="dropdown-item">Eastern</li>
-                      <li className="dropdown-item">Central</li>
-                      <li className="dropdown-item">Pacific</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div className="btn_box_primary select-btn">Select</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                aria-describedby="tooltip"
-                id="instructor-button_mobile"
-              >
-                <a className="btn" href="#">
-                  Instructor{" "}
-                </a>
-              </div>
-              <div
-                id="instructor-modal_mobile"
-                data-instructor="null"
-                data-instructor-initial="Instructor"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div
-                    id="instructor-close_mobile"
-                    className="mobile-modal--close"
-                  >
-                    <img src="./img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Instructor</h2>
-                  <div
-                    className="smart-input-mobile"
-                    id="instructor-mobile-input"
-                  >
-                    <input
-                      placeholder="Search instructor"
-                      type="text"
-                      name="instructor"
-                      className="custom-input"
-                    />
-                    <div className="smart-input--list">
-                      <p className="smart-input--list-item">Mary Walker</p>
-                      <p className="smart-input--list-item">Rajesh Moksha</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div
-                      id="instructor-search"
-                      className="btn_box_primary select-btn"
-                    >
-                      Select
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                id="location-button_mobile"
-                data-swicth-active="false"
-              >
-                <a className="btn" href="#">
-                  Location
-                </a>
-              </div>
-              <div
-                id="location-modal_mobile"
-                data-location="null"
-                data-location-initial="Location"
-                className="mobile-modal"
-              >
-                <div className="mobile-modal--header">
-                  <div
-                    id="location-close_mobile"
-                    className="mobile-modal--close"
-                  >
-                    <img src="/img/ic-close.svg" alt="close" />
-                  </div>
-                  <h2 className="mobile-modal--title">Location</h2>
-                  <div
-                    className="smart-input-mobile"
-                    id="location-mobile-input"
-                  >
-                    <input
-                      placeholder="Search location"
-                      type="text"
-                      name="location"
-                      className="custom-input"
-                    />
-                    <div className="smart-input--list">
-                      <p className="smart-input--list-item">Los Altos</p>
-                      <p className="smart-input--list-item">Los Angeles</p>
-                      <p className="smart-input--list-item">Los Gatos</p>
-                      <p className="smart-input--list-item">Los Mochis</p>
-                      <p className="smart-input--list-item">Los Banos</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-modal--body">
-                  <div className="row m-0 align-items-center justify-content-between">
-                    <div className="clear">Clear</div>
-                    <div
-                      id="location-search"
-                      className="btn_box_primary select-btn"
-                    >
-                      Select
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
         <div className="container upcoming_course">
-          <div className="row">
-            <div className="col-12">
-              <p className="title mb-1 mt-lg-5 mt-3">
-                Upcoming {activeFilterType} courses
-              </p>
-            </div>
-          </div>
           <div className="row mb-4">
             {isSuccess &&
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
-                  {page.data.map((workshop) => (
-                    <WorkshopTile
-                      key={workshop.sfid}
-                      data={workshop}
+                  {page.data.map((meditation) => (
+                    <MeditationTile
+                      key={meditation.sfid}
+                      data={meditation}
                       authenticated={authenticated}
+                      additionalClass="meditate-find"
+                      markFavorite={markFavorite(meditation)}
+                      meditateClickHandle={meditateClickHandle(meditation)}
                     />
                   ))}
                 </React.Fragment>
@@ -830,52 +622,6 @@ const MeditationFind = ({ meditations, authenticated, query }) => {
           </div>
         </div>
       </section>
-      {activeFilterType === COURSE_MODES.ONLINE &&
-        isSuccess &&
-        data.pages[0].totalCount === 0 &&
-        !isFetchingNextPage && (
-          <section className="about">
-            <div className="container happines_box">
-              <div className="row">
-                <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
-                  <h1 className="happines_title">
-                    Sorry, no courses match your chosen filters.
-                  </h1>
-                  <p className="happines_subtitle">
-                    Please broaden your options and try again.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-      {activeFilterType === COURSE_MODES.IN_PERSON &&
-        isSuccess &&
-        data.pages[0].totalCount === 0 &&
-        !isFetchingNextPage && (
-          <section className="about">
-            <div className="container happines_box">
-              <div className="row">
-                <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
-                  <h1 className="happines_title">
-                    Currently there are no {activeFilterType} courses available.
-                  </h1>
-                  <p className="happines_subtitle">
-                    Please check out our{" "}
-                    <a
-                      href="#"
-                      className="link v2"
-                      onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
-                    >
-                      online offerings
-                    </a>
-                    .
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
     </main>
   );
 };

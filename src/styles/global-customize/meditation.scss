@@ -1,0 +1,87 @@
+.card-title-bxs {
+  .course_name {
+    font-family: Lora !important;
+    font-size: 28px !important;
+    line-height: 1.43 !important;
+    // white-space: nowrap !important;
+    // overflow: hidden !important;
+    // text-overflow: ellipsis !important;
+    margin-bottom: 0.75rem;
+    font-weight: 500 !important;
+    color: #31364e;
+  }
+  .course_place {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.29;
+    color: #31364e;
+  }
+}
+
+.duration-time-txt {
+  border-radius: 4px !important;
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #31364e !important;
+}
+.collection-lock {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.upcoming_course_card.newCard-new {
+  width: 100%;
+  max-width: 262.6px;
+  height: auto;
+  text-align: left;
+  display: flex;
+  /* justify-items: flex-end; */
+  justify-content: space-between;
+  padding: 20px 20px 30px;
+  background-size: cover !important;
+  background-position: center !important;
+  color: #31364e;
+  border: 0;
+  flex-direction: column;
+  text-decoration: none;
+  min-height: 163px;
+  /* margin-bottom: 20px; */
+}
+.upcoming_course_card.newCard-new img {
+  width: auto !important;
+}
+
+.upcoming_course_card.newCard-new {
+  position: relative;
+}
+.card.image-card.image-card-1 .course-like,
+.upcoming_course_card.newCard-new .course-like {
+  background-image: url("../img/ic-heart.svg");
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  z-index: 101;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+.upcoming_course_card.newCard-new .course-like.liked {
+  background-image: url("../img/ic-heart-filled.svg");
+}
+.card.image-card.image-card-1 .course-like.liked {
+  background-image: url("../img/ic-heart-filled.svg");
+}
+.upcoming_course_card.newCard-new .forClick,
+.swiper-slide.popular-slide-item .forClick {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 52px;
+  z-index: 998;
+}

@@ -91,9 +91,7 @@ export const Popup = (props) => {
           ></div>
         )}
 
-        <a className={classNames("btn", buttonTextClass)} href="#">
-          {buttonText}
-        </a>
+        <a className={classNames("btn", buttonTextClass)}>{buttonText}</a>
       </div>
 
       <ul
