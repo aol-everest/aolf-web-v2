@@ -29,7 +29,7 @@
 .collection-lock {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 44px;
 }
 
 .upcoming_course_card.newCard-new {
@@ -170,4 +170,95 @@
 .meditate-collection .course_name,
 .meditate-find .course_name {
   margin-bottom: 10px;
+}
+
+.course-join-card__text-container .description {
+  font-size: 20px;
+  padding: 0;
+  margin: 25px 0 30px;
+  line-height: 1.38;
+}
+.course-join-card__text-container ul li {
+  position: relative;
+  padding-left: 15px;
+  font-size: 16px;
+  line-height: 1.43;
+  margin-bottom: 10px;
+}
+.course-join-card__text-container ul li::before {
+  content: "";
+  background-color: #ed994e;
+  font-weight: bold;
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  left: 0;
+  top: 8px;
+  border-radius: 10px;
+}
+
+.meditation-digital-membership {
+  max-width: 620px !important;
+  width: 620px;
+}
+.meditation-digital-membership .course-join-card__body {
+  padding: 40px 0 0 0 !important;
+}
+.meditation-digital-membership .course-join-card__text-container .description {
+  font-size: 16px;
+  margin-bottom: 20px;
+  margin-top: 0;
+  color: #31364e !important;
+  letter-spacing: 0.3px;
+}
+.meditation-digital-membership .course-join-card__text-container ul li {
+  position: relative;
+  padding-left: 15px;
+  font-size: 14px;
+  line-height: 1.43;
+  margin-bottom: 10px;
+}
+.meditation-digital-membership .modal-gray-text {
+  color: #9598a6;
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 10px;
+}
+
+.meditation-digital-membership .course-join-card__footer {
+  padding: 0px !important;
+}
+.meditation-digital-membership .course-join-card__footer .btn-secondary.v2 {
+  justify-content: space-around;
+  width: 225px;
+  height: 50px;
+  margin: 25px !important;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  font-size: 15px;
+  border-radius: 16px;
+}
+.meditation-digital-membership .course-join-card__footer .btn-secondary.v3 {
+  width: 125px;
+  height: 50px;
+  margin: 25px !important;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  font-size: 15px;
+  border-radius: 16px;
+}
+.meditation-digital-membership .course-join-card__text-container {
+  padding: 0 25px !important;
+  margin: 10px 0 20px !important;
+  line-height: 1.38;
+}
+
+#retreat-prerequisite .course-join-card__title {
+  font-size: 30px !important;
+  font-family: Lora;
+  font-weight: 400;
+  text-align: center;
 }

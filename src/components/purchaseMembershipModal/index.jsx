@@ -1,4 +1,7 @@
-export const PurchaseMembershipModal = (modalSubscription) => {
+import renderHTML from "react-render-html";
+
+export const PurchaseMembershipModal = ({ modalSubscription }) => {
+  console.log(modalSubscription);
   return (
     <>
       <p className="description">

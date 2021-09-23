@@ -256,6 +256,8 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
         )
       ) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          className: "retreat-prerequisite-big meditation-digital-membership",
+          title: "Go deeper with the Digital Membership",
           footer: () => {
             return (
               <button

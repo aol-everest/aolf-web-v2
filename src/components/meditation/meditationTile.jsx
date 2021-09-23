@@ -1,10 +1,6 @@
 import React from "react";
-import moment from "moment";
-import Image from "next/image";
-import Link from "next/link";
 import { useGlobalModalContext, useGlobalAlertContext } from "@contexts";
-import { MODAL_TYPES, ALERT_TYPES, ABBRS } from "@constants";
-import { api } from "@utils";
+import { MODAL_TYPES } from "@constants";
 import classNames from "classnames";
 
 const timeConvert = (data) => {
@@ -76,7 +72,7 @@ export const MeditationTile = ({
           {!accessible && (
             <span className="lock collection-lock">
               {" "}
-              <img src={Lock} />{" "}
+              <img src="/img/ic-lock.png" />{" "}
             </span>
           )}
         </div>
