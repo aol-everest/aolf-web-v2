@@ -19,7 +19,6 @@ import {
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
-import { useQuery } from "react-query";
 import Style from "./Workshop.module.scss";
 
 const DATE_PICKER_CONFIG = {

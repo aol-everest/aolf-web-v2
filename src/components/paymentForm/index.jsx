@@ -430,7 +430,6 @@ export const PaymentForm = ({
         paymentMode: Yup.string().required("Payment mode is required!"),
       })}
       onSubmit={async (values, { setSubmitting, isValid, errors }) => {
-        console.log(values);
         await completeEnrollmentAction(values);
       }}
     >

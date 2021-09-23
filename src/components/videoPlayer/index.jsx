@@ -28,7 +28,7 @@ const VideoPlayer = () => {
   };
 
   return (
-    <div className="profile-modal active show" style={{ zIndex: 99 }}>
+    <div className="profile-modal active show" style={{ zIndex: 999 }}>
       <div className="digital-member-join_journey show course-join-card video-player-modal">
         <div className="close-modal new-btn-modal" onClick={handleModalToggle}>
           <div className="close-line"></div>

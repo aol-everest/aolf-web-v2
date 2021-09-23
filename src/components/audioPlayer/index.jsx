@@ -253,7 +253,7 @@ const AudioPlayer = () => {
         </div>
       )}
       {!isFullPlayer && (
-        <div id="player" className="visible" style={{ bottom: 0 }}>
+        <div id="player" className="visible" style={{ bottom: 0, zIndex: 991 }}>
           <div
             className={classNames("audioplayer", {
               "audioplayer-playing": isPlaying,
