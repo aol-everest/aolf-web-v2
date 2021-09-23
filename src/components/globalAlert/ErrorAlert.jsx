@@ -44,13 +44,13 @@ export const ErrorAlert = () => {
           </h2>
 
           <div className="f-modal-alert">
-            <div class="f-modal-icon f-modal-error animate">
-              <span class="f-modal-x-mark">
-                <span class="f-modal-line f-modal-left animateXLeft"></span>
-                <span class="f-modal-line f-modal-right animateXRight"></span>
+            <div className="f-modal-icon f-modal-error animate">
+              <span className="f-modal-x-mark">
+                <span className="f-modal-line f-modal-left animateXLeft"></span>
+                <span className="f-modal-line f-modal-right animateXRight"></span>
               </span>
-              <div class="f-modal-placeholder"></div>
-              <div class="f-modal-fix"></div>
+              <div className="f-modal-placeholder"></div>
+              <div className="f-modal-fix"></div>
             </div>
           </div>
           <div className="course-join-card__text-container">{children}</div>

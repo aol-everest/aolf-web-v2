@@ -490,10 +490,10 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                   {({ closeHandler }) => (
                     <>
                       <h2>Time range</h2>
-                      <div class="checkbox-list">
-                        <div class="checkbox-wrapper">
+                      <div className="checkbox-list">
+                        <div className="checkbox-wrapper">
                           <input
-                            class="custom-checkbox"
+                            className="custom-checkbox"
                             type="checkbox"
                             checked={
                               timesOfDayFilter
@@ -506,13 +506,13 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                               onFilterChange("timesOfDayFilter")("Morning")
                             }
                           />
-                          <label class="checkbox-text" for="morning">
+                          <label className="checkbox-text" for="morning">
                             Morning
                           </label>
                         </div>
-                        <div class="checkbox-wrapper">
+                        <div className="checkbox-wrapper">
                           <input
-                            class="custom-checkbox"
+                            className="custom-checkbox"
                             type="checkbox"
                             name="afternoon"
                             id="afternoon"
@@ -525,13 +525,13 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                               onFilterChange("timesOfDayFilter")("Afternoon")
                             }
                           />
-                          <label class="checkbox-text" for="afternoon">
+                          <label className="checkbox-text" for="afternoon">
                             Afternoon
                           </label>
                         </div>
-                        <div class="checkbox-wrapper">
+                        <div className="checkbox-wrapper">
                           <input
-                            class="custom-checkbox"
+                            className="custom-checkbox"
                             type="checkbox"
                             name="evening"
                             id="evening"
@@ -544,15 +544,15 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                               onFilterChange("timesOfDayFilter")("Evening")
                             }
                           />
-                          <label class="checkbox-text" for="evening">
+                          <label className="checkbox-text" for="evening">
                             Evening
                           </label>
                         </div>
                       </div>
                       <h2>Time zone</h2>
-                      <div class="dropdown">
+                      <div className="dropdown">
                         <button
-                          class="custom-dropdown"
+                          className="custom-dropdown"
                           type="button"
                           id="dropdownTimeButton"
                           data-toggle="dropdown"
@@ -565,38 +565,38 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                             : "Select time zone"}
                         </button>
                         <ul
-                          class="dropdown-menu"
+                          className="dropdown-menu"
                           aria-labelledby="dropdownTimeButton"
                           style={
                             showTimeZoneDropdown ? { display: "block" } : {}
                           }
                         >
                           <li
-                            class="dropdown-item text-left"
+                            className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.EST.value)}
                           >
                             {TIME_ZONE.EST.name}
                           </li>
                           <li
-                            class="dropdown-item text-left"
+                            className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.CST.value)}
                           >
                             {TIME_ZONE.CST.name}
                           </li>
                           <li
-                            class="dropdown-item text-left"
+                            className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.MST.value)}
                           >
                             {TIME_ZONE.MST.value}
                           </li>
                           <li
-                            class="dropdown-item text-left"
+                            className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.PST.value)}
                           >
                             {TIME_ZONE.PST.value}
                           </li>
                           <li
-                            class="dropdown-item text-left"
+                            className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.HST.value)}
                           >
                             {TIME_ZONE.HST.value}
@@ -672,7 +672,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                 }
                 clearEvent={onFilterClearEvent("locationFilter")}
               >
-                <div class="dropdown">
+                <div className="dropdown">
                   <AddressSearch
                     filter={onFilterChange("locationFilter")}
                     placeholder="Search for Location"
@@ -746,10 +746,10 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
               >
                 <div className="dropdown">
                   <h2>Time range</h2>
-                  <div class="checkbox-list">
-                    <div class="checkbox-wrapper">
+                  <div className="checkbox-list">
+                    <div className="checkbox-wrapper">
                       <input
-                        class="custom-checkbox"
+                        className="custom-checkbox"
                         type="checkbox"
                         name="morning"
                         id="morning"
@@ -762,13 +762,13 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                           "Morning",
                         )}
                       />
-                      <label class="checkbox-text" for="morning">
+                      <label className="checkbox-text" for="morning">
                         Morning
                       </label>
                     </div>
-                    <div class="checkbox-wrapper">
+                    <div className="checkbox-wrapper">
                       <input
-                        class="custom-checkbox"
+                        className="custom-checkbox"
                         type="checkbox"
                         name="afternoon"
                         id="afternoon"
@@ -781,13 +781,13 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                           "Afternoon",
                         )}
                       />
-                      <label class="checkbox-text" for="afternoon">
+                      <label className="checkbox-text" for="afternoon">
                         Afternoon
                       </label>
                     </div>
-                    <div class="checkbox-wrapper">
+                    <div className="checkbox-wrapper">
                       <input
-                        class="custom-checkbox"
+                        className="custom-checkbox"
                         type="checkbox"
                         name="evening"
                         id="evening"
@@ -800,7 +800,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
                           "Evening",
                         )}
                       />
-                      <label class="checkbox-text" for="evening">
+                      <label className="checkbox-text" for="evening">
                         Evening
                       </label>
                     </div>

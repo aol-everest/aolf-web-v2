@@ -10,17 +10,14 @@ import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
 import { useGlobalAlertContext, useGlobalAudioPlayerContext } from "@contexts";
-import {
-  Popup,
-  SmartInput,
-  MobileFilterModal,
-  SmartDropDown,
-  DateRangeInput,
-} from "@components";
 import { useQueryString } from "@hooks";
 import { ALERT_TYPES, DURATION, MEMBERSHIP_TYPES } from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
 import { updateUserActivity } from "@service";
+import {
+  PurchaseMembershipModal,
+  RetreatPrerequisiteWarning,
+} from "@components";
 
 export const getServerSideProps = async (context) => {
   let props = {};
@@ -76,26 +73,6 @@ export const getServerSideProps = async (context) => {
   }
   // Pass data to the page via props
   return { props };
-};
-
-const PurchaseMembershipModal = (modalSubscription) => {
-  return (
-    <>
-      <p className="description">
-        Access even more content to support peace of mind and deep relaxation.
-        When you join Art of Living Journey's Digital Membership, you unlock a
-        growing library of meditations and insights, available ad-free. What's
-        included?
-      </p>
-      <div className="meditateMemberShip">
-        {modalSubscription.description &&
-          renderHTML(modalSubscription.description)}
-        <p className="modal-gray-text">
-          * Available to SKY Breath Meditation graduates
-        </p>
-      </div>
-    </>
-  );
 };
 
 function MeditationCollection({ meditations, authenticated, token }) {
@@ -253,6 +230,7 @@ function MeditationCollection({ meditations, authenticated, token }) {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useInfiniteQuery(
     [
       "meditations",
@@ -299,21 +277,21 @@ function MeditationCollection({ meditations, authenticated, token }) {
   });
 
   return (
-    <main class="background-image">
-      <div class="sleep-collection">
-        <section class="top-column">
-          <div class="container">
-            <p class="type-course">Guided Meditations</p>
-            <h1 class="course-name">{type}</h1>
-            <p class="type-guide">
+    <main className="background-image">
+      <div className="sleep-collection">
+        <section className="top-column">
+          <div className="container">
+            <p className="type-course">Guided Meditations</p>
+            <h1 className="course-name">{type}</h1>
+            <p className="type-guide">
               Guided Meditations for {type}
               <br />
             </p>
           </div>
         </section>
-        <section class="courses">
-          <div class="container">
-            <div class="row">
+        <section className="courses">
+          <div className="container">
+            <div className="row">
               {isSuccess &&
                 data.pages.map((page) => (
                   <React.Fragment key={seed(page)}>
@@ -322,7 +300,7 @@ function MeditationCollection({ meditations, authenticated, token }) {
                         key={meditation.sfid}
                         data={meditation}
                         authenticated={authenticated}
-                        additionalClass="meditate-find"
+                        additionalclassName="meditate-collection"
                         markFavorite={markFavorite(meditation)}
                         meditateClickHandle={meditateClickHandle(meditation)}
                       />

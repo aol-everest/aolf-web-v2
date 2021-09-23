@@ -1,0 +1,17 @@
+.video-react .video-react-big-play-button {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  background: rgb(130, 173, 224);
+  background: linear-gradient(
+    352deg,
+    rgba(130, 173, 224, 1) 0%,
+    rgba(61, 139, 232, 1) 100%
+  );
+  border: 1px solid #3571b9;
+}
+.video-player {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  overflow: hidden;
+}

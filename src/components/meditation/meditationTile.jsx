@@ -65,7 +65,7 @@ export const MeditationTile = ({
         data-complete={false}
         style={{
           background: `url(${
-            coverImage ? coverImage.url : "./img/card-1a.png"
+            coverImage ? coverImage.url : "/img/card-1a.png"
           }) no-repeat center/cover`,
         }}
       >

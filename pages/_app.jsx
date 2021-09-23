@@ -12,6 +12,7 @@ import Layout from "@components/layout";
 import { GlobalModal } from "@components/globalModal";
 import { GlobalAlert } from "@components/globalAlert";
 import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
+import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { AuthProvider } from "@contexts";
 import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
 import "nprogress/nprogress.css";
@@ -47,7 +48,12 @@ function App({ Component, pageProps, userInfo }) {
           <Hydrate state={pageProps.dehydratedState}>
             <AuthProvider userInfo={userInfo}>
               <Compose
-                components={[GlobalModal, GlobalAlert, GlobalAudioPlayer]}
+                components={[
+                  GlobalModal,
+                  GlobalAlert,
+                  GlobalAudioPlayer,
+                  GlobalVideoPlayer,
+                ]}
               >
                 <Layout hideHeader={Component.hideHeader}>
                   <TopProgressBar />

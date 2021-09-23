@@ -85,3 +85,89 @@
   top: 52px;
   z-index: 998;
 }
+
+@media (min-width: 767px) {
+  .upcoming_course_card.newCard-new {
+    height: auto;
+
+    min-height: 263px;
+    /* margin-bottom: 20px; */
+  }
+}
+@media (min-width: 1200px) {
+  .upcoming_course_card.newCard-new {
+    height: auto;
+
+    min-height: 320px;
+    /* margin-bottom: 20px; */
+  }
+}
+@media (max-width: 991px) {
+  .upcoming_course_card.newCard-new {
+    min-height: 263px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container.mob-container {
+    max-width: 540px !important;
+  }
+  .upcoming_course_card.newCard-new {
+    min-height: 301px;
+  }
+  .mob-container.container.upcoming_course .col-6.col-lg-3.col-md-4 {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .upcoming_course_card.newCard-new {
+    height: auto;
+
+    min-height: 301px;
+    /* margin-bottom: 20px; */
+  }
+}
+
+@media (max-width: 576px) {
+  .upcoming_course_card.newCard-new {
+    height: auto;
+
+    min-height: 163px;
+  }
+  .find-page-tiles .upcoming_course_card.newCard-new {
+    height: auto;
+
+    min-height: 183px;
+  }
+}
+
+.meditate-collection,
+.meditate-find {
+  overflow: hidden;
+}
+.meditate-collection .card-title-bxs .course_name {
+  font-weight: 800 !important;
+  font-size: 18px !important;
+  font-family: Work Sans, sans-serif !important;
+  line-height: 1.2 !important;
+}
+.meditate-collection .course_dat,
+.meditate-find .course_dat {
+  z-index: 9;
+}
+
+.meditate-collection .card-title-bxs,
+.meditate-find .card-title-bxs {
+  position: absolute;
+  bottom: 30px;
+  top: auto;
+  left: 20px;
+
+  z-index: 1;
+}
+.meditate-collection .course_name,
+.meditate-find .course_name {
+  margin-bottom: 10px;
+}

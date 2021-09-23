@@ -14,7 +14,7 @@ import classNames from "classnames";
 
 const AudioPlayer = () => {
   // State
-  const [trackIndex, setTrackIndex] = useState(0);
+
   const [trackProgress, setTrackProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [dragging, setDragging] = useState(false);
@@ -100,22 +100,6 @@ const AudioPlayer = () => {
     startTimer();
   };
 
-  const toPrevTrack = () => {
-    if (trackIndex - 1 < 0) {
-      setTrackIndex(tracks.length - 1);
-    } else {
-      setTrackIndex(trackIndex - 1);
-    }
-  };
-
-  const toNextTrack = () => {
-    if (trackIndex < tracks.length - 1) {
-      setTrackIndex(trackIndex + 1);
-    } else {
-      setTrackIndex(0);
-    }
-  };
-
   const trackerMousedown = (event) => {
     const theRealEvent = isTouch ? event.touches[0] : event;
     const currentTime = Math.round(
@@ -191,43 +175,43 @@ const AudioPlayer = () => {
   }, []);
 
   return (
-    <div className="meditation">
+    <div className="meditation" style={{ padding: "62px 0px 0px" }}>
       {isFullPlayer && (
         <div
           id="modal_player"
-          class="modal player fixed-right fade show"
+          className="modal player fixed-right fade show"
           tabindex="-1"
           role="dialog"
         >
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="logo">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="logo">
                 <img src="/img/ic-logo.svg" alt="logo" />
               </div>
-              <div class="mobile-wrapper">
+              <div className="mobile-wrapper">
                 <div
-                  class="modal-header"
+                  className="modal-header"
                   style={{ backgroundImage: "url('/img/card-1a.png')" }}
                 >
                   <button
                     type="button"
-                    class="close"
+                    className="close"
                     data-dismiss="modal"
                     aria-label="Close"
                   >
                     <img
                       src="/img/ic-collapse.svg"
-                      class="collapse-player"
+                      className="collapse-player"
                       onClick={toggelPlayer}
                     />
                   </button>
                 </div>
-                <div class="modal-body">
+                <div className="modal-body">
                   <p>Gratitude</p>
                   <span>Alan Watts</span>
                   <div className="audioplayer">
                     <div
-                      class="audioplayer-playpause"
+                      className="audioplayer-playpause"
                       title=""
                       onClick={onPlayPauseClick}
                       style={{ width: "40px", height: "40px" }}
@@ -235,13 +219,13 @@ const AudioPlayer = () => {
                       {!isPlaying && <img src="/img/ic-play-40-hover.svg" />}
                       {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
                     </div>
-                    <div class="player-song"></div>
-                    <div class="audioplayer-time audioplayer-time-current">
+                    <div className="player-song"></div>
+                    <div className="audioplayer-time audioplayer-time-current">
                       {secondsToTime(trackProgress)}
                     </div>
                     <div
                       ref={barRef}
-                      class="audioplayer-bar"
+                      className="audioplayer-bar"
                       onMouseDown={!isTouch ? trackerMousedown : () => {}}
                       onMouseMove={!isTouch ? trackerMousemove : () => {}}
                       onMouseUp={!isTouch ? trackerMouseup : () => {}}
@@ -250,15 +234,15 @@ const AudioPlayer = () => {
                       onTouchCancel={isTouch ? trackerMouseup : () => {}}
                     >
                       <div
-                        class="audioplayer-bar-loaded"
+                        className="audioplayer-bar-loaded"
                         style={{ width: "100%" }}
                       ></div>
                       <div
-                        class="audioplayer-bar-played"
+                        className="audioplayer-bar-played"
                         style={{ width: currentPercentage }}
                       ></div>
                     </div>
-                    <div class="audioplayer-time audioplayer-time-duration">
+                    <div className="audioplayer-time audioplayer-time-duration">
                       {secondsToTime(duration)}
                     </div>
                   </div>
@@ -276,7 +260,7 @@ const AudioPlayer = () => {
             })}
           >
             <div
-              class="audioplayer-playpause"
+              className="audioplayer-playpause"
               title=""
               onClick={onPlayPauseClick}
               style={{ width: "40px" }}
@@ -284,16 +268,16 @@ const AudioPlayer = () => {
               {!isPlaying && <img src="/img/ic-play-40-hover.svg" />}
               {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
             </div>
-            <div class="player-song">
+            <div className="player-song">
               <span>{artist}</span>
               <p>{title}</p>
             </div>
-            <div class="audioplayer-time audioplayer-time-current">
+            <div className="audioplayer-time audioplayer-time-current">
               {secondsToTime(trackProgress)}
             </div>
             <div
               ref={barRef}
-              class="audioplayer-bar"
+              className="audioplayer-bar"
               onMouseDown={!isTouch ? trackerMousedown : () => {}}
               onMouseMove={!isTouch ? trackerMousemove : () => {}}
               onMouseUp={!isTouch ? trackerMouseup : () => {}}
@@ -302,27 +286,27 @@ const AudioPlayer = () => {
               onTouchCancel={isTouch ? trackerMouseup : () => {}}
             >
               <div
-                class="audioplayer-bar-loaded"
+                className="audioplayer-bar-loaded"
                 style={{ width: "100%" }}
               ></div>
               <div
-                class="audioplayer-bar-played"
+                className="audioplayer-bar-played"
                 style={{ width: currentPercentage }}
               ></div>
             </div>
-            <div class="audioplayer-time audioplayer-time-duration">
+            <div className="audioplayer-time audioplayer-time-duration">
               {secondsToTime(duration)}
             </div>
             <div></div>
           </div>
           <img
             src="/img/ic-close-24-r.svg"
-            class="close-player"
+            className="close-player"
             onClick={hidePlayer}
           />
           <img
             src="/img/ic-expand.svg"
-            class="expand-player"
+            className="expand-player"
             onClick={toggelPlayer}
           ></img>
         </div>

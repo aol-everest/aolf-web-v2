@@ -8,13 +8,19 @@ import { useUIDSeed } from "react-uid";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
-import { useGlobalAlertContext, useGlobalAudioPlayerContext } from "@contexts";
+import {
+  useGlobalAlertContext,
+  useGlobalAudioPlayerContext,
+  useGlobalVideoPlayerContext,
+} from "@contexts";
 import {
   Popup,
   SmartInput,
   MobileFilterModal,
   SmartDropDown,
   DateRangeInput,
+  PurchaseMembershipModal,
+  RetreatPrerequisiteWarning,
 } from "@components";
 import { useQueryString } from "@hooks";
 import { ALERT_TYPES, DURATION, MEMBERSHIP_TYPES } from "@constants";
@@ -89,50 +95,12 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const RetreatPrerequisiteWarning = (warningPayload) => {
-  return (
-    <>
-      <p class="course-join-card__text">
-        {warningPayload && warningPayload.message}
-      </p>
-      <p class="course-join-card__text">
-        If our records are not accurate, please contact customer service at{" "}
-        <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
-        <a href="mailto:app.support@us.artofliving.org">
-          app.support@us.artofliving.org
-        </a>
-        . We will be happy to help you so you can sign up for the Silent
-        Retreat.
-      </p>
-    </>
-  );
-};
-
-const PurchaseMembershipModal = (modalSubscription) => {
-  return (
-    <>
-      <p className="description">
-        Access even more content to support peace of mind and deep relaxation.
-        When you join Art of Living Journey's Digital Membership, you unlock a
-        growing library of meditations and insights, available ad-free. What's
-        included?
-      </p>
-      <div className="meditateMemberShip">
-        {modalSubscription.description &&
-          renderHTML(modalSubscription.description)}
-        <p className="modal-gray-text">
-          * Available to SKY Breath Meditation graduates
-        </p>
-      </div>
-    </>
-  );
-};
-
 const MeditationFind = ({ meditations, authenticated, token }) => {
   const seed = useUIDSeed();
 
   const { showPlayer } = useGlobalAudioPlayerContext();
   const { showAlert } = useGlobalAlertContext();
+  const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
@@ -203,6 +171,10 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
     }
   };
 
+  const purchaseMembershipAction = (id) => (e) => {
+    router.push(`/membership/${id}`);
+  };
+
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
 
@@ -240,18 +212,20 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
             showPlayer({
               track: {
                 title: meditateDetails.title,
-                artist: meditateDetails.teacher.name,
-                image: meditateDetails.coverImage.url,
-                audioSrc: meditateDetails.track.url,
+                artist: meditateDetails.teacher?.name,
+                image: meditateDetails.coverImage?.url,
+                audioSrc: meditateDetails.track?.url,
               },
             });
           } else if (meditateDetails.contentType === "Video") {
-            // this.setState(({ video }) => {
-            //   return {
-            //     video: { ...video, isRender: true },
-            //     videoMeditateDetails: meditateDetails,
-            //   };
-            // });
+            showVideoPlayer({
+              track: {
+                title: meditateDetails.title,
+                artist: meditateDetails.teacher?.name,
+                image: meditateDetails.coverImage?.url,
+                audioSrc: meditateDetails.track?.url,
+              },
+            });
           }
           const { totalActivity } = await updateUserActivity(token, {
             contentSfid: meditateDetails.sfid,
@@ -284,6 +258,18 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
         )
       ) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          footer: () => {
+            return (
+              <button
+                className="btn-secondary v2"
+                onClick={purchaseMembershipAction(
+                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                )}
+              >
+                Join Digital Membership
+              </button>
+            );
+          },
           children: (
             <PurchaseMembershipModal
               modalSubscription={
@@ -605,7 +591,7 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
                       key={meditation.sfid}
                       data={meditation}
                       authenticated={authenticated}
-                      additionalClass="meditate-find"
+                      additionalclassName="meditate-find"
                       markFavorite={markFavorite(meditation)}
                       meditateClickHandle={meditateClickHandle(meditation)}
                     />

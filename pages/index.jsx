@@ -5,12 +5,22 @@ import { useRouter } from "next/router";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import { useGlobalAudioPlayerContext } from "@contexts";
+import {
+  useGlobalAudioPlayerContext,
+  useGlobalAlertContext,
+  useGlobalVideoPlayerContext,
+} from "@contexts";
 import { useQuery } from "react-query";
 import Link from "next/link";
 import { useQueryString } from "@hooks";
-import { Popup } from "@components";
-import { DURATION } from "@constants";
+import {
+  Popup,
+  PurchaseMembershipModal,
+  RetreatPrerequisiteWarning,
+} from "@components";
+import { DURATION, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { updateUserActivity } from "@service";
+
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
@@ -24,20 +34,109 @@ const CATEGORY_IMAGES = [
   "/img/card-4a.png",
 ];
 
-const Meditation = ({ workshops, authenticated }) => {
+const timeConvert = (data) => {
+  const minutes = data % 60;
+  const hours = (data - minutes) / 60;
+
+  return String(hours).padStart(2, 0) + ":" + String(minutes).padStart(2, 0);
+};
+
+export const getServerSideProps = async (context) => {
+  let props = {};
+  let token = "";
+  try {
+    const { Auth } = await withSSRContext(context);
+    const user = await Auth.currentAuthenticatedUser();
+    token = user.signInUserSession.idToken.jwtToken;
+    props = {
+      authenticated: true,
+      token,
+    };
+  } catch (err) {
+    props = {
+      authenticated: false,
+    };
+  }
+
+  const res = await api.get({
+    path: "randomMeditation",
+    token,
+  });
+
+  props = { ...props, randomMeditate: res.data };
+
+  // Pass data to the page via props
+  return { props };
+};
+
+const Meditation = ({ authenticated, token, randomMeditate }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
+  const { showAlert } = useGlobalAlertContext();
   const { showPlayer } = useGlobalAudioPlayerContext();
+  const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
 
-  const { data: meditationCategory = [] } = useQuery(
+  const { data: meditationCategory = [], isSuccess } = useQuery(
     "meditationCategory",
     async () => {
       const response = await api.get({
         path: "meditationCategory",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const [firstCategory, secoundCategory] = meditationCategory;
+  const { data: firstCategoryMeditations = [] } = useQuery(
+    "firstCategoryMeditation",
+    async () => {
+      const response = await api.get({
+        path: "meditations",
+        param: {
+          deviceType: "web",
+          category: firstCategory,
+        },
+        token,
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!firstCategory,
+    },
+  );
+
+  const { data: secoundCategoryMeditations = [] } = useQuery(
+    "secoundCategoryMeditation",
+    async () => {
+      const response = await api.get({
+        path: "meditations",
+        param: {
+          deviceType: "web",
+          category: secoundCategory,
+        },
+        token,
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!secoundCategory,
+    },
+  );
+
+  const { data: subsciptionCategories = [] } = useQuery(
+    "subsciption",
+    async () => {
+      const response = await api.get({
+        path: "subsciption",
       });
       return response.data;
     },
@@ -62,7 +161,7 @@ const Meditation = ({ workshops, authenticated }) => {
     },
   );
 
-  const { data: recommendedMeditations = [] } = useQuery(
+  const { data: recommendedMeditations = [], refetch } = useQuery(
     "recommendedmeds",
     async () => {
       const response = await api.get({
@@ -71,6 +170,7 @@ const Meditation = ({ workshops, authenticated }) => {
           deviceType: "web",
           collectionName: "Recommendedmeds",
         },
+        token,
       });
       return response.data;
     },
@@ -104,6 +204,134 @@ const Meditation = ({ workshops, authenticated }) => {
     }
   };
 
+  const markFavorite = (meditate) => async () => {
+    try {
+      const data = {
+        contentSfid: meditate.sfid,
+        removeFavourite: meditate.isFavorite ? true : false,
+      };
+      await api.post({
+        path: "markFavourite",
+        body: data,
+        token,
+      });
+      refetch({ refetchPage: (page, index) => index === 0 });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const purchaseMembershipAction = (id) => (e) => {
+    router.push(`/membership/${id}`);
+  };
+
+  const meditateClickHandle = (meditate) => async (e) => {
+    if (e) e.preventDefault();
+
+    if (meditate.accessible) {
+      try {
+        const results = await api.get({
+          path: "meditationDetail",
+          param: { id: meditate.sfid },
+          token,
+        });
+        const {
+          data,
+          status,
+          error: errorMessage,
+          workshopPrerequisiteMessage,
+          requiredPrerequisitWorkshopIds,
+        } = results;
+
+        if (status === 400) {
+          showAlert(ALERT_TYPES.ERROR_ALERT, {
+            children: (
+              <RetreatPrerequisiteWarning
+                warningPayload={workshopPrerequisiteMessage}
+              />
+            ),
+          });
+        }
+
+        if (data) {
+          const meditateDetails = { ...data, ...meditate };
+          if (
+            meditateDetails.contentType === "Audio" ||
+            meditateDetails.contentType === "audio/x-m4a"
+          ) {
+            showPlayer({
+              track: {
+                title: meditateDetails.title,
+                artist: meditateDetails.teacher?.name,
+                image: meditateDetails.coverImage?.url,
+                audioSrc: meditateDetails.track?.url,
+              },
+            });
+          } else if (meditateDetails.contentType === "Video") {
+            showVideoPlayer({
+              track: {
+                title: meditateDetails.title,
+                artist: meditateDetails.teacher?.name,
+                image: meditateDetails.coverImage?.url,
+                audioSrc: meditateDetails.track?.url,
+              },
+            });
+          }
+          await updateUserActivity(token, {
+            contentSfid: meditateDetails.sfid,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: error.message,
+        });
+      }
+      // } else if (meditate.accessible && !meditate.utilizable) {
+      //   this.setState({
+      //     retreatPrerequisiteWarningPayload: meditate,
+      //     showRetreatPrerequisiteWarning: true,
+      //   });
+    } else {
+      const allSubscriptions = subsciptionCategories.reduce(
+        (accumulator, currentValue) => {
+          return {
+            ...accumulator,
+            [currentValue.sfid]: currentValue,
+          };
+        },
+        {},
+      );
+      if (
+        allSubscriptions.hasOwnProperty(
+          MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+        )
+      ) {
+        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          footer: () => {
+            return (
+              <button
+                className="btn-secondary v2"
+                onClick={purchaseMembershipAction(
+                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                )}
+              >
+                Join Digital Membership
+              </button>
+            );
+          },
+          children: (
+            <PurchaseMembershipModal
+              modalSubscription={
+                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
+              }
+            />
+          ),
+        });
+      }
+    }
+  };
+
   const findMeditation = () => {
     let query = {};
     if (topic) {
@@ -118,15 +346,6 @@ const Meditation = ({ workshops, authenticated }) => {
     router.push({
       pathname: "/meditation",
       query,
-    });
-  };
-
-  const testAcrion = () => {
-    showPlayer({
-      track: {
-        audioSrc:
-          "https://downloads.ctfassets.net/us20rr1wrm34/20cWFGhMXu2cw08AioEUoK/2b79636d37fd72d57c8a83085a0a0744/YOGA_NIDRA_ENG__without_Music_VOICEONLY.mp3",
-      },
     });
   };
 
@@ -178,14 +397,14 @@ const Meditation = ({ workshops, authenticated }) => {
       <section className="top-column meditation-page">
         <div className="container">
           <p className="type-course">Guided Meditations</p>
-          <h1 className="course-name">Breath of Relaxation</h1>
-          <p className="type-guide">Alan Watts</p>
+          <h1 className="course-name">{randomMeditate.title}</h1>
+          <p className="type-guide">{randomMeditate.primaryTeacherName}</p>
           <button
             type="button"
             id="play"
             name="play"
             play="false"
-            onClick={testAcrion}
+            onClick={meditateClickHandle(randomMeditate)}
           >
             <div id="playIcon">
               <img className="ic-play-static" src="img/ic-play.svg" alt="" />
@@ -398,7 +617,7 @@ const Meditation = ({ workshops, authenticated }) => {
           {meditationCategory &&
             meditationCategory.map((category, i) => (
               <SwiperSlide key={i} className="category-slide-item">
-                <Link href={`/meditation/collection?topic=${category}`}>
+                <Link href={`/meditation/collection?type=${category}`}>
                   <div
                     className="card image-card image-card-1"
                     style={{
@@ -422,80 +641,49 @@ const Meditation = ({ workshops, authenticated }) => {
           </Link>
         </p>
         <Swiper {...swiperOption}>
-          <SwiperSlide className="popular-slide-item">
-            <div className="card image-card image-card-1" data-play-meditation>
-              <div className="duration-wrapper">
-                <span className="duration">26:00</span>
+          {recommendedMeditations.map((meditate) => (
+            <SwiperSlide
+              className="swiper-slide popular-slide-item"
+              key={meditate.sfid}
+            >
+              <div
+                className="card image-card image-card-1"
+                data-play-meditation
+                style={{
+                  background: `url(${
+                    meditate.coverImage
+                      ? meditate.coverImage.url
+                      : "/img/card-1a.png"
+                  }) no-repeat center/cover`,
+                }}
+              >
+                <div className="duration-wrapper">
+                  <span className="duration">
+                    {timeConvert(meditate.duration)}
+                  </span>
+                  {!meditate.accessible && (
+                    <span className="lock">
+                      <img src="/img/ic-lock.png" />
+                    </span>
+                  )}
+                </div>
+                {meditate.accessible && (
+                  <div
+                    onClick={markFavorite(meditate)}
+                    className={
+                      meditate.isFavorite ? "course-like liked" : "course-like"
+                    }
+                  ></div>
+                )}
+                <div
+                  className="forClick"
+                  onClick={meditateClickHandle(meditate)}
+                ></div>
+                <h5 className="card-title">{meditate.title}</h5>
+                <p className="card-text">{meditate.primaryTeacherName}</p>
               </div>
-              <h5 className="card-title">Blossom Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="popular-slide-item">
-            <div className="card image-card image-card-2">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">06:00</span>{" "}
-                <span className="lock">
-                  <img src="img/ic-lock.png" />
-                </span>
-              </div>
-              <h5 className="card-title">Cool Down Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="popular-slide-item">
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">18:00</span>{" "}
-                <span className="lock">
-                  <img src="img/ic-lock.png" />
-                </span>
-              </div>
-              <h5 className="card-title">Contentment Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="popular-slide-item">
-            <div className="card image-card image-card-4">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">10:00</span>{" "}
-                <span className="lock">
-                  <img src="img/ic-lock.png" />
-                </span>
-              </div>
-              <h5 className="card-title">Ocean of Calmness</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="popular-slide-item">
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
-                <span className="lock">
-                  <img src="img/ic-lock.png" />
-                </span>
-              </div>
-              <h5 className="card-title">You Are Peace</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className="popular-slide-item">
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
-                <span className="lock">
-                  <img src="img/ic-lock.png" />
-                </span>
-              </div>
-              <h5 className="card-title">Gratitude</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </section>
       <section className="browse-category most-popular d-none d-md-block">
@@ -597,133 +785,101 @@ const Meditation = ({ workshops, authenticated }) => {
         </div>
       </section>
       <section className="browse-category most-popular">
-        <p className="title-slider">Peace</p>
+        <p className="title-slider">{firstCategory}</p>
         <Swiper {...swiperOption}>
-          <SwiperSlide>
-            <div className="card image-card image-card-1">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
+          {firstCategoryMeditations.map((meditate) => (
+            <SwiperSlide
+              className="swiper-slide popular-slide-item"
+              key={meditate.sfid}
+            >
+              <div
+                className="card image-card image-card-1"
+                data-play-meditation
+                style={{
+                  background: `url(${
+                    meditate.coverImage
+                      ? meditate.coverImage.url
+                      : "/img/card-1a.png"
+                  }) no-repeat center/cover`,
+                }}
+              >
+                <div className="duration-wrapper">
+                  <span className="duration">
+                    {timeConvert(meditate.duration)}
+                  </span>
+                  {!meditate.accessible && (
+                    <span className="lock">
+                      {" "}
+                      <img src="/img/ic-lock.png" />{" "}
+                    </span>
+                  )}
+                </div>
+                {meditate.accessible && (
+                  <div
+                    onClick={markFavorite(meditate)}
+                    className={
+                      meditate.isFavorite ? "course-like liked" : "course-like"
+                    }
+                  ></div>
+                )}
+                <div
+                  className="forClick"
+                  onClick={meditateClickHandle(meditate)}
+                ></div>
+                <h5 className="card-title">{meditate.title}</h5>
+                <p className="card-text">{meditate.primaryTeacherName}</p>
               </div>
-              <h5 className="card-title">Blossom Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-2">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">06:00</span>{" "}
-              </div>
-              <h5 className="card-title">Cool Down Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">18:00</span>{" "}
-              </div>
-              <h5 className="card-title">Contentment Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-4">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">10:00</span>{" "}
-              </div>
-              <h5 className="card-title">Ocean of Calmness</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
-              </div>
-              <h5 className="card-title">You Are Peace</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
-              </div>
-              <h5 className="card-title">Gratitude</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </section>
       <section className="browse-category most-popular">
-        <p className="title-slider">Gratitude</p>
+        <p className="title-slider">{secoundCategory}</p>
         <Swiper {...swiperOption}>
-          <SwiperSlide>
-            <div className="card image-card image-card-1">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
+          {secoundCategoryMeditations.map((meditate) => (
+            <SwiperSlide
+              className="swiper-slide popular-slide-item"
+              key={meditate.sfid}
+            >
+              <div
+                className="card image-card image-card-1"
+                data-play-meditation
+                style={{
+                  background: `url(${
+                    meditate.coverImage
+                      ? meditate.coverImage.url
+                      : "/img/card-1a.png"
+                  }) no-repeat center/cover`,
+                }}
+              >
+                <div className="duration-wrapper">
+                  <span className="duration">
+                    {timeConvert(meditate.duration)}
+                  </span>
+                  {!meditate.accessible && (
+                    <span className="lock">
+                      {" "}
+                      <img src="/img/ic-lock.png" />{" "}
+                    </span>
+                  )}
+                </div>
+                {meditate.accessible && (
+                  <div
+                    onClick={markFavorite(meditate)}
+                    className={
+                      meditate.isFavorite ? "course-like liked" : "course-like"
+                    }
+                  ></div>
+                )}
+                <div
+                  className="forClick"
+                  onClick={meditateClickHandle(meditate)}
+                ></div>
+                <h5 className="card-title">{meditate.title}</h5>
+                <p className="card-text">{meditate.primaryTeacherName}</p>
               </div>
-              <h5 className="card-title">Blossom Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-2">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">06:00</span>{" "}
-              </div>
-              <h5 className="card-title">Cool Down Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">18:00</span>{" "}
-              </div>
-              <h5 className="card-title">Contentment Meditation</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-4">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">10:00</span>{" "}
-              </div>
-              <h5 className="card-title">Ocean of Calmness</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
-              </div>
-              <h5 className="card-title">You Are Peace</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="card image-card image-card-3">
-              <div className="duration-wrapper">
-                {" "}
-                <span className="duration">26:00</span>{" "}
-              </div>
-              <h5 className="card-title">Gratitude</h5>
-              <p className="card-text">Deepika Desai</p>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </section>
       <section className="top-column last-tips">
