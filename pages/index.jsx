@@ -9,17 +9,14 @@ import {
   useGlobalAudioPlayerContext,
   useGlobalAlertContext,
   useGlobalVideoPlayerContext,
+  useGlobalModalContext,
 } from "@contexts";
 import { useQuery } from "react-query";
 import Link from "next/link";
 import { useQueryString } from "@hooks";
-import {
-  Popup,
-  PurchaseMembershipModal,
-  RetreatPrerequisiteWarning,
-} from "@components";
-import { DURATION, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { updateUserActivity } from "@service";
+import { Popup } from "@components";
+import { DURATION } from "@constants";
+import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
@@ -72,8 +69,9 @@ export const getServerSideProps = async (context) => {
 const Meditation = ({ authenticated, token, randomMeditate }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
+  const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
-  const { showPlayer } = useGlobalAudioPlayerContext();
+  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [topic, setTopic] = useQueryString("topic");
@@ -204,20 +202,12 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
     }
   };
 
-  const markFavorite = (meditate) => async () => {
-    try {
-      const data = {
-        contentSfid: meditate.sfid,
-        removeFavourite: meditate.isFavorite ? true : false,
-      };
-      await api.post({
-        path: "markFavourite",
-        body: data,
-        token,
-      });
-      refetch({ refetchPage: (page, index) => index === 0 });
-    } catch (error) {
-      console.log(error);
+  const markFavorite = (meditate) => async (e) => {
+    if (e) e.preventDefault();
+    if (!authenticated) {
+      showModal(MODAL_TYPES.LOGIN_MODAL);
+    } else {
+      await markFavoriteEvent({ meditate, refetch, token });
     }
   };
 
@@ -227,108 +217,19 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
 
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
-
-    if (meditate.accessible) {
-      try {
-        const results = await api.get({
-          path: "meditationDetail",
-          param: { id: meditate.sfid },
-          token,
-        });
-        const {
-          data,
-          status,
-          error: errorMessage,
-          workshopPrerequisiteMessage,
-          requiredPrerequisitWorkshopIds,
-        } = results;
-
-        if (status === 400) {
-          showAlert(ALERT_TYPES.ERROR_ALERT, {
-            children: (
-              <RetreatPrerequisiteWarning
-                warningPayload={workshopPrerequisiteMessage}
-              />
-            ),
-          });
-        }
-
-        if (data) {
-          const meditateDetails = { ...data, ...meditate };
-          if (
-            meditateDetails.contentType === "Audio" ||
-            meditateDetails.contentType === "audio/x-m4a"
-          ) {
-            showPlayer({
-              track: {
-                title: meditateDetails.title,
-                artist: meditateDetails.teacher?.name,
-                image: meditateDetails.coverImage?.url,
-                audioSrc: meditateDetails.track?.url,
-              },
-            });
-          } else if (meditateDetails.contentType === "Video") {
-            showVideoPlayer({
-              track: {
-                title: meditateDetails.title,
-                artist: meditateDetails.teacher?.name,
-                image: meditateDetails.coverImage?.url,
-                audioSrc: meditateDetails.track?.url,
-              },
-            });
-          }
-          await updateUserActivity(token, {
-            contentSfid: meditateDetails.sfid,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: error.message,
-        });
-      }
-      // } else if (meditate.accessible && !meditate.utilizable) {
-      //   this.setState({
-      //     retreatPrerequisiteWarningPayload: meditate,
-      //     showRetreatPrerequisiteWarning: true,
-      //   });
+    if (!authenticated) {
+      showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      const allSubscriptions = subsciptionCategories.reduce(
-        (accumulator, currentValue) => {
-          return {
-            ...accumulator,
-            [currentValue.sfid]: currentValue,
-          };
-        },
-        {},
-      );
-      if (
-        allSubscriptions.hasOwnProperty(
-          MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-        )
-      ) {
-        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-          footer: () => {
-            return (
-              <button
-                className="btn-secondary v2"
-                onClick={purchaseMembershipAction(
-                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                )}
-              >
-                Join Digital Membership
-              </button>
-            );
-          },
-          children: (
-            <PurchaseMembershipModal
-              modalSubscription={
-                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
-              }
-            />
-          ),
-        });
-      }
+      await meditatePlayEvent({
+        meditate,
+        showAlert,
+        showPlayer,
+        hidePlayer,
+        showVideoPlayer,
+        subsciptionCategories,
+        purchaseMembershipAction,
+        token,
+      });
     }
   };
 
@@ -394,6 +295,7 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
 
   return (
     <main className="background-image meditation">
+      <NextSeo title="Meditations" />
       <section className="top-column meditation-page">
         <div className="container">
           <p className="type-course">Guided Meditations</p>

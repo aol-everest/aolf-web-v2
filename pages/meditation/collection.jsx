@@ -9,15 +9,15 @@ import { useUIDSeed } from "react-uid";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
-import { useGlobalAlertContext, useGlobalAudioPlayerContext } from "@contexts";
-import { useQueryString } from "@hooks";
-import { ALERT_TYPES, DURATION, MEMBERSHIP_TYPES } from "@constants";
-import { InfiniteScrollLoader } from "@components/loader";
-import { updateUserActivity } from "@service";
 import {
-  PurchaseMembershipModal,
-  RetreatPrerequisiteWarning,
-} from "@components";
+  useGlobalAlertContext,
+  useGlobalAudioPlayerContext,
+  useGlobalVideoPlayerContext,
+  useGlobalModalContext,
+} from "@contexts";
+import { useQueryString } from "@hooks";
+import { InfiniteScrollLoader } from "@components/loader";
+import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
 export const getServerSideProps = async (context) => {
   let props = {};
@@ -78,8 +78,10 @@ export const getServerSideProps = async (context) => {
 function MeditationCollection({ meditations, authenticated, token }) {
   const seed = useUIDSeed();
   const router = useRouter();
-  const { showPlayer } = useGlobalAudioPlayerContext();
+  const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
+  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
+  const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [type, setType] = useQueryString("type");
 
   const { data: subsciptionCategories = [] } = useQuery(
@@ -95,20 +97,12 @@ function MeditationCollection({ meditations, authenticated, token }) {
     },
   );
 
-  const markFavorite = (meditate) => async () => {
-    try {
-      const data = {
-        contentSfid: meditate.sfid,
-        removeFavourite: meditate.isFavorite ? true : false,
-      };
-      await api.post({
-        path: "markFavourite",
-        body: data,
-        token,
-      });
-      refetch({ refetchPage: (page, index) => index === 0 });
-    } catch (error) {
-      console.log(error);
+  const markFavorite = (meditate) => async (e) => {
+    if (e) e.preventDefault();
+    if (!authenticated) {
+      showModal(MODAL_TYPES.LOGIN_MODAL);
+    } else {
+      await markFavoriteEvent({ meditate, refetch, token });
     }
   };
 
@@ -118,107 +112,19 @@ function MeditationCollection({ meditations, authenticated, token }) {
 
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
-
-    if (meditate.accessible) {
-      try {
-        const results = await api.get({
-          path: "meditationDetail",
-          param: { id: meditate.sfid },
-          token,
-        });
-        const {
-          data,
-          status,
-          error: errorMessage,
-          workshopPrerequisiteMessage,
-          requiredPrerequisitWorkshopIds,
-        } = results;
-
-        if (status === 400) {
-          showAlert(ALERT_TYPES.ERROR_ALERT, {
-            children: (
-              <RetreatPrerequisiteWarning
-                warningPayload={workshopPrerequisiteMessage}
-              />
-            ),
-          });
-        }
-
-        if (data) {
-          const meditateDetails = { ...data, ...meditate };
-          if (
-            meditateDetails.contentType === "Audio" ||
-            meditateDetails.contentType === "audio/x-m4a"
-          ) {
-            showPlayer({
-              track: {
-                title: meditateDetails.title,
-                artist: meditateDetails.teacher.name,
-                image: meditateDetails.coverImage.url,
-                audioSrc: meditateDetails.track.url,
-              },
-            });
-          } else if (meditateDetails.contentType === "Video") {
-            // this.setState(({ video }) => {
-            //   return {
-            //     video: { ...video, isRender: true },
-            //     videoMeditateDetails: meditateDetails,
-            //   };
-            // });
-          }
-          const { totalActivity } = await updateUserActivity(token, {
-            contentSfid: meditateDetails.sfid,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: error.message,
-        });
-      }
-      // } else if (meditate.accessible && !meditate.utilizable) {
-      //   this.setState({
-      //     retreatPrerequisiteWarningPayload: meditate,
-      //     showRetreatPrerequisiteWarning: true,
-      //   });
+    if (!authenticated) {
+      showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      const allSubscriptions = subsciptionCategories.reduce(
-        (accumulator, currentValue) => {
-          return {
-            ...accumulator,
-            [currentValue.sfid]: currentValue,
-          };
-        },
-        {},
-      );
-      if (
-        allSubscriptions.hasOwnProperty(
-          MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-        )
-      ) {
-        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-          className: "meditation-digital-membership",
-          footer: () => {
-            return (
-              <button
-                className="btn-secondary v2"
-                onClick={purchaseMembershipAction(
-                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                )}
-              >
-                Join Digital Membership
-              </button>
-            );
-          },
-          children: (
-            <PurchaseMembershipModal
-              modalSubscription={
-                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
-              }
-            />
-          ),
-        });
-      }
+      await meditatePlayEvent({
+        meditate,
+        showAlert,
+        showPlayer,
+        hidePlayer,
+        showVideoPlayer,
+        subsciptionCategories,
+        purchaseMembershipAction,
+        token,
+      });
     }
   };
 
@@ -278,6 +184,7 @@ function MeditationCollection({ meditations, authenticated, token }) {
 
   return (
     <main className="background-image">
+      <NextSeo title="Meditations" />
       <div className="sleep-collection">
         <section className="top-column">
           <div className="container">

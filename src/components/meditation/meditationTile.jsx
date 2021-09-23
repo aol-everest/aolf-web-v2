@@ -1,6 +1,4 @@
 import React from "react";
-import { useGlobalModalContext, useGlobalAlertContext } from "@contexts";
-import { MODAL_TYPES } from "@constants";
 import classNames from "classnames";
 
 const timeConvert = (data) => {
@@ -17,8 +15,6 @@ export const MeditationTile = ({
   meditateClickHandle,
   additionalClass,
 }) => {
-  const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
   const {
     title,
     description,
@@ -33,22 +29,6 @@ export const MeditationTile = ({
     isFree,
     primaryTeacherName,
   } = data || {};
-
-  const markFavoriteAction = async () => {
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else {
-      await markFavorite();
-    }
-  };
-
-  const meditateClickAction = async () => {
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else {
-      await meditateClickHandle();
-    }
-  };
 
   return (
     <div className="col-6 col-lg-3 col-md-4">
@@ -78,11 +58,11 @@ export const MeditationTile = ({
         </div>
         {accessible && (
           <div
-            onClick={markFavoriteAction}
+            onClick={markFavorite}
             className={isFavorite ? "course-like liked" : "course-like"}
           ></div>
         )}
-        <div className="forClick" onClick={meditateClickAction}></div>
+        <div className="forClick" onClick={meditateClickHandle}></div>
         <div className="card-title-bxs">
           <div className="course_name">{title}</div>
           <div className="course_place">{primaryTeacherName}</div>

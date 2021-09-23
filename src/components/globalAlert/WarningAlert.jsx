@@ -3,13 +3,13 @@ import { useGlobalAlertContext } from "@contexts";
 import classNames from "classnames";
 import Style from "./GlobalAlert.module.scss";
 
-export const ErrorAlert = () => {
+export const WarningAlert = () => {
   const { hideAlert, store } = useGlobalAlertContext();
   const { alertProps } = store || {};
   const {
     closeModalAction,
     confirmBtnText = "Close",
-    title = "Error",
+    title = "Attention",
     children,
     className,
   } = alertProps || {};
@@ -44,13 +44,9 @@ export const ErrorAlert = () => {
           </h2>
 
           <div className="f-modal-alert">
-            <div className="f-modal-icon f-modal-error animate">
-              <span className="f-modal-x-mark">
-                <span className="f-modal-line f-modal-left animateXLeft"></span>
-                <span className="f-modal-line f-modal-right animateXRight"></span>
-              </span>
-              <div className="f-modal-placeholder"></div>
-              <div className="f-modal-fix"></div>
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+              <span class="f-modal-body pulseWarningIns"></span>
+              <span class="f-modal-dot pulseWarningIns"></span>
             </div>
           </div>
           <div className="course-join-card__text-container text-center font-weight-light">

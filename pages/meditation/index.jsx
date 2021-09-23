@@ -4,6 +4,7 @@ import { api } from "@utils";
 import classNames from "classnames";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
+import { useRouter } from "next/router";
 import { useUIDSeed } from "react-uid";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
@@ -12,6 +13,7 @@ import {
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
   useGlobalVideoPlayerContext,
+  useGlobalModalContext,
 } from "@contexts";
 import {
   Popup,
@@ -21,9 +23,14 @@ import {
   RetreatPrerequisiteWarning,
 } from "@components";
 import { useQueryString } from "@hooks";
-import { ALERT_TYPES, DURATION, MEMBERSHIP_TYPES } from "@constants";
+import {
+  ALERT_TYPES,
+  DURATION,
+  MEMBERSHIP_TYPES,
+  MODAL_TYPES,
+} from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
-import { updateUserActivity } from "@service";
+import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
 export const getServerSideProps = async (context) => {
   let props = {};
@@ -95,15 +102,15 @@ export const getServerSideProps = async (context) => {
 
 const MeditationFind = ({ meditations, authenticated, token }) => {
   const seed = useUIDSeed();
-
-  const { showPlayer } = useGlobalAudioPlayerContext();
+  const router = useRouter();
+  const { showModal } = useGlobalModalContext();
+  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showAlert } = useGlobalAlertContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
 
-  const [searchKey, setSearchKey] = useState("");
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const { data: meditationCategory = [] } = useQuery(
@@ -152,20 +159,12 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
-  const markFavorite = (meditate) => async () => {
-    try {
-      const data = {
-        contentSfid: meditate.sfid,
-        removeFavourite: meditate.isFavorite ? true : false,
-      };
-      await api.post({
-        path: "markFavourite",
-        body: data,
-        token,
-      });
-      refetch({ refetchPage: (page, index) => index === 0 });
-    } catch (error) {
-      console.log(error);
+  const markFavorite = (meditate) => async (e) => {
+    if (e) e.preventDefault();
+    if (!authenticated) {
+      showModal(MODAL_TYPES.LOGIN_MODAL);
+    } else {
+      await markFavoriteEvent({ meditate, refetch, token });
     }
   };
 
@@ -175,110 +174,19 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
 
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
-
-    if (meditate.accessible) {
-      try {
-        const results = await api.get({
-          path: "meditationDetail",
-          param: { id: meditate.sfid },
-          token,
-        });
-        const {
-          data,
-          status,
-          error: errorMessage,
-          workshopPrerequisiteMessage,
-          requiredPrerequisitWorkshopIds,
-        } = results;
-
-        if (status === 400) {
-          showAlert(ALERT_TYPES.ERROR_ALERT, {
-            children: (
-              <RetreatPrerequisiteWarning
-                warningPayload={workshopPrerequisiteMessage}
-              />
-            ),
-          });
-        }
-
-        if (data) {
-          const meditateDetails = { ...data, ...meditate };
-          if (
-            meditateDetails.contentType === "Audio" ||
-            meditateDetails.contentType === "audio/x-m4a"
-          ) {
-            showPlayer({
-              track: {
-                title: meditateDetails.title,
-                artist: meditateDetails.teacher?.name,
-                image: meditateDetails.coverImage?.url,
-                audioSrc: meditateDetails.track?.url,
-              },
-            });
-          } else if (meditateDetails.contentType === "Video") {
-            showVideoPlayer({
-              track: {
-                title: meditateDetails.title,
-                artist: meditateDetails.teacher?.name,
-                image: meditateDetails.coverImage?.url,
-                audioSrc: meditateDetails.track?.url,
-              },
-            });
-          }
-          const { totalActivity } = await updateUserActivity(token, {
-            contentSfid: meditateDetails.sfid,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: error.message,
-        });
-      }
-      // } else if (meditate.accessible && !meditate.utilizable) {
-      //   this.setState({
-      //     retreatPrerequisiteWarningPayload: meditate,
-      //     showRetreatPrerequisiteWarning: true,
-      //   });
+    if (!authenticated) {
+      showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      const allSubscriptions = subsciptionCategories.reduce(
-        (accumulator, currentValue) => {
-          return {
-            ...accumulator,
-            [currentValue.sfid]: currentValue,
-          };
-        },
-        {},
-      );
-      if (
-        allSubscriptions.hasOwnProperty(
-          MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-        )
-      ) {
-        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-          className: "retreat-prerequisite-big meditation-digital-membership",
-          title: "Go deeper with the Digital Membership",
-          footer: () => {
-            return (
-              <button
-                className="btn-secondary v2"
-                onClick={purchaseMembershipAction(
-                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                )}
-              >
-                Join Digital Membership
-              </button>
-            );
-          },
-          children: (
-            <PurchaseMembershipModal
-              modalSubscription={
-                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
-              }
-            />
-          ),
-        });
-      }
+      await meditatePlayEvent({
+        meditate,
+        showAlert,
+        showPlayer,
+        hidePlayer,
+        showVideoPlayer,
+        subsciptionCategories,
+        purchaseMembershipAction,
+        token,
+      });
     }
   };
 

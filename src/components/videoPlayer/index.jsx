@@ -47,7 +47,7 @@ const VideoPlayer = () => {
           <span>{artist}</span>
         </div>
         <div className="video-player">
-          <Player poster={image}>
+          <Player>
             <source src={audioSrc} />
 
             <BigPlayButton position="center" />
