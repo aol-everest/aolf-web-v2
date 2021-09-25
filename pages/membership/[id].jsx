@@ -1,0 +1,249 @@
+import React from "react";
+import { withSSRContext } from "aws-amplify";
+import { api } from "@utils";
+import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { MembershipCheckoutStripe } from "@components/membership/membershipCheckoutStripe";
+import { useQueryString } from "@hooks";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import { useRouter } from "next/router";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+);
+
+const RetreatPrerequisiteWarning = () => {
+  return (
+    <>
+      <p class="course-join-card__text">
+        Our records indicate that you have not yet taken the prerequisite for
+        the Journey + membership, which is{" "}
+        <strong>SKY Breath Meditation</strong> (formerly known as the Happiness
+        Program). In SKY Breath Meditation, you'll learn a powerful breath
+        meditation to effectively settle and calm the mind.
+      </p>
+      <p class="course-join-card__text">
+        If our records are not accurate, please contact customer service at{" "}
+        <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
+        <a href="mailto:app.support@us.artofliving.org">
+          app.support@us.artofliving.org
+        </a>
+        . We will be happy to help you so you can sign up for the Silent
+        Retreat.
+      </p>
+    </>
+  );
+};
+
+export const getServerSideProps = async (context) => {
+  const { query, req, res, resolvedUrl } = context;
+  const { id, ofid } = query;
+  let props = {};
+  let token = "";
+  try {
+    const { Auth } = await withSSRContext(context);
+    const user = await Auth.currentAuthenticatedUser();
+    token = user.signInUserSession.idToken.jwtToken;
+    const res = await api.get({
+      path: "profile",
+      token,
+    });
+    props = {
+      authenticated: true,
+      username: user.username,
+      profile: res,
+      token,
+    };
+  } catch (err) {
+    console.error(err);
+    res.writeHead(302, {
+      Location: `/login?next=${resolvedUrl}`,
+    });
+    res.end();
+    return;
+  }
+  try {
+    const res = await api.get({
+      path: "subsciption",
+      token,
+      param: {
+        id,
+        system_default: 1,
+        ofid: ofid,
+      },
+    });
+    props = {
+      ...props,
+      subsciption: res.data[0],
+    };
+  } catch (err) {
+    console.error(err);
+    res.writeHead(302, {
+      Location: `/workshop`,
+    });
+    res.end();
+  }
+  // Pass data to the page via props
+  return { props };
+};
+
+function MembershipCheckout({ subsciption, profile, token }) {
+  console.log(subsciption);
+  const [couponCode] = useQueryString("coupon");
+  const [offeringId] = useQueryString("ofid");
+  const { showModal } = useGlobalModalContext();
+  const { showAlert } = useGlobalAlertContext();
+  const router = useRouter();
+
+  const [activeSubscription] = subsciption.activeSubscriptions;
+
+  const { name, sfid } = subsciption || {};
+
+  if (
+    MEMBERSHIP_TYPES.JOURNEY_PLUS === sfid &&
+    !profile.isMandatoryWorkshopAttended
+  ) {
+    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+      className: "retreat-prerequisite-big meditation-digital-membership",
+      title: "Retreat Prerequisite",
+      footer: () => {
+        return (
+          <button
+            className="btn-secondary v2"
+            onClick={closeRetreatPrerequisiteWarning}
+          >
+            Discover SKY Breath Meditation
+          </button>
+        );
+      },
+      children: <RetreatPrerequisiteWarning />,
+    });
+  }
+
+  const closeRetreatPrerequisiteWarning = (e) => {
+    if (e) e.preventDefault();
+    hideAlert();
+    router.push({
+      pathname: "/workshop",
+      query: {
+        courseType: "SKY_BREATH_MEDITATION",
+      },
+    });
+  };
+
+  return (
+    <main>
+      <section class="order">
+        <div class="container">
+          <h1 class="title">{name}</h1>
+          <p class="order__detail">Take your journey to the next level</p>
+          <Elements
+            stripe={stripePromise}
+            fonts={[
+              {
+                cssSrc:
+                  "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+              },
+            ]}
+          >
+            <MembershipCheckoutStripe
+              offeringId={offeringId}
+              subsciption={subsciption}
+              activeSubscription={activeSubscription}
+              couponCode={couponCode}
+              profile={profile}
+              token={token}
+            />
+          </Elements>
+        </div>
+      </section>
+      <section class="additional-information">
+        <div class="container">
+          {MEMBERSHIP_TYPES.JOURNEY_PLUS.value !== sfid && (
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="information__blcok">
+                  <h2 class="information__tile">Support for your journey</h2>
+                  <p class="information__text">
+                    Build your SKY practice with daily resources in the SKY
+                    Journey.
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 mt-3 mt-lg-0">
+                <div class="information__blcok">
+                  <h2 class="information__tile">Exclusive member content</h2>
+                  <p class="information__text">
+                    Access content exclusive to digital members.
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 mt-3 mt-lg-0">
+                <div class="information__blcok">
+                  <h2 class="information__tile">Meditate wherever you are</h2>
+                  <p class="information__text">
+                    Take a library of online meditations with you in your
+                    pocket.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {MEMBERSHIP_TYPES.JOURNEY_PLUS.value === sfid && (
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="information__blcok">
+                  <h2 class="information__tile">Silent Retreat Waiver+</h2>
+                  <p class="information__text">
+                    $400 waiver on your first silent retreat.
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 mt-3 mt-lg-0">
+                <div class="information__blcok">
+                  <h2 class="information__tile">More Discounts</h2>
+                  <p class="information__text">
+                    Receive $200 off additional silent retreats*
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 mt-3 mt-lg-0">
+                <div class="information__blcok">
+                  <h2 class="information__tile">Special Events</h2>
+                  <p class="information__text">
+                    Receive more discounts for special events with Sri Sri.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div class="featured-in">
+            <h2 class="featured-in__title">Featured in</h2>
+            <div class="featured-in__box d-none d-lg-flex">
+              <img src="/img/featured-in-cnn.png" alt="cnn" />
+              <img src="/img/featured-in-yoga.png" alt="yoga" />
+              <img src="/img/featured-in-tnyt.png" alt="tnyt" />
+              <img src="/img/featured-in-time.png" alt="time" />
+              <img src="/img/featured-in-wsj.png" alt="wsj" />
+              <img src="/img/featured-in-forbes.png" alt="forbes" />
+              <img src="/img/featured-in-nbc.png" alt="nbc" />
+            </div>
+            <div class="featured-in__box d-flex d-lg-none">
+              <img src="/img/featured-in-cnn.png" alt="cnn" />
+              <img src="/img/featured-in-yoga.png" alt="yoga" />
+              <img src="/img/featured-in-nbc.png" alt="nbc" />
+              <img src="/img/featured-in-wsj.png" alt="wsj" />
+              <img src="/img/featured-in-forbes.png" alt="forbes" />
+              <img src="/img/featured-in-time.png" alt="time" />
+              <img class="m-auto" src="/img/featured-in-tnyt.png" alt="tnyt" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default MembershipCheckout;

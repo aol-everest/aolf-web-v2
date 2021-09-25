@@ -12,7 +12,7 @@ const stripePromise = loadStripe(
 );
 
 export const getServerSideProps = async (context) => {
-  const { query, req, res } = context;
+  const { query, req, res, resolvedUrl } = context;
   const { id } = query;
   let props = {};
   let token = "";
@@ -33,9 +33,7 @@ export const getServerSideProps = async (context) => {
   } catch (err) {
     console.error(err);
     res.writeHead(302, {
-      Location: `/login?next=${encodeURIComponent(
-        location.pathname + location.search,
-      )}`,
+      Location: `/login?next=${resolvedUrl}`,
     });
     res.end();
     return;
