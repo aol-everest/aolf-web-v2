@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Auth } from "aws-amplify";
+import { withSSRContext } from "aws-amplify";
 import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES } from "@constants";
+import { api } from "@utils";
 
 export const getServerSideProps = async (context) => {
   const { query, req, res } = context;

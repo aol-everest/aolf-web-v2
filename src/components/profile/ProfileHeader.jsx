@@ -2,6 +2,7 @@ import React from "react";
 import moment from "moment";
 import ReactTooltip from "react-tooltip";
 import { MEMBERSHIP_TYPES } from "@constants";
+import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES } from "@constants";
 import { useQuery } from "react-query";
@@ -12,6 +13,7 @@ export const ProfileHeader = ({
   subscriptions = [],
   userSubscriptions = {},
 }) => {
+  const router = useRouter();
   const { showModal } = useGlobalModalContext();
   const { data: subsciptionCategories = [] } = useQuery(
     "subsciption",
@@ -25,6 +27,16 @@ export const ProfileHeader = ({
       refetchOnWindowFocus: false,
     },
   );
+
+  const cancelMembershipAction = (modalSubscriptionId) => (e) => {
+    if (e) e.preventDefault();
+    router.push({
+      pathname: "/membership-cancellation",
+      query: {
+        id: modalSubscriptionId,
+      },
+    });
+  };
 
   const showPurchaseMembershipModalAction = (subscriptionId) => () => {
     const allSubscriptions = subsciptionCategories.reduce(
@@ -83,7 +95,7 @@ export const ProfileHeader = ({
                   <a
                     href="#"
                     className="link link_gray"
-                    onClick={this.cancelMembershipAction(modalSubscription)}
+                    onClick={cancelMembershipAction(modalSubscription.sfid)}
                   >
                     Cancel Membership
                   </a>
@@ -130,7 +142,9 @@ export const ProfileHeader = ({
 
                 <button
                   className="btn-secondary v2"
-                  // onClick={purchaseMembershipAction(modalSubscription.sfid)}
+                  onClick={showPurchaseMembershipModalAction(
+                    modalSubscription.sfid,
+                  )}
                 >
                   Join {modalSubscription.name}
                 </button>
@@ -141,6 +155,33 @@ export const ProfileHeader = ({
       }
     }
   };
+
+  const subscriptionPanel = (subscription) => {
+    return (
+      <>
+        <div className="profile-header__course">
+          <strong>{subscription.name} member </strong>
+          <span className="profile-header__course-date">
+            since{" "}
+            {moment(subscription.subscriptionStartDate).format("MMMM DD, YYYY")}
+          </span>{" "}
+          {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
+            subscription.subscriptionMasterSfid && (
+            <a
+              href="#"
+              className="link link_dark link-modal"
+              onClick={showPurchaseMembershipModalAction(
+                subscription.subscriptionMasterSfid,
+              )}
+            >
+              <strong>See details</strong>
+            </a>
+          )}
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       {subscriptions.map(subscriptionPanel)}
@@ -148,30 +189,6 @@ export const ProfileHeader = ({
         userSubscriptions,
         showPurchaseMembershipModalAction,
       )}
-    </>
-  );
-};
-
-const subscriptionPanel = (subscription) => {
-  return (
-    <>
-      <div className="profile-header__course">
-        <strong>{subscription.name} member </strong>
-        <span className="profile-header__course-date">
-          since{" "}
-          {moment(subscription.subscriptionStartDate).format("MMMM DD, YYYY")}
-        </span>{" "}
-        {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
-          subscription.subscriptionMasterSfid && (
-          <a
-            href="#"
-            className="link link_dark link-modal"
-            // onClick={this.showSubscriptionDetailModal(subscription)}
-          >
-            <strong>See details</strong>
-          </a>
-        )}
-      </div>
     </>
   );
 };

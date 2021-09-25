@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import classNames from "classnames";
 import Link from "next/link";
 import { Collapse } from "reactstrap";
+import { FaCamera } from "react-icons/fa";
 import {
   EventList,
   ViewCardDetail,
@@ -153,7 +154,9 @@ const Profile = ({ profile }) => {
                   )}
                   {!profilePic && <span>{initials}</span>}
                   <div className="camera-icon">
-                    <i className="fa fa-camera"></i>
+                    <i className="fa">
+                      <FaCamera />
+                    </i>
                   </div>
                 </div>
               </label>
