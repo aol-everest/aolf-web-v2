@@ -53,6 +53,7 @@ export const COURSE_MODES = {
 export const MODAL_TYPES = {
   LOGIN_MODAL: "LOGIN_MODAL",
   CUSTOM_MODAL: "CUSTOM_MODAL",
+  EMPTY_MODAL: "EMPTY_MODAL",
 };
 
 export const ALERT_TYPES = {

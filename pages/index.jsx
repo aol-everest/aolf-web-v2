@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useQueryString } from "@hooks";
 import { Popup } from "@components";
 import { DURATION } from "@constants";
+import { NextSeo } from "next-seo";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
 import "swiper/swiper.min.css";

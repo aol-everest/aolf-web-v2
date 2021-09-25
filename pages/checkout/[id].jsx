@@ -12,7 +12,8 @@ const stripePromise = loadStripe(
 );
 
 export const getServerSideProps = async (context) => {
-  const { id } = context.query;
+  const { query, req, res } = context;
+  const { id } = query;
   let props = {};
   let token = "";
   try {
@@ -30,9 +31,14 @@ export const getServerSideProps = async (context) => {
       token,
     };
   } catch (err) {
-    props = {
-      authenticated: false,
-    };
+    console.error(err);
+    res.writeHead(302, {
+      Location: `/login?next=${encodeURIComponent(
+        location.pathname + location.search,
+      )}`,
+    });
+    res.end();
+    return;
   }
   try {
     const res = await api.get({
@@ -47,10 +53,11 @@ export const getServerSideProps = async (context) => {
       workshop: res.data,
     };
   } catch (err) {
-    props = {
-      ...props,
-      error: { message: err.message },
-    };
+    console.error(err);
+    res.writeHead(302, {
+      Location: `/workshop`,
+    });
+    res.end();
   }
   // Pass data to the page via props
   return { props };
@@ -65,7 +72,7 @@ const Checkout = ({ workshop, profile, token }) => {
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     router.replace({
-      pathname: '"/thankyou"',
+      pathname: "/thankyou",
       query: {
         aid: attendeeId,
         ctype: workshop.productTypeId,

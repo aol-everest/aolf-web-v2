@@ -4,8 +4,8 @@ import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 
 export async function getServerSideProps(context) {
-  const { Auth } = withSSRContext({ req });
   const { query, req, res } = context;
+  const { Auth } = withSSRContext(context);
   const { aid } = query;
   try {
     const user = await Auth.currentAuthenticatedUser();

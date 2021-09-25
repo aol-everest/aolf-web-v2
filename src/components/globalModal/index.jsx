@@ -3,10 +3,12 @@ import { LoginModal } from "./LoginModal";
 import { CustomModal } from "./CustomModal";
 import { MODAL_TYPES } from "@constants";
 import { GlobalModalContext } from "@contexts";
+import { EmptyModal } from "./EmptyModal";
 
 const MODAL_COMPONENTS = {
   [MODAL_TYPES.LOGIN_MODAL]: LoginModal,
   [MODAL_TYPES.CUSTOM_MODAL]: CustomModal,
+  [MODAL_TYPES.EMPTY_MODAL]: EmptyModal,
 };
 
 export const GlobalModal = ({ children }) => {

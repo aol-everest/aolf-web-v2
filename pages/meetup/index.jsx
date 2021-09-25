@@ -7,11 +7,13 @@ import { useUIDSeed } from "react-uid";
 import { MeetupTile } from "@components/meetup/meetupTile";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import { MeetupType } from "@components/meetup/meetupType";
+import { MeetupEnroll } from "@components/meetup/meetupEnroll";
 import { AddressSearch } from "@components";
 import { InfiniteScrollLoader } from "@components/loader";
 import { useGeolocation } from "@hooks";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
+import { useRouter } from "next/router";
 import {
   Popup,
   SmartInput,
@@ -20,7 +22,8 @@ import {
   DateRangeInput,
 } from "@components";
 import { useQueryString } from "@hooks";
-import { TIME_ZONE, COURSE_MODES } from "@constants";
+import { TIME_ZONE, COURSE_MODES, ALERT_TYPES, MODAL_TYPES } from "@constants";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import Style from "./Meetup.module.scss";
 
 const DATE_PICKER_CONFIG = {
@@ -163,8 +166,32 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
+const RetreatPrerequisiteWarning = ({ meetup }) => {
+  return (
+    <>
+      <p class="course-join-card__text">
+        Our records indicate that you have not yet taken the prerequisite for
+        the {meetup.meetupTitle}, which is{" "}
+        <strong>SKY Breath Meditation</strong>.
+      </p>
+      <p class="course-join-card__text">
+        If our records are not accurate, please contact customer service at{" "}
+        <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
+        <a href="mailto:app.support@us.artofliving.org">
+          app.support@us.artofliving.org
+        </a>
+        . We will be happy to help you so you can sign up for the{" "}
+        {meetup.meetupTitle}.
+      </p>
+    </>
+  );
+};
+
+const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
   const seed = useUIDSeed();
+  const router = useRouter();
+  const { showModal } = useGlobalModalContext();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
   const { latitude, longitude, error: geoLocationError } = useGeolocation();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
@@ -296,6 +323,71 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
     );
   };
 
+  const closeRetreatPrerequisiteWarning = (e) => {
+    if (e) e.preventDefault();
+    hideAlert();
+    router.push({
+      pathname: "/workshop",
+      query: {
+        courseType: "SKY_BREATH_MEDITATION",
+      },
+    });
+  };
+
+  const checkoutMeetup = async () => {};
+
+  const openEnrollPage = (selectedMeetup) => async (e) => {
+    if (e) e.preventDefault();
+    if (!authenticated) {
+      showModal(MODAL_TYPES.LOGIN_MODAL);
+    } else {
+      if (!selectedMeetup.isMandatoryWorkshopAttended) {
+        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          className: "retreat-prerequisite-big meditation-digital-membership",
+          title: "Retreat Prerequisite",
+          footer: () => {
+            return (
+              <button
+                className="btn-secondary v2"
+                onClick={closeRetreatPrerequisiteWarning}
+              >
+                Discover SKY Breath Meditation
+              </button>
+            );
+          },
+          children: <RetreatPrerequisiteWarning meetup={selectedMeetup} />,
+        });
+        return;
+      }
+
+      try {
+        const { data } = await api.get({
+          path: "meetupDetail",
+          param: {
+            id: selectedMeetup.sfid,
+          },
+          token,
+        });
+        const currentMeetup = { ...selectedMeetup, ...data };
+        showModal(MODAL_TYPES.EMPTY_MODAL, {
+          children: (handleModalToggle) => {
+            return (
+              <MeetupEnroll
+                selectedMeetup={currentMeetup}
+                checkoutMeetup={checkoutMeetup}
+                closeDetailAction={handleModalToggle}
+              />
+            );
+          },
+        });
+      } catch (error) {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: error.message,
+        });
+      }
+    }
+  };
+
   const {
     status,
     isSuccess,
@@ -363,6 +455,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
       const res = await api.get({
         path: "meetups",
         param,
+        token,
       });
       return res;
     },
@@ -885,7 +978,11 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query }) => {
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
                   {page.data.map((meetup) => (
-                    <MeetupTile key={meetup.sfid} data={meetup} />
+                    <MeetupTile
+                      key={meetup.sfid}
+                      data={meetup}
+                      openEnrollAction={openEnrollPage(meetup)}
+                    />
                   ))}
                 </React.Fragment>
               ))}
