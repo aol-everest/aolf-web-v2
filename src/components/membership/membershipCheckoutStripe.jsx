@@ -250,31 +250,31 @@ export const MembershipCheckoutStripe = ({
         } = formikProps;
         console.log(errors);
         return (
-          <div class="row">
+          <div className="row">
             {loading && <Loader />}
-            <div class="col-xl-7 col-lg-6 col-12">
-              <form class="order__form" onSubmit={handleSubmit}>
-                <div class="details mb-4">
-                  <h2 class="details__title">Account Details:</h2>
-                  <p class="details__content">
+            <div className="col-xl-7 col-lg-6 col-12">
+              <form className="order__form" onSubmit={handleSubmit}>
+                <div className="details mb-4">
+                  <h2 className="details__title">Account Details:</h2>
+                  <p className="details__content">
                     This is not your account?{" "}
                     <a href="#" className="link" onClick={logout}>
                       Logout
                     </a>
                   </p>
                 </div>
-                <div class="order__card">
+                <div className="order__card">
                   <UserInfoForm formikProps={formikProps} />
                 </div>
-                <div class="details mb-4 mt-5">
-                  <h2 class="details__title">Billing Details:</h2>
-                  <p class="details__content">
+                <div className="details mb-4 mt-5">
+                  <h2 className="details__title">Billing Details:</h2>
+                  <p className="details__content">
                     <img src="/img/ic-visa.svg" alt="visa" />
                     <img src="/img/ic-mc.svg" alt="mc" />
                     <img src="/img/ic-ae.svg" alt="ae" />
                   </p>
                 </div>
-                <div class="order__card">
+                <div className="order__card">
                   <BillingInfoForm formikProps={formikProps} />
                   <DiscountCodeInput
                     placeholder="Discount Code"
@@ -296,10 +296,10 @@ export const MembershipCheckoutStripe = ({
                       )}
 
                       {isRegisteredStripeCustomer && (
-                        <div class="bank-card-info">
+                        <div className="bank-card-info">
                           <input
                             id="card-number"
-                            class="full-width"
+                            className="full-width"
                             type="text"
                             value={`**** **** **** ${cardLast4Digit}`}
                             placeholder="Card Number"
@@ -321,8 +321,8 @@ export const MembershipCheckoutStripe = ({
                     </>
                   )}
                 </div>
-                <div class="agreement v2 mt-4 d-block d-lg-none">
-                  <div class="agreement__group">
+                <div className="agreement v2 mt-4 d-block d-lg-none">
+                  <div className="agreement__group">
                     <input
                       type="checkbox"
                       class={classNames("custom-checkbox", {
@@ -336,8 +336,8 @@ export const MembershipCheckoutStripe = ({
                       value={formikProps.values.ppaAgreement}
                       name="ppaAgreement"
                     />
-                    <label for="ppaAgreement"></label>
-                    <p class="agreement__text">
+                    <label htmlFor="ppaAgreement"></label>
+                    <p className="agreement__text">
                       I agree to the{" "}
                       <a href="/us/ts-cs" target="_blank">
                         Program Participant agreement including privacy and
@@ -347,9 +347,9 @@ export const MembershipCheckoutStripe = ({
                   </div>
                   {formikProps.errors.ppaAgreement &&
                     formikProps.touched.ppaAgreement && (
-                      <div class="agreement__important agreement__important_desktop">
+                      <div className="agreement__important agreement__important_desktop">
                         <img
-                          class="agreement__important-icon"
+                          className="agreement__important-icon"
                           src="/img/warning.svg"
                           alt="warning"
                         />
@@ -357,15 +357,15 @@ export const MembershipCheckoutStripe = ({
                       </div>
                     )}
                 </div>
-                <div class="order__complete">
-                  <div class="order__security security">
+                <div className="order__complete">
+                  <div className="order__security security">
                     <img src="/img/ic-lock.svg" alt="lock" />
-                    <p class="security__info">
+                    <p className="security__info">
                       AES 256-B&T
                       <span>SSL Secured</span>
                     </p>
                   </div>
-                  <button class="btn btn-primary v2" type="submit">
+                  <button className="btn btn-primary v2" type="submit">
                     {loading && (
                       <div className="loaded" style={{ padding: "0px 58px" }}>
                         <div className="loader">
@@ -380,29 +380,29 @@ export const MembershipCheckoutStripe = ({
                 </div>
               </form>
             </div>
-            <div class="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-lg-1">
-              <div class="reciept d-none d-lg-block">
-                <div class="reciept__header">
-                  <p class="reciept__item_main">Enroll</p>
-                  <ul class="reciept__item_list">
+            <div className="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-lg-1">
+              <div className="reciept d-none d-lg-block">
+                <div className="reciept__header">
+                  <p className="reciept__item_main">Enroll</p>
+                  <ul className="reciept__item_list">
                     <li>
                       <span>{subsciption.name}</span>
                       <span>${activeSubscription.price}/mo</span>
                     </li>
                   </ul>
                 </div>
-                <div class="reciept__details reciept__details_v2 subsciption-description">
+                <div className="reciept__details reciept__details_v2 subsciption-description">
                   {subsciption.description &&
                     renderHTML(subsciption.description)}
                 </div>
                 {subsciption.condition && (
-                  <div class="reciept__more">
+                  <div className="reciept__more">
                     {renderHTML(subsciption.condition)}
                   </div>
                 )}
               </div>
-              <div class="agreement v2 mt-4 d-none d-lg-block">
-                <div class="agreement__group">
+              <div className="agreement v2 mt-4 d-none d-lg-block">
+                <div className="agreement__group">
                   <input
                     type="checkbox"
                     class={classNames("custom-checkbox", {
@@ -416,8 +416,8 @@ export const MembershipCheckoutStripe = ({
                     value={formikProps.values.ppaAgreement}
                     name="ppaAgreement"
                   />
-                  <label for="ppaAgreement"></label>
-                  <p class="agreement__text">
+                  <label htmlFor="ppaAgreement"></label>
+                  <p className="agreement__text">
                     I agree to the{" "}
                     <a href="/us/ts-cs" target="_blank">
                       Program Participant agreement including privacy and
@@ -427,9 +427,9 @@ export const MembershipCheckoutStripe = ({
                 </div>
                 {formikProps.errors.ppaAgreement &&
                   formikProps.touched.ppaAgreement && (
-                    <div class="agreement__important agreement__important_desktop">
+                    <div className="agreement__important agreement__important_desktop">
                       <img
-                        class="agreement__important-icon"
+                        className="agreement__important-icon"
                         src="/img/warning.svg"
                         alt="warning"
                       />
@@ -439,23 +439,28 @@ export const MembershipCheckoutStripe = ({
               </div>
             </div>
 
-            <div class="course-popup d-lg-none d-block" style={{ zIndex: 99 }}>
-              <div class="course-card">
-                <div class="course-card__info">
-                  <div class="course-card__info-wrapper">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <p class="course-card__date"></p>
+            <div
+              className="course-popup d-lg-none d-block"
+              style={{ zIndex: 99 }}
+            >
+              <div className="course-card">
+                <div className="course-card__info">
+                  <div className="course-card__info-wrapper">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <p className="course-card__date"></p>
                       <button
                         id="course-details"
-                        class="link"
+                        className="link"
                         onClick={toggleDetailMobileModal}
                       >
                         See details
                       </button>
                     </div>
-                    <h3 class="course-card__course-name">{subsciption.name}</h3>
-                    <div class="d-flex align-items-center">
-                      <h6 class="price">${activeSubscription.price}/mo</h6>
+                    <h3 className="course-card__course-name">
+                      {subsciption.name}
+                    </h3>
+                    <div className="d-flex align-items-center">
+                      <h6 className="price">${activeSubscription.price}/mo</h6>
                     </div>
                   </div>
                 </div>
@@ -466,23 +471,26 @@ export const MembershipCheckoutStripe = ({
                   show: showDetailMobileModal,
                 })}
               >
-                <div class="mobile-modal__header mobile-modal__header_v2">
-                  <div class="close-modal" onClick={toggleDetailMobileModal}>
-                    <div class="close-line"></div>
-                    <div class="close-line"></div>
+                <div className="mobile-modal__header mobile-modal__header_v2">
+                  <div
+                    className="close-modal"
+                    onClick={toggleDetailMobileModal}
+                  >
+                    <div className="close-line"></div>
+                    <div className="close-line"></div>
                   </div>
-                  <h1 class="course-name">Enroll</h1>
-                  <h6 class="new-price d-sm-block d-flex justify-content-between">
+                  <h1 className="course-name">Enroll</h1>
+                  <h6 className="new-price d-sm-block d-flex justify-content-between">
                     {subsciption.name}{" "}
                     <span>${activeSubscription.price}/mo</span>
                   </h6>
                 </div>
-                <div class="mobile-modal__body mobile-modal__body_v2">
-                  <div class="subsciption-description">
+                <div className="mobile-modal__body mobile-modal__body_v2">
+                  <div className="subsciption-description">
                     {subsciption.description &&
                       renderHTML(subsciption.description)}
                   </div>
-                  <div class="course-more">
+                  <div className="course-more">
                     {subsciption.condition && renderHTML(subsciption.condition)}
                   </div>
                 </div>

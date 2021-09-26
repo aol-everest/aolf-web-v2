@@ -42,14 +42,14 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
           {`${updateMeetupDuration}`}
         </div>
         <div className="course_complete">Meetup Full</div>
-        <div class="course_info">
-          <div class="course_status">
+        <div className="course_info">
+          <div className="course_status">
             {isOnlineMeetup
               ? "Live Streaming from" + " " + centerName
               : "" + centerName}
           </div>
-          <div class="course_name">{meetupTitle}</div>
-          <div class="course_place">{primaryTeacherName}</div>
+          <div className="course_name">{meetupTitle}</div>
+          <div className="course_place">{primaryTeacherName}</div>
         </div>
         <div className="course_complete_registration">already registered</div>
         <div

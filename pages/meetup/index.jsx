@@ -169,12 +169,12 @@ async function queryInstructor({ queryKey: [_, term] }) {
 const RetreatPrerequisiteWarning = ({ meetup }) => {
   return (
     <>
-      <p class="course-join-card__text">
+      <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
         the {meetup.meetupTitle}, which is{" "}
         <strong>SKY Breath Meditation</strong>.
       </p>
-      <p class="course-join-card__text">
+      <p className="course-join-card__text">
         If our records are not accurate, please contact customer service at{" "}
         <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
         <a href="mailto:app.support@us.artofliving.org">
@@ -599,7 +599,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
                               onFilterChange("timesOfDayFilter")("Morning")
                             }
                           />
-                          <label className="checkbox-text" for="morning">
+                          <label className="checkbox-text" htmlFor="morning">
                             Morning
                           </label>
                         </div>
@@ -618,7 +618,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
                               onFilterChange("timesOfDayFilter")("Afternoon")
                             }
                           />
-                          <label className="checkbox-text" for="afternoon">
+                          <label className="checkbox-text" htmlFor="afternoon">
                             Afternoon
                           </label>
                         </div>
@@ -637,7 +637,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
                               onFilterChange("timesOfDayFilter")("Evening")
                             }
                           />
-                          <label className="checkbox-text" for="evening">
+                          <label className="checkbox-text" htmlFor="evening">
                             Evening
                           </label>
                         </div>
@@ -855,7 +855,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
                           "Morning",
                         )}
                       />
-                      <label className="checkbox-text" for="morning">
+                      <label className="checkbox-text" htmlFor="morning">
                         Morning
                       </label>
                     </div>
@@ -874,7 +874,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
                           "Afternoon",
                         )}
                       />
-                      <label className="checkbox-text" for="afternoon">
+                      <label className="checkbox-text" htmlFor="afternoon">
                         Afternoon
                       </label>
                     </div>
@@ -893,7 +893,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
                           "Evening",
                         )}
                       />
-                      <label className="checkbox-text" for="evening">
+                      <label className="checkbox-text" htmlFor="evening">
                         Evening
                       </label>
                     </div>

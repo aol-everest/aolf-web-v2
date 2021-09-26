@@ -44,9 +44,9 @@ export const WarningAlert = () => {
           </h2>
 
           <div className="f-modal-alert">
-            <div class="f-modal-icon f-modal-warning scaleWarning">
-              <span class="f-modal-body pulseWarningIns"></span>
-              <span class="f-modal-dot pulseWarningIns"></span>
+            <div className="f-modal-icon f-modal-warning scaleWarning">
+              <span className="f-modal-body pulseWarningIns"></span>
+              <span className="f-modal-dot pulseWarningIns"></span>
             </div>
           </div>
           <div className="course-join-card__text-container text-center font-weight-light">

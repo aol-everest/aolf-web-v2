@@ -57,7 +57,7 @@ export const CourseOptions = ({
                           defaultChecked
                           onChange={handlePriceTypeChange}
                         />
-                        <label htmlFor="payment-lg-regular-card">
+                        <label htmlhtmlFor="payment-lg-regular-card">
                           <span>Regular rate</span>
                           <span>
                             {delfee && (
@@ -76,7 +76,7 @@ export const CourseOptions = ({
                           value="premium"
                           onChange={handlePriceTypeChange}
                         />
-                        <label htmlFor="payment-lg-premium-card">
+                        <label htmlhtmlFor="payment-lg-premium-card">
                           <span>Premium/Journey+ rate:</span>
                           <span>
                             {premiumRate &&
@@ -117,7 +117,9 @@ export const CourseOptions = ({
                                     disabled={product.isAddOnSelectionRequired}
                                   />
                                 )}
-                                <label htmlFor={product.productSfid}></label>
+                                <label
+                                  htmlhtmlFor={product.productSfid}
+                                ></label>
                                 <span className="ml-2">
                                   {product.productName} Required:
                                 </span>
@@ -204,7 +206,7 @@ export const CourseOptions = ({
                                   disabled={product.isAddOnSelectionRequired}
                                 />
                               )}
-                              <label htmlFor={product.productSfid}></label>
+                              <label htmlhtmlFor={product.productSfid}></label>
                               <span className="ml-2">
                                 {product.productName} Required:
                               </span>
@@ -263,7 +265,7 @@ export const CourseOptions = ({
                                 disabled={product.isAddOnSelectionRequired}
                               />
                             )}
-                            <label htmlFor={product.productSfid}></label>
+                            <label htmlhtmlFor={product.productSfid}></label>
                             <span className="ml-2">
                               {product.productName} Required:
                             </span>
@@ -333,7 +335,7 @@ export const CourseOptions = ({
                       }
                     >
                       <label
-                        htmlFor={`${residentialAddOn.productSfid}-card`}
+                        htmlhtmlFor={`${residentialAddOn.productSfid}-card`}
                         aria-hidden="aria-hidden"
                         data-value={residentialAddOn.unitPrice}
                         className="select-room__option"

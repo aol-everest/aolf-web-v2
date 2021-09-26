@@ -64,23 +64,23 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   }
   return (
     <main>
-      <section class="journey-cancellation v3">
-        <div class="container">
-          <div class="col-10 m-auto">
-            <div class="journey-cancellation__card mx-auto">
-              <div class="journey-cancellation__card-info">
-                <h1 class="journey-cancellation__card-title section-title">
+      <section className="journey-cancellation v3">
+        <div className="container">
+          <div className="col-10 m-auto">
+            <div className="journey-cancellation__card mx-auto">
+              <div className="journey-cancellation__card-info">
+                <h1 className="journey-cancellation__card-title section-title">
                   {userSubscriptions.name} Cancellation
                 </h1>
-                <p class="journey-cancellation__card-text">
+                <p className="journey-cancellation__card-text">
                   We are sorry to see you go. Is there anything we could do to
                   support your journey? Please reach out to our team at{" "}
                   <a href="tel:8442735500">(844) 273-5500</a> or
                 </p>
-                <p class="journey-cancellation__card-text">
+                <p className="journey-cancellation__card-text">
                   <a
                     href="mailto:support@us.artofliving.org"
-                    class="journey-cancellation__card-link link_orange"
+                    className="journey-cancellation__card-link link_orange"
                   >
                     support@us.artofliving.org
                   </a>
@@ -88,22 +88,22 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                 </p>
                 {totalAmountWillBeDeducted > 0 && (
                   <>
-                    <p class="journey-cancellation__card-text">
+                    <p className="journey-cancellation__card-text">
                       If you cancel your {userSubscriptions.name} Membership
                       today, you’ll be charged for the remainder of your annual
                       commitment.
                     </p>
-                    <h2 class="journey-cancellation__card-subtitle">
+                    <h2 className="journey-cancellation__card-subtitle">
                       Cancellation Details:
                     </h2>
-                    <ul class="journey-cancellation__card-details">
-                      <li class="journey-cancellation__card-details-item">
+                    <ul className="journey-cancellation__card-details">
+                      <li className="journey-cancellation__card-details-item">
                         <span>
                           You have used your $400 tuition waiver for a Silent
                           Retreat as part of a 12-month commitment.
                         </span>
                       </li>
-                      <li class="journey-cancellation__card-details-item">
+                      <li className="journey-cancellation__card-details-item">
                         <span>
                           You will be charged{" "}
                           <strong>${totalAmountWillBeDeducted}</strong>
@@ -113,15 +113,15 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                   </>
                 )}
                 {totalAmountWillBeDeducted === 0 && (
-                  <p class="journey-cancellation__card-text pt-4">
+                  <p className="journey-cancellation__card-text pt-4">
                     You can cancel your membership by clicking the link below.
                   </p>
                 )}
               </div>
-              <div class="journey-cancellation__card-bottom-info">
-                <div class="btn-wrapper">
+              <div className="journey-cancellation__card-bottom-info">
+                <div className="btn-wrapper">
                   {totalAmountWillBeDeducted > 0 && (
-                    <button class="btn-outline" onClick={this.payAndCancel}>
+                    <button className="btn-outline" onClick={this.payAndCancel}>
                       {inlineLoading && (
                         <div className="loaded" style={{ padding: "0px 58px" }}>
                           <div className="loader">
@@ -138,7 +138,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                   {totalAmountWillBeDeducted === 0 && (
                     <a
                       href="#"
-                      class="link link_dark"
+                      className="link link_dark"
                       onClick={this.payAndCancel}
                     >
                       {inlineLoading && (
@@ -154,7 +154,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                     </a>
                   )}
                   <button
-                    class="btn-secondary v2"
+                    className="btn-secondary v2"
                     onClick={this.backToProfileAction}
                   >
                     {inlineLoading && (
@@ -174,22 +174,22 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
           </div>
         </div>
       </section>
-      <section class="journey-cancellation_mobile">
-        <div class="container">
-          <div class="col-lg-10 col-12 h-100 m-auto">
-            <div class="h-100 w-100 position-relative">
-              <div class="journey-cancellation_mobile__info">
-                <h1 class="journey-cancellation_mobile__title section-title">
+      <section className="journey-cancellation_mobile">
+        <div className="container">
+          <div className="col-lg-10 col-12 h-100 m-auto">
+            <div className="h-100 w-100 position-relative">
+              <div className="journey-cancellation_mobile__info">
+                <h1 className="journey-cancellation_mobile__title section-title">
                   {userSubscriptions.name} Cancellation
                 </h1>
-                <p class="journey-cancellation_mobile__text">
+                <p className="journey-cancellation_mobile__text">
                   We are sorry to see you go. Is there anything we could do to
                   support your journey? Please reach out to our team at{" "}
                   <a href="tel:8442735500">(844) 273-5500</a> or
                 </p>
-                <p class="journey-cancellation_mobile__text">
+                <p className="journey-cancellation_mobile__text">
                   <a
-                    class="journey-cancellation_mobile__link link_orange"
+                    className="journey-cancellation_mobile__link link_orange"
                     href="mailto:support@us.artofliving.org"
                   >
                     support@us.artofliving.org
@@ -199,22 +199,22 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
 
                 {totalAmountWillBeDeducted > 0 && (
                   <>
-                    <p class="journey-cancellation_mobile__text">
+                    <p className="journey-cancellation_mobile__text">
                       If you cancel your {userSubscriptions.name} Membership
                       today, you’ll be charged for the remainder of your annual
                       commitment.
                     </p>
-                    <h2 class="journey-cancellation_mobile__subtitle">
+                    <h2 className="journey-cancellation_mobile__subtitle">
                       Cancellation Details:
                     </h2>
-                    <ul class="journey-cancellation_mobile__details">
-                      <li class="journey-cancellation_mobile__details-item">
+                    <ul className="journey-cancellation_mobile__details">
+                      <li className="journey-cancellation_mobile__details-item">
                         <span>
                           You have used your $400 tuition waiver for a Silent
                           Retreat as part of a 12-month commitment.
                         </span>
                       </li>
-                      <li class="journey-cancellation_mobile__details-item">
+                      <li className="journey-cancellation_mobile__details-item">
                         <span>
                           You will be charged{" "}
                           <strong>${totalAmountWillBeDeducted}</strong>
@@ -224,14 +224,14 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                   </>
                 )}
                 {totalAmountWillBeDeducted === 0 && (
-                  <p class="journey-cancellation_mobile__text">
+                  <p className="journey-cancellation_mobile__text">
                     You can cancel your membership by clicking the link below.
                   </p>
                 )}
               </div>
-              <div class="btn-wrapper">
+              <div className="btn-wrapper">
                 <button
-                  class="btn-secondary v2"
+                  className="btn-secondary v2"
                   onClick={this.backToProfileAction}
                 >
                   {inlineLoading && (
@@ -246,7 +246,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                   {!inlineLoading && `Keep my membership`}
                 </button>
                 {totalAmountWillBeDeducted > 0 && (
-                  <button class="btn-outline" onClick={this.payAndCancel}>
+                  <button className="btn-outline" onClick={this.payAndCancel}>
                     {inlineLoading && (
                       <div className="loaded" style={{ padding: "0px 58px" }}>
                         <div className="loader">
@@ -263,7 +263,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                 {totalAmountWillBeDeducted === 0 && (
                   <a
                     href="#"
-                    class="link link_dark"
+                    className="link link_dark"
                     onClick={this.payAndCancel}
                   >
                     {inlineLoading && (

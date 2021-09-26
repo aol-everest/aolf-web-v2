@@ -16,14 +16,14 @@ const stripePromise = loadStripe(
 const RetreatPrerequisiteWarning = () => {
   return (
     <>
-      <p class="course-join-card__text">
+      <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
         the Journey + membership, which is{" "}
         <strong>SKY Breath Meditation</strong> (formerly known as the Happiness
         Program). In SKY Breath Meditation, you'll learn a powerful breath
         meditation to effectively settle and calm the mind.
       </p>
-      <p class="course-join-card__text">
+      <p className="course-join-card__text">
         If our records are not accurate, please contact customer service at{" "}
         <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
         <a href="mailto:app.support@us.artofliving.org">
@@ -134,10 +134,10 @@ function MembershipCheckout({ subsciption, profile, token }) {
 
   return (
     <main>
-      <section class="order">
-        <div class="container">
-          <h1 class="title">{name}</h1>
-          <p class="order__detail">Take your journey to the next level</p>
+      <section className="order">
+        <div className="container">
+          <h1 className="title">{name}</h1>
+          <p className="order__detail">Take your journey to the next level</p>
           <Elements
             stripe={stripePromise}
             fonts={[
@@ -158,31 +158,37 @@ function MembershipCheckout({ subsciption, profile, token }) {
           </Elements>
         </div>
       </section>
-      <section class="additional-information">
-        <div class="container">
+      <section className="additional-information">
+        <div className="container">
           {MEMBERSHIP_TYPES.JOURNEY_PLUS.value !== sfid && (
-            <div class="row">
-              <div class="col-lg-4">
-                <div class="information__blcok">
-                  <h2 class="information__tile">Support for your journey</h2>
-                  <p class="information__text">
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="information__blcok">
+                  <h2 className="information__tile">
+                    Support for your journey
+                  </h2>
+                  <p className="information__text">
                     Build your SKY practice with daily resources in the SKY
                     Journey.
                   </p>
                 </div>
               </div>
-              <div class="col-lg-4 mt-3 mt-lg-0">
-                <div class="information__blcok">
-                  <h2 class="information__tile">Exclusive member content</h2>
-                  <p class="information__text">
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">
+                    Exclusive member content
+                  </h2>
+                  <p className="information__text">
                     Access content exclusive to digital members.
                   </p>
                 </div>
               </div>
-              <div class="col-lg-4 mt-3 mt-lg-0">
-                <div class="information__blcok">
-                  <h2 class="information__tile">Meditate wherever you are</h2>
-                  <p class="information__text">
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">
+                    Meditate wherever you are
+                  </h2>
+                  <p className="information__text">
                     Take a library of online meditations with you in your
                     pocket.
                   </p>
@@ -191,27 +197,27 @@ function MembershipCheckout({ subsciption, profile, token }) {
             </div>
           )}
           {MEMBERSHIP_TYPES.JOURNEY_PLUS.value === sfid && (
-            <div class="row">
-              <div class="col-lg-4">
-                <div class="information__blcok">
-                  <h2 class="information__tile">Silent Retreat Waiver+</h2>
-                  <p class="information__text">
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="information__blcok">
+                  <h2 className="information__tile">Silent Retreat Waiver+</h2>
+                  <p className="information__text">
                     $400 waiver on your first silent retreat.
                   </p>
                 </div>
               </div>
-              <div class="col-lg-4 mt-3 mt-lg-0">
-                <div class="information__blcok">
-                  <h2 class="information__tile">More Discounts</h2>
-                  <p class="information__text">
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">More Discounts</h2>
+                  <p className="information__text">
                     Receive $200 off additional silent retreats*
                   </p>
                 </div>
               </div>
-              <div class="col-lg-4 mt-3 mt-lg-0">
-                <div class="information__blcok">
-                  <h2 class="information__tile">Special Events</h2>
-                  <p class="information__text">
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">Special Events</h2>
+                  <p className="information__text">
                     Receive more discounts for special events with Sri Sri.
                   </p>
                 </div>
@@ -219,9 +225,9 @@ function MembershipCheckout({ subsciption, profile, token }) {
             </div>
           )}
 
-          <div class="featured-in">
-            <h2 class="featured-in__title">Featured in</h2>
-            <div class="featured-in__box d-none d-lg-flex">
+          <div className="featured-in">
+            <h2 className="featured-in__title">Featured in</h2>
+            <div className="featured-in__box d-none d-lg-flex">
               <img src="/img/featured-in-cnn.png" alt="cnn" />
               <img src="/img/featured-in-yoga.png" alt="yoga" />
               <img src="/img/featured-in-tnyt.png" alt="tnyt" />
@@ -230,14 +236,18 @@ function MembershipCheckout({ subsciption, profile, token }) {
               <img src="/img/featured-in-forbes.png" alt="forbes" />
               <img src="/img/featured-in-nbc.png" alt="nbc" />
             </div>
-            <div class="featured-in__box d-flex d-lg-none">
+            <div className="featured-in__box d-flex d-lg-none">
               <img src="/img/featured-in-cnn.png" alt="cnn" />
               <img src="/img/featured-in-yoga.png" alt="yoga" />
               <img src="/img/featured-in-nbc.png" alt="nbc" />
               <img src="/img/featured-in-wsj.png" alt="wsj" />
               <img src="/img/featured-in-forbes.png" alt="forbes" />
               <img src="/img/featured-in-time.png" alt="time" />
-              <img class="m-auto" src="/img/featured-in-tnyt.png" alt="tnyt" />
+              <img
+                className="m-auto"
+                src="/img/featured-in-tnyt.png"
+                alt="tnyt"
+              />
             </div>
           </div>
         </div>

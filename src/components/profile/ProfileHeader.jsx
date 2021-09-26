@@ -14,7 +14,7 @@ export const ProfileHeader = ({
   userSubscriptions = {},
 }) => {
   const router = useRouter();
-  const { showModal } = useGlobalModalContext();
+  const { showModal, hideModal } = useGlobalModalContext();
   const { data: subsciptionCategories = [] } = useQuery(
     "subsciption",
     async () => {
@@ -30,11 +30,17 @@ export const ProfileHeader = ({
 
   const cancelMembershipAction = (modalSubscriptionId) => (e) => {
     if (e) e.preventDefault();
+    hideModal();
     router.push({
-      pathname: "/membership-cancellation",
-      query: {
-        id: modalSubscriptionId,
-      },
+      pathname: `/membership/cancellation/${modalSubscriptionId}`,
+    });
+  };
+
+  const purchaseMembershipAction = (id) => (e) => {
+    if (e) e.preventDefault();
+    hideModal();
+    router.push({
+      pathname: `/membership/${id}`,
     });
   };
 
@@ -84,7 +90,7 @@ export const ProfileHeader = ({
                 {modalSubscription.subscriptionBuyingChannel !== "WEB" && (
                   <a
                     data-tip
-                    data-for="Popover1"
+                    data-htmlFor="Popover1"
                     href="#"
                     className="link link_gray"
                   >
@@ -142,9 +148,7 @@ export const ProfileHeader = ({
 
                 <button
                   className="btn-secondary v2"
-                  onClick={showPurchaseMembershipModalAction(
-                    modalSubscription.sfid,
-                  )}
+                  onClick={purchaseMembershipAction(modalSubscription.sfid)}
                 >
                   Join {modalSubscription.name}
                 </button>

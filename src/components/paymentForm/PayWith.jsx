@@ -51,7 +51,7 @@ export const PayWith = ({ formikProps, otherPaymentOptions }) => {
         <ul className="select-box__list">
           <li>
             <label
-              htmlFor="payment-method-card"
+              htmlhtmlFor="payment-method-card"
               aria-hidden="aria-hidden"
               data-value="card"
               className="select-box__option"
@@ -63,7 +63,7 @@ export const PayWith = ({ formikProps, otherPaymentOptions }) => {
           {otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") > -1 && (
             <li>
               <label
-                htmlFor="payment-method-paypal"
+                htmlhtmlFor="payment-method-paypal"
                 aria-hidden="aria-hidden"
                 data-value="paypal"
                 className="select-box__option"

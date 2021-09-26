@@ -698,7 +698,7 @@ export const PaymentForm = ({
                         value="regular"
                         checked
                       />
-                      <label htmlFor="payment-lg-regular">
+                      <label htmlhtmlFor="payment-lg-regular">
                         <span>Regular rate</span>
                         <span>
                           <span className="discount">$550</span> $450
@@ -713,7 +713,7 @@ export const PaymentForm = ({
                         id="payment-lg-premium"
                         value="premium"
                       />
-                      <label htmlFor="payment-lg-premium">
+                      <label htmlhtmlFor="payment-lg-premium">
                         <span>Premium/Journey+ rate:</span>
                         <span>
                           <span className="discount">$150</span> $50
@@ -772,7 +772,7 @@ export const PaymentForm = ({
                     <ul className="select-box__list">
                       <li>
                         <label
-                          htmlFor="room-lg-1"
+                          htmlhtmlFor="room-lg-1"
                           aria-hidden="aria-hidden"
                           data-value="1"
                           className="select-box__option"
@@ -783,7 +783,7 @@ export const PaymentForm = ({
                       </li>
                       <li>
                         <label
-                          htmlFor="room-lg-2"
+                          htmlhtmlFor="room-lg-2"
                           aria-hidden="aria-hidden"
                           data-value="2"
                           className="select-box__option"
@@ -794,7 +794,7 @@ export const PaymentForm = ({
                       </li>
                       <li>
                         <label
-                          htmlFor="room-lg-3"
+                          htmlhtmlFor="room-lg-3"
                           aria-hidden="aria-hidden"
                           data-value="3"
                           className="select-box__option"
@@ -830,7 +830,7 @@ export const PaymentForm = ({
                         name="program"
                         id="program"
                       />
-                      <label htmlFor="program"></label>
+                      <label htmlhtmlFor="program"></label>
                       <p className="agreement__text">
                         I agree to the
                         <a href="#">
@@ -856,7 +856,7 @@ export const PaymentForm = ({
                         name="health-confirmation"
                         id="health-confirmation"
                       />
-                      <label htmlFor="health-confirmation"></label>
+                      <label htmlhtmlFor="health-confirmation"></label>
                       <p className="health-confirmation__text">
                         I represent that I am in good health, and I will inform
                         the health info desk of any limiting health conditions

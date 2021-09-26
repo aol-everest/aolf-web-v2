@@ -80,32 +80,32 @@ export const MeetupEnroll = ({
           show: true,
         })}
       >
-        <div class="modal-content">
-          <div class="logo">
+        <div className="modal-content">
+          <div className="logo">
             <img src="/static/media/ic-logo.807a6f6a.svg" alt="logo" />
           </div>
-          <div class="close-modal d-lg-none" onClick={closeDetailAction}>
-            <div class="close-line"></div>
-            <div class="close-line"></div>
+          <div className="close-modal d-lg-none" onClick={closeDetailAction}>
+            <div className="close-line"></div>
+            <div className="close-line"></div>
           </div>
-          <div class="mobile-wrapper">
-            <div class="modal-header">
+          <div className="mobile-wrapper">
+            <div className="modal-header">
               <button
                 type="button"
-                class="close"
+                className="close"
                 data-dismiss="modal"
                 onClick={closeDetailAction}
                 aria-label="Close"
               >
                 <span aria-hidden="true">&times;</span>
               </button>
-              <span class="modal-title">RSVP for {meetupTitle}</span>
+              <span className="modal-title">RSVP for {meetupTitle}</span>
             </div>
-            <div class="modal-body">
-              {/* <p class="description">Refresh your {meetupType} practice live with the original recording and a
+            <div className="modal-body">
+              {/* <p className="description">Refresh your {meetupType} practice live with the original recording and a
               certified teacher.</p> */}
-              <p class="description">{description}</p>
-              <p class="date">
+              <p className="description">{description}</p>
+              <p className="date">
                 {`${moment.utc(meetupStartDate).format("MMMM DD")}, `}
                 {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
               </p>
@@ -116,25 +116,28 @@ export const MeetupEnroll = ({
               </ul>
             </div>
 
-            <div class="card-wrapper">
+            <div className="card-wrapper">
               {(isDigitalMember || isPremiumMember || isBasicMember) && (
                 <div class={classNames("card full card-preffered")}>
-                  <div class="card-body">
-                    <p class="card-title">
+                  <div className="card-body">
+                    <p className="card-title">
                       For {isDigitalMember && "Digital"}
                       {isPremiumMember && "Premium"}
                       {isBasicMember && "Basic"} members
                     </p>
-                    <p class="card-text">
+                    <p className="card-text">
                       {loading && <Loader />}
                       {!loading && (
                         <>
-                          <span class="prev-price">${listPrice}</span> $
+                          <span className="prev-price">${listPrice}</span> $
                           {memberPrice}
                         </>
                       )}
                     </p>
-                    <button class="btn btn-preffered" onClick={checkoutMeetup}>
+                    <button
+                      className="btn btn-preffered"
+                      onClick={checkoutMeetup}
+                    >
                       {checkoutLoading && (
                         <div className="loaded" style={{ padding: "0px 58px" }}>
                           <div className="loader">
@@ -153,23 +156,23 @@ export const MeetupEnroll = ({
               {!isDigitalMember && !isPremiumMember && !isBasicMember && (
                 <>
                   <div class={classNames("card")}>
-                    <div class="card-body">
-                      <p class="card-title">For non-members</p>
-                      <p class="card-text">
+                    <div className="card-body">
+                      <p className="card-title">For non-members</p>
+                      <p className="card-text">
                         {loading && <Loader />}
                         {!loading && (
                           <>
                             {listPrice !== unitPrice && (
                               <>
-                                <span class="prev-price">${listPrice}</span> $
-                                {unitPrice}
+                                <span className="prev-price">${listPrice}</span>{" "}
+                                ${unitPrice}
                               </>
                             )}
                             {listPrice === unitPrice && <>${unitPrice}</>}
                           </>
                         )}
                       </p>
-                      <button class="btn" onClick={checkoutMeetup}>
+                      <button className="btn" onClick={checkoutMeetup}>
                         {checkoutLoading && (
                           <div
                             className="loaded"
@@ -186,19 +189,22 @@ export const MeetupEnroll = ({
                       </button>
                     </div>
                   </div>
-                  <div class="card card-preffered">
-                    <div class="card-body">
-                      <p class="card-title">For Digital members</p>
-                      <p class="card-text">
+                  <div className="card card-preffered">
+                    <div className="card-body">
+                      <p className="card-title">For Digital members</p>
+                      <p className="card-text">
                         {loading && <Spinner />}
                         {!loading && (
                           <>
-                            <span class="prev-price">${listPrice}</span> $
+                            <span className="prev-price">${listPrice}</span> $
                             {memberPrice}
                           </>
                         )}
                       </p>
-                      <button class="btn btn-preffered" onClick={goToCheckout}>
+                      <button
+                        className="btn btn-preffered"
+                        onClick={goToCheckout}
+                      >
                         Join Digital and RSVP
                       </button>
                     </div>
@@ -207,9 +213,12 @@ export const MeetupEnroll = ({
               )}
             </div>
           </div>
-          <div class="close-modal d-none d-lg-flex" onClick={closeDetailAction}>
-            <div class="close-line"></div>
-            <div class="close-line"></div>
+          <div
+            className="close-modal d-none d-lg-flex"
+            onClick={closeDetailAction}
+          >
+            <div className="close-line"></div>
+            <div className="close-line"></div>
           </div>
         </div>
       </div>

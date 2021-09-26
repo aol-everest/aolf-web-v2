@@ -6,7 +6,7 @@ import { NextSeo } from "next-seo";
 
 const successMessage = () => {
   return (
-    <p class="course-join-card__text">
+    <p className="course-join-card__text">
       We have received your request to withhold your grant of rights.
     </p>
   );

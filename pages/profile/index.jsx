@@ -137,7 +137,7 @@ const Profile = ({ profile }) => {
         <section className="profile-header">
           <div className="container d-flex flex-md-row flex-column align-items-md-center">
             <div className="profile-header__client profile-pic-section">
-              <label htmlFor="upload-button">
+              <label htmlhtmlFor="upload-button">
                 <input
                   type="file"
                   id="upload-button"
