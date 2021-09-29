@@ -43,7 +43,7 @@ export const getServerSideProps = async (context) => {
   } catch (err) {
     console.error(err);
     res.writeHead(302, {
-      Location: `/workshop`,
+      Location: `/course`,
     });
     res.end();
   }

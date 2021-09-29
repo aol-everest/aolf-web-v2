@@ -15,6 +15,7 @@ import {
 } from "@components/profile";
 import { api } from "@utils";
 import { MEMBERSHIP_TYPES } from "@constants";
+import { useQueryString } from "@hooks";
 
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
 const UPDATE_PROFILE = "UPDATE_PROFILE";
@@ -51,9 +52,11 @@ export async function getServerSideProps({ req, res }) {
 
 const Profile = ({ profile }) => {
   const [loading, setLoading] = useState(false);
-  const [request, setRequest] = useState(null);
-  const [activeTab, setActiveTab] = useState(UPCOMING_EVENTS);
+  const [activeTab, setActiveTab] = useQueryString("tab", {
+    defaultValue: UPCOMING_EVENTS,
+  });
   const [editCardDetail, setEditCardDetail] = useState(false);
+  const [request] = useQueryString("request");
   const router = useRouter();
   const {
     first_name,
@@ -252,7 +255,7 @@ const Profile = ({ profile }) => {
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
-                        <Link href="/workshop">
+                        <Link href="/course">
                           <a href="#" className="link link_orange">
                             course
                           </a>

@@ -657,6 +657,7 @@ export const PaymentForm = ({
                     workshop={workshop}
                     fee={fee}
                     delfee={fee}
+                    formikProps={formikProps}
                     userSubscriptions={userSubscriptions}
                     handlePriceTypeChange={handlePriceTypeChange}
                     // openSubscriptionPaywallPage={openSubscriptionPaywallPage}

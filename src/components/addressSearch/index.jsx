@@ -34,7 +34,6 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
       setIsGeocoding(true);
       setAddress(selected);
       const res = await geocodeByAddress(selected);
-      console.log(res);
       const [locationResult] = res;
       const { lat, lng } = await getLatLng(locationResult);
       setLatitude(lat);

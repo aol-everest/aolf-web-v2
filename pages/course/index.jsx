@@ -5,7 +5,7 @@ import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
-import { WorkshopTile } from "@components/workshop/workshopTile";
+import { WorkshopTile } from "@components/course/workshopTile";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
@@ -19,7 +19,7 @@ import {
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
-import Style from "./Workshop.module.scss";
+import Style from "./Course.module.scss";
 
 const DATE_PICKER_CONFIG = {
   opens: "center",
@@ -147,7 +147,7 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Workshop = ({ workshops, authenticated, query }) => {
+const Course = ({ workshops, authenticated, query }) => {
   const seed = useUIDSeed();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
@@ -752,7 +752,7 @@ const Workshop = ({ workshops, authenticated, query }) => {
   );
 };
 
-// Workshop.requiresAuth = true;
-// Workshop.redirectUnauthenticated = "/login";
+// Course.requiresAuth = true;
+// Course.redirectUnauthenticated = "/login";
 
-export default Workshop;
+export default Course;

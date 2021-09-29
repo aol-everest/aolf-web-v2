@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { api } from "@utils";
 import { withSSRContext } from "aws-amplify";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { useQueryString } from "@hooks";
+import Style from "./MembershipCancellation.module.scss";
 
 export async function getServerSideProps({ req, res, query }) {
   const { Auth } = withSSRContext({ req });
@@ -47,9 +49,15 @@ export async function getServerSideProps({ req, res, query }) {
   return { props };
 }
 
-const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
-  console.log(cancelSubscription);
-  const [subscriptionId] = useQueryString("id");
+const MembershipCancellation = ({
+  cancelSubscription,
+  token,
+  profile,
+  query,
+}) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { id: subscriptionId } = router.query;
   const { data, status, error: errorMessage, isError } = cancelSubscription;
   const { totalAmountWillBeDeducted } = data || [];
 
@@ -62,9 +70,69 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   if (!userSubscriptions) {
     return <div>Invalid subscription Id</div>;
   }
+
+  const backToProfileAction = (e) => {
+    if (e) e.preventDefault();
+    router.push({
+      pathname: `/profile`,
+    });
+  };
+
+  const payAndCancel = async (e) => {
+    if (e) e.preventDefault();
+    if (loading) {
+      return false;
+    }
+
+    setLoading(true);
+
+    try {
+      if (!subsciptionId) {
+        throw new Error("Invalid subsciptionId Id");
+      }
+      const {
+        data,
+        status,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: "cancelSubscriptionStep2",
+        token,
+        body: {
+          id: subsciptionId,
+          amountDue: totalAmountWillBeDeducted,
+        },
+      });
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      router.push({
+        pathname: `/profile`,
+        query: {
+          request: 2,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+
+      router.push({
+        pathname: `/profile`,
+        query: {
+          request: 1,
+        },
+      });
+    }
+  };
+
   return (
     <main>
-      <section className="journey-cancellation v3">
+      <section
+        className={classNames(
+          "journey-cancellation",
+          Style.journeyCancellation,
+        )}
+      >
         <div className="container">
           <div className="col-10 m-auto">
             <div className="journey-cancellation__card mx-auto">
@@ -121,7 +189,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
               <div className="journey-cancellation__card-bottom-info">
                 <div className="btn-wrapper">
                   {totalAmountWillBeDeducted > 0 && (
-                    <button className="btn-outline" onClick={this.payAndCancel}>
+                    <button className="btn-outline" onClick={payAndCancel}>
                       {inlineLoading && (
                         <div className="loaded" style={{ padding: "0px 58px" }}>
                           <div className="loader">
@@ -139,9 +207,9 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                     <a
                       href="#"
                       className="link link_dark"
-                      onClick={this.payAndCancel}
+                      onClick={payAndCancel}
                     >
-                      {inlineLoading && (
+                      {loading && (
                         <div className="loaded" style={{ padding: "0px 58px" }}>
                           <div className="loader">
                             <div className="loader-inner ball-clip-rotate">
@@ -150,14 +218,14 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                           </div>
                         </div>
                       )}
-                      {!inlineLoading && `No thanks, I’ll cancel`}
+                      {!loading && `No thanks, I’ll cancel`}
                     </a>
                   )}
                   <button
                     className="btn-secondary v2"
-                    onClick={this.backToProfileAction}
+                    onClick={backToProfileAction}
                   >
-                    {inlineLoading && (
+                    {loading && (
                       <div className="loaded" style={{ padding: "0px 58px" }}>
                         <div className="loader">
                           <div className="loader-inner ball-clip-rotate">
@@ -166,7 +234,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                         </div>
                       </div>
                     )}
-                    {!inlineLoading && `Keep my membership`}
+                    {!loading && `Keep my membership`}
                   </button>
                 </div>
               </div>
@@ -232,9 +300,9 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
               <div className="btn-wrapper">
                 <button
                   className="btn-secondary v2"
-                  onClick={this.backToProfileAction}
+                  onClick={backToProfileAction}
                 >
-                  {inlineLoading && (
+                  {loading && (
                     <div className="loaded" style={{ padding: "0px 58px" }}>
                       <div className="loader">
                         <div className="loader-inner ball-clip-rotate">
@@ -243,11 +311,11 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                       </div>
                     </div>
                   )}
-                  {!inlineLoading && `Keep my membership`}
+                  {!loading && `Keep my membership`}
                 </button>
                 {totalAmountWillBeDeducted > 0 && (
-                  <button className="btn-outline" onClick={this.payAndCancel}>
-                    {inlineLoading && (
+                  <button className="btn-outline" onClick={payAndCancel}>
+                    {loading && (
                       <div className="loaded" style={{ padding: "0px 58px" }}>
                         <div className="loader">
                           <div className="loader-inner ball-clip-rotate">
@@ -256,17 +324,12 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                         </div>
                       </div>
                     )}
-                    {!inlineLoading &&
-                      `Pay $${totalAmountWillBeDeducted} and cancel`}
+                    {!loading && `Pay $${totalAmountWillBeDeducted} and cancel`}
                   </button>
                 )}
                 {totalAmountWillBeDeducted === 0 && (
-                  <a
-                    href="#"
-                    className="link link_dark"
-                    onClick={this.payAndCancel}
-                  >
-                    {inlineLoading && (
+                  <a href="#" className="link link_dark" onClick={payAndCancel}>
+                    {loading && (
                       <div className="loaded" style={{ padding: "0px 58px" }}>
                         <div className="loader">
                           <div className="loader-inner ball-clip-rotate">
@@ -275,7 +338,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                         </div>
                       </div>
                     )}
-                    {!inlineLoading && `No thanks, I’ll cancel`}
+                    {!loading && `No thanks, I’ll cancel`}
                   </a>
                 )}
               </div>

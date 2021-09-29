@@ -51,7 +51,7 @@ export const getServerSideProps = async (context) => {
   } catch (err) {
     console.error(err);
     res.writeHead(302, {
-      Location: `/workshop`,
+      Location: `/course`,
     });
     res.end();
   }
@@ -107,7 +107,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
 
   const searchSilentRetreatsAction = () => {
     router.push({
-      pathname: "/workshop",
+      pathname: "/course",
       query: {
         courseType: "SILENT_RETREAT",
       },
@@ -118,7 +118,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
     if (courseId) {
       if (page === "detail") {
         router.push({
-          pathname: `/workshop/${courseId}`,
+          pathname: `/course/${courseId}`,
         });
       } else {
         router.push({

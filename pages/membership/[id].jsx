@@ -80,7 +80,7 @@ export const getServerSideProps = async (context) => {
   } catch (err) {
     console.error(err);
     res.writeHead(302, {
-      Location: `/workshop`,
+      Location: `/course`,
     });
     res.end();
   }
@@ -89,7 +89,6 @@ export const getServerSideProps = async (context) => {
 };
 
 function MembershipCheckout({ subsciption, profile, token }) {
-  console.log(subsciption);
   const [couponCode] = useQueryString("coupon");
   const [offeringId] = useQueryString("ofid");
   const { showModal } = useGlobalModalContext();
@@ -125,7 +124,7 @@ function MembershipCheckout({ subsciption, profile, token }) {
     if (e) e.preventDefault();
     hideAlert();
     router.push({
-      pathname: "/workshop",
+      pathname: "/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },

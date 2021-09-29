@@ -9,6 +9,8 @@ export const CourseOptions = ({
   delfee,
   hasGroupedAddOnProducts,
   totalFee,
+  formikProps,
+  userSubscriptions,
 }) => {
   const {
     premiumRate,

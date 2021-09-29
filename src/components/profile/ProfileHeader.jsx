@@ -87,7 +87,8 @@ export const ProfileHeader = ({
           footer: () => {
             return (
               <div className="course-join-card__footer">
-                {modalSubscription.subscriptionBuyingChannel !== "WEB" && (
+                {userSubscriptions[subscriptionId].subscriptionBuyingChannel !==
+                  "WEB" && (
                   <a
                     data-tip
                     data-htmlFor="Popover1"
@@ -97,11 +98,14 @@ export const ProfileHeader = ({
                     Cancel Membership
                   </a>
                 )}
-                {modalSubscription.subscriptionBuyingChannel === "WEB" && (
+                {userSubscriptions[subscriptionId].subscriptionBuyingChannel ===
+                  "WEB" && (
                   <a
                     href="#"
                     className="link link_gray"
-                    onClick={cancelMembershipAction(modalSubscription.sfid)}
+                    onClick={cancelMembershipAction(
+                      userSubscriptions[subscriptionId].sfid,
+                    )}
                   >
                     Cancel Membership
                   </a>

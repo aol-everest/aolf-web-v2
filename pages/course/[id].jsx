@@ -4,7 +4,7 @@ import {
   SKYBreathMeditation,
   SahajSamadhi,
   SilentRetreat,
-} from "@components/workshopDetails";
+} from "@components/courseDetails";
 import { COURSE_TYPES } from "@constants";
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
@@ -53,8 +53,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-export default function WorkshopDetail({ data }) {
-
+export default function CourseDetail({ data }) {
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
   const isSilentRetreatType =

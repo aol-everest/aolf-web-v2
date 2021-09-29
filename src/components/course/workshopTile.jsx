@@ -29,10 +29,10 @@ export const WorkshopTile = ({ data, authenticated }) => {
 
   const enrollAction = (workshopId) => () => {
     if (authenticated) {
-      router.push(`/checkout/${workshopId}`);
+      router.push(`/course/checkout/${workshopId}`);
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/checkout/${workshopId}`,
+        navigateTo: `/course/checkout/${workshopId}`,
       });
     }
 
@@ -102,7 +102,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
             >
               Enroll
             </a>
-            <Link href={`/workshop/${sfid}`}>
+            <Link href={`/course/${sfid}`}>
               <a className="btn btn-box-light text-center">Details</a>
             </Link>
           </div>
