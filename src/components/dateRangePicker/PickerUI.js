@@ -1,5 +1,5 @@
-import React from 'react';
-import { getDefaultState, interval } from './utils';
+import React from "react";
+import { getDefaultState, interval } from "./utils";
 
 export default class PickerUI extends React.Component {
   state = getDefaultState();
@@ -14,7 +14,8 @@ export default class PickerUI extends React.Component {
     const startDate = isOpen ? this.state.startDate : day;
     const endDate = isOpen && day >= startDate ? day : null;
     const range = endDate || startDate;
-    const closedOrOpen = isOpen && day >= startDate ? interval.CLOSED : interval.OPEN;
+    const closedOrOpen =
+      isOpen && day >= startDate ? interval.CLOSED : interval.OPEN;
     this.setState({
       startDate,
       endDate,
@@ -38,8 +39,8 @@ export default class PickerUI extends React.Component {
   dateLabel = () => {
     const { startDate, endDate } = this.state;
     return startDate && endDate
-      ? `${startDate.format('DD/MM/YYYY')} - ${endDate.format('DD/MM/YYYY')}`
-      : '';
+      ? `${startDate.format("DD/MM/YYYY")} - ${endDate.format("DD/MM/YYYY")}`
+      : "";
   };
 
   render() {
@@ -57,9 +58,14 @@ export default class PickerUI extends React.Component {
         <div className="ranges" />
         {!noFooter && (
           <div className="drp-buttons">
-            {!noInfo && <span className="drp-selected">{this.dateLabel()}</span>}
+            {!noInfo && (
+              <span className="drp-selected">{this.dateLabel()}</span>
+            )}
             {!noCancel && (
-              <button className="cancelBtn btn btn-sm btn-default" type="button">
+              <button
+                className="cancelBtn btn btn-sm btn-default"
+                type="button"
+              >
                 Cancel
               </button>
             )}

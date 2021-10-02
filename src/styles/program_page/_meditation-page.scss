@@ -104,7 +104,7 @@
             }
           }
         }
-        
+
         .video-player {
           .video-shrink {
             display: none;
@@ -199,12 +199,12 @@
           }
           &:hover {
             img {
-              content: url('./../img/ic-play-hover.svg');
+              content: url("./../img/ic-play-hover.svg");
             }
           }
           &:active {
             img {
-              content: url('./../img/ic-play-active.svg');
+              content: url("./../img/ic-play-active.svg");
             }
           }
         }
@@ -249,7 +249,7 @@
               max-width: 100%;
               transition: all 0.15s ease-out;
               &:after {
-                content: '';
+                content: "";
                 display: flex;
                 position: absolute;
                 box-sizing: border-box;
@@ -282,8 +282,6 @@
               }
             }
           }
-
-          
         }
         .collection-video-details {
           span {
@@ -334,37 +332,37 @@
                 font-weight: 500;
                 line-height: 40px;
                 padding-left: 55px;
-                font-family: 'Work Sans';
+                font-family: "Work Sans";
                 &:hover,
                 &:focus {
                   text-decoration: none;
                 }
                 &[aria-expanded="true"] {
-                  background: url('../img/ic-minus.svg');
+                  background: url("../img/ic-minus.svg");
                   background-repeat: no-repeat;
                   background-position: left;
                   &:hover {
-                    background: url('../img/ic-minus-hover.svg');
+                    background: url("../img/ic-minus-hover.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                   &:active {
-                    background: url('../img/ic-minus-focus.svg');
+                    background: url("../img/ic-minus-focus.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                 }
                 &[aria-expanded="false"] {
-                  background: url('../img/ic-plus.svg');
+                  background: url("../img/ic-plus.svg");
                   background-repeat: no-repeat;
                   background-position: left;
                   &:hover {
-                    background: url('../img/ic-plus-hover.svg');
+                    background: url("../img/ic-plus-hover.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                   &:active {
-                    background: url('../img/ic-plus-focus.svg');
+                    background: url("../img/ic-plus-focus.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
@@ -381,7 +379,7 @@
                   position: relative;
                   font-size: 16px;
                   &:after {
-                    content: '';
+                    content: "";
                     width: 4px;
                     height: 4px;
                     background-color: #3d8be8;
@@ -423,8 +421,8 @@
               position: relative;
               padding-left: 30px;
               &:after {
-                content: '';
-                background-image: url('../img/ic-video.svg');
+                content: "";
+                background-image: url("../img/ic-video.svg");
                 width: 24px;
                 height: 24px;
                 position: absolute;
@@ -443,7 +441,7 @@
         .title-modules {
           font-size: 28px;
           line-height: 40px;
-          font-family: 'Lora';
+          font-family: "Lora";
           margin-bottom: 25px;
           margin: 100px 0 25px;
         }
@@ -459,8 +457,8 @@
             cursor: pointer;
             position: relative;
             &.viewed {
-              background-color: rgba(61,139,232, 0.05);
-              border: 1px solid rgba(61,139,232,0.05);
+              background-color: rgba(61, 139, 232, 0.05);
+              border: 1px solid rgba(61, 139, 232, 0.05);
               .insight-item-img {
                 img.module-viewed {
                   position: absolute;
@@ -824,7 +822,7 @@
         cursor: pointer;
         position: relative;
         &:after {
-          content: '';
+          content: "";
           position: absolute;
           top: 0;
           left: 0;
@@ -980,7 +978,8 @@
 }
 
 .sleep-collection {
-  background-image: url('../img/bg-sleep-header.png'), url('../img/bg-sleep-footer.png');
+  background-image: url("../img/bg-sleep-header.png"),
+    url("../img/bg-sleep-footer.png");
   background-position: center top, center bottom;
   background-repeat: no-repeat, no-repeat;
   background-size: contain;
@@ -1043,7 +1042,7 @@
   }
   .upcoming_course_card {
     .course-like {
-      background-image: url('../img/ic-heart.svg');
+      background-image: url("../img/ic-heart.svg");
       position: absolute;
       right: 20px;
       top: 20px;
@@ -1052,7 +1051,7 @@
       border-radius: 4px;
       background-color: rgba(255, 255, 255, 0.6);
       &.liked {
-          background-image: url('../img/ic-heart-filled.svg');
+        background-image: url("../img/ic-heart-filled.svg");
       }
     }
     .course_info {
@@ -1083,7 +1082,7 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   opacity: 0.6;
   &:hover {
     opacity: 1;
@@ -1093,9 +1092,9 @@
 .audioplayer-time {
   display: flex;
   width: 40px;
-  justify-content:center;
+  justify-content: center;
   font-size: 12px;
-  color: rgba(51, 51 ,51, .6)
+  color: rgba(51, 51, 51, 0.6);
 }
 
 .audioplayer-time-current {
@@ -1117,12 +1116,12 @@
 }
 
 .audioplayer-bar::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 5px;
   width: 100%;
   height: 5px;
-  background-color: #DDE2E6;
+  background-color: #dde2e6;
 }
 
 .audioplayer-bar > div {
@@ -1149,7 +1148,7 @@
 .audioplayer-bar-played::after {
   display: flex;
   position: absolute;
-  content: '';
+  content: "";
   box-sizing: border-box;
   top: -9px;
   right: -1px;
@@ -1183,12 +1182,13 @@
   display: flex;
   width: 6px;
   height: 8px;
-  background-color: #9A9FB0;
+  background-color: #9a9fb0;
   position: relative;
 }
 
-.audioplayer-volume-button a:before, .audioplayer-volume-button a:after {
-  content: '';
+.audioplayer-volume-button a:before,
+.audioplayer-volume-button a:after {
+  content: "";
   position: absolute;
 }
 
@@ -1196,7 +1196,7 @@
   width: 0;
   height: 0;
   border-top: 8px solid transparent;
-  border-right: 9px solid #9A9FB0;
+  border-right: 9px solid #9a9fb0;
   border-bottom: 8px solid transparent;
   border-left: none;
   top: -4px;
@@ -1207,18 +1207,18 @@
   top: -2px;
   width: 6px;
   height: 6px;
-  border: 6px double #9A9FB0;
+  border: 6px double #9a9fb0;
   border-width: 6px 6px 0 0;
   border-radius: 0 12px 0 0;
   transform: rotate(45deg);
 }
 
 .audioplayer-mute .audioplayer-volume-button a {
-  background-color: #FD4F1A;
+  background-color: #fd4f1a;
 }
 
 .audioplayer-mute .audioplayer-volume-button a:before {
-  border-right: 9px solid #FD4F1A;
+  border-right: 9px solid #fd4f1a;
 }
 
 .audioplayer-volume-adjust {
@@ -1233,7 +1233,7 @@
   width: 60px;
   height: 5px;
   cursor: pointer;
-  background-color: #BEC8D2;
+  background-color: #bec8d2;
 }
 
 .audioplayer-volume-adjust div div {
@@ -1241,7 +1241,7 @@
   top: 0;
   left: 0;
   height: 5px;
-  background-color: #0059FF;
+  background-color: #0059ff;
 }
 .player-song {
   margin-left: 24px;
@@ -1299,19 +1299,20 @@
   font-size: 12px;
   color: #9598a6;
 
-  &::before, &::after {
-    content: ''; 
+  &::before,
+  &::after {
+    content: "";
     position: absolute;
     transform: translate(-50%);
     left: 50%;
     bottom: -13px;
     border: 6px solid transparent;
     border-top: 6px solid #e9e9e9;
-   }
-   &::after {
+  }
+  &::after {
     border-top: 6px solid white;
-    bottom: -12px; 
-   }
+    bottom: -12px;
+  }
 }
 
 .video-insighter-bar:hover {

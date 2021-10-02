@@ -10,7 +10,6 @@
 
     #switch-filter .btn[data-swicth-active]:first-child {
       border-radius: 12px 2px 2px 12px;
-      
     }
 
     #switch-filter .btn[data-swicth-active]:last-child {
@@ -23,7 +22,7 @@
     padding: 4px;
     margin-right: 15px;
     margin-bottom: 5px;
-    
+
     .btn {
       height: 40px;
       display: flex;
@@ -36,7 +35,6 @@
       &:last-child {
         width: 115px;
       }
-      
     }
   }
 
@@ -69,7 +67,7 @@
         margin-left: 0px;
       }
     }
-    
+
     .custom-dropdown {
       padding: 10px 15px;
     }

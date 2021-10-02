@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Th } from './Table';
-import { dayjs } from './utils';
+import React from "react";
+import PropTypes from "prop-types";
+import { Th } from "./Table";
+import { dayjs } from "./utils";
 
 export default class CalendarTitle extends React.Component {
   constructor(props) {
@@ -16,14 +16,17 @@ export default class CalendarTitle extends React.Component {
   };
 
   static defaultProps = {
-    className: 'month',
+    className: "month",
   };
   handleChange = () => {
     const {
       monthSelect: { current: monthSelect },
       yearSelect: { current: yearSelect },
     } = this;
-    const options = [parseInt(yearSelect.value), parseInt(monthSelect.value) + 1];
+    const options = [
+      parseInt(yearSelect.value),
+      parseInt(monthSelect.value) + 1,
+    ];
     const newCalendar = dayjs(options);
 
     const { handleSelected } = this.props;
@@ -36,7 +39,7 @@ export default class CalendarTitle extends React.Component {
     const month = calendar.month();
     const year = calendar.year();
     const titleProps = { colSpan, className };
-    let label = calendar.format('MMM YYYY');
+    let label = calendar.format("MMM YYYY");
     if (showDropdowns) {
       const { monthNames, yearNames } = locale;
       label = [

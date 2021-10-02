@@ -1,4 +1,4 @@
-@import '../variables';
+@import "../variables";
 
 .modal-dialog {
   max-width: 620px;
@@ -293,7 +293,7 @@
                 transition: all 0.15s ease-out;
                 &:after {
                   opacity: 0;
-                  content: '';
+                  content: "";
                   display: flex;
                   position: absolute;
                   box-sizing: border-box;
@@ -395,7 +395,7 @@
             outline: none;
           }
           &:before {
-            content: '';
+            content: "";
             width: 32px;
             height: 32px;
             background-color: #fff;

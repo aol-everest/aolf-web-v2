@@ -66,7 +66,7 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
           <div className="search-bar-container">
             <div>
               <input
-                class={classNames("custom-input", "instructor-input")}
+                className={classNames("custom-input", "instructor-input")}
                 {...getInputProps({
                   placeholder,
                 })}
@@ -83,17 +83,21 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
                     ? { backgroundColor: "#fafafa", cursor: "pointer" }
                     : { backgroundColor: "#ffffff", cursor: "pointer" };
                   return (
-                    <div
-                      {...getSuggestionItemProps(suggestion, {
-                        className,
-                        style,
-                      })}
-                    >
-                      <strong>{suggestion.formattedSuggestion.mainText}</strong>{" "}
-                      <small>
-                        {suggestion.formattedSuggestion.secondaryText}
-                      </small>
-                    </div>
+                    <>
+                      <div
+                        {...getSuggestionItemProps(suggestion, {
+                          className,
+                          style,
+                        })}
+                      >
+                        <strong>
+                          {suggestion.formattedSuggestion.mainText}
+                        </strong>{" "}
+                        <small>
+                          {suggestion.formattedSuggestion.secondaryText}
+                        </small>
+                      </div>
+                    </>
                   );
                 })}
               </div>

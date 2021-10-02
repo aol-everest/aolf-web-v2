@@ -154,12 +154,12 @@
   }
 
   .course_complete {
-    background: rgba($text-color, .6);
+    background: rgba($text-color, 0.6);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 
     &_registration {
-      background: rgba($blue, .6);
+      background: rgba($blue, 0.6);
       padding-left: 50px;
       padding-right: 50px;
       text-align: center;

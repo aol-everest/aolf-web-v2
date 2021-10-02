@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
@@ -186,9 +187,9 @@ export const SilentRetreat = ({ data }) => {
               src="https://player.vimeo.com/video/432237531"
               width="100%"
               height="100%"
-              frameborder="0"
+              frameBorder="0"
               allow="autoplay; fullscreen"
-              allowfullscreen
+              allowFullScreen
             ></iframe>
           </div>
           <Swiper className="px-3 px-lg-0" {...swiperOption}>

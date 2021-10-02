@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import classNames from "classnames";
@@ -11,7 +13,7 @@ import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
-import { useMediaQuery } from "@hooks";
+import { useMedia } from "react-use";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
 import { HideOn } from "react-hide-on-scroll";
 import { priceCalculation } from "@utils";
@@ -51,14 +53,15 @@ export const SKYBreathMeditation = ({ data }) => {
     preventInteractionOnTransition: true,
     navigation: true,
   };
-  if (useMediaQuery(768)) {
+
+  if (useMedia("(min-width: 768px)")) {
     swiperOption = {
       slidesPerView: 1,
       spaceBetween: 30,
       centeredSlides: true,
       navigation: false,
     };
-  } else if (useMediaQuery(1024)) {
+  } else if (useMedia("(max-width: 1024px)")) {
     swiperOption = {
       allowTouchMove: false,
       slidesPerView: 2,
@@ -67,7 +70,7 @@ export const SKYBreathMeditation = ({ data }) => {
       preventInteractionOnTransition: true,
       navigation: true,
     };
-  } else if (useMediaQuery(1440)) {
+  } else if (useMedia("(max-width: 1440px)")) {
     swiperOption = {
       allowTouchMove: false,
       slidesPerView: 3,
@@ -312,9 +315,9 @@ export const SKYBreathMeditation = ({ data }) => {
               src="https://player.vimeo.com/video/428103610"
               width="100%"
               height="100%"
-              frameborder="0"
+              frameBorder="0"
               allow="autoplay; fullscreen"
-              allowfullscreen
+              allowFullScreen
             ></iframe>
           </div>
           <Swiper className="px-3 px-lg-0" {...swiperOption}>

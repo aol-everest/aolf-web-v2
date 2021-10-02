@@ -5,18 +5,20 @@ import { Link, Element, animateScroll as scroll } from "react-scroll";
 import CourseDetailsCard from "./CourseDetailsCard";
 import { Comment } from "./Comment";
 import { CourseBottomCard } from "./CourseBottomCard";
-import { ABBRS, COURSE_TYPES } from "@constants";
+import { ALERT_TYPES, COURSE_TYPES } from "@constants";
 import { RegisterPanel } from "./RegisterPanel";
 import { HideOn } from "react-hide-on-scroll";
+import { useGlobalAlertContext } from "@contexts";
 
 export const SahajSamadhi = ({ data }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+
+  const [showAlert] = useGlobalAlertContext();
 
   const showResearchModal = (e) => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       title: "Success",
-      children: <ResearchFindingSource />,
       className: "research-detail-modal",
       hideConfirm: true,
     });

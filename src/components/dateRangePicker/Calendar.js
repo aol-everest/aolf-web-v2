@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { dayjs } from './utils';
-import { Table } from './Table';
-import CalendarBody from './CalendarBody';
-import CalendarHead from './CalendarHead';
-import PickerUI from './PickerUI';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { dayjs } from "./utils";
+import { Table } from "./Table";
+import CalendarBody from "./CalendarBody";
+import CalendarHead from "./CalendarHead";
+import PickerUI from "./PickerUI";
 
 class Calendar extends React.Component {
   static propTypes = {
@@ -18,7 +18,7 @@ class Calendar extends React.Component {
   };
 
   static defaultProps = {
-    position: 'left',
+    position: "left",
   };
 
   handleSelected = (calendar) => {
@@ -48,8 +48,8 @@ class Calendar extends React.Component {
   renderTable = () => {
     const props = this.createProps();
     const { position } = props;
-    const className = classNames('v2', {
-      'drp-calendar': true,
+    const className = classNames("v2", {
+      "drp-calendar": true,
       [position]: true,
     });
 
@@ -68,14 +68,14 @@ class Calendar extends React.Component {
     const { opens, children } = this.props;
     const className = classNames({
       [`opens${opens}`]: true,
-      'daterangepicker ltr show-calendar': true,
+      "daterangepicker ltr show-calendar": true,
     });
     return (
       <div
         className={className}
         style={{
-          left: 'auto',
-          display: 'block',
+          left: "auto",
+          display: "block",
         }}
       >
         {this.renderTable()}

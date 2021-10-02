@@ -217,12 +217,12 @@
       color: #fa4141;
     }
 
-    input:not([type=radio]),
+    input:not([type="radio"]),
     .select-box {
       margin-top: 1.5rem;
     }
 
-    input:not([type=radio]) {
+    input:not([type="radio"]) {
       outline: none;
       border: none;
       width: 250px;
@@ -599,16 +599,16 @@
     }
 
     &__group_important {
-      .custom-checkbox+label:before {
+      .custom-checkbox + label:before {
         border-color: #ee8585;
       }
 
-      .custom-checkbox:checked+label:before {
+      .custom-checkbox:checked + label:before {
         border-color: #89beec;
         background-color: white;
       }
 
-      .custom-checkbox:checked+label:after {
+      .custom-checkbox:checked + label:after {
         content: url("../img/ic-tick-blue.svg");
       }
     }

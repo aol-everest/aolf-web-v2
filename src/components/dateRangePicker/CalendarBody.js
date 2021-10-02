@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Tr, TBody } from './Table';
-import { cellMapper } from './Cell';
-import { dates, unitType } from './utils';
+import React from "react";
+import PropTypes from "prop-types";
+import { Tr, TBody } from "./Table";
+import { cellMapper } from "./Cell";
+import { dates, unitType } from "./utils";
 
 export default class CalendarBody extends React.Component {
   static propTypes = {
@@ -28,22 +28,22 @@ export default class CalendarBody extends React.Component {
       onDayClick,
       onDayMouseEnter,
     } = this.props;
-    const startOfMonth = calendar.startOf('month');
-    const startOfWeek = startOfMonth.startOf('week');
-    const endOfMonth = calendar.endOf('month');
-    const endOfWeek = endOfMonth.endOf('week');
+    const startOfMonth = calendar.startOf("month");
+    const startOfWeek = startOfMonth.startOf("week");
+    const endOfMonth = calendar.endOf("month");
+    const endOfWeek = endOfMonth.endOf("week");
     const data = [];
     let s = startOfWeek.clone();
 
     for (; s <= endOfWeek; ) {
       data.push(s);
-      s = s.add(1, 'day');
+      s = s.add(1, "day");
     }
     if (data.length < 42) {
       let fill = data.length;
       for (; fill < 42; fill++) {
         data.push(s);
-        s = s.add(1, 'day');
+        s = s.add(1, "day");
       }
     }
     const resolvedData = [];
@@ -53,7 +53,9 @@ export default class CalendarBody extends React.Component {
       const rxiDay = data[rxi];
 
       if (showISOWeekNumbers || showWeekNumbers) {
-        const week = showISOWeekNumbers ? dates.isoWeek(rxiDay.toDate()) : rxiDay.week();
+        const week = showISOWeekNumbers
+          ? dates.isoWeek(rxiDay.toDate())
+          : rxiDay.week();
         rows.push({
           unitType: unitType.WEEK,
           key: 0,
@@ -85,7 +87,11 @@ export default class CalendarBody extends React.Component {
     return resolvedData.map((rows, rowKey) => {
       const cell = rows.map((props) => {
         const Component = cellMapper[props.unitType];
-        return <Component {...props} />;
+        return (
+          <>
+            <Component {...props} />
+          </>
+        );
       });
       return <Tr key={rowKey}>{cell}</Tr>;
     });

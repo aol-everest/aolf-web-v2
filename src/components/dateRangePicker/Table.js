@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export class Tr extends React.Component {
   render() {
@@ -13,7 +13,8 @@ export class Tr extends React.Component {
 
 export class Th extends React.Component {
   render() {
-    const { className, onClick, style, children, colSpan, onMouseDown } = this.props;
+    const { className, onClick, style, children, colSpan, onMouseDown } =
+      this.props;
     return (
       <th
         style={style}

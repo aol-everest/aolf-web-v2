@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useRef } from "react";
 import { useGlobalAudioPlayerContext } from "@contexts";
 // import AudioControls from "./AudioControls";
@@ -180,7 +181,7 @@ const AudioPlayer = () => {
         <div
           id="modal_player"
           className="modal player fixed-right fade show"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
         >
           <div className="modal-dialog modal-dialog-centered" role="document">

@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { THead, Tr, Th } from './Table';
-import CalendarNext from './CalendarNext';
-import CalendarPrev from './CalendarPrev';
-import CalendarTitle from './CalendarTitle';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { THead, Tr, Th } from "./Table";
+import CalendarNext from "./CalendarNext";
+import CalendarPrev from "./CalendarPrev";
+import CalendarTitle from "./CalendarTitle";
 
 export default class CalendarHeader extends React.Component {
   static propTypes = {
@@ -23,8 +23,8 @@ export default class CalendarHeader extends React.Component {
     showWeekNumbers: false,
     showNext: true,
     showPrev: true,
-    nextDate: (calendar) => calendar.add(1, 'month'),
-    prevDate: (calendar) => calendar.subtract(1, 'month'),
+    nextDate: (calendar) => calendar.add(1, "month"),
+    prevDate: (calendar) => calendar.subtract(1, "month"),
   };
 
   createNextProps = () => {
@@ -91,7 +91,11 @@ export default class CalendarHeader extends React.Component {
         className,
         key,
       };
-      return <Th {...thProps} />;
+      return (
+        <>
+          <Th {...thProps} />
+        </>
+      );
     });
     return <Tr>{WeekData}</Tr>;
   };

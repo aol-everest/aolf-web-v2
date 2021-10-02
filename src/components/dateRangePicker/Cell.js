@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { cx, unitType } from './utils';
+import React from "react";
+import PropTypes from "prop-types";
+import { cx, unitType } from "./utils";
 
 export class DayCell extends React.Component {
   static propTypes = {
@@ -30,8 +30,12 @@ export class DayCell extends React.Component {
     const { day } = this.props;
     const className = cx({ ...this.props });
     return (
-      <td className={className} onClick={this.handleOnClick} onMouseEnter={this.handleOnMouseEnter}>
-        {day.format('DD')}
+      <td
+        className={className}
+        onClick={this.handleOnClick}
+        onMouseEnter={this.handleOnMouseEnter}
+      >
+        {day.format("DD")}
       </td>
     );
   }

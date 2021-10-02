@@ -25,16 +25,25 @@ $blue: #3d8be8;
 $blue-hover: #89beec;
 $blue-active: #2465b3;
 $piction-blue: #4191e9;
-$dodger-blue: #4287F5;
+$dodger-blue: #4287f5;
 
 //Button vars
 $button-primary: linear-gradient(to top, $blue, $blue-hover);
-$button-primary-hover: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
-linear-gradient(to top, $blue, $blue-hover);
+$button-primary-hover: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.2)
+  ),
+  linear-gradient(to top, $blue, $blue-hover);
 $button-primary-active: linear-gradient(to top, #1374e8, #70bafa);
 
 $button-secondary: linear-gradient(to bottom, #ffd16f, #ff865b);
-$button-secondary-hover: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), linear-gradient(to bottom, #ffd16f, #ff865b);
+$button-secondary-hover: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.2)
+  ),
+  linear-gradient(to bottom, #ffd16f, #ff865b);
 $button-secondary-active: linear-gradient(to bottom, #ffc64d, #fe6933);
 
 $header-background: linear-gradient(270deg, $blue, $blue-hover);
@@ -58,5 +67,5 @@ $border-radius-btn: 16px;
 $blue-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
 
 //card headers
-$blue-card-header:rgba(61, 139, 232, 0.1);
-$yellow-card-header:rgba(237, 153, 78, 0.1);
+$blue-card-header: rgba(61, 139, 232, 0.1);
+$yellow-card-header: rgba(237, 153, 78, 0.1);

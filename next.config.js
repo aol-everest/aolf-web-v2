@@ -20,42 +20,42 @@ const securityHeaders = [
     value: "nosniff",
   },
 ];
-const moduleExports =
-  withPlugins(
-    [
-      new FaviconsWebpackPlugin({
-        logo: "./src/logo.png", // svg works too!
-        mode: "webapp", // optional can be 'webapp', 'light' or 'auto' - 'auto' by default
-        devMode: "webapp", // optional can be 'webapp' or 'light' - 'light' by default
-        favicons: {
-          appName: "Art of Living Journey",
-          appShortName: "AOLF",
-          appDescription: "Art of Living Journey",
-          background: "#ffffff",
-          theme_color: "#4B5487",
-          developerName: "Me",
-          dir: "auto", // Primary text direction for name, short_name, and description
-          lang: "en-US",
-          developerURL: null, // prevent retrieving from the nearest package.json
-          icons: {
-            coast: false,
-            yandex: false,
-          },
+const moduleExports = withPlugins(
+  [
+    new FaviconsWebpackPlugin({
+      logo: "./src/logo.png", // svg works too!
+      mode: "webapp", // optional can be 'webapp', 'light' or 'auto' - 'auto' by default
+      devMode: "webapp", // optional can be 'webapp' or 'light' - 'light' by default
+      favicons: {
+        appName: "Art of Living Journey",
+        appShortName: "AOLF",
+        appDescription: "Art of Living Journey",
+        background: "#ffffff",
+        theme_color: "#4B5487",
+        developerName: "Me",
+        dir: "auto", // Primary text direction for name, short_name, and description
+        lang: "en-US",
+        developerURL: null, // prevent retrieving from the nearest package.json
+        icons: {
+          coast: false,
+          yandex: false,
         },
-      }),
-    ],
-    {
-      productionBrowserSourceMaps: true,
-      async headers() {
-        return [
-          {
-            // Apply these headers to all routes in your application.
-            source: "/(.*)",
-            headers: securityHeaders,
-          },
-        ];
       },
-    });
+    }),
+  ],
+  {
+    productionBrowserSourceMaps: true,
+    async headers() {
+      return [
+        {
+          // Apply these headers to all routes in your application.
+          source: "/(.*)",
+          headers: securityHeaders,
+        },
+      ];
+    },
+  },
+);
 
 const SentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that

@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { Th } from './Table';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { Th } from "./Table";
 
 export default class CalendarNext extends React.Component {
   static propTypes = {

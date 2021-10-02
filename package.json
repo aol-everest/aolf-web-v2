@@ -14,7 +14,8 @@
     "start": "next start -p $PORT",
     "build:analyze": "ANALYZE=true npm run build",
     "lint": "next lint",
-    "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons"
+    "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons",
+    "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss}\""
   },
   "dependencies": {
     "@elgorditosalsero/react-gtm-hook": "^2.0.8",
@@ -58,6 +59,7 @@
     "react-text-mask": "^5.4.3",
     "react-tooltip": "^4.2.21",
     "react-uid": "^2.3.1",
+    "react-use": "^17.3.1",
     "reactstrap": "^8.10.0",
     "sass": "^1.42.1",
     "swiper": "^6.8.4",
