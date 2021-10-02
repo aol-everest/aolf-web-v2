@@ -12,10 +12,12 @@ import {
   ChangePassword,
   ChangeProfile,
   ProfileHeader,
+  ProfilePicCrop,
 } from "@components/profile";
 import { api } from "@utils";
-import { MEMBERSHIP_TYPES } from "@constants";
+import { MEMBERSHIP_TYPES, ALERT_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
+import { useGlobalAlertContext } from "@contexts";
 
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
 const UPDATE_PROFILE = "UPDATE_PROFILE";
@@ -51,12 +53,15 @@ export async function getServerSideProps({ req, res }) {
 }
 
 const Profile = ({ profile }) => {
+  const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
+  const [cropedProfilePic, setCropedProfilePic] = useState(null);
+  const [uploadedProfilePic, setUploadedProfilePic] = useState(null);
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: UPCOMING_EVENTS,
   });
   const [editCardDetail, setEditCardDetail] = useState(false);
-  const [request] = useQueryString("request");
+  const [request, setRequest] = useQueryString("request");
   const router = useRouter();
   const {
     first_name,
@@ -89,11 +94,42 @@ const Profile = ({ profile }) => {
     setEditCardDetail((editCardDetail) => !editCardDetail);
   };
 
+  const handleOnCropChange = (cropedProfilePic) => {
+    setCropedProfilePic(cropedProfilePic);
+  };
+
   const logoutAction = async () => {
     setLoading(true);
     await Auth.signOut();
     setLoading(false);
     router.push("/");
+  };
+
+  const handleOnSelectFile = (e) => {
+    if (e.target.files.length) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () =>
+        setUploadedProfilePic(reader.result),
+      );
+      reader.readAsDataURL(e.target.files[0]);
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        title: "Edit Profile Pic",
+        children: (
+          <ProfilePicCrop
+            src={uploadedProfilePic}
+            handleOnCropChange={handleOnCropChange}
+          />
+        ),
+        className: "research-detail-modal",
+        hideConfirm: true,
+      });
+    }
+  };
+
+  const toggleTopShowMessage = () => {
+    setRequest({
+      request: null,
+    });
   };
 
   const updateCompleteAction = async ({
@@ -119,6 +155,7 @@ const Profile = ({ profile }) => {
               className="profile__close-alert"
               src="/img/ic-close-white.svg"
               alt="close"
+              onClick={toggleTopShowMessage}
             />
           </aside>
         )}
@@ -134,19 +171,20 @@ const Profile = ({ profile }) => {
               className="profile__close-alert"
               src="/img/ic-close-white.svg"
               alt="close"
+              onClick={toggleTopShowMessage}
             />
           </aside>
         )}
         <section className="profile-header">
           <div className="container d-flex flex-md-row flex-column align-items-md-center">
             <div className="profile-header__client profile-pic-section">
-              <label htmlhtmlFor="upload-button">
+              <label htmlFor="upload-button">
                 <input
                   type="file"
                   id="upload-button"
                   accept="image/*"
                   style={{ display: "none" }}
-                  // onChange={this.handleOnSelectFile}
+                  onChange={handleOnSelectFile}
                 />
                 <div className="profile-header__image wrapper">
                   {profilePic && (

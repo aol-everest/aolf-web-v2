@@ -46,7 +46,7 @@ export const AgreementForm = ({
               value={formikProps.values.ppaAgreement}
               name="ppaAgreement"
             />
-            <label htmlhtmlFor="program"></label>
+            <label htmlFor="program"></label>
             <p className="agreement__text">
               I agree to the{" "}
               <a
@@ -111,7 +111,7 @@ export const AgreementForm = ({
                     );
                   }}
                 </Field>
-                <label htmlhtmlFor="health-confirmation"></label>
+                <label htmlFor="health-confirmation"></label>
                 <p className="health-confirmation__text">
                   {renderHTML(compliance.question)}
                 </p>
@@ -161,7 +161,7 @@ export const AgreementForm = ({
             value={formikProps.values.ppaAgreement}
             name="ppaAgreement"
           />
-          <label htmlhtmlFor="ppaAgreement"></label>
+          <label htmlFor="ppaAgreement"></label>
           <p className="agreement__text">
             I agree to the{" "}
             <a
@@ -223,7 +223,7 @@ export const AgreementForm = ({
                       );
                     }}
                   </Field>
-                  <label htmlhtmlFor="health"></label>
+                  <label htmlFor="health"></label>
                   <p className="agreement__text">
                     {renderHTML(compliance.question)}
                   </p>

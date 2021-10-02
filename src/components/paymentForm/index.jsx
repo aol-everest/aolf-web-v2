@@ -15,12 +15,18 @@ import { BillingInfoForm } from "./BillingInfoForm";
 import { PayWith } from "./PayWith";
 import { CourseOptions } from "./CourseOptions";
 import { AgreementForm } from "./AgreementForm";
+import { MobileCourseDetails } from "./MobileCourseDetails";
 import { DiscountCodeInput } from "./DiscountCodeInput";
 import { priceCalculation } from "@utils";
 import { useQueryString } from "@hooks";
-import { PAYMENT_MODES, PAYMENT_TYPES, ALERT_TYPES } from "@constants";
+import {
+  PAYMENT_MODES,
+  PAYMENT_TYPES,
+  ALERT_TYPES,
+  MODAL_TYPES,
+} from "@constants";
 import { CourseDetailsCard } from "./CourseDetailsCard";
-import { useGlobalAlertContext } from "@contexts";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";
 
@@ -62,6 +68,7 @@ export const PaymentForm = ({
   // const { isCreditCardRequired } = discount || {};
 
   const { showAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -84,6 +91,18 @@ export const PaymentForm = ({
 
   const applyDiscount = (discount) => {
     setDicountResponse(discount);
+  };
+
+  const openSubscriptionPaywallPage = (id) => (e) => {
+    if (e) e.preventDefault();
+    router.push({
+      pathname: `/us/membership-checkout`,
+      query: {
+        id,
+        cid: workshop.id,
+        page: "checkout",
+      },
+    });
   };
 
   const toggleCardChangeDetail = (e) => {
@@ -343,6 +362,22 @@ export const PaymentForm = ({
   });
 
   const isRegularPrice = priceType === null || priceType === "regular";
+
+  const toggleDetailMobileModal = () => {
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      children: (handleModalToggle) => {
+        return (
+          <MobileCourseDetails
+            workshop={workshop}
+            closeDetailAction={handleModalToggle}
+            userSubscriptions={userSubscriptions}
+            price={{ fee, delfee, offering, isRegularPrice }}
+            openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+          />
+        );
+      },
+    });
+  };
 
   const {
     first_name,
@@ -660,7 +695,7 @@ export const PaymentForm = ({
                     formikProps={formikProps}
                     userSubscriptions={userSubscriptions}
                     handlePriceTypeChange={handlePriceTypeChange}
-                    // openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+                    openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                     hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                     totalFee={totalFee}
                   />
@@ -699,7 +734,7 @@ export const PaymentForm = ({
                         value="regular"
                         checked
                       />
-                      <label htmlhtmlFor="payment-lg-regular">
+                      <label htmlFor="payment-lg-regular">
                         <span>Regular rate</span>
                         <span>
                           <span className="discount">$550</span> $450
@@ -714,7 +749,7 @@ export const PaymentForm = ({
                         id="payment-lg-premium"
                         value="premium"
                       />
-                      <label htmlhtmlFor="payment-lg-premium">
+                      <label htmlFor="payment-lg-premium">
                         <span>Premium/Journey+ rate:</span>
                         <span>
                           <span className="discount">$150</span> $50
@@ -773,7 +808,7 @@ export const PaymentForm = ({
                     <ul className="select-box__list">
                       <li>
                         <label
-                          htmlhtmlFor="room-lg-1"
+                          htmlFor="room-lg-1"
                           aria-hidden="aria-hidden"
                           data-value="1"
                           className="select-box__option"
@@ -784,7 +819,7 @@ export const PaymentForm = ({
                       </li>
                       <li>
                         <label
-                          htmlhtmlFor="room-lg-2"
+                          htmlFor="room-lg-2"
                           aria-hidden="aria-hidden"
                           data-value="2"
                           className="select-box__option"
@@ -795,7 +830,7 @@ export const PaymentForm = ({
                       </li>
                       <li>
                         <label
-                          htmlhtmlFor="room-lg-3"
+                          htmlFor="room-lg-3"
                           aria-hidden="aria-hidden"
                           data-value="3"
                           className="select-box__option"
@@ -831,7 +866,7 @@ export const PaymentForm = ({
                         name="program"
                         id="program"
                       />
-                      <label htmlhtmlFor="program"></label>
+                      <label htmlFor="program"></label>
                       <p className="agreement__text">
                         I agree to the
                         <a href="#">
@@ -857,7 +892,7 @@ export const PaymentForm = ({
                         name="health-confirmation"
                         id="health-confirmation"
                       />
-                      <label htmlhtmlFor="health-confirmation"></label>
+                      <label htmlFor="health-confirmation"></label>
                       <p className="health-confirmation__text">
                         I represent that I am in good health, and I will inform
                         the health info desk of any limiting health conditions
@@ -879,6 +914,27 @@ export const PaymentForm = ({
                       Please check the box in order to continue
                     </div>
                   </div>*/}
+                </div>
+              </div>
+            </div>
+            <div className="course-popup d-lg-none d-block">
+              <div className="course-card">
+                <div className="course-card__info">
+                  <div className="course-card__info-wrapper">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <p className="course-card__date">May 5-7, 2020</p>
+                      <button
+                        id="course-details"
+                        className="link"
+                        onClick={toggleDetailMobileModal}
+                      >
+                        See details
+                      </button>
+                    </div>
+                    <h3 className="course-card__course-name">
+                      SKY Breath Meditation
+                    </h3>
+                  </div>
                 </div>
               </div>
             </div>

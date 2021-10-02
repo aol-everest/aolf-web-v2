@@ -58,6 +58,7 @@ export const getServerSideProps = async (context) => {
     props = {
       authenticated: true,
       username: user.username,
+      token,
     };
   } catch (err) {
     props = {
@@ -147,7 +148,7 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Course = ({ workshops, authenticated, query }) => {
+const Course = ({ workshops, authenticated, token }) => {
   const seed = useUIDSeed();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
@@ -315,6 +316,7 @@ const Course = ({ workshops, authenticated, query }) => {
       const res = await api.get({
         path: "workshops",
         param,
+        token,
       });
       return res;
     },

@@ -53,7 +53,7 @@ export const Dropdown = ({
             return (
               <li key={option.value}>
                 <label
-                  htmlhtmlFor={option.value}
+                  htmlFor={option.value}
                   aria-hidden="aria-hidden"
                   data-value="card"
                   className="select-box__option"
