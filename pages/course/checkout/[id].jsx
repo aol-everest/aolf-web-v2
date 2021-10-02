@@ -38,25 +38,18 @@ export const getServerSideProps = async (context) => {
     res.end();
     return;
   }
-  try {
-    const res = await api.get({
-      path: "workshopDetail",
-      token,
-      param: {
-        id,
-      },
-    });
-    props = {
-      ...props,
-      workshop: res.data,
-    };
-  } catch (err) {
-    console.error(err);
-    res.writeHead(302, {
-      Location: `/course`,
-    });
-    res.end();
-  }
+  const workshopDetail = await api.get({
+    path: "workshopDetail",
+    token,
+    param: {
+      id,
+    },
+  });
+  props = {
+    ...props,
+    workshop: workshopDetail.data,
+  };
+
   // Pass data to the page via props
   return { props };
 };
