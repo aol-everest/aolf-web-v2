@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import { Field, ErrorMessage } from "formik";
 import classNames from "classnames";
 import { COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
@@ -14,6 +13,8 @@ export const CourseOptions = ({
   formikProps,
   userSubscriptions,
   openSubscriptionPaywallPage,
+  handlePriceTypeChange,
+  discount,
 }) => {
   const {
     premiumRate,
@@ -45,12 +46,8 @@ export const CourseOptions = ({
                     </span>
                   </p>
                 )}
-                {!userSubscriptions.hasOwnProperty(
-                  MEMBERSHIP_TYPES.JOURNEY_PREMIUM,
-                ) &&
-                  !userSubscriptions.hasOwnProperty(
-                    MEMBERSHIP_TYPES.JOURNEY_PLUS,
-                  ) && (
+                {!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM] &&
+                  !userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS] && (
                     <ul className="reciept__payment_list">
                       <div className="reciept__payment-option">
                         <input
@@ -132,15 +129,9 @@ export const CourseOptions = ({
                           );
                         }
                       })}
-                      {!userSubscriptions.hasOwnProperty(
-                        MEMBERSHIP_TYPES.JOURNEY_PREMIUM,
-                      ) &&
-                        !userSubscriptions.hasOwnProperty(
-                          MEMBERSHIP_TYPES.BASIC_MEMBERSHIP,
-                        ) &&
-                        !userSubscriptions.hasOwnProperty(
-                          MEMBERSHIP_TYPES.JOURNEY_PLUS,
-                        ) && (
+                      {!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM] &&
+                        !userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP] &&
+                        !userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS] && (
                           <li className="btn-item">
                             <button
                               className="btn-outline"
@@ -154,12 +145,8 @@ export const CourseOptions = ({
                         )}
                     </ul>
                   )}
-                {(userSubscriptions.hasOwnProperty(
-                  MEMBERSHIP_TYPES.JOURNEY_PREMIUM,
-                ) ||
-                  userSubscriptions.hasOwnProperty(
-                    MEMBERSHIP_TYPES.JOURNEY_PLUS,
-                  )) && (
+                {(userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM] ||
+                  userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS]) && (
                   <ul className="reciept__payment_list">
                     <li>
                       <span>Premium/Journey+ rate:</span>
@@ -304,7 +291,10 @@ export const CourseOptions = ({
               {groupedAddOnProducts["Residential Add On"].map(
                 (residentialAddOn) => {
                   return (
-                    <div className="select-room__value">
+                    <div
+                      className="select-room__value"
+                      key={residentialAddOn.productSfid}
+                    >
                       <input
                         type="radio"
                         id={`${residentialAddOn.productSfid}-card`}
@@ -330,6 +320,7 @@ export const CourseOptions = ({
                 (residentialAddOn) => {
                   return (
                     <li
+                      key={residentialAddOn.productSfid}
                       onClick={() =>
                         this.handleAccommodationChange(
                           formikProps,

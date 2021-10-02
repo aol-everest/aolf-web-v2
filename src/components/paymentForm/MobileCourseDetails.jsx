@@ -10,32 +10,32 @@ const CourseFeeRender = ({
   productTypeId,
   price,
   openSubscriptionPaywallPage,
+  isUsableCreditAvailable,
+  premiumRate,
+  discount,
 }) => {
   const { fee, delfee, offering, isRegularPrice } = price;
-  const isJourneyPremium = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value,
-  );
-  const isJourneyPlus = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
-  );
+  const isJourneyPremium =
+    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
+  const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   if (`${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(productTypeId) >= 0) {
     if (!isJourneyPremium && !isJourneyPlus) {
       return (
         <>
-          <h3 class="new-price d-flex justify-content-sm-start justify-content-between">
+          <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
             Regular rate:
             <span>
-              {delfee && <span class="discount">${delfee}</span>} ${fee}
+              {delfee && <span className="discount">${delfee}</span>} ${fee}
             </span>
           </h3>
           {!isUsableCreditAvailable && (
-            <h3 class="new-price d-flex justify-content-sm-start justify-content-between">
+            <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
               Premium/Journey+ rate:
               <span>
                 {premiumRate &&
                   premiumRate.listPrice &&
                   premiumRate.listPrice !== premiumRate.unitPrice && (
-                    <span class="discount">
+                    <span className="discount">
                       ${delfee || premiumRate.listPrice}
                     </span>
                   )}{" "}
@@ -54,17 +54,19 @@ const CourseFeeRender = ({
     if (isJourneyPremium || isJourneyPlus) {
       if (discount && discount.newPrice) {
         return (
-          <h3 class="new-price d-flex justify-content-sm-start justify-content-between">
+          <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
             Premium/Journey+ rate:
             <span>
-              <span class="discount">${delfee || premiumRate.listPrice}</span>$
-              {premiumRate && premiumRate.unitPrice}
+              <span className="discount">
+                ${delfee || premiumRate.listPrice}
+              </span>
+              ${premiumRate && premiumRate.unitPrice}
             </span>
           </h3>
         );
       } else {
         return (
-          <h3 class="new-price d-flex justify-content-sm-start justify-content-between">
+          <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
             Premium/Journey+ rate:
             <span>{premiumRate && premiumRate.unitPrice}</span>
           </h3>
@@ -79,13 +81,13 @@ const CourseFeeRender = ({
       <>
         {delfee && (
           <>
-            <h2 class="new-price">Limited Time Offer: ${fee}</h2>
-            <h3 class="common-price">
-              Regular Course Fee: <span class="discount">${delfee}</span>
+            <h2 className="new-price">Limited Time Offer: ${fee}</h2>
+            <h3 className="common-price">
+              Regular Course Fee: <span className="discount">${delfee}</span>
             </h3>
           </>
         )}
-        {!delfee && <h2 class="new-price">Regular Course Fee: ${fee}</h2>}
+        {!delfee && <h2 className="new-price">Regular Course Fee: ${fee}</h2>}
       </>
     );
   }
@@ -95,16 +97,13 @@ const CourseButtonRender = ({
   userSubscriptions,
   productTypeId,
   openSubscriptionPaywallPage,
+  isUsableCreditAvailable,
 }) => {
-  const isJourneyPremium = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value,
-  );
-  const isJourneyPlus = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
-  );
-  const isBasicMember = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value,
-  );
+  const isJourneyPremium =
+    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
+  const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
+  const isBasicMember =
+    userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
   if (`${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(productTypeId) >= 0) {
     if (
       !isJourneyPremium &&
@@ -115,7 +114,7 @@ const CourseButtonRender = ({
       return (
         <button
           data-join-modal="journey-join"
-          class="btn-outline white join-btn"
+          className="btn-outline white join-btn"
           onClick={openSubscriptionPaywallPage(
             MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
           )}
@@ -188,11 +187,13 @@ export const MobileCourseDetails = ({
           {timings &&
             timings.map((time) => {
               return (
-                <span>
-                  {`${moment.utc(time.startDate).format("dd")}: ${tConvert(
-                    time.startTime,
-                  )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
-                </span>
+                <>
+                  <span>
+                    {`${moment.utc(time.startDate).format("dd")}: ${tConvert(
+                      time.startTime,
+                    )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
+                  </span>
+                </>
               );
             })}
         </div>
@@ -212,12 +213,12 @@ export const MobileCourseDetails = ({
           {phone2 && <span>{phone2}</span>}
           <span>{contactEmail}</span>
         </div>
-        <div class="course-more word-wrap">
+        <div className="course-more word-wrap">
           {notes && <>Additional Notes: {renderHTML(notes)}</>}
           <br />
           <br />
           {description && (
-            <div class="course-more__full">{renderHTML(description)}</div>
+            <div className="course-more__full">{renderHTML(description)}</div>
           )}
         </div>
       </div>

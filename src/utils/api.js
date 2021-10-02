@@ -1,6 +1,5 @@
 import Axios from "axios";
 import queryString from "query-string";
-import NProgress from "nprogress";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
   ? process.env.NEXT_PUBLIC_SERVER_URL

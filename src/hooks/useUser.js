@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Router from "next/router";
 import { api } from "@utils";
 
-export function useUser({
+export async function useUser({
   redirectTo = false,
   redirectIfFound = false,
 } = {}) {

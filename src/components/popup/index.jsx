@@ -12,7 +12,6 @@ export const Popup = (props) => {
     showId = false,
     parentClass = "",
     buttonTextClass = "",
-    className,
   } = props;
   const [visible, setVisibility] = useState(false);
   const referenceRef = useRef(null);

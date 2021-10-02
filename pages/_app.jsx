@@ -8,7 +8,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
-import Layout from "@components/layout";
+import { Layout } from "@components";
 import { GlobalModal } from "@components/globalModal";
 import { GlobalAlert } from "@components/globalAlert";
 import { GlobalAudioPlayer } from "@components/globalAudioPlayer";

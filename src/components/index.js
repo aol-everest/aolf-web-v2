@@ -1,6 +1,6 @@
 export { Header } from "./header";
 export { NoHeader } from "./noHeader";
-export { Button } from "./button";
+export { Layout } from "./layout";
 export { Footer } from "./footer";
 export { ActiveLink } from "./activeLink";
 export { Popup } from "./popup";

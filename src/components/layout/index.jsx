@@ -1,11 +1,9 @@
-import { Header, NoHeader, Footer } from "@components";
+import { Header, NoHeader } from "@components";
 
-const Layout = ({ hideHeader = false, children }) => (
+export const Layout = ({ hideHeader = false, children }) => (
   <>
     {!hideHeader && <Header />}
     {hideHeader && <NoHeader />}
     {children}
   </>
 );
-
-export default Layout;

@@ -39,13 +39,7 @@ export const meditatePlayEvent = async ({
         param: { id: meditate.sfid },
         token,
       });
-      const {
-        data,
-        status,
-        error: errorMessage,
-        workshopPrerequisiteMessage,
-        requiredPrerequisitWorkshopIds,
-      } = results;
+      const { data, status, workshopPrerequisiteMessage } = results;
 
       if (status === 400) {
         showAlert(ALERT_TYPES.ERROR_ALERT, {
@@ -107,9 +101,7 @@ export const meditatePlayEvent = async ({
       },
       {},
     );
-    if (
-      allSubscriptions.hasOwnProperty(MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value)
-    ) {
+    if (allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big meditation-digital-membership",
         title: "Go deeper with the Digital Membership",

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
@@ -74,7 +75,7 @@ export const PaymentForm = ({
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [priceType, setPriceType] = useState("");
-  const [discount, setDiscount] = useQueryString("discountCode");
+  const [discount] = useQueryString("discountCode");
   const [dicountResponse, setDicountResponse] = useState(null);
   const router = useRouter();
 
@@ -138,7 +139,7 @@ export const PaymentForm = ({
       paymentOption,
       paymentMode,
       accommodation,
-    } = values || formValues;
+    } = values;
 
     if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
       return null;
@@ -308,36 +309,9 @@ export const PaymentForm = ({
 
   const {
     id: productId,
-    eventStartDate,
-    eventEndDate,
-    email: contactEmail,
-    phone1,
-    phone2,
-    timings,
-    primaryTeacherName,
-    coTeacher1Name,
-    coTeacher2Name,
-    title,
     premiumRate = {},
-    mode,
-    earlyBirdFeeIncreasing,
-    productTypeId,
     notes,
-    description,
-    isEarlyBirdAllowed,
-    isCCNotRequired,
-    isGenericWorkshop,
-    streetAddress1,
-    streetAddress2,
-    state,
-    city,
-    country,
     isCorporateEvent,
-    isInstalmentAllowed,
-    instalmentTenure,
-    instalmentGapUnit,
-    instalmentGap,
-    instalmentAmount,
     otherPaymentOptions,
     groupedAddOnProducts,
     addOnProducts = [],
@@ -383,15 +357,12 @@ export const PaymentForm = ({
     first_name,
     last_name,
     email,
-    personMailingCity,
-    personMailingCountry,
     personMailingPostalCode,
     personMailingState,
     personMobilePhone,
     personMailingStreet,
     isRegisteredStripeCustomer,
     cardLast4Digit,
-    subscriptionMasterSfid,
   } = profile;
   const questionnaire = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -408,17 +379,17 @@ export const PaymentForm = ({
     "Residential Add On" in groupedAddOnProducts &&
     groupedAddOnProducts["Residential Add On"].length > 0;
 
-  const residentialAddOnRequired =
-    hasGroupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].some(
-      (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
-    );
+  // const residentialAddOnRequired =
+  //   hasGroupedAddOnProducts &&
+  //   groupedAddOnProducts["Residential Add On"].some(
+  //     (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
+  //   );
 
-  const isAccommodationRequired =
-    hasGroupedAddOnProducts && residentialAddOnRequired;
+  // const isAccommodationRequired =
+  //   hasGroupedAddOnProducts && residentialAddOnRequired;
 
-  const isCourseOptionRequired =
-    hasGroupedAddOnProducts || addOnProducts.length > 0;
+  // const isCourseOptionRequired =
+  //   hasGroupedAddOnProducts || addOnProducts.length > 0;
 
   return (
     <Formik
@@ -434,7 +405,10 @@ export const PaymentForm = ({
         questionnaire: questionnaire,
         ppaAgreement: false,
         paymentOption: PAYMENT_TYPES.FULL,
-        paymentMode: otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") < 0 ? STRIPE_PAYMENT_MODE :"",
+        paymentMode:
+          otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") < 0
+            ? PAYMENT_MODES.STRIPE_PAYMENT_MODE
+            : "",
         accommodation: null,
       }}
       validationSchema={Yup.object().shape({
@@ -459,9 +433,7 @@ export const PaymentForm = ({
             "Please check the box in order to continue.",
             (value) => value === true,
           ),
-        accommodation: false
-          ? Yup.object().required("ERROR!")
-          : Yup.mixed().notRequired(),
+        accommodation: Yup.mixed().notRequired(),
         paymentMode: Yup.string().required("Payment mode is required!"),
       })}
       onSubmit={async (values, { setSubmitting, isValid, errors }) => {
@@ -469,14 +441,7 @@ export const PaymentForm = ({
       }}
     >
       {(formikProps) => {
-        const {
-          values,
-          touched,
-          errors,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-        } = formikProps;
+        const { values, handleSubmit } = formikProps;
 
         const addOnFee = addOnProducts.reduce(
           (
