@@ -5,6 +5,7 @@ import {
   SahajSamadhi,
   SilentRetreat,
 } from "@components/courseDetails";
+import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
