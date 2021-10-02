@@ -54,7 +54,7 @@ export const ProfileHeader = ({
       },
       {},
     );
-    if (allSubscriptions.hasOwnProperty(subscriptionId)) {
+    if (allSubscriptions[subscriptionId]) {
       const modalSubscription = allSubscriptions[subscriptionId];
       const modalBody = (
         <>
@@ -79,7 +79,7 @@ export const ProfileHeader = ({
         </>
       );
 
-      if (userSubscriptions.hasOwnProperty(subscriptionId)) {
+      if (userSubscriptions[subscriptionId]) {
         showModal(MODAL_TYPES.CUSTOM_MODAL, {
           title: `Your ${modalSubscription.name} Membership`,
           children: modalBody,
@@ -205,9 +205,7 @@ const subscriptionBuyBtnPanel = (
   userSubscriptions,
   showPurchaseMembershipModalAction,
 ) => {
-  if (
-    userSubscriptions.hasOwnProperty(MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value)
-  ) {
+  if (userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value]) {
     return (
       <div className="btn-wrapper">
         <button
@@ -222,19 +220,13 @@ const subscriptionBuyBtnPanel = (
       </div>
     );
   }
-  if (
-    userSubscriptions.hasOwnProperty(MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value)
-  ) {
+  if (userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value]) {
     return null;
   }
   let result = null;
-  if (!userSubscriptions.hasOwnProperty(MEMBERSHIP_TYPES.JOURNEY_PLUS.value)) {
+  if (!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value]) {
     let message = null;
-    if (
-      userSubscriptions.hasOwnProperty(
-        MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-      )
-    ) {
+    if (userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
       message =
         "Take your journey deeper with a special offering for silent retreats.";
     } else {
@@ -250,9 +242,7 @@ const subscriptionBuyBtnPanel = (
     <>
       {result}
       <div className="btn-wrapper">
-        {!userSubscriptions.hasOwnProperty(
-          MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-        ) && (
+        {!userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value] && (
           <button
             data-href-modal="digital-member-join"
             className="btn-secondary link-modal"
@@ -264,9 +254,7 @@ const subscriptionBuyBtnPanel = (
           </button>
         )}
 
-        {!userSubscriptions.hasOwnProperty(
-          MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
-        ) && (
+        {!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value] && (
           <button
             data-href-modal="journey-join"
             className="btn-secondary link-modal"

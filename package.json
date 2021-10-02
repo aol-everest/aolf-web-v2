@@ -15,6 +15,7 @@
     "build:analyze": "ANALYZE=true npm run build",
     "lint": "next lint",
     "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons",
+    "eslint": "./node_modules/.bin/eslint --fix \"./**/*.{js,jsx}\"",
     "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss}\""
   },
   "dependencies": {

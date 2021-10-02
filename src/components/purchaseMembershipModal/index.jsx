@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import renderHTML from "react-render-html";
 
 export const PurchaseMembershipModal = ({ modalSubscription }) => {

@@ -52,6 +52,7 @@ export const AgreementForm = ({
               <a
                 href={isCorporateEvent ? "/us/ts-cs" : "/us/workshop-ppa"}
                 target="_blank"
+                rel="noreferrer"
               >
                 Program Participant agreement including privacy and cancellation
                 policy.
@@ -167,6 +168,7 @@ export const AgreementForm = ({
             <a
               href={isCorporateEvent ? "/policy/ts-cs" : "/policy/ppa"}
               target="_blank"
+              rel="noreferrer"
             >
               Program Participant agreement including privacy and cancellation
               policy.

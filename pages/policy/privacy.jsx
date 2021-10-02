@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import { NextSeo } from "next-seo";
 
@@ -314,6 +315,7 @@ const PrivacyPolicy = () => {
                     <a
                       href="https://www.artofliving.org/cookie-policy"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Cookie Policy
                     </a>

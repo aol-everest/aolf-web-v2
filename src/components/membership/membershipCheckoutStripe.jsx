@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
+import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import renderHTML from "react-render-html";
@@ -84,7 +85,7 @@ export const MembershipCheckoutStripe = ({
 
   if (
     sfid === MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value &&
-    userSubscriptions.hasOwnProperty(MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value)
+    userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value]
   ) {
     extraProps = {
       isSubscriptionUpgradeOrDowngrade: true,
@@ -109,69 +110,6 @@ export const MembershipCheckoutStripe = ({
 
     try {
       setLoading(true);
-
-      let tokenizeCC = null;
-      if (!isRegisteredStripeCustomer && isCreditCardRequired !== false) {
-        const cardElement = elements.getElement(CardElement);
-        let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile.name ? profile.name : firstName + " " + lastName,
-        });
-        let { error, token } = createTokenRespone;
-        if (error) {
-          throw error;
-        }
-        tokenizeCC = token;
-      }
-
-      let products = {
-        productType: "subscription",
-        productSfId: activeSubscription.sfid,
-        ...extraProps,
-      };
-
-      if (offeringId) {
-        products = { ...products, offeringId };
-      }
-
-      let payLoad = {
-        shoppingRequest: {
-          tokenizeCC,
-          couponCode,
-
-          contactAddress: {
-            contactPhone,
-            contactAddress,
-            contactState,
-            contactZip,
-          },
-          products,
-        },
-      };
-
-      const {
-        data,
-        status,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        token,
-        path: "createAndPayOrder",
-        body: payLoad,
-      });
-
-      setLoading(false);
-
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
-      } else if (data && data.orderId) {
-        router.push({
-          pathname: `/membership/thank-you/${data.orderId}`,
-          query: {
-            courseType: "SKY_BREATH_MEDITATION",
-            sid: activeSubscription.sfid,
-          },
-        });
-      }
     } catch (ex) {
       console.error(ex);
       setLoading(false);
@@ -289,9 +227,9 @@ export const MembershipCheckoutStripe = ({
                     <>
                       {!isRegisteredStripeCustomer && (
                         <div className="input-block card-element v2">
-                          <CardElement
+                          {/* <CardElement
                             {...createOptions(this.props.fontSize)}
-                          />
+                          /> */}
                         </div>
                       )}
 
@@ -325,7 +263,7 @@ export const MembershipCheckoutStripe = ({
                   <div className="agreement__group">
                     <input
                       type="checkbox"
-                      class={classNames("custom-checkbox", {
+                      className={classNames("custom-checkbox", {
                         error:
                           formikProps.errors.ppaAgreement &&
                           formikProps.touched.ppaAgreement,
@@ -405,7 +343,7 @@ export const MembershipCheckoutStripe = ({
                 <div className="agreement__group">
                   <input
                     type="checkbox"
-                    class={classNames("custom-checkbox", {
+                    className={classNames("custom-checkbox", {
                       error:
                         formikProps.errors.ppaAgreement &&
                         formikProps.touched.ppaAgreement,
@@ -466,7 +404,7 @@ export const MembershipCheckoutStripe = ({
                 </div>
               </div>
               <div
-                class={classNames("mobile-modal v3", {
+                className={classNames("mobile-modal v3", {
                   active: showDetailMobileModal,
                   show: showDetailMobileModal,
                 })}

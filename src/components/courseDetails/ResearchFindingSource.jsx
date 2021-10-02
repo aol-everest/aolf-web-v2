@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-irregular-whitespace */
 import React, { useState } from "react";
 import classNames from "classnames";
 import { TabContent, TabPane, Nav, NavItem, NavLink } from "reactstrap";

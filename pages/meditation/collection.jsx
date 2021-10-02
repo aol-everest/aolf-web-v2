@@ -18,6 +18,7 @@ import {
 import { useQueryString } from "@hooks";
 import { InfiniteScrollLoader } from "@components/loader";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
+import { MODAL_TYPES } from "@constants";
 
 export const getServerSideProps = async (context) => {
   let props = {};

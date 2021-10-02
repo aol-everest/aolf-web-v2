@@ -78,8 +78,7 @@ const MembershipCancellation = ({
     });
   };
 
-  const payAndCancel = async (e) => {
-    if (e) e.preventDefault();
+  const payAndCancel = async (subsciptionId) => {
     if (loading) {
       return false;
     }
@@ -190,7 +189,7 @@ const MembershipCancellation = ({
                 <div className="btn-wrapper">
                   {totalAmountWillBeDeducted > 0 && (
                     <button className="btn-outline" onClick={payAndCancel}>
-                      {inlineLoading && (
+                      {loading && (
                         <div className="loaded" style={{ padding: "0px 58px" }}>
                           <div className="loader">
                             <div className="loader-inner ball-clip-rotate">
@@ -199,7 +198,7 @@ const MembershipCancellation = ({
                           </div>
                         </div>
                       )}
-                      {!inlineLoading &&
+                      {!loading &&
                         `Pay $${totalAmountWillBeDeducted} and cancel`}
                     </button>
                   )}

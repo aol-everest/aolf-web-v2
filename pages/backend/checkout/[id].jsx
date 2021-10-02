@@ -1,5 +1,6 @@
 import React from "react";
 import { withSSRContext } from "aws-amplify";
+import { api } from "@utils";
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;

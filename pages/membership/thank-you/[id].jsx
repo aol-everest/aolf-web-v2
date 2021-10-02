@@ -1,5 +1,5 @@
 import React from "react";
-import { api } from "@utils";
+import { api, tConvert } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import renderHTML from "react-render-html";
 import moment from "moment";
@@ -189,7 +189,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
   return (
     <main>
       <section
-        class={classNames("journey-confirmation", {
+        className={classNames("journey-confirmation", {
           "journey-confirmation_v2": !courseId && !meetupId,
           "journey-confirmation_v1": courseId || meetupId,
         })}
@@ -197,7 +197,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
         <div className="container">
           <div className="row">
             <div
-              class={classNames({
+              className={classNames({
                 "col-12 col-md-10 mx-auto": !courseId && !meetupId,
                 "col-11 mx-auto": courseId || meetupId,
               })}

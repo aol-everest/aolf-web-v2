@@ -39,30 +39,30 @@ export const ChangeProfile = ({
     const { token: accessToken, updateCompleteAction } = this.props;
     setLoading(true);
     try {
-      const results = await secure_fetch(`${API.REST.UPDATE_USER_PROFILE}`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        accessToken,
-        body: JSON.stringify({
-          contactCity,
-          contactPhone,
-          contactAddress,
-          contactState,
-          contactZip,
-        }),
-      });
+      // const results = await secure_fetch(`${API.REST.UPDATE_USER_PROFILE}`, {
+      //   method: "POST",
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //   },
+      //   accessToken,
+      //   body: JSON.stringify({
+      //     contactCity,
+      //     contactPhone,
+      //     contactAddress,
+      //     contactState,
+      //     contactZip,
+      //   }),
+      // });
 
-      if (!results.ok) {
-        throw new Error(results.statusText);
-      }
-      const { status, error: errorMessage } = await results.json();
+      // if (!results.ok) {
+      //   throw new Error(results.statusText);
+      // }
+      // const { status, error: errorMessage } = await results.json();
 
-      if (status === 400) {
-        throw new Error(errorMessage);
-      }
+      // if (status === 400) {
+      //   throw new Error(errorMessage);
+      // }
       updateCompleteAction({});
     } catch (ex) {
       console.log(ex);

@@ -190,7 +190,7 @@ export const LoginModal = () => {
               <svg
                 aria-hidden="true"
                 focusable="false"
-                enable-background="new 0 0 24 24"
+                enableBackground="new 0 0 24 24"
                 version="1.0"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
@@ -200,14 +200,14 @@ export const LoginModal = () => {
                   fill="none"
                   points="12.5,21 3.5,12 12.5,3 "
                   stroke="#000000"
-                  stroke-miterlimit="10"
-                  stroke-width="2"
+                  strokeMiterlimit="10"
+                  strokeWidth="2"
                 ></polyline>{" "}
                 <line
                   fill="none"
                   stroke="#000000"
-                  stroke-miterlimit="10"
-                  stroke-width="2"
+                  strokeMiterlimit="10"
+                  strokeWidth="2"
                   x1="22"
                   x2="3.5"
                   y1="12"

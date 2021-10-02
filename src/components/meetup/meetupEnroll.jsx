@@ -53,20 +53,17 @@ export const MeetupEnroll = ({
       };
     }, {});
 
-  const isDigitalMember = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-  );
+  const isDigitalMember =
+    userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value];
 
-  const isPremiumMember = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value,
-  );
-  const isBasicMember = userSubscriptions.hasOwnProperty(
-    MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value,
-  );
+  const isPremiumMember =
+    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
+  const isBasicMember =
+    userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
 
   return (
     <div
-      class={classNames(
+      className={classNames(
         "alert__modal modal-window modal-window_no-log modal fixed-right fade",
         {
           active: true,
@@ -75,7 +72,7 @@ export const MeetupEnroll = ({
       )}
     >
       <div
-        class={classNames(` modal-dialog modal-dialog-centered`, {
+        className={classNames(` modal-dialog modal-dialog-centered`, {
           active: true,
           show: true,
         })}
@@ -118,7 +115,7 @@ export const MeetupEnroll = ({
 
             <div className="card-wrapper">
               {(isDigitalMember || isPremiumMember || isBasicMember) && (
-                <div class={classNames("card full card-preffered")}>
+                <div className={classNames("card full card-preffered")}>
                   <div className="card-body">
                     <p className="card-title">
                       For {isDigitalMember && "Digital"}
@@ -155,7 +152,7 @@ export const MeetupEnroll = ({
 
               {!isDigitalMember && !isPremiumMember && !isBasicMember && (
                 <>
-                  <div class={classNames("card")}>
+                  <div className={classNames("card")}>
                     <div className="card-body">
                       <p className="card-title">For non-members</p>
                       <p className="card-text">
@@ -193,7 +190,7 @@ export const MeetupEnroll = ({
                     <div className="card-body">
                       <p className="card-title">For Digital members</p>
                       <p className="card-text">
-                        {loading && <Spinner />}
+                        {/* {loading && <Spinner />} */}
                         {!loading && (
                           <>
                             <span className="prev-price">${listPrice}</span> $

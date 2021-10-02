@@ -1,3 +1,5 @@
+/* eslint-disable no-irregular-whitespace */
+/* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import { api } from "@utils";
 import { useGlobalAlertContext } from "@contexts";
@@ -59,6 +61,7 @@ const TAndCWorkshop = ({ token }) => {
               <a
                 href="https://www.artofliving.org/us-en/terms-use"
                 target="_blank"
+                rel="noreferrer"
               >
                 Terms of Use
               </a>{" "}
@@ -66,6 +69,7 @@ const TAndCWorkshop = ({ token }) => {
               <a
                 href="https://www.artofliving.org/us-en/privacy-policy"
                 target="_blank"
+                rel="noreferrer"
               >
                 Privacy Policy
               </a>

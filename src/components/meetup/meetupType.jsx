@@ -8,7 +8,11 @@ export const MeetupType = ({
   return (
     <>
       {meetupMasters.map((mtype) => (
-        <li class={applyClassName} onClick={closeHandler(mtype.id)}>
+        <li
+          key={mtype.id}
+          className={applyClassName}
+          onClick={closeHandler(mtype.id)}
+        >
           {mtype.name}
         </li>
       ))}

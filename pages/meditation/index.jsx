@@ -323,7 +323,9 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
                     <>
                       {meditationCategory &&
                         meditationCategory.map((category) => (
-                          <li onClick={closeHandler(category)}>{category}</li>
+                          <li key={category} onClick={closeHandler(category)}>
+                            {category}
+                          </li>
                         ))}
                     </>
                   )}
@@ -360,6 +362,7 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
                       {instructorList &&
                         instructorList.map((instructor) => (
                           <li
+                            key={instructor.primaryTeacherName}
                             className="topic-dropdown"
                             onClick={closeHandler(
                               instructor.primaryTeacherName,
@@ -408,6 +411,7 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
                         {meditationCategory &&
                           meditationCategory.map((category) => (
                             <li
+                              key={category}
                               className="dropdown-item"
                               onClick={closeHandler(category)}
                             >
@@ -473,6 +477,7 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
                         {instructorList &&
                           instructorList.map((instructor) => (
                             <li
+                              key={instructor.primaryTeacherName}
                               className="topic-dropdown"
                               onClick={closeHandler(
                                 instructor.primaryTeacherName,

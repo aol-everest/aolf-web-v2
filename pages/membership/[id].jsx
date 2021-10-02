@@ -1,6 +1,7 @@
+/* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import { withSSRContext } from "aws-amplify";
-import { api } from "@utils";
+import { api, tConvert } from "@utils";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -92,7 +93,7 @@ function MembershipCheckout({ subsciption, profile, token }) {
   const [couponCode] = useQueryString("coupon");
   const [offeringId] = useQueryString("ofid");
   const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
   const router = useRouter();
 
   const [activeSubscription] = subsciption.activeSubscriptions;

@@ -15,6 +15,7 @@ export const DiscountCodeInput = ({
   product,
   applyDiscount,
   clearCoupon,
+  setUser,
   ...rest
 }) => {
   const [showTag, setShowTag] = useState(false);

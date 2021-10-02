@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import { withSSRContext } from "aws-amplify";
 import { Auth } from "aws-amplify";
@@ -333,7 +334,7 @@ const Profile = ({ profile }) => {
                     switchCardDetailView={switchCardDetailView}
                   ></ViewCardDetail>
                 )}
-                {editCardDetail && (
+                {/* {editCardDetail && (
                   <StripeProvider apiKey={APP.STRIPE_PUBLISHABLE_KEY}>
                     <Elements>
                       <ChangeCardDetail
@@ -341,7 +342,7 @@ const Profile = ({ profile }) => {
                       />
                     </Elements>
                   </StripeProvider>
-                )}
+                )} */}
               </div>
               <div
                 className={classNames("tab-pane fade", {
@@ -452,7 +453,7 @@ const Profile = ({ profile }) => {
                         switchCardDetailView={switchCardDetailView}
                       ></ViewCardDetail>
                     )}
-                    {editCardDetail && (
+                    {/* {editCardDetail && (
                       <StripeProvider apiKey={APP.STRIPE_PUBLISHABLE_KEY}>
                         <Elements>
                           <ChangeCardDetail
@@ -460,7 +461,7 @@ const Profile = ({ profile }) => {
                           />
                         </Elements>
                       </StripeProvider>
-                    )}
+                    )} */}
                   </div>
                 </Collapse>
               </div>

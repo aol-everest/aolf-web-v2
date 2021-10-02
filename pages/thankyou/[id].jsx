@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-irregular-whitespace */
 import React, { useEffect } from "react";
 import { api } from "@utils";
 import { withSSRContext } from "aws-amplify";
@@ -54,7 +56,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
       title: meetupTitle || title,
       ctype: productTypeId,
       requestType: "Thankyou",
-      user,
+      // user,
       ecommerce: {
         currencyCode: "USD",
         purchase: {
@@ -75,7 +77,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
               variant: "N/A",
               brand: "Art of Living Foundation",
               quantity: 1,
-              price: totalOrderAmount,
+              // price: totalOrderAmount,
             },
           ],
         },
@@ -114,9 +116,9 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
                     src="https://player.vimeo.com/video/432237531"
                     width="100%"
                     height="100%"
-                    frameborder="0"
+                    frameBorder="0"
                     allow="autoplay; fullscreen"
-                    allowfullscreen
+                    allowFullScreen
                   ></iframe>
                 </div>
               </div>

@@ -79,6 +79,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
             href="https://www.artofliving.org/us-en/privacy-policy"
             target="_blank"
             className="link"
+            rel="noreferrer"
           >
             Privacy Policy
           </a>

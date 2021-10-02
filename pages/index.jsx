@@ -15,7 +15,7 @@ import { useQuery } from "react-query";
 import Link from "next/link";
 import { useQueryString } from "@hooks";
 import { Popup } from "@components";
-import { DURATION } from "@constants";
+import { DURATION, MODAL_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
@@ -602,7 +602,9 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
               <>
                 {meditationCategory &&
                   meditationCategory.map((category) => (
-                    <li onClick={closeHandler(category)}>{category}</li>
+                    <li onClick={closeHandler(category)} key={category}>
+                      {category}
+                    </li>
                   ))}
               </>
             )}
@@ -639,6 +641,7 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
                 {instructorList &&
                   instructorList.map((instructor) => (
                     <li
+                      key={instructor.primaryTeacherName}
                       className="topic-dropdown"
                       onClick={closeHandler(instructor.primaryTeacherName)}
                     >

@@ -60,7 +60,6 @@ export const ChangePasswordForm = ({
         type="password"
         placeholder="Password"
         className={classNames({ validate: errors.password })}
-        type="password"
       />
       {errors.passwordConfirmation && (
         <p className="validation-input">
