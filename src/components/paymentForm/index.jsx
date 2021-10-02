@@ -434,7 +434,7 @@ export const PaymentForm = ({
         questionnaire: questionnaire,
         ppaAgreement: false,
         paymentOption: PAYMENT_TYPES.FULL,
-        paymentMode: "",
+        paymentMode: otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") < 0 ? STRIPE_PAYMENT_MODE :"",
         accommodation: null,
       }}
       validationSchema={Yup.object().shape({
@@ -689,6 +689,8 @@ export const PaymentForm = ({
                   )}
 
                   <CourseOptions
+                    expenseAddOn={expenseAddOn}
+                    isOfflineExpense={isOfflineExpense}
                     workshop={workshop}
                     fee={fee}
                     delfee={fee}

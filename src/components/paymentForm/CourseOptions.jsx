@@ -4,6 +4,8 @@ import classNames from "classnames";
 import { COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 export const CourseOptions = ({
+  expenseAddOn,
+  isOfflineExpense,
   workshop,
   fee,
   delfee,

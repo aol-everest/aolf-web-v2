@@ -63,6 +63,7 @@ export const getServerSideProps = async (context) => {
     props = {
       authenticated: true,
       username: user.username,
+      token,
     };
   } catch (err) {
     props = {
@@ -187,7 +188,7 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
   );
 };
 
-const Meetup = ({ meetups, allMeetupMaster, authenticated, query, token }) => {
+const Meetup = ({ meetups, allMeetupMaster, authenticated, token }) => {
   const seed = useUIDSeed();
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
