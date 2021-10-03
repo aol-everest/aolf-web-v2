@@ -13,7 +13,7 @@ import { useGlobalAlertContext } from "@contexts";
 export const SahajSamadhi = ({ data }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-  const [showAlert] = useGlobalAlertContext();
+  const { showAlert } = useGlobalAlertContext();
 
   const showResearchModal = (e) => {
     if (e) e.preventDefault();
