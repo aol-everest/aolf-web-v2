@@ -69,3 +69,5 @@ amplifytools.xcconfig
 
 # Sentry
 .sentryclirc
+
+report.*.json

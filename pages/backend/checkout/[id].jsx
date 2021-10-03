@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { withSSRContext } from "aws-amplify";
 import { api } from "@utils";
-import { Loader } from "@components";
+
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { BackendPaymentForm } from "@components/backendPaymentForm";
-// import Style from "./BackEndCheckout.module.scss";
-import classNames from "classnames";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -58,10 +56,10 @@ export const getServerSideProps = async (context) => {
 
 const BackEndCheckout = ({ workshop, profile, token }) => {
   return (
-    <main className="body_wrapper">
+    <main className="body_wrapper backend-reg-body">
       <div className="container">
         <div className="row">
-          {/* <Elements
+          <Elements
             stripe={stripePromise}
             fonts={[
               {
@@ -75,11 +73,12 @@ const BackEndCheckout = ({ workshop, profile, token }) => {
               profile={profile}
               token={token}
             />
-          </Elements> */}
+          </Elements>
         </div>
       </div>
     </main>
   );
 };
+BackEndCheckout.hideHeader = true;
 
 export default BackEndCheckout;

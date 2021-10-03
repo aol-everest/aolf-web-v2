@@ -4,6 +4,7 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
 import moment from "moment";
+import { Loader } from "@components";
 import { isEmpty } from "lodash";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
@@ -20,8 +21,6 @@ import {
 import { EmailField } from "./EmailField";
 import { Radiobox } from "./Radiobox";
 import { PriceCalculation } from "./PriceCalculation";
-
-import { useQueryString } from "@hooks";
 import {
   PAYMENT_MODES,
   PAYMENT_TYPES,
@@ -30,7 +29,6 @@ import {
   US_STATES,
 } from "@constants";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { Loader } from "@components";
 import { api } from "@utils";
 
 const PARTIAL = "partial";
@@ -74,6 +72,8 @@ export const BackendPaymentForm = ({
   const [workshop, setWorkshop] = useState(useWorkshop);
   const [courseAddOnFee, setCourseAddOnFee] = useState(null);
   const [selectedComboCourseId, setSelectedComboCourseId] = useState(null);
+  const [selectedUnitPrice, setSelectedUnitPrice] = useState(null);
+  const [selectedListPrice, setSelectedListPrice] = useState(null);
   let _cardElement;
 
   const paymentOptionChangeAction = (mode) => {
@@ -154,7 +154,9 @@ export const BackendPaymentForm = ({
       }
     }
     setUser(user);
-    setWorkshop(workshop);
+    if (workshop) {
+      setWorkshop(workshop);
+    }
   };
 
   const formatPhoneNumber = (phoneNumberString) => {
@@ -267,6 +269,128 @@ export const BackendPaymentForm = ({
 
   return (
     <>
+      {loading && <Loader />}
+      <div className="col-md-6 col-sm-6 col-xs-12 wlc_left_wrap">
+        <div className="row">
+          <div className="col-sm-12">
+            <h2 className="title">{title}</h2>
+            {!isGenericWorkshop && (
+              <div className="row">
+                <div className="col-sm-12 col-12 datetime-box">
+                  <h6>Date:</h6>
+                  <div>
+                    Start: {formattedStartDateOnly} : {eventStartTime}
+                  </div>
+                  <div>
+                    End: {formattedEndDateOnly} : {eventEndTime}
+                  </div>
+                </div>
+                {/* <div className="col-sm-6 col-12 datetime-box">
+                  <h6>Time:</h6>
+                  <div>Weekdays: {formattedWeekDay}</div>
+                  <div>Weekend: {formattedWeekEnd}</div>
+                </div> */}
+              </div>
+            )}
+            <p>Venue: {shortAddress}</p>
+          </div>
+
+          <div className="col-sm-12 workshopCourseBlk">
+            <div className="row">
+              <div className="col-sm-12 col-md-6 leftBlk">
+                <p>Course ID: {name}</p>
+
+                <PriceCalculation
+                  // groupedAddOnProductsFirst={groupedAddOnProductsFirst}
+                  // addOnProductFirst={addOnProductFirst}
+                  listPrice={listPrice}
+                  unitPrice={unitPrice}
+                  courseAddOnFee={courseAddOnFee}
+                  savingFromOfferings={savingFromOfferings}
+                  priceBookName={priceBookName}
+                  earlyBirdDays={earlyBirdDays}
+                  isEarlyBirdAllowed={isEarlyBirdAllowed}
+                  selectedUnitPrice={selectedUnitPrice}
+                  selectedListPrice={selectedListPrice}
+                  discount={discount}
+                  paymentMode={paymentMode}
+                  instalmentAmount={instalmentAmount}
+                  instalmentTenure={instalmentTenure}
+                  instalmentGap={instalmentGap}
+                  instalmentGapUnit={instalmentGapUnit}
+                  earlyBirdEndDate={earlyBirdEndDate}
+                  showPrice={showPrice}
+                  comboPrice={comboPrice}
+                />
+                {earlyBirdFeeIncreasing && (
+                  <p>
+                    Register soon. Course fee will go up by $
+                    {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                    {earlyBirdFeeIncreasing.increasingBy}
+                  </p>
+                )}
+                {isUsableCreditAvailable && (
+                  <p>
+                    {usableCredit.message} ${UpdatedFeeAfterCredits}.
+                  </p>
+                )}
+              </div>
+              <div className="col-sm-12 col-md-6 rightBlk">
+                <p>
+                  Contact: {contactName},{" "}
+                  <a href={`tel:${phone1}`}>{phone1},</a>
+                </p>
+                <p>
+                  <a href={`mailto:${email}`}>{email}</a>
+                </p>
+              </div>
+              {!isGenericWorkshop && (
+                <div className="col-sm-12 teacherWrap extrMrg">
+                  <span className="name">Teacher:</span>
+                  <div className="row">
+                    {primaryTeacherName && (
+                      <div className="col-sm-12">
+                        <img
+                          className="img"
+                          src={primaryTeacherPic || "/assets/images/user.png"}
+                        />
+                        <a href="#" className="name">
+                          {primaryTeacherName}
+                        </a>
+                      </div>
+                    )}
+                    {coTeacher1Name && (
+                      <div className="col-sm-12">
+                        {"  "}
+                        <img
+                          className="img"
+                          src={coTeacher1Pic || "/assets/images/user.png"}
+                        />
+                        <a href="#" className="name">
+                          {coTeacher1Name}
+                        </a>
+                      </div>
+                    )}
+                    {coTeacher2Name && (
+                      <div className="col-sm-12">
+                        {"  "}
+                        <img
+                          className="img"
+                          src={coTeacher2Pic || "/assets/images/user.png"}
+                        />
+                        <a href="#" className="name">
+                          {coTeacher2Name}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="col-md-6 col-sm-6 col-xs-12 form_right_wrap">
         <Formik
           enableReinitialize

@@ -16,6 +16,7 @@ export function EmailField({
   user,
   name,
   applyUser,
+  productId,
   ...rest
 }) {
   const [loading, setLoading] = useState(false);
@@ -54,7 +55,6 @@ export function EmailField({
       if (!user) {
         throw new Error();
       }
-      const { productId } = this.props;
 
       const { data } = await api.get({
         path: "workshopDetail",
@@ -68,6 +68,7 @@ export function EmailField({
 
       applyUser({ user, form }, data);
     } catch (ex) {
+      console.log(ex);
       applyUser({ user: null, form });
     }
     setLoading(false);
@@ -121,7 +122,7 @@ export function EmailField({
         <>
           <div className="couponCode-error">{form.errors.email}</div>
 
-          <div className="react-tag-container">
+          <div className="react-tag-container-bc">
             {withLabel && <label className="react-tag-label">Email</label>}
             <span
               className={classNames("badge", "react-tag", {
