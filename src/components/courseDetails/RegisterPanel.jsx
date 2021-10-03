@@ -10,7 +10,7 @@ export const RegisterPanel = ({ workshop }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    router.push(`/checkout/${sfid}`);
+    router.push(`/course/checkout/${sfid}`);
   };
 
   return (

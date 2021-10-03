@@ -5,19 +5,21 @@ import * as Yup from "yup";
 import classNames from "classnames";
 import renderHTML from "react-render-html";
 import { Auth } from "aws-amplify";
-import moment from "moment";
-import NumberFormat from "react-number-format";
 import { useRouter } from "next/router";
 import { isEmpty } from "lodash";
 import { PayPalButton } from "react-paypal-button-v2";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { UserInfoForm } from "./UserInfoForm";
-import { BillingInfoForm } from "./BillingInfoForm";
-import { PayWith } from "./PayWith";
-import { CourseOptions } from "./CourseOptions";
-import { AgreementForm } from "./AgreementForm";
-import { MobileCourseDetails } from "./MobileCourseDetails";
-import { DiscountCodeInput } from "./DiscountCodeInput";
+import {
+  BillingInfoForm,
+  PayWith,
+  UserInfoForm,
+  CourseOptions,
+  AgreementForm,
+  MobileCourseDetails,
+  DiscountCodeInput,
+  CourseDetailsCard,
+} from "@components/checkout";
+
 import { priceCalculation } from "@utils";
 import { useQueryString } from "@hooks";
 import {
@@ -26,7 +28,6 @@ import {
   ALERT_TYPES,
   MODAL_TYPES,
 } from "@constants";
-import { CourseDetailsCard } from "./CourseDetailsCard";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";

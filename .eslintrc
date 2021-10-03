@@ -9,7 +9,7 @@
   },
   "settings": {
     "react": {
-      "version": "detect" // Automatically detect the react version
+      "version": "detect"
     }
   },
   "env": {
@@ -19,6 +19,7 @@
   },
   "extends": ["eslint:recommended", "next", "plugin:prettier/recommended"],
   "rules": {
+    "@next/next/no-img-element": "off",
     "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
     "react/react-in-jsx-scope": "off",
     "no-unused-vars": [

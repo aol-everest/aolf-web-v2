@@ -44,6 +44,7 @@ const moduleExports = withPlugins(
     }),
   ],
   {
+    // basePath: "/us",
     productionBrowserSourceMaps: true,
     async headers() {
       return [

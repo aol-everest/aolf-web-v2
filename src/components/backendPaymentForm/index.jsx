@@ -1,0 +1,1531 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from "react";
+import { Formik, Field } from "formik";
+import * as Yup from "yup";
+import classNames from "classnames";
+import moment from "moment";
+import { isEmpty } from "lodash";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  BillingInfoForm,
+  PayWith,
+  UserInfoForm,
+  CourseOptions,
+  AgreementForm,
+  MobileCourseDetails,
+  DiscountCodeInput,
+  CourseDetailsCard,
+  Dropdown,
+} from "@components/checkout";
+import { EmailField } from "./EmailField";
+import { Radiobox } from "./Radiobox";
+import { PriceCalculation } from "./PriceCalculation";
+
+import { useQueryString } from "@hooks";
+import {
+  PAYMENT_MODES,
+  PAYMENT_TYPES,
+  ALERT_TYPES,
+  MODAL_TYPES,
+  US_STATES,
+} from "@constants";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import { Loader } from "@components";
+import { api } from "@utils";
+
+const PARTIAL = "partial";
+const FULL = "";
+const INSTALMENT = "instalment";
+
+const createOptions = {
+  style: {
+    base: {
+      fontSize: "16px",
+      lineHeight: 2,
+      fontWeight: 200,
+      fontStyle: "normal",
+      color: "#303650",
+      fontFamily: "Work Sans, sans-serif",
+      "::placeholder": {
+        color: "#9598a6",
+        fontFamily: "Work Sans, sans-serif",
+        fontSize: "16px",
+      },
+    },
+    invalid: {
+      color: "#9e2146",
+    },
+  },
+};
+
+export const BackendPaymentForm = ({
+  useWorkshop = {},
+  profile = {},
+  token,
+}) => {
+  const [couponCode, setCouponCode] = useState("");
+  const [selectedComboBundle, setSelectedComboBundle] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [sameAsBillingCardDetail, setSameAsBillingCardDetail] = useState(false);
+  const [showCouponCodeField, setShowCouponCodeField] = useState(true);
+  const [discount, setDiscount] = useState(null);
+  const [paymentMode, setPaymentMode] = useState(FULL);
+  const [workshop, setWorkshop] = useState(useWorkshop);
+  const [courseAddOnFee, setCourseAddOnFee] = useState(null);
+  const [selectedComboCourseId, setSelectedComboCourseId] = useState(null);
+  let _cardElement;
+
+  const paymentOptionChangeAction = (mode) => {
+    setPaymentMode(mode);
+  };
+
+  const applyDiscount = (discount) => {
+    setDiscount(discount);
+  };
+
+  const selectPaymentPlan = (mode) => {
+    setPaymentMode(mode);
+  };
+
+  const setFormInitialValues = () => {
+    const secondPaymentDate = moment(workshop.eventStartDate)
+      .add(-3, "D")
+      .format("YYYY-MM-DD");
+    return {
+      firstName: "",
+      lastName: "",
+      email: "",
+      confirmEmail: "",
+      password: "",
+      contactPhone: "",
+      contactAddress: "",
+      contactState: "",
+      contactZip: "",
+      billingPhone: "",
+      billingAddress: "",
+      billingState: "",
+      billingZip: "",
+      couponCode: couponCode ? couponCode : "",
+      selectedPaymentOption: FULL,
+      isChequePayment: false,
+      isFirstChequePayment: false,
+      isSecondChequePayment: false,
+      chequeNumber: "",
+      chequeRoutingNumber: "",
+      firstChequeNumber: "",
+      firstChequeRoutingNumber: "",
+      secondChequeNumber: "",
+      secondChequeRoutingNumber: "",
+      secondPaymentDate,
+      firstPaymentAmount: workshop.minimumPartialPayment || 0,
+    };
+  };
+
+  const applyUser = ({ user, form }, workshop) => {
+    if (user) {
+      const {
+        first_name,
+        last_name,
+        email,
+        personMobilePhone,
+        personMailingStreet,
+        personMailingState,
+        personMailingPostalCode,
+      } = user || {};
+      const payload = setFormInitialValues();
+      form.setValues({
+        ...payload,
+        firstName: first_name || "",
+        lastName: last_name || "",
+        email,
+        contactPhone: personMobilePhone || "",
+        contactAddress: personMailingStreet || "",
+        contactState: personMailingState || "",
+        contactZip: personMailingPostalCode || "",
+        billingPhone: "",
+        billingAddress: "",
+        billingState: "",
+        billingZip: "",
+      });
+      if (!user) {
+        _cardElement.clear();
+        this.couponCodeInstance.refresh();
+      }
+    }
+    setUser(user);
+    setWorkshop(workshop);
+  };
+
+  const formatPhoneNumber = (phoneNumberString) => {
+    const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+    const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      const intlCode = match[1] ? "+1 " : "";
+      return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
+    }
+    return phoneNumberString;
+  };
+
+  const sameAsBillingCardDetailAction = () => {
+    setSameAsBillingCardDetail(
+      (sameAsBillingCardDetail) => !sameAsBillingCardDetail,
+    );
+  };
+
+  const completeEnrollmentAction = (values, resetForm) => {};
+
+  const {
+    id,
+    title,
+    shortAddress,
+    email,
+    contactName,
+    formattedStartDate,
+    formattedEndDate,
+    formattedStartDateOnly,
+    formattedEndDateOnly,
+    formattedWeekDay,
+    formattedWeekEnd,
+    courseId,
+    phone1,
+    primaryTeacherName,
+    primaryTeacherPic,
+    coTeacher1Name,
+    coTeacher1Pic,
+    coTeacher2Name,
+    coTeacher2Pic,
+    listPrice,
+    unitPrice,
+    savingFromOfferings,
+    priceBookName,
+    earlyBirdDays,
+    isEarlyBirdAllowed,
+    instalmentAmount,
+    instalmentTenure,
+    instalmentGap,
+    instalmentGapUnit,
+    earlyBirdEndDate,
+    showPrice,
+    earlyBirdFeeIncreasing,
+    isGenericWorkshop,
+    name,
+    eventStartTime,
+    eventEndTime,
+    availableBundles,
+    addOnProducts,
+    usableCredit,
+    eventStartDate,
+    isPartialPaymentAllowed,
+    minimumPartialPayment,
+    groupedAddOnProducts,
+  } = workshop;
+
+  const comboPrice = availableBundles?.find(
+    (availableBundle) =>
+      selectedComboCourseId === availableBundle.comboProductSfid,
+  );
+
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === "Amount"
+  ) {
+    if (usableCredit.availableCredit > unitPrice) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = unitPrice - usableCredit.availableCredit;
+    }
+  }
+
+  const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
+
+  const hasGroupedAddOnProducts =
+    groupedAddOnProducts &&
+    !isEmpty(groupedAddOnProducts) &&
+    "Residential Add On" in groupedAddOnProducts &&
+    groupedAddOnProducts["Residential Add On"].length > 0;
+
+  const residentialAddOnRequired =
+    hasGroupedAddOnProducts &&
+    groupedAddOnProducts["Residential Add On"].some(
+      (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
+    );
+
+  const isAccommodationRequired =
+    hasGroupedAddOnProducts && residentialAddOnRequired;
+
+  const isComboDetailAvailable = availableBundles?.length > 0;
+
+  return (
+    <>
+      <div className="col-md-6 col-sm-6 col-xs-12 form_right_wrap">
+        <Formik
+          enableReinitialize
+          initialValues={setFormInitialValues()}
+          validationSchema={Yup.object().shape({
+            firstName: Yup.string().required("First Name is required!"),
+            lastName: Yup.string().required("Last Name is required!"),
+            email: Yup.string()
+              .email("Email is invalid!")
+              .required("Email is required!"),
+            confirmEmail: Yup.string()
+              .required("Confirm Email is required!")
+              .oneOf([Yup.ref("email")], "Emails must match"),
+            contactPhone: Yup.string().required("Phone is required!"),
+            contactAddress: Yup.string().required("Address is required!"),
+            contactState: Yup.string().required("State is required!"),
+            contactZip: Yup.string()
+              .required("Zip is required!")
+              //.matches(/^[0-9]+$/, { message: 'Zip is invalid!' })
+              .min(2, "Zip is invalid!")
+              .max(10, "Zip is invalid!"),
+            billingZip: Yup.string()
+              //.matches(/^[0-9]+$/, { message: 'Zip is invalid!' })
+              .min(2, "Zip is invalid!")
+              .max(10, "Zip is invalid!"),
+            chequeNumber: Yup.string().when(
+              ["isChequePayment", "selectedPaymentOption"],
+              {
+                is: (isChequePayment, selectedPaymentOption) =>
+                  isChequePayment && selectedPaymentOption !== PARTIAL,
+                then: Yup.string().required("Check number is required!"),
+              },
+            ),
+            chequeRoutingNumber: Yup.string().when(
+              ["isChequePayment", "selectedPaymentOption"],
+              {
+                is: (isChequePayment, selectedPaymentOption) =>
+                  isChequePayment && selectedPaymentOption !== PARTIAL,
+                then: Yup.string().required("Routing number is required!"),
+              },
+            ),
+            firstChequeNumber: Yup.string().when(
+              ["isFirstChequePayment", "selectedPaymentOption"],
+              {
+                is: (isFirstChequePayment, selectedPaymentOption) =>
+                  isFirstChequePayment && selectedPaymentOption === PARTIAL,
+                then: Yup.string().required("Check number is required!"),
+              },
+            ),
+            firstChequeRoutingNumber: Yup.string().when(
+              ["isFirstChequePayment", "selectedPaymentOption"],
+              {
+                is: (isFirstChequePayment, selectedPaymentOption) =>
+                  isFirstChequePayment && selectedPaymentOption === PARTIAL,
+                then: Yup.string().required("Routing number is required!"),
+              },
+            ),
+            secondChequeNumber: Yup.string().when(
+              ["isSecondChequePayment", "selectedPaymentOption"],
+              {
+                is: (isSecondChequePayment, selectedPaymentOption) =>
+                  isSecondChequePayment && selectedPaymentOption === PARTIAL,
+                then: Yup.string().required("Check number is required!"),
+              },
+            ),
+            secondChequeRoutingNumber: Yup.string().when(
+              ["isSecondChequePayment", "selectedPaymentOption"],
+              {
+                is: (isSecondChequePayment, selectedPaymentOption) =>
+                  isSecondChequePayment && selectedPaymentOption === PARTIAL,
+                then: Yup.string().required("Routing number is required!"),
+              },
+            ),
+            secondPaymentDate: Yup.string().when(
+              ["isSecondChequePayment", "selectedPaymentOption"],
+              {
+                is: (isSecondChequePayment, selectedPaymentOption) => {
+                  return (
+                    !isSecondChequePayment && selectedPaymentOption === PARTIAL
+                  );
+                },
+                then: Yup.string()
+                  .required("Payment date is required!")
+                  .test({
+                    name: "max",
+                    exclusive: true,
+                    params: { eventStartDate },
+                    message: `Payment date must be on or before ${moment(
+                      selectedComboBundle?.remainPartialPaymentDateCap ||
+                        eventStartDate,
+                    ).format("MM/DD/YYYY")}`,
+                    test: (value) => {
+                      return moment(value, [
+                        "MM-DD-YYYY",
+                        "YYYY-MM-DD",
+                      ]).isSameOrBefore(
+                        moment(
+                          selectedComboBundle?.remainPartialPaymentDateCap ||
+                            eventStartDate,
+                        ),
+                      );
+                    },
+                  })
+                  .test({
+                    name: "min",
+                    exclusive: true,
+                    params: { eventStartDate },
+                    message: `Payment date must be after today`,
+                    test: (value) => {
+                      return moment(value, [
+                        "MM-DD-YYYY",
+                        "YYYY-MM-DD",
+                      ]).isAfter(moment(new Date()));
+                    },
+                  }),
+              },
+            ),
+            firstPaymentAmount: Yup.number().when("selectedPaymentOption", {
+              is: (selectedPaymentOption) => {
+                return selectedPaymentOption === PARTIAL;
+              },
+              then: Yup.number()
+                .required("Amount is required!")
+                .test({
+                  name: "min",
+                  exclusive: true,
+                  params: { eventStartDate },
+                  message: `Amount should not be less then ${
+                    selectedComboBundle?.minimumPartialPaymentOnBundle ||
+                    minimumPartialPayment ||
+                    1
+                  }`,
+                  test: (value) => {
+                    return (
+                      value >=
+                      (selectedComboBundle?.minimumPartialPaymentOnBundle ||
+                        minimumPartialPayment ||
+                        1)
+                    );
+                  },
+                }),
+            }),
+            accommodation: isAccommodationRequired
+              ? Yup.object().required("ERROR!")
+              : Yup.mixed().notRequired(),
+          })}
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
+            await completeEnrollmentAction(values, resetForm);
+          }}
+        >
+          {(formikProps) => {
+            const {
+              values,
+              touched,
+              errors,
+              dirty,
+              isSubmitting,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              handleReset,
+              submitCount,
+              isValid,
+            } = formikProps;
+
+            let isOfflineExpense;
+            if (hasGroupedAddOnProducts && expenseAddOn) {
+              isOfflineExpense = expenseAddOn.paymentMode === "In Person";
+            } else if (expenseAddOn && !expenseAddOn.isAddOnSelectionRequired) {
+              isOfflineExpense = values[expenseAddOn.productName] || false;
+            } else if (!expenseAddOn) {
+              isOfflineExpense = false;
+            } else {
+              isOfflineExpense = true;
+            }
+
+            return (
+              <form
+                name="workshopEnroll"
+                onSubmit={handleSubmit}
+                className="workshopEnroll"
+              >
+                <div className="row">
+                  <div className="col-sm-12 heading_info">
+                    <p>User Information:</p>
+                  </div>
+                  <div className="col-sm-6">
+                    <div
+                      className={classNames("input-group inputLabel_place", {
+                        "text-input-error":
+                          errors.firstName && touched.firstName,
+                      })}
+                    >
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="firstName"
+                        placeholder=" "
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.firstName}
+                        name="firstName"
+                        maxLength={80}
+                      />
+                      <label htmlFor="firstName">
+                        {errors.firstName && touched.firstName
+                          ? errors.firstName
+                          : "First Name"}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div
+                      className={classNames("input-group inputLabel_place", {
+                        "text-input-error": errors.lastName && touched.lastName,
+                      })}
+                    >
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="lastName"
+                        placeholder=" "
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.lastName}
+                        name="lastName"
+                        maxLength={80}
+                      />
+                      <label htmlFor="lastName">
+                        {errors.lastName && touched.lastName
+                          ? errors.lastName
+                          : "Last Name"}
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-sm-12">
+                    <Field name="email">
+                      {({ field, form }) => (
+                        <EmailField
+                          name="email"
+                          field={field}
+                          form={form}
+                          productId={workshop.sfid}
+                          parentClassName="aol_intGroup"
+                          placeholder="Email"
+                          applyUser={applyUser}
+                          user={user}
+                          token={token}
+                          withLabel={true}
+                          disabled={loading}
+                        />
+                      )}
+                    </Field>
+                  </div>
+                  <div className="col-sm-12">
+                    <div
+                      className={classNames("input-group aol_intGroup", {
+                        "text-input-error":
+                          errors.confirmEmail && touched.confirmEmail,
+                      })}
+                    >
+                      <input
+                        type="email"
+                        id="confirmEmail"
+                        placeholder="Confirm Email"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.confirmEmail}
+                        name="confirmEmail"
+                        onCut={(event) => {
+                          event.preventDefault();
+                        }}
+                        onCopy={(event) => {
+                          event.preventDefault();
+                        }}
+                        onPaste={(event) => {
+                          event.preventDefault();
+                        }}
+                      />
+                      <label htmlFor="confirmEmail">
+                        {errors.confirmEmail && touched.confirmEmail
+                          ? errors.confirmEmail
+                          : "Confirm Email"}
+                      </label>
+                    </div>
+
+                    {/*<div
+                    className={classNames('input-group inputLabel_place', {
+                      'text-input-error': errors.email && touched.email
+                    })}
+                  >
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      placeholder=" "
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                      name="email"
+                    />
+                    <label htmlFor="email">
+                      {errors.email && touched.email ? errors.email : 'Email'}
+                    </label>
+                  </div>*/}
+                  </div>
+
+                  {isComboDetailAvailable && (
+                    <>
+                      <div className="col-sm-12 heading_info">
+                        <p>Course Options:</p>
+                      </div>
+                      <div className="reciept__payment reciept__header mt-4 ml-4">
+                        <div className="reciept__payment-option">
+                          <input
+                            className="custom-radio"
+                            type="radio"
+                            name="payment"
+                            id={id}
+                            checked={
+                              values.comboDetailId
+                                ? values.comboDetailId === id
+                                : true
+                            }
+                            onChange={() =>
+                              this.handleComboDetailChange(
+                                formikProps,
+                                id,
+                                null,
+                              )
+                            }
+                          />
+                          <label htmlFor="payment-lg-meditation">
+                            <span>{title}: </span>
+                            <span>${unitPrice}</span>
+                          </label>
+                        </div>
+                        {availableBundles.map((availableBundle) => {
+                          const isChecked =
+                            values.comboDetailId ===
+                            availableBundle.comboProductSfid;
+                          return (
+                            <>
+                              <div className="reciept__payment-option reciept__payment-option_special-offer">
+                                <span className="special-offer">
+                                  Special Offer
+                                </span>
+                                <input
+                                  className="custom-radio"
+                                  type="radio"
+                                  name="payment"
+                                  id={availableBundle.comboProductSfid}
+                                  checked={isChecked}
+                                  onChange={() =>
+                                    this.handleComboDetailChange(
+                                      formikProps,
+                                      availableBundle.comboProductSfid,
+                                      availableBundle,
+                                    )
+                                  }
+                                />
+                                <label htmlFor="payment-lg-retreat">
+                                  <span>{availableBundle.comboName}: </span>
+                                  <span>${availableBundle.comboUnitPrice}</span>
+                                </label>
+                              </div>
+                              <div className="reciept__payment-tooltip">
+                                {availableBundle.comboDescription || ""}
+                              </div>
+                            </>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+
+                  {groupedAddOnProducts && !isEmpty(groupedAddOnProducts) && (
+                    <>
+                      <div className="col-sm-12 heading_info">
+                        <p>Addon Information:</p>
+                      </div>
+                      <ul className="reciept__payment_list mt-3">
+                        {addOnProducts.map((product) => {
+                          if (
+                            !product.isExpenseAddOn ||
+                            (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                          ) {
+                            const isChecked = product.isAddOnSelectionRequired
+                              ? true
+                              : values[product.productName];
+
+                            return (
+                              <li>
+                                <span>
+                                  {!product.isAddOnSelectionRequired && (
+                                    <input
+                                      type="checkbox"
+                                      className="custom-checkbox"
+                                      placeholder=" "
+                                      checked={isChecked}
+                                      onClick={(e) =>
+                                        this.handleAddOnSelection(
+                                          formikProps,
+                                          product.productName,
+                                          e.target.checked,
+                                        )
+                                      }
+                                      value={product.productName}
+                                      name={product.productName}
+                                      id={product.productSfid}
+                                      disabled={
+                                        product.isAddOnSelectionRequired
+                                      }
+                                    />
+                                  )}
+                                  <label htmlFor={product.productSfid}></label>
+                                  <span className="ml-2">
+                                    {product.productName} Required:
+                                  </span>
+                                </span>
+                                <span className="ml-2">
+                                  ${product.unitPrice}
+                                </span>
+                              </li>
+                            );
+                          }
+                        })}
+                      </ul>
+                      {/* <div className="col-sm-12">
+                      <h6
+                        style={{ padding: '10px 0px' }}
+                        className={classNames({
+                          'group-error': errors.selectedAddOn,
+                        })}
+                      >
+                        <i className="fas fa-cart-plus" /> Accommodation :
+                      </h6>
+                      {groupedAddOnProducts.map(this.groupAddOnSelectItem)}
+                    </div> */}
+                      {hasGroupedAddOnProducts && (
+                        <div className="col-sm-12">
+                          <h6
+                            style={{ padding: "10px 0px" }}
+                            className={classNames({
+                              "group-error": errors.selectedAddOn,
+                            })}
+                          >
+                            <i className="fas fa-cart-plus" /> Room &amp; Board{" "}
+                            {isOfflineExpense && "*"}
+                          </h6>
+                          <div
+                            className={classNames(
+                              "select-room select-room_rounded",
+                              {
+                                "no-valid":
+                                  errors.accommodation && touched.accommodation,
+                              },
+                            )}
+                          >
+                            <div tabIndex="1" className="select-room__current">
+                              <span className="select-room__placeholder">
+                                Select Room &amp; Board
+                              </span>
+                              {groupedAddOnProducts["Residential Add On"].map(
+                                (residentialAddOn) => {
+                                  return (
+                                    <div
+                                      className="select-room__value"
+                                      key={residentialAddOn.productSfid}
+                                    >
+                                      <input
+                                        type="radio"
+                                        id={residentialAddOn.productSfid}
+                                        value={residentialAddOn.unitPrice}
+                                        name="room-lg"
+                                        className="select-room__input"
+                                      />
+                                      <span className="select-room__input-text">
+                                        {residentialAddOn.productName}{" "}
+                                        <span className="price">
+                                          $
+                                          {residentialAddOn.unitPrice +
+                                            (expenseAddOn?.unitPrice || 0)}
+                                        </span>
+                                      </span>
+                                    </div>
+                                  );
+                                },
+                              )}
+                            </div>
+                            <ul className="select-room__list">
+                              {groupedAddOnProducts["Residential Add On"].map(
+                                (residentialAddOn) => {
+                                  return (
+                                    <li
+                                      key={residentialAddOn.productSfid}
+                                      onClick={() =>
+                                        this.handleAccommodationChange(
+                                          formikProps,
+                                          residentialAddOn,
+                                        )
+                                      }
+                                    >
+                                      <label
+                                        htmlFor={residentialAddOn.productSfid}
+                                        aria-hidden="aria-hidden"
+                                        data-value={residentialAddOn.unitPrice}
+                                        className="select-room__option"
+                                      >
+                                        <span>
+                                          {residentialAddOn.productName}
+                                        </span>
+                                        <span className="price">
+                                          $
+                                          {residentialAddOn.unitPrice +
+                                            (expenseAddOn?.unitPrice || 0)}
+                                        </span>
+                                      </label>
+                                    </li>
+                                  );
+                                },
+                              )}
+                            </ul>
+                          </div>
+                          {isOfflineExpense && (
+                            <div className="reciept__payment-tooltip reciept__payment-tooltip_small mt-2">
+                              * Expences to be collected offline
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  <div className="col-sm-12 heading_info">
+                    <p>Contact Information:</p>
+                  </div>
+                  <div className="col-sm-6">
+                    <div
+                      className={classNames("input-group inputLabel_place", {
+                        "text-input-error":
+                          errors.contactPhone && touched.contactPhone,
+                      })}
+                    >
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="contactPhone"
+                        placeholder=" "
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={formatPhoneNumber(values.contactPhone)}
+                        name="contactPhone"
+                        disabled={loading}
+                        maxLength={14}
+                      />
+                      <label htmlFor="contactPhone">
+                        {errors.contactPhone && touched.contactPhone
+                          ? errors.contactPhone
+                          : "Phone"}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div
+                      className={classNames("input-group inputLabel_place", {
+                        "text-input-error":
+                          errors.contactAddress && touched.contactAddress,
+                      })}
+                    >
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="contactAddress"
+                        placeholder=" "
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.contactAddress}
+                        name="contactAddress"
+                        disabled={loading}
+                      />
+                      <label htmlFor="contactAddress">
+                        {errors.contactAddress && touched.contactAddress
+                          ? errors.contactAddress
+                          : "Address"}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <Field name="contactState">
+                      {({ field, form }) => {
+                        return (
+                          <div
+                            className={classNames({
+                              "text-input-error":
+                                errors.contactState && touched.contactState,
+                            })}
+                            style={{ marginTop: "32px" }}
+                          >
+                            <Dropdown
+                              formikProps={formikProps}
+                              formikKey="contactState"
+                              options={US_STATES}
+                              fullWidth
+                            ></Dropdown>
+                          </div>
+                        );
+                      }}
+                    </Field>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div
+                      className={classNames("input-group inputLabel_place", {
+                        "text-input-error":
+                          errors.contactZip && touched.contactZip,
+                      })}
+                    >
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="contactZip"
+                        placeholder=" "
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.contactZip}
+                        name="contactZip"
+                        disabled={loading}
+                      />
+                      <label htmlFor="contactZip">
+                        {errors.contactZip && touched.contactZip
+                          ? errors.contactZip
+                          : "Zip Code"}
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-sm-6 heading_info">
+                    <p>Billing Information:</p>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div className="form-check custom_check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="SameAsBilling"
+                        checked={sameAsBillingCardDetail}
+                        onChange={sameAsBillingCardDetailAction}
+                        disabled={loading}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="SameAsBilling"
+                      >
+                        Same as Contact Details
+                      </label>
+                    </div>
+                  </div>
+                  {values.selectedPaymentOption !== INSTALMENT && (
+                    <div className="col-sm-12">
+                      {showCouponCodeField && (
+                        <DiscountCodeInput
+                          placeholder="Discount Code"
+                          formikProps={formikProps}
+                          formikKey="couponCode"
+                          product={workshop.sfid}
+                          token={token}
+                          applyDiscount={applyDiscount}
+                          addOnProducts={addOnProducts}
+                        ></DiscountCodeInput>
+                      )}
+                    </div>
+                  )}
+
+                  {!sameAsBillingCardDetail && (
+                    <>
+                      <div className="col-sm-6">
+                        <div
+                          className={classNames(
+                            "input-group inputLabel_place",
+                            {
+                              "text-input-error":
+                                errors.billingPhone && touched.billingPhone,
+                            },
+                          )}
+                        >
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="billingPhone"
+                            placeholder=" "
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="billingPhone"
+                            value={formatPhoneNumber(values.billingPhone)}
+                            disabled={loading}
+                          />
+                          <label htmlFor="billingPhone">
+                            {errors.billingPhone && touched.billingPhone
+                              ? errors.billingPhone
+                              : "Phone"}
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <div
+                          className={classNames(
+                            "input-group inputLabel_place",
+                            {
+                              "text-input-error":
+                                errors.billingAddress && touched.billingAddress,
+                            },
+                          )}
+                        >
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="billingAddress"
+                            placeholder=" "
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.billingAddress}
+                            name="billingAddress"
+                            disabled={loading}
+                          />
+                          <label htmlFor="billingAddress">
+                            {errors.billingAddress && touched.billingAddress
+                              ? errors.billingAddress
+                              : "Address"}
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <Field name="billingState">
+                          {({ field, form }) => {
+                            return (
+                              <div
+                                className={classNames({
+                                  "text-input-error":
+                                    errors.billingState && touched.billingState,
+                                })}
+                                style={{ marginTop: "32px" }}
+                              >
+                                <Dropdown
+                                  formikProps={formikProps}
+                                  formikKey="billingState"
+                                  options={US_STATES}
+                                  fullWidth
+                                  valuePrefix="bs"
+                                ></Dropdown>
+                              </div>
+                            );
+                          }}
+                        </Field>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <div
+                          className={classNames(
+                            "input-group inputLabel_place",
+                            {
+                              "text-input-error":
+                                errors.billingZip && touched.billingZip,
+                            },
+                          )}
+                        >
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="billingZip"
+                            placeholder=" "
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.billingZip}
+                            name="billingZip"
+                            disabled={loading}
+                          />
+                          <label htmlFor="billingZip">
+                            {errors.billingZip && touched.billingZip
+                              ? errors.billingZip
+                              : "Zip Code"}
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  <div className="col-sm-12 heading_info">
+                    <p>Payment Options:</p>
+                  </div>
+
+                  <div className="col-sm-12">
+                    <p>
+                      <Radiobox
+                        name="selectedPaymentOption"
+                        group={"selectedPaymentOption"}
+                        value={FULL}
+                        dtype={1}
+                        action={paymentOptionChangeAction}
+                        label={`Full Payment`}
+                      />
+                    </p>
+                    {workshop.isInstalmentAllowed && showCouponCodeField && (
+                      <p>
+                        <Radiobox
+                          name="selectedPaymentOption"
+                          group={"selectedPaymentOption"}
+                          value={INSTALMENT}
+                          dtype={1}
+                          action={paymentOptionChangeAction}
+                          label={`${workshop.instalmentTenure} Installment of $${workshop.instalmentAmount} every ${workshop.instalmentGap} ${workshop.instalmentGapUnit}(s)`}
+                        />
+                      </p>
+                    )}
+                    {isPartialPaymentAllowed && !selectedComboBundle && (
+                      <p>
+                        <Radiobox
+                          name="selectedPaymentOption"
+                          group={"selectedPaymentOption"}
+                          value={PARTIAL}
+                          dtype={1}
+                          action={paymentOptionChangeAction}
+                          label={`Partial Payment`}
+                        />
+                      </p>
+                    )}
+                    {selectedComboBundle &&
+                      selectedComboBundle.isPartialPaymentAllowedOnBundle && (
+                        <p>
+                          <Radiobox
+                            name="selectedPaymentOption"
+                            group={"selectedPaymentOption"}
+                            value={PARTIAL}
+                            dtype={1}
+                            action={this.paymentOptionChangeAction}
+                            label={`Partial Payment`}
+                          />
+                        </p>
+                      )}
+                  </div>
+                  <div className="col-sm-12 heading_info">
+                    <p>Payment Type:</p>
+                  </div>
+
+                  {values.selectedPaymentOption === FULL && (
+                    <>
+                      <div className="col-sm-12">
+                        <div className="form-check custom_check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            value=""
+                            id="isChequePayment"
+                            name="isChequePayment"
+                            onChange={handleChange}
+                            checked={values.isChequePayment}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="isChequePayment"
+                          >
+                            Payment by check?
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {values.selectedPaymentOption !== PARTIAL && (
+                    <>
+                      {(!values.isChequePayment ||
+                        values.selectedPaymentOption === INSTALMENT) && (
+                        <div className="col-sm-12">
+                          <div className="card-element-box">
+                            <CardElement
+                              onReady={(c) => (_cardElement = c)}
+                              options={createOptions}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      {values.isChequePayment &&
+                        values.selectedPaymentOption !== INSTALMENT && (
+                          <>
+                            <div className="col-sm-6">
+                              <div
+                                className={classNames(
+                                  "input-group inputLabel_place",
+                                  {
+                                    "text-input-error":
+                                      errors.chequeNumber &&
+                                      touched.chequeNumber,
+                                  },
+                                )}
+                              >
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="chequeNumber"
+                                  placeholder=" "
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  value={values.chequeNumber}
+                                  name="chequeNumber"
+                                  disabled={loading}
+                                />
+                                <label htmlFor="chequeNumber">
+                                  {errors.chequeNumber && touched.chequeNumber
+                                    ? errors.chequeNumber
+                                    : "Check Number"}
+                                </label>
+                              </div>
+                            </div>
+
+                            <div className="col-sm-6">
+                              <div
+                                className={classNames(
+                                  "input-group inputLabel_place",
+                                  {
+                                    "text-input-error":
+                                      errors.chequeRoutingNumber &&
+                                      touched.chequeRoutingNumber,
+                                  },
+                                )}
+                              >
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="chequeRoutingNumber"
+                                  placeholder=" "
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  value={values.chequeRoutingNumber}
+                                  name="chequeRoutingNumber"
+                                  disabled={loading}
+                                />
+                                <label htmlFor="chequeRoutingNumber">
+                                  {errors.chequeRoutingNumber &&
+                                  touched.chequeRoutingNumber
+                                    ? errors.chequeRoutingNumber
+                                    : "Check Routing Number"}
+                                </label>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                    </>
+                  )}
+
+                  {values.selectedPaymentOption === PARTIAL && (
+                    <>
+                      {(!values.isFirstChequePayment ||
+                        !values.isSecondChequePayment) && (
+                        <div className="col-sm-12">
+                          <div className="card-element-box">
+                            <CardElement
+                              onReady={(c) => (this._cardElement = c)}
+                              {...createOptions(this.props.fontSize)}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <div className="col-sm-6 heading_info">
+                        <p>First Payment:</p>
+                      </div>
+                      {false && (
+                        <div className="col-sm-6">
+                          <div className="form-check custom_check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="isFirstChequePayment"
+                              name="isFirstChequePayment"
+                              onChange={handleChange}
+                              checked={values.isFirstChequePayment}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="isFirstChequePayment"
+                            >
+                              First Payment by cheque?
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                      <div className="col-sm-12">
+                        <div
+                          className={classNames(
+                            "input-group inputLabel_place",
+                            {
+                              "text-input-error":
+                                errors.firstPaymentAmount &&
+                                touched.firstPaymentAmount,
+                            },
+                          )}
+                        >
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="firstPaymentAmount"
+                            placeholder=" "
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.firstPaymentAmount}
+                            name="firstPaymentAmount"
+                            disabled={loading}
+                            min={
+                              selectedComboBundle?.minimumPartialPaymentOnBundle ||
+                              workshop.minimumPartialPayment
+                            }
+                          />
+                          <label htmlFor="firstPaymentAmount">
+                            {errors.firstPaymentAmount &&
+                            touched.firstPaymentAmount
+                              ? errors.firstPaymentAmount
+                              : "First Payment Amount"}
+                          </label>
+                        </div>
+                      </div>
+                      {values.isFirstChequePayment && (
+                        <>
+                          <div className="col-sm-6">
+                            <div
+                              className={classNames(
+                                "input-group inputLabel_place",
+                                {
+                                  "text-input-error":
+                                    errors.firstChequeNumber &&
+                                    touched.firstChequeNumber,
+                                },
+                              )}
+                            >
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="firstChequeNumber"
+                                placeholder=" "
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.firstChequeNumber}
+                                name="firstChequeNumber"
+                                disabled={loading}
+                              />
+                              <label htmlFor="firstChequeNumber">
+                                {errors.firstChequeNumber &&
+                                touched.firstChequeNumber
+                                  ? errors.firstChequeNumber
+                                  : "Check Number"}
+                              </label>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6">
+                            <div
+                              className={classNames(
+                                "input-group inputLabel_place",
+                                {
+                                  "text-input-error":
+                                    errors.firstChequeRoutingNumber &&
+                                    touched.firstChequeRoutingNumber,
+                                },
+                              )}
+                            >
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="firstChequeRoutingNumber"
+                                placeholder=" "
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.firstChequeRoutingNumber}
+                                name="firstChequeRoutingNumber"
+                                disabled={loading}
+                              />
+                              <label htmlFor="firstChequeRoutingNumber">
+                                {errors.firstChequeRoutingNumber &&
+                                touched.firstChequeRoutingNumber
+                                  ? errors.firstChequeRoutingNumber
+                                  : "Check Routing Number"}
+                              </label>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      <div className="col-sm-6 heading_info">
+                        <p>Second Payment:</p>
+                      </div>
+                      {false && (
+                        <div className="col-sm-6">
+                          <div className="form-check custom_check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="isSecondChequePayment"
+                              name="isSecondChequePayment"
+                              onChange={handleChange}
+                              checked={values.isSecondChequePayment}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="isSecondChequePayment"
+                            >
+                              Second Payment by check?
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                      {!values.isSecondChequePayment && (
+                        <div className="col-sm-12">
+                          <div
+                            className={classNames(
+                              "input-group inputLabel_place",
+                              {
+                                "text-input-error":
+                                  errors.secondPaymentDate &&
+                                  touched.secondPaymentDate,
+                              },
+                            )}
+                          >
+                            <input
+                              type="date"
+                              className="form-control"
+                              id="secondPaymentDate"
+                              placeholder=" "
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.secondPaymentDate}
+                              name="secondPaymentDate"
+                              min={new Date().toISOString().split("T")[0]}
+                              max={
+                                new Date(
+                                  selectedComboBundle?.remainPartialPaymentDateCap ||
+                                    eventStartDate,
+                                )
+                                  .toISOString()
+                                  .split("T")[0]
+                              }
+                              disabled={loading}
+                            />
+                            <label htmlFor="secondPaymentDate">
+                              {errors.secondPaymentDate &&
+                              touched.secondPaymentDate
+                                ? errors.secondPaymentDate
+                                : "Payment Date"}
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                      {values.isSecondChequePayment && (
+                        <>
+                          <div className="col-sm-6">
+                            <div
+                              className={classNames(
+                                "input-group inputLabel_place",
+                                {
+                                  "text-input-error":
+                                    errors.secondChequeNumber &&
+                                    touched.secondChequeNumber,
+                                },
+                              )}
+                            >
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="secondChequeNumber"
+                                placeholder=" "
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.secondChequeNumber}
+                                name="secondChequeNumber"
+                                disabled={loading}
+                              />
+                              <label htmlFor="secondChequeNumber">
+                                {errors.secondChequeNumber &&
+                                touched.secondChequeNumber
+                                  ? errors.secondChequeNumber
+                                  : "Check Number"}
+                              </label>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6">
+                            <div
+                              className={classNames(
+                                "input-group inputLabel_place",
+                                {
+                                  "text-input-error":
+                                    errors.secondChequeRoutingNumber &&
+                                    touched.secondChequeRoutingNumber,
+                                },
+                              )}
+                            >
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="secondChequeRoutingNumber"
+                                placeholder=" "
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.secondChequeRoutingNumber}
+                                name="secondChequeRoutingNumber"
+                                disabled={loading}
+                              />
+                              <label htmlFor="secondChequeRoutingNumber">
+                                {errors.secondChequeRoutingNumber &&
+                                touched.secondChequeRoutingNumber
+                                  ? errors.secondChequeRoutingNumber
+                                  : "Check Routing Number"}
+                              </label>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  <div className="col-sm-12 complete_subs">
+                    <button type="submit" className="btn btn-color">
+                      {loading && (
+                        <div className="loaded">
+                          <div className="loader">
+                            <div className="loader-inner ball-clip-rotate">
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {!loading && `Complete Enrollment`}
+                    </button>
+                  </div>
+
+                  {Object.values(errors).length > 0 && (
+                    <div className="col-sm-12">
+                      <div className="col-sm-12">
+                        <b>Errors:</b>
+                      </div>
+                      <div className="col-sm-12">
+                        <ul>
+                          {Object.values(errors).map((msg) => (
+                            <>
+                              <li>{msg}</li>
+                            </>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </form>
+            );
+          }}
+        </Formik>
+      </div>
+    </>
+  );
+};

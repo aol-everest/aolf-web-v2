@@ -30,26 +30,17 @@ export const getServerSideProps = async (context) => {
       authenticated: false,
     };
   }
-  try {
-    const res = await api.get({
-      path: "workshopDetail",
-      token,
-      param: {
-        id,
-      },
-    });
-    props = {
-      ...props,
-      data: res.data,
-    };
-  } catch (err) {
-    props = {
-      ...props,
-      data: {
-        error: { message: err.message },
-      },
-    };
-  }
+  const workshopDetail = await api.get({
+    path: "workshopDetail",
+    token,
+    param: {
+      id,
+    },
+  });
+  props = {
+    ...props,
+    data: workshopDetail.data,
+  };
   // Pass data to the page via props
   return { props };
 };

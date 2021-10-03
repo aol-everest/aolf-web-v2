@@ -5,10 +5,16 @@ import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import renderHTML from "react-render-html";
-import { StyledInput } from "@components/paymentForm/StyledInput";
-import { DiscountCodeInput } from "@components/paymentForm/DiscountCodeInput";
-import { BillingInfoForm } from "@components/paymentForm/BillingInfoForm";
-import { UserInfoForm } from "@components/paymentForm/UserInfoForm";
+import {
+  BillingInfoForm,
+  PayWith,
+  UserInfoForm,
+  CourseOptions,
+  AgreementForm,
+  MobileCourseDetails,
+  DiscountCodeInput,
+  CourseDetailsCard,
+} from "@components/checkout";
 import { api } from "@utils";
 import { Loader } from "@components";
 import { useGlobalAlertContext } from "@contexts";

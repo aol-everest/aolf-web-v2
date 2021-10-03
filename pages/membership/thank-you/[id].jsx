@@ -122,7 +122,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
         });
       } else {
         router.push({
-          pathname: `/checkout/${courseId}`,
+          pathname: `/course/checkout/${courseId}`,
         });
       }
     } else if (meetupId) {
