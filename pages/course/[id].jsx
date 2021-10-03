@@ -7,6 +7,7 @@ import {
 } from "@components/courseDetails";
 import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
+import { NextSeo } from "next-seo";
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
@@ -56,6 +57,7 @@ export default function CourseDetail({ data }) {
 
   return (
     <>
+      <NextSeo title={data.title} />
       {isSKYType && <SilentRetreat data={data} />}
       {isSilentRetreatType && <SilentRetreat data={data} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi data={data} />}

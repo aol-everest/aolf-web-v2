@@ -9,6 +9,7 @@ import { MembershipCheckoutStripe } from "@components/membership/membershipCheck
 import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useRouter } from "next/router";
+import { NextSeo } from "next-seo";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -134,6 +135,7 @@ function MembershipCheckout({ subsciption, profile, token }) {
 
   return (
     <main>
+      <NextSeo title={name} />
       <section className="order">
         <div className="container">
           <h1 className="title">{name}</h1>

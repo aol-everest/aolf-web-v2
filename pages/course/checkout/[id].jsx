@@ -6,6 +6,7 @@ import { PaymentForm } from "@components";
 import { api } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
+import { NextSeo } from "next-seo";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -76,10 +77,11 @@ const Checkout = ({ workshop, profile, token }) => {
 
   return (
     <>
+      <NextSeo title={workshop.title} />
       <main>
         <section className="order">
           <div className="container">
-            <h1 className="title title_thin">Silent Retreat</h1>
+            <h1 className="title title_thin">{workshop.title}</h1>
             <p className="order__detail">
               The ultimate vacation for mind, body, and spirit
             </p>
