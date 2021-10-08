@@ -5,11 +5,8 @@
   "cacheDirectories": [
     ".next/cache"
   ],
-  "engines": {
-    "node": "12.4.0"
-  },
   "scripts": {
-    "dev": "next dev",
+    "develop": "next dev",
     "build": "next build",
     "start": "next start -p $PORT",
     "build:analyze": "ANALYZE=true npm run build",

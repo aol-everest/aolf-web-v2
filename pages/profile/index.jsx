@@ -7,6 +7,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { Collapse } from "reactstrap";
 import { FaCamera } from "react-icons/fa";
+import { Loader } from "@components";
 import {
   EventList,
   ViewCardDetail,
@@ -16,7 +17,7 @@ import {
   ProfilePicCrop,
 } from "@components/profile";
 import { api } from "@utils";
-import { MEMBERSHIP_TYPES, ALERT_TYPES } from "@constants";
+import { ALERT_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { useGlobalAlertContext } from "@contexts";
 
@@ -43,6 +44,7 @@ export async function getServerSideProps({ req, res }) {
         authenticated: true,
         username: user.username,
         profile: res,
+        token,
       },
     };
   } catch (err) {
@@ -53,11 +55,12 @@ export async function getServerSideProps({ req, res }) {
   return { props: {} };
 }
 
-const Profile = ({ profile }) => {
+const Profile = ({ profile, token }) => {
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
   const [cropedProfilePic, setCropedProfilePic] = useState(null);
   const [uploadedProfilePic, setUploadedProfilePic] = useState(null);
+  const [userProfile, setUserProfile] = useState(profile);
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: UPCOMING_EVENTS,
   });
@@ -137,10 +140,25 @@ const Profile = ({ profile }) => {
     message,
     isError = false,
     payload = {},
-  }) => {};
+  }) => {
+    if (isError) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message,
+      });
+    } else {
+      setLoading(true);
+      const res = await api.get({
+        path: "profile",
+        token,
+      });
+      setUserProfile(res);
+      setLoading(false);
+    }
+  };
 
   return (
     <>
+      {loading && <Loader />}
       <main className="profile">
         {request === "1" && (
           <aside className="profile__alert profile__alert_error">
@@ -320,7 +338,8 @@ const Profile = ({ profile }) => {
               >
                 <ChangeProfile
                   updateCompleteAction={updateCompleteAction}
-                  profile={Profile}
+                  profile={profile}
+                  token={token}
                 ></ChangeProfile>
               </div>
               <div
@@ -352,6 +371,7 @@ const Profile = ({ profile }) => {
               >
                 <ChangePassword
                   updateCompleteAction={updateCompleteAction}
+                  token={token}
                 ></ChangePassword>
               </div>
             </div>
@@ -427,6 +447,8 @@ const Profile = ({ profile }) => {
                     <ChangeProfile
                       isMobile
                       updateCompleteAction={updateCompleteAction}
+                      profile={profile}
+                      token={token}
                     ></ChangeProfile>
                   </div>
                 </Collapse>

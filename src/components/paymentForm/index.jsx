@@ -407,9 +407,9 @@ export const PaymentForm = ({
         ppaAgreement: false,
         paymentOption: PAYMENT_TYPES.FULL,
         paymentMode:
-          otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") < 0
-            ? PAYMENT_MODES.STRIPE_PAYMENT_MODE
-            : "",
+          otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") > -1
+            ? ""
+            : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
         accommodation: null,
       }}
       validationSchema={Yup.object().shape({

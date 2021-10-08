@@ -3,6 +3,7 @@ import classNames from "classnames";
 import MaskedInput from "react-text-mask";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { api } from "@utils";
 
 const phoneNumberMask = [
   "(",
@@ -25,6 +26,7 @@ export const ChangeProfile = ({
   isMobile,
   profile = {},
   updateCompleteAction,
+  token,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -36,33 +38,23 @@ export const ChangeProfile = ({
       contactState,
       contactZip,
     } = values;
-    const { token: accessToken, updateCompleteAction } = this.props;
     setLoading(true);
     try {
-      // const results = await secure_fetch(`${API.REST.UPDATE_USER_PROFILE}`, {
-      //   method: "POST",
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "application/json",
-      //   },
-      //   accessToken,
-      //   body: JSON.stringify({
-      //     contactCity,
-      //     contactPhone,
-      //     contactAddress,
-      //     contactState,
-      //     contactZip,
-      //   }),
-      // });
+      const { status, error: errorMessage } = await api.post({
+        path: "updateProfile",
+        body: {
+          contactCity,
+          contactPhone,
+          contactAddress,
+          contactState,
+          contactZip,
+        },
+        token,
+      });
 
-      // if (!results.ok) {
-      //   throw new Error(results.statusText);
-      // }
-      // const { status, error: errorMessage } = await results.json();
-
-      // if (status === 400) {
-      //   throw new Error(errorMessage);
-      // }
+      if (status === 400) {
+        throw new Error(errorMessage);
+      }
       updateCompleteAction({});
     } catch (ex) {
       console.log(ex);
@@ -82,7 +74,6 @@ export const ChangeProfile = ({
     personMailingStreet,
     email,
   } = profile;
-
   return (
     <>
       {loading && <div className="cover-spin"></div>}
@@ -113,7 +104,7 @@ export const ChangeProfile = ({
             .max(10, "Zip is invalid"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          await this.submitAction(values);
+          await submitAction(values);
         }}
       >
         {(props) => {

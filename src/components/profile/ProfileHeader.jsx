@@ -207,7 +207,7 @@ const subscriptionBuyBtnPanel = (
 ) => {
   if (userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value]) {
     return (
-      <div className="btn-wrapper">
+      <div className="btn-wrapper" key={MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value}>
         <button
           data-href-modal="digital-member-join"
           className="btn-secondary link-modal v2"
