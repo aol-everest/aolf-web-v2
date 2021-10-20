@@ -6,7 +6,7 @@ import { ActiveLink } from "@components";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import Style from "./Header.module.scss";
 import { FaUserCircle } from "react-icons/fa";
-import { MODAL_TYPES } from "@constants";
+import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
 export const Header = () => {
   const { authenticated = false, profile } = useAuth();
@@ -49,7 +49,10 @@ export const Header = () => {
           </NavbarToggler>
           <Collapse isOpen={collapsed} navbar>
             <Nav className="ml-auto" navbar>
-              <ActiveLink activeClassName="active" href="/">
+              <ActiveLink
+                activeClassName="active"
+                href={`/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
+              >
                 <NavItem className="nav-item">
                   <a className="nav-link">
                     <img src="/img/sun-icon.png" /> Meditate

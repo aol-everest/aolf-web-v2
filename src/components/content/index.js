@@ -1,0 +1,1 @@
+export { DesignOne } from "./designOne";
