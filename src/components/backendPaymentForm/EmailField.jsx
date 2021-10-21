@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { api } from "@utils";
 import classNames from "classnames";
+import { FaSpinner } from "react-icons/fa";
 
 export function EmailField({
   applyDiscount,
@@ -103,6 +104,7 @@ export function EmailField({
             onBlur={findUser({ field, form })}
             onKeyDown={keyPress({ field, form })}
           />
+
           {withLabel && (
             <label
               htmlFor="emailId"
@@ -114,7 +116,10 @@ export function EmailField({
             </label>
           )}
           {loading && (
-            <i className="fas fa-sync fa-spin check-coupon-code-btn" />
+            <FaSpinner
+              icon="spinner"
+              className="spinner check-coupon-code-btn"
+            />
           )}
         </>
       )}

@@ -18,6 +18,8 @@ import { DURATION, MODAL_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
+import Styles from "./DesignOne.module.scss";
+
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
@@ -520,7 +522,10 @@ export const DesignOne = ({ data, token, authenticated }) => {
               key={meditate.sfid}
             >
               <div
-                className="card image-card image-card-1"
+                className={classNames(
+                  "card image-card image-card-1",
+                  Styles.courseCard,
+                )}
                 data-play-meditation
                 style={{
                   background: `url(${

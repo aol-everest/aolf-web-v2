@@ -1080,4 +1080,39 @@
       color: #4b5487;
     }
   }
+
+  .spinner {
+    animation: spin infinite 1s linear;
+
+    /*You can increase or decrease the timer (5s) to 
+     increase or decrease the speed of the spinner*/
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .check-coupon-code-btn {
+    position: absolute;
+    right: 16px;
+    top: 40%;
+    transform: translateY(-50%);
+    font-weight: 600;
+    color: rgb(75, 84, 135);
+    background: transparent;
+    border-width: initial;
+    border-style: none;
+    border-color: initial;
+    border-image: initial;
+    outline: none;
+  }
+  .couponCode-error {
+    font-size: 11px;
+    color: #f10a0a !important;
+  }
 }
