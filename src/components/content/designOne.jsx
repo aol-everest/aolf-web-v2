@@ -18,8 +18,6 @@ import { DURATION, MODAL_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
-import Styles from "./DesignOne.module.scss";
-
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
@@ -52,6 +50,23 @@ export const DesignOne = ({ data, token, authenticated }) => {
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
 
+  console.log(data);
+  let listingFolders = data.folder.filter((folder) => folder.isListingFolder);
+  const nonListingFolders = data.folder.filter(
+    (folder) => !folder.isListingFolder,
+  );
+
+  const popularFolder = listingFolders.find(
+    (folder) =>
+      folder.title && folder.title.toLowerCase().indexOf("popular") > -1,
+  );
+
+  if (popularFolder) {
+    listingFolders = listingFolders.filter(
+      (folder) => folder.id !== popularFolder.id,
+    );
+  }
+
   const { data: meditationCategory = [], isSuccess } = useQuery(
     "meditationCategory",
     async () => {
@@ -62,45 +77,6 @@ export const DesignOne = ({ data, token, authenticated }) => {
     },
     {
       refetchOnWindowFocus: false,
-    },
-  );
-
-  const [firstCategory, secoundCategory] = meditationCategory;
-  const { data: firstCategoryMeditations = [] } = useQuery(
-    "firstCategoryMeditation",
-    async () => {
-      const response = await api.get({
-        path: "meditations",
-        param: {
-          deviceType: "web",
-          category: firstCategory,
-        },
-        token,
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!firstCategory,
-    },
-  );
-
-  const { data: secoundCategoryMeditations = [] } = useQuery(
-    "secoundCategoryMeditation",
-    async () => {
-      const response = await api.get({
-        path: "meditations",
-        param: {
-          deviceType: "web",
-          category: secoundCategory,
-        },
-        token,
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!secoundCategory,
     },
   );
 
@@ -127,24 +103,6 @@ export const DesignOne = ({ data, token, authenticated }) => {
         },
       });
       return response;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const { data: recommendedMeditations = [], refetch } = useQuery(
-    "recommendedmeds",
-    async () => {
-      const response = await api.get({
-        path: "meditations",
-        param: {
-          deviceType: "web",
-          collectionName: "Recommendedmeds",
-        },
-        token,
-      });
-      return response.data;
     },
     {
       refetchOnWindowFocus: false,
@@ -181,7 +139,7 @@ export const DesignOne = ({ data, token, authenticated }) => {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch, token });
+      await markFavoriteEvent({ meditate, refetch: null, token });
     }
   };
 
@@ -489,81 +447,88 @@ export const DesignOne = ({ data, token, authenticated }) => {
       <section className="browse-category">
         <p className="title-slider">Browse by Category</p>
         <Swiper {...swiperOption}>
-          {meditationCategory &&
-            meditationCategory.map((category, i) => (
+          {nonListingFolders &&
+            nonListingFolders.map((folder, i) => (
               <SwiperSlide key={i} className="category-slide-item">
-                <Link href={`/meditation/collection?type=${category}`}>
+                <Link href={`/meditation/collection?type=${folder.id}`}>
                   <div
                     className="card image-card image-card-1"
                     style={{
-                      background: `url(${pickCategoryImage(
-                        backgroundIterator,
-                      )}) no-repeat center/cover`,
+                      background: `url(${
+                        folder.coverImage
+                          ? folder.coverImage.url
+                          : pickCategoryImage(backgroundIterator)
+                      }) no-repeat center/cover`,
                     }}
                   >
-                    <h5 className="card-title">{category}</h5>
+                    <h5 className="card-title">{folder.title}</h5>
                   </div>
                 </Link>
               </SwiperSlide>
             ))}
         </Swiper>
       </section>
-      <section className="browse-category most-popular">
-        <p className="title-slider">
-          Most Popular{" "}
-          <Link href={`/meditation`}>
-            <span className="popular-all">All</span>
-          </Link>
-        </p>
-        <Swiper {...swiperOption}>
-          {recommendedMeditations.map((meditate) => (
-            <SwiperSlide
-              className="swiper-slide popular-slide-item"
-              key={meditate.sfid}
-            >
-              <div
-                className={classNames(
-                  "card image-card image-card-1",
-                  Styles.courseCard,
-                )}
-                data-play-meditation
-                style={{
-                  background: `url(${
-                    meditate.coverImage
-                      ? meditate.coverImage.url
-                      : "/img/card-1a.png"
-                  }) no-repeat center/cover`,
-                }}
-              >
-                <div className="duration-wrapper">
-                  <span className="duration">
-                    {timeConvert(meditate.duration)}
-                  </span>
-                  {!meditate.accessible && (
-                    <span className="lock">
-                      <img src="/img/ic-lock.png" />
-                    </span>
-                  )}
-                </div>
-                {meditate.accessible && (
+      {popularFolder &&
+        popularFolder.content &&
+        popularFolder.content.length > 0 && (
+          <section className="browse-category most-popular">
+            <p className="title-slider">
+              Most Popular{" "}
+              <Link href={`/meditation`}>
+                <span className="popular-all">All</span>
+              </Link>
+            </p>
+            <Swiper {...swiperOption}>
+              {popularFolder.content.map((meditate) => (
+                <SwiperSlide
+                  className="swiper-slide popular-slide-item"
+                  key={meditate.sfid}
+                >
                   <div
-                    onClick={markFavorite(meditate)}
-                    className={
-                      meditate.isFavorite ? "course-like liked" : "course-like"
-                    }
-                  ></div>
-                )}
-                <div
-                  className="forClick"
-                  onClick={meditateClickHandle(meditate)}
-                ></div>
-                <h5 className="card-title">{meditate.title}</h5>
-                <p className="card-text">{meditate.primaryTeacherName}</p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
+                    className={classNames(
+                      "card image-card image-card-1 courseCard",
+                    )}
+                    data-play-meditation
+                    style={{
+                      background: `url(${
+                        meditate.coverImage
+                          ? meditate.coverImage.url
+                          : "/img/card-1a.png"
+                      }) no-repeat center/cover`,
+                    }}
+                  >
+                    <div className="duration-wrapper">
+                      <span className="duration">
+                        {timeConvert(meditate.duration)}
+                      </span>
+                      {!meditate.accessible && (
+                        <span className="lock">
+                          <img src="/img/ic-lock.png" />
+                        </span>
+                      )}
+                    </div>
+                    {meditate.accessible && (
+                      <div
+                        onClick={markFavorite(meditate)}
+                        className={
+                          meditate.isFavorite
+                            ? "course-like liked"
+                            : "course-like"
+                        }
+                      ></div>
+                    )}
+                    <div
+                      className="forClick"
+                      onClick={meditateClickHandle(meditate)}
+                    ></div>
+                    <h5 className="card-title">{meditate.title}</h5>
+                    <p className="card-text">{meditate.primaryTeacherName}</p>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
+        )}
       <section className="browse-category most-popular d-none d-md-block">
         <p className="title-slider">Find a meditation</p>
         <div className="buttons-wrapper">
@@ -665,7 +630,65 @@ export const DesignOne = ({ data, token, authenticated }) => {
           </div>
         </div>
       </section>
-      <section className="browse-category most-popular">
+      {listingFolders &&
+        listingFolders.map((folder) => {
+          return (
+            <section className="browse-category most-popular" key={folder.id}>
+              <p className="title-slider">{folder.title}</p>
+              <Swiper {...swiperOption}>
+                {folder.content.map((meditate) => (
+                  <SwiperSlide
+                    className="swiper-slide popular-slide-item"
+                    key={meditate.sfid}
+                  >
+                    <div
+                      className={classNames(
+                        "card image-card image-card-1 courseCard",
+                      )}
+                      data-play-meditation
+                      style={{
+                        background: `url(${
+                          meditate.coverImage
+                            ? meditate.coverImage.url
+                            : "/img/card-1a.png"
+                        }) no-repeat center/cover`,
+                      }}
+                    >
+                      <div className="duration-wrapper">
+                        <span className="duration">
+                          {timeConvert(meditate.duration)}
+                        </span>
+                        {!meditate.accessible && (
+                          <span className="lock">
+                            {" "}
+                            <img src="/img/ic-lock.png" />{" "}
+                          </span>
+                        )}
+                      </div>
+                      {meditate.accessible && (
+                        <div
+                          onClick={markFavorite(meditate)}
+                          className={
+                            meditate.isFavorite
+                              ? "course-like liked"
+                              : "course-like"
+                          }
+                        ></div>
+                      )}
+                      <div
+                        className="forClick"
+                        onClick={meditateClickHandle(meditate)}
+                      ></div>
+                      <h5 className="card-title">{meditate.title}</h5>
+                      <p className="card-text">{meditate.primaryTeacherName}</p>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </section>
+          );
+        })}
+      {/* <section className="browse-category most-popular">
         <p className="title-slider">{firstCategory}</p>
         <Swiper {...swiperOption}>
           {firstCategoryMeditations.map((meditate) => (
@@ -674,7 +697,9 @@ export const DesignOne = ({ data, token, authenticated }) => {
               key={meditate.sfid}
             >
               <div
-                className="card image-card image-card-1"
+                className={classNames(
+                  "card image-card image-card-1 courseCard",
+                )}
                 data-play-meditation
                 style={{
                   background: `url(${
@@ -723,7 +748,9 @@ export const DesignOne = ({ data, token, authenticated }) => {
               key={meditate.sfid}
             >
               <div
-                className="card image-card image-card-1"
+                className={classNames(
+                  "card image-card image-card-1 courseCard",
+                )}
                 data-play-meditation
                 style={{
                   background: `url(${
@@ -762,7 +789,7 @@ export const DesignOne = ({ data, token, authenticated }) => {
             </SwiperSlide>
           ))}
         </Swiper>
-      </section>
+      </section> */}
       <section className="top-column last-tips">
         <img
           src="/img/meditation-page-3@2x.png"

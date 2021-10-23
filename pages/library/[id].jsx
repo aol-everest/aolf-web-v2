@@ -45,14 +45,14 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-export default function Library({ data, token }) {
+export default function Library({ data, ...rest }) {
   console.log(data);
   const [rootFolder] = data.folder;
   switch (rootFolder.screenDesign) {
     case "Design 1":
-      return <DesignOne data={rootFolder} token={token} />;
+      return <DesignOne data={rootFolder} {...rest} />;
     case "Design 2":
-      return <DesignOne data={rootFolder} token={token} />;
+      return <DesignOne data={rootFolder} {...rest} />;
     default:
       return null;
   }

@@ -73,7 +73,10 @@ export const Header = () => {
                   </a>
                 </NavItem>
               </ActiveLink>
-              <ActiveLink activeClassName="active" href="/learn">
+              <ActiveLink
+                activeClassName="active"
+                href={`/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`}
+              >
                 <NavItem className="nav-item">
                   <a className="nav-link">
                     <img src="/img/book-open.png" /> Learn

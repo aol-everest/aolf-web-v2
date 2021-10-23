@@ -37,6 +37,7 @@ export const TIME_ZONE = {
 
 export const CONTENT_FOLDER_IDS = {
   MEDITATE_FOLDER_ID: process.env.NEXT_PUBLIC_MEDITATE_FOLDER_ID,
+  WISDOM_FOLDER_ID: process.env.NEXT_PUBLIC_WISDOM_FOLDER_ID,
 };
 
 export const PAYMENT_TYPES = {
