@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { api } from "@utils";
-import { DesignOne } from "@components/content";
+import { DesignOne, DesignTwo } from "@components/content";
 import { withSSRContext } from "aws-amplify";
 import { NextSeo } from "next-seo";
 import "swiper/swiper.min.css";
@@ -52,7 +52,7 @@ export default function Library({ data, ...rest }) {
     case "Design 1":
       return <DesignOne data={rootFolder} {...rest} />;
     case "Design 2":
-      return <DesignOne data={rootFolder} {...rest} />;
+      return <DesignTwo data={rootFolder} {...rest} />;
     default:
       return null;
   }
