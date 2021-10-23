@@ -452,7 +452,7 @@ export const DesignOne = ({ data, token, authenticated }) => {
               <SwiperSlide key={i} className="category-slide-item">
                 <Link href={`/meditation/collection?type=${folder.id}`}>
                   <div
-                    className="card image-card image-card-1"
+                    className="card image-card image-card-1 contentCard"
                     style={{
                       background: `url(${
                         folder.coverImage
@@ -486,7 +486,7 @@ export const DesignOne = ({ data, token, authenticated }) => {
                 >
                   <div
                     className={classNames(
-                      "card image-card image-card-1 courseCard",
+                      "card image-card image-card-1 contentCard",
                     )}
                     data-play-meditation
                     style={{
@@ -643,7 +643,7 @@ export const DesignOne = ({ data, token, authenticated }) => {
                   >
                     <div
                       className={classNames(
-                        "card image-card image-card-1 courseCard",
+                        "card image-card image-card-1 contentCard",
                       )}
                       data-play-meditation
                       style={{

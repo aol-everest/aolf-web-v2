@@ -261,7 +261,15 @@
   font-weight: 400;
   text-align: center;
 }
-.courseCard {
-  text-shadow: 3px 0px 7px rgb(255 255 255 / 80%),
-    -3px 0px 7px rgb(185 179 179 / 80%), 0px 4px 7px rgb(169 165 153 / 80%);
+.contentCard {
+  .card-title {
+    color: #fff !important;
+    text-shadow: 3px 0px 7px rgb(0 0 0 / 80%), -3px 0px 7px rgb(92 89 89 / 80%),
+      0px 4px 7px rgb(169 165 153 / 80%);
+  }
+  .card-text {
+    color: #ffffff !important;
+    text-shadow: 3px 0px 7px rgb(0 0 0 / 80%), -3px 0px 7px rgb(92 89 89 / 80%),
+      0px 4px 7px rgb(169 165 153 / 80%);
+  }
 }
