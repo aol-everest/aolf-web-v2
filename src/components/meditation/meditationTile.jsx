@@ -34,7 +34,7 @@ export const MeditationTile = ({
     <div className="col-6 col-lg-3 col-md-4">
       <div
         className={classNames(
-          "upcoming_course_card newCard-new courseCard",
+          "upcoming_course_card newCard-new contentCard",
           additionalClass,
         )}
         data-full={false}
