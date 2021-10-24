@@ -38,7 +38,6 @@ export const DesignTwo = ({
   findMeditation,
   duration,
 }) => {
-  console.log(data);
   let listingFolders = data.folder.filter((folder) => folder.isListingFolder);
   const nonListingFolders = data.folder.filter(
     (folder) => !folder.isListingFolder,

@@ -58,14 +58,11 @@ export const getServerSideProps = async (context) => {
 };
 
 function Collection({ rootFolder, authenticated, token }) {
-  console.log(rootFolder);
-  const seed = useUIDSeed();
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
-  const [type, setType] = useQueryString("type");
 
   const { data: subsciptionCategories = [] } = useQuery(
     "subsciption",
