@@ -40,6 +40,7 @@ export const getServerSideProps = async (context) => {
     props = {
       authenticated: true,
       username: user.username,
+      token,
     };
   } catch (err) {
     props = {
@@ -77,8 +78,6 @@ export default function Library({ data, authenticated, token }) {
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
-
-  console.log(data);
 
   const { data: meditationCategory = [], isSuccess } = useQuery(
     "meditationCategory",
@@ -164,6 +163,8 @@ export default function Library({ data, authenticated, token }) {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
+    } else if (meditate.courseType === "Course") {
+      router.push(`/learn/${meditate.sfid}`);
     } else {
       await meditatePlayEvent({
         meditate,

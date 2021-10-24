@@ -73,6 +73,7 @@ export const meditatePlayEvent = async ({
               artist: meditateDetails.teacher?.name,
               image: meditateDetails.coverImage?.url,
               audioSrc: meditateDetails.track?.url,
+              description: meditateDetails.description,
             },
           });
         }
