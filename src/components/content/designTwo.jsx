@@ -1,28 +1,9 @@
 import React, { useState } from "react";
-import { api, isSSR } from "@utils";
-import { useRouter } from "next/router";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import {
-  useGlobalAudioPlayerContext,
-  useGlobalAlertContext,
-  useGlobalVideoPlayerContext,
-  useGlobalModalContext,
-} from "@contexts";
-import { useQuery } from "react-query";
 import Link from "next/link";
-import { useQueryString } from "@hooks";
 import { Popup } from "@components";
-import { DURATION, MODAL_TYPES } from "@constants";
-import { NextSeo } from "next-seo";
-import { meditatePlayEvent, markFavoriteEvent } from "@service";
-
-import "swiper/swiper.min.css";
-import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/pagination/pagination.min.css";
-import "swiper/components/a11y/a11y.min.css";
-import "swiper/components/scrollbar/scrollbar.min.css";
+import { DURATION } from "@constants";
 
 const CATEGORY_IMAGES = [
   "/img/card-1a.png",
@@ -38,18 +19,25 @@ const timeConvert = (data) => {
   return String(hours).padStart(2, 0) + ":" + String(minutes).padStart(2, 0);
 };
 
-export const DesignTwo = ({ data, token, authenticated }) => {
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
-  const router = useRouter();
-  const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
-  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
-  const { showVideoPlayer } = useGlobalVideoPlayerContext();
-  const [showFilterModal, setShowFilterModal] = useState(false);
-  const [topic, setTopic] = useQueryString("topic");
-  const [duration, setDuration] = useQueryString("duration");
-  const [instructor, setInstructor] = useQueryString("instructor");
-
+export const DesignTwo = ({
+  data,
+  token,
+  authenticated,
+  swiperOption,
+  pickCategoryImage,
+  backgroundIterator,
+  markFavorite,
+  meditateClickHandle,
+  showFilterModal,
+  toggleFilter,
+  onFilterChange,
+  topic,
+  meditationCategory,
+  instructorList,
+  instructor,
+  findMeditation,
+  duration,
+}) => {
   console.log(data);
   let listingFolders = data.folder.filter((folder) => folder.isListingFolder);
   const nonListingFolders = data.folder.filter(
@@ -67,163 +55,6 @@ export const DesignTwo = ({ data, token, authenticated }) => {
     );
   }
 
-  const { data: meditationCategory = [], isSuccess } = useQuery(
-    "meditationCategory",
-    async () => {
-      const response = await api.get({
-        path: "meditationCategory",
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const { data: subsciptionCategories = [] } = useQuery(
-    "subsciption",
-    async () => {
-      const response = await api.get({
-        path: "subsciption",
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const { data: instructorList = [] } = useQuery(
-    "instructorList",
-    async () => {
-      const response = await api.get({
-        path: "getAllContentTeachers",
-        param: {
-          deviceType: "web",
-        },
-      });
-      return response;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  let backgroundIterator = -1;
-  const pickCategoryImage = (i) => {
-    backgroundIterator = backgroundIterator + 1;
-    if (backgroundIterator <= 3) {
-      return CATEGORY_IMAGES[backgroundIterator];
-    } else {
-      backgroundIterator = 0;
-      return CATEGORY_IMAGES[backgroundIterator];
-    }
-  };
-
-  const onFilterChange = (field) => async (value) => {
-    switch (field) {
-      case "topicFilter":
-        setTopic(value);
-        break;
-      case "durationFilter":
-        setDuration(value);
-        break;
-      case "instructorFilter":
-        setInstructor(value);
-        break;
-    }
-  };
-
-  const markFavorite = (meditate) => async (e) => {
-    if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else {
-      await markFavoriteEvent({ meditate, refetch: null, token });
-    }
-  };
-
-  const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/membership/${id}`);
-  };
-
-  const meditateClickHandle = (meditate) => async (e) => {
-    if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else {
-      await meditatePlayEvent({
-        meditate,
-        showAlert,
-        showPlayer,
-        hidePlayer,
-        showVideoPlayer,
-        subsciptionCategories,
-        purchaseMembershipAction,
-        token,
-      });
-    }
-  };
-
-  const findMeditation = () => {
-    let query = {};
-    if (topic) {
-      query = { ...query, topic };
-    }
-    if (duration) {
-      query = { ...query, duration };
-    }
-    if (instructor) {
-      query = { ...query, instructor };
-    }
-    router.push({
-      pathname: "/meditation",
-      query,
-    });
-  };
-
-  let slidesPerView = 5;
-  if (!isSSR) {
-    const screenWidth = window.innerWidth;
-    if (screenWidth < 1600 && screenWidth > 1200) {
-      slidesPerView = 4.3;
-    } else if (screenWidth < 1200 && screenWidth > 981) {
-      slidesPerView = 3.3;
-    } else if (screenWidth < 981 && screenWidth > 767) {
-      slidesPerView = 3;
-    } else if (screenWidth < 767) {
-      slidesPerView = 2.2;
-    }
-  }
-
-  let swiperOption = {
-    allowTouchMove: true,
-    slidesPerView: slidesPerView,
-    spaceBetween: 30,
-    preventInteractionOnTransition: true,
-    navigation: true,
-    breakpoints: {
-      320: {
-        slidesPerView: 2.2,
-      },
-      767: {
-        slidesPerView: 3,
-      },
-      981: {
-        slidesPerView: 3.3,
-      },
-      1200: {
-        slidesPerView: 4.3,
-      },
-      1600: {
-        slidesPerView: 5,
-      },
-    },
-  };
-
-  const toggleFilter = () => {
-    setShowFilterModal((showFilterModal) => !showFilterModal);
-  };
   return (
     <main className="background-image meditation insight-collection insight-collection3">
       <section className="top-column meditation-page browse-category insight-collection insight-collection3">
@@ -476,7 +307,7 @@ export const DesignTwo = ({ data, token, authenticated }) => {
           {nonListingFolders &&
             nonListingFolders.map((folder, i) => (
               <SwiperSlide key={i} className="category-slide-item">
-                <Link href={`/meditation/collection?type=${folder.id}`}>
+                <Link href={`/library/collection/${folder.id}`}>
                   <div
                     className="card image-card image-card-1 contentCard"
                     style={{

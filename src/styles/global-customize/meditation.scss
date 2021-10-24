@@ -262,13 +262,11 @@
   text-align: center;
 }
 .contentCard {
-  .card-title {
+  .card-title,
+  .course_name,
+  .card-text,
+  .course_place {
     color: #fff !important;
-    text-shadow: 3px 0px 7px rgb(0 0 0 / 80%), -3px 0px 7px rgb(92 89 89 / 80%),
-      0px 4px 7px rgb(169 165 153 / 80%);
-  }
-  .card-text {
-    color: #ffffff !important;
     text-shadow: 3px 0px 7px rgb(0 0 0 / 80%), -3px 0px 7px rgb(92 89 89 / 80%),
       0px 4px 7px rgb(169 165 153 / 80%);
   }

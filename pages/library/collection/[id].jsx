@@ -36,47 +36,29 @@ export const getServerSideProps = async (context) => {
       authenticated: false,
     };
   }
-  const { page = 1, type } = context.query;
+  const { id } = context.query;
   // Fetch data from external API
-  try {
-    let param = {
-      page,
-      size: 8,
-      deviceType: "Web",
-    };
-
-    if (type) {
-      param = {
-        ...param,
-        category: type,
-      };
-    }
-
-    const res = await api.get({
-      path: "meditations",
-      token,
-      param,
-    });
-    props = {
-      ...props,
-      meditations: {
-        pages: [{ data: res }],
-        pageParams: [null],
-      },
-    };
-  } catch (err) {
-    props = {
-      ...props,
-      meditations: {
-        error: { message: err.message },
-      },
-    };
+  const { data } = await api.get({
+    path: "library",
+    token,
+    param: {
+      folderId: id,
+    },
+  });
+  if (data.folder.length === 0) {
+    throw new Error("Invalid Folder Id");
   }
+  const [rootFolder] = data.folder;
+  props = {
+    ...props,
+    rootFolder,
+  };
   // Pass data to the page via props
   return { props };
 };
 
-function MeditationCollection({ meditations, authenticated, token }) {
+function Collection({ rootFolder, authenticated, token }) {
+  console.log(rootFolder);
   const seed = useUIDSeed();
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
@@ -103,7 +85,7 @@ function MeditationCollection({ meditations, authenticated, token }) {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch, token });
+      await markFavoriteEvent({ meditate, refetch: null, token });
     }
   };
 
@@ -129,60 +111,6 @@ function MeditationCollection({ meditations, authenticated, token }) {
     }
   };
 
-  const {
-    status,
-    isSuccess,
-    data,
-    error,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-  } = useInfiniteQuery(
-    [
-      "meditations",
-      {
-        type,
-      },
-    ],
-    async ({ pageParam = 1 }) => {
-      let param = {
-        page: pageParam,
-        size: 8,
-        deviceType: "Web",
-      };
-
-      if (type) {
-        param = {
-          ...param,
-          category: type,
-        };
-      }
-
-      const res = await api.get({
-        path: "meditations",
-        param,
-      });
-      return res;
-    },
-    {
-      getNextPageParam: (page) => {
-        return page.currectPage === page.lastPage
-          ? undefined
-          : page.currectPage + 1;
-      },
-    },
-    { initialData: meditations },
-  );
-
-  const loadMoreRef = React.useRef();
-
-  useIntersectionObserver({
-    target: loadMoreRef,
-    onIntersect: fetchNextPage,
-    enabled: hasNextPage,
-  });
-
   return (
     <main className="background-image">
       <NextSeo title="Meditations" />
@@ -190,9 +118,9 @@ function MeditationCollection({ meditations, authenticated, token }) {
         <section className="top-column">
           <div className="container">
             <p className="type-course">Guided Meditations</p>
-            <h1 className="course-name">{type}</h1>
+            <h1 className="course-name">{rootFolder.title}</h1>
             <p className="type-guide">
-              Guided Meditations for {type}
+              Guided Meditations for {rootFolder.title}
               <br />
             </p>
           </div>
@@ -200,28 +128,16 @@ function MeditationCollection({ meditations, authenticated, token }) {
         <section className="courses">
           <div className="container">
             <div className="row">
-              {isSuccess &&
-                data.pages.map((page) => (
-                  <React.Fragment key={seed(page)}>
-                    {page.data.map((meditation) => (
-                      <MeditationTile
-                        key={meditation.sfid}
-                        data={meditation}
-                        authenticated={authenticated}
-                        additionalclassName="meditate-collection"
-                        markFavorite={markFavorite(meditation)}
-                        meditateClickHandle={meditateClickHandle(meditation)}
-                      />
-                    ))}
-                  </React.Fragment>
-                ))}
-            </div>
-            <div className="row">
-              <div className="pt-3 col-12 text-center">
-                <div ref={loadMoreRef}>
-                  {isFetchingNextPage && <InfiniteScrollLoader />}
-                </div>
-              </div>
+              {rootFolder.content.map((content) => (
+                <MeditationTile
+                  key={content.sfid}
+                  data={content}
+                  authenticated={authenticated}
+                  additionalclassName="meditate-collection"
+                  markFavorite={markFavorite(content)}
+                  meditateClickHandle={meditateClickHandle(content)}
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -230,4 +146,4 @@ function MeditationCollection({ meditations, authenticated, token }) {
   );
 }
 
-export default MeditationCollection;
+export default Collection;

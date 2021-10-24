@@ -100,7 +100,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const MeditationFind = ({ meditations, authenticated, token }) => {
+const LibrarySearch = ({ meditations, authenticated, token }) => {
   const seed = useUIDSeed();
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
@@ -528,4 +528,4 @@ const MeditationFind = ({ meditations, authenticated, token }) => {
 // Workshop.requiresAuth = true;
 // Workshop.redirectUnauthenticated = "/login";
 
-export default MeditationFind;
+export default LibrarySearch;
