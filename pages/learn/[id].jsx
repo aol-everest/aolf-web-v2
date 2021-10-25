@@ -1,11 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { api, isSSR } from "@utils";
 import classNames from "classnames";
 import { withSSRContext } from "aws-amplify";
-import HTMLEllipsis from "react-lines-ellipsis/lib/html";
-import * as RemoveMarkdown from "remove-markdown";
 import { NextSeo } from "next-seo";
 import {
   useGlobalAudioPlayerContext,
@@ -14,7 +12,24 @@ import {
   useGlobalModalContext,
 } from "@contexts";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES } from "@constants";
+import { MODAL_TYPES, ALERT_TYPES } from "@constants";
+import { ChapterItem } from "@components/content";
+import { updateUserActivity } from "@service";
+import { Loader } from "@components";
+import {
+  Player,
+  ControlBar,
+  ReplayControl,
+  ForwardControl,
+  CurrentTimeDisplay,
+  TimeDivider,
+  PlaybackRateMenuButton,
+  VolumeMenuButton,
+  LoadingSpinner,
+  BigPlayButton,
+  PlayToggle,
+  FullscreenToggle,
+} from "video-react";
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query;
@@ -54,8 +69,19 @@ export const getServerSideProps = async (context) => {
 
 export default function Learn({ data, authenticated, token }) {
   console.log(data);
+  const {
+    sfid,
+    subTitle,
+    description,
+    primaryTeacherName,
+    primaryTeacherPic,
+    title,
+  } = data;
 
   const router = useRouter();
+  const playerEl = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
@@ -74,68 +100,83 @@ export default function Learn({ data, authenticated, token }) {
     router.push(`/membership/${id}`);
   };
 
-  const renderChapter = (chapter) => {
-    const desc = chapter.description ? RemoveMarkdown(chapter.description) : "";
-    return (
-      <div
-        className={classNames("category-slide-item block", {
-          viewed: chapter.isCompleted,
-          next: chapter.isAccessible && !chapter.isCompleted,
-        })}
-        key={chapter.sfid}
-      >
-        <div className="insight-item-img">
-          <img
-            src={
-              chapter.isCompleted
-                ? "/img/ic-play-viewed.svg"
-                : "/img/ic-play.svg"
-            }
-            alt=""
-            className={classNames({
-              "module-play": chapter.isAccessible && !chapter.isCompleted,
-              "module-viewed": chapter.isCompleted,
-            })}
-            data-toggle="modal"
-            data-target="#modal_video1"
-          />
-          <img
-            src="/img/ic-info.svg"
-            alt=""
-            className="module-info"
-            data-toggle="modal"
-            data-target="#modal_module_details"
-          />
-        </div>
-        <div className="insight-item-details">
-          <p className="card-duration">
-            <img src="/img/ic-video.svg" alt="" /> 2 mins
-          </p>
-          <h5 className="card-title">{chapter.title}</h5>
-          <p className="card-text">
-            <HTMLEllipsis
-              unsafeHTML={desc}
-              maxLine="2"
-              ellipsis="..."
-              basedOn="letters"
-            />
-          </p>
-          <p className="read-more">Read More</p>
-        </div>
-      </div>
-    );
+  const onPlayPauseAction = () => {
+    const { player } = playerEl.current.getState();
+    setIsPlaying(!player.paused);
   };
 
-  const {
-    subTitle,
-    description,
-    primaryTeacherName,
-    primaryTeacherPic,
-    title,
-  } = data;
+  const togglePlay = () => {
+    const { player } = playerEl.current.getState();
+    if (player.paused) {
+      playerEl.current.play();
+    } else {
+      playerEl.current.pause();
+    }
+  };
+
+  const toggleFullscreen = () => {
+    const { player } = playerEl.current.getState();
+    if (player.isFullscreen) {
+      playerEl.current.toggleFullscreen();
+    } else {
+      playerEl.current.toggleFullscreen();
+    }
+  };
+
+  const playChapterAction = (chapter) => async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.get({
+        path: "chapterDetail",
+        token,
+        param: {
+          id: sfid,
+          chapterSfid: chapter.sfid,
+        },
+      });
+
+      if (data) {
+        const chapterDetails = { ...data, ...chapter };
+        if (
+          chapterDetails.contentType === "Audio" ||
+          chapterDetails.contentType === "audio/x-m4a"
+        ) {
+          showPlayer({
+            track: {
+              title: chapterDetails.title,
+              artist: chapterDetails.teacher?.name,
+              image: chapterDetails.coverImage?.url,
+              audioSrc: chapterDetails.track?.url,
+            },
+          });
+        } else if (chapterDetails.contentType === "Video") {
+          hidePlayer();
+          showVideoPlayer({
+            track: {
+              title: chapterDetails.title,
+              artist: chapterDetails.teacher?.name,
+              image: chapterDetails.coverImage?.url,
+              audioSrc: chapterDetails.track?.url,
+              description: chapterDetails.description,
+            },
+          });
+        }
+        await updateUserActivity(token, {
+          contentSfid: chapterDetails.sfid,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: error.message,
+      });
+    }
+    setLoading(false);
+  };
 
   return (
     <main className="background-image meditation">
+      {loading && <Loader />}
       <section className="top-column meditation-page browse-category insight-collection insight-collection2">
         <div className="container-fluid">
           <div className="row">
@@ -143,7 +184,11 @@ export default function Learn({ data, authenticated, token }) {
               <p className="type-course">Course</p>
               <h1 className="course-name">{title}</h1>
               <p className="type-guide">
-                <img src={primaryTeacherPic} alt="" />
+                <img
+                  src={primaryTeacherPic}
+                  alt=""
+                  className="rounded-circle"
+                />
                 {primaryTeacherName}
               </p>
               <p className="course-description">{subTitle}</p>
@@ -227,11 +272,29 @@ export default function Learn({ data, authenticated, token }) {
               <article className="collection-video">
                 <div className="video-player">
                   <div className="video-insighter-container">
-                    <video
-                      id="video-insighter"
-                      src="http://html5videoformatconverter.com/data/images/happyfit2.mp4"
+                    <Player
+                      ref={playerEl}
                       poster="http://html5videoformatconverter.com/data/images/screen.jpg"
-                    ></video>
+                      onPlay={onPlayPauseAction}
+                      onPause={onPlayPauseAction}
+                    >
+                      <source src="http://html5videoformatconverter.com/data/images/happyfit2.mp4" />
+                      <BigPlayButton position="center" className="d-none" />
+                      <LoadingSpinner />
+                      <ControlBar>
+                        <PlayToggle className="d-none" />
+                        <ReplayControl seconds={10} order={1.1} />
+                        <ForwardControl seconds={30} order={1.2} />
+                        <CurrentTimeDisplay order={4.1} />
+                        <TimeDivider order={4.2} />
+                        <PlaybackRateMenuButton
+                          rates={[5, 2, 1, 0.5, 0.1]}
+                          order={7.1}
+                        />
+                        <VolumeMenuButton vertical />
+                        <FullscreenToggle />
+                      </ControlBar>
+                    </Player>
                     <div className="video-insighter-play">
                       <img
                         src="/img/ic-play.svg"
@@ -240,35 +303,39 @@ export default function Learn({ data, authenticated, token }) {
                       />
                     </div>
                   </div>
-                  <div className="video-insighter-bar">
-                    <div className="video-insighter-progress">
-                      {/* <div className="loaded" style="width: 100%;"></div>
-                      <div className="played" style="width: 0%;"></div> */}
-                    </div>
-                    <div className="video-time-hint"></div>
-                  </div>
+
                   <div className="collection-video-details video-details">
                     <img
-                      src="/img/ic-play-40.svg"
+                      src={
+                        isPlaying
+                          ? "/img/ic-pause-40.svg"
+                          : "/img/ic-play-40.svg"
+                      }
                       alt=""
-                      className="video-play play"
+                      className={classNames("video-play", {
+                        play: !isPlaying,
+                        pause: isPlaying,
+                      })}
+                      onClick={togglePlay}
                     />
                     <img
                       src="/img/ic-expand2.svg"
                       alt=""
                       className="video-expand"
+                      onClick={toggleFullscreen}
                     />
                     <button
                       type="button"
                       name="button"
                       className="video-shrink"
+                      onClick={toggleFullscreen}
                     >
                       <img src="/img/ic-shrink2.svg" alt="shrink" />
                     </button>
                     <button type="button" className="video-close close">
                       <span aria-hidden="true">×</span>
                     </button>
-                    <span className="video-duration"></span>
+                    <span className="video-duration">1 min 37 seconds</span>
                     <p className="title">Welcome and Intro</p>
                     <p className="description">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -286,130 +353,17 @@ export default function Learn({ data, authenticated, token }) {
             </div>
             <div className="col-md-6 offset-md-3 col-12">
               <div className="" id="video-insighter-list">
-                {data && data.chapters && data.chapters.map(renderChapter)}
-                <div className="category-slide-item viewed">
-                  <div className="insight-item-img">
-                    <img
-                      src="/img/ic-play-viewed.svg"
-                      alt=""
-                      className="module-viewed"
-                      data-toggle="modal"
-                      data-target="#modal_video1"
-                    />
-                    <img
-                      src="/img/ic-info.svg"
-                      alt=""
-                      className="module-info"
-                      data-toggle="modal"
-                      data-target="#modal_module_details"
-                    />
-                  </div>
-                  <div className="insight-item-details">
-                    <p className="card-duration">
-                      <img src="/img/ic-video.svg" alt="" /> 2 mins
-                    </p>
-                    <h5 className="card-title">Video that has been seen</h5>
-                    <p className="card-text">
-                      In this video, meet hapiness expert and celebrated author
-                      Rajshee Patel and discover a new approach...
-                    </p>
-                    <p className="read-more">Read More</p>
-                  </div>
-                </div>
-                <div className="category-slide-item next">
-                  <div className="insight-item-img">
-                    <img
-                      src="/img/ic-play.svg"
-                      alt=""
-                      className="module-play"
-                      data-toggle="modal"
-                      data-target="#modal_video2"
-                    />
-                    <img
-                      src="/img/ic-info.svg"
-                      alt=""
-                      className="module-info"
-                      data-toggle="modal"
-                      data-target="#modal_module_details"
-                    />
-                  </div>
-                  <div className="insight-item-details">
-                    <p className="card-duration">
-                      <img src="/img/ic-video.svg" alt="" /> 16 mins
-                    </p>
-                    <h5 className="card-title">
-                      Video that has to be watched next
-                    </h5>
-                    <p className="card-text">
-                      In this video, meet hapiness expert and celebrated author
-                      Rajshee Patel and discover a new approach to sleep.
-                      Welcome and enjoy!
-                    </p>
-                    <p className="read-more">Read More</p>
-                  </div>
-                </div>
-                <div className="category-slide-item block">
-                  <div className="insight-item-img">
-                    <img
-                      src="/img/ic-play.svg"
-                      alt=""
-                      className="module-play"
-                      data-toggle="modal"
-                      data-target="#modal_video3"
-                    />
-                    <img
-                      src="/img/ic-info.svg"
-                      alt=""
-                      className="module-info"
-                      data-toggle="modal"
-                      data-target="#modal_module_details"
-                    />
-                  </div>
-                  <div className="insight-item-details">
-                    <p className="card-duration">
-                      <img src="/img/ic-video.svg" alt="" /> 16 mins
-                    </p>
-                    <h5 className="card-title">
-                      Block with the short description
-                    </h5>
-                    <p className="card-text">
-                      Very very short description in this block
-                    </p>
-                  </div>
-                </div>
-                <div className="category-slide-item block">
-                  <div className="insight-item-img">
-                    <img
-                      src="/img/ic-play.svg"
-                      alt=""
-                      className="module-play"
-                      data-toggle="modal"
-                      data-target="#modal_video4"
-                    />
-                    <img
-                      src="/img/ic-info.svg"
-                      alt=""
-                      className="module-info"
-                      data-toggle="modal"
-                      data-target="#modal_module_details"
-                    />
-                  </div>
-                  <div className="insight-item-details">
-                    <p className="card-duration">
-                      <img src="/img/ic-video.svg" alt="" /> 16 mins
-                    </p>
-                    <h5 className="card-title">Expanded block</h5>
-                    <p className="card-text">
-                      In this video, meet hapiness expert and celebrated author
-                      Rajshee Patel and discover a new approach to sleep.
-                      Welcome and enjoy! In this video, meet hapiness expert and
-                      celebrated author Rajshee Patel and discover a new
-                      approach to sleep. Welcome and enjoy! In this video, meet
-                      hapiness expert and celebrated author Rajshee Patel and
-                      discover a new approach to sleep. Welcome and enjoy!
-                    </p>
-                  </div>
-                </div>
+                {data &&
+                  data.chapters &&
+                  data.chapters.map((chapter) => {
+                    return (
+                      <ChapterItem
+                        key={chapter.sfid}
+                        chapter={chapter}
+                        playChapterAction={playChapterAction}
+                      />
+                    );
+                  })}
               </div>
             </div>
           </div>
