@@ -16,7 +16,7 @@ export const markFavoriteEvent = async ({ meditate, refetch, token }) => {
       body: data,
       token,
     });
-    refetch({ refetchPage: (page, index) => index === 0 });
+    if (refetch) refetch({ refetchPage: (page, index) => index === 0 });
   } catch (error) {
     console.log(error);
   }
