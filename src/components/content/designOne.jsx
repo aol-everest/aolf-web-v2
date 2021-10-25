@@ -31,9 +31,28 @@ export const DesignOne = ({
   instructor,
   findMeditation,
   duration,
+  favouriteContents,
 }) => {
-  let listingFolders = data.folder.filter((folder) => folder.isListingFolder);
-  const nonListingFolders = data.folder.filter(
+  const contentFolders = data.folder.map((folder) => {
+    const content = folder.content.map((content) => {
+      const isFavorite = favouriteContents.find(
+        (el) => el.sfid === content.sfid,
+      );
+      return {
+        ...content,
+        isFavorite,
+      };
+    });
+
+    return {
+      ...folder,
+      content,
+    };
+  });
+  let listingFolders = contentFolders.filter(
+    (folder) => folder.isListingFolder,
+  );
+  const nonListingFolders = contentFolders.filter(
     (folder) => !folder.isListingFolder,
   );
 

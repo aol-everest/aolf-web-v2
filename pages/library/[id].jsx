@@ -67,6 +67,7 @@ export const getServerSideProps = async (context) => {
 
 export default function Library({ data, authenticated, token }) {
   const [rootFolder] = data.folder;
+  console.log(data);
 
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
@@ -78,6 +79,20 @@ export default function Library({ data, authenticated, token }) {
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
+
+  const { data: favouriteContents = [] } = useQuery(
+    "favouriteContents",
+    async () => {
+      const response = await api.get({
+        path: "getFavouriteContents",
+        token,
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: true,
+    },
+  );
 
   const { data: meditationCategory = [], isSuccess } = useQuery(
     "meditationCategory",
@@ -256,6 +271,7 @@ export default function Library({ data, authenticated, token }) {
     instructor,
     findMeditation,
     duration,
+    favouriteContents,
   };
 
   switch (rootFolder.screenDesign) {

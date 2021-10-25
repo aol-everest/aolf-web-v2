@@ -52,14 +52,14 @@ export const MeditationTile = ({
           {!accessible && (
             <span className="lock collection-lock">
               {" "}
-              <img src="/img/ic-lock.png" />{" "}
+              <img src="/img/ic-lock.png" alt="" />{" "}
             </span>
           )}
         </div>
         {accessible && (
           <div
             onClick={markFavorite}
-            className={isFavorite ? "course-like liked" : "course-like"}
+            className={classNames("course-like", { liked: isFavorite })}
           ></div>
         )}
         <div className="forClick" onClick={meditateClickHandle}></div>
