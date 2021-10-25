@@ -14,8 +14,14 @@
   overflow: hidden;
   border-radius: 16px 16px 0 0;
 }
-.insight-collection2.top-column.meditation-page.insight-collection .collection-video .video-insighter-container .video-react {
-    height: 275px;
-    margin: 0 auto;
-    width: 100%;
+.insight-collection2.top-column.meditation-page.insight-collection
+  .collection-video
+  .video-insighter-container
+  .video-react {
+  height: 275px;
+  margin: 0 auto;
+  width: 100%;
+}
+.video-react .video-react-poster {
+  background-size: cover !important;
 }
