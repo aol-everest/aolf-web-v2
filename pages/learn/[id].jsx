@@ -30,6 +30,7 @@ import {
   PlayToggle,
   FullscreenToggle,
 } from "video-react";
+import Styles from "./Learn.module.scss";
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query;
@@ -187,7 +188,7 @@ export default function Learn({ data, authenticated, token }) {
                 <img
                   src={primaryTeacherPic}
                   alt=""
-                  className="rounded-circle"
+                  className={classNames("rounded-circle", Styles.teacherPic)}
                 />
                 {primaryTeacherName}
               </p>
