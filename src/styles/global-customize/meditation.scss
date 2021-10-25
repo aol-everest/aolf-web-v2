@@ -267,7 +267,7 @@
   .card-text,
   .course_place {
     color: #fff !important;
-    text-shadow: 3px 0px 7px rgb(0 0 0 / 80%), -3px 0px 7px rgb(92 89 89 / 80%),
-      0px 4px 7px rgb(169 165 153 / 80%);
+    text-shadow: -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000,
+      1px 1px 0 #000;
   }
 }
