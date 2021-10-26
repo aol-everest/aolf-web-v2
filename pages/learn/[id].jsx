@@ -84,7 +84,7 @@ export default function Learn({ data, authenticated, token }) {
 
   let introContentPoster =
     "http://html5videoformatconverter.com/data/images/screen.jpg";
-  if (introContent.coverImage) {
+  if (introContent && introContent.coverImage) {
     introContentPoster = introContent.coverImage.url;
   } else if (cardImage) {
     introContentPoster = cardImage.url;
