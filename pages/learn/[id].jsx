@@ -3,9 +3,8 @@ import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { api, isSSR } from "@utils";
 import classNames from "classnames";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { withSSRContext } from "aws-amplify";
-import * as RemoveMarkdown from "remove-markdown";
-import ReactHtmlParser from "react-html-parser";
 import { secondsToHms } from "@utils";
 import { NextSeo } from "next-seo";
 import {
@@ -79,11 +78,10 @@ export default function Learn({ data, authenticated, token }) {
     title,
     introContent,
     cardImage,
+    whatYoullLearn,
+    whoIsItFor,
   } = data;
 
-  const introContentDesc = introContent.description
-    ? RemoveMarkdown(introContent.description)
-    : "";
   let introContentPoster =
     "http://html5videoformatconverter.com/data/images/screen.jpg";
   if (introContent.coverImage) {
@@ -96,6 +94,8 @@ export default function Learn({ data, authenticated, token }) {
   const playerEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showWhatYoullLearn, setShowWhatYoullLearn] = useState(true);
+  const [showWhoIsItFor, setShowWhoIsItFor] = useState(false);
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
@@ -165,11 +165,12 @@ export default function Learn({ data, authenticated, token }) {
           });
         } else if (chapterDetails.contentType === "Video") {
           hidePlayer();
+          const image = chapterDetails.coverImage?.url;
           showVideoPlayer({
             track: {
               title: chapterDetails.title,
               artist: chapterDetails.teacher?.name,
-              image: chapterDetails.coverImage?.url,
+              image: image || introContentPoster,
               audioSrc: chapterDetails.track?.url,
               description: chapterDetails.description,
             },
@@ -207,79 +208,75 @@ export default function Learn({ data, authenticated, token }) {
               </p>
               <p className="course-description">{subTitle}</p>
 
-              <div className="accordion" id="accordionExample">
-                <div className="card">
-                  <div className="card-header" id="headingOne">
-                    <h2 className="mb-0">
-                      <button
-                        className="btn btn-link btn-block text-left"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#collapseOne"
-                        aria-expanded="true"
-                        aria-controls="collapseOne"
-                      >
-                        What You'll Learn
-                      </button>
-                    </h2>
-                  </div>
-                  <div
-                    id="collapseOne"
-                    className="collapse show"
-                    aria-labelledby="headingOne"
-                    data-parent="#accordionExample"
-                  >
-                    <div className="card-body">
-                      <ul>
-                        <li>
-                          Those who are looking for a deeper understanding of
-                          the Pranayama technique.
-                        </li>
-                        <li>
-                          Those who have a Science slant of mind and are curious
-                          to know the Why behind the What.
-                        </li>
-                        <li>The sincere YOGA practitioner.</li>
-                      </ul>
+              <div className="accordion">
+                {whatYoullLearn && (
+                  <div className="card">
+                    <div className="card-header">
+                      <h2 className="mb-0">
+                        <button
+                          onClick={() =>
+                            setShowWhatYoullLearn(
+                              (showWhatYoullLearn) => !showWhatYoullLearn,
+                            )
+                          }
+                          className="btn btn-link btn-block text-left"
+                          type="button"
+                          data-toggle="collapse"
+                          data-target="#collapseOne"
+                          aria-expanded={showWhatYoullLearn}
+                          aria-controls="collapseOne"
+                        >
+                          What You'll Learn
+                        </button>
+                      </h2>
+                    </div>
+                    <div
+                      className={classNames("collapse", {
+                        show: showWhatYoullLearn,
+                      })}
+                      aria-labelledby="headingOne"
+                      data-parent="#accordionExample"
+                    >
+                      <div className="card-body">
+                        {documentToReactComponents(whatYoullLearn)}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="card">
-                  <div className="card-header" id="headingTwo">
-                    <h2 className="mb-0">
-                      <button
-                        className="btn btn-link btn-block text-left collapsed"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#collapseTwo"
-                        aria-expanded="false"
-                        aria-controls="collapseTwo"
-                      >
-                        Who is it for?
-                      </button>
-                    </h2>
-                  </div>
-                  <div
-                    id="collapseTwo"
-                    className="collapse"
-                    aria-labelledby="headingTwo"
-                    data-parent="#accordionExample"
-                  >
-                    <div className="card-body">
-                      <ul>
-                        <li>
-                          Those who are looking for a deeper understanding of
-                          the Pranayama technique.
-                        </li>
-                        <li>
-                          Those who have a Science slant of mind and are curious
-                          to know the Why behind the What.
-                        </li>
-                        <li>The sincere YOGA practitioner.</li>
-                      </ul>
+                )}
+                {whoIsItFor && (
+                  <div className="card">
+                    <div className="card-header">
+                      <h2 className="mb-0">
+                        <button
+                          onClick={() =>
+                            setShowWhoIsItFor(
+                              (showWhoIsItFor) => !showWhoIsItFor,
+                            )
+                          }
+                          className="btn btn-link btn-block text-left collapsed"
+                          type="button"
+                          data-toggle="collapse"
+                          data-target="#collapseTwo"
+                          aria-expanded={showWhoIsItFor}
+                          aria-controls="collapseTwo"
+                        >
+                          Who is it for?
+                        </button>
+                      </h2>
+                    </div>
+                    <div
+                      className={classNames("collapse", {
+                        show: showWhoIsItFor,
+                      })}
+                      aria-labelledby="headingTwo"
+                      data-parent="#accordionExample"
+                    >
+                      <div className="card-body">
+                        {documentToReactComponents(whoIsItFor)}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
             <div className="col-12 col-md-6 d-flex justify-content-end">
@@ -354,9 +351,7 @@ export default function Learn({ data, authenticated, token }) {
                         {secondsToHms(introContent.duration)}
                       </span>
                       <p className="title">{introContent.title}</p>
-                      <p className="description">
-                        {ReactHtmlParser(introContentDesc)}
-                      </p>
+                      <p className="description">{introContent.description}</p>
                     </div>
                   </div>
                 </article>
