@@ -1,42 +1,51 @@
-import React, { useState } from "react";
-import { api, isSSR } from "@utils";
-import { withSSRContext } from "aws-amplify";
-import { useRouter } from "next/router";
-import classNames from "classnames";
-import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import {
-  useGlobalAudioPlayerContext,
-  useGlobalAlertContext,
-  useGlobalVideoPlayerContext,
-  useGlobalModalContext,
-} from "@contexts";
-import { useQuery } from "react-query";
-import Link from "next/link";
-import { useQueryString } from "@hooks";
-import { Popup } from "@components";
-import { DURATION, MODAL_TYPES } from "@constants";
+import React, { useState, useEffect } from "react";
+import { useInfiniteQuery, useQuery } from "react-query";
+import { api } from "@utils";
 import { NextSeo } from "next-seo";
-import { meditatePlayEvent, markFavoriteEvent } from "@service";
+import { useIntersectionObserver } from "@hooks";
+import classNames from "classnames";
+import { useUIDSeed } from "react-uid";
+import { WorkshopTile } from "@components/course/workshopTile";
+import { LinkedCalendar } from "@components/dateRangePicker";
+import "bootstrap-daterangepicker/daterangepicker.css";
+import { withSSRContext } from "aws-amplify";
+import {
+  Popup,
+  SmartInput,
+  MobileFilterModal,
+  SmartDropDown,
+  DateRangeInput,
+} from "@components";
+import { useQueryString } from "@hooks";
+import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
+import { InfiniteScrollLoader } from "@components/loader";
+import Style from "./course/Course.module.scss";
 
-import "swiper/swiper.min.css";
-import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/pagination/pagination.min.css";
-import "swiper/components/a11y/a11y.min.css";
-import "swiper/components/scrollbar/scrollbar.min.css";
-
-const CATEGORY_IMAGES = [
-  "/img/card-1a.png",
-  "/img/card-2a.png",
-  "/img/card-6.png",
-  "/img/card-4a.png",
-];
-
-const timeConvert = (data) => {
-  const minutes = data % 60;
-  const hours = (data - minutes) / 60;
-
-  return String(hours).padStart(2, 0) + ":" + String(minutes).padStart(2, 0);
+const DATE_PICKER_CONFIG = {
+  opens: "center",
+  drops: "down",
+  showDropdowns: false,
+  showISOWeekNumbers: false,
+  showWeekNumbers: false,
+  locale: {
+    cancelLabel: "Clear",
+    daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+    monthNames: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+  },
+  autoApply: true,
 };
 
 export const getServerSideProps = async (context) => {
@@ -48,6 +57,7 @@ export const getServerSideProps = async (context) => {
     token = user.signInUserSession.idToken.jwtToken;
     props = {
       authenticated: true,
+      username: user.username,
       token,
     };
   } catch (err) {
@@ -55,286 +65,435 @@ export const getServerSideProps = async (context) => {
       authenticated: false,
     };
   }
+  const {
+    page = 1,
+    mode = COURSE_MODES.ONLINE,
+    location,
+    courseType,
+    startEndDate,
+    timeZone,
+    instructor,
+  } = context.query;
+  // Fetch data from external API
+  try {
+    let param = {
+      page,
+      size: 8,
+    };
 
-  const res = await api.get({
-    path: "randomMeditation",
-    token,
-  });
+    if (mode) {
+      param = {
+        ...param,
+        mode,
+      };
+    }
+    if (courseType && COURSE_TYPES[courseType]) {
+      param = {
+        ...param,
+        ctype: COURSE_TYPES[courseType].value,
+      };
+    }
+    if (timeZone && TIME_ZONE[timeZone]) {
+      param = {
+        ...param,
+        timeZone: TIME_ZONE[timeZone].value,
+      };
+    }
+    if (instructor && instructor.value) {
+      param = {
+        ...param,
+        teacherId: instructor.value,
+      };
+    }
+    if (startEndDate) {
+      const [startDate, endDate] = startEndDate.split("|");
+      param = {
+        ...param,
+        sdate: startDate,
+        eDate: endDate,
+      };
+    }
 
-  props = { ...props, randomMeditate: res.data };
-
+    const res = await api.get({
+      path: "workshops",
+      token,
+      param,
+    });
+    props = {
+      ...props,
+      workshops: {
+        pages: [{ data: res }],
+        pageParams: [null],
+      },
+    };
+  } catch (err) {
+    props = {
+      ...props,
+      workshops: {
+        error: { message: err.message },
+      },
+    };
+  }
   // Pass data to the page via props
   return { props };
 };
 
-const Meditation = ({ authenticated, token, randomMeditate }) => {
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
-  const router = useRouter();
-  const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
-  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
-  const { showVideoPlayer } = useGlobalVideoPlayerContext();
+async function queryInstructor({ queryKey: [_, term] }) {
+  const response = await api.get({
+    path: "cf/teachers",
+    param: {
+      query: term,
+    },
+  });
+  return response;
+}
+
+const Course = ({ workshops, authenticated, token }) => {
+  const seed = useUIDSeed();
+
+  const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
+    defaultValue: COURSE_MODES.ONLINE,
+  });
+  const [locationFilter, setLocationFilter] = useQueryString("location");
+  const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
+  const [filterStartEndDate, setFilterStartEndDate] =
+    useQueryString("startEndDate");
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryString("timeZone");
+  const [instructorFilter, setInstructorFilter] = useQueryString("instructor", {
+    parse: JSON.parse,
+  });
+
+  const [searchKey, setSearchKey] = useState("");
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [topic, setTopic] = useQueryString("topic");
-  const [duration, setDuration] = useQueryString("duration");
-  const [instructor, setInstructor] = useQueryString("instructor");
-
-  const { data: meditationCategory = [], isSuccess } = useQuery(
-    "meditationCategory",
-    async () => {
-      const response = await api.get({
-        path: "meditationCategory",
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const [firstCategory, secoundCategory] = meditationCategory;
-  const { data: firstCategoryMeditations = [] } = useQuery(
-    "firstCategoryMeditation",
-    async () => {
-      const response = await api.get({
-        path: "meditations",
-        param: {
-          deviceType: "web",
-          category: firstCategory,
-        },
-        token,
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!firstCategory,
-    },
-  );
-
-  const { data: secoundCategoryMeditations = [] } = useQuery(
-    "secoundCategoryMeditation",
-    async () => {
-      const response = await api.get({
-        path: "meditations",
-        param: {
-          deviceType: "web",
-          category: secoundCategory,
-        },
-        token,
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!secoundCategory,
-    },
-  );
-
-  const { data: subsciptionCategories = [] } = useQuery(
-    "subsciption",
-    async () => {
-      const response = await api.get({
-        path: "subsciption",
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const { data: instructorList = [] } = useQuery(
-    "instructorList",
-    async () => {
-      const response = await api.get({
-        path: "getAllContentTeachers",
-        param: {
-          deviceType: "web",
-        },
-      });
-      return response;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const { data: recommendedMeditations = [], refetch } = useQuery(
-    "recommendedmeds",
-    async () => {
-      const response = await api.get({
-        path: "meditations",
-        param: {
-          deviceType: "web",
-          collectionName: "Recommendedmeds",
-        },
-        token,
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  let backgroundIterator = -1;
-  const pickCategoryImage = (i) => {
-    backgroundIterator = backgroundIterator + 1;
-    if (backgroundIterator <= 3) {
-      return CATEGORY_IMAGES[backgroundIterator];
-    } else {
-      backgroundIterator = 0;
-      return CATEGORY_IMAGES[backgroundIterator];
-    }
-  };
-
-  const onFilterChange = (field) => async (value) => {
-    switch (field) {
-      case "topicFilter":
-        setTopic(value);
-        break;
-      case "durationFilter":
-        setDuration(value);
-        break;
-      case "instructorFilter":
-        setInstructor(value);
-        break;
-    }
-  };
-
-  const markFavorite = (meditate) => async (e) => {
-    if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else {
-      await markFavoriteEvent({ meditate, refetch, token });
-    }
-  };
-
-  const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/membership/${id}`);
-  };
-
-  const meditateClickHandle = (meditate) => async (e) => {
-    if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else {
-      await meditatePlayEvent({
-        meditate,
-        showAlert,
-        showPlayer,
-        hidePlayer,
-        showVideoPlayer,
-        subsciptionCategories,
-        purchaseMembershipAction,
-        token,
-      });
-    }
-  };
-
-  const findMeditation = () => {
-    let query = {};
-    if (topic) {
-      query = { ...query, topic };
-    }
-    if (duration) {
-      query = { ...query, duration };
-    }
-    if (instructor) {
-      query = { ...query, instructor };
-    }
-    router.push({
-      pathname: "/meditation",
-      query,
-    });
-  };
-
-  let slidesPerView = 5;
-  if (!isSSR) {
-    const screenWidth = window.innerWidth;
-    if (screenWidth < 1600 && screenWidth > 1200) {
-      slidesPerView = 4.3;
-    } else if (screenWidth < 1200 && screenWidth > 981) {
-      slidesPerView = 3.3;
-    } else if (screenWidth < 981 && screenWidth > 767) {
-      slidesPerView = 3;
-    } else if (screenWidth < 767) {
-      slidesPerView = 2.2;
-    }
-  }
-
-  let swiperOption = {
-    allowTouchMove: true,
-    slidesPerView: slidesPerView,
-    spaceBetween: 30,
-    preventInteractionOnTransition: true,
-    navigation: true,
-    breakpoints: {
-      320: {
-        slidesPerView: 2.2,
-      },
-      767: {
-        slidesPerView: 3,
-      },
-      981: {
-        slidesPerView: 3.3,
-      },
-      1200: {
-        slidesPerView: 4.3,
-      },
-      1600: {
-        slidesPerView: 5,
-      },
-    },
-  };
 
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
+  const toggleActiveFilter = (newType) => () => {
+    setActiveFilterType(newType);
+  };
+
+  let instructorResult = useQuery(["instructor", searchKey], queryInstructor, {
+    // only fetch search terms longer than 2 characters
+    enabled: searchKey.length > 0,
+    // refresh cache after 10 seconds (watch the network tab!)
+    staleTime: 10 * 1000,
+  });
+
+  let instructorList = instructorResult?.data?.map(({ id, name }) => ({
+    value: id,
+    label: name,
+  }));
+  instructorList = (instructorList || []).slice(0, 5);
+
+  const onFilterChange = (field) => async (value) => {
+    switch (field) {
+      case "courseTypeFilter":
+        setCourseTypeFilter(value);
+        break;
+      case "locationFilter":
+        setLocationFilter(JSON.stringify(value));
+        break;
+      case "timeZoneFilter":
+        setTimeZoneFilter(value);
+        break;
+      case "instructorFilter":
+        if (value) {
+          setInstructorFilter(JSON.stringify(value));
+        } else {
+          setInstructorFilter(null);
+        }
+        break;
+    }
+  };
+
+  const onFilterChangeEvent = (field) => (value) => async (e) => {
+    switch (field) {
+      case "courseTypeFilter":
+        setCourseTypeFilter(value);
+        break;
+      case "locationFilter":
+        setLocationFilter(JSON.stringify(value));
+        break;
+      case "timeZoneFilter":
+        setTimeZoneFilter(value);
+        break;
+      case "instructorFilter":
+        if (value) {
+          setInstructorFilter(JSON.stringify(value));
+        } else {
+          setInstructorFilter(null);
+        }
+        break;
+    }
+  };
+
+  const onFilterClearEvent = (field) => async () => {
+    switch (field) {
+      case "courseTypeFilter":
+        setCourseTypeFilter(null);
+        break;
+      case "locationFilter":
+        setLocationFilter(null);
+        break;
+      case "timeZoneFilter":
+        setTimeZoneFilter(null);
+        break;
+      case "instructorFilter":
+        setInstructorFilter(null);
+        break;
+    }
+  };
+
+  const onDatesChange = async (date) => {
+    const { startDate, endDate } = date || {};
+    setFilterStartEndDate(
+      startDate
+        ? startDate.format("YYYY-MM-DD") + "|" + endDate.format("YYYY-MM-DD")
+        : null,
+    );
+  };
+
+  const {
+    status,
+    isSuccess,
+    data,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    [
+      "workshops",
+      {
+        courseTypeFilter,
+        filterStartEndDate,
+        timeZoneFilter,
+        instructorFilter,
+        activeFilterType,
+      },
+    ],
+    async ({ pageParam = 1 }) => {
+      let param = {
+        page: pageParam,
+        size: 8,
+      };
+
+      if (activeFilterType) {
+        param = {
+          ...param,
+          mode: activeFilterType,
+        };
+      }
+      if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+        param = {
+          ...param,
+          ctype: COURSE_TYPES[courseTypeFilter].value,
+        };
+      }
+      if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
+        param = {
+          ...param,
+          timeZone: TIME_ZONE[timeZoneFilter].value,
+        };
+      }
+      if (instructorFilter && instructorFilter.value) {
+        param = {
+          ...param,
+          teacherId: instructorFilter.value,
+        };
+      }
+      if (filterStartEndDate) {
+        const [startDate, endDate] = filterStartEndDate.split("|");
+        param = {
+          ...param,
+          sdate: startDate,
+          eDate: endDate,
+        };
+      }
+
+      const res = await api.get({
+        path: "workshops",
+        param,
+        token,
+      });
+      return res;
+    },
+    {
+      getNextPageParam: (page) => {
+        return page.currectPage === page.lastPage
+          ? undefined
+          : page.currectPage + 1;
+      },
+    },
+    { initialData: workshops },
+  );
+
+  const loadMoreRef = React.useRef();
+
+  useIntersectionObserver({
+    target: loadMoreRef,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+  });
+
   return (
-    <main className="background-image meditation">
-      <NextSeo title="Meditations" />
-      <section className="top-column meditation-page">
-        <div className="container">
-          <p className="type-course">Guided Meditations</p>
-          <h1 className="course-name">{randomMeditate.title}</h1>
-          <p className="type-guide">{randomMeditate.primaryTeacherName}</p>
-          <button
-            type="button"
-            id="play"
-            name="play"
-            play="false"
-            onClick={meditateClickHandle(randomMeditate)}
-          >
-            <div id="playIcon">
-              <img className="ic-play-static" src="img/ic-play.svg" alt="" />
-              <img
-                className="ic-play-hover"
-                src="img/ic-play-hover.svg"
-                alt=""
-              />
-              <img className="ic-pause-static" src="img/ic-pause.svg" alt="" />
-              <img
-                className="ic-pause-hover"
-                src="img/ic-pause_hover.svg"
-                alt=""
-              />
+    <main className="meetsup-filter">
+      <NextSeo title="Workshops" />
+      <section className="courses">
+        <div className="container search_course_form d-lg-block d-none mb-2">
+          <div className="row">
+            <div className="col">
+              <p className="title mb-3">Find a course </p>
             </div>
-          </button>
+          </div>
+          <div className="row">
+            <div className="search-form col-12 d-flex align-items-center">
+              <div id="switch-filter" className="btn_outline_box ml-0">
+                <a
+                  className="btn"
+                  href="#"
+                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
+                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                >
+                  Online
+                </a>
+                <a
+                  className="btn"
+                  href="#"
+                  data-swicth-active={
+                    activeFilterType === COURSE_MODES.IN_PERSON
+                  }
+                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
+                >
+                  In Person
+                </a>
+              </div>
+              <div className="switch-flter-container">
+                {false && activeFilterType === COURSE_MODES.IN_PERSON && (
+                  <Popup
+                    tabIndex="1"
+                    value={locationFilter}
+                    buttonText={locationFilter ? locationFilter : "Location"}
+                    closeEvent={onFilterChange("locationFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <SmartInput
+                        closeHandler={closeHandler}
+                        inputclassName="location-input"
+                      ></SmartInput>
+                    )}
+                  </Popup>
+                )}
+
+                <Popup
+                  tabIndex="2"
+                  value={courseTypeFilter}
+                  buttonText={
+                    courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                      ? COURSE_TYPES[courseTypeFilter].name
+                      : "Course Type"
+                  }
+                  closeEvent={onFilterChange("courseTypeFilter")}
+                >
+                  {({ closeHandler }) => (
+                    <>
+                      <li onClick={closeHandler("SKY_BREATH_MEDITATION")}>
+                        {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                      </li>
+                      <li onClick={closeHandler("SILENT_RETREAT")}>
+                        {COURSE_TYPES.SILENT_RETREAT.name}
+                      </li>
+                      <li onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}>
+                        {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+                      </li>
+                    </>
+                  )}
+                </Popup>
+                <Popup
+                  containerclassName={Style.daterangepickerPopup}
+                  tabIndex="3"
+                  value={filterStartEndDate}
+                  buttonText={
+                    filterStartEndDate
+                      ? filterStartEndDate.split("|").join(" - ")
+                      : "Dates"
+                  }
+                  closeEvent={onDatesChange}
+                >
+                  {({ closeHandler }) => (
+                    <LinkedCalendar
+                      {...DATE_PICKER_CONFIG}
+                      noFooter
+                      noInfo
+                      noCancel
+                      onDatesChange={closeHandler}
+                      className={Style.daterangepicker}
+                    />
+                  )}
+                </Popup>
+                <Popup
+                  tabIndex="4"
+                  value={timeZoneFilter}
+                  buttonText={
+                    timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                      ? TIME_ZONE[timeZoneFilter].name
+                      : "Time Zone"
+                  }
+                  closeEvent={onFilterChange("timeZoneFilter")}
+                >
+                  {({ closeHandler }) => (
+                    <>
+                      <li onClick={closeHandler(TIME_ZONE.EST.value)}>
+                        {TIME_ZONE.EST.name}
+                      </li>
+                      <li onClick={closeHandler(TIME_ZONE.CST.value)}>
+                        {TIME_ZONE.CST.name}
+                      </li>
+                      <li onClick={closeHandler(TIME_ZONE.MST.value)}>
+                        {TIME_ZONE.MST.name}
+                      </li>
+                      <li onClick={closeHandler(TIME_ZONE.PST.value)}>
+                        {TIME_ZONE.PST.name}
+                      </li>
+                      <li onClick={closeHandler(TIME_ZONE.HST.value)}>
+                        {TIME_ZONE.HST.name}
+                      </li>
+                    </>
+                  )}
+                </Popup>
+
+                <Popup
+                  tabIndex="5"
+                  value={instructorFilter ? instructorFilter.label : null}
+                  buttonText={
+                    instructorFilter ? instructorFilter.label : "Instructor"
+                  }
+                  closeEvent={onFilterChange("instructorFilter")}
+                >
+                  {({ closeHandler }) => (
+                    <SmartInput
+                      inputclassName={Style.instructor_input}
+                      onSearchKeyChange={(value) => setSearchKey(value)}
+                      dataList={instructorList}
+                      closeHandler={closeHandler}
+                      value={searchKey}
+                    ></SmartInput>
+                  )}
+                </Popup>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-      <section className="courses courses-dop pb-4">
-        <div className="search_course_form_mobile d-md-none d-block">
-          <div className="">
+        <div className="search_course_form_mobile d-lg-none d-block">
+          <div className="container">
             <div className="row m-0 justify-content-between align-items-center">
-              <p className="title mb-0">Find a Meditation</p>
+              <p className="title mb-0">Find a course</p>
               <div className="filter">
-                <div className="filter--button" onClick={toggleFilter}>
-                  <img src="/img/ic-filter.svg" alt="filter" />
-                  Filters
+                <div className="filter--button d-flex" onClick={toggleFilter}>
+                  <img src="./img/ic-filter.svg" alt="filter" />
+                  Filter
                   <span id="filter-count">0</span>
                 </div>
               </div>
@@ -344,485 +503,258 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
                 "d-none": !showFilterModal,
               })}
             >
-              <div className="browse-category mb-3">
-                <div className="buttons-wrapper">
-                  <div
-                    className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                    id="topic-button_mobile"
-                  >
-                    <a className="btn" href="#">
-                      Topic
-                    </a>
-                  </div>
-                  <div
-                    id="topic-modal_mobile"
-                    data-topic="null"
-                    data-course-initial="Topic"
-                    className="mobile-modal"
-                  >
-                    <div className="mobile-modal--header">
-                      <div
-                        id="topic-close_mobile"
-                        className="mobile-modal--close"
-                      >
-                        <img src="/img/ic-close.svg" alt="close" />
-                      </div>
-                      <h2 className="mobile-modal--title">Topic</h2>
-                      <div className="dropdown">
-                        <button
-                          className="custom-dropdown"
-                          type="button"
-                          id="dropdownTopicButton"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        >
-                          Select topic
-                        </button>
-                        <ul
-                          className="dropdown-menu"
-                          aria-labelledby="dropdownTopicButton"
-                        >
-                          <li className="dropdown-item">Gratitude</li>
-                          <li className="dropdown-item">Calm</li>
-                          <li className="dropdown-item">Beginners</li>
-                          <li className="dropdown-item">Peace</li>
-                          <li className="dropdown-item">Energy</li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="mobile-modal--body">
-                      <div className="row m-0 align-items-center justify-content-between">
-                        <div className="clear">Clear</div>
-                        <div className="btn_box_primary select-btn">Select</div>
-                      </div>
-                    </div>
-                  </div>
+              <div
+                id="switch-mobile-filter"
+                className="btn_outline_box full-btn mt-3"
+              >
+                <a
+                  className="btn"
+                  href="#"
+                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
+                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                >
+                  Online
+                </a>
+                <a
+                  className="btn"
+                  href="#"
+                  data-swicth-active={
+                    activeFilterType === COURSE_MODES.IN_PERSON
+                  }
+                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
+                >
+                  In Person
+                </a>
+              </div>
 
-                  <div
-                    className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                    id="duration-button_mobile"
+              <MobileFilterModal
+                modalTitle="Course Type"
+                buttonText={
+                  courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                    ? COURSE_TYPES[courseTypeFilter].name
+                    : "Course Type"
+                }
+                clearEvent={onFilterClearEvent("courseTypeFilter")}
+              >
+                <div className="dropdown">
+                  <SmartDropDown
+                    value={courseTypeFilter}
+                    buttonText={
+                      courseTypeFilter ? courseTypeFilter : "Select Course"
+                    }
+                    closeEvent={onFilterChange("courseTypeFilter")}
                   >
-                    <a className="btn" href="#">
-                      Duration
-                    </a>
-                  </div>
-                  <div
-                    id="duration-modal_mobile"
-                    data-duration="null"
-                    data-course-initial="Duration"
-                    className="mobile-modal"
-                  >
-                    <div className="mobile-modal--header">
-                      <div
-                        id="duration-close_mobile"
-                        className="mobile-modal--close"
-                      >
-                        <img src="/img/ic-close.svg" alt="close" />
-                      </div>
-                      <h2 className="mobile-modal--title">Duration</h2>
-                      <div className="dropdown">
-                        <button
-                          className="custom-dropdown"
-                          type="button"
-                          id="dropdownDurationButton"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
+                    {({ closeHandler }) => (
+                      <>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler("SKY_BREATH_MEDITATION")}
                         >
-                          Select duration
-                        </button>
-                        <ul
-                          className="dropdown-menu"
-                          aria-labelledby="dropdownTopicButton"
+                          {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler("SILENT_RETREAT")}
                         >
-                          <li className="dropdown-item">5 minutes</li>
-                          <li className="dropdown-item">10 minutes</li>
-                          <li className="dropdown-item">15 minutes</li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="mobile-modal--body">
-                      <div className="row m-0 align-items-center justify-content-between">
-                        <div className="clear">Clear</div>
-                        <div className="btn_box_primary select-btn">Select</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                    aria-describedby="tooltip"
-                    id="instructor-button_mobile"
-                  >
-                    <a className="btn" href="#">
-                      Instructor{" "}
-                    </a>
-                  </div>
-                  <div
-                    id="instructor-modal_mobile"
-                    data-instructor="null"
-                    data-instructor-initial="Instructor"
-                    className="mobile-modal"
-                  >
-                    <div className="mobile-modal--header">
-                      <div
-                        id="instructor-close_mobile"
-                        className="mobile-modal--close"
-                      >
-                        <img src="/img/ic-close.svg" alt="close" />
-                      </div>
-                      <h2 className="mobile-modal--title">Instructor</h2>
-                      <div
-                        className="smart-input-mobile"
-                        id="instructor-mobile-input"
-                      >
-                        <input
-                          placeholder="Search instructor"
-                          type="text"
-                          name="instructor"
-                          className="custom-input"
-                        />
-                        <div className="smart-input--list">
-                          <p className="smart-input--list-item">Mary Walker</p>
-                          <p className="smart-input--list-item">
-                            Rajesh Moksha
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mobile-modal--body">
-                      <div className="row m-0 align-items-center justify-content-between">
-                        <div className="clear">Clear</div>
-                        <div
-                          id="instructor-search"
-                          className="btn_box_primary select-btn"
+                          {COURSE_TYPES.SILENT_RETREAT.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
                         >
-                          Select
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="btn_box_primary btn-modal_dropdown full-btn mt-3 search">
-                    <a className="btn" href="#">
-                      Search{" "}
-                    </a>
-                  </div>
+                          {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+                        </li>
+                      </>
+                    )}
+                  </SmartDropDown>
                 </div>
+              </MobileFilterModal>
+
+              <MobileFilterModal
+                modalTitle="Dates"
+                buttonText={
+                  filterStartEndDate
+                    ? filterStartEndDate.split("|").join(" - ")
+                    : "Dates"
+                }
+                clearEvent={onDatesChange}
+              >
+                <DateRangeInput
+                  value={filterStartEndDate}
+                  buttonText={
+                    filterStartEndDate
+                      ? filterStartEndDate.split("|").join(" - ")
+                      : "Select Dates"
+                  }
+                  closeEvent={onDatesChange}
+                >
+                  {({ closeHandler }) => (
+                    <LinkedCalendar
+                      {...DATE_PICKER_CONFIG}
+                      onDatesChange={closeHandler}
+                    />
+                  )}
+                </DateRangeInput>
+              </MobileFilterModal>
+
+              <MobileFilterModal
+                modalTitle="Time"
+                buttonText={
+                  timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                    ? TIME_ZONE[timeZoneFilter].name
+                    : "Timezone"
+                }
+                clearEvent={onFilterClearEvent("timeZoneFilter")}
+              >
+                <div className="dropdown">
+                  <SmartDropDown
+                    value={timeZoneFilter}
+                    buttonText={
+                      timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                        ? TIME_ZONE[timeZoneFilter].name
+                        : "Select Timezone"
+                    }
+                    closeEvent={onFilterChange("timeZoneFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler(TIME_ZONE.EST.value)}
+                        >
+                          {TIME_ZONE.EST.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler(TIME_ZONE.CST.value)}
+                        >
+                          {TIME_ZONE.CST.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler(TIME_ZONE.MST.value)}
+                        >
+                          {TIME_ZONE.MST.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler(TIME_ZONE.PST.value)}
+                        >
+                          {TIME_ZONE.PST.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler(TIME_ZONE.HST.value)}
+                        >
+                          {TIME_ZONE.HST.name}
+                        </li>
+                      </>
+                    )}
+                  </SmartDropDown>
+                </div>
+              </MobileFilterModal>
+
+              <MobileFilterModal
+                modalTitle="Instructor"
+                buttonText={
+                  instructorFilter ? instructorFilter.label : "Instructor"
+                }
+                clearEvent={onFilterClearEvent("instructorFilter")}
+              >
+                <SmartInput
+                  containerclassName="smart-input-mobile"
+                  placeholder="Search Instructor"
+                  value={searchKey}
+                  onSearchKeyChange={(value) => setSearchKey(value)}
+                  dataList={instructorList}
+                  closeHandler={onFilterChangeEvent("instructorFilter")}
+                ></SmartInput>
+              </MobileFilterModal>
+            </div>
+          </div>
+        </div>
+        <div className="container upcoming_course">
+          <div className="row">
+            <div className="col-12">
+              <p className="title mb-1 mt-lg-5 mt-3">
+                Upcoming {activeFilterType} courses
+              </p>
+            </div>
+          </div>
+          <div className="row mb-4">
+            {isSuccess &&
+              data.pages.map((page) => (
+                <React.Fragment key={seed(page)}>
+                  {page.data.map((workshop) => (
+                    <WorkshopTile
+                      key={workshop.sfid}
+                      data={workshop}
+                      authenticated={authenticated}
+                    />
+                  ))}
+                </React.Fragment>
+              ))}
+          </div>
+          <div className="row">
+            <div className="pt-3 col-12 text-center">
+              <div ref={loadMoreRef}>
+                {isFetchingNextPage && <InfiniteScrollLoader />}
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section className="browse-category">
-        <p className="title-slider">Browse by Category</p>
-        <Swiper {...swiperOption}>
-          {meditationCategory &&
-            meditationCategory.map((category, i) => (
-              <SwiperSlide key={i} className="category-slide-item">
-                <Link href={`/meditation/collection?type=${category}`}>
-                  <div
-                    className="card image-card image-card-1"
-                    style={{
-                      background: `url(${pickCategoryImage(
-                        backgroundIterator,
-                      )}) no-repeat center/cover`,
-                    }}
-                  >
-                    <h5 className="card-title">{category}</h5>
-                  </div>
-                </Link>
-              </SwiperSlide>
-            ))}
-        </Swiper>
-      </section>
-      <section className="browse-category most-popular">
-        <p className="title-slider">
-          Most Popular{" "}
-          <Link href={`/meditation`}>
-            <span className="popular-all">All</span>
-          </Link>
-        </p>
-        <Swiper {...swiperOption}>
-          {recommendedMeditations.map((meditate) => (
-            <SwiperSlide
-              className="swiper-slide popular-slide-item"
-              key={meditate.sfid}
-            >
-              <div
-                className="card image-card image-card-1"
-                data-play-meditation
-                style={{
-                  background: `url(${
-                    meditate.coverImage
-                      ? meditate.coverImage.url
-                      : "/img/card-1a.png"
-                  }) no-repeat center/cover`,
-                }}
-              >
-                <div className="duration-wrapper">
-                  <span className="duration">
-                    {timeConvert(meditate.duration)}
-                  </span>
-                  {!meditate.accessible && (
-                    <span className="lock">
-                      <img src="/img/ic-lock.png" />
-                    </span>
-                  )}
+      {activeFilterType === COURSE_MODES.ONLINE &&
+        isSuccess &&
+        data.pages[0].totalCount === 0 &&
+        !isFetchingNextPage && (
+          <section className="about">
+            <div className="container happines_box">
+              <div className="row">
+                <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                  <h1 className="happines_title">
+                    Sorry, no courses match your chosen filters.
+                  </h1>
+                  <p className="happines_subtitle">
+                    Please broaden your options and try again.
+                  </p>
                 </div>
-                {meditate.accessible && (
-                  <div
-                    onClick={markFavorite(meditate)}
-                    className={
-                      meditate.isFavorite ? "course-like liked" : "course-like"
-                    }
-                  ></div>
-                )}
-                <div
-                  className="forClick"
-                  onClick={meditateClickHandle(meditate)}
-                ></div>
-                <h5 className="card-title">{meditate.title}</h5>
-                <p className="card-text">{meditate.primaryTeacherName}</p>
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
-      <section className="browse-category most-popular d-none d-md-block">
-        <p className="title-slider">Find a meditation</p>
-        <div className="buttons-wrapper">
-          <Popup
-            tabIndex="1"
-            value={topic}
-            buttonText={topic ? topic : "Topic"}
-            closeEvent={onFilterChange("topicFilter")}
-          >
-            {({ closeHandler }) => (
-              <>
-                {meditationCategory &&
-                  meditationCategory.map((category) => (
-                    <li onClick={closeHandler(category)} key={category}>
-                      {category}
-                    </li>
-                  ))}
-              </>
-            )}
-          </Popup>
-
-          <Popup
-            tabIndex="2"
-            value={duration}
-            buttonText={duration ? DURATION[duration].name : "Duration"}
-            closeEvent={onFilterChange("durationFilter")}
-          >
-            {({ closeHandler }) => (
-              <>
-                <li onClick={closeHandler("MINUTES_5")}>
-                  {DURATION.MINUTES_5.name}
-                </li>
-                <li onClick={closeHandler("MINUTES_10")}>
-                  {DURATION.MINUTES_10.name}
-                </li>
-                <li onClick={closeHandler("MINUTES_20")}>
-                  {DURATION.MINUTES_20.name}
-                </li>
-              </>
-            )}
-          </Popup>
-          <Popup
-            tabIndex="3"
-            value={instructor}
-            buttonText={instructor ? instructor : "Instructor"}
-            closeEvent={onFilterChange("instructorFilter")}
-          >
-            {({ closeHandler }) => (
-              <>
-                {instructorList &&
-                  instructorList.map((instructor) => (
-                    <li
-                      key={instructor.primaryTeacherName}
-                      className="topic-dropdown"
-                      onClick={closeHandler(instructor.primaryTeacherName)}
+            </div>
+          </section>
+        )}
+      {activeFilterType === COURSE_MODES.IN_PERSON &&
+        isSuccess &&
+        data.pages[0].totalCount === 0 &&
+        !isFetchingNextPage && (
+          <section className="about">
+            <div className="container happines_box">
+              <div className="row">
+                <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                  <h1 className="happines_title">
+                    Currently there are no {activeFilterType} courses available.
+                  </h1>
+                  <p className="happines_subtitle">
+                    Please check out our{" "}
+                    <a
+                      href="#"
+                      className="link v2"
+                      onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
                     >
-                      {instructor.primaryTeacherName}
-                    </li>
-                  ))}
-              </>
-            )}
-          </Popup>
-
-          <button
-            onClick={findMeditation}
-            className="btn tooltip-button_search"
-          >
-            Search
-          </button>
-        </div>
-      </section>
-      <section className="top-column what-meditation">
-        <img
-          src="/img/meditation-page-2@2x.png"
-          alt=""
-          className="background-image"
-        />
-        <div className="container">
-          <p className="type-course">What is meditation?</p>
-          <div className="card guide-meditation">
-            <h5 className="card-title">
-              Meditation is that which gives you deep rest.
-            </h5>
-            <p className="card-text">
-              The delicate art of doing nothing and letting go of all the
-              efforts to relax into your true nature which is love, joy and
-              peace.
-            </p>
-            <p className="card-text">
-              The rest in meditation is deeper than the deepest sleep that you
-              can ever have. When the mind becomes free from agitation, is calm
-              and serene and at peace, meditation happens. The benefits of
-              meditation are manifold. It is an essential practice for mental
-              hygiene.
-            </p>
-            <a href="https://aolf.me/sky" className="learn-more-link">
-              Learn More
-            </a>
-          </div>
-        </div>
-      </section>
-      <section className="browse-category most-popular">
-        <p className="title-slider">{firstCategory}</p>
-        <Swiper {...swiperOption}>
-          {firstCategoryMeditations.map((meditate) => (
-            <SwiperSlide
-              className="swiper-slide popular-slide-item"
-              key={meditate.sfid}
-            >
-              <div
-                className="card image-card image-card-1"
-                data-play-meditation
-                style={{
-                  background: `url(${
-                    meditate.coverImage
-                      ? meditate.coverImage.url
-                      : "/img/card-1a.png"
-                  }) no-repeat center/cover`,
-                }}
-              >
-                <div className="duration-wrapper">
-                  <span className="duration">
-                    {timeConvert(meditate.duration)}
-                  </span>
-                  {!meditate.accessible && (
-                    <span className="lock">
-                      {" "}
-                      <img src="/img/ic-lock.png" />{" "}
-                    </span>
-                  )}
+                      online offerings
+                    </a>
+                    .
+                  </p>
                 </div>
-                {meditate.accessible && (
-                  <div
-                    onClick={markFavorite(meditate)}
-                    className={
-                      meditate.isFavorite ? "course-like liked" : "course-like"
-                    }
-                  ></div>
-                )}
-                <div
-                  className="forClick"
-                  onClick={meditateClickHandle(meditate)}
-                ></div>
-                <h5 className="card-title">{meditate.title}</h5>
-                <p className="card-text">{meditate.primaryTeacherName}</p>
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
-      <section className="browse-category most-popular">
-        <p className="title-slider">{secoundCategory}</p>
-        <Swiper {...swiperOption}>
-          {secoundCategoryMeditations.map((meditate) => (
-            <SwiperSlide
-              className="swiper-slide popular-slide-item"
-              key={meditate.sfid}
-            >
-              <div
-                className="card image-card image-card-1"
-                data-play-meditation
-                style={{
-                  background: `url(${
-                    meditate.coverImage
-                      ? meditate.coverImage.url
-                      : "/img/card-1a.png"
-                  }) no-repeat center/cover`,
-                }}
-              >
-                <div className="duration-wrapper">
-                  <span className="duration">
-                    {timeConvert(meditate.duration)}
-                  </span>
-                  {!meditate.accessible && (
-                    <span className="lock">
-                      {" "}
-                      <img src="/img/ic-lock.png" />{" "}
-                    </span>
-                  )}
-                </div>
-                {meditate.accessible && (
-                  <div
-                    onClick={markFavorite(meditate)}
-                    className={
-                      meditate.isFavorite ? "course-like liked" : "course-like"
-                    }
-                  ></div>
-                )}
-                <div
-                  className="forClick"
-                  onClick={meditateClickHandle(meditate)}
-                ></div>
-                <h5 className="card-title">{meditate.title}</h5>
-                <p className="card-text">{meditate.primaryTeacherName}</p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
-      <section className="top-column last-tips">
-        <img
-          src="/img/meditation-page-3@2x.png"
-          alt=""
-          className="background-image"
-        />
-        <div className="container">
-          <div className="card blue">
-            <h5 className="card-title">Join a Free Intro to Meditation</h5>
-            <p className="card-text">
-              Join an online, live session with a certified teacher to discover
-              the secrets of meditation and your own breath.
-            </p>
-            <button
-              onClick={() => window.open("https://aolf.me/intro", "_self")}
-              className="btn"
-            >
-              Register Today
-            </button>
-          </div>
-          <div className="card yellow">
-            <h5 className="card-title">Search Live Meditation Courses</h5>
-            <p className="card-text">
-              Learn to meditate live online with a certified{" "}
-              <br className="mob-none" /> instructor
-            </p>
-            <button className="btn">Find a Course</button>
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
+        )}
     </main>
   );
 };
 
-// Workshop.requiresAuth = true;
-// Workshop.redirectUnauthenticated = "/login";
+// Course.requiresAuth = true;
+// Course.redirectUnauthenticated = "/login";
 
-export default Meditation;
+export default Course;

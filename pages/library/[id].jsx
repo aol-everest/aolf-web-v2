@@ -7,6 +7,7 @@ import { Loader } from "@components";
 import { withSSRContext } from "aws-amplify";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useQueryString } from "@hooks";
+import { PurchaseMembershipModal } from "@components";
 import {
   useGlobalAudioPlayerContext,
   useGlobalAlertContext,
@@ -14,7 +15,7 @@ import {
   useGlobalModalContext,
 } from "@contexts";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES } from "@constants";
+import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
@@ -179,7 +180,42 @@ export default function Library({ data, authenticated, token }) {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else if (meditate.courseType === "Course") {
+    } else if (!meditate.accessible) {
+      const allSubscriptions = subsciptionCategories.reduce(
+        (accumulator, currentValue) => {
+          return {
+            ...accumulator,
+            [currentValue.sfid]: currentValue,
+          };
+        },
+        {},
+      );
+      if (allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
+        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          className: "retreat-prerequisite-big meditation-digital-membership",
+          title: "Go deeper with the Digital Membership",
+          footer: () => {
+            return (
+              <button
+                className="btn-secondary v2"
+                onClick={purchaseMembershipAction(
+                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                )}
+              >
+                Join Digital Membership
+              </button>
+            );
+          },
+          children: (
+            <PurchaseMembershipModal
+              modalSubscription={
+                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
+              }
+            />
+          ),
+        });
+      }
+    } else if (meditate.type === "Course") {
       router.push(`/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
@@ -189,8 +225,6 @@ export default function Library({ data, authenticated, token }) {
         showPlayer,
         hidePlayer,
         showVideoPlayer,
-        subsciptionCategories,
-        purchaseMembershipAction,
         token,
       });
       setLoading(false);
