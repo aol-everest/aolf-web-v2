@@ -2121,6 +2121,18 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
+"@contentful/rich-text-react-renderer@^15.5.1":
+  version "15.5.1"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-react-renderer/-/rich-text-react-renderer-15.5.1.tgz#af68bdf17133bb5c4f18ea82da1ce2bcbbcb7680"
+  integrity sha512-veHBG7NJjE8UdntQyYII98tc8EPDVEVYfbpM9eV7djVDxuCifU9w7D1hCw4+xxKoaZfyJ4pNQuR55eWrrXIoeg==
+  dependencies:
+    "@contentful/rich-text-types" "^15.5.1"
+
+"@contentful/rich-text-types@^15.5.1":
+  version "15.5.1"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.5.1.tgz#1fa318564307635225116502b2e120b130cb97c2"
+  integrity sha512-FEFyPv4s6yoBMONSabbnZQn2o6n89bwIvD+y1uqgi48qnsOf7LoodNIL7t7vaSzHCUj5wU3zKUiTmMaSB5Uptw==
+
 "@elgorditosalsero/react-gtm-hook@^2.0.8":
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/@elgorditosalsero/react-gtm-hook/-/react-gtm-hook-2.0.8.tgz#f291130c93155325c2cb3d4efb1c89aeda10e016"

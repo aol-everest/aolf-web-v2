@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useGlobalVideoPlayerContext } from "@contexts";
 import classNames from "classnames";
+import HTMLEllipsis from "react-lines-ellipsis/lib/html";
+import * as RemoveMarkdown from "remove-markdown";
+import ReactHtmlParser from "react-html-parser";
 import "node_modules/video-react/dist/video-react.css";
 import {
   Player,
@@ -20,10 +23,22 @@ import {
 const VideoPlayer = () => {
   const { hideVideoPlayer, store } = useGlobalVideoPlayerContext();
   const playerEl = useRef(null);
+  const [showFull, setShowFull] = useState(false);
 
   const { playerProps } = store || {};
   const { track } = playerProps || {};
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const readMoreAction = () => {
+    setShowFull(true);
+  };
+
+  const handleReflow = (rleState) => {
+    const { clamped } = rleState;
+    if (!clamped) {
+      setShowFull(true);
+    }
+  };
 
   // Destructure for conciseness
   const {
@@ -34,6 +49,7 @@ const VideoPlayer = () => {
     description = "",
   } = track || {};
   console.log(track);
+  const desc = description ? RemoveMarkdown(description) : "";
 
   const handleModalToggle = () => {
     hideVideoPlayer();
@@ -133,7 +149,25 @@ const VideoPlayer = () => {
                   />
                   <span>{artist}</span>
                   <p className="video-title">{title}</p>
-                  <p>{description}...</p>
+                  {!showFull && (
+                    <>
+                      <p className="card-text">
+                        <HTMLEllipsis
+                          unsafeHTML={desc}
+                          onReflow={handleReflow}
+                          maxLine="2"
+                          ellipsis="..."
+                          basedOn="letters"
+                        />
+                      </p>
+                      <p className="read-more" onClick={readMoreAction}>
+                        Read More
+                      </p>
+                    </>
+                  )}
+                  {showFull && (
+                    <p className="card-text">{ReactHtmlParser(desc)}</p>
+                  )}
                 </div>
               </div>
             </div>

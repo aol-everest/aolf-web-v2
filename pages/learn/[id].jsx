@@ -3,7 +3,9 @@ import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { api, isSSR } from "@utils";
 import classNames from "classnames";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { withSSRContext } from "aws-amplify";
+import { secondsToHms } from "@utils";
 import { NextSeo } from "next-seo";
 import {
   useGlobalAudioPlayerContext,
@@ -57,9 +59,6 @@ export const getServerSideProps = async (context) => {
       id,
     },
   });
-
-  console.log(data);
-
   props = {
     ...props,
     data,
@@ -77,12 +76,26 @@ export default function Learn({ data, authenticated, token }) {
     primaryTeacherName,
     primaryTeacherPic,
     title,
+    introContent,
+    cardImage,
+    whatYoullLearn,
+    whoIsItFor,
   } = data;
+
+  let introContentPoster =
+    "http://html5videoformatconverter.com/data/images/screen.jpg";
+  if (introContent.coverImage) {
+    introContentPoster = introContent.coverImage.url;
+  } else if (cardImage) {
+    introContentPoster = cardImage.url;
+  }
 
   const router = useRouter();
   const playerEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showWhatYoullLearn, setShowWhatYoullLearn] = useState(true);
+  const [showWhoIsItFor, setShowWhoIsItFor] = useState(false);
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
@@ -152,11 +165,12 @@ export default function Learn({ data, authenticated, token }) {
           });
         } else if (chapterDetails.contentType === "Video") {
           hidePlayer();
+          const image = chapterDetails.coverImage?.url;
           showVideoPlayer({
             track: {
               title: chapterDetails.title,
               artist: chapterDetails.teacher?.name,
-              image: chapterDetails.coverImage?.url,
+              image: image || introContentPoster,
               audioSrc: chapterDetails.track?.url,
               description: chapterDetails.description,
             },
@@ -194,158 +208,154 @@ export default function Learn({ data, authenticated, token }) {
               </p>
               <p className="course-description">{subTitle}</p>
 
-              <div className="accordion" id="accordionExample">
-                <div className="card">
-                  <div className="card-header" id="headingOne">
-                    <h2 className="mb-0">
-                      <button
-                        className="btn btn-link btn-block text-left"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#collapseOne"
-                        aria-expanded="true"
-                        aria-controls="collapseOne"
-                      >
-                        What You'll Learn
-                      </button>
-                    </h2>
-                  </div>
-                  <div
-                    id="collapseOne"
-                    className="collapse show"
-                    aria-labelledby="headingOne"
-                    data-parent="#accordionExample"
-                  >
-                    <div className="card-body">
-                      <ul>
-                        <li>
-                          Those who are looking for a deeper understanding of
-                          the Pranayama technique.
-                        </li>
-                        <li>
-                          Those who have a Science slant of mind and are curious
-                          to know the Why behind the What.
-                        </li>
-                        <li>The sincere YOGA practitioner.</li>
-                      </ul>
+              <div className="accordion">
+                {whatYoullLearn && (
+                  <div className="card">
+                    <div className="card-header">
+                      <h2 className="mb-0">
+                        <button
+                          onClick={() =>
+                            setShowWhatYoullLearn(
+                              (showWhatYoullLearn) => !showWhatYoullLearn,
+                            )
+                          }
+                          className="btn btn-link btn-block text-left"
+                          type="button"
+                          data-toggle="collapse"
+                          data-target="#collapseOne"
+                          aria-expanded={showWhatYoullLearn}
+                          aria-controls="collapseOne"
+                        >
+                          What You'll Learn
+                        </button>
+                      </h2>
+                    </div>
+                    <div
+                      className={classNames("collapse", {
+                        show: showWhatYoullLearn,
+                      })}
+                      aria-labelledby="headingOne"
+                      data-parent="#accordionExample"
+                    >
+                      <div className="card-body">
+                        {documentToReactComponents(whatYoullLearn)}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="card">
-                  <div className="card-header" id="headingTwo">
-                    <h2 className="mb-0">
-                      <button
-                        className="btn btn-link btn-block text-left collapsed"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#collapseTwo"
-                        aria-expanded="false"
-                        aria-controls="collapseTwo"
-                      >
-                        Who is it for?
-                      </button>
-                    </h2>
-                  </div>
-                  <div
-                    id="collapseTwo"
-                    className="collapse"
-                    aria-labelledby="headingTwo"
-                    data-parent="#accordionExample"
-                  >
-                    <div className="card-body">
-                      <ul>
-                        <li>
-                          Those who are looking for a deeper understanding of
-                          the Pranayama technique.
-                        </li>
-                        <li>
-                          Those who have a Science slant of mind and are curious
-                          to know the Why behind the What.
-                        </li>
-                        <li>The sincere YOGA practitioner.</li>
-                      </ul>
+                )}
+                {whoIsItFor && (
+                  <div className="card">
+                    <div className="card-header">
+                      <h2 className="mb-0">
+                        <button
+                          onClick={() =>
+                            setShowWhoIsItFor(
+                              (showWhoIsItFor) => !showWhoIsItFor,
+                            )
+                          }
+                          className="btn btn-link btn-block text-left collapsed"
+                          type="button"
+                          data-toggle="collapse"
+                          data-target="#collapseTwo"
+                          aria-expanded={showWhoIsItFor}
+                          aria-controls="collapseTwo"
+                        >
+                          Who is it for?
+                        </button>
+                      </h2>
+                    </div>
+                    <div
+                      className={classNames("collapse", {
+                        show: showWhoIsItFor,
+                      })}
+                      aria-labelledby="headingTwo"
+                      data-parent="#accordionExample"
+                    >
+                      <div className="card-body">
+                        {documentToReactComponents(whoIsItFor)}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
             <div className="col-12 col-md-6 d-flex justify-content-end">
-              <article className="collection-video">
-                <div className="video-player">
-                  <div className="video-insighter-container">
-                    <Player
-                      ref={playerEl}
-                      poster="http://html5videoformatconverter.com/data/images/screen.jpg"
-                      onPlay={onPlayPauseAction}
-                      onPause={onPlayPauseAction}
-                    >
-                      <source src="http://html5videoformatconverter.com/data/images/happyfit2.mp4" />
-                      <BigPlayButton position="center" className="d-none" />
-                      <LoadingSpinner />
-                      <ControlBar>
-                        <PlayToggle className="d-none" />
-                        <ReplayControl seconds={10} order={1.1} />
-                        <ForwardControl seconds={30} order={1.2} />
-                        <CurrentTimeDisplay order={4.1} />
-                        <TimeDivider order={4.2} />
-                        <PlaybackRateMenuButton
-                          rates={[5, 2, 1, 0.5, 0.1]}
-                          order={7.1}
+              {introContent && introContent.track && (
+                <article className="collection-video">
+                  <div className="video-player">
+                    <div className="video-insighter-container">
+                      <Player
+                        ref={playerEl}
+                        poster={introContentPoster}
+                        onPlay={onPlayPauseAction}
+                        onPause={onPlayPauseAction}
+                      >
+                        <source src={introContent.track.url} />
+                        <BigPlayButton position="center" className="d-none" />
+                        <LoadingSpinner />
+                        <ControlBar>
+                          <PlayToggle className="d-none" />
+                          <ReplayControl seconds={10} order={1.1} />
+                          <ForwardControl seconds={30} order={1.2} />
+                          <CurrentTimeDisplay order={4.1} />
+                          <TimeDivider order={4.2} />
+                          <PlaybackRateMenuButton
+                            rates={[5, 2, 1, 0.5, 0.1]}
+                            order={7.1}
+                          />
+                          <VolumeMenuButton vertical />
+                          <FullscreenToggle />
+                        </ControlBar>
+                      </Player>
+                      <div className="video-insighter-play">
+                        <img
+                          src="/img/ic-play.svg"
+                          alt=""
+                          className="video-play"
                         />
-                        <VolumeMenuButton vertical />
-                        <FullscreenToggle />
-                      </ControlBar>
-                    </Player>
-                    <div className="video-insighter-play">
+                      </div>
+                    </div>
+
+                    <div className="collection-video-details video-details">
                       <img
-                        src="/img/ic-play.svg"
+                        src={
+                          isPlaying
+                            ? "/img/ic-pause-40.svg"
+                            : "/img/ic-play-40.svg"
+                        }
                         alt=""
-                        className="video-play"
+                        className={classNames("video-play", {
+                          play: !isPlaying,
+                          pause: isPlaying,
+                        })}
+                        onClick={togglePlay}
                       />
+                      <img
+                        src="/img/ic-expand2.svg"
+                        alt=""
+                        className="video-expand"
+                        onClick={toggleFullscreen}
+                      />
+                      <button
+                        type="button"
+                        name="button"
+                        className="video-shrink"
+                        onClick={toggleFullscreen}
+                      >
+                        <img src="/img/ic-shrink2.svg" alt="shrink" />
+                      </button>
+                      <button type="button" className="video-close close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                      <span className="video-duration">
+                        {secondsToHms(introContent.duration)}
+                      </span>
+                      <p className="title">{introContent.title}</p>
+                      <p className="description">{introContent.description}</p>
                     </div>
                   </div>
-
-                  <div className="collection-video-details video-details">
-                    <img
-                      src={
-                        isPlaying
-                          ? "/img/ic-pause-40.svg"
-                          : "/img/ic-play-40.svg"
-                      }
-                      alt=""
-                      className={classNames("video-play", {
-                        play: !isPlaying,
-                        pause: isPlaying,
-                      })}
-                      onClick={togglePlay}
-                    />
-                    <img
-                      src="/img/ic-expand2.svg"
-                      alt=""
-                      className="video-expand"
-                      onClick={toggleFullscreen}
-                    />
-                    <button
-                      type="button"
-                      name="button"
-                      className="video-shrink"
-                      onClick={toggleFullscreen}
-                    >
-                      <img src="/img/ic-shrink2.svg" alt="shrink" />
-                    </button>
-                    <button type="button" className="video-close close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                    <span className="video-duration">1 min 37 seconds</span>
-                    <p className="title">Welcome and Intro</p>
-                    <p className="description">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                  </div>
-                </div>
-              </article>
+                </article>
+              )}
             </div>
           </div>
           <div className="row">
