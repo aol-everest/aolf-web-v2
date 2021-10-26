@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import { api, isSSR } from "@utils";
 import { useQuery } from "react-query";
 import { DesignOne, DesignTwo } from "@components/content";
+import { Loader } from "@components";
 import { withSSRContext } from "aws-amplify";
-import { NextSeo } from "next-seo";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useQueryString } from "@hooks";
 import {
@@ -79,6 +79,7 @@ export default function Library({ data, authenticated, token }) {
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
+  const [loading, setLoading] = useState(false);
 
   const { data: favouriteContents = [] } = useQuery(
     "favouriteContents",
@@ -181,6 +182,7 @@ export default function Library({ data, authenticated, token }) {
     } else if (meditate.courseType === "Course") {
       router.push(`/learn/${meditate.sfid}`);
     } else {
+      setLoading(true);
       await meditatePlayEvent({
         meditate,
         showAlert,
@@ -191,6 +193,7 @@ export default function Library({ data, authenticated, token }) {
         purchaseMembershipAction,
         token,
       });
+      setLoading(false);
     }
   };
 
@@ -276,9 +279,19 @@ export default function Library({ data, authenticated, token }) {
 
   switch (rootFolder.screenDesign) {
     case "Design 1":
-      return <DesignOne data={rootFolder} {...params} />;
+      return (
+        <>
+          {loading && <Loader />}
+          <DesignOne data={rootFolder} {...params} />
+        </>
+      );
     case "Design 2":
-      return <DesignTwo data={rootFolder} {...params} />;
+      return (
+        <>
+          {loading && <Loader />}
+          <DesignTwo data={rootFolder} {...params} />
+        </>
+      );
     default:
       return null;
   }
