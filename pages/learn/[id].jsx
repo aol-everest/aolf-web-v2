@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 import { api, isSSR } from "@utils";
 import classNames from "classnames";
 import { withSSRContext } from "aws-amplify";
+import * as RemoveMarkdown from "remove-markdown";
+import ReactHtmlParser from "react-html-parser";
+import { secondsToHms } from "@utils";
 import { NextSeo } from "next-seo";
 import {
   useGlobalAudioPlayerContext,
@@ -57,9 +60,6 @@ export const getServerSideProps = async (context) => {
       id,
     },
   });
-
-  console.log(data);
-
   props = {
     ...props,
     data,
@@ -77,7 +77,20 @@ export default function Learn({ data, authenticated, token }) {
     primaryTeacherName,
     primaryTeacherPic,
     title,
+    introContent,
+    cardImage,
   } = data;
+
+  const introContentDesc = introContent.description
+    ? RemoveMarkdown(introContent.description)
+    : "";
+  let introContentPoster =
+    "http://html5videoformatconverter.com/data/images/screen.jpg";
+  if (introContent.coverImage) {
+    introContentPoster = introContent.coverImage.url;
+  } else if (cardImage) {
+    introContentPoster = cardImage.url;
+  }
 
   const router = useRouter();
   const playerEl = useRef(null);
@@ -270,82 +283,84 @@ export default function Learn({ data, authenticated, token }) {
               </div>
             </div>
             <div className="col-12 col-md-6 d-flex justify-content-end">
-              <article className="collection-video">
-                <div className="video-player">
-                  <div className="video-insighter-container">
-                    <Player
-                      ref={playerEl}
-                      poster="http://html5videoformatconverter.com/data/images/screen.jpg"
-                      onPlay={onPlayPauseAction}
-                      onPause={onPlayPauseAction}
-                    >
-                      <source src="http://html5videoformatconverter.com/data/images/happyfit2.mp4" />
-                      <BigPlayButton position="center" className="d-none" />
-                      <LoadingSpinner />
-                      <ControlBar>
-                        <PlayToggle className="d-none" />
-                        <ReplayControl seconds={10} order={1.1} />
-                        <ForwardControl seconds={30} order={1.2} />
-                        <CurrentTimeDisplay order={4.1} />
-                        <TimeDivider order={4.2} />
-                        <PlaybackRateMenuButton
-                          rates={[5, 2, 1, 0.5, 0.1]}
-                          order={7.1}
+              {introContent && introContent.track && (
+                <article className="collection-video">
+                  <div className="video-player">
+                    <div className="video-insighter-container">
+                      <Player
+                        ref={playerEl}
+                        poster={introContentPoster}
+                        onPlay={onPlayPauseAction}
+                        onPause={onPlayPauseAction}
+                      >
+                        <source src={introContent.track.url} />
+                        <BigPlayButton position="center" className="d-none" />
+                        <LoadingSpinner />
+                        <ControlBar>
+                          <PlayToggle className="d-none" />
+                          <ReplayControl seconds={10} order={1.1} />
+                          <ForwardControl seconds={30} order={1.2} />
+                          <CurrentTimeDisplay order={4.1} />
+                          <TimeDivider order={4.2} />
+                          <PlaybackRateMenuButton
+                            rates={[5, 2, 1, 0.5, 0.1]}
+                            order={7.1}
+                          />
+                          <VolumeMenuButton vertical />
+                          <FullscreenToggle />
+                        </ControlBar>
+                      </Player>
+                      <div className="video-insighter-play">
+                        <img
+                          src="/img/ic-play.svg"
+                          alt=""
+                          className="video-play"
                         />
-                        <VolumeMenuButton vertical />
-                        <FullscreenToggle />
-                      </ControlBar>
-                    </Player>
-                    <div className="video-insighter-play">
+                      </div>
+                    </div>
+
+                    <div className="collection-video-details video-details">
                       <img
-                        src="/img/ic-play.svg"
+                        src={
+                          isPlaying
+                            ? "/img/ic-pause-40.svg"
+                            : "/img/ic-play-40.svg"
+                        }
                         alt=""
-                        className="video-play"
+                        className={classNames("video-play", {
+                          play: !isPlaying,
+                          pause: isPlaying,
+                        })}
+                        onClick={togglePlay}
                       />
+                      <img
+                        src="/img/ic-expand2.svg"
+                        alt=""
+                        className="video-expand"
+                        onClick={toggleFullscreen}
+                      />
+                      <button
+                        type="button"
+                        name="button"
+                        className="video-shrink"
+                        onClick={toggleFullscreen}
+                      >
+                        <img src="/img/ic-shrink2.svg" alt="shrink" />
+                      </button>
+                      <button type="button" className="video-close close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                      <span className="video-duration">
+                        {secondsToHms(introContent.duration)}
+                      </span>
+                      <p className="title">{introContent.title}</p>
+                      <p className="description">
+                        {ReactHtmlParser(introContentDesc)}
+                      </p>
                     </div>
                   </div>
-
-                  <div className="collection-video-details video-details">
-                    <img
-                      src={
-                        isPlaying
-                          ? "/img/ic-pause-40.svg"
-                          : "/img/ic-play-40.svg"
-                      }
-                      alt=""
-                      className={classNames("video-play", {
-                        play: !isPlaying,
-                        pause: isPlaying,
-                      })}
-                      onClick={togglePlay}
-                    />
-                    <img
-                      src="/img/ic-expand2.svg"
-                      alt=""
-                      className="video-expand"
-                      onClick={toggleFullscreen}
-                    />
-                    <button
-                      type="button"
-                      name="button"
-                      className="video-shrink"
-                      onClick={toggleFullscreen}
-                    >
-                      <img src="/img/ic-shrink2.svg" alt="shrink" />
-                    </button>
-                    <button type="button" className="video-close close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                    <span className="video-duration">1 min 37 seconds</span>
-                    <p className="title">Welcome and Intro</p>
-                    <p className="description">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                  </div>
-                </div>
-              </article>
+                </article>
+              )}
             </div>
           </div>
           <div className="row">

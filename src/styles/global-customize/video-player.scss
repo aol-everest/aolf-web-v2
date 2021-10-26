@@ -25,3 +25,9 @@
 .video-react .video-react-poster {
   background-size: cover !important;
 }
+.collection-video {
+  width: 100%;
+}
+video {
+  object-fit: cover;
+}
