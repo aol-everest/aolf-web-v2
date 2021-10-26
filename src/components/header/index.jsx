@@ -66,7 +66,7 @@ export const Header = () => {
                   </a>
                 </NavItem>
               </ActiveLink>
-              <ActiveLink activeClassName="active" href="/course">
+              <ActiveLink activeClassName="active" href="/">
                 <NavItem className="nav-item">
                   <a className="nav-link">
                     <img src="/img/books-icon.png" /> Courses
