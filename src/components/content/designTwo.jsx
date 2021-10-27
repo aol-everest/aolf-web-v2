@@ -106,15 +106,19 @@ export const DesignTwo = ({
           <div className="row m-0 justify-content-between align-items-center">
             <p className="title mb-0">Search</p>
             <div className="filter">
-              <div className="filter--button d-flex">
-                <img src="./img/ic-filter.svg" alt="filter" />
+              <div className="filter--button d-flex" onClick={toggleFilter}>
+                <img src="/img/ic-filter.svg" alt="filter" />
                 Filter
                 <span id="filter-count">0</span>
               </div>
             </div>
           </div>
 
-          <div className="filter--box">
+          <div
+            className={classNames("filter--box", {
+              "d-none": !showFilterModal,
+            })}
+          >
             <div
               className="btn_outline_box btn-modal_dropdown full-btn mt-3"
               id="duration-button_mobile"

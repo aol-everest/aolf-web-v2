@@ -21,15 +21,12 @@ export const Header = () => {
   const toggle = () => setCollapsed(!collapsed);
 
   const loginAction = () => {
+    setCollapsed(false);
     showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/profile" });
   };
 
   return (
     <header className="aol_header" id="site-header">
-      {/* <aside id="registerSoonAlert">
-          <IcTimerWhite />{" "}
-          <span>Register soon. Course fee will go up by $100 on MM/DD</span>
-        </aside> */}
       <Navbar expand="md" className="navbar aol_navbar ">
         <figure className="container mrgb">
           <a
@@ -52,6 +49,7 @@ export const Header = () => {
               <ActiveLink
                 activeClassName="active"
                 href={`/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
+                setCollapsed={setCollapsed}
               >
                 <NavItem className="nav-item">
                   <a className="nav-link">
@@ -59,14 +57,22 @@ export const Header = () => {
                   </a>
                 </NavItem>
               </ActiveLink>
-              <ActiveLink activeClassName="active" href="/meetup">
+              <ActiveLink
+                activeClassName="active"
+                href="/meetup"
+                setCollapsed={setCollapsed}
+              >
                 <NavItem className="nav-item">
                   <a className="nav-link">
                     <img src="/img/map-pin.png" /> Meetups
                   </a>
                 </NavItem>
               </ActiveLink>
-              <ActiveLink activeClassName="active" href="/">
+              <ActiveLink
+                activeClassName="active"
+                href="/"
+                setCollapsed={setCollapsed}
+              >
                 <NavItem className="nav-item">
                   <a className="nav-link">
                     <img src="/img/books-icon.png" /> Courses
@@ -76,6 +82,7 @@ export const Header = () => {
               <ActiveLink
                 activeClassName="active"
                 href={`/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`}
+                setCollapsed={setCollapsed}
               >
                 <NavItem className="nav-item">
                   <a className="nav-link">
@@ -100,7 +107,11 @@ export const Header = () => {
               )}
               {isLoggedIn && (
                 <NavItem className={classNames("nav-item", Style.userNavitem)}>
-                  <ActiveLink activeClassName="active" href="/profile">
+                  <ActiveLink
+                    activeClassName="active"
+                    href="/profile"
+                    setCollapsed={setCollapsed}
+                  >
                     <a className="nav-link">
                       <>
                         {first_name || last_name}

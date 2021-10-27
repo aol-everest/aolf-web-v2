@@ -2,7 +2,12 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { Children } from "react";
 
-export const ActiveLink = ({ children, activeClassName, ...props }) => {
+export const ActiveLink = ({
+  children,
+  activeClassName,
+  setCollapsed,
+  ...props
+}) => {
   const { asPath } = useRouter();
   const child = Children.only(children);
   const childClassName = child.props.className || "";
@@ -19,6 +24,11 @@ export const ActiveLink = ({ children, activeClassName, ...props }) => {
     <Link {...props}>
       {React.cloneElement(child, {
         className: className || null,
+        onClick: () => {
+          if (setCollapsed) {
+            setCollapsed(false);
+          }
+        },
       })}
     </Link>
   );
