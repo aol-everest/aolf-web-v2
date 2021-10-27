@@ -280,6 +280,18 @@ export default function Learn({ data, authenticated, token }) {
               </div>
             </div>
             <div className="col-12 col-md-6 d-flex justify-content-end">
+              {!introContent && (
+                <article className="collection-video">
+                  <div className="video-player">
+                    <div
+                      className="video-insighter-container"
+                      style={{ borderRadius: "16px" }}
+                    >
+                      <video poster={introContentPoster}></video>
+                    </div>
+                  </div>
+                </article>
+              )}
               {introContent && introContent.track && (
                 <article className="collection-video">
                   <div className="video-player">
