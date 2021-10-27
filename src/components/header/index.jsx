@@ -113,30 +113,26 @@ export const Header = () => {
                     setCollapsed={setCollapsed}
                   >
                     <a className="nav-link">
-                      <>
-                        {first_name || last_name}
-                        {profilePic && (
-                          <img
-                            src={profilePic}
-                            className={classNames(
-                              "rounded-circle",
-                              Style.userProfilePic,
-                            )}
-                          />
+                      {first_name || last_name}
+                      <div
+                        className={classNames(
+                          "top-nav-bar",
+                          Style.userProfilePic,
+                          Style.profileHeadeImage,
                         )}
-                        {!profilePic && (
-                          <span
-                            className={classNames(
-                              "top-nav-bar",
-                              Style.userProfilePic,
-                              Style.profileHeadeImage,
-                            )}
-                          >
-                            {" "}
-                            <span>{initials}</span>
-                          </span>
-                        )}
-                      </>
+                      >
+                        <p className={Style.initials}>{initials}</p>
+                        <img
+                          src={profilePic}
+                          className={classNames(
+                            "rounded-circle",
+                            Style.userProfilePic,
+                            Style.profilePic,
+                          )}
+                          alt=""
+                          onError={(i) => (i.target.src = "")}
+                        />
+                      </div>
                     </a>
                   </ActiveLink>
                 </NavItem>
