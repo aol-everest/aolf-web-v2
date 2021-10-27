@@ -101,6 +101,12 @@ export default function Learn({ data, authenticated, token }) {
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
 
+  // Call this function whenever you want to
+  // refresh props!
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
     if (!authenticated) {
@@ -174,11 +180,15 @@ export default function Learn({ data, authenticated, token }) {
               audioSrc: chapterDetails.track?.url,
               description: chapterDetails.description,
             },
+            playAction: async () => {
+              await updateUserActivity(token, {
+                contentSfid: sfid,
+                subContentSfid: chapterDetails.sfid,
+              });
+              refreshData();
+            },
           });
         }
-        await updateUserActivity(token, {
-          contentSfid: chapterDetails.sfid,
-        });
       }
     } catch (error) {
       console.log(error);
