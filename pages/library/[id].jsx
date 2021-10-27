@@ -82,19 +82,20 @@ export default function Library({ data, authenticated, token }) {
   const [instructor, setInstructor] = useQueryString("instructor");
   const [loading, setLoading] = useState(false);
 
-  const { data: favouriteContents = [] } = useQuery(
-    "favouriteContents",
-    async () => {
-      const response = await api.get({
-        path: "getFavouriteContents",
-        token,
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: true,
-    },
-  );
+  const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
+    useQuery(
+      "favouriteContents",
+      async () => {
+        const response = await api.get({
+          path: "getFavouriteContents",
+          token,
+        });
+        return response.data;
+      },
+      {
+        refetchOnWindowFocus: false,
+      },
+    );
 
   const { data: meditationCategory = [], isSuccess } = useQuery(
     "meditationCategory",
@@ -168,7 +169,11 @@ export default function Library({ data, authenticated, token }) {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch: null, token });
+      await markFavoriteEvent({
+        meditate,
+        refetch: refetchFavouriteContents,
+        token,
+      });
     }
   };
 
