@@ -122,16 +122,18 @@ export const Header = () => {
                         )}
                       >
                         <p className={Style.initials}>{initials}</p>
-                        <img
-                          src={profilePic}
-                          className={classNames(
-                            "rounded-circle",
-                            Style.userProfilePic,
-                            Style.profilePic,
-                          )}
-                          alt=""
-                          onError={(i) => (i.target.src = "")}
-                        />
+                        {profilePic && (
+                          <img
+                            src={profilePic}
+                            className={classNames(
+                              "rounded-circle",
+                              Style.userProfilePic,
+                              Style.profilePic,
+                            )}
+                            alt=""
+                            onError={(i) => (i.target.src = "")}
+                          />
+                        )}
                       </div>
                     </a>
                   </ActiveLink>
