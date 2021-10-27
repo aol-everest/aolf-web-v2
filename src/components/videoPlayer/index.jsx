@@ -26,8 +26,9 @@ const VideoPlayer = () => {
   const [showFull, setShowFull] = useState(false);
 
   const { playerProps } = store || {};
-  const { track } = playerProps || {};
+  const { track, playAction } = playerProps || {};
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isActivityLogged, setIsActivityLogged] = useState(false);
 
   const readMoreAction = () => {
     setShowFull(true);
@@ -58,6 +59,10 @@ const VideoPlayer = () => {
   const onPlayPauseAction = () => {
     const { player } = playerEl.current.getState();
     setIsPlaying(!player.paused);
+    if (playAction && !player.paused && !isActivityLogged) {
+      setIsActivityLogged(true);
+      playAction();
+    }
   };
 
   const togglePlay = () => {
