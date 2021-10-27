@@ -206,7 +206,9 @@ export default function Learn({ data, authenticated, token }) {
                 />
                 {primaryTeacherName}
               </p>
-              <p className="course-description">{subTitle}</p>
+              <p className="course-description">
+                {description && documentToReactComponents(description)}
+              </p>
 
               <div className="accordion">
                 {whatYoullLearn && (

@@ -84,7 +84,10 @@ export const DesignTwo = ({
   }
 
   return (
-    <main className="background-image meditation insight-collection insight-collection3">
+    <main
+      className="background-image meditation insight-collection insight-collection3"
+      style={{ paddingBottom: "100px" }}
+    >
       <section className="top-column meditation-page browse-category insight-collection insight-collection3">
         <div className="container-fluid">
           <div className="row">
