@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Link from "next/link";
 
 const schema = yup.object().shape({
   username: yup
@@ -71,9 +72,11 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
       <div className="checkbox-wrapper">
         <p className="checkbox-text">
           By signing up, I agree to{" "}
-          <a href="/us/ts-cs" target="_blank" className="link">
-            Terms of Service
-          </a>{" "}
+          <Link href="/policy/ts-cs">
+            <a target="_blank" className="link">
+              Terms of Service
+            </a>
+          </Link>{" "}
           and{" "}
           <a
             href="https://www.artofliving.org/us-en/privacy-policy"

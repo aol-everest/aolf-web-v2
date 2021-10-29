@@ -50,14 +50,16 @@ export const AgreementForm = ({
             <label htmlFor="program"></label>
             <p className="agreement__text">
               I agree to the{" "}
-              <a
-                href={isCorporateEvent ? "/us/ts-cs" : "/us/workshop-ppa"}
-                target="_blank"
-                rel="noreferrer"
+              <Link
+                href={
+                  isCorporateEvent ? "/policy/ts-cs" : "/policy/workshop-ppa"
+                }
               >
-                Program Participant agreement including privacy and cancellation
-                policy.
-              </a>
+                <a target="_blank" rel="noreferrer">
+                  Program Participant agreement including privacy and
+                  cancellation policy.
+                </a>
+              </Link>
             </p>
           </div>
           {formikProps.errors.ppaAgreement && formikProps.touched.ppaAgreement && (
