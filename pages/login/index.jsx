@@ -42,7 +42,7 @@ function Login() {
     try {
       await Auth.signIn(username, password);
 
-      router.push("/course");
+      router.push("/us/course");
     } catch (error) {
       console.log("error signing in", error);
     }

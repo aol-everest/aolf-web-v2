@@ -87,7 +87,7 @@ function Collection({ rootFolder, authenticated, token }) {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/membership/${id}`);
+    router.push(`/us/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {

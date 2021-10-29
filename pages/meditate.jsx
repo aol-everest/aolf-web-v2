@@ -213,7 +213,7 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/membership/${id}`);
+    router.push(`/us/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {
@@ -246,7 +246,7 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
       query = { ...query, instructor };
     }
     router.push({
-      pathname: "/meditation",
+      pathname: "/us/meditation",
       query,
     });
   };

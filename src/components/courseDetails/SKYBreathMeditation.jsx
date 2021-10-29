@@ -1,10 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useEffect } from "react";
-import moment from "moment";
-import classNames from "classnames";
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import CourseDetailsCard from "./CourseDetailsCard";
 import { ResearchPagination } from "./ResearchPagination";
@@ -13,12 +10,11 @@ import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
-import { useMedia } from "react-use";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
 import { HideOn } from "react-hide-on-scroll";
 import { priceCalculation } from "@utils";
 
-export const SKYBreathMeditation = ({ data }) => {
+export const SKYBreathMeditation = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
 
   const showResearchModal = (e) => {
@@ -31,7 +27,6 @@ export const SKYBreathMeditation = ({ data }) => {
     });
   };
 
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const autoSwiperOption = {
     slidesPerView: 1,
     spaceBetween: 30,
@@ -44,51 +39,6 @@ export const SKYBreathMeditation = ({ data }) => {
       clickable: true,
     },
   };
-
-  let swiperOption = {
-    allowTouchMove: false,
-    slidesPerView: 4,
-    spaceBetween: 30,
-    slidesOffsetBefore: 300,
-    preventInteractionOnTransition: true,
-    navigation: true,
-  };
-
-  if (useMedia("(min-width: 768px)")) {
-    swiperOption = {
-      slidesPerView: 1,
-      spaceBetween: 30,
-      centeredSlides: true,
-      navigation: false,
-    };
-  } else if (useMedia("(max-width: 1024px)")) {
-    swiperOption = {
-      allowTouchMove: false,
-      slidesPerView: 2,
-      spaceBetween: 30,
-      centeredSlides: true,
-      preventInteractionOnTransition: true,
-      navigation: true,
-    };
-  } else if (useMedia("(max-width: 1440px)")) {
-    swiperOption = {
-      allowTouchMove: false,
-      slidesPerView: 3,
-      spaceBetween: 30,
-      slidesOffsetBefore: 150,
-      preventInteractionOnTransition: true,
-      navigation: true,
-    };
-  } else {
-    swiperOption = {
-      allowTouchMove: false,
-      slidesPerView: 4,
-      spaceBetween: 30,
-      slidesOffsetBefore: 300,
-      preventInteractionOnTransition: true,
-      navigation: true,
-    };
-  }
 
   const { title, workshopTotalHours, mode } = data || {};
   const { fee, delfee, offering } = priceCalculation({ workshop: data });

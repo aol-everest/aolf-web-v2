@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import CourseDetailsCard from "./CourseDetailsCard";
 import { CourseBottomCard } from "./CourseBottomCard";
@@ -9,55 +8,7 @@ import { ABBRS, COURSE_TYPES } from "@constants";
 import { RegisterPanel } from "./RegisterPanel";
 import { HideOn } from "react-hide-on-scroll";
 
-export const SilentRetreat = ({ data }) => {
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
-
-  let swiperOption = {
-    allowTouchMove: false,
-    slidesPerView: 4,
-    spaceBetween: 30,
-    slidesOffsetBefore: 300,
-    preventInteractionOnTransition: true,
-    navigation: true,
-  };
-  if (typeof window !== "undefined") {
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      swiperOption = {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        centeredSlides: true,
-        navigation: false,
-      };
-    } else if (window.matchMedia("(max-width: 1024px)").matches) {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 2,
-        spaceBetween: 30,
-        centeredSlides: true,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    } else if (window.matchMedia("(max-width: 1440px)").matches) {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 3,
-        spaceBetween: 30,
-        slidesOffsetBefore: 150,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    } else {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 4,
-        spaceBetween: 30,
-        slidesOffsetBefore: 300,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    }
-  }
-
+export const SilentRetreat = ({ data, swiperOption }) => {
   const { title, mode } = data || {};
   return (
     <>

@@ -7,6 +7,7 @@ import {
 } from "@components/courseDetails";
 import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { NextSeo } from "next-seo";
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
@@ -47,6 +48,54 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function CourseDetail({ data }) {
+  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+
+  let swiperOption = {
+    allowTouchMove: false,
+    slidesPerView: 4,
+    spaceBetween: 30,
+    slidesOffsetBefore: 300,
+    preventInteractionOnTransition: true,
+    navigation: true,
+  };
+  if (typeof window !== "undefined") {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      swiperOption = {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        centeredSlides: true,
+        navigation: false,
+      };
+    } else if (window.matchMedia("(max-width: 1024px)").matches) {
+      swiperOption = {
+        allowTouchMove: false,
+        slidesPerView: 2,
+        spaceBetween: 30,
+        centeredSlides: true,
+        preventInteractionOnTransition: true,
+        navigation: true,
+      };
+    } else if (window.matchMedia("(max-width: 1440px)").matches) {
+      swiperOption = {
+        allowTouchMove: false,
+        slidesPerView: 3,
+        spaceBetween: 30,
+        slidesOffsetBefore: 150,
+        preventInteractionOnTransition: true,
+        navigation: true,
+      };
+    } else {
+      swiperOption = {
+        allowTouchMove: false,
+        slidesPerView: 4,
+        spaceBetween: 30,
+        slidesOffsetBefore: 300,
+        preventInteractionOnTransition: true,
+        navigation: true,
+      };
+    }
+  }
+
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
   const isSilentRetreatType =
@@ -55,12 +104,17 @@ export default function CourseDetail({ data }) {
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(data.productTypeId) >=
     0;
 
+  const props = {
+    data,
+    swiperOption,
+  };
+
   return (
     <>
       <NextSeo title={data.title} />
-      {isSKYType && <SilentRetreat data={data} />}
-      {isSilentRetreatType && <SilentRetreat data={data} />}
-      {isSahajSamadhiMeditationType && <SahajSamadhi data={data} />}
+      {isSKYType && <SilentRetreat {...props} />}
+      {isSilentRetreatType && <SilentRetreat {...props} />}
+      {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
     </>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import CourseDetailsCard from "./CourseDetailsCard";
 import { Comment } from "./Comment";
@@ -10,9 +9,7 @@ import { RegisterPanel } from "./RegisterPanel";
 import { HideOn } from "react-hide-on-scroll";
 import { useGlobalAlertContext } from "@contexts";
 
-export const SahajSamadhi = ({ data }) => {
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
-
+export const SahajSamadhi = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
 
   const showResearchModal = (e) => {
@@ -24,51 +21,6 @@ export const SahajSamadhi = ({ data }) => {
     });
   };
 
-  let swiperOption = {
-    allowTouchMove: false,
-    slidesPerView: 4,
-    spaceBetween: 30,
-    slidesOffsetBefore: 300,
-    preventInteractionOnTransition: true,
-    navigation: true,
-  };
-  if (typeof window !== "undefined") {
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      swiperOption = {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        centeredSlides: true,
-        navigation: false,
-      };
-    } else if (window.matchMedia("(max-width: 1024px)").matches) {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 2,
-        spaceBetween: 30,
-        centeredSlides: true,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    } else if (window.matchMedia("(max-width: 1440px)").matches) {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 3,
-        spaceBetween: 30,
-        slidesOffsetBefore: 150,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    } else {
-      swiperOption = {
-        allowTouchMove: false,
-        slidesPerView: 4,
-        spaceBetween: 30,
-        slidesOffsetBefore: 300,
-        preventInteractionOnTransition: true,
-        navigation: true,
-      };
-    }
-  }
   const { title, mode } = data || {};
   return (
     <>
