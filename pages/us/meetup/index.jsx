@@ -328,7 +328,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, token }) => {
     if (e) e.preventDefault();
     hideAlert();
     router.push({
-      pathname: "/course",
+      pathname: "/us/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },

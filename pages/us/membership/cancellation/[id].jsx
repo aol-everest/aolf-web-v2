@@ -74,7 +74,7 @@ const MembershipCancellation = ({
   const backToProfileAction = (e) => {
     if (e) e.preventDefault();
     router.push({
-      pathname: `/profile`,
+      pathname: `/us/profile`,
     });
   };
 
@@ -107,7 +107,7 @@ const MembershipCancellation = ({
         throw new Error(errorMessage);
       }
       router.push({
-        pathname: `/profile`,
+        pathname: `/us/profile`,
         query: {
           request: 2,
         },
@@ -116,7 +116,7 @@ const MembershipCancellation = ({
       console.log(error);
 
       router.push({
-        pathname: `/profile`,
+        pathname: `/us/profile`,
         query: {
           request: 1,
         },

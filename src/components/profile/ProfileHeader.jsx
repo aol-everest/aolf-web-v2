@@ -32,7 +32,7 @@ export const ProfileHeader = ({
     if (e) e.preventDefault();
     hideModal();
     router.push({
-      pathname: `/membership/cancellation/${modalSubscriptionId}`,
+      pathname: `/us/membership/cancellation/${modalSubscriptionId}`,
     });
   };
 
@@ -40,7 +40,7 @@ export const ProfileHeader = ({
     if (e) e.preventDefault();
     hideModal();
     router.push({
-      pathname: `/membership/${id}`,
+      pathname: `/us/membership/${id}`,
     });
   };
 

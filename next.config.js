@@ -45,7 +45,22 @@ const moduleExports = withPlugins(
   ],
   {
     // basePath: "/us",
+    // assetPrefix: "/us/",
     productionBrowserSourceMaps: true,
+    async redirects() {
+      return [
+        {
+          source: "/",
+          destination: "/us",
+          permanent: true,
+        },
+        {
+          source: "/us/course",
+          destination: "/us",
+          permanent: true,
+        },
+      ];
+    },
     async headers() {
       return [
         {

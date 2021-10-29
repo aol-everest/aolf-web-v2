@@ -6,6 +6,7 @@ export const ActiveLink = ({
   children,
   activeClassName,
   setCollapsed,
+  href,
   ...props
 }) => {
   const { asPath } = useRouter();
@@ -21,7 +22,7 @@ export const ActiveLink = ({
       : childClassName;
 
   return (
-    <Link {...props}>
+    <Link {...props} href={`/us${href}`}>
       {React.cloneElement(child, {
         className: className || null,
         onClick: () => {

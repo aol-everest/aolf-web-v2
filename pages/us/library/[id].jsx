@@ -178,7 +178,7 @@ export default function Library({ data, authenticated, token }) {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/membership/${id}`);
+    router.push(`/us/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {
@@ -221,7 +221,7 @@ export default function Library({ data, authenticated, token }) {
         });
       }
     } else if (meditate.type === "Course") {
-      router.push(`/learn/${meditate.sfid}`);
+      router.push(`/us/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
       await meditatePlayEvent({

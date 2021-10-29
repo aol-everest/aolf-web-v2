@@ -3,19 +3,14 @@ import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useGlobalModalContext, useGlobalAlertContext } from "@contexts";
-import { MODAL_TYPES, ALERT_TYPES, ABBRS } from "@constants";
+import { useGlobalModalContext } from "@contexts";
+import { MODAL_TYPES, ABBRS } from "@constants";
 
 export const WorkshopTile = ({ data, authenticated }) => {
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
   const {
     title,
-    coverImage,
-    accessible,
-    city,
-    state,
     mode,
     isPurchased,
     isEventFull,
@@ -29,10 +24,10 @@ export const WorkshopTile = ({ data, authenticated }) => {
 
   const enrollAction = (workshopId) => () => {
     if (authenticated) {
-      router.push(`/course/checkout/${workshopId}`);
+      router.push(`/us/course/checkout/${workshopId}`);
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/course/checkout/${workshopId}`,
+        navigateTo: `/us/course/checkout/${workshopId}`,
       });
     }
 
@@ -102,7 +97,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
             >
               Enroll
             </a>
-            <Link href={`/course/${sfid}`}>
+            <Link href={`/us/course/${sfid}`}>
               <a className="btn btn-box-light text-center">Details</a>
             </Link>
           </div>

@@ -117,7 +117,7 @@ export default function Learn({ data, authenticated, token }) {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/membership/${id}`);
+    router.push(`/us/membership/${id}`);
   };
 
   const onPlayPauseAction = () => {
