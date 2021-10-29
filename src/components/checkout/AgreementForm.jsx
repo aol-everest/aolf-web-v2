@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Field, ErrorMessage } from "formik";
 import classNames from "classnames";
 import renderHTML from "react-render-html";
+import Link from "next/link";
 
 export const AgreementForm = ({
   formikProps,
@@ -165,14 +166,12 @@ export const AgreementForm = ({
           <label htmlFor="ppaAgreement"></label>
           <p className="agreement__text">
             I agree to the{" "}
-            <a
-              href={isCorporateEvent ? "/policy/ts-cs" : "/policy/ppa"}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Program Participant agreement including privacy and cancellation
-              policy.
-            </a>
+            <Link href={isCorporateEvent ? "/policy/ts-cs" : "/policy/ppa"}>
+              <a target="_blank" rel="noreferrer">
+                Program Participant agreement including privacy and cancellation
+                policy.
+              </a>
+            </Link>
           </p>
         </div>
         {formikProps.errors.ppaAgreement && formikProps.touched.ppaAgreement && (
