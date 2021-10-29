@@ -5,7 +5,6 @@ import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import Link from "next/link";
-import { Collapse } from "reactstrap";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
 import {
@@ -30,8 +29,9 @@ const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Ple
                 at (844) 273-5500 to resolve the issue and cancel your
                 membership.`;
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req, res, query }) {
   const { Auth } = withSSRContext({ req });
+  const { tab } = query || {};
   try {
     const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
@@ -45,6 +45,7 @@ export async function getServerSideProps({ req, res }) {
         username: user.username,
         profile: res,
         token,
+        tab: tab || UPCOMING_EVENTS,
       },
     };
   } catch (err) {
@@ -55,14 +56,14 @@ export async function getServerSideProps({ req, res }) {
   return { props: {} };
 }
 
-const Profile = ({ profile, token }) => {
+const Profile = ({ profile, token, tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
   const [cropedProfilePic, setCropedProfilePic] = useState(null);
   const [uploadedProfilePic, setUploadedProfilePic] = useState(null);
   const [userProfile, setUserProfile] = useState(profile);
   const [activeTab, setActiveTab] = useQueryString("tab", {
-    defaultValue: UPCOMING_EVENTS,
+    defaultValue: tab || UPCOMING_EVENTS,
   });
   const [editCardDetail, setEditCardDetail] = useState(false);
   const [request, setRequest] = useQueryString("request");
@@ -165,9 +166,7 @@ const Profile = ({ profile, token }) => {
             <div className="container-xl d-flex align-center">
               <span>
                 <img src="/img/ic-error.svg" alt="error" />
-                We're sorry, but an error occurred. Please contact the help desk
-                at (844) 273-5500 to resolve the issue and cancel your
-                membership.
+                {MESSAGE_CANCEL_MEMBERSHIP_ERROR}
               </span>
             </div>
             <img
@@ -395,7 +394,11 @@ const Profile = ({ profile, token }) => {
                     </button>
                   </h2>
                 </div>
-                <Collapse isOpen={activeTab === UPCOMING_EVENTS}>
+                <div
+                  className={classNames("collapse", {
+                    show: activeTab === UPCOMING_EVENTS,
+                  })}
+                >
                   <div className="profile-body_mobile__card-body">
                     {upcomingEvents.length === 0 && (
                       <div className="profile-body_mobile__cards-empty cards-empty">
@@ -426,7 +429,7 @@ const Profile = ({ profile, token }) => {
                     )}
                     <EventList workshops={upcomingEvents} isMobile></EventList>
                   </div>
-                </Collapse>
+                </div>
               </div>
               <div className="profile-body_mobile__card">
                 <div className="profile-body_mobile__card-header">
@@ -442,7 +445,11 @@ const Profile = ({ profile, token }) => {
                     </button>
                   </h2>
                 </div>
-                <Collapse isOpen={activeTab === UPDATE_PROFILE}>
+                <div
+                  className={classNames("collapse", {
+                    show: activeTab === UPDATE_PROFILE,
+                  })}
+                >
                   <div className="profile-body_mobile__card-body">
                     <ChangeProfile
                       isMobile
@@ -451,7 +458,7 @@ const Profile = ({ profile, token }) => {
                       token={token}
                     ></ChangeProfile>
                   </div>
-                </Collapse>
+                </div>
               </div>
               <div className="profile-body_mobile__card">
                 <div className="profile-body_mobile__card-header">
@@ -467,7 +474,11 @@ const Profile = ({ profile, token }) => {
                     </button>
                   </h2>
                 </div>
-                <Collapse isOpen={activeTab === CARD_DETAILS}>
+                <div
+                  className={classNames("collapse", {
+                    show: activeTab === CARD_DETAILS,
+                  })}
+                >
                   <div className="profile-body_mobile__card-body">
                     {!editCardDetail && (
                       <ViewCardDetail
@@ -485,7 +496,7 @@ const Profile = ({ profile, token }) => {
                       </StripeProvider>
                     )} */}
                   </div>
-                </Collapse>
+                </div>
               </div>
               <div className="profile-body_mobile__card">
                 <div className="profile-body_mobile__card-header">
@@ -501,14 +512,18 @@ const Profile = ({ profile, token }) => {
                     </button>
                   </h2>
                 </div>
-                <Collapse isOpen={activeTab === CHANGE_PASSWORD}>
+                <div
+                  className={classNames("collapse", {
+                    show: activeTab === CHANGE_PASSWORD,
+                  })}
+                >
                   <div className="profile-body_mobile__card-body">
                     <ChangePassword
                       isMobile
                       updateCompleteAction={updateCompleteAction}
                     ></ChangePassword>
                   </div>
-                </Collapse>
+                </div>
               </div>
               <div className="profile-body_mobile__card">
                 <div className="profile-body_mobile__card-header">

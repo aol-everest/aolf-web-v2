@@ -24,6 +24,7 @@ export const EventList = ({ isMobile, workshops }) => {
 
 const renderEventMobile = (workshop) => {
   const {
+    sfid,
     title,
     coverImage,
     accessible,
@@ -89,7 +90,7 @@ const renderEventMobile = (workshop) => {
     );
   } else {
     return (
-      <div className="embla__slide">
+      <div className="embla__slide" key={sfid}>
         <div className="profile-body_mobile__course">
           {isSilentRetreatType && (
             <img
@@ -150,6 +151,7 @@ const renderEventMobile = (workshop) => {
 
 const renderEvent = (workshop) => {
   const {
+    sfid,
     title,
     meetupTitle,
     coverImage,
@@ -198,7 +200,7 @@ const renderEvent = (workshop) => {
         break;
     }
     return (
-      <div className="col-6 col-lg-3 col-md-4">
+      <div className="col-6 col-lg-3 col-md-4" key={sfid}>
         <div
           className="profile-body__card"
           style={{ backgroundColor: "transparent" }}
@@ -228,7 +230,7 @@ const renderEvent = (workshop) => {
       imageSrc = "/img/course-card-1.png";
     }
     return (
-      <div className="col-6 col-lg-3 col-md-4">
+      <div className="col-6 col-lg-3 col-md-4" key={sfid}>
         <div
           className="profile-body__card"
           style={{ backgroundColor: "transparent" }}
