@@ -56,7 +56,6 @@ const createOptions = {
 export const PaymentForm = ({
   workshop = {},
   profile = {},
-  token,
   enrollmentCompletionAction = () => {},
 }) => {
   // const {
@@ -266,15 +265,15 @@ export const PaymentForm = ({
         };
       }
 
-      if (!token) {
-        payLoad = {
-          ...payLoad,
-          user: {
-            firstName,
-            lastName,
-          },
-        };
-      }
+      // if (!token) {
+      //   payLoad = {
+      //     ...payLoad,
+      //     user: {
+      //       firstName,
+      //       lastName,
+      //     },
+      //   };
+      // }
       //token.saveCardForFuture = true;
 
       const {
@@ -283,7 +282,6 @@ export const PaymentForm = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        token,
         path: "createAndPayOrder",
         body: payLoad,
       });
@@ -529,7 +527,6 @@ export const PaymentForm = ({
                     formikProps={formikProps}
                     formikKey="couponCode"
                     product={productId}
-                    token={token}
                     applyDiscount={applyDiscount}
                     addOnProducts={addOnProducts}
                   ></DiscountCodeInput>

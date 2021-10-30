@@ -14,14 +14,13 @@ const successMessage = () => {
   );
 };
 
-const TAndCWorkshop = ({ token }) => {
+const TAndCWorkshop = () => {
   const { showAlert } = useGlobalAlertContext();
   const handleClick = async () => {
     try {
       await api.post({
         path: "waiveOffUserGrants",
         body: { waiveGrants: true },
-        token,
       });
       showAlert(ALERT_TYPES.SUCCESS_ALERT, {
         children: successMessage,

@@ -66,7 +66,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-export default function Library({ data, authenticated, token }) {
+export default function Library({ data, authenticated }) {
   const [rootFolder] = data.folder;
   console.log(data);
 
@@ -88,7 +88,6 @@ export default function Library({ data, authenticated, token }) {
       async () => {
         const response = await api.get({
           path: "getFavouriteContents",
-          token,
         });
         return response.data;
       },
@@ -172,7 +171,6 @@ export default function Library({ data, authenticated, token }) {
       await markFavoriteEvent({
         meditate,
         refetch: refetchFavouriteContents,
-        token,
       });
     }
   };
@@ -230,7 +228,6 @@ export default function Library({ data, authenticated, token }) {
         showPlayer,
         hidePlayer,
         showVideoPlayer,
-        token,
       });
       setLoading(false);
     }
@@ -298,7 +295,6 @@ export default function Library({ data, authenticated, token }) {
 
   const params = {
     authenticated,
-    token,
     swiperOption,
     pickCategoryImage,
     backgroundIterator,

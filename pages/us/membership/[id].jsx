@@ -90,7 +90,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-function MembershipCheckout({ subsciption, profile, token }) {
+function MembershipCheckout({ subsciption, profile }) {
   const [couponCode] = useQueryString("coupon");
   const [offeringId] = useQueryString("ofid");
   const { showModal } = useGlobalModalContext();
@@ -155,7 +155,6 @@ function MembershipCheckout({ subsciption, profile, token }) {
               activeSubscription={activeSubscription}
               couponCode={couponCode}
               profile={profile}
-              token={token}
             />
           </Elements>
         </div>

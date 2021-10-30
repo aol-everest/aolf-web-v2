@@ -55,7 +55,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const Checkout = ({ workshop, profile, token }) => {
+const Checkout = ({ workshop, profile }) => {
   const router = useRouter();
 
   const [mbsy_source] = useQueryString("mbsy_source");
@@ -97,7 +97,6 @@ const Checkout = ({ workshop, profile, token }) => {
               <PaymentForm
                 workshop={workshop}
                 profile={profile}
-                token={token}
                 enrollmentCompletionAction={enrollmentCompletionAction}
               />
             </Elements>

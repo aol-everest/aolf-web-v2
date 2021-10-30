@@ -67,7 +67,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const Meditation = ({ authenticated, token, randomMeditate }) => {
+const Meditation = ({ authenticated, randomMeditate }) => {
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
@@ -102,7 +102,6 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
           deviceType: "web",
           category: firstCategory,
         },
-        token,
       });
       return response.data;
     },
@@ -121,7 +120,6 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
           deviceType: "web",
           category: secoundCategory,
         },
-        token,
       });
       return response.data;
     },
@@ -169,7 +167,6 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
           deviceType: "web",
           collectionName: "Recommendedmeds",
         },
-        token,
       });
       return response.data;
     },
@@ -208,7 +205,7 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch, token });
+      await markFavoriteEvent({ meditate, refetch });
     }
   };
 
@@ -229,7 +226,6 @@ const Meditation = ({ authenticated, token, randomMeditate }) => {
         showVideoPlayer,
         subsciptionCategories,
         purchaseMembershipAction,
-        token,
       });
     }
   };

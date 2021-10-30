@@ -54,7 +54,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const BackEndCheckout = ({ workshop, profile, token }) => {
+const BackEndCheckout = ({ workshop, profile }) => {
   return (
     <main className="body_wrapper backend-reg-body">
       <div className="container">
@@ -68,11 +68,7 @@ const BackEndCheckout = ({ workshop, profile, token }) => {
               },
             ]}
           >
-            <BackendPaymentForm
-              useWorkshop={workshop}
-              profile={profile}
-              token={token}
-            />
+            <BackendPaymentForm useWorkshop={workshop} profile={profile} />
           </Elements>
         </div>
       </div>

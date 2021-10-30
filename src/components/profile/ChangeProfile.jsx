@@ -26,7 +26,6 @@ export const ChangeProfile = ({
   isMobile,
   profile = {},
   updateCompleteAction,
-  token,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +48,6 @@ export const ChangeProfile = ({
           contactState,
           contactZip,
         },
-        token,
       });
 
       if (status === 400) {

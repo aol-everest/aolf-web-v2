@@ -2,7 +2,7 @@ import { api } from "@utils";
 import { ALERT_TYPES } from "@constants";
 import { RetreatPrerequisiteWarning } from "@components";
 import { updateUserActivity } from "@service";
-export const markFavoriteEvent = async ({ meditate, refetch, token }) => {
+export const markFavoriteEvent = async ({ meditate, refetch }) => {
   try {
     const data = {
       contentSfid: meditate.sfid,
@@ -11,7 +11,6 @@ export const markFavoriteEvent = async ({ meditate, refetch, token }) => {
     await api.post({
       path: "markFavourite",
       body: data,
-      token,
     });
     if (refetch) refetch({ refetchPage: (page, index) => index === 0 });
   } catch (error) {
