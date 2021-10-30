@@ -67,7 +67,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-export default function Learn({ data, authenticated, token }) {
+export default function Learn({ data, authenticated }) {
   console.log(data);
   const {
     sfid,
@@ -112,7 +112,7 @@ export default function Learn({ data, authenticated, token }) {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch: null, token });
+      await markFavoriteEvent({ meditate, refetch: null });
     }
   };
 
@@ -148,7 +148,6 @@ export default function Learn({ data, authenticated, token }) {
     try {
       const { data } = await api.get({
         path: "chapterDetail",
-        token,
         param: {
           id: sfid,
           chapterSfid: chapter.sfid,
@@ -181,7 +180,7 @@ export default function Learn({ data, authenticated, token }) {
               description: chapterDetails.description,
             },
             playAction: async () => {
-              await updateUserActivity(token, {
+              await updateUserActivity({
                 contentSfid: sfid,
                 subContentSfid: chapterDetails.sfid,
               });

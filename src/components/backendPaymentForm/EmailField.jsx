@@ -8,7 +8,6 @@ export function EmailField({
   addOnProducts,
   field,
   form,
-  token,
   product,
   producttype,
   withLabel,
@@ -50,7 +49,6 @@ export function EmailField({
         param: {
           email: value,
         },
-        token,
       });
 
       if (!user) {
@@ -64,7 +62,6 @@ export function EmailField({
           id: productId,
           uid: user.id,
         },
-        token,
       });
 
       applyUser({ user, form }, data);

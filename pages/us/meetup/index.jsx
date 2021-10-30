@@ -188,7 +188,7 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
   );
 };
 
-const Meetup = ({ meetups, allMeetupMaster, authenticated, token }) => {
+const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
   const seed = useUIDSeed();
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
@@ -367,7 +367,6 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, token }) => {
           param: {
             id: selectedMeetup.sfid,
           },
-          token,
         });
         const currentMeetup = { ...selectedMeetup, ...data };
         showModal(MODAL_TYPES.EMPTY_MODAL, {
@@ -456,7 +455,6 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated, token }) => {
       const res = await api.get({
         path: "meetups",
         param,
-        token,
       });
       return res;
     },

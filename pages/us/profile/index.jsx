@@ -57,7 +57,7 @@ export async function getServerSideProps({ req, res, query }) {
   return { props: {} };
 }
 
-const Profile = ({ profile, token, tab }) => {
+const Profile = ({ profile, tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
   const [cropedProfilePic, setCropedProfilePic] = useState(null);
@@ -151,7 +151,6 @@ const Profile = ({ profile, token, tab }) => {
       setLoading(true);
       const res = await api.get({
         path: "profile",
-        token,
       });
       setUserProfile(res);
       setLoading(false);
@@ -339,7 +338,6 @@ const Profile = ({ profile, token, tab }) => {
                 <ChangeProfile
                   updateCompleteAction={updateCompleteAction}
                   profile={profile}
-                  token={token}
                 ></ChangeProfile>
               </div>
               <div
@@ -371,7 +369,6 @@ const Profile = ({ profile, token, tab }) => {
               >
                 <ChangePassword
                   updateCompleteAction={updateCompleteAction}
-                  token={token}
                 ></ChangePassword>
               </div>
             </div>
@@ -456,7 +453,6 @@ const Profile = ({ profile, token, tab }) => {
                       isMobile
                       updateCompleteAction={updateCompleteAction}
                       profile={profile}
-                      token={token}
                     ></ChangeProfile>
                   </div>
                 </div>

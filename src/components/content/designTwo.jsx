@@ -21,7 +21,6 @@ const timeConvert = (data) => {
 
 export const DesignTwo = ({
   data,
-  token,
   authenticated,
   swiperOption,
   pickCategoryImage,

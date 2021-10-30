@@ -56,11 +56,7 @@ const createOptions = {
   },
 };
 
-export const BackendPaymentForm = ({
-  useWorkshop = {},
-  profile = {},
-  token,
-}) => {
+export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
   const [couponCode, setCouponCode] = useState("");
   const [selectedComboBundle, setSelectedComboBundle] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -639,7 +635,6 @@ export const BackendPaymentForm = ({
                           placeholder="Email"
                           applyUser={applyUser}
                           user={user}
-                          token={token}
                           withLabel={true}
                           disabled={loading}
                         />
@@ -1061,7 +1056,6 @@ export const BackendPaymentForm = ({
                           formikProps={formikProps}
                           formikKey="couponCode"
                           product={workshop.sfid}
-                          token={token}
                           applyDiscount={applyDiscount}
                           addOnProducts={addOnProducts}
                         ></DiscountCodeInput>

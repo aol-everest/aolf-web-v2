@@ -148,7 +148,7 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Course = ({ workshops, authenticated, token }) => {
+const Course = ({ workshops, authenticated }) => {
   const seed = useUIDSeed();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
@@ -316,7 +316,6 @@ const Course = ({ workshops, authenticated, token }) => {
       const res = await api.get({
         path: "workshops",
         param,
-        token,
       });
       return res;
     },

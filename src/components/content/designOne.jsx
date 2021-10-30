@@ -15,7 +15,6 @@ const timeConvert = (data) => {
 
 export const DesignOne = ({
   data,
-  token,
   authenticated,
   swiperOption,
   pickCategoryImage,

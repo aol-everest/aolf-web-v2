@@ -49,12 +49,7 @@ export async function getServerSideProps({ req, res, query }) {
   return { props };
 }
 
-const MembershipCancellation = ({
-  cancelSubscription,
-  token,
-  profile,
-  query,
-}) => {
+const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { id: subscriptionId } = router.query;
@@ -96,7 +91,6 @@ const MembershipCancellation = ({
         isError,
       } = await api.post({
         path: "cancelSubscriptionStep2",
-        token,
         body: {
           id: subsciptionId,
           amountDue: totalAmountWillBeDeducted,

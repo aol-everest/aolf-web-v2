@@ -57,7 +57,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-function Collection({ rootFolder, authenticated, token }) {
+function Collection({ rootFolder, authenticated }) {
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
@@ -82,7 +82,7 @@ function Collection({ rootFolder, authenticated, token }) {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch: null, token });
+      await markFavoriteEvent({ meditate, refetch: null });
     }
   };
 
@@ -103,7 +103,6 @@ function Collection({ rootFolder, authenticated, token }) {
         showVideoPlayer,
         subsciptionCategories,
         purchaseMembershipAction,
-        token,
       });
     }
   };

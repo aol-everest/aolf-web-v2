@@ -11,7 +11,6 @@ export const DiscountCodeInput = ({
   fullWidth,
   productType = "workshop",
   addOnProducts = [],
-  token,
   product,
   applyDiscount,
   clearCoupon,
@@ -72,7 +71,6 @@ export const DiscountCodeInput = ({
       let results = await api.post({
         path: "applyCoupon",
         body: payLoad,
-        token,
       });
       if (results.status !== 200) {
         throw new Error(results.error || "Internal Server error.");

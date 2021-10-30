@@ -51,7 +51,6 @@ export const MembershipCheckoutStripe = ({
   activeSubscription,
   couponCode,
   profile,
-  token,
 }) => {
   const [loading, setLoading] = useState(false);
   const [discount, setDiscount] = useState(null);
@@ -225,7 +224,6 @@ export const MembershipCheckoutStripe = ({
                     formikProps={formikProps}
                     formikKey="couponCode"
                     product={activeSubscription.sfid}
-                    token={token}
                     applyDiscount={applyDiscount}
                   ></DiscountCodeInput>
 

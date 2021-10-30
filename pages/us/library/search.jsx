@@ -100,7 +100,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const LibrarySearch = ({ meditations, authenticated, token }) => {
+const LibrarySearch = ({ meditations, authenticated }) => {
   const seed = useUIDSeed();
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
@@ -164,7 +164,7 @@ const LibrarySearch = ({ meditations, authenticated, token }) => {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch, token });
+      await markFavoriteEvent({ meditate, refetch });
     }
   };
 
@@ -185,7 +185,6 @@ const LibrarySearch = ({ meditations, authenticated, token }) => {
         showVideoPlayer,
         subsciptionCategories,
         purchaseMembershipAction,
-        token,
       });
     }
   };
