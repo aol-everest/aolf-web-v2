@@ -248,7 +248,7 @@ export default function Library({ data, authenticated, token }) {
       query = { ...query, instructor };
     }
     router.push({
-      pathname: "/library/search",
+      pathname: "/us/library/search",
       query,
     });
   };
