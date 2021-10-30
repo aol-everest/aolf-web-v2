@@ -25,13 +25,11 @@ export const meditatePlayEvent = async ({
   showPlayer,
   hidePlayer,
   showVideoPlayer,
-  token,
 }) => {
   try {
     const results = await api.get({
       path: "meditationDetail",
       param: { id: meditate.sfid },
-      token,
     });
     const { data, status, workshopPrerequisiteMessage } = results;
 
@@ -71,7 +69,7 @@ export const meditatePlayEvent = async ({
           },
         });
       }
-      await updateUserActivity(token, {
+      await updateUserActivity({
         contentSfid: meditateDetails.sfid,
       });
     }

@@ -7,6 +7,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
+
 import {
   EventList,
   ViewCardDetail,
