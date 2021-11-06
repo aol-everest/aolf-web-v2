@@ -44,6 +44,7 @@ const moduleExports = withPlugins(
     }),
   ],
   {
+    swcMinify: true,
     // basePath: "/us",
     // assetPrefix: "/us/",
     productionBrowserSourceMaps: true,
