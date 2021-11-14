@@ -341,7 +341,7 @@ export const DesignTwo = ({
           {nonListingFolders &&
             nonListingFolders.map((folder, i) => (
               <SwiperSlide key={i} className="category-slide-item">
-                <Link href={`/library/collection/${folder.id}`}>
+                <Link href={`/us/library/collection/${folder.id}`}>
                   <div
                     className="card image-card image-card-1 contentCard"
                     style={{

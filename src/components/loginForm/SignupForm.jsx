@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import * as yup from "yup";
 import Link from "next/link";
 
