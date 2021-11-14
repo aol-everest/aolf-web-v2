@@ -43,7 +43,7 @@ export const meditatePlayEvent = async ({
     }
 
     if (data) {
-      const meditateDetails = { ...data, ...meditate };
+      const meditateDetails = { ...meditate, ...data };
       if (
         meditateDetails.contentType === "Audio" ||
         meditateDetails.contentType === "audio/x-m4a"
