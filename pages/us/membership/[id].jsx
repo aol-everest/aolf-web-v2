@@ -40,7 +40,7 @@ const RetreatPrerequisiteWarning = () => {
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
-  const { id, ofid } = query;
+  const { id, ofid, cid } = query;
   let props = {};
   let token = "";
   try {
@@ -78,6 +78,7 @@ export const getServerSideProps = async (context) => {
     props = {
       ...props,
       subsciption: res.data[0],
+      cid,
     };
   } catch (err) {
     console.error(err);
@@ -90,9 +91,15 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-function MembershipCheckout({ subsciption, profile }) {
+function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
   const [couponCode] = useQueryString("coupon");
   const [offeringId] = useQueryString("ofid");
+  const [courseId] = useQueryString("cid", {
+    defaultValue: cid,
+  });
+  const [returnPage] = useQueryString("page", {
+    defaultValue: "detail",
+  });
   const { showModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const router = useRouter();
@@ -133,6 +140,17 @@ function MembershipCheckout({ subsciption, profile }) {
     });
   };
 
+  const completeCheckoutCallback = (orderId) => {
+    let query = {};
+    if (courseId) {
+      query = { cid: courseId, page: returnPage };
+    }
+    router.push({
+      pathname: `/us/membership/thank-you/${orderId}`,
+      query,
+    });
+  };
+
   return (
     <main>
       <NextSeo title={name} />
@@ -155,6 +173,8 @@ function MembershipCheckout({ subsciption, profile }) {
               activeSubscription={activeSubscription}
               couponCode={couponCode}
               profile={profile}
+              authenticated={authenticated}
+              completeCheckoutCallback={completeCheckoutCallback}
             />
           </Elements>
         </div>

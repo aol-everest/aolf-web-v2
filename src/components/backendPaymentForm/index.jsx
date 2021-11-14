@@ -348,7 +348,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                       <div className="col-sm-12">
                         <img
                           className="img"
-                          src={primaryTeacherPic || "/assets/images/user.png"}
+                          src={primaryTeacherPic || "/img/user.png"}
                         />
                         <a href="#" className="name">
                           {primaryTeacherName}
@@ -360,7 +360,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                         {"  "}
                         <img
                           className="img"
-                          src={coTeacher1Pic || "/assets/images/user.png"}
+                          src={coTeacher1Pic || "/img/user.png"}
                         />
                         <a href="#" className="name">
                           {coTeacher1Name}
@@ -372,7 +372,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                         {"  "}
                         <img
                           className="img"
-                          src={coTeacher2Pic || "/assets/images/user.png"}
+                          src={coTeacher2Pic || "/img/user.png"}
                         />
                         <a href="#" className="name">
                           {coTeacher2Name}
