@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { isEmpty } from "lodash";
 import { useAuth } from "@contexts";
 import moment from "moment";
-import { MEMBERSHIP_TYPES } from "@constants";
+import { MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
 
 export const RegisterPanel = ({ workshop }) => {
   const { authenticated = false, profile } = useAuth();
@@ -20,6 +20,16 @@ export const RegisterPanel = ({ workshop }) => {
     roomAndBoardRange,
     usableCredit,
   } = workshop || {};
+
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
+    0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -69,6 +79,52 @@ export const RegisterPanel = ({ workshop }) => {
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
+  if (isSahajSamadhiMeditationType) {
+    return (
+      <div className="powerful__block powerful__block_bottom">
+        <div>
+          <h6 className="powerful__block-caption_2">
+            Learn a meditation practice for life
+          </h6>
+          <div>
+            {delfee && <h3>Limited Time Offer</h3>}
+            <h2>
+              {title}: ${fee}
+            </h2>
+            {delfee && (
+              <p>
+                Regular course fee:{" "}
+                <span className="discount"> ${delfee} </span>
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="bottom-box justify-content-md-center">
+          <button className="btn-secondary v2" onClick={handleRegister}>
+            Register Today
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (isSKYType) {
+    return (
+      <div className="powerful__block">
+        <div>
+          <h3>Limited Time Offer</h3>
+          <h2>
+            {title}: ${fee}
+          </h2>
+          <p>
+            Regular course fee: <span className="discount"> ${delfee} </span>
+          </p>
+          <button className="btn-secondary v2" onClick={handleRegister}>
+            Register Today
+          </button>
+        </div>
+      </div>
+    );
+  }
   if (authenticated && (isJourneyPremium || isJourneyPlus)) {
     return (
       <div className="powerful__block powerful__block_bottom">
