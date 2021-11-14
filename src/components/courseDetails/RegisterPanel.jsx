@@ -2,31 +2,181 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { priceCalculation } from "@utils";
 import { useRouter } from "next/router";
+import { isEmpty } from "lodash";
+import { useAuth } from "@contexts";
+import moment from "moment";
+import { MEMBERSHIP_TYPES } from "@constants";
 
 export const RegisterPanel = ({ workshop }) => {
+  const { authenticated = false, profile } = useAuth();
   const router = useRouter();
-  const { title, sfid } = workshop;
   const { fee, delfee, offering } = priceCalculation({ workshop });
+  const {
+    title,
+    sfid,
+    premiumRate,
+    mode,
+    earlyBirdFeeIncreasing,
+    roomAndBoardRange,
+    usableCredit,
+  } = workshop || {};
 
   const handleRegister = (e) => {
     e.preventDefault();
     router.push(`/us/course/checkout/${sfid}`);
   };
 
+  const purchaseMembershipAction = (id) => (e) => {
+    if (e) e.preventDefault();
+    router.push({
+      pathname: `/us/membership/${id}`,
+      query: { cid: sfid, page: "detail" },
+    });
+  };
+
+  const { subscriptions = [] } = profile || {};
+  const userSubscriptions = subscriptions.reduce(
+    (accumulator, currentValue) => {
+      return {
+        ...accumulator,
+        [currentValue.subscriptionMasterSfid]: currentValue,
+      };
+    },
+    {},
+  );
+
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === "Amount"
+  ) {
+    if (usableCredit.availableCredit > fee) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
+    }
+  }
+
+  const isJourneyPremium =
+    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
+  const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
+
+  if (authenticated && (isJourneyPremium || isJourneyPlus)) {
+    return (
+      <div className="powerful__block powerful__block_bottom">
+        <div>
+          <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
+          <h5 className="powerful__block-title_5 mb-1">
+            Premium/Journey+ rate:{" "}
+            {premiumRate &&
+              premiumRate.listPrice &&
+              premiumRate.listPrice !== premiumRate.unitPrice && (
+                <span className="discount">
+                  ${delfee || premiumRate.listPrice}
+                </span>
+              )}{" "}
+            ${premiumRate && premiumRate.unitPrice}
+          </h5>
+          {roomAndBoardRange && (
+            <h5 className="powerful__italic-title_6">
+              plus room &amp; board: {roomAndBoardRange}
+            </h5>
+          )}
+          {isUsableCreditAvailable && (
+            <div className="credit-text mb-2">
+              {usableCredit.message} ${UpdatedFeeAfterCredits}.
+            </div>
+          )}
+        </div>
+        <div className="bottom-box">
+          {earlyBirdFeeIncreasing && (
+            <>
+              <img src="/img/ic-timer-orange.svg" alt="timer" />
+              <p>
+                Register soon. Course fee will go up by $
+                {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                {moment
+                  .utc(earlyBirdFeeIncreasing.increasingByDate)
+                  .format("MMM D, YYYY")}
+              </p>
+            </>
+          )}
+          <button className="btn-secondary v2" onClick={handleRegister}>
+            Register Today
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="powerful__block powerful__block_bottom">
       <div>
         <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
-        <h5 className="powerful__block-title_3">
-          {title}: <span className="discount">${delfee}</span> ${fee}
+        <h5 className="powerful__block-title_5">
+          Regular rate: {delfee && <span className="discount">${delfee}</span>}{" "}
+          ${fee}
         </h5>
+        {!isUsableCreditAvailable && (
+          <h5 className="powerful__block-title_5 mb-1">
+            Premium/Journey+ rate:{" "}
+            {premiumRate &&
+              premiumRate.listPrice &&
+              premiumRate.listPrice !== premiumRate.unitPrice && (
+                <span className="discount">
+                  ${delfee || premiumRate.listPrice}
+                </span>
+              )}{" "}
+            ${premiumRate && premiumRate.unitPrice}
+          </h5>
+        )}
+        {roomAndBoardRange && (
+          <h5 className="powerful__italic-title_6">
+            plus room &amp; board: {roomAndBoardRange}
+          </h5>
+        )}
+        {isUsableCreditAvailable && (
+          <div className="credit-text mb-2">
+            {usableCredit.message} ${UpdatedFeeAfterCredits}.
+          </div>
+        )}
       </div>
       <div className="bottom-box">
-        <img src="/img/ic-timer-orange.svg" alt="timer" />
-        <p>Register soon. Course fee will go up by $100 on MM/DD</p>
-        <button className="btn-secondary" onClick={handleRegister}>
-          Register Today
-        </button>
+        {earlyBirdFeeIncreasing && (
+          <>
+            <img src="/img/ic-timer-orange.svg" alt="timer" />
+            <p>
+              Register soon. Course fee will go up by $
+              {earlyBirdFeeIncreasing.increasingFee} on{" "}
+              {moment
+                .utc(earlyBirdFeeIncreasing.increasingByDate)
+                .format("MMM D, YYYY")}
+            </p>
+          </>
+        )}
+        <div className="btn-wrapper">
+          <button className="btn-outline" onClick={handleRegister}>
+            Join at the full rate
+          </button>
+          {!isUsableCreditAvailable && (
+            <button
+              className="btn-secondary v2"
+              onClick={purchaseMembershipAction(
+                MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+              )}
+            >
+              Join Journey+
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

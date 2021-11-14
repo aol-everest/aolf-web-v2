@@ -15,6 +15,7 @@ import {
   DiscountCodeInput,
   CourseDetailsCard,
 } from "@components/checkout";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { api } from "@utils";
 import { Loader } from "@components";
 import { useGlobalAlertContext } from "@contexts";
@@ -51,12 +52,16 @@ export const MembershipCheckoutStripe = ({
   activeSubscription,
   couponCode,
   profile,
+  completeCheckoutCallback,
+  authenticated,
 }) => {
   const [loading, setLoading] = useState(false);
   const [discount, setDiscount] = useState(null);
   const [showDetailMobileModal, setShowDetailMobileModal] = useState(false);
   const router = useRouter();
   const { showAlert } = useGlobalAlertContext();
+  const elements = useElements();
+  const stripe = useStripe();
 
   const {
     first_name,
@@ -115,6 +120,71 @@ export const MembershipCheckoutStripe = ({
 
     try {
       setLoading(true);
+
+      let tokenizeCC = null;
+      if (!isRegisteredStripeCustomer && isCreditCardRequired !== false) {
+        const cardElement = elements.getElement(CardElement);
+        let createTokenRespone = await stripe.createToken(cardElement, {
+          name: profile.name ? profile.name : firstName + " " + lastName,
+        });
+        let { error, token } = createTokenRespone;
+        if (error) {
+          throw error;
+        }
+        tokenizeCC = token;
+      }
+
+      let products = {
+        productType: "subscription",
+        productSfId: activeSubscription.sfid,
+        ...extraProps,
+      };
+
+      if (offeringId) {
+        products = { ...products, offeringId };
+      }
+
+      let payLoad = {
+        shoppingRequest: {
+          tokenizeCC,
+          couponCode,
+
+          contactAddress: {
+            contactPhone,
+            contactAddress,
+            contactState,
+            contactZip,
+          },
+          products,
+        },
+      };
+
+      if (!authenticated) {
+        payLoad = {
+          ...payLoad,
+          user: {
+            firstName,
+            lastName,
+          },
+        };
+      }
+
+      const {
+        data,
+        status,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: "createAndPayOrder",
+        body: payLoad,
+      });
+
+      setLoading(false);
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      completeCheckoutCallback(data.orderId);
     } catch (ex) {
       console.error(ex);
       setLoading(false);
@@ -231,9 +301,7 @@ export const MembershipCheckoutStripe = ({
                     <>
                       {!isRegisteredStripeCustomer && (
                         <div className="input-block card-element v2">
-                          {/* <CardElement
-                            {...createOptions(this.props.fontSize)}
-                          /> */}
+                          <CardElement options={createOptions} />
                         </div>
                       )}
 
