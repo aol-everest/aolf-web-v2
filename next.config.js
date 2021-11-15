@@ -1,6 +1,7 @@
 // const withPlugins = require("next-compose-plugins");
 const { withSentryConfig } = require("@sentry/nextjs");
 const withPWA = require("next-pwa");
+const runtimeCaching = require("next-pwa/cache");
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -25,6 +26,7 @@ const moduleExports = withPWA({
   pwa: {
     dest: "public",
     disable: process.env.NODE_ENV === "development",
+    runtimeCaching,
   },
   // swcMinify: true,
   // basePath: "/us",
