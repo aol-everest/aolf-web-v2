@@ -24,7 +24,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
               <li>Begin or renew a restorative meditation practice</li>
             </ul>
             <Link
-              activeclassName="active"
+              activeClassName="active"
               className="btn-secondary v2"
               to="registerNowBlock"
               spy={true}
@@ -353,7 +353,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
                 </p>
               </div>
               <Link
-                activeclassName="active"
+                activeClassName="active"
                 className="btn-secondary v2"
                 to="registerNowBlock"
                 spy={true}

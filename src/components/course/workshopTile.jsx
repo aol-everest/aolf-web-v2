@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES, ABBRS } from "@constants";
+import classNames from "classnames";
 
 export const WorkshopTile = ({ data, authenticated }) => {
   const router = useRouter();
@@ -89,7 +90,11 @@ export const WorkshopTile = ({ data, authenticated }) => {
         </div>
         <div className="course_complete">Course full</div>
         <div className="course_complete_registration">already registered</div>
-        <div className="course_detail_box d-none d-lg-block">
+        <div
+          className={classNames("course_detail_box", {
+            "d-none": isPurchased || isEventFull,
+          })}
+        >
           <div className="course_detail_btn_box">
             <a
               className="btn btn_box_primary text-center"

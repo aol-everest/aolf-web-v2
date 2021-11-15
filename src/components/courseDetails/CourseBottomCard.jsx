@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import classNames from "classnames";
+import moment from "moment";
+import { Link } from "react-scroll";
 
 export const CourseBottomCard = ({ workshop }) => {
+  const { title, eventStartDate, eventEndDate } = workshop || {};
   return (
     <div className={classNames("course-bottom-card show")}>
       <div className="container">
@@ -11,23 +14,27 @@ export const CourseBottomCard = ({ workshop }) => {
               <img src="/img/rectangle.png" alt="img" />
             </div>
             <div className="course-bottom-card__info">
-              <p>May 5-7, 2020</p>
+              <p>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+                .utc(eventEndDate)
+                .format("DD, YYYY")}`}</p>
               <div>
                 <h6 className="course-bottom-card__info-course-name">
-                  SKY Breath Meditation
+                  {title}
                 </h6>
-                <ul>
-                  <li>
-                    <b>limited offer $190</b>{" "}
-                    <span className="discount">$395</span>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
-          <button id="register-button-2" className="btn-secondary">
-            Register Now
-          </button>
+          <Link
+            activeClassName="active"
+            className="btn-secondary"
+            to="registerNowBlock"
+            spy={true}
+            smooth={true}
+            duration={500}
+            offset={0}
+          >
+            Register Today
+          </Link>
         </div>
       </div>
     </div>

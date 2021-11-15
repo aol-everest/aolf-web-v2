@@ -68,7 +68,6 @@ export const getServerSideProps = async (context) => {
 
 export default function Library({ data, authenticated }) {
   const [rootFolder] = data.folder;
-  console.log(data);
 
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
