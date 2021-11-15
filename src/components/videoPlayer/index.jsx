@@ -49,7 +49,6 @@ const VideoPlayer = () => {
     audioSrc,
     description = "",
   } = track || {};
-  console.log(track);
   const desc = description ? RemoveMarkdown(description) : "";
 
   const handleModalToggle = () => {

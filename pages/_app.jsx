@@ -15,6 +15,7 @@ import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
 import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { AuthProvider } from "@contexts";
 import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
+
 import "nprogress/nprogress.css";
 import "@styles/global-customize/style.scss";
 import "@styles/style.scss";

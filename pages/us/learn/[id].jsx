@@ -68,7 +68,6 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function Learn({ data, authenticated }) {
-  console.log(data);
   const {
     sfid,
     subTitle,
