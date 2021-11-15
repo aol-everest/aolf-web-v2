@@ -10,7 +10,9 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel="shortcut icon" href="/assets/favicon.ico"></link>
+          <link rel="icon" href="/iconx/favicon.svg" type="image/svg+xml" />
+          <link rel="apple-touch-icon" href="/iconx/apple-touch-icon.png" />
+          <link rel="manifest" href="/manifest.json" />
           <link
             rel="icon"
             type="image/png"

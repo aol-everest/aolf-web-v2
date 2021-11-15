@@ -1,6 +1,7 @@
-const withPlugins = require("next-compose-plugins");
-const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+// const withPlugins = require("next-compose-plugins");
 const { withSentryConfig } = require("@sentry/nextjs");
+const withPWA = require("next-pwa");
+
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
   {
@@ -20,59 +21,39 @@ const securityHeaders = [
     value: "nosniff",
   },
 ];
-const moduleExports = withPlugins(
-  [
-    new FaviconsWebpackPlugin({
-      logo: "./src/logo.png", // svg works too!
-      mode: "webapp", // optional can be 'webapp', 'light' or 'auto' - 'auto' by default
-      devMode: "webapp", // optional can be 'webapp' or 'light' - 'light' by default
-      favicons: {
-        appName: "Art of Living Journey",
-        appShortName: "AOLF",
-        appDescription: "Art of Living Journey",
-        background: "#ffffff",
-        theme_color: "#4B5487",
-        developerName: "Me",
-        dir: "auto", // Primary text direction for name, short_name, and description
-        lang: "en-US",
-        developerURL: null, // prevent retrieving from the nearest package.json
-        icons: {
-          coast: false,
-          yandex: false,
-        },
-      },
-    }),
-  ],
-  {
-    // swcMinify: true,
-    // basePath: "/us",
-    // assetPrefix: "/us/",
-    productionBrowserSourceMaps: true,
-    async redirects() {
-      return [
-        {
-          source: "/",
-          destination: "/us",
-          permanent: true,
-        },
-        {
-          source: "/us/course",
-          destination: "/us",
-          permanent: true,
-        },
-      ];
-    },
-    async headers() {
-      return [
-        {
-          // Apply these headers to all routes in your application.
-          source: "/(.*)",
-          headers: securityHeaders,
-        },
-      ];
-    },
+const moduleExports = withPWA({
+  pwa: {
+    dest: "public",
+    disable: process.env.NODE_ENV === "development",
   },
-);
+  // swcMinify: true,
+  // basePath: "/us",
+  // assetPrefix: "/us/",
+  productionBrowserSourceMaps: true,
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/us",
+        permanent: true,
+      },
+      {
+        source: "/us/course",
+        destination: "/us",
+        permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: "/(.*)",
+        headers: securityHeaders,
+      },
+    ];
+  },
+});
 
 const SentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
