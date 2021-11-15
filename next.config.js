@@ -58,6 +58,16 @@ const moduleExports = withPWA({
         source: "/(.*)",
         headers: securityHeaders,
       },
+      {
+        source: "/:all*(svg|jpg|png)",
+        locale: false,
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
 });
