@@ -113,7 +113,7 @@ export default function CourseDetail({ data }) {
     <>
       <NextSeo title={data.title} />
       {isSKYType && <SilentRetreat {...props} />}
-      {isSilentRetreatType && <SilentRetreat {...props} />}
+      {isSilentRetreatType && <SKYBreathMeditation {...props} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
     </>
   );

@@ -109,7 +109,7 @@ export const RegisterPanel = ({ workshop }) => {
   }
   if (isSKYType) {
     return (
-      <div className="powerful__block">
+      <div className="powerful__block powerful__block_bottom">
         <div>
           <h3>Limited Time Offer</h3>
           <h2>
@@ -118,6 +118,8 @@ export const RegisterPanel = ({ workshop }) => {
           <p>
             Regular course fee: <span className="discount"> ${delfee} </span>
           </p>
+        </div>
+        <div className="bottom-box justify-content-md-center">
           <button className="btn-secondary v2" onClick={handleRegister}>
             Register Today
           </button>
@@ -125,7 +127,7 @@ export const RegisterPanel = ({ workshop }) => {
       </div>
     );
   }
-  if (authenticated && (isJourneyPremium || isJourneyPlus)) {
+  if (!authenticated && (isJourneyPremium || isJourneyPlus)) {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
@@ -152,7 +154,11 @@ export const RegisterPanel = ({ workshop }) => {
             </div>
           )}
         </div>
-        <div className="bottom-box">
+        <div
+          className={classNames("bottom-box", {
+            "justify-content-md-center": !earlyBirdFeeIncreasing,
+          })}
+        >
           {earlyBirdFeeIncreasing && (
             <>
               <img src="/img/ic-timer-orange.svg" alt="timer" />
@@ -165,7 +171,7 @@ export const RegisterPanel = ({ workshop }) => {
               </p>
             </>
           )}
-          <button className="btn-secondary v2" onClick={handleRegister}>
+          <button className="btn-secondary" onClick={handleRegister}>
             Register Today
           </button>
         </div>
@@ -209,7 +215,7 @@ export const RegisterPanel = ({ workshop }) => {
         {earlyBirdFeeIncreasing && (
           <>
             <img src="/img/ic-timer-orange.svg" alt="timer" />
-            <p>
+            <p style={{ fontSize: "15px" }}>
               Register soon. Course fee will go up by $
               {earlyBirdFeeIncreasing.increasingFee} on{" "}
               {moment
@@ -224,7 +230,7 @@ export const RegisterPanel = ({ workshop }) => {
           </button>
           {!isUsableCreditAvailable && (
             <button
-              className="btn-secondary v2"
+              className="btn-secondary"
               onClick={purchaseMembershipAction(
                 MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
               )}
