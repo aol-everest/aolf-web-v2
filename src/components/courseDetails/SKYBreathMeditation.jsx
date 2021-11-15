@@ -56,7 +56,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
               <li>Experience deep meditation</li>
             </ul>
             <Link
-              activeclassName="active"
+              activeClassName="active"
               className="btn-secondary v2"
               to="registerNowBlock"
               spy={true}
@@ -704,7 +704,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
               </p>
             </div>
             <Link
-              activeclassName="active"
+              activeClassName="active"
               className="btn-secondary v2"
               to="registerNowBlock"
               spy={true}
