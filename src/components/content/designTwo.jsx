@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
-import { Popup } from "@components";
+import { Popup, MobileFilterModal, SmartDropDown } from "@components";
 import { DURATION } from "@constants";
 
 const CATEGORY_IMAGES = [
@@ -37,6 +37,7 @@ export const DesignTwo = ({
   findMeditation,
   duration,
   favouriteContents,
+  onFilterClearEvent,
 }) => {
   let favouriteContentOnly = [];
   const contentFolders = data.folder.map((folder) => {
@@ -82,6 +83,17 @@ export const DesignTwo = ({
     );
   }
 
+  let filterCount = 0;
+  if (topic) {
+    filterCount++;
+  }
+  if (duration) {
+    filterCount++;
+  }
+  if (instructor) {
+    filterCount++;
+  }
+
   return (
     <main
       className="background-image meditation insight-collection insight-collection3"
@@ -108,7 +120,14 @@ export const DesignTwo = ({
               <div className="filter--button d-flex" onClick={toggleFilter}>
                 <img src="/img/ic-filter.svg" alt="filter" />
                 Filter
-                <span id="filter-count">0</span>
+                <span
+                  id="filter-count"
+                  className={classNames({
+                    "filter-count--show": filterCount > 0,
+                  })}
+                >
+                  {filterCount}
+                </span>
               </div>
             </div>
           </div>
@@ -118,146 +137,104 @@ export const DesignTwo = ({
               "d-none": !showFilterModal,
             })}
           >
-            <div
-              className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-              id="duration-button_mobile"
-            >
-              <a className="btn" href="#">
-                Duration
-              </a>
-            </div>
-            <div
-              id="duration-modal_mobile"
-              data-duration="null"
-              data-course-initial="Duration"
-              className="mobile-modal"
-            >
-              <div className="mobile-modal--header">
-                <div id="duration-close_mobile" className="mobile-modal--close">
-                  <img src="./img/ic-close.svg" alt="close" />
-                </div>
-                <h2 className="mobile-modal--title">Duration</h2>
-                <div className="dropdown">
-                  <button
-                    className="custom-dropdown"
-                    type="button"
-                    id="dropdownDurationButton"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    Select duration
-                  </button>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="dropdownTopicButton"
-                  >
-                    <li className="dropdown-item">5 minutes</li>
-                    <li className="dropdown-item">10 minutes</li>
-                    <li className="dropdown-item">15 minutes</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mobile-modal--body">
-                <div className="row m-0 align-items-center justify-content-between">
-                  <div className="clear">Clear</div>
-                  <div className="btn_box_primary select-btn">Select</div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-              aria-describedby="tooltip"
-              id="instructor-button_mobile"
-            >
-              <a className="btn" href="#">
-                Instructor{" "}
-              </a>
-            </div>
-
-            <div
-              id="instructor-modal_mobile"
-              data-instructor="null"
-              data-instructor-initial="Instructor"
-              className="mobile-modal"
-            >
-              <div className="mobile-modal--header">
-                <div
-                  id="instructor-close_mobile"
-                  className="mobile-modal--close"
+            <div className="browse-category mb-3">
+              <div className="buttons-wrapper">
+                <MobileFilterModal
+                  modalTitle="topic"
+                  buttonText={topic ? topic : "Topic"}
+                  clearEvent={onFilterClearEvent("topic")}
                 >
-                  <img src="./img/ic-close.svg" alt="close" />
-                </div>
-                <h2 className="mobile-modal--title">Instructor</h2>
-                <div
-                  className="smart-input-mobile"
-                  id="instructor-mobile-input"
-                >
-                  <input
-                    placeholder="Search instructor"
-                    type="text"
-                    name="instructor"
-                    className="custom-input"
-                  />
-                  <div className="smart-input--list">
-                    <p className="smart-input--list-item">Mary Walker</p>
-                    <p className="smart-input--list-item">Rajesh Moksha</p>
+                  <div className="dropdown">
+                    <SmartDropDown
+                      value={topic}
+                      buttonText={topic ? topic : "Topic"}
+                      closeEvent={onFilterChange("topic")}
+                    >
+                      {({ closeHandler }) => (
+                        <>
+                          {meditationCategory &&
+                            meditationCategory.map((category) => (
+                              <li
+                                key={category}
+                                className="dropdown-item"
+                                onClick={closeHandler(category)}
+                              >
+                                {category}
+                              </li>
+                            ))}
+                        </>
+                      )}
+                    </SmartDropDown>
                   </div>
-                </div>
-              </div>
-              <div className="mobile-modal--body">
-                <div className="row m-0 align-items-center justify-content-between">
-                  <div className="clear">Clear</div>
-                  <div
-                    id="instructor-search"
-                    className="btn_box_primary select-btn"
-                  >
-                    Select
-                  </div>
-                </div>
-              </div>
-            </div>
+                </MobileFilterModal>
 
-            <div
-              tabIndex="3"
-              className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-              id="topic-search_mobile"
-              aria-describedby="topic-search_mobile"
-            >
-              <input
-                type="text"
-                name="location"
-                id="topic-input"
-                className="btn"
-              />
-              <div className="placeholder btn">Search Topic</div>
-            </div>
-            <div
-              id="topic-search_mobile"
-              data-instructor="null"
-              data-instructor-initial="Instructor"
-              className="mobile-modal"
-            >
-              <div className="mobile-modal--header">
-                <div
-                  id="instructor-close_mobile"
-                  className="mobile-modal--close"
+                <MobileFilterModal
+                  modalTitle="duration"
+                  buttonText={duration ? DURATION[duration].name : "Duration"}
+                  clearEvent={onFilterClearEvent("duration")}
                 >
-                  <img src="./img/ic-close.svg" alt="close" />
-                </div>
-                <h2 className="mobile-modal--title">Topics</h2>
-              </div>
-              <div className="mobile-modal--body">
-                <div className="row m-0 align-items-center justify-content-between">
-                  <div className="clear">Clear</div>
-                  <div
-                    id="instructor-search"
-                    className="btn_box_primary select-btn"
-                  >
-                    Select
+                  <div className="dropdown">
+                    <SmartDropDown
+                      value={duration}
+                      buttonText={
+                        duration ? DURATION[duration].name : "Duration"
+                      }
+                      closeEvent={onFilterChange("duration")}
+                    >
+                      {({ closeHandler }) => (
+                        <>
+                          <li
+                            className="dropdown-item"
+                            onClick={closeHandler("MINUTES_5")}
+                          >
+                            {DURATION.MINUTES_5.name}
+                          </li>
+                          <li
+                            className="dropdown-item"
+                            onClick={closeHandler("MINUTES_10")}
+                          >
+                            {DURATION.MINUTES_10.name}
+                          </li>
+                          <li
+                            className="dropdown-item"
+                            onClick={closeHandler("MINUTES_20")}
+                          >
+                            {DURATION.MINUTES_20.name}
+                          </li>
+                        </>
+                      )}
+                    </SmartDropDown>
                   </div>
-                </div>
+                </MobileFilterModal>
+
+                <MobileFilterModal
+                  modalTitle="Instructor"
+                  buttonText={instructor ? instructor : "Instructor"}
+                  clearEvent={onFilterClearEvent("instructor")}
+                >
+                  <SmartDropDown
+                    value={instructor}
+                    buttonText={instructor ? instructor : "Instructor"}
+                    closeEvent={onFilterChange("instructor")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {instructorList &&
+                          instructorList.map((instructor) => (
+                            <li
+                              key={instructor.primaryTeacherName}
+                              className="dropdown-item"
+                              onClick={closeHandler(
+                                instructor.primaryTeacherName,
+                              )}
+                            >
+                              {instructor.primaryTeacherName}
+                            </li>
+                          ))}
+                      </>
+                    )}
+                  </SmartDropDown>
+                </MobileFilterModal>
               </div>
             </div>
           </div>
