@@ -155,6 +155,20 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     },
   );
 
+  const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
+    useQuery(
+      "favouriteContents",
+      async () => {
+        const response = await api.get({
+          path: "getFavouriteContents",
+        });
+        return response.data;
+      },
+      {
+        refetchOnWindowFocus: false,
+      },
+    );
+
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
@@ -164,7 +178,7 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch });
+      await markFavoriteEvent({ meditate, refetch: refetchFavouriteContents });
     }
   };
 
@@ -530,6 +544,7 @@ const LibrarySearch = ({ meditations, authenticated }) => {
                       additionalclassName="meditate-find"
                       markFavorite={markFavorite(meditation)}
                       meditateClickHandle={meditateClickHandle(meditation)}
+                      favouriteContents={favouriteContents}
                     />
                   ))}
                 </React.Fragment>

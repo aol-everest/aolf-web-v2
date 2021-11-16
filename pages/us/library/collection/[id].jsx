@@ -77,12 +77,26 @@ function Collection({ rootFolder, authenticated }) {
     },
   );
 
+  const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
+    useQuery(
+      "favouriteContents",
+      async () => {
+        const response = await api.get({
+          path: "getFavouriteContents",
+        });
+        return response.data;
+      },
+      {
+        refetchOnWindowFocus: false,
+      },
+    );
+
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch: null });
+      await markFavoriteEvent({ meditate, refetch: refetchFavouriteContents });
     }
   };
 
@@ -107,6 +121,14 @@ function Collection({ rootFolder, authenticated }) {
     }
   };
 
+  const content = rootFolder.content.map((content) => {
+    const isFavorite = favouriteContents.find((el) => el.sfid === content.sfid);
+    return {
+      ...content,
+      isFavorite: !!isFavorite,
+    };
+  });
+
   return (
     <main className="background-image">
       <NextSeo title="Meditations" />
@@ -124,7 +146,7 @@ function Collection({ rootFolder, authenticated }) {
         <section className="courses">
           <div className="container">
             <div className="row">
-              {rootFolder.content.map((content) => (
+              {content.map((content) => (
                 <MeditationTile
                   key={content.sfid}
                   data={content}

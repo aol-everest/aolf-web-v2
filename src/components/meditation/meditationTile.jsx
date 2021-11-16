@@ -14,8 +14,10 @@ export const MeditationTile = ({
   markFavorite,
   meditateClickHandle,
   additionalClass,
+  favouriteContents = [],
 }) => {
   const {
+    sfid,
     title,
     description,
     coverImage,
@@ -29,6 +31,8 @@ export const MeditationTile = ({
     isFree,
     primaryTeacherName,
   } = data || {};
+
+  const isFavoriteContent = !!favouriteContents.find((el) => el.sfid === sfid);
 
   return (
     <div className="col-6 col-lg-3 col-md-4">
@@ -59,7 +63,9 @@ export const MeditationTile = ({
         {accessible && (
           <div
             onClick={markFavorite}
-            className={classNames("course-like", { liked: isFavorite })}
+            className={classNames("course-like", {
+              liked: isFavorite || isFavoriteContent,
+            })}
           ></div>
         )}
         <div className="forClick" onClick={meditateClickHandle}></div>
