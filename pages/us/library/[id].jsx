@@ -150,13 +150,13 @@ export default function Library({ data, authenticated }) {
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
-      case "topicFilter":
+      case "topic":
         setTopic(value);
         break;
-      case "durationFilter":
+      case "duration":
         setDuration(value);
         break;
-      case "instructorFilter":
+      case "instructor":
         setInstructor(value);
         break;
     }
@@ -164,13 +164,13 @@ export default function Library({ data, authenticated }) {
 
   const onFilterClearEvent = (field) => async () => {
     switch (field) {
-      case "topicFilter":
+      case "topic":
         setTopic(null);
         break;
-      case "durationFilter":
+      case "duration":
         setDuration(null);
         break;
-      case "instructorFilter":
+      case "instructor":
         setInstructor(null);
         break;
     }

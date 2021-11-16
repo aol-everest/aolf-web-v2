@@ -155,6 +155,20 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     },
   );
 
+  const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
+    useQuery(
+      "favouriteContents",
+      async () => {
+        const response = await api.get({
+          path: "getFavouriteContents",
+        });
+        return response.data;
+      },
+      {
+        refetchOnWindowFocus: false,
+      },
+    );
+
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
@@ -164,7 +178,7 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      await markFavoriteEvent({ meditate, refetch });
+      await markFavoriteEvent({ meditate, refetch: refetchFavouriteContents });
     }
   };
 
@@ -299,6 +313,23 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     enabled: hasNextPage,
   });
 
+  let filterCount = 0;
+  if (topic) {
+    filterCount++;
+  }
+  if (duration) {
+    filterCount++;
+  }
+  if (instructor) {
+    filterCount++;
+  }
+
+  console.log(
+    data,
+    isFetchingNextPage,
+    isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage,
+  );
+
   return (
     <main className="meetsup-filter">
       <NextSeo title="Meditations" />
@@ -383,9 +414,16 @@ const LibrarySearch = ({ meditations, authenticated }) => {
               <p className="title mb-0">Find a meditation</p>
               <div className="filter">
                 <div className="filter--button d-flex" onClick={toggleFilter}>
-                  <img src="./img/ic-filter.svg" alt="filter" />
+                  <img src="/img/ic-filter.svg" alt="filter" />
                   Filter
-                  <span id="filter-count">0</span>
+                  <span
+                    id="filter-count"
+                    className={classNames({
+                      "filter-count--show": filterCount > 0,
+                    })}
+                  >
+                    {filterCount}
+                  </span>
                 </div>
               </div>
             </div>
@@ -506,11 +544,28 @@ const LibrarySearch = ({ meditations, authenticated }) => {
                       additionalclassName="meditate-find"
                       markFavorite={markFavorite(meditation)}
                       meditateClickHandle={meditateClickHandle(meditation)}
+                      favouriteContents={favouriteContents}
                     />
                   ))}
                 </React.Fragment>
               ))}
           </div>
+          {isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage && (
+            <section className="about" style={{ backgroundImage: "none" }}>
+              <div className="container happines_box">
+                <div className="row">
+                  <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                    <h1 className="happines_title">
+                      Sorry, no meditation match your chosen filters.
+                    </h1>
+                    <p className="happines_subtitle">
+                      Please broaden your options and try again.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
           <div className="row">
             <div className="pt-3 col-12 text-center">
               <div ref={loadMoreRef}>

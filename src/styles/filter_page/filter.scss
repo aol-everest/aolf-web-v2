@@ -691,7 +691,7 @@ main.background-image {
 
 .tooltip-button.active,
 .btn_outline_box.active {
-  border-color: $blue-active;
+  border-color: $blue-active !important;
 }
 
 .checkbox-group {
