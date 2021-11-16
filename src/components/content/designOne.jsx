@@ -341,12 +341,12 @@ export const DesignOne = ({
         )}
       <section className="browse-category most-popular d-none d-md-block">
         <p className="title-slider">Find a meditation</p>
-        <div className="buttons-wrapper">
+        <div className="search-form buttons-wrapper">
           <Popup
             tabIndex="1"
             value={topic}
             buttonText={topic ? topic : "Topic"}
-            closeEvent={onFilterChange("topicFilter")}
+            closeEvent={onFilterChange("topic")}
           >
             {({ closeHandler }) => (
               <>
@@ -364,7 +364,7 @@ export const DesignOne = ({
             tabIndex="2"
             value={duration}
             buttonText={duration ? DURATION[duration].name : "Duration"}
-            closeEvent={onFilterChange("durationFilter")}
+            closeEvent={onFilterChange("duration")}
           >
             {({ closeHandler }) => (
               <>
@@ -384,7 +384,7 @@ export const DesignOne = ({
             tabIndex="3"
             value={instructor}
             buttonText={instructor ? instructor : "Instructor"}
-            closeEvent={onFilterChange("instructorFilter")}
+            closeEvent={onFilterChange("instructor")}
           >
             {({ closeHandler }) => (
               <>
