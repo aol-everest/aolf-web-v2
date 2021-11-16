@@ -310,6 +310,12 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     filterCount++;
   }
 
+  console.log(
+    data,
+    isFetchingNextPage,
+    isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage,
+  );
+
   return (
     <main className="meetsup-filter">
       <NextSeo title="Meditations" />
@@ -529,6 +535,22 @@ const LibrarySearch = ({ meditations, authenticated }) => {
                 </React.Fragment>
               ))}
           </div>
+          {isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage && (
+            <section className="about" style={{ backgroundImage: "none" }}>
+              <div className="container happines_box">
+                <div className="row">
+                  <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                    <h1 className="happines_title">
+                      Sorry, no meditation match your chosen filters.
+                    </h1>
+                    <p className="happines_subtitle">
+                      Please broaden your options and try again.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
           <div className="row">
             <div className="pt-3 col-12 text-center">
               <div ref={loadMoreRef}>
