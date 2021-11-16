@@ -86,7 +86,7 @@ export const ProfileHeader = ({
           className: "course-details-card",
           footer: () => {
             return (
-              <div className="course-join-card__footer">
+              <div className="course-details-card__footer">
                 {userSubscriptions[subscriptionId].subscriptionBuyingChannel !==
                   "WEB" && (
                   <a
