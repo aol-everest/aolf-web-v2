@@ -162,6 +162,20 @@ export default function Library({ data, authenticated }) {
     }
   };
 
+  const onFilterClearEvent = (field) => async () => {
+    switch (field) {
+      case "topicFilter":
+        setTopic(null);
+        break;
+      case "durationFilter":
+        setDuration(null);
+        break;
+      case "instructorFilter":
+        setInstructor(null);
+        break;
+    }
+  };
+
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
     if (!authenticated) {
@@ -309,6 +323,7 @@ export default function Library({ data, authenticated }) {
     findMeditation,
     duration,
     favouriteContents,
+    onFilterClearEvent,
   };
 
   switch (rootFolder.screenDesign) {
