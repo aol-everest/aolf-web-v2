@@ -76,6 +76,18 @@ export const DesignOne = ({
       (folder) => folder.id !== popularFolder.id,
     );
   }
+
+  let filterCount = 0;
+  if (topic) {
+    filterCount++;
+  }
+  if (duration) {
+    filterCount++;
+  }
+  if (instructor) {
+    filterCount++;
+  }
+
   return (
     <main className="background-image meditation">
       <NextSeo title="Meditations" />
@@ -117,7 +129,14 @@ export const DesignOne = ({
                 <div className="filter--button" onClick={toggleFilter}>
                   <img src="/img/ic-filter.svg" alt="filter" />
                   Filters
-                  <span id="filter-count">0</span>
+                  <span
+                    id="filter-count"
+                    className={classNames({
+                      "filter-count--show": filterCount > 0,
+                    })}
+                  >
+                    {filterCount}
+                  </span>
                 </div>
               </div>
             </div>
@@ -130,13 +149,13 @@ export const DesignOne = ({
                 <div className="buttons-wrapper">
                   <MobileFilterModal
                     modalTitle="topic"
-                    buttonText={topic ? topic.name : "Topic"}
+                    buttonText={topic ? topic : "Topic"}
                     clearEvent={onFilterClearEvent("topic")}
                   >
                     <div className="dropdown">
                       <SmartDropDown
                         value={topic}
-                        buttonText={topic ? topic.name : "Topic"}
+                        buttonText={topic ? topic : "Topic"}
                         closeEvent={onFilterChange("topic")}
                       >
                         {({ closeHandler }) => (
@@ -146,9 +165,7 @@ export const DesignOne = ({
                                 <li
                                   key={category}
                                   className="dropdown-item"
-                                  onClick={closeHandler({
-                                    name: category,
-                                  })}
+                                  onClick={closeHandler(category)}
                                 >
                                   {category}
                                 </li>
@@ -161,43 +178,36 @@ export const DesignOne = ({
 
                   <MobileFilterModal
                     modalTitle="duration"
-                    buttonText={duration ? duration.name : "Duration"}
+                    buttonText={duration ? DURATION[duration].name : "Duration"}
                     clearEvent={onFilterClearEvent("duration")}
                   >
                     <div className="dropdown">
                       <SmartDropDown
                         value={duration}
-                        buttonText={duration ? duration.name : "Duration"}
+                        buttonText={
+                          duration ? DURATION[duration].name : "Duration"
+                        }
                         closeEvent={onFilterChange("duration")}
                       >
                         {({ closeHandler }) => (
                           <>
                             <li
                               className="dropdown-item"
-                              onClick={closeHandler({
-                                name: "5 minutes",
-                                value: "0-300",
-                              })}
+                              onClick={closeHandler("MINUTES_5")}
                             >
-                              5 minutes
+                              {DURATION.MINUTES_5.name}
                             </li>
                             <li
                               className="dropdown-item"
-                              onClick={closeHandler({
-                                name: "10 minutes",
-                                value: "300-600",
-                              })}
+                              onClick={closeHandler("MINUTES_10")}
                             >
-                              10 minutes
+                              {DURATION.MINUTES_10.name}
                             </li>
                             <li
                               className="dropdown-item"
-                              onClick={closeHandler({
-                                name: "20 + minutes",
-                                value: "600-10800",
-                              })}
+                              onClick={closeHandler("MINUTES_20")}
                             >
-                              {`20 + minutes`}
+                              {DURATION.MINUTES_20.name}
                             </li>
                           </>
                         )}
@@ -207,12 +217,12 @@ export const DesignOne = ({
 
                   <MobileFilterModal
                     modalTitle="Instructor"
-                    buttonText={instructor ? instructor.name : "Instructor"}
+                    buttonText={instructor ? instructor : "Instructor"}
                     clearEvent={onFilterClearEvent("instructor")}
                   >
                     <SmartDropDown
                       value={instructor}
-                      buttonText={instructor ? instructor.name : "Instructor"}
+                      buttonText={instructor ? instructor : "Instructor"}
                       closeEvent={onFilterChange("instructor")}
                     >
                       {({ closeHandler }) => (
@@ -234,7 +244,7 @@ export const DesignOne = ({
                     </SmartDropDown>
                   </MobileFilterModal>
                   <div className="btn_box_primary btn-modal_dropdown full-btn mt-3 search">
-                    <a className="btn" href="#">
+                    <a className="btn" href="#" onClick={findMeditation}>
                       Search{" "}
                     </a>
                   </div>

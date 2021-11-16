@@ -299,6 +299,17 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     enabled: hasNextPage,
   });
 
+  let filterCount = 0;
+  if (topic) {
+    filterCount++;
+  }
+  if (duration) {
+    filterCount++;
+  }
+  if (instructor) {
+    filterCount++;
+  }
+
   return (
     <main className="meetsup-filter">
       <NextSeo title="Meditations" />
@@ -383,9 +394,16 @@ const LibrarySearch = ({ meditations, authenticated }) => {
               <p className="title mb-0">Find a meditation</p>
               <div className="filter">
                 <div className="filter--button d-flex" onClick={toggleFilter}>
-                  <img src="./img/ic-filter.svg" alt="filter" />
+                  <img src="/img/ic-filter.svg" alt="filter" />
                   Filter
-                  <span id="filter-count">0</span>
+                  <span
+                    id="filter-count"
+                    className={classNames({
+                      "filter-count--show": filterCount > 0,
+                    })}
+                  >
+                    {filterCount}
+                  </span>
                 </div>
               </div>
             </div>
