@@ -1,6 +1,6 @@
 .top-column {
   &.meditation-page {
-    background-image: url("../img/meditation-page-first@2x.png");
+    background-image: url("/img/meditation-page-first@2x.png");
     background-position-y: 100%;
     box-shadow: none;
     padding: 119px 150px 190px 150px;
@@ -41,7 +41,7 @@
       }
     }
     &.insight-collection {
-      background-image: url("../img/bg-insight-collection.png");
+      background-image: url("/img/bg-insight-collection.png");
       margin-top: 0;
       padding: 91px 150px 100px 150px;
       @media screen and (max-width: 1024px) {
@@ -199,12 +199,12 @@
           }
           &:hover {
             img {
-              content: url("./../img/ic-play-hover.svg");
+              content: url("/img/ic-play-hover.svg");
             }
           }
           &:active {
             img {
-              content: url("./../img/ic-play-active.svg");
+              content: url("/img/ic-play-active.svg");
             }
           }
         }
@@ -301,7 +301,7 @@
         }
       }
       &.insight-collection2 {
-        background-image: url("../img/bg-insight-collection2.png");
+        background-image: url("/img/bg-insight-collection2.png");
         background-size: contain;
         background-repeat: no-repeat;
         background-position: top;
@@ -338,31 +338,31 @@
                   text-decoration: none;
                 }
                 &[aria-expanded="true"] {
-                  background: url("../img/ic-minus.svg");
+                  background: url("/img/ic-minus.svg");
                   background-repeat: no-repeat;
                   background-position: left;
                   &:hover {
-                    background: url("../img/ic-minus-hover.svg");
+                    background: url("/img/ic-minus-hover.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                   &:active {
-                    background: url("../img/ic-minus-focus.svg");
+                    background: url("/img/ic-minus-focus.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                 }
                 &[aria-expanded="false"] {
-                  background: url("../img/ic-plus.svg");
+                  background: url("/img/ic-plus.svg");
                   background-repeat: no-repeat;
                   background-position: left;
                   &:hover {
-                    background: url("../img/ic-plus-hover.svg");
+                    background: url("/img/ic-plus-hover.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                   &:active {
-                    background: url("../img/ic-plus-focus.svg");
+                    background: url("/img/ic-plus-focus.svg");
                     background-repeat: no-repeat;
                     background-position: left;
                   }
@@ -422,7 +422,7 @@
               padding-left: 30px;
               &:after {
                 content: "";
-                background-image: url("../img/ic-video.svg");
+                background-image: url("/img/ic-video.svg");
                 width: 24px;
                 height: 24px;
                 position: absolute;
@@ -528,7 +528,7 @@
         }
       }
       &.insight-collection3 {
-        background-image: url("../img/bg-insight-collection2.png");
+        background-image: url("/img/bg-insight-collection2.png");
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center 20%;
@@ -757,35 +757,35 @@
       }
 
       &.image-card-1 {
-        background: url(../img/card-1a.png) no-repeat;
+        background: url(/img/card-1a.png) no-repeat;
       }
 
       &.image-card-2 {
-        background: url(../img/card-2a.png) no-repeat;
+        background: url(/img/card-2a.png) no-repeat;
       }
 
       &.image-card-3 {
-        background: url(../img/card-6.png) no-repeat;
+        background: url(/img/card-6.png) no-repeat;
       }
 
       &.image-card-4 {
-        background: url(../img/card-4a.png) no-repeat;
+        background: url(/img/card-4a.png) no-repeat;
       }
 
       &.forest {
-        background: url(../img/card-10.png) no-repeat;
+        background: url(/img/card-10.png) no-repeat;
       }
 
       &.water {
-        background: url(../img/card-9.png) no-repeat;
+        background: url(/img/card-9.png) no-repeat;
       }
 
       &.children {
-        background: url(../img/card-8.png) no-repeat;
+        background: url(/img/card-8.png) no-repeat;
       }
 
       &.flower {
-        background: url(../img/card-7.png) no-repeat;
+        background: url(/img/card-7.png) no-repeat;
       }
       .duration-wrapper {
         flex: 1;
@@ -978,8 +978,8 @@
 }
 
 .sleep-collection {
-  background-image: url("../img/bg-sleep-header.png"),
-    url("../img/bg-sleep-footer.png");
+  background-image: url("/img/bg-sleep-header.png"),
+    url("/img/bg-sleep-footer.png");
   background-position: center top, center bottom;
   background-repeat: no-repeat, no-repeat;
   background-size: contain;
@@ -1042,7 +1042,7 @@
   }
   .upcoming_course_card {
     .course-like {
-      background-image: url("../img/ic-heart.svg");
+      background-image: url("/img/ic-heart.svg");
       position: absolute;
       right: 20px;
       top: 20px;
@@ -1051,7 +1051,7 @@
       border-radius: 4px;
       background-color: rgba(255, 255, 255, 0.6);
       &.liked {
-        background-image: url("../img/ic-heart-filled.svg");
+        background-image: url("/img/ic-heart-filled.svg");
       }
     }
     .course_info {

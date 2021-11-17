@@ -726,7 +726,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
               <p className="title mb-0">Find a meetup</p>
               <div className="filter">
                 <div className="filter--button d-flex">
-                  <img src="./img/ic-filter.svg" alt="filter" />
+                  <img src="/img/ic-filter.svg" alt="filter" />
                   Filter
                   <span id="filter-count">0</span>
                 </div>

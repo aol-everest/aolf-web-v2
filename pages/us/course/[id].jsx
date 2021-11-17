@@ -4,6 +4,7 @@ import {
   SKYBreathMeditation,
   SahajSamadhi,
   SilentRetreat,
+  SriSriYoga,
 } from "@components/courseDetails";
 import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
@@ -112,8 +113,8 @@ export default function CourseDetail({ data }) {
   return (
     <>
       <NextSeo title={data.title} />
-      {isSKYType && <SilentRetreat {...props} />}
-      {isSilentRetreatType && <SKYBreathMeditation {...props} />}
+      {isSKYType && <SKYBreathMeditation {...props} />}
+      {isSilentRetreatType && <SriSriYoga {...props} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
     </>
   );

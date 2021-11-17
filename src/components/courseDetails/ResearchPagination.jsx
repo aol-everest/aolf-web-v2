@@ -75,7 +75,7 @@ export const ResearchPagination = () => {
               {renderHTML(researchImgItems[activeIndex].quote)}
             </p>
             <div>
-              <img src="./img/research-highlights-ijoy-color.png" alt="ljoy" />
+              <img src="/img/research-highlights-ijoy-color.png" alt="ljoy" />
             </div>
           </div>
         </div>

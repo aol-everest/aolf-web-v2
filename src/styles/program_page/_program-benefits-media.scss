@@ -1,0 +1,35 @@
+@media only screen and (max-width: 991px) {
+	.program-benefits {
+		padding-top: 60px;
+		
+		&__quote {
+			padding-top: 55px;
+			margin-bottom: 60px;
+	
+			&:before {
+				left: 50%;
+				width: 295px;
+				height: 148px;
+				border-top-left-radius: 148px;  
+				border-top-right-radius: 148px;
+				opacity: 0.08;
+				transform: translateX(-50%);
+			}
+	
+			&-title {
+				text-align: center;
+				font-size: 28px;
+				line-height: 38px;
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.program-benefits {
+		&__item {
+			margin-bottom: 60px;
+			text-align: center;
+		}
+	}
+}

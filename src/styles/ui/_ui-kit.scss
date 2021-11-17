@@ -343,12 +343,12 @@ p {
 
   // Disabled box.
   &:checked:disabled + label::after {
-    content: url("../img/ic-tick-disabled.svg");
+    content: url("/img/ic-tick-disabled.svg");
   }
 
   // Checkmark. Could be replaced with an image
   &:checked + label:after {
-    content: url("../img/ic-tick.svg");
+    content: url("/img/ic-tick.svg");
     position: absolute;
     left: 50%;
     top: 58%;
@@ -714,14 +714,14 @@ p {
   &__header {
     padding: 40px 20px 20px 20px;
     color: white;
-    background-image: url("../img/image.png");
+    background-image: url("/img/image.png");
     background-position-y: 100%;
     background-size: cover;
     position: relative;
     overflow: hidden;
 
     &_silent {
-      background-image: url("../img/silent-retreat-checkout-bg@2x.png");
+      background-image: url("/img/silent-retreat-checkout-bg@2x.png");
       background-position-y: 50%;
     }
 
@@ -910,7 +910,7 @@ p {
         }
 
         .custom-checkbox:checked + label:after {
-          content: url("../img/ic-tick-blue.svg");
+          content: url("/img/ic-tick-blue.svg");
         }
       }
 

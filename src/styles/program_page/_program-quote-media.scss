@@ -1,0 +1,17 @@
+@media only screen and (max-width: 991px) {
+	.program-quote {
+		padding: 113px 0;
+
+		&__text {
+			font-size: 28px;
+			line-height: 38px;
+			margin-bottom: 40px;
+		}
+	
+		&__author {
+			font-weight: 500;
+			font-size: 20px;
+			line-height: 30px;
+		}
+	}
+}
