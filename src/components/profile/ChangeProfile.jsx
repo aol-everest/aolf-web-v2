@@ -275,7 +275,6 @@ export const ChangeProfile = ({
                     placeholder="Phone Number"
                     mask={phoneNumberMask}
                     type="tel"
-                    id="contactPhone"
                     name="contactPhone"
                     onChange={handleChange}
                     onBlur={handleBlur}

@@ -24,6 +24,7 @@ export const ChangePasswordForm = ({
   changePassword,
   showMessage,
   message,
+  username,
 }) => {
   const {
     register,
@@ -36,8 +37,8 @@ export const ChangePasswordForm = ({
   return (
     <form className="active show" onSubmit={handleSubmit(changePassword)}>
       <p className="info">
-        We have sent a password reset code by email. Enter it below to reset
-        your password.
+        We have sent a password reset code by email ({username}). Enter it below
+        to reset your password.
       </p>
       <input
         type="text"
@@ -49,7 +50,7 @@ export const ChangePasswordForm = ({
       <input
         {...register("password")}
         type="password"
-        placeholder="Password"
+        placeholder="New Password"
         className={classNames({ validate: errors.password })}
       />
       {errors.password && (
@@ -58,7 +59,7 @@ export const ChangePasswordForm = ({
       <input
         {...register("passwordConfirmation")}
         type="password"
-        placeholder="Password"
+        placeholder="Confirm Password"
         className={classNames({ validate: errors.password })}
       />
       {errors.passwordConfirmation && (
@@ -66,9 +67,7 @@ export const ChangePasswordForm = ({
           {errors.passwordConfirmation.message}
         </p>
       )}
-      {showMessage && (
-        <p className="validation-input">{this.getActualMessage(message)}</p>
-      )}
+      {showMessage && <p className="validation-input">{message}</p>}
       <button type="submit" className="mt-4 modal-window__btn btn-primary">
         Change Password
       </button>

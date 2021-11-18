@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export const PastCourses = ({ data, isMobile }) => {
-  const [loading, setLoading] = useState(true);
   const [pastWorkshops, setPastWorkshops] = useState(data);
   const [workshopOrderAsc, setWorkshopOrderAsc] = useState(true);
 
@@ -101,7 +100,7 @@ export const PastCourses = ({ data, isMobile }) => {
                   <td>{workshop.title}</td>
                   <td>{workshop.primaryTeacherName}</td>
                   <td>{workshop.primaryTeacherEmail}</td>
-                  <td className="text-right">{workshop.eventEndDate}</td>
+                  <td className="text-right">{workshop.eventStartDate}</td>
                 </tr>
               ))}
             </tbody>
@@ -140,7 +139,7 @@ export const PastCourses = ({ data, isMobile }) => {
             <div className="past-course" key={index}>
               <div className="past-course__meta">
                 <span>#{index + 1}</span>
-                <span>{workshop.eventEndDate}</span>
+                <span>{workshop.eventStartDate}</span>
               </div>
               <p className="past-course__course">{workshop.title}</p>
               <p className="past-course__teacher">

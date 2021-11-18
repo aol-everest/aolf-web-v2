@@ -6,7 +6,7 @@
     ".next/cache"
   ],
   "scripts": {
-    "develop": "next dev",
+    "develop": "NODE_ENV=development next dev",
     "develop:qa": "NODE_ENV=test next dev",
     "develop:prod": "NODE_ENV=production next dev",
     "build": "next build",

@@ -52,9 +52,7 @@ export const NewPasswordForm = ({
           {errors.passwordConfirmation.message}
         </p>
       )}
-      {showMessage && (
-        <p className="validation-input">{this.getActualMessage(message)}</p>
-      )}
+      {showMessage && <p className="validation-input">{message}</p>}
       <button type="submit" className="mt-4 modal-window__btn btn-primary">
         Change Password
       </button>

@@ -934,7 +934,6 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                       <input
                         type="text"
                         className="form-control"
-                        id="contactPhone"
                         placeholder=" "
                         onChange={handleChange}
                         onBlur={handleBlur}

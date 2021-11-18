@@ -22,7 +22,7 @@ export const Header = () => {
 
   const loginAction = () => {
     setCollapsed(false);
-    showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/profile" });
+    showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/us/profile" });
   };
 
   return (

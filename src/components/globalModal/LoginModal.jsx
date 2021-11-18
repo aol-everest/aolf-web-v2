@@ -3,6 +3,7 @@ import { useGlobalModalContext } from "@contexts";
 import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import { FaCheckCircle } from "react-icons/fa";
 import {
   SignupForm,
   SigninForm,
@@ -57,17 +58,19 @@ export const LoginModal = () => {
 
   const signIn = async ({ username, password }) => {
     setLoading(true);
+    setShowMessage(false);
     try {
       const user = await Auth.signIn(username, password);
       if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
         setUsername(username);
         setMode(NEW_PASSWORD_REQUEST);
       }
-      if (navigateTo) {
-        router.push(navigateTo);
-      }
       if (!hideCloseBtn) {
         hideModal();
+      }
+      if (navigateTo) {
+        setLoading(false);
+        return router.push(navigateTo);
       }
     } catch (error) {
       console.error(error);
@@ -87,8 +90,9 @@ export const LoginModal = () => {
 
   const signUp = async ({ username, password, firstName, lastName }) => {
     setLoading(true);
+    setShowMessage(false);
     try {
-      const { user } = await Auth.signUp({
+      await Auth.signUp({
         username,
         password,
         attributes: {
@@ -97,6 +101,7 @@ export const LoginModal = () => {
           family_name: lastName,
         },
       });
+      await signIn({ username, password });
     } catch (error) {
       console.error(error);
       setMessage(error.message);
@@ -107,6 +112,7 @@ export const LoginModal = () => {
 
   const resetPassword = async ({ username }) => {
     setLoading(true);
+    setShowMessage(false);
     try {
       await Auth.forgotPassword(username);
       setUsername(username);
@@ -125,32 +131,34 @@ export const LoginModal = () => {
     setLoading(false);
   };
 
-  const changePassword = async ({ username, code, password }) => {
+  const changePassword = async ({ code, password }) => {
     setLoading(true);
+    setShowMessage(false);
     try {
-      await Auth.forgotPasswordSubmit(username, code, password);
+      await Auth.forgotPasswordSubmit(username, "" + code, password);
       setUsername(null);
       setMode(LOGIN_MODE);
     } catch (error) {
       console.log("error signing in", error);
-      setLoading(false);
       setMessage(error.message);
       setShowMessage(true);
     }
+    setLoading(false);
   };
 
   const completeNewPassword = async ({ password }) => {
     setLoading(true);
+    setShowMessage(false);
     try {
       await Auth.completeNewPassword(username, password);
       setUsername(null);
       setMode(LOGIN_MODE);
     } catch (error) {
       console.log("error signing in", error);
-      setLoading(false);
       setMessage(error.message);
       setShowMessage(true);
     }
+    setLoading(false);
   };
 
   return (
@@ -164,7 +172,7 @@ export const LoginModal = () => {
         >
           <div className="success-message">
             <div className="icon-container">
-              <i className="fas fa-check-circle"></i>
+              <FaCheckCircle />
             </div>
             {successMessage}
           </div>
@@ -219,26 +227,28 @@ export const LoginModal = () => {
           <h6 className="modal-window__subtitle">
             You’re minutes away from the next step in your journey
           </h6>
-          <div className="auth-btn-wrapper">
-            <button
-              className={classNames("auth-btn", {
-                active: mode === LOGIN_MODE,
-              })}
-              id="login"
-              onClick={switchView(LOGIN_MODE)}
-            >
-              Log In
-            </button>
-            <button
-              className={classNames("auth-btn", {
-                active: mode === SIGNUP_MODE,
-              })}
-              id="signup"
-              onClick={switchView(SIGNUP_MODE)}
-            >
-              Sign Up
-            </button>
-          </div>
+          {(mode === LOGIN_MODE || mode === SIGNUP_MODE) && (
+            <div className="auth-btn-wrapper">
+              <button
+                className={classNames("auth-btn", {
+                  active: mode === LOGIN_MODE,
+                })}
+                id="login"
+                onClick={switchView(LOGIN_MODE)}
+              >
+                Log In
+              </button>
+              <button
+                className={classNames("auth-btn", {
+                  active: mode === SIGNUP_MODE,
+                })}
+                id="signup"
+                onClick={switchView(SIGNUP_MODE)}
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
         <div className="modal-window__body">
           {mode === NEW_PASSWORD_REQUEST && (
@@ -259,6 +269,7 @@ export const LoginModal = () => {
             <ChangePasswordForm
               changePassword={changePassword}
               showMessage={showMessage}
+              username={username}
               message={getActualMessage(message)}
             />
           )}

@@ -124,7 +124,7 @@ const Profile = ({ profile, tab }) => {
     setLoading(true);
     await Auth.signOut();
     setLoading(false);
-    router.push("/");
+    router.push("/us");
   };
 
   const handleOnSelectFile = (e) => {
