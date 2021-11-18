@@ -49,6 +49,7 @@
   form input.validate {
     border-color: #fa5a67;
   }
+
   .cover-spin {
     position: absolute;
     width: 100%;
@@ -58,7 +59,6 @@
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.7);
     z-index: 9999;
-    border-radius: 8px;
   }
   @-webkit-keyframes spin {
     from {

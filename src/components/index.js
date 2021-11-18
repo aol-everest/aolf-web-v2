@@ -13,3 +13,4 @@ export { Loader } from "./loader";
 export { AddressSearch } from "./addressSearch";
 export { PurchaseMembershipModal } from "./purchaseMembershipModal";
 export { RetreatPrerequisiteWarning } from "./retreatPrerequisiteWarning";
+export { FadeInAnimation } from "./fadeIn";

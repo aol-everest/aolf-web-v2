@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { GlobalLoadingContext } from "@contexts";
+import { FadeInAnimation } from "@components";
 
 export const GlobalLoading = ({ children }) => {
   const [store, setStore] = useState();
@@ -25,7 +26,19 @@ export const GlobalLoading = ({ children }) => {
     if (!show) {
       return null;
     }
-    return <div className="cover-spin"></div>;
+    return (
+      <FadeInAnimation
+        style={{
+          top: 0,
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          zIndex: 9999,
+        }}
+      >
+        <div className="cover-spin"></div>
+      </FadeInAnimation>
+    );
   };
 
   return (
