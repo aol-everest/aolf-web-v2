@@ -1,0 +1,53 @@
+.program-benefits {
+	padding-top: 100px;
+
+	&__quote {
+		position: relative;
+		padding-top: 92px;
+
+		&:before {
+			z-index: -1;
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 96px;
+			width: 404px;
+			height: 202px; 
+			background: linear-gradient(180deg, #96BBEF 0%, #5B86EC 100%);
+			border-top-left-radius: 202px;  
+			border-top-right-radius: 202px;
+			border-bottom: 0;
+			opacity: 0.08;
+		}
+
+		&-title {
+			font-weight: bold;
+			font-size: 44px;
+			line-height: 60px;
+			color: #1E2232;
+		}
+	}
+
+	&__item {
+		color: #1E2232;
+		margin-bottom: 80px;
+
+		&-image {
+			margin-bottom: 28px;
+			width: 60px;
+			height: 60px;
+		}
+
+		&-title {
+			font-weight: 500;
+			font-size: 20px;
+			line-height: 28px;
+			margin-bottom: 16px;
+		}
+
+		&-text {
+			font-size: 16px;
+			line-height: 22px;
+		}
+	}
+}

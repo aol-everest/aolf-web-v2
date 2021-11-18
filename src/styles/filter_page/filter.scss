@@ -543,7 +543,7 @@ main.background-image {
       right: 10px;
       width: 24px;
       height: 24px;
-      content: url(../img/ic-arrow-down.svg);
+      content: url(/img/ic-arrow-down.svg);
       transform: translateY(-50%);
     }
 
@@ -667,7 +667,7 @@ main.background-image {
   height: 32px;
   font-size: 16px;
   line-height: 28px;
-  background-image: url("../img/ic-close.svg");
+  background-image: url("/img/ic-close.svg");
   background-size: 14px;
   background-repeat: no-repeat;
   background-position: center;
@@ -812,7 +812,7 @@ main.background-image {
   }
 }
 .rsvp-confirm {
-  background-image: url("../img/rsvp-confirm-bg.jpg");
+  background-image: url("/img/rsvp-confirm-bg.jpg");
   background-position: center bottom;
   background-size: cover;
   background-repeat: no-repeat;
@@ -867,7 +867,7 @@ main.background-image {
   }
 }
 .rsvp-fail {
-  background-image: url("../img/rsvp-fail-bg.jpg");
+  background-image: url("/img/rsvp-fail-bg.jpg");
   background-position: center bottom;
   background-size: cover;
   background-repeat: no-repeat;
@@ -1044,7 +1044,7 @@ main.background-image {
 }
 
 // .about {
-//   background-image: url("../img/filter-bg.png");
+//   background-image: url("/img/filter-bg.png");
 //   background-size: cover;
 //   background-position: center 95%;
 //   padding: 180px 0;
@@ -1257,7 +1257,7 @@ main.background-image {
         right: 20px;
         width: 24px;
         height: 24px;
-        content: url(../img/ic-arrow-down.svg);
+        content: url(/img/ic-arrow-down.svg);
         transform: translateY(-50%);
       }
 
@@ -1642,12 +1642,12 @@ main.background-image {
 
   // Disabled box.
   &:checked:disabled + label::after {
-    content: url("../img/ic-tick-disabled.svg");
+    content: url("/img/ic-tick-disabled.svg");
   }
 
   // Checkmark. Could be replaced with an image
   &:checked + label:after {
-    content: url("../img/ic-tick.svg");
+    content: url("/img/ic-tick.svg");
     position: absolute;
     left: 10px;
     width: 20px;

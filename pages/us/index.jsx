@@ -492,7 +492,7 @@ const Course = ({ workshops, authenticated }) => {
               <p className="title mb-0">Find a course</p>
               <div className="filter">
                 <div className="filter--button d-flex" onClick={toggleFilter}>
-                  <img src="./img/ic-filter.svg" alt="filter" />
+                  <img src="/img/ic-filter.svg" alt="filter" />
                   Filter
                   <span id="filter-count">0</span>
                 </div>

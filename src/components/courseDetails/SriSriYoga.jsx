@@ -4,8 +4,6 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import CourseDetailsCard from "./CourseDetailsCard";
-import { ResearchPagination } from "./ResearchPagination";
-import { Comment } from "./Comment";
 import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
@@ -46,570 +44,94 @@ export const SriSriYoga = ({ data, swiperOption }) => {
   return (
     <>
       <main>
-        <section className="top-column">
-          <div className="container">
-            <p className="type-course">{mode}</p>
-            <h1 className="course-name">{title}</h1>
-            <ul className="course-details-list">
-              <li>Relieve stress, anxiety, and tension</li>
-              <li>Improve your energy & calm</li>
-              <li>Experience deep meditation</li>
-            </ul>
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-100}
-            >
-              Register Now
-            </Link>
+        <section className="about-program">
+          <div className="about-program__image">
+            <img
+              src="/img/sri-sri-top-column.png"
+              alt="Sri Sri Yoga Foundation Program"
+            />
           </div>
-          <CourseDetailsCard
-            workshop={data}
-            courseType={COURSE_TYPES.SKY_BREATH_MEDITATION}
-          ></CourseDetailsCard>
-        </section>
-        <section className="progress-section">
           <div className="container">
-            <h2 className="progress-section__title">
-              Discover the transformation that millions
-              <br />
-              of people <span>in 156 countries</span> have experienced.
-            </h2>
-            <div className="achivment">
-              <div className="row">
-                <div className="col-12 col-lg-3 text-center text-lg-left">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-40-years-of-programs.svg" alt="years" />
-                    </div>
-                    <h2 className="achivment__title">
-                      40 years <br />
-                      of programs
-                    </h2>
-                    <p className="achivment__text">
-                      Learn from the pioneers of breath-based meditation
-                      practice
-                    </p>
-                  </div>
+            <div className="row">
+              <div className="col-lg-6 col-xl-7">
+                <div className="about-program__main">
+                  <p className="about-program__main-type">{mode}</p>
+                  <h1 className="about-program__main-name">
+                    {title} <br />
+                    Foundation Program
+                  </h1>
+                  <ul className="about-program__main-list">
+                    <li>Restore, rebalance, & re-energize your mind-body</li>
+                    <li>Begin or deepen your yoga journey </li>
+                    <li>Gain wisdom for greater health & vitality</li>
+                  </ul>
+                  <Link
+                    activeClassName="active"
+                    className="btn-secondary about-program__main-button register-button"
+                    to="registerNowBlock"
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    offset={-100}
+                  >
+                    Register Now
+                  </Link>
                 </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img
-                        src="/img/ic-70-independent-studies.svg"
-                        alt="years"
-                      />
-                    </div>
-                    <h2 className="achivment__title">
-                      Backed by 100
-                      <br />
-                      independent studies
-                    </h2>
-                    <p className="achivment__text">
-                      <span>56%</span> reduced anxiety <br />
-                      <span>3x</span> better sleep <br />
-                      <span>5x</span> improved immunity
-                    </p>
-                  </div>
-                </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-3-day-online-course.svg" alt="day" />
-                    </div>
-                    <h2 className="achivment__title">
-                      3-Day online <br />
-                      course
-                    </h2>
+              </div>
 
-                    <p className="achivment__text">
-                      {workshopTotalHours} hours a day live interactive sessions
-                      with certified instructors
-                    </p>
-                  </div>
-                </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-limited-time-only.svg" alt="day" />
-                    </div>
-                    <h2 className="achivment__title">
-                      Limited time <br />
-                      only
-                    </h2>
-                    <p className="achivment__text">
-                      This program is regularly{" "}
-                      <span className="discount">${delfee}</span> and currently
-                      offered online for <span> ${fee}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="featured-in">
-              <h2 className="featured-in__title">Featured in</h2>
-              <div className="featured-in__box d-none d-lg-flex">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-tnyt.png" alt="tnyt" />
-                <img src="/img/featured-in-time.png" alt="time" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
-              </div>
-              <div className="featured-in__box d-flex d-lg-none">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-time.png" alt="time" />
-                <img
-                  className="m-auto"
-                  src="/img/featured-in-tnyt.png"
-                  alt="tnyt"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="how-it-works">
-          <div className="container">
-            <div className="how-it-works__block">
-              <h2 className="how-it-works__title section-title">
-                Why this workshop is so powerful
-              </h2>
-              <p className="how-it-works__text">
-                Breathe your stress away with this evidence-based practice.
-                Using the science of breath, you can raise your energy, manage
-                your emotions, and find lasting ease...so you’re ready to face
-                your day. Every day!
-              </p>
-            </div>
-            <div className="how-it-works__list">
-              <h2>How it works</h2>
-              <div className="how-it-works__item">
-                <p>
-                  <span>Clear</span> stress from every cell of your body
-                </p>
-                SKY Breath Meditation, the most powerful breathing technique of
-                our time, uses specific, natural rhythms of the breath to deeply
-                clear more than 90% of the toxins and accumulated stress tension
-                on a cellular level. Removing all the negativity from your whole
-                system, leaving you restored, clear, and energized.
-              </div>
-              <div className="how-it-works__item">
-                <p>
-                  <span>Unlock</span> your freedom & joy within
-                </p>
-                <div>
-                  Like atoms, our central core is positive. The electrons, or
-                  negative charge, are only on the surface.
-                </div>
-                Since positivity is within you, it's not something you have to
-                learn or get. On the contrary, through specific breathing
-                techniques, you can drop stress and negativity. Then you
-                naturally connect with your positive core—energy, ease, and
-                clarity.
-              </div>
-              <div className="how-it-works__item">
-                <p>
-                  <span>Transform</span> your life
-                </p>
-                With the inner freedom you’ll gain from this practice, you’ll be
-                able to:
-                <ul>
-                  <li>
-                    <span>Take action & feel empowered</span>
-                  </li>
-                  <li>
-                    <span>Handle stressful situations with ease</span>
-                  </li>
-                  <li>
-                    <span>Connect more deeply and easily with others</span>
-                  </li>
-                  <li>
-                    <span>Improve life-work balance</span>
-                  </li>
-                  <li>
-                    <span>Attract the things you want</span>
-                  </li>
-                  <li>
-                    <span>Heal your mind and body</span>
-                  </li>
-                  <li>
-                    <span>Release old patterns and habits</span>
-                  </li>
-                  <li>
-                    <span>
-                      Feel empowered to make positive change in your life.
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="comments">
-          <div className="container">
-            <h2 className="comments__title section-title text-center">
-              How this workshop is changing lives
-            </h2>
-          </div>
-          <div className="comments__video">
-            <iframe
-              src="https://player.vimeo.com/video/428103610"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            ></iframe>
-          </div>
-          <Swiper className="px-3 px-lg-0" {...swiperOption}>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="When I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before."
-                fullText="When I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img
-                        className="rounded-circle"
-                        src="/img/Dan-Joy.jpg"
-                        alt="comments"
-                      />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Dan J. </h3>
-                      <p className="comments__person-about">
-                        Chef
-                        <br />
-                        Asheville, NC
-                      </p>
-                    </div>
-                  </div>
-                  <p className="comments__quote">
-                    “Come to Work in a Better Mindset”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="I joined the Happiness program after an introductory meet up
-                    at the Art of Living Center. It felt like it could be a
-                    great program for me, and before I could change my mind, I
-                    signed up for it. If I had waited until later to join, I
-                    would have missed out on a truly life transforming
-                    experience. The program gave me great insights and practical
-                    too…"
-                fullText="I joined the Happiness program after an introductory meet up
-                    at the Art of Living Center. It felt like it could be a
-                    great program for me, and before I could change my mind, I
-                    signed up for it. If I had waited until later to join, I
-                    would have missed out on a truly life transforming
-                    experience. The program gave me great insights and practical
-                    tools to dealing with life's stressful situations. I met
-                    some really good friends that I still stay in contact with."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/2-comments.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Tiffany Guynes</h3>
-                      <p className="comments__person-about">
-                        Chef & private caterer,
-                        <br />
-                        Austin, TX
-                      </p>
-                    </div>
-                  </div>
-                  <p className="comments__quote">
-                    “Great insights and practical tools”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="Before the Happiness Program, I was on medication for panic
-                    and anxiety attacks. After the first day of the Happiness
-                    Program, I experienced a full night’s sleep, which was rare
-                    for me. The next morning was one of the happiest I had ever
-                    felt. I’ve been constant with my SKY meditation practice for
-                    the..."
-                fullText="Before the Happiness Program, I was on medication for panic
-                    and anxiety attacks. After the first day of the Happiness
-                    Program, I experienced a full night’s sleep, which was rare
-                    for me. The next morning was one of the happiest I had ever
-                    felt. I’ve been constant with my SKY meditation practice for
-                    the last two years - it makes me feel so alive. My friends
-                    and family tell me that I am much more confident and
-                    happier. Despite the struggles last year - my grandfather
-                    passed away, I lost my job and I went through a divorce - I
-                    still did not have a panic or anxiety attack. I feel
-                    grateful for this inner strength because I don’t know where
-                    I would be without it."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/3-comments.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Robert Delmont</h3>
-                      <p className="comments__person-about">
-                        Elementary music teacher,
-                        <br />
-                        Boston, MA
-                      </p>
-                    </div>
-                  </div>
-                  <p className="comments__quote">
-                    “Much more confident and happier, despite the struggles”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="I was at the height of my career, with a high profile job
-                    and a wonderful family. But stress was taking a toll on my
-                    physical and mental health – and I was relying on
-                    antibiotics and pain medicine regularly. Practicing SKY
-                    Meditation has reduced my stress levels and improved my
-                    immune system…"
-                fullText="I was at the height of my career, with a high profile job
-                    and a wonderful family. But stress was taking a toll on my
-                    physical and mental health – and I was relying on
-                    antibiotics and pain medicine regularly. Practicing SKY
-                    Meditation has reduced my stress levels and improved my
-                    immune system dramatically. I haven’t needed medication for
-                    4 years now! This course is the best financial investment I
-                    have made in myself"
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/4-comments.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Uma Vishwanath</h3>
-                      <p className="comments__person-about">
-                        Team lead in a high-tech company,
-                        <br />
-                        Lexington, MA
-                      </p>
-                    </div>
-                  </div>
-
-                  <p className="comments__quote">
-                    “The best financial investment I have made in myself”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-          </Swiper>
-        </section>
-        <section className="powerful" id="third">
-          <div className="container">
-            <div className="col-lg-10 p-0 m-auto">
-              <h4 className="powerful__message text-lg-center">
-                LET'S DO THIS
-              </h4>
-              <h2 className="powerful__title section-title text-lg-center">
-                Experience powerful shifts for less than a cup of coffee a day
-              </h2>
-              <h3 className="powerful__subtitle text-lg-center">
-                How much do we spend on
-              </h3>
-              <div className="powerful__list flex-lg-row flex-column">
-                <div className="col-lg-3 col-12">
-                  <div className="powerful__item d-flex mt-3 mt-lg-0 align-items-center flex-row flex-lg-column">
-                    <img src="/img/ic-starbucks.svg" alt="starbucks" />
-                    <p className="mt-lg-4">A Starbucks habit?</p>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-12">
-                  <div className="powerful__item d-flex mt-3 mt-lg-0 align-items-center flex-row flex-lg-column">
-                    <img src="/img/ic-gym.svg" alt="gym" />
-                    <p className="mt-lg-4">The gym?</p>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-12">
-                  <div className="powerful__item d-flex mt-3 mt-lg-0 align-items-center flex-row flex-lg-column">
-                    <img src="/img/ic-dinner.svg" alt="dinner" />
-                    <p className="mt-lg-4">A dinner out for 4?</p>
-                  </div>
-                </div>
-              </div>
-              <p className="powerful__text">
-                <span>
-                  A gym membership can easily cost you upwards of $650 a year.
-                </span>
-                <span>
-                  A daily Starbucks habit? That’s <b>$1,100</b> a year or more
-                  when you add it all up, according to a recent study of 1,008
-                  coffee drinkers!
-                </span>
-                <span>
-                  How much do we invest in a calm and clear mind? In feeling
-                  energized and excited about life? In equipping ourselves with
-                  tools to clear the mind and boost your energy — so that you
-                  can better care for your family, your friends, and your work?
-                </span>
-                <span>
-                  Imagine waking up each day, knowing you have a morning routine
-                  that leaves you strong, calm, and ready to face your day,
-                  whatever comes.
-                </span>
-                <span>
-                  Now’s your chance. For ${fee}, way less and more powerful than
-                  a coffee a day.
-                </span>
-              </p>
-              <Element name="registerNowBlock">
-                <RegisterPanel workshop={data} />
-              </Element>
-            </div>
-          </div>
-        </section>
-        <section className="quote-section">
-          <div className="container">
-            <div className="offset-lg-6">
-              <p className="quote-section__name">
-                Sri Sri Ravi Shankar
-                <span>Founder of The Art of Living</span>
-              </p>
-              <p className="quote-section__quote">
-                “
-                <span>
-                  Meditation is the journey from sound to silence, from movement
-                  to stillness, from a limited identity to unlimited space.
-                </span>
-              </p>
-            </div>
-          </div>
-        </section>
-        <section className="studies">
-          <div className="container">
-            <h2 className="col-lg-10 p-0 mx-auto studies__title section-title">
-              An evidence-based practice that can significantly lower stress
-              from the very 1st session!
-            </h2>
-            <div className="studies__block">
-              <div className="studies__info-block">
-                <div className="studies__info">
-                  <h3 className="studies__number">100</h3>
-                  <h3 className="studies__name">
-                    independent <br />
-                    studies
+              <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-0 col-xl-5 d-flex flex-column justify-content-end">
+                <div className="about-program__details">
+                  <h3 className="about-program__details-title">
+                    Online course details
                   </h3>
-                  <img src="/img/mask.svg" alt="mask" />
-                </div>
-                <p>on SKY Breath Meditation (SK&P)</p>
-              </div>
-              <p className="studies__text">
-                <span>
-                  From reducing stress to getting better rest, the SKY Breath
-                  Meditation techniques have demonstrated measurable impact on
-                  quality of life.
-                </span>
-                <span>
-                  Over 100 independent studies conducted on four continents and
-                  published in peer review journals, have demonstrated a
-                  comprehensive range of benefits from practicing SKY
-                  Meditation.
-                </span>
-
-                <p className="summary_detail_c">
-                  Summary of Independent Research Findings and{" "}
-                  <a href="#" onClick={showResearchModal}>
-                    Sources
-                  </a>
-                </p>
-              </p>
-            </div>
-            <div className="studies__result">
-              <h3 className="studies__result-title section-title">
-                Research result key findings
-              </h3>
-              <div className="studies__list">
-                <div className="container col-12 col-lg-10">
-                  <div className="row">
-                    <div className="col-12 col-md-3 studies__item studies__item_violet">
-                      <h3>Deep Sleep Increases</h3>
-
-                      <div className="studies__item-img">
-                        218%
-                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
+                  <div className="details-table about-program__details-table">
+                    <div className="details-table__row">
+                      <div className="details-table__column details-table__column_bold">
+                        Date:
                       </div>
-
-                      <div className="studies__item-text">
-                        <h3>Deep Sleep Increases</h3>
-                        <p>
-                          <span>INCREASE</span>
-                          in deep sleep
-                        </p>
+                      <div className="details-table__column">
+                        August 20-22, 2021
                       </div>
                     </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_violet">
-                      <h3>Well-Being Hormones Increase</h3>
-
-                      <div className="studies__item-img">
-                        50%
-                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
+                    <div className="details-table__row">
+                      <div className="details-table__column details-table__column_bold">
+                        Timings:
                       </div>
-
-                      <div className="studies__item-text">
-                        <h3>Well-Being Hormones Increase</h3>
-                        <p>
-                          <span>INCREASE</span>
-                          serum prolactin
-                        </p>
+                      <div className="details-table__column">
+                        Fr: 4:00 PM-7:00 PM PT
+                        <br />
+                        Sa: 4:00 PM-7:00 PM PT
+                        <br />
+                        Su: 4:00 PM-7:00 PM PT
                       </div>
                     </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_blue">
-                      <h3>Depression Decreases</h3>
-
-                      <div className="studies__item-img">
-                        70%
-                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
+                    <div className="details-table__row">
+                      <div className="details-table__column details-table__column_bold">
+                        Instructor(s):
                       </div>
-
-                      <div className="studies__item-text">
-                        <h3>Depression Decreases</h3>
-                        <p>
-                          <span>REMISSION RATE</span> in depression in 1 month
-                        </p>
+                      <div className="details-table__column">
+                        Prachee Sharma
+                        <br />
+                        Poornima Raman
+                        <br />
+                        Rachel Harvey
                       </div>
                     </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_blue">
-                      <h3>Stress Hormones Decrease</h3>
-
-                      <div className="studies__item-img">
-                        56%
-                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
+                    <div className="details-table__row">
+                      <div className="details-table__column details-table__column_bold">
+                        Contacts:
                       </div>
-
-                      <div className="studies__item-text">
-                        <h3>Stress Hormones Decrease</h3>
-                        <p>
-                          <span>REDUCTION</span>
-                          serum cortisol
-                        </p>
+                      <div className="details-table__column">
+                        <a href="tel:+13104046599" className="link">
+                          +1 (310) 404-6599
+                        </a>
+                        <br />
+                        <a
+                          href="mailto:prachee.sharma@artofliving.org"
+                          className="link"
+                        >
+                          prachee.sharma@artofliving.org
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -618,153 +140,506 @@ export const SriSriYoga = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
-        <section className="research text-center">
+        <section className="program-benefits">
           <div className="container">
-            <h2 className="research__title section-title">
-              Research highlights
-            </h2>
-            <ResearchPagination></ResearchPagination>
-
-            <Swiper
-              className="d-lg-none research__list-container swiper-container"
-              {...autoSwiperOption}
+            <div className="row">
+              <div className="col-lg-6">
+                <div className="program-benefits__quote">
+                  <h2 className="program-benefits__quote-title">
+                    Discover an authentic, integrated mind-body yoga practice
+                    with far-reaching benefits.
+                  </h2>
+                </div>
+              </div>
+              <div className="col-lg-6">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="program-benefits__item">
+                      <img
+                        src="/img/Learn.svg"
+                        alt="40 years of authentic yoga education"
+                        className="program-benefits__item-image"
+                      />
+                      <h6 className="program-benefits__item-title">
+                        40 years of authentic yoga education
+                      </h6>
+                      <p className="program-benefits__item-text">
+                        Discover a transformative practice rooted in tradition,
+                        designed for modern life
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="program-benefits__item">
+                      <img
+                        src="/img/Step.svg"
+                        alt="Suitable for beginner to intermediate"
+                        className="program-benefits__item-image"
+                      />
+                      <h6 className="program-benefits__item-title">
+                        Suitable for beginner to intermediate
+                      </h6>
+                      <p className="program-benefits__item-text">
+                        Begin, refresh, or deepen your yoga practice from the
+                        comfort of your home
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="program-benefits__item">
+                      <img
+                        src="/img/Online.svg"
+                        alt="4-day online program"
+                        className="program-benefits__item-image"
+                      />
+                      <h6 className="program-benefits__item-title">
+                        4-day online program
+                      </h6>
+                      <p className="program-benefits__item-text">
+                        2 hours a day of live sessions with experienced and
+                        certified instructors
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <Element name="registerNowBlock">
+                      <div className="program-benefits__item">
+                        <img
+                          src="/img/Time.svg"
+                          alt="Limited time only"
+                          className="program-benefits__item-image"
+                        />
+                        <h6 className="program-benefits__item-title">
+                          Limited time only
+                        </h6>
+                        <p className="program-benefits__item-text">
+                          This program is regularly $200 and currently offered
+                          online for $100
+                        </p>
+                      </div>
+                    </Element>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="program-description">
+          <div className="container">
+            <div className="row program-description__row">
+              <div className="col-lg-6 program-description__content">
+                <h2 className="program-description__content-title">
+                  Yoga made just for you
+                </h2>
+                <p className="program-description__content-text">
+                  Stretch out the kinks, begin a new empowering healthy habit,
+                  gain personal insight, deepen your practice, get strong.{" "}
+                </p>
+              </div>
+              <div className="col-lg-6">
+                <div className="program-description__image">
+                  <img
+                    src="/img/yoga-for-you.png"
+                    alt="Yoga made just for you"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="row program-description__row">
+              <div className="col-lg-6 program-description__content d-lg-none">
+                <p className="program-description__content-text">
+                  Whatever your motivation, you’ll emerge energized, restored,
+                  more self-aware, with the confidence to continue your new
+                  transformative yoga journey.
+                </p>
+              </div>
+              <div className="col-lg-6">
+                <div className="program-description__image">
+                  <img src="/img/sri-sri-yoga.png" alt="Sri Sri Yoga" />
+                </div>
+              </div>
+              <div className="col-lg-6 program-description__content">
+                <p className="program-description__content-text d-none d-lg-block">
+                  Whatever your motivation, you’ll emerge energized, restored,
+                  more self-aware, with the confidence to continue your new
+                  transformative yoga journey.
+                </p>
+                <p className="program-description__content-subtitle">
+                  Sri Sri Yoga is deeply relaxing, beneficial, and enjoyable to
+                  practice—it is a yoga that makes you feel great on and off the
+                  mat!
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="program-banner">
+          <div className="program-banner__image">
+            <img src="/img/program-banner.png" alt="Limited Time Offer" />
+          </div>
+          <div className="container">
+            <h2 className="program-banner__title">Limited Time Offer</h2>
+            <p className="program-banner__subtitle">
+              Sri Sri School of Yoga Foundation Program:
+            </p>
+            <p className="program-banner__price">
+              <span className="program-banner__price_previous">$200</span>
+              <span>$100</span>
+            </p>
+            <button
+              type="button"
+              className="btn-secondary program-banner__button register-button"
             >
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  "Improved immune cell counts within as little as 3 weeks"
-                </p>
-                <div>
+              Register Today
+            </button>
+          </div>
+        </section>
+        <section className="program-experience">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-6 col-xl-5">
+                <div className="program-experience__quote">
+                  <h2 className="program-experience__quote-title">
+                    Experience <br />
+                    the best of yoga
+                  </h2>
+                  <p className="program-experience__quote-text">
+                    With an expert by your side, you’ll explore the breadth of
+                    yoga, and a transformational practice with benefits abound.
+                  </p>
+                </div>
+              </div>
+              <div className="col-lg-6 offset-xl-1">
+                <div className="program-experience__item">
                   <img
-                    src="/img/research-highlights-ijoy-color.png"
-                    alt="ljoy"
+                    src="/img/Lotus.svg"
+                    alt="Authentic yoga"
+                    className="program-experience__item-image"
                   />
+                  <h6 className="program-experience__item-title">
+                    Authentic yoga
+                  </h6>
+                  <p className="program-experience__item-text">
+                    Experience the true essence of yoga. Discover an authentic,
+                    accessible, and enjoyable practice that deeply benefits
+                    mind, body, and spirit. Feel relaxed and restored.
+                  </p>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  “3x more time spent in deep, restful stages of sleep.”
-                </p>
-                <div>
+                <div className="program-experience__item">
                   <img
-                    src="/img/research-highlights-sabr-color.png"
-                    alt="sabr"
+                    src="/img/Instructor.svg"
+                    alt="Expert instructors"
+                    className="program-experience__item-image"
                   />
+                  <h6 className="program-experience__item-title">
+                    Expert instructors
+                  </h6>
+                  <p className="program-experience__item-text">
+                    Dedicated to yoga and your well-being, our experienced and
+                    certified Sri Sri School of Yoga instructors expertly guide
+                    you every step of the way. Featuring demos with Q&A and
+                    interactive sessions—all within a small group setting.
+                  </p>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  "The Easy Breathing Technique That Can Lower Your Anxiety 44%"
-                </p>
-                <div>
+                <div className="program-experience__item">
                   <img
-                    src="/img/research-highlights-prevention-color.png"
-                    alt="prevention"
+                    src="/img/OpenBook.svg"
+                    alt="Mind-body wisdom"
+                    className="program-experience__item-image"
                   />
+                  <h6 className="program-experience__item-title">
+                    Mind-body wisdom
+                  </h6>
+                  <p className="program-experience__item-text">
+                    Gain practical, life-enhancing yogic wisdom and insight into
+                    your mind-body well-being for greater health and vitality.{" "}
+                  </p>
                 </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  "Shows promise in providing relief for depression"
+                <div className="program-experience__item">
+                  <img
+                    src="/img/Opportunity.svg"
+                    alt="Empowerment"
+                    className="program-experience__item-image"
+                  />
+                  <h6 className="program-experience__item-title">
+                    Empowerment
+                  </h6>
+                  <p className="program-experience__item-text">
+                    You’ll take away your own yoga sequence (and the
+                    confidence!) to practice solo at home, plus have the tools
+                    to reset and rebalance, anytime.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="program-reviews">
+          <div className="container">
+            <h2 className="program-reviews__title">What people are saying</h2>
+            <Swiper className="program-reviews__slider" {...swiperOption}>
+              <SwiperSlide className="program-reviews__slide-item">
+                <div className="program-reviews__slide-item-image">
+                  <img src="/img/reviews-karen.png" alt="Karen" />
+                </div>
+                <h3 className="program-reviews__slide-item-name">Karen</h3>
+                <span className="program-reviews__slide-item-location">
+                  Long Island, NY
+                </span>
+                <ul className="program-reviews__slide-item-mark">
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star"></li>
+                </ul>
+                <p className="program-reviews__slide-item-text">
+                  I was able to sleep better and noticed that I was more
+                  productive and alert during the day. The workshop gave me a
+                  better understanding of what yoga is all about — not just
+                  asana (yoga poses).
                 </p>
-                <div>
-                  <img src="/img/research-highlights-hhp-color.png" alt="hhp" />
-                </div>
               </SwiperSlide>
-              <div className="research__list-pagination"></div>
+              <SwiperSlide className="program-reviews__slide-item">
+                <div className="program-reviews__slide-item-image">
+                  <img src="/img/reviews-pooja.png" alt="Pooja" />
+                </div>
+                <h3 className="program-reviews__slide-item-name">Pooja</h3>
+                <span className="program-reviews__slide-item-location">
+                  Santa Clara, CA
+                </span>
+                <ul className="program-reviews__slide-item-mark">
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star"></li>
+                </ul>
+                <p className="program-reviews__slide-item-text">
+                  The combination of yoga and meditation made my mind and body
+                  feel more relaxed with sense of completion. The knowledge
+                  given on yoga and how to deal with mind through body was
+                  amazing to learn.
+                </p>
+              </SwiperSlide>
+              <SwiperSlide className="program-reviews__slide-item">
+                <div className="program-reviews__slide-item-image">
+                  <img src="/img/reviews-emmet.png" alt="Emmet" />
+                </div>
+                <h3 className="program-reviews__slide-item-name">Emmet</h3>
+                <span className="program-reviews__slide-item-location">
+                  Atlanta, GA
+                </span>
+                <ul className="program-reviews__slide-item-mark">
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                  <li className="program-reviews__slide-item-mark__star"></li>
+                </ul>
+                <p className="program-reviews__slide-item-text">
+                  I have knee problems, but after the workshop, my knee felt
+                  better and less stiff. The instruction were great both in
+                  knowledge and style. I love that I could incorporate these
+                  sequences of postures in my home practice.
+                </p>
+              </SwiperSlide>
             </Swiper>
           </div>
         </section>
-        <section className="life-time">
+        <section className="program-answers">
           <div className="container">
-            <h2 className="life-time__title section-title">
-              Learn tools for a lifetime
-            </h2>
-            <div className="life-time__block">
-              <h3>Experience the essence of meditation</h3>
-              <p className="life-time__text">
-                Discover advanced breathing techniques that have been
-                scientifically shown to effectively reduce anxiety, calm the
-                mind, and take you into a state of deep meditation.
-              </p>
-            </div>
-            <div className="life-time__block">
-              <h3>Mental hygiene kit</h3>
-              <p className="life-time__text">
-                Discover how the wisdom of yoga can be applied in everyday life
-                to not accumulate stress to begin with.
-              </p>
-            </div>
-            <div className="life-time__block">
-              <h3>Lifetime access to a global community</h3>
-              <p className="life-time__text">
-                This course doesn't just end after three days.. You’ll have
-                access to weekly practice groups around the world and a
-                community of positive, like-minded people for connection and
-                support—online and in-person.
-              </p>
-            </div>
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-100}
-            >
-              Let’s Get Started
-            </Link>
-          </div>
-        </section>
-        <section className="about">
-          <div className="container">
-            <h2 className="about__title section-title text-center">
-              About the Art of Living
-            </h2>
             <div className="row">
-              <div className="col-12 col-md-3 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-39-years.svg" alt="years" />
+              <div className="col-lg-6 col-xl-5">
+                <div className="program-answers__quote">
+                  <h2 className="program-answers__quote-title">
+                    Why Sri Sri Yoga?
+                  </h2>
+                  <p className="program-answers__quote-text">
+                    Experience the most relaxing style of yoga; a holistic
+                    mind-body, multidimensional, and purposeful practice that
+                    goes beyond the yoga mat to benefit every area of your life.
+                  </p>
                 </div>
-                <p className="about__text">
-                  <span>40 years</span> of service to society
-                </p>
               </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-3000-centers.svg" alt="centers" />
+              <div className="col-lg-6 offset-xl-1">
+                <div className="program-answers__item">
+                  <div className="program-answers__item-image">
+                    <img
+                      src="/img/sri-sri-answers-1.png"
+                      alt="Sri Sri Yoga is unique"
+                    />
+                  </div>
+                  <div className="program-answers__item-info">
+                    <h6 className="program-answers__item-info__title">
+                      Sri Sri Yoga is unique
+                    </h6>
+                    <p className="program-answers__item-info__text">
+                      This is authentic yoga. Rooted in the original teachings
+                      of the ancient yogis—and brought to you in a way that is
+                      simple, accessible, and enjoyable to practice. You
+                      experience the breadth of yoga and the maximum benefits of
+                      a holistic, deep yoga practice.
+                    </p>
+                  </div>
                 </div>
-                <p className="about__text">
-                  <span>3,000+ centers</span> worldwide
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-156-countries.svg" alt="countries" />
+                <div className="program-answers__item">
+                  <div className="program-answers__item-image">
+                    <img
+                      src="/img/sri-sri-answers-2.png"
+                      alt="Yoga for every body"
+                    />
+                  </div>
+                  <div className="program-answers__item-info">
+                    <h6 className="program-answers__item-info__title">
+                      Yoga for every body
+                    </h6>
+                    <p className="program-answers__item-info__text">
+                      Discover a supportive, inclusive yoga practice that meets
+                      you, just as you are. You’ll explore your own comfortable
+                      edge of stretch and strength to suit your body. And emerge
+                      with deeper self-awareness and insight.{" "}
+                    </p>
+                  </div>
                 </div>
-                <p className="about__text">
-                  <span>156 countries</span> where our programs made a
-                  difference
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-450-m-lives.svg" alt="lives" />
+                <div className="program-answers__item">
+                  <div className="program-answers__item-image">
+                    <img
+                      src="/img/sri-sri-answers-3.png"
+                      alt="Beyond the yoga pose"
+                    />
+                  </div>
+                  <div className="program-answers__item-info">
+                    <h6 className="program-answers__item-info__title">
+                      Beyond the yoga pose
+                    </h6>
+                    <p className="program-answers__item-info__text">
+                      Experience all aspects of a complete yoga practice,
+                      including yoga postures (asanas), simple breathing
+                      techniques (pranayamas), guided meditation, and yogic
+                      wisdom. Designed to bring about vibrant well-being and
+                      connection to calm.
+                    </p>
+                  </div>
                 </div>
-                <p className="about__text">
-                  <span>450M+ lives</span> touched through our courses & events
-                </p>
               </div>
             </div>
           </div>
         </section>
-        <section className="details">
-          <div className="container"></div>
+        <section className="program-quote">
+          <div className="program-quote__image">
+            <img src="/img/program-quote-bg.png" />
+          </div>
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
+                <h2 className="program-quote__text">
+                  “One of the best yoga workshops I’ve taken. I gained a feeling
+                  of calmness, stress reduction, and relief from anxiety”
+                </h2>
+                <h3 className="program-quote__author">
+                  — Purti G., School teacher, Texas
+                </h3>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="program-inspiration">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-5">
+                <h2 className="program-inspiration__title">
+                  Gain well-being tools for life
+                </h2>
+                <p className="program-inspiration__subtitle">
+                  4-day program, 2 hours per day
+                </p>
+                <button
+                  type="button"
+                  className="btn-secondary program-inspiration__button program-inspiration__button_desktop register-button"
+                >
+                  Let's Get Started
+                </button>
+              </div>
+              <div className="col-lg-7">
+                <div className="program-inspiration__items">
+                  <div className="program-inspiration__item">
+                    <img
+                      src="/img/Yoga.svg"
+                      alt="Strength and poise"
+                      className="program-inspiration__item-image"
+                    />
+                    <h5 className="program-inspiration__item-title">
+                      Strength and poise
+                    </h5>
+                    <h6 className="program-inspiration__item-subtitle">
+                      Yoga poses (asanas)
+                    </h6>
+                    <p className="program-inspiration__item-text">
+                      Strengthen and tone muscles, while burning fat and
+                      reducing cholesterol.
+                    </p>
+                  </div>
+                  <div className="program-inspiration__item">
+                    <img
+                      src="/img/Energy.svg"
+                      alt="Energy"
+                      className="program-inspiration__item-image"
+                    />
+                    <h5 className="program-inspiration__item-title">Energy</h5>
+                    <h6 className="program-inspiration__item-subtitle">
+                      Breathing techniques
+                    </h6>
+                    <p className="program-inspiration__item-text">
+                      Discover the power of yogic breathing practices to
+                      energize, calm, and de-stress.
+                    </p>
+                  </div>
+                  <div className="program-inspiration__item">
+                    <img
+                      src="/img/Candles.svg"
+                      alt="Deep rest"
+                      className="program-inspiration__item-image"
+                    />
+                    <h5 className="program-inspiration__item-title">
+                      Deep rest
+                    </h5>
+                    <h6 className="program-inspiration__item-subtitle">
+                      Meditation and relaxation
+                    </h6>
+                    <p className="program-inspiration__item-text">
+                      Experience profound rest through guided practices that
+                      effortlessly calm the mind and body.
+                    </p>
+                  </div>
+                  <div className="program-inspiration__item">
+                    <img
+                      src="/img/Idea.svg"
+                      alt="Insight"
+                      className="program-inspiration__item-image"
+                    />
+                    <h5 className="program-inspiration__item-title">Insight</h5>
+                    <h6 className="program-inspiration__item-subtitle">
+                      Wisdom from yoga
+                    </h6>
+                    <p className="program-inspiration__item-text">
+                      Explore the nature of the mind and body and how to live a
+                      relaxed, healthy, fulfilling life.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn-secondary program-inspiration__button program-inspiration__button_mobile"
+            >
+              Let's Get Started
+            </button>
+          </div>
         </section>
       </main>
-      <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
-      </HideOn>
+      <CourseBottomCard workshop={data} />
     </>
   );
 };

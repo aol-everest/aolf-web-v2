@@ -7,11 +7,11 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { useQuery } from "react-query";
-import { MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
+import { MEMBERSHIP_TYPES, COURSE_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
-  const { id } = query;
+  const { id, cid = null } = query;
   let props = {};
   let token = "";
   try {
@@ -60,7 +60,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const MembershipThankyou = ({ workshop, order, query }) => {
+const MembershipThankyou = ({ order, query }) => {
   const [courseId] = useQueryString("cid");
   const [meetupId] = useQueryString("mid");
   const [page] = useQueryString("page", {
@@ -107,7 +107,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
 
   const searchSilentRetreatsAction = () => {
     router.push({
-      pathname: "/us/course",
+      pathname: "/us",
       query: {
         courseType: "SILENT_RETREAT",
       },
@@ -134,13 +134,13 @@ const MembershipThankyou = ({ workshop, order, query }) => {
 
   const exploreMeditationsAction = () => {
     router.push({
-      pathname: `/us/meditate`,
+      pathname: `/us/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
     });
   };
 
   const getEventImage = () => {
-    if (workshop.eventType === "Meetup") {
-      switch (workshop.meetupType) {
+    if (workshopDetail.eventType === "Meetup") {
+      switch (workshopDetail.meetupType) {
         case "Short SKY Meditation Meetup":
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
         case "Guided Meditation Meetup":
@@ -148,24 +148,24 @@ const MembershipThankyou = ({ workshop, order, query }) => {
         default:
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
       }
-    } else if (workshop.eventType === "Workshop") {
+    } else if (workshopDetail.eventType === "Workshop") {
       if (
         `${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(
-          workshop.productTypeId,
+          workshopDetail.productTypeId,
         ) >= 0
       ) {
         return <img src="/img/Silence_desktop.png" alt="card" />;
       }
       if (
         `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(
-          workshop.productTypeId,
+          workshopDetail.productTypeId,
         ) >= 0
       ) {
         return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
       }
       if (
         `${COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value}`.indexOf(
-          workshop.productTypeId,
+          workshopDetail.productTypeId,
         ) >= 0
       ) {
         return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
@@ -190,16 +190,17 @@ const MembershipThankyou = ({ workshop, order, query }) => {
     <main>
       <section
         className={classNames("journey-confirmation", {
-          "journey-confirmation_v2": !courseId && !meetupId,
-          "journey-confirmation_v1": courseId || meetupId,
+          "journey-confirmation_v2": courseId === null && meetupId === null,
+          "journey-confirmation_v1": !!courseId || !!meetupId,
         })}
       >
         <div className="container">
           <div className="row">
             <div
               className={classNames({
-                "col-12 col-md-10 mx-auto": !courseId && !meetupId,
-                "col-11 mx-auto": courseId || meetupId,
+                "col-12 col-md-10 mx-auto":
+                  courseId === null && meetupId === null,
+                "col-11 mx-auto": !!courseId || !!meetupId,
               })}
             >
               <h1 className="journey-confirmation__title section-title">
@@ -215,14 +216,14 @@ const MembershipThankyou = ({ workshop, order, query }) => {
                   {courseId && (
                     <p className="journey-confirmation__info-text">
                       You’re just one step away from completing your{" "}
-                      {workshop.title} registration. If you are not
+                      {workshopDetail.title} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
                   )}
                   {meetupId && (
                     <p className="journey-confirmation__info-text">
                       You’re just one step away from completing your{" "}
-                      {workshop.meetupTitle} registration. If you are not
+                      {workshopDetail.meetupTitle} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
                   )}

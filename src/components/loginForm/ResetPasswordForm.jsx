@@ -35,9 +35,7 @@ export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
       {errors.username && (
         <p className="validation-input">{errors.username.message}</p>
       )}
-      {showMessage && (
-        <p className="validation-input">{this.getActualMessage(message)}</p>
-      )}
+      {showMessage && <p className="validation-input">{message}</p>}
       <button type="submit" className="mt-4 modal-window__btn btn-primary v2">
         Send email
       </button>

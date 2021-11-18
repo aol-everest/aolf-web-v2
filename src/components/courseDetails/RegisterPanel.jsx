@@ -127,7 +127,7 @@ export const RegisterPanel = ({ workshop }) => {
       </div>
     );
   }
-  if (!authenticated && (isJourneyPremium || isJourneyPlus)) {
+  if (authenticated && (isJourneyPremium || isJourneyPlus)) {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>

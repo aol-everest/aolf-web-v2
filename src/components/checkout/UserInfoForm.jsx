@@ -35,6 +35,7 @@ export const UserInfoForm = ({ formikProps }) => {
         }}
       ></StyledInput>
       <StyledInput
+        isPhoneNumberMask
         placeholder="Phone No"
         maxLength="16"
         type="tel"

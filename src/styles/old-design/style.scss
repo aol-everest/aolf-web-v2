@@ -2,7 +2,7 @@
 @import "./backend-checkout";
 
 .login-screen {
-  background: #ffffff url("./../img/login-bg-angle.png") no-repeat top right -40px /
+  background: #ffffff url("/img/login-bg-angle.png") no-repeat top right -40px /
     100% auto;
   height: 100vh - 10;
 }
@@ -84,7 +84,7 @@ header .aol_navbar {
       height: 38px;
       width: 38px;
       display: inline-block;
-      background: #ffffff url(../img/user.png) no-repeat center (center / cover);
+      background: #ffffff url(/img/user.png) no-repeat center (center / cover);
       float: right;
       margin-left: 10px;
       margin-top: -4px;

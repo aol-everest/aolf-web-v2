@@ -1,7 +1,7 @@
 .top-column {
   position: relative;
   padding: 190px 150px 235px 150px;
-  background-image: url("../img/top-column-bg@2x.png");
+  background-image: url("/img/top-column-bg@2x.png");
   background-size: cover;
   background-position: 90%;
   box-shadow: inset 0px -130px 89px -60px white;
@@ -375,7 +375,7 @@
   }
 
   &.silent-retreat {
-    background-image: url("../img/silent-retreat-bg@2x.png");
+    background-image: url("/img/silent-retreat-bg@2x.png");
 
     .type-course {
       color: white;
@@ -397,7 +397,7 @@
   }
 
   &.sahaj-samadhi {
-    background-image: url("../img/sahaj-samadhi-bg@2x.png");
+    background-image: url("/img/sahaj-samadhi-bg@2x.png");
     background-position-y: 100%;
     box-shadow: none;
 

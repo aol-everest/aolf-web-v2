@@ -14,5 +14,9 @@ export {
   GlobalVideoPlayerContext,
   useGlobalVideoPlayerContext,
 } from "./GlobalVideoPlayerContext";
+export {
+  GlobalLoadingContext,
+  useGlobalLoadingContext,
+} from "./GlobalLoadingContext";
 
 export { AuthProvider, useAuth } from "./auth";

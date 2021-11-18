@@ -1,0 +1,29 @@
+@media only screen and (min-width: 992px) {
+  .program-reviews {
+    &__slider {
+      &-pagination {
+        display: none;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .program-reviews {
+    padding: 40px 0;
+
+    &__title {
+      font-size: 28px;
+      line-height: 38px;
+    }
+
+    &__slider {
+      margin: 0 -6px;
+    }
+
+    &__slide {
+      width: 339px;
+      padding: 0 6px;
+    }
+  }
+}

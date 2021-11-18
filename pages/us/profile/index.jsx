@@ -7,6 +7,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
+import { useQuery } from "react-query";
 
 import {
   EventList,
@@ -15,6 +16,7 @@ import {
   ChangeProfile,
   ProfileHeader,
   ProfilePicCrop,
+  PastCourses,
 } from "@components/profile";
 import { api } from "@utils";
 import { ALERT_TYPES } from "@constants";
@@ -22,6 +24,7 @@ import { useQueryString } from "@hooks";
 import { useGlobalAlertContext } from "@contexts";
 
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
+const PAST_COURSES = "PAST_COURSES";
 const UPDATE_PROFILE = "UPDATE_PROFILE";
 const CARD_DETAILS = "CARD_DETAILS";
 const CHANGE_PASSWORD = "CHANGE_PASSWORD";
@@ -91,6 +94,19 @@ const Profile = ({ profile, tab }) => {
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
+  const { data = {}, isSuccess } = useQuery(
+    "userPastCourses",
+    async () => {
+      const response = await api.get({
+        path: "getUserPastCourses",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
   const switchTab = (tab) => (e) => {
     if (e) e.preventDefault();
     setActiveTab(tab);
@@ -108,7 +124,7 @@ const Profile = ({ profile, tab }) => {
     setLoading(true);
     await Auth.signOut();
     setLoading(false);
-    router.push("/");
+    router.push("/us");
   };
 
   const handleOnSelectFile = (e) => {
@@ -156,6 +172,8 @@ const Profile = ({ profile, tab }) => {
       setLoading(false);
     }
   };
+
+  const { pastWorkshops = [] } = data;
 
   return (
     <>
@@ -255,6 +273,16 @@ const Profile = ({ profile, tab }) => {
               <li className="nav-item" role="presentation">
                 <a
                   className={classNames("profile-tab", {
+                    active: activeTab === PAST_COURSES,
+                  })}
+                  onClick={switchTab(PAST_COURSES)}
+                >
+                  Past Courses
+                </a>
+              </li>
+              <li className="nav-item" role="presentation">
+                <a
+                  className={classNames("profile-tab", {
                     active: activeTab === UPDATE_PROFILE,
                   })}
                   onClick={switchTab(UPDATE_PROFILE)}
@@ -311,13 +339,13 @@ const Profile = ({ profile, tab }) => {
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
-                        <Link href="/course">
+                        <Link href="/us">
                           <a href="#" className="link link_orange">
                             course
                           </a>
                         </Link>{" "}
                         or{" "}
-                        <Link href="/meetup">
+                        <Link href="/us/meetup">
                           <a href="#" className="link link_orange">
                             meetup
                           </a>
@@ -328,6 +356,14 @@ const Profile = ({ profile, tab }) => {
                   )}
                   <EventList workshops={upcomingEvents}></EventList>
                 </div>
+              </div>
+              <div
+                className={classNames("tab-pane past-courses fade", {
+                  active: activeTab === PAST_COURSES,
+                  show: activeTab === PAST_COURSES,
+                })}
+              >
+                <PastCourses data={pastWorkshops} />
               </div>
               <div
                 className={classNames("tab-pane profile-update fade", {
@@ -406,26 +442,46 @@ const Profile = ({ profile, tab }) => {
                         <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
                           upcoming{" "}
-                          <a
-                            href="#"
-                            className="link link_orange"
-                            // onClick={this.navigateToCourses}
-                          >
-                            course
-                          </a>{" "}
+                          <Link href="/us">
+                            <a href="#" className="link link_orange">
+                              course
+                            </a>
+                          </Link>{" "}
                           or{" "}
-                          <a
-                            href="#"
-                            className="link link_orange"
-                            // onClick={this.navigateToMeetups}
-                          >
-                            meetup
-                          </a>{" "}
+                          <Link href="/us/meetup">
+                            <a href="#" className="link link_orange">
+                              meetup
+                            </a>
+                          </Link>{" "}
                           to join.
                         </div>
                       </div>
                     )}
                     <EventList workshops={upcomingEvents} isMobile></EventList>
+                  </div>
+                </div>
+              </div>
+              <div className="profile-body_mobile__card">
+                <div className="profile-body_mobile__card-header">
+                  <h2 className="mb-0">
+                    <button
+                      className={classNames("btn", {
+                        collapsed: activeTab !== UPCOMING_EVENTS,
+                      })}
+                      type="button"
+                      onClick={switchTab(UPCOMING_EVENTS)}
+                    >
+                      Upcoming Events
+                    </button>
+                  </h2>
+                </div>
+                <div
+                  className={classNames("collapse", {
+                    show: activeTab === UPCOMING_EVENTS,
+                  })}
+                >
+                  <div className="profile-body_mobile__card-body">
+                    <PastCourses isMobile data={pastWorkshops} />
                   </div>
                 </div>
               </div>

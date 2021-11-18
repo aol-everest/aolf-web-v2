@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useEffect } from "react";
 import { withSSRContext } from "aws-amplify";
 import { api, tConvert } from "@utils";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
@@ -40,7 +40,7 @@ const RetreatPrerequisiteWarning = () => {
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
-  const { id, ofid, cid } = query;
+  const { id, ofid = null, cid = null } = query;
   let props = {};
   let token = "";
   try {
@@ -79,6 +79,7 @@ export const getServerSideProps = async (context) => {
       ...props,
       subsciption: res.data[0],
       cid,
+      ofid,
     };
   } catch (err) {
     console.error(err);
@@ -108,26 +109,28 @@ function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
 
   const { name, sfid } = subsciption || {};
 
-  if (
-    MEMBERSHIP_TYPES.JOURNEY_PLUS === sfid &&
-    !profile.isMandatoryWorkshopAttended
-  ) {
-    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      className: "retreat-prerequisite-big meditation-digital-membership",
-      title: "Retreat Prerequisite",
-      footer: () => {
-        return (
-          <button
-            className="btn-secondary v2"
-            onClick={closeRetreatPrerequisiteWarning}
-          >
-            Discover SKY Breath Meditation
-          </button>
-        );
-      },
-      children: <RetreatPrerequisiteWarning />,
-    });
-  }
+  useEffect(() => {
+    if (
+      MEMBERSHIP_TYPES.JOURNEY_PLUS.value === sfid &&
+      !profile.isMandatoryWorkshopAttended
+    ) {
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: "retreat-prerequisite-big meditation-digital-membership",
+        title: "Retreat Prerequisite",
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary v2"
+              onClick={closeRetreatPrerequisiteWarning}
+            >
+              Discover SKY Breath Meditation
+            </button>
+          );
+        },
+        children: <RetreatPrerequisiteWarning />,
+      });
+    }
+  }, []);
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
@@ -175,6 +178,7 @@ function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
               profile={profile}
               authenticated={authenticated}
               completeCheckoutCallback={completeCheckoutCallback}
+              closeRetreatPrerequisiteWarning={closeRetreatPrerequisiteWarning}
             />
           </Elements>
         </div>

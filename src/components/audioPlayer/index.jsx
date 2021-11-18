@@ -17,7 +17,7 @@ const AudioPlayer = () => {
   // State
 
   const [trackProgress, setTrackProgress] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [isFullPlayer, setIsFullPlayer] = useState(false);
 
@@ -169,6 +169,16 @@ const AudioPlayer = () => {
 
   useEffect(() => {
     // Pause and clean up on unmount
+    setIsPlaying(true);
+    audioRef.current.oncanplay = () => {
+      console.log("Can play");
+    };
+    audioRef.current.oncanplaythrough = () => {
+      console.log("Can play through");
+    };
+    audioRef.current.onloadeddata = () => {
+      console.log("Loaded data");
+    };
     return () => {
       audioRef.current.pause();
       clearInterval(intervalRef.current);

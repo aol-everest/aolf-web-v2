@@ -59,7 +59,7 @@
 }
 .card.image-card.image-card-1 .course-like,
 .upcoming_course_card.newCard-new .course-like {
-  background-image: url("../img/ic-heart.svg");
+  background-image: url("/img/ic-heart.svg");
   position: absolute;
   right: 20px;
   top: 20px;
@@ -70,10 +70,10 @@
   background-color: rgba(255, 255, 255, 0.6);
 }
 .upcoming_course_card.newCard-new .course-like.liked {
-  background-image: url("../img/ic-heart-filled.svg");
+  background-image: url("/img/ic-heart-filled.svg");
 }
 .card.image-card.image-card-1 .course-like.liked {
-  background-image: url("../img/ic-heart-filled.svg");
+  background-image: url("/img/ic-heart-filled.svg");
 }
 .upcoming_course_card.newCard-new .forClick,
 .swiper-slide.popular-slide-item .forClick {

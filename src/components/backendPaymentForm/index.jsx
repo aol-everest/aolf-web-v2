@@ -934,7 +934,6 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                       <input
                         type="text"
                         className="form-control"
-                        id="contactPhone"
                         placeholder=" "
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -1344,10 +1343,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                         !values.isSecondChequePayment) && (
                         <div className="col-sm-12">
                           <div className="card-element-box">
-                            <CardElement
-                              onReady={(c) => (this._cardElement = c)}
-                              {...createOptions(this.props.fontSize)}
-                            />
+                            <CardElement options={createOptions} />
                           </div>
                         </div>
                       )}
