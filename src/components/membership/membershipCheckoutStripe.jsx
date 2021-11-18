@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
@@ -42,6 +43,29 @@ const createOptions = {
   },
 };
 
+const RetreatPrerequisiteWarning = () => {
+  return (
+    <>
+      <p className="course-join-card__text">
+        Our records indicate that you have not yet taken the prerequisite for
+        the Journey + membership, which is{" "}
+        <strong>SKY Breath Meditation</strong> (formerly known as the Happiness
+        Program). In SKY Breath Meditation, you'll learn a powerful breath
+        meditation to effectively settle and calm the mind.
+      </p>
+      <p className="course-join-card__text">
+        If our records are not accurate, please contact customer service at{" "}
+        <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
+        <a href="mailto:app.support@us.artofliving.org">
+          app.support@us.artofliving.org
+        </a>
+        . We will be happy to help you so you can sign up for the Silent
+        Retreat.
+      </p>
+    </>
+  );
+};
+
 export const MembershipCheckoutStripe = ({
   offeringId,
   subsciption,
@@ -50,6 +74,7 @@ export const MembershipCheckoutStripe = ({
   profile,
   completeCheckoutCallback,
   authenticated,
+  closeRetreatPrerequisiteWarning,
 }) => {
   const [loading, setLoading] = useState(false);
   const [discount, setDiscount] = useState(null);
@@ -103,6 +128,26 @@ export const MembershipCheckoutStripe = ({
   const completeEnrollmentAction = async (values) => {
     if (loading) {
       return null;
+    }
+    if (
+      MEMBERSHIP_TYPES.JOURNEY_PLUS.value === subsciption.sfid &&
+      !profile.isMandatoryWorkshopAttended
+    ) {
+      return showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: "retreat-prerequisite-big meditation-digital-membership",
+        title: "Retreat Prerequisite",
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary v2"
+              onClick={closeRetreatPrerequisiteWarning}
+            >
+              Discover SKY Breath Meditation
+            </button>
+          );
+        },
+        children: <RetreatPrerequisiteWarning />,
+      });
     }
     const {
       contactPhone,

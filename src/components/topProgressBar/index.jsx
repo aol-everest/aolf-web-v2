@@ -17,7 +17,9 @@ function load() {
   state = "loading";
 
   timer = setTimeout(function () {
-    loader.showLoader();
+    if (loader.showLoader) {
+      loader.showLoader();
+    }
     NProgress.start();
   }, delay); // only show progress bar if it takes longer than the delay
 }
@@ -30,7 +32,9 @@ function stop() {
   state = "stop";
 
   clearTimeout(timer);
-  loader.hideLoader();
+  if (loader.hideLoader) {
+    loader.hideLoader();
+  }
   NProgress.done();
 }
 

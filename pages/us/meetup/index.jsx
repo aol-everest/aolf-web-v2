@@ -328,7 +328,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
     if (e) e.preventDefault();
     hideAlert();
     router.push({
-      pathname: "/us/course",
+      pathname: "/us",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },
@@ -339,10 +339,12 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
 
   const openEnrollPage = (selectedMeetup) => async (e) => {
     if (e) e.preventDefault();
+    console.log("selectedMeetup", selectedMeetup);
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
       if (!selectedMeetup.isMandatoryWorkshopAttended) {
+        console.log("IIIII");
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
           className: "retreat-prerequisite-big meditation-digital-membership",
           title: "Retreat Prerequisite",
@@ -359,31 +361,31 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
           children: <RetreatPrerequisiteWarning meetup={selectedMeetup} />,
         });
         return;
-      }
-
-      try {
-        const { data } = await api.get({
-          path: "meetupDetail",
-          param: {
-            id: selectedMeetup.sfid,
-          },
-        });
-        const currentMeetup = { ...selectedMeetup, ...data };
-        showModal(MODAL_TYPES.EMPTY_MODAL, {
-          children: (handleModalToggle) => {
-            return (
-              <MeetupEnroll
-                selectedMeetup={currentMeetup}
-                checkoutMeetup={checkoutMeetup}
-                closeDetailAction={handleModalToggle}
-              />
-            );
-          },
-        });
-      } catch (error) {
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: error.message,
-        });
+      } else {
+        try {
+          const { data } = await api.get({
+            path: "meetupDetail",
+            param: {
+              id: selectedMeetup.sfid,
+            },
+          });
+          const currentMeetup = { ...selectedMeetup, ...data };
+          showModal(MODAL_TYPES.EMPTY_MODAL, {
+            children: (handleModalToggle) => {
+              return (
+                <MeetupEnroll
+                  selectedMeetup={currentMeetup}
+                  checkoutMeetup={checkoutMeetup}
+                  closeDetailAction={handleModalToggle}
+                />
+              );
+            },
+          });
+        } catch (error) {
+          showAlert(ALERT_TYPES.ERROR_ALERT, {
+            children: error.message,
+          });
+        }
       }
     }
   };
