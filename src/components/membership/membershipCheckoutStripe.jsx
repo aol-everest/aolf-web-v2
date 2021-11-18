@@ -371,17 +371,12 @@ export const MembershipCheckoutStripe = ({
                       <span>SSL Secured</span>
                     </p>
                   </div>
-                  <button className="btn btn-primary v2" type="submit">
-                    {loading && (
-                      <div className="loaded" style={{ padding: "0px 58px" }}>
-                        <div className="loader">
-                          <div className="loader-inner ball-clip-rotate">
-                            <div />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {!loading && `Complete Checkout`}
+                  <button
+                    className="btn btn-primary v2"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    Complete Checkout
                   </button>
                 </div>
               </form>

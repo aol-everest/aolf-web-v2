@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { useQuery } from "react-query";
-import { MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
+import { MEMBERSHIP_TYPES, COURSE_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
@@ -107,7 +107,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
 
   const searchSilentRetreatsAction = () => {
     router.push({
-      pathname: "/us/course",
+      pathname: "/us",
       query: {
         courseType: "SILENT_RETREAT",
       },
@@ -134,7 +134,7 @@ const MembershipThankyou = ({ workshop, order, query }) => {
 
   const exploreMeditationsAction = () => {
     router.push({
-      pathname: `/us/meditate`,
+      pathname: `/us/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
     });
   };
 

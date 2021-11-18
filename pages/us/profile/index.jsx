@@ -339,13 +339,13 @@ const Profile = ({ profile, tab }) => {
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
-                        <Link href="/course">
+                        <Link href="/us">
                           <a href="#" className="link link_orange">
                             course
                           </a>
                         </Link>{" "}
                         or{" "}
-                        <Link href="/meetup">
+                        <Link href="/us/meetup">
                           <a href="#" className="link link_orange">
                             meetup
                           </a>
@@ -442,21 +442,17 @@ const Profile = ({ profile, tab }) => {
                         <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
                           upcoming{" "}
-                          <a
-                            href="#"
-                            className="link link_orange"
-                            // onClick={this.navigateToCourses}
-                          >
-                            course
-                          </a>{" "}
+                          <Link href="/us">
+                            <a href="#" className="link link_orange">
+                              course
+                            </a>
+                          </Link>{" "}
                           or{" "}
-                          <a
-                            href="#"
-                            className="link link_orange"
-                            // onClick={this.navigateToMeetups}
-                          >
-                            meetup
-                          </a>{" "}
+                          <Link href="/us/meetup">
+                            <a href="#" className="link link_orange">
+                              meetup
+                            </a>
+                          </Link>{" "}
                           to join.
                         </div>
                       </div>
