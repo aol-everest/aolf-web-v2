@@ -13,6 +13,7 @@ import { GlobalModal } from "@components/globalModal";
 import { GlobalAlert } from "@components/globalAlert";
 import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
 import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
+import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
 
@@ -54,6 +55,7 @@ function App({ Component, pageProps, userInfo }) {
                   GlobalAlert,
                   GlobalAudioPlayer,
                   GlobalVideoPlayer,
+                  GlobalLoading,
                 ]}
               >
                 <Layout hideHeader={Component.hideHeader}>

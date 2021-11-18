@@ -1,10 +1,13 @@
 import Router from "next/router";
 import NProgress from "nprogress";
+import { useGlobalLoadingContext } from "@contexts";
 
 let timer;
 let state;
 let activeRequests = 0;
 const delay = 250;
+
+let loader = {};
 
 function load() {
   if (state === "loading") {
@@ -14,6 +17,7 @@ function load() {
   state = "loading";
 
   timer = setTimeout(function () {
+    loader.showLoader();
     NProgress.start();
   }, delay); // only show progress bar if it takes longer than the delay
 }
@@ -26,6 +30,7 @@ function stop() {
   state = "stop";
 
   clearTimeout(timer);
+  loader.hideLoader();
   NProgress.done();
 }
 
@@ -33,7 +38,9 @@ Router.events.on("routeChangeStart", load);
 Router.events.on("routeChangeComplete", stop);
 Router.events.on("routeChangeError", stop);
 
-NProgress.configure({ showSpinner: false });
+NProgress.configure({
+  showSpinner: false,
+});
 
 // const originalFetch = window.fetch;
 // window.fetch = async function (...args) {
@@ -57,5 +64,7 @@ NProgress.configure({ showSpinner: false });
 // };
 
 export default function _() {
+  const { showLoader, hideLoader } = useGlobalLoadingContext();
+  loader = { showLoader, hideLoader };
   return null;
 }

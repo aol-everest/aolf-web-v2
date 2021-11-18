@@ -40,7 +40,7 @@ const RetreatPrerequisiteWarning = () => {
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
-  const { id, ofid, cid } = query;
+  const { id, ofid = null, cid = null } = query;
   let props = {};
   let token = "";
   try {
@@ -79,6 +79,7 @@ export const getServerSideProps = async (context) => {
       ...props,
       subsciption: res.data[0],
       cid,
+      ofid,
     };
   } catch (err) {
     console.error(err);

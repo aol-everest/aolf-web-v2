@@ -21,29 +21,25 @@ import { Loader } from "@components";
 import { useGlobalAlertContext } from "@contexts";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
-const createOptions = (fontSize, padding) => {
-  return {
-    style: {
-      base: {
-        fontSize: "16px",
-        lineHeight: 2,
-        fontWeight: 400,
-        fontStyle: "normal",
-        color: "#303650",
-        letterSpacing: "0.025em",
+const createOptions = {
+  style: {
+    base: {
+      fontSize: "16px",
+      lineHeight: 2,
+      fontWeight: 200,
+      fontStyle: "normal",
+      color: "#303650",
+      fontFamily: "Work Sans, sans-serif",
+      "::placeholder": {
+        color: "#9598a6",
         fontFamily: "Work Sans, sans-serif",
-        "::placeholder": {
-          color: "#9598a6",
-          fontFamily: "Work Sans, sans-serif",
-          fontSize: "16px",
-        },
-        ...(padding ? { padding } : {}),
-      },
-      invalid: {
-        color: "#9e2146",
+        fontSize: "16px",
       },
     },
-  };
+    invalid: {
+      color: "#9e2146",
+    },
+  },
 };
 
 export const MembershipCheckoutStripe = ({
