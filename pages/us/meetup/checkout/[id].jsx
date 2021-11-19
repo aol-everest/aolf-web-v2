@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { PaymentForm } from "@components";
+import { MeetupPaymentForm } from "@components/meetup/meetupPaymentForm";
 import { api } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
@@ -76,13 +76,13 @@ const Checkout = ({ meetup, profile }) => {
 
   return (
     <>
-      <NextSeo title={meetup.title} />
+      <NextSeo title={meetup.meetupTitle} />
       <main>
         <section className="order">
           <div className="container">
-            <h1 className="title title_thin">{meetup.title}</h1>
+            <h1 className="title title_thin">{meetup.meetupTitle}</h1>
             <p className="order__detail">
-              The ultimate vacation for mind, body, and spirit
+              Reconnect with your practice and community
             </p>
             <Elements
               stripe={stripePromise}
@@ -93,8 +93,8 @@ const Checkout = ({ meetup, profile }) => {
                 },
               ]}
             >
-              <PaymentForm
-                workshop={meetup}
+              <MeetupPaymentForm
+                meetup={meetup}
                 profile={profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
               />
