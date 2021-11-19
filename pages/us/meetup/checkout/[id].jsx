@@ -39,8 +39,8 @@ export const getServerSideProps = async (context) => {
     res.end();
     return;
   }
-  const workshopDetail = await api.get({
-    path: "workshopDetail",
+  const meetupDetail = await api.get({
+    path: "meetupDetail",
     token,
     param: {
       id,
@@ -48,14 +48,14 @@ export const getServerSideProps = async (context) => {
   });
   props = {
     ...props,
-    workshop: workshopDetail.data,
+    meetup: meetupDetail.data,
   };
 
   // Pass data to the page via props
   return { props };
 };
 
-const Checkout = ({ workshop, profile }) => {
+const Checkout = ({ meetup, profile }) => {
   const router = useRouter();
 
   const [mbsy_source] = useQueryString("mbsy_source");
@@ -66,7 +66,7 @@ const Checkout = ({ workshop, profile }) => {
     router.replace({
       pathname: `/us/meetup/thankyou/${attendeeId}`,
       query: {
-        ctype: workshop.productTypeId,
+        ctype: meetup.productTypeId,
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
         mbsy,
@@ -76,11 +76,11 @@ const Checkout = ({ workshop, profile }) => {
 
   return (
     <>
-      <NextSeo title={workshop.title} />
+      <NextSeo title={meetup.title} />
       <main>
         <section className="order">
           <div className="container">
-            <h1 className="title title_thin">{workshop.title}</h1>
+            <h1 className="title title_thin">{meetup.title}</h1>
             <p className="order__detail">
               The ultimate vacation for mind, body, and spirit
             </p>
@@ -94,7 +94,7 @@ const Checkout = ({ workshop, profile }) => {
               ]}
             >
               <PaymentForm
-                workshop={workshop}
+                workshop={meetup}
                 profile={profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
               />
