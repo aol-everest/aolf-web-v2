@@ -22,8 +22,15 @@ import {
   DateRangeInput,
 } from "@components";
 import { useQueryString } from "@hooks";
-import { TIME_ZONE, COURSE_MODES, ALERT_TYPES, MODAL_TYPES } from "@constants";
+import {
+  TIME_ZONE,
+  COURSE_MODES,
+  ALERT_TYPES,
+  MODAL_TYPES,
+  MEMBERSHIP_TYPES,
+} from "@constants";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import { useAuth } from "@contexts";
 import Style from "./Meetup.module.scss";
 
 const DATE_PICKER_CONFIG = {
@@ -190,6 +197,7 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
 
 const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
   const seed = useUIDSeed();
+  const { profile } = useAuth();
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
@@ -213,7 +221,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
   const [showTimeZoneDropdown, setShowTimeZoneDropdown] = useState(false);
 
   const [searchKey, setSearchKey] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const meetupMasters = allMeetupMaster.reduce((acc, meetup) => {
     return { ...acc, [meetup.id]: meetup };
   }, {});
@@ -335,7 +343,130 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
     });
   };
 
-  const checkoutMeetup = async () => {};
+  const checkoutMeetup = (selectedMeetup) => async () => {
+    const { unitPrice, memberPrice, sfid, productTypeId } = selectedMeetup;
+    const { subscriptions = [] } = profile;
+
+    const userSubscriptions =
+      subscriptions &&
+      subscriptions.reduce((accumulator, currentValue) => {
+        return {
+          ...accumulator,
+          [currentValue.subscriptionMasterSfid]: currentValue,
+        };
+      }, {});
+
+    const isDigitalMember =
+      !!userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value];
+    const isPremiumMember =
+      !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
+    const isBasicMember =
+      !!userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
+    console.log(
+      isDigitalMember,
+      isPremiumMember,
+      isBasicMember,
+      memberPrice,
+      unitPrice,
+    );
+    if (
+      ((isDigitalMember || isPremiumMember || isBasicMember) &&
+        memberPrice === 0) ||
+      unitPrice === 0
+    ) {
+      try {
+        const {
+          first_name,
+          last_name,
+          personMobilePhone,
+          personMailingStreet,
+          personMailingState,
+          personMailingPostalCode,
+        } = profile || {};
+
+        setLoading(true);
+        let payLoad = {
+          shoppingRequest: {
+            tokenizeCC: null,
+            couponCode: "",
+            contactAddress: {
+              contactPhone: personMobilePhone,
+              contactAddress: personMailingStreet,
+              contactState: personMailingState,
+              contactZip: personMailingPostalCode,
+            },
+            billingAddress: {
+              billingPhone: personMobilePhone,
+              billingAddress: personMailingStreet,
+              billingState: personMailingState,
+              billingZip: personMailingPostalCode,
+            },
+            products: {
+              productType: "meetup",
+              productSfId: sfid,
+              AddOnProductIds: [],
+            },
+            isInstalmentOpted: false,
+          },
+        };
+
+        if (!authenticated) {
+          payLoad = {
+            ...payLoad,
+            user: {
+              first_name,
+              last_name,
+            },
+          };
+        }
+        //token.saveCardForFuture = true;
+        const {
+          data,
+          status,
+          error: errorMessage,
+          isError,
+        } = await api.post({
+          path: "createAndPayOrder",
+          body: payLoad,
+        });
+        setLoading(false);
+        hideAlert();
+
+        if (status === 400 || isError) {
+          throw new Error(errorMessage);
+        } else if (data) {
+          showEnrollmentCompletionAction(selectedMeetup, data);
+        }
+      } catch (ex) {
+        console.log(ex);
+
+        setLoading(false);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: ex.message,
+        });
+      }
+    } else {
+      router.push({
+        pathname: `/us/meetup/checkout/${sfid}`,
+        query: {
+          ctype: productTypeId,
+        },
+      });
+    }
+  };
+
+  const showEnrollmentCompletionAction = (selectedMeetup, data) => {
+    const { attendeeId } = data;
+
+    router.push({
+      pathname: `/us/meetup/thankyou/${attendeeId}`,
+      query: {
+        cid: selectedMeetup.sfid,
+        ctype: selectedMeetup.productTypeId,
+        type: "local",
+      },
+    });
+  };
 
   const openEnrollPage = (selectedMeetup) => async (e) => {
     if (e) e.preventDefault();
@@ -344,7 +475,6 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
       if (!selectedMeetup.isMandatoryWorkshopAttended) {
-        console.log("IIIII");
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
           className: "retreat-prerequisite-big meditation-digital-membership",
           title: "Retreat Prerequisite",
@@ -375,7 +505,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
               return (
                 <MeetupEnroll
                   selectedMeetup={currentMeetup}
-                  checkoutMeetup={checkoutMeetup}
+                  checkoutMeetup={checkoutMeetup(currentMeetup)}
                   closeDetailAction={handleModalToggle}
                 />
               );

@@ -62,24 +62,11 @@ export const MeetupEnroll = ({
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
 
   return (
-    <div
-      className={classNames(
-        "alert__modal modal-window modal-window_no-log modal fixed-right fade",
-        {
-          active: true,
-          show: true,
-        },
-      )}
-    >
-      <div
-        className={classNames(` modal-dialog modal-dialog-centered`, {
-          active: true,
-          show: true,
-        })}
-      >
+    <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
+      <div className=" modal-dialog modal-dialog-centered active">
         <div className="modal-content">
           <div className="logo">
-            <img src="/static/media/ic-logo.807a6f6a.svg" alt="logo" />
+            <img src="/img/ic-logo.svg" alt="logo" />
           </div>
           <div className="close-modal d-lg-none" onClick={closeDetailAction}>
             <div className="close-line"></div>

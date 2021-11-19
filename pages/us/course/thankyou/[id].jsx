@@ -94,12 +94,10 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
               <div className="col-lg-5 col-md-12 p-md-0">
                 <div className="get-started__info">
                   <h3 className="get-started__subtitle">You’re going!</h3>
-                  <h1 className="get-started__title section-title">
-                    The Silent Retreat
-                  </h1>
+                  <h1 className="get-started__title section-title">{title}</h1>
                   <p className="get-started__text">
-                    You're registered for the Silent Retreat from Wed, October
-                    23 - Fri, October 25, 2020
+                    You're registered for the {title} from Wed, October 23 -
+                    Fri, October 25, 2020
                   </p>
                   <a className="get-started__link" href="#">
                     Add to Calendar
@@ -213,7 +211,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
               <div className="course-bottom-card__info">
                 <p>October 23-35, 2020</p>
                 <div>
-                  <h3>Silent Retreat</h3>
+                  <h3>{title}</h3>
                 </div>
               </div>
             </div>

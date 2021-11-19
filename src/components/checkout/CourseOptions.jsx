@@ -46,8 +46,8 @@ export const CourseOptions = ({
                     </span>
                   </p>
                 )}
-                {!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM] &&
-                  !userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS] && (
+                {!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value] &&
+                  !userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value] && (
                     <ul className="reciept__payment_list">
                       <div className="reciept__payment-option">
                         <input
@@ -129,9 +129,15 @@ export const CourseOptions = ({
                           );
                         }
                       })}
-                      {!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM] &&
-                        !userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP] &&
-                        !userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS] && (
+                      {!userSubscriptions[
+                        MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value
+                      ] &&
+                        !userSubscriptions[
+                          MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value
+                        ] &&
+                        !userSubscriptions[
+                          MEMBERSHIP_TYPES.JOURNEY_PLUS.value
+                        ] && (
                           <li className="btn-item">
                             <button
                               className="btn-outline"
@@ -145,8 +151,8 @@ export const CourseOptions = ({
                         )}
                     </ul>
                   )}
-                {(userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM] ||
-                  userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS]) && (
+                {(userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value] ||
+                  userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value]) && (
                   <ul className="reciept__payment_list">
                     <li>
                       <span>Premium/Journey+ rate:</span>
@@ -211,7 +217,8 @@ export const CourseOptions = ({
               </div>
             )}
 
-            {`${COURSE_TYPES.SILENT_RETREAT}`.indexOf(productTypeId) < 0 && (
+            {`${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(productTypeId) <
+              0 && (
               <>
                 <div className="reciept__header_v1 full-padding">
                   {delfee && (
