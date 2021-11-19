@@ -7,6 +7,7 @@ import { DURATION } from "@constants";
 import { NextSeo } from "next-seo";
 import { api } from "@utils";
 import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 const timeConvert = (data) => {
   const minutes = data % 60;
@@ -35,6 +36,7 @@ export const DesignOne = ({
   favouriteContents,
   onFilterClearEvent,
 }) => {
+  const router = useRouter();
   const { data: randomMeditate = {} } = useQuery(
     "randomMeditation",
     async () => {
@@ -101,6 +103,15 @@ export const DesignOne = ({
   if (instructor) {
     filterCount++;
   }
+
+  const findACourseAction = () => {
+    router.push({
+      pathname: "/us",
+      query: {
+        courseType: "SKY_BREATH_MEDITATION",
+      },
+    });
+  };
 
   return (
     <main className="background-image meditation">
@@ -706,7 +717,9 @@ export const DesignOne = ({
               Learn to meditate live online with a certified{" "}
               <br className="mob-none" /> instructor
             </p>
-            <button className="btn">Find a Course</button>
+            <button className="btn" onClick={findACourseAction}>
+              Find a Course
+            </button>
           </div>
         </div>
       </section>
