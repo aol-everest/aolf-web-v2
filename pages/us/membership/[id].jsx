@@ -149,7 +149,7 @@ function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
       query = { cid: courseId, page: returnPage };
     }
     router.push({
-      pathname: `/us/membership/thank-you/${orderId}`,
+      pathname: `/us/membership/thankyou/${orderId}`,
       query,
     });
   };

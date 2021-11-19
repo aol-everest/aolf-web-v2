@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Popup, MobileFilterModal, SmartDropDown } from "@components";
 import { DURATION } from "@constants";
 import { NextSeo } from "next-seo";
+import { api } from "@utils";
+import { useQuery } from "react-query";
 
 const timeConvert = (data) => {
   const minutes = data % 60;
@@ -33,6 +35,18 @@ export const DesignOne = ({
   favouriteContents,
   onFilterClearEvent,
 }) => {
+  const { data: randomMeditate = {} } = useQuery(
+    "randomMeditation",
+    async () => {
+      const response = await api.get({
+        path: "randomMeditation",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
   let favouriteContentOnly = [];
   const contentFolders = data.folder.map((folder) => {
     const content = folder.content.map((content) => {
@@ -94,7 +108,7 @@ export const DesignOne = ({
       <section className="top-column meditation-page">
         <div className="container">
           <p className="type-course">Guided Meditations</p>
-          {/* <h1 className="course-name">{randomMeditate.title}</h1>
+          <h1 className="course-name">{randomMeditate.title}</h1>
           <p className="type-guide">{randomMeditate.primaryTeacherName}</p>
           <button
             type="button"
@@ -104,20 +118,20 @@ export const DesignOne = ({
             onClick={meditateClickHandle(randomMeditate)}
           >
             <div id="playIcon">
-              <img className="ic-play-static" src="img/ic-play.svg" alt="" />
+              <img className="ic-play-static" src="/img/ic-play.svg" alt="" />
               <img
                 className="ic-play-hover"
-                src="img/ic-play-hover.svg"
+                src="/img/ic-play-hover.svg"
                 alt=""
               />
-              <img className="ic-pause-static" src="img/ic-pause.svg" alt="" />
+              <img className="ic-pause-static" src="/img/ic-pause.svg" alt="" />
               <img
                 className="ic-pause-hover"
-                src="img/ic-pause_hover.svg"
+                src="/img/ic-pause_hover.svg"
                 alt=""
               />
             </div>
-          </button> */}
+          </button>
         </div>
       </section>
       <section className="courses courses-dop pb-4">
@@ -284,8 +298,10 @@ export const DesignOne = ({
           <section className="browse-category most-popular">
             <p className="title-slider">
               Most Popular{" "}
-              <Link href={`/meditation`}>
-                <span className="popular-all">All</span>
+              <Link href={`/us/library/search`}>
+                <span style={{ cursor: "pointer" }} className="popular-all">
+                  All
+                </span>
               </Link>
             </p>
             <Swiper {...swiperOption}>
@@ -405,6 +421,7 @@ export const DesignOne = ({
           <button
             onClick={findMeditation}
             className="btn tooltip-button_search"
+            style={{ opacity: 1 }}
           >
             Search
           </button>

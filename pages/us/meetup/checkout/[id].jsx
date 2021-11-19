@@ -64,9 +64,8 @@ const Checkout = ({ workshop, profile }) => {
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     router.replace({
-      pathname: "/us/course/thankyou",
+      pathname: `/us/meetup/thankyou/${attendeeId}`,
       query: {
-        aid: attendeeId,
         ctype: workshop.productTypeId,
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,

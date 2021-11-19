@@ -68,6 +68,11 @@ export const ALERT_TYPES = {
   CUSTOM_ALERT: "CUSTOM_ALERT",
 };
 
+export const SHARE_SITES = {
+  GOOGLE: "Google",
+  ICAL: "iCal",
+};
+
 export const COURSE_TYPES = {
   SKY_BREATH_MEDITATION: {
     name: "SKY Breath Meditation",
