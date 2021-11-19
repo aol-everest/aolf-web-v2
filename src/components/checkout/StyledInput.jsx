@@ -84,9 +84,9 @@ export const StyledInput = ({
         <MaskedInput
           mask={phoneNumberMask}
           type="tel"
-          id={formikKey}
           name={formikKey}
           value={formikProps.values[formikKey]}
+          {...inputProps}
           className={
             formikProps.errors[formikKey] && formikProps.touched[formikKey]
               ? "text-input error"

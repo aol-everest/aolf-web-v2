@@ -119,7 +119,7 @@ export const MeetupPaymentForm = ({
     }
 
     const {
-      id: productId,
+      sfid: productId,
       isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
@@ -174,50 +174,13 @@ export const MeetupPaymentForm = ({
         }
         tokenizeCC = token;
       }
-
-      const selectedAddOn = accommodation?.isExpenseAddOn
-        ? null
-        : accommodation?.productSfid || null;
-
       let addOnProductsList = addOnProducts
-        ? addOnProducts.map((product) => {
-            if (!product.isAddOnSelectionRequired) {
-              const value = values[product.productName];
-              if (value) {
-                return product.productSfid;
-              } else {
-                return null;
-              }
-            }
-            return product.productSfid;
-          })
+        ? addOnProducts.map(({ productSfid }) => productSfid)
         : [];
 
-      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+      let AddOnProductIds = [...addOnProductsList];
 
       AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
-
-      const isRegularOrder = values.comboDetailId
-        ? values.comboDetailId === productId
-        : true;
-
-      const products = isRegularOrder
-        ? {
-            productType: "workshop",
-            productSfId: productId,
-            AddOnProductIds: AddOnProductIds,
-          }
-        : {
-            productType: "bundle",
-            productSfId: values.comboDetailId,
-            childProduct: {
-              productType: "workshop",
-              productSfId: productId,
-              AddOnProductIds: AddOnProductIds,
-              complianceQuestionnaire,
-            },
-          };
-
       let payLoad = {
         shoppingRequest: {
           tokenizeCC,
@@ -228,15 +191,13 @@ export const MeetupPaymentForm = ({
             contactState,
             contactZip,
           },
-          billingAddress: {
-            billingPhone: contactPhone,
-            billingAddress: contactAddress,
-            billingState: contactState,
-            billingZip: contactZip,
+          products: {
+            productType: "meetup",
+            productSfId: productId,
+            AddOnProductIds: AddOnProductIds,
           },
-          products,
           complianceQuestionnaire,
-          isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
+          isInstalmentOpted: false,
         },
       };
 
@@ -249,32 +210,6 @@ export const MeetupPaymentForm = ({
           },
         };
       }
-
-      if (isGenericWorkshop) {
-        const timeSlot =
-          availableTimings &&
-          Object.values(availableTimings)[0] &&
-          Object.values(Object.values(availableTimings)[0])[0][0]
-            .genericWorkshopSlotSfid;
-        payLoad = {
-          ...payLoad,
-          shoppingRequest: {
-            ...payLoad.shoppingRequest,
-            genericWorkshopSlotSfid: timeSlot,
-          },
-        };
-      }
-
-      // if (!token) {
-      //   payLoad = {
-      //     ...payLoad,
-      //     user: {
-      //       firstName,
-      //       lastName,
-      //     },
-      //   };
-      // }
-      //token.saveCardForFuture = true;
 
       const {
         data,
@@ -440,6 +375,7 @@ export const MeetupPaymentForm = ({
         lastName: Yup.string().required("Last Name is required"),
         contactPhone: Yup.string()
           .required("Phone is required")
+          .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })
           .min(10, "Phone is invalid")
           .max(18, "Phone is invalid"),
         contactAddress: Yup.string().required("Address is required"),
