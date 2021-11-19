@@ -199,7 +199,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
   const seed = useUIDSeed();
   const { profile } = useAuth();
   const router = useRouter();
-  const { showModal } = useGlobalModalContext();
+  const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { latitude, longitude, error: geoLocationError } = useGeolocation();
 
@@ -346,6 +346,8 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
   const checkoutMeetup = (selectedMeetup) => async () => {
     const { unitPrice, memberPrice, sfid, productTypeId } = selectedMeetup;
     const { subscriptions = [] } = profile;
+    hideAlert();
+    hideModal();
 
     const userSubscriptions =
       subscriptions &&
@@ -430,7 +432,6 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
           body: payLoad,
         });
         setLoading(false);
-        hideAlert();
 
         if (status === 400 || isError) {
           throw new Error(errorMessage);
@@ -470,7 +471,6 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
 
   const openEnrollPage = (selectedMeetup) => async (e) => {
     if (e) e.preventDefault();
-    console.log("selectedMeetup", selectedMeetup);
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {

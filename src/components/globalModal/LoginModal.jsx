@@ -71,6 +71,8 @@ export const LoginModal = () => {
       if (navigateTo) {
         setLoading(false);
         return router.push(navigateTo);
+      } else {
+        return router.reload(window.location.pathname);
       }
     } catch (error) {
       console.error(error);

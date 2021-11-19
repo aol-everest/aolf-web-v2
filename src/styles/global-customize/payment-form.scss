@@ -79,3 +79,6 @@
   transition: opacity 0.25s linear;
   opacity: 1;
 }
+.select-box__list {
+  z-index: 5 !important;
+}

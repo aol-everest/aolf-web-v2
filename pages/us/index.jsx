@@ -340,7 +340,6 @@ const Course = ({ workshops, authenticated }) => {
   return (
     <main className="meetsup-filter">
       <NextSeo title="Workshops" />
-      {isFetchingNextPage && <div className="cover-spin"></div>}
       <section className="courses">
         <div className="container search_course_form d-lg-block d-none mb-2">
           <div className="row">
