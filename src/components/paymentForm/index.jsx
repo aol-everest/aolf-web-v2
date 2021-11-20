@@ -99,9 +99,8 @@ export const PaymentForm = ({
   const openSubscriptionPaywallPage = (id) => (e) => {
     if (e) e.preventDefault();
     router.push({
-      pathname: `/us/membership-checkout`,
+      pathname: `/us/membership/${id}`,
       query: {
-        id,
         cid: workshop.id,
         page: "checkout",
       },
