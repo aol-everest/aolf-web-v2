@@ -104,6 +104,8 @@ export default function CourseDetail({ data }) {
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(data.productTypeId) >=
     0;
+  const isSriSriYogaMeditationType =
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(data.productTypeId) >= 0;
 
   const props = {
     data,
@@ -113,6 +115,7 @@ export default function CourseDetail({ data }) {
   return (
     <>
       <NextSeo title={data.title} />
+      {isSriSriYogaMeditationType && <SriSriYoga {...props} />}
       {isSKYType && <SKYBreathMeditation {...props} />}
       {isSilentRetreatType && <SilentRetreat {...props} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
