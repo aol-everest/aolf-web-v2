@@ -24,7 +24,7 @@ function Token() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/us");
+    router.reload("/us");
   });
 
   return (
