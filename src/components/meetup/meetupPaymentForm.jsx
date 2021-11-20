@@ -640,7 +640,7 @@ export const MeetupPaymentForm = ({
                     </p>
                   </div>
                   <button className="btn-primary" type="submit">
-                    Complete Checkout
+                    RSVP
                   </button>
                 </div>
               </form>

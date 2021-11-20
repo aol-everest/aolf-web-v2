@@ -18,6 +18,8 @@ import {
   MobileCourseDetails,
   DiscountCodeInput,
   CourseDetailsCard,
+  PreCostDetailsCard,
+  PostCostDetailsCard,
 } from "@components/checkout";
 
 import { priceCalculation } from "@utils";
@@ -685,9 +687,29 @@ export const PaymentForm = ({
             </div>
             <div className="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-xl-1">
               <div className="reciept d-none d-lg-block">
+                <PreCostDetailsCard
+                  workshop={workshop}
+                  userSubscriptions={userSubscriptions}
+                  formikProps={formikProps}
+                  fee={fee}
+                  delfee={delfee}
+                  offering={offering}
+                  showCouponCodeField={true}
+                  hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                />
                 <CourseDetailsCard workshop={workshop} />
+                <PostCostDetailsCard
+                  workshop={workshop}
+                  userSubscriptions={userSubscriptions}
+                  formikProps={formikProps}
+                  fee={fee}
+                  delfee={delfee}
+                  offering={offering}
+                  showCouponCodeField={true}
+                  hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                />
 
-                <div className="reciept__payment">
+                {/* <div className="reciept__payment">
                   <h6 className="reciept__payment__title">Course Options</h6>
                   <div>
                     <div className="reciept__payment-option">
@@ -815,7 +837,7 @@ export const PaymentForm = ({
                 <div className="reciept__total">
                   <span>Total</span>
                   <span>$750</span>
-                </div>
+                </div> */}
                 <div className="reciept__agreement">
                   <AgreementForm
                     formikProps={formikProps}
