@@ -115,6 +115,7 @@ export const CourseOptions = ({
                             <span>
                               {!product.isAddOnSelectionRequired && (
                                 <input
+                                  style={{ width: "auto" }}
                                   type="checkbox"
                                   className="custom-checkbox"
                                   placeholder=" "
@@ -189,6 +190,7 @@ export const CourseOptions = ({
                             <span>
                               {!product.isAddOnSelectionRequired && (
                                 <input
+                                  style={{ width: "auto" }}
                                   type="checkbox"
                                   className="custom-checkbox"
                                   placeholder=" "
