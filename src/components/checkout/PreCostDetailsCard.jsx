@@ -17,6 +17,8 @@ export const PreCostDetailsCard = ({
   isComboDetailAvailable,
   isCourseOptionRequired,
   openSubscriptionPaywallPage,
+  isUsableCreditAvailable,
+  UpdatedFeeAfterCredits,
   values,
 }) => {
   const {
@@ -37,26 +39,6 @@ export const PreCostDetailsCard = ({
     addOnProducts,
     availableBundles,
   } = workshop || {};
-
-  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
-
-  let UpdatedFeeAfterCredits;
-  if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
-    usableCredit.availableCredit === 1
-  ) {
-    UpdatedFeeAfterCredits = 0;
-  } else if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
-  ) {
-    if (usableCredit.availableCredit > fee) {
-      UpdatedFeeAfterCredits = 0;
-    } else {
-      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
-    }
-  }
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;

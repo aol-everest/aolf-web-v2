@@ -19,6 +19,8 @@ export const PostCostDetailsCard = ({
   isOfflineExpense,
   openSubscriptionPaywallPage,
   totalFee,
+  isUsableCreditAvailable,
+  UpdatedFeeAfterCredits,
   ...rest
 }) => {
   const {
@@ -41,26 +43,6 @@ export const PostCostDetailsCard = ({
   } = workshop || {};
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
-
-  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
-
-  let UpdatedFeeAfterCredits;
-  if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
-    usableCredit.availableCredit === 1
-  ) {
-    UpdatedFeeAfterCredits = 0;
-  } else if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
-  ) {
-    if (usableCredit.availableCredit > fee) {
-      UpdatedFeeAfterCredits = 0;
-    } else {
-      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
-    }
-  }
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;

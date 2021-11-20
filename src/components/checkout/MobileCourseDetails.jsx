@@ -18,7 +18,15 @@ const CourseFeeRender = ({
   const isJourneyPremium =
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
-  if (`${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(productTypeId) >= 0) {
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSriSriYogaMeditationType =
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0;
+  if (isSilentRetreatType) {
     if (!isJourneyPremium && !isJourneyPlus) {
       return (
         <>
@@ -74,9 +82,7 @@ const CourseFeeRender = ({
       }
     }
   }
-  if (
-    `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(productTypeId) >= 0
-  ) {
+  if (isSKYType) {
     return (
       <>
         {delfee && (
@@ -104,7 +110,15 @@ const CourseButtonRender = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
-  if (`${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(productTypeId) >= 0) {
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSriSriYogaMeditationType =
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0;
+  if (isSilentRetreatType) {
     if (
       !isJourneyPremium &&
       !isJourneyPlus &&
@@ -132,6 +146,8 @@ export const MobileCourseDetails = ({
   userSubscriptions,
   price,
   openSubscriptionPaywallPage,
+  isUsableCreditAvailable,
+  discount,
 }) => {
   const {
     title,
@@ -147,6 +163,7 @@ export const MobileCourseDetails = ({
     contactEmail,
     notes,
     description,
+    premiumRate,
   } = workshop || {};
 
   return (
@@ -162,6 +179,9 @@ export const MobileCourseDetails = ({
           productTypeId={productTypeId}
           price={price}
           openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+          isUsableCreditAvailable={isUsableCreditAvailable}
+          premiumRate={premiumRate}
+          discount={discount}
         />
       </div>
       <div className="mobile-modal__body">

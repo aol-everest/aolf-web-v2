@@ -24,6 +24,17 @@ export const CourseOptions = ({
     groupedAddOnProducts,
     addOnProducts = [],
   } = workshop;
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isJourneyPremium =
+    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
+  const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
+  const isBasicMember =
+    userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
   return (
     <>
       <div className="order__card__payment d-block d-lg-none">
@@ -31,7 +42,7 @@ export const CourseOptions = ({
 
         {!isInstalmentAllowed && (
           <>
-            {`${COURSE_TYPES.SILENT_RETREAT}`.indexOf(productTypeId) >= 0 && (
+            {isSilentRetreatType && (
               <div>
                 {!isEarlyBirdAllowed && (
                   <h1 className="title reciept__item reciept__item_main">
@@ -46,113 +57,102 @@ export const CourseOptions = ({
                     </span>
                   </p>
                 )}
-                {!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value] &&
-                  !userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value] && (
-                    <ul className="reciept__payment_list">
-                      <div className="reciept__payment-option">
-                        <input
-                          className="custom-radio"
-                          type="radio"
-                          name="payment-type"
-                          id="payment-lg-regular-card"
-                          value="regular"
-                          defaultChecked
-                          onChange={handlePriceTypeChange}
-                        />
-                        <label htmlFor="payment-lg-regular-card">
-                          <span>Regular rate</span>
-                          <span>
-                            {delfee && (
-                              <span className="discount">${delfee}</span>
-                            )}{" "}
-                            ${fee}
-                          </span>
-                        </label>
-                      </div>
-                      <div className="reciept__payment-option">
-                        <input
-                          className="custom-radio"
-                          type="radio"
-                          name="payment-type"
-                          id="payment-lg-premium-card"
-                          value="premium"
-                          onChange={handlePriceTypeChange}
-                        />
-                        <label htmlFor="payment-lg-premium-card">
-                          <span>Premium/Journey+ rate:</span>
-                          <span>
-                            {premiumRate &&
-                              premiumRate.listPrice &&
-                              premiumRate.listPrice !==
-                                premiumRate.unitPrice && (
-                                <span className="discount">
-                                  ${delfee || premiumRate.listPrice}
-                                </span>
-                              )}{" "}
-                            ${premiumRate.unitPrice}
-                          </span>
-                        </label>
-                      </div>
-                      {addOnProducts.map((product) => {
-                        if (
-                          !product.isExpenseAddOn ||
-                          (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                        ) {
-                          const isChecked = product.isAddOnSelectionRequired
-                            ? true
-                            : formikProps.values[product.productName];
-                          return (
-                            <li>
-                              <span>
-                                {!product.isAddOnSelectionRequired && (
-                                  <input
-                                    type="checkbox"
-                                    className="custom-checkbox"
-                                    placeholder=" "
-                                    checked={isChecked}
-                                    onChange={formikProps.handleChange(
-                                      product.productName,
-                                    )}
-                                    value={product.productName}
-                                    name={product.productName}
-                                    id={product.productSfid}
-                                    disabled={product.isAddOnSelectionRequired}
-                                  />
-                                )}
-                                <label htmlFor={product.productSfid}></label>
-                                <span className="ml-2">
-                                  {product.productName} Required:
-                                </span>
+                {!isJourneyPremium && !isJourneyPlus && (
+                  <ul className="reciept__payment_list">
+                    <div className="reciept__payment-option">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="payment-type"
+                        id="payment-lg-regular-card"
+                        value="regular"
+                        defaultChecked
+                        onChange={handlePriceTypeChange}
+                      />
+                      <label htmlFor="payment-lg-regular-card">
+                        <span>Regular rate</span>
+                        <span>
+                          {delfee && (
+                            <span className="discount">${delfee}</span>
+                          )}{" "}
+                          ${fee}
+                        </span>
+                      </label>
+                    </div>
+                    <div className="reciept__payment-option">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="payment-type"
+                        id="payment-lg-premium-card"
+                        value="premium"
+                        onChange={handlePriceTypeChange}
+                      />
+                      <label htmlFor="payment-lg-premium-card">
+                        <span>Premium/Journey+ rate:</span>
+                        <span>
+                          {premiumRate &&
+                            premiumRate.listPrice &&
+                            premiumRate.listPrice !== premiumRate.unitPrice && (
+                              <span className="discount">
+                                ${delfee || premiumRate.listPrice}
                               </span>
-                              <span className="ml-2">${product.unitPrice}</span>
-                            </li>
-                          );
-                        }
-                      })}
-                      {!userSubscriptions[
-                        MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value
-                      ] &&
-                        !userSubscriptions[
-                          MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value
-                        ] &&
-                        !userSubscriptions[
-                          MEMBERSHIP_TYPES.JOURNEY_PLUS.value
-                        ] && (
-                          <li className="btn-item">
-                            <button
-                              className="btn-outline"
-                              onClick={openSubscriptionPaywallPage(
-                                MEMBERSHIP_TYPES.JOURNEY_PLUS,
+                            )}{" "}
+                          ${premiumRate.unitPrice}
+                        </span>
+                      </label>
+                    </div>
+                    {addOnProducts.map((product) => {
+                      if (
+                        !product.isExpenseAddOn ||
+                        (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                      ) {
+                        const isChecked = product.isAddOnSelectionRequired
+                          ? true
+                          : formikProps.values[product.productName];
+                        return (
+                          <li>
+                            <span>
+                              {!product.isAddOnSelectionRequired && (
+                                <input
+                                  type="checkbox"
+                                  className="custom-checkbox"
+                                  placeholder=" "
+                                  checked={isChecked}
+                                  onChange={formikProps.handleChange(
+                                    product.productName,
+                                  )}
+                                  value={product.productName}
+                                  name={product.productName}
+                                  id={product.productSfid}
+                                  disabled={product.isAddOnSelectionRequired}
+                                />
                               )}
-                            >
-                              Join Journey+
-                            </button>
+                              <label htmlFor={product.productSfid}></label>
+                              <span className="ml-2">
+                                {product.productName} Required:
+                              </span>
+                            </span>
+                            <span className="ml-2">${product.unitPrice}</span>
                           </li>
-                        )}
-                    </ul>
-                  )}
-                {(userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value] ||
-                  userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value]) && (
+                        );
+                      }
+                    })}
+                    {!isJourneyPremium && !isBasicMember && !isJourneyPlus && (
+                      <li className="btn-item">
+                        <button
+                          className="btn-outline"
+                          onClick={openSubscriptionPaywallPage(
+                            MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+                          )}
+                        >
+                          Join Journey+
+                        </button>
+                      </li>
+                    )}
+                  </ul>
+                )}
+                {(isJourneyPremium || isJourneyPlus) && (
                   <ul className="reciept__payment_list">
                     <li>
                       <span>Premium/Journey+ rate:</span>
@@ -217,8 +217,7 @@ export const CourseOptions = ({
               </div>
             )}
 
-            {`${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(productTypeId) <
-              0 && (
+            {!isSilentRetreatType && (
               <>
                 <div className="reciept__header_v1 full-padding">
                   {delfee && (
@@ -249,6 +248,7 @@ export const CourseOptions = ({
                           <span>
                             {!product.isAddOnSelectionRequired && (
                               <input
+                                style={{ width: "auto" }}
                                 type="checkbox"
                                 className="custom-checkbox"
                                 placeholder=" "

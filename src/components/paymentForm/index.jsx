@@ -318,6 +318,7 @@ export const PaymentForm = ({
     addOnProducts = [],
     complianceQuestionnaire,
     availableBundles,
+    usableCredit,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -336,22 +337,6 @@ export const PaymentForm = ({
     workshop,
     discount,
   });
-
-  const toggleDetailMobileModal = () => {
-    showModal(MODAL_TYPES.EMPTY_MODAL, {
-      children: (handleModalToggle) => {
-        return (
-          <MobileCourseDetails
-            workshop={workshop}
-            closeDetailAction={handleModalToggle}
-            userSubscriptions={userSubscriptions}
-            price={{ fee, delfee, offering, isRegularPrice }}
-            openSubscriptionPaywallPage={openSubscriptionPaywallPage}
-          />
-        );
-      },
-    });
-  };
 
   const {
     first_name,
@@ -394,6 +379,44 @@ export const PaymentForm = ({
     hasGroupedAddOnProducts || addOnProducts.length > 0;
 
   const isComboDetailAvailable = availableBundles?.length > 0;
+
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === "Amount"
+  ) {
+    if (usableCredit.availableCredit > fee) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
+    }
+  }
+
+  const toggleDetailMobileModal = () => {
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      children: (handleModalToggle) => {
+        return (
+          <MobileCourseDetails
+            workshop={workshop}
+            closeDetailAction={handleModalToggle}
+            userSubscriptions={userSubscriptions}
+            price={{ fee, delfee, offering, isRegularPrice }}
+            openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+            isUsableCreditAvailable={isUsableCreditAvailable}
+            discount={discount}
+          />
+        );
+      },
+    });
+  };
 
   return (
     <Formik
@@ -703,6 +726,8 @@ export const PaymentForm = ({
                   openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                   isComboDetailAvailable={isComboDetailAvailable}
                   isCourseOptionRequired={isCourseOptionRequired}
+                  isUsableCreditAvailable={isUsableCreditAvailable}
+                  UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                 />
                 <CourseDetailsCard workshop={workshop} />
                 <PostCostDetailsCard
@@ -717,6 +742,8 @@ export const PaymentForm = ({
                   openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                   isComboDetailAvailable={isComboDetailAvailable}
                   isCourseOptionRequired={isCourseOptionRequired}
+                  isUsableCreditAvailable={isUsableCreditAvailable}
+                  UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                   totalFee={totalFee}
                 />
 
