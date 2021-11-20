@@ -18,6 +18,8 @@ import {
   MobileCourseDetails,
   DiscountCodeInput,
   CourseDetailsCard,
+  PreCostDetailsCard,
+  PostCostDetailsCard,
 } from "@components/checkout";
 
 import { priceCalculation } from "@utils";
@@ -315,6 +317,7 @@ export const PaymentForm = ({
     groupedAddOnProducts,
     addOnProducts = [],
     complianceQuestionnaire,
+    availableBundles,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -333,8 +336,6 @@ export const PaymentForm = ({
     workshop,
     discount,
   });
-
-  const isRegularPrice = priceType === null || priceType === "regular";
 
   const toggleDetailMobileModal = () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
@@ -378,17 +379,21 @@ export const PaymentForm = ({
     "Residential Add On" in groupedAddOnProducts &&
     groupedAddOnProducts["Residential Add On"].length > 0;
 
-  // const residentialAddOnRequired =
-  //   hasGroupedAddOnProducts &&
-  //   groupedAddOnProducts["Residential Add On"].some(
-  //     (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
-  //   );
+  const isRegularPrice = priceType === null || priceType === "regular";
 
-  // const isAccommodationRequired =
-  //   hasGroupedAddOnProducts && residentialAddOnRequired;
+  const residentialAddOnRequired =
+    hasGroupedAddOnProducts &&
+    groupedAddOnProducts["Residential Add On"].some(
+      (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
+    );
 
-  // const isCourseOptionRequired =
-  //   hasGroupedAddOnProducts || addOnProducts.length > 0;
+  const isAccommodationRequired =
+    hasGroupedAddOnProducts && residentialAddOnRequired;
+
+  const isCourseOptionRequired =
+    hasGroupedAddOnProducts || addOnProducts.length > 0;
+
+  const isComboDetailAvailable = availableBundles?.length > 0;
 
   return (
     <Formik
@@ -409,6 +414,7 @@ export const PaymentForm = ({
             ? ""
             : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
         accommodation: null,
+        priceType: "regular",
       }}
       validationSchema={Yup.object().shape({
         firstName: Yup.string().required("First Name is required"),
@@ -685,9 +691,36 @@ export const PaymentForm = ({
             </div>
             <div className="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-xl-1">
               <div className="reciept d-none d-lg-block">
+                <PreCostDetailsCard
+                  workshop={workshop}
+                  userSubscriptions={userSubscriptions}
+                  formikProps={formikProps}
+                  fee={fee}
+                  delfee={delfee}
+                  offering={offering}
+                  showCouponCodeField={true}
+                  hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                  openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+                  isComboDetailAvailable={isComboDetailAvailable}
+                  isCourseOptionRequired={isCourseOptionRequired}
+                />
                 <CourseDetailsCard workshop={workshop} />
+                <PostCostDetailsCard
+                  workshop={workshop}
+                  userSubscriptions={userSubscriptions}
+                  formikProps={formikProps}
+                  fee={fee}
+                  delfee={delfee}
+                  offering={offering}
+                  showCouponCodeField={true}
+                  hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                  openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+                  isComboDetailAvailable={isComboDetailAvailable}
+                  isCourseOptionRequired={isCourseOptionRequired}
+                  totalFee={totalFee}
+                />
 
-                <div className="reciept__payment">
+                {/* <div className="reciept__payment">
                   <h6 className="reciept__payment__title">Course Options</h6>
                   <div>
                     <div className="reciept__payment-option">
@@ -815,7 +848,7 @@ export const PaymentForm = ({
                 <div className="reciept__total">
                   <span>Total</span>
                   <span>$750</span>
-                </div>
+                </div> */}
                 <div className="reciept__agreement">
                   <AgreementForm
                     formikProps={formikProps}

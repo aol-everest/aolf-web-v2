@@ -19,6 +19,7 @@ export const RegisterPanel = ({ workshop }) => {
     earlyBirdFeeIncreasing,
     roomAndBoardRange,
     usableCredit,
+    productTypeId,
   } = workshop || {};
 
   const isSKYType =
@@ -33,7 +34,12 @@ export const RegisterPanel = ({ workshop }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    router.push(`/us/course/checkout/${sfid}`);
+    router.push({
+      pathname: `/us/course/checkout/${sfid}`,
+      query: {
+        ctype: productTypeId,
+      },
+    });
   };
 
   const purchaseMembershipAction = (id) => (e) => {

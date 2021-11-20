@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
-import { MODAL_TYPES, ABBRS } from "@constants";
+import { MODAL_TYPES, ABBRS, COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 
 export const WorkshopTile = ({ data, authenticated }) => {
@@ -23,17 +23,30 @@ export const WorkshopTile = ({ data, authenticated }) => {
     sfid,
   } = data || {};
 
-  const enrollAction = (workshopId) => () => {
+  const enrollAction = (workshopId, productTypeId) => () => {
     if (authenticated) {
-      router.push(`/us/course/checkout/${workshopId}`);
+      router.push({
+        pathname: `/us/course/checkout/${workshopId}`,
+        query: {
+          ctype: productTypeId,
+        },
+      });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us/course/checkout/${workshopId}`,
+        navigateTo: `/us/course/checkout/${workshopId}?ctype=${productTypeId}`,
       });
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
   };
+
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(data.productTypeId) >=
+    0;
 
   return (
     <div className="col-6 col-lg-3 col-md-4">
@@ -42,24 +55,18 @@ export const WorkshopTile = ({ data, authenticated }) => {
         data-full={isEventFull}
         data-complete={isPurchased}
       >
-        {`${process.env.NEXT_PUBLIC_SILENT_RETREAT_CTYPE}`.indexOf(
-          productTypeId,
-        ) >= 0 && <Image src="/img/course-card-4.png" alt="bg" layout="fill" />}
-        {`${process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE}`.indexOf(
-          productTypeId,
-        ) >= 0 && <Image src="/img/course-card-2.png" alt="bg" layout="fill" />}
-        {`${process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE}`.indexOf(
-          productTypeId,
-        ) >= 0 && <Image src="/img/course-card-5.png" alt="bg" layout="fill" />}
-        {`${process.env.NEXT_PUBLIC_SILENT_RETREAT_CTYPE}`.indexOf(
-          productTypeId,
-        ) < 0 &&
-          `${process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE}`.indexOf(
-            productTypeId,
-          ) < 0 &&
-          `${process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE}`.indexOf(
-            productTypeId,
-          ) < 0 && (
+        {isSilentRetreatType && (
+          <Image src="/img/course-card-4.png" alt="bg" layout="fill" />
+        )}
+        {isSKYType && (
+          <Image src="/img/course-card-2.png" alt="bg" layout="fill" />
+        )}
+        {isSahajSamadhiMeditationType && (
+          <Image src="/img/course-card-5.png" alt="bg" layout="fill" />
+        )}
+        {!isSilentRetreatType &&
+          !isSKYType &&
+          !isSahajSamadhiMeditationType && (
             <Image src="/img/course-card-1.png" alt="bg" layout="fill" />
           )}
         <div className="parentData">
@@ -98,7 +105,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
           <div className="course_detail_btn_box">
             <a
               className="btn btn_box_primary text-center"
-              onClick={enrollAction(sfid)}
+              onClick={enrollAction(sfid, productTypeId)}
             >
               Enroll
             </a>

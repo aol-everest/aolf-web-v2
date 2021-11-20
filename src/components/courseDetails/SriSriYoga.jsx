@@ -11,31 +11,19 @@ import { useGlobalAlertContext } from "@contexts";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
 import { HideOn } from "react-hide-on-scroll";
 import { priceCalculation } from "@utils";
+import { useRouter } from "next/router";
 
 export const SriSriYoga = ({ data, swiperOption }) => {
-  const { showAlert } = useGlobalAlertContext();
+  const router = useRouter();
 
-  const showResearchModal = (e) => {
-    if (e) e.preventDefault();
-    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Success",
-      children: <ResearchFindingSource />,
-      className: "research-detail-modal",
-      hideConfirm: true,
+  const handleRegister = (e) => {
+    e.preventDefault();
+    router.push({
+      pathname: `/us/course/checkout/${data.sfid}`,
+      query: {
+        ctype: data.productTypeId,
+      },
     });
-  };
-
-  const autoSwiperOption = {
-    slidesPerView: 1,
-    spaceBetween: 30,
-    centeredSlides: true,
-    autoplay: {
-      delay: 2000,
-    },
-    pagination: {
-      el: ".research__list-pagination",
-      clickable: true,
-    },
   };
 
   const { title, workshopTotalHours, mode } = data || {};
@@ -202,22 +190,20 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                     </div>
                   </div>
                   <div className="col-md-6">
-                    <Element name="registerNowBlock">
-                      <div className="program-benefits__item">
-                        <img
-                          src="/img/Time.svg"
-                          alt="Limited time only"
-                          className="program-benefits__item-image"
-                        />
-                        <h6 className="program-benefits__item-title">
-                          Limited time only
-                        </h6>
-                        <p className="program-benefits__item-text">
-                          This program is regularly $200 and currently offered
-                          online for $100
-                        </p>
-                      </div>
-                    </Element>
+                    <div className="program-benefits__item">
+                      <img
+                        src="/img/Time.svg"
+                        alt="Limited time only"
+                        className="program-benefits__item-image"
+                      />
+                      <h6 className="program-benefits__item-title">
+                        Limited time only
+                      </h6>
+                      <p className="program-benefits__item-text">
+                        This program is regularly $200 and currently offered
+                        online for $100
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -274,25 +260,28 @@ export const SriSriYoga = ({ data, swiperOption }) => {
           </div>
         </section>
         <section className="program-banner">
-          <div className="program-banner__image">
-            <img src="/img/program-banner.png" alt="Limited Time Offer" />
-          </div>
-          <div className="container">
-            <h2 className="program-banner__title">Limited Time Offer</h2>
-            <p className="program-banner__subtitle">
-              Sri Sri School of Yoga Foundation Program:
-            </p>
-            <p className="program-banner__price">
-              <span className="program-banner__price_previous">$200</span>
-              <span>$100</span>
-            </p>
-            <button
-              type="button"
-              className="btn-secondary program-banner__button register-button"
-            >
-              Register Today
-            </button>
-          </div>
+          <Element name="registerNowBlock">
+            <div className="program-banner__image">
+              <img src="/img/program-banner.png" alt="Limited Time Offer" />
+            </div>
+            <div className="container">
+              <h2 className="program-banner__title">Limited Time Offer</h2>
+              <p className="program-banner__subtitle">
+                Sri Sri School of Yoga Foundation Program:
+              </p>
+              <p className="program-banner__price">
+                <span className="program-banner__price_previous">$200</span>
+                <span>$100</span>
+              </p>
+              <button
+                type="button"
+                className="btn-secondary program-banner__button register-button"
+                onClick={handleRegister}
+              >
+                Register Today
+              </button>
+            </div>
+          </Element>
         </section>
         <section className="program-experience">
           <div className="container">

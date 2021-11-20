@@ -86,6 +86,10 @@ export const COURSE_TYPES = {
     name: "Sahaj Samadhi Meditation",
     value: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE || "",
   },
+  SRI_SRI_YOGA_MEDITATION: {
+    name: "Sri Sri Yoga",
+    value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE || "",
+  },
 };
 
 export const MEMBERSHIP_TYPES = {

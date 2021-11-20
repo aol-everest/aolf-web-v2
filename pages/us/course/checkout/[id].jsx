@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -7,10 +7,44 @@ import { api } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
+import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
+
+const RetreatPrerequisiteWarning = ({
+  firstPreRequisiteFailedReason,
+  title,
+}) => {
+  return (
+    <>
+      <p className="course-join-card__text">
+        Our records indicate that you have not yet taken the prerequisite for
+        the {title}, which is{" "}
+        <strong>
+          {firstPreRequisiteFailedReason &&
+          firstPreRequisiteFailedReason.totalCount <
+            firstPreRequisiteFailedReason.requiredCount &&
+          firstPreRequisiteFailedReason.requiredCount > 1
+            ? firstPreRequisiteFailedReason.requiredCount
+            : ""}{" "}
+          {firstPreRequisiteFailedReason && firstPreRequisiteFailedReason.type}
+        </strong>
+        .
+      </p>
+      <p className="course-join-card__text">
+        If our records are not accurate, please contact customer service at{" "}
+        <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
+        <a href="mailto:app.support@us.artofliving.org">
+          app.support@us.artofliving.org
+        </a>
+        . We will be happy to help you so you can sign up for the {title}.
+      </p>
+    </>
+  );
+};
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
@@ -61,6 +95,47 @@ const Checkout = ({ workshop, profile }) => {
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
+  const { showAlert, hideAlert } = useGlobalAlertContext();
+
+  useEffect(() => {
+    const { preRequisiteFailedReason = [] } = workshop || {};
+    const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
+    if (!workshop.isPreRequisiteCompleted) {
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: "retreat-prerequisite-big",
+        title: "Retreat Prerequisite",
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary"
+              onClick={closeRetreatPrerequisiteWarning}
+            >
+              Discover{" "}
+              {firstPreRequisiteFailedReason &&
+                firstPreRequisiteFailedReason.type}
+            </button>
+          );
+        },
+        children: (
+          <RetreatPrerequisiteWarning
+            firstPreRequisiteFailedReason={firstPreRequisiteFailedReason}
+            title={workshop.title}
+          />
+        ),
+      });
+    }
+  }, []);
+
+  const closeRetreatPrerequisiteWarning = (e) => {
+    if (e) e.preventDefault();
+    hideAlert();
+    router.push({
+      pathname: "/us/course",
+      query: {
+        courseType: "SKY_BREATH_MEDITATION",
+      },
+    });
+  };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     router.replace({
@@ -83,7 +158,7 @@ const Checkout = ({ workshop, profile }) => {
           <div className="container">
             <h1 className="title title_thin">{workshop.title}</h1>
             <p className="order__detail">
-              The ultimate vacation for mind, body, and spirit
+              The Most Effective Way to Feel Calm & Clear, Day After Day
             </p>
             <Elements
               stripe={stripePromise}

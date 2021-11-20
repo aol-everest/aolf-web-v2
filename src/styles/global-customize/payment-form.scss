@@ -82,3 +82,60 @@
 .select-box__list {
   z-index: 5 !important;
 }
+.price {
+  font-weight: 600;
+}
+.room__board {
+  width: 100%;
+  padding: 20px 30px;
+  border-top: 1px solid #e8f2fc;
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.29;
+    color: #9598a6;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+}
+.reciept__payment {
+  &_list {
+    padding-top: 15px;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 16px;
+      line-height: 1;
+      color: #31364e;
+      font-weight: 600;
+
+      .discount {
+        font-weight: 400;
+      }
+
+      &:not(:first-child) {
+        margin-top: 15px;
+      }
+
+      &.link {
+        margin-top: 5px;
+
+        a {
+          font-size: 12px;
+          font-weight: 400;
+        }
+      }
+
+      &.btn-item {
+        width: 100%;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

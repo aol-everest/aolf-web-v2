@@ -9,3 +9,5 @@ export { MobileCourseDetails } from "./MobileCourseDetails";
 export { PayWith } from "./PayWith";
 export { StyledInput } from "./StyledInput";
 export { UserInfoForm } from "./UserInfoForm";
+export { PreCostDetailsCard } from "./PreCostDetailsCard";
+export { PostCostDetailsCard } from "./PostCostDetailsCard";
