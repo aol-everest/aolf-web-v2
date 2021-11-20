@@ -72,7 +72,7 @@ export const LoginModal = () => {
         setLoading(false);
         return router.push(navigateTo);
       } else {
-        return router.reload(window.location.pathname);
+        //return router.reload(window.location.pathname);
       }
     } catch (error) {
       console.error(error);
@@ -83,11 +83,11 @@ export const LoginModal = () => {
   };
 
   const fbLogin = () => {
-    Auth.federatedSignIn({ provider: "Facebook" });
+    Auth.federatedSignIn({ provider: "Facebook", customState: navigateTo });
   };
 
   const googleLogin = () => {
-    Auth.federatedSignIn({ provider: "Google" });
+    Auth.federatedSignIn({ provider: "Google", customState: navigateTo });
   };
 
   const signUp = async ({ username, password, firstName, lastName }) => {

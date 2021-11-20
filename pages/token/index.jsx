@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Loader } from "@components";
+import { Hub } from "@aws-amplify/core";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -24,7 +25,15 @@ function Token() {
   const router = useRouter();
 
   useEffect(() => {
-    router.reload("/us");
+    Hub.listen("auth", async ({ payload: { event, data } }) => {
+      switch (event) {
+        case "customOAuthState": {
+          const originalUrl = decodeURIComponent(data);
+          router.replace(originalUrl);
+          break;
+        }
+      }
+    });
   });
 
   return (

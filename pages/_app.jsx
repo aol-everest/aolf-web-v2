@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Amplify from "aws-amplify";
+import { Hub } from "@aws-amplify/core";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { withSSRContext } from "aws-amplify";
@@ -39,6 +40,32 @@ Amplify.configure({
 });
 
 function App({ Component, pageProps, userInfo }) {
+  const [user, setUser] = useState(userInfo);
+  useEffect(() => {
+    Hub.listen("auth", async ({ payload: { event, data } }) => {
+      switch (event) {
+        case "signIn": {
+          const user = await Amplify.Auth.currentAuthenticatedUser();
+          const token = user.signInUserSession.idToken.jwtToken;
+          const res = await api.get({
+            path: "profile",
+            token,
+          });
+          const userInfo = {
+            authenticated: true,
+            username: user.username,
+            profile: res,
+          };
+          setUser(userInfo);
+          break;
+        }
+        case "signOut": {
+          setUser({});
+        }
+      }
+    });
+  });
+
   const queryClient = new QueryClient();
   const gtmParams = { id: process.env.NEXT_PUBLIC_GTM_ID };
   return (
@@ -48,7 +75,7 @@ function App({ Component, pageProps, userInfo }) {
       <GTMProvider state={gtmParams}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
-            <AuthProvider userInfo={userInfo}>
+            <AuthProvider userInfo={user}>
               <Compose
                 components={[
                   GlobalModal,
