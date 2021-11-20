@@ -466,18 +466,18 @@ const Profile = ({ profile, tab }) => {
                   <h2 className="mb-0">
                     <button
                       className={classNames("btn", {
-                        collapsed: activeTab !== UPCOMING_EVENTS,
+                        collapsed: activeTab !== PAST_COURSES,
                       })}
                       type="button"
-                      onClick={switchTab(UPCOMING_EVENTS)}
+                      onClick={switchTab(PAST_COURSES)}
                     >
-                      Upcoming Events
+                      Past Courses
                     </button>
                   </h2>
                 </div>
                 <div
                   className={classNames("collapse", {
-                    show: activeTab === UPCOMING_EVENTS,
+                    show: activeTab === PAST_COURSES,
                   })}
                 >
                   <div className="profile-body_mobile__card-body">
