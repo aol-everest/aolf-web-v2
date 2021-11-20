@@ -317,6 +317,7 @@ export const PaymentForm = ({
     groupedAddOnProducts,
     addOnProducts = [],
     complianceQuestionnaire,
+    availableBundles,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -335,8 +336,6 @@ export const PaymentForm = ({
     workshop,
     discount,
   });
-
-  const isRegularPrice = priceType === null || priceType === "regular";
 
   const toggleDetailMobileModal = () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
@@ -380,17 +379,21 @@ export const PaymentForm = ({
     "Residential Add On" in groupedAddOnProducts &&
     groupedAddOnProducts["Residential Add On"].length > 0;
 
-  // const residentialAddOnRequired =
-  //   hasGroupedAddOnProducts &&
-  //   groupedAddOnProducts["Residential Add On"].some(
-  //     (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
-  //   );
+  const isRegularPrice = priceType === null || priceType === "regular";
 
-  // const isAccommodationRequired =
-  //   hasGroupedAddOnProducts && residentialAddOnRequired;
+  const residentialAddOnRequired =
+    hasGroupedAddOnProducts &&
+    groupedAddOnProducts["Residential Add On"].some(
+      (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
+    );
 
-  // const isCourseOptionRequired =
-  //   hasGroupedAddOnProducts || addOnProducts.length > 0;
+  const isAccommodationRequired =
+    hasGroupedAddOnProducts && residentialAddOnRequired;
+
+  const isCourseOptionRequired =
+    hasGroupedAddOnProducts || addOnProducts.length > 0;
+
+  const isComboDetailAvailable = availableBundles?.length > 0;
 
   return (
     <Formik
@@ -411,6 +414,7 @@ export const PaymentForm = ({
             ? ""
             : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
         accommodation: null,
+        priceType: "regular",
       }}
       validationSchema={Yup.object().shape({
         firstName: Yup.string().required("First Name is required"),
@@ -696,6 +700,9 @@ export const PaymentForm = ({
                   offering={offering}
                   showCouponCodeField={true}
                   hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                  openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+                  isComboDetailAvailable={isComboDetailAvailable}
+                  isCourseOptionRequired={isCourseOptionRequired}
                 />
                 <CourseDetailsCard workshop={workshop} />
                 <PostCostDetailsCard
@@ -707,6 +714,10 @@ export const PaymentForm = ({
                   offering={offering}
                   showCouponCodeField={true}
                   hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                  openSubscriptionPaywallPage={openSubscriptionPaywallPage}
+                  isComboDetailAvailable={isComboDetailAvailable}
+                  isCourseOptionRequired={isCourseOptionRequired}
+                  totalFee={totalFee}
                 />
 
                 {/* <div className="reciept__payment">

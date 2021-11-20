@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import moment from "moment";
 import classNames from "classnames";
-import NumberFormat from "react-number-format";
-import renderHTML from "react-render-html";
-import { ABBRS, COURSE_MODES } from "@constants";
-import { Popup } from "@components";
-import { LinkedCalendar } from "@components/dateRangePicker";
-import { tConvert } from "@utils";
 import { Formik, Field } from "formik";
 import { PAYMENT_TYPES, COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { isEmpty } from "lodash";
@@ -110,9 +103,10 @@ export const PostCostDetailsCard = ({
                           type="radio"
                           name="payment-type"
                           id="payment-lg-regular"
-                          value="regular"
                           defaultChecked
-                          onChange={this.handlePriceTypeChange}
+                          checked={formikProps.values.priceType === "regular"}
+                          value="regular"
+                          onChange={formikProps.handleChange("priceType")}
                         />
                         <label htmlFor="payment-lg-regular">
                           <span>Regular rate</span>
@@ -129,10 +123,11 @@ export const PostCostDetailsCard = ({
                           <input
                             className="custom-radio"
                             type="radio"
-                            name="payment-type"
+                            name="priceType"
                             id="payment-lg-premium"
+                            checked={formikProps.values.priceType === "premium"}
                             value="premium"
-                            onChange={this.handlePriceTypeChange}
+                            onChange={formikProps.handleChange("priceType")}
                           />
                           <label htmlFor="payment-lg-premium">
                             <span>Premium/Journey+ rate:</span>

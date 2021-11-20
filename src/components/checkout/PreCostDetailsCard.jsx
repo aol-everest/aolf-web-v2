@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import moment from "moment";
 import classNames from "classnames";
-import NumberFormat from "react-number-format";
-import renderHTML from "react-render-html";
-import { ABBRS, COURSE_MODES } from "@constants";
-import { Popup } from "@components";
-import { LinkedCalendar } from "@components/dateRangePicker";
-import { tConvert } from "@utils";
 import { Formik, Field } from "formik";
 import { PAYMENT_TYPES, COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { isEmpty } from "lodash";
@@ -25,7 +18,6 @@ export const PreCostDetailsCard = ({
   isCourseOptionRequired,
   openSubscriptionPaywallPage,
   values,
-  ...rest
 }) => {
   const {
     id,
@@ -77,6 +69,11 @@ export const PreCostDetailsCard = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
+  console.log(
+    isInstalmentAllowed,
+    isComboDetailAvailable,
+    isCourseOptionRequired,
+  );
   if (
     !isInstalmentAllowed &&
     !isComboDetailAvailable &&
@@ -107,10 +104,12 @@ export const PreCostDetailsCard = ({
                     type="radio"
                     name="payment-type"
                     id="payment-lg-regular-card"
-                    value="regular"
                     defaultChecked
-                    onChange={this.handlePriceTypeChange}
+                    checked={formikProps.values.priceType === "regular"}
+                    value="regular"
+                    onChange={formikProps.handleChange("priceType")}
                   />
+
                   <label htmlFor="payment-lg-regular-card">
                     <span>Regular rate</span>
                     <span>
@@ -124,10 +123,11 @@ export const PreCostDetailsCard = ({
                     <input
                       className="custom-radio"
                       type="radio"
-                      name="payment-type"
+                      name="priceType"
                       id="payment-lg-premium-card"
+                      checked={formikProps.values.priceType === "premium"}
                       value="premium"
-                      onChange={this.handlePriceTypeChange}
+                      onChange={formikProps.handleChange("priceType")}
                     />
                     <label htmlFor="payment-lg-premium-card">
                       <span>Premium/Journey+ rate:</span>
@@ -275,7 +275,7 @@ export const PreCostDetailsCard = ({
     } else {
       return (
         <>
-          <div className="reciept__header_v1 full-padding">
+          <div className="reciept__header reciept__header_v1 full-padding">
             {delfee && (
               <>
                 <h1 className="title reciept__title_v1">
