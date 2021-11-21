@@ -19,6 +19,7 @@ import {
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
+import ContentLoader, { Facebook } from "react-content-loader";
 import Style from "./course/Course.module.scss";
 
 const DATE_PICKER_CONFIG = {
@@ -681,6 +682,75 @@ const Course = ({ workshops, authenticated }) => {
             </div>
           </div>
           <div className="row mb-4">
+            {!isSuccess && (
+              <>
+                {" "}
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+              </>
+            )}
             {isSuccess &&
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
@@ -693,13 +763,136 @@ const Course = ({ workshops, authenticated }) => {
                   ))}
                 </React.Fragment>
               ))}
+            <div ref={loadMoreRef} className="col-12">
+              {isFetchingNextPage && (
+                <div className="row">
+                  {" "}
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className="row">
-            <div className="pt-3 col-12 text-center">
-              <div ref={loadMoreRef}>
-                {isFetchingNextPage && <InfiniteScrollLoader />}
-              </div>
-            </div>
+            <div className="pt-3 col-12 text-center"></div>
           </div>
         </div>
       </section>
