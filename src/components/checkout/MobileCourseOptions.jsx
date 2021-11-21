@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import classNames from "classnames";
 import { COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
-export const CourseOptions = ({
+export const MobileCourseOptions = ({
   expenseAddOn,
   isOfflineExpense,
   workshop,

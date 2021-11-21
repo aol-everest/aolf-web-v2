@@ -166,9 +166,38 @@ export const MobileCourseDetails = ({
     premiumRate,
   } = workshop || {};
 
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+
+  let modalStyle = {
+    backgroundImage: "url(/img/course-card-1.png)",
+    backgroundPositionY: "-12px",
+    color: "#000000",
+  };
+  if (isSilentRetreatType) {
+    modalStyle = {
+      ...modalStyle,
+      backgroundImage: "url(/img/course-card-4.png)",
+    };
+  } else if (isSahajSamadhiMeditationType) {
+    modalStyle = {
+      ...modalStyle,
+      backgroundImage: "url(/img/course-card-5.png)",
+    };
+  } else if (isSKYType) {
+    modalStyle = {
+      ...modalStyle,
+      backgroundImage: "url(/img/course-card-2.png)",
+    };
+  }
+
   return (
     <div className={classNames("mobile-modal active show")}>
-      <div className="mobile-modal__header">
+      <div className="mobile-modal__header" style={{ ...modalStyle }}>
         <div className="close-modal" onClick={closeDetailAction}>
           <div className="close-line"></div>
           <div className="close-line"></div>

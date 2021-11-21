@@ -1,7 +1,7 @@
 export { AgreementForm } from "./AgreementForm";
 export { BillingInfoForm } from "./BillingInfoForm";
 export { CourseDetailsCard } from "./CourseDetailsCard";
-export { CourseOptions } from "./CourseOptions";
+export { MobileCourseOptions } from "./MobileCourseOptions";
 export { DiscountCodeInput } from "./DiscountCodeInput";
 export { Dropdown } from "./Dropdown";
 export { FieldWrapper } from "./FieldWrapper";

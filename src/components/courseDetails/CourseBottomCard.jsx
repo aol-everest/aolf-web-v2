@@ -2,15 +2,57 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import moment from "moment";
 import { Link } from "react-scroll";
+import { COURSE_TYPES } from "@constants";
+import Image from "next/image";
 
 export const CourseBottomCard = ({ workshop }) => {
-  const { title, eventStartDate, eventEndDate } = workshop || {};
+  const { title, eventStartDate, eventEndDate, productTypeId } = workshop || {};
+
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
   return (
     <div className={classNames("course-bottom-card show")}>
       <div className="container">
         <div className="course-bottom-card__container">
           <div className="course-bottom-card__info-block">
-            <div className="course-bottom-card__img d-none d-lg-block">
+            <div
+              className="course-bottom-card__img d-none d-lg-block"
+              style={{ minWidth: "60px", height: "60px", position: "relative" }}
+            >
+              {isSilentRetreatType && (
+                <Image
+                  src="/img/course-card-4.png"
+                  alt="course-photo"
+                  layout="fill"
+                />
+              )}
+              {isSKYType && (
+                <Image
+                  src="/img/course-card-2.png"
+                  alt="course-photo"
+                  layout="fill"
+                />
+              )}
+              {isSahajSamadhiMeditationType && (
+                <Image
+                  src="/img/course-card-5.png"
+                  alt="course-photo"
+                  layout="fill"
+                />
+              )}
+              {!isSilentRetreatType &&
+                !isSKYType &&
+                !isSahajSamadhiMeditationType && (
+                  <Image
+                    src="/img/course-card-1.png"
+                    alt="course-photo"
+                    layout="fill"
+                  />
+                )}
               <img src="/img/rectangle.png" alt="img" />
             </div>
             <div className="course-bottom-card__info">

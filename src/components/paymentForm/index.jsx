@@ -13,7 +13,7 @@ import {
   BillingInfoForm,
   PayWith,
   UserInfoForm,
-  CourseOptions,
+  MobileCourseOptions,
   AgreementForm,
   MobileCourseDetails,
   DiscountCodeInput,
@@ -679,7 +679,7 @@ export const PaymentForm = ({
                     </div>
                   )}
 
-                  <CourseOptions
+                  <MobileCourseOptions
                     expenseAddOn={expenseAddOn}
                     isOfflineExpense={isOfflineExpense}
                     workshop={workshop}

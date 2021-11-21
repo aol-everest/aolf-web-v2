@@ -3,10 +3,9 @@ import moment from "moment";
 import classNames from "classnames";
 import NumberFormat from "react-number-format";
 import renderHTML from "react-render-html";
-import { ABBRS, COURSE_MODES } from "@constants";
-import { Popup } from "@components";
-import { LinkedCalendar } from "@components/dateRangePicker";
+import { ABBRS, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { tConvert } from "@utils";
+import Image from "next/image";
 
 export const CourseDetailsCard = ({ workshop, ...rest }) => {
   const {
@@ -30,11 +29,50 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
     corporateName,
   } = workshop || {};
 
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+
   return (
     <div className="reciept__details">
       <div className="course">
-        <div className="course__photo" style={{ minWidth: "98px" }}>
-          <img src="/img/rectangle.png" alt="course-photo" />
+        <div
+          className="course__photo"
+          style={{ minWidth: "98px", height: "98px", position: "relative" }}
+        >
+          {isSilentRetreatType && (
+            <Image
+              src="/img/course-card-4.png"
+              alt="course-photo"
+              layout="fill"
+            />
+          )}
+          {isSKYType && (
+            <Image
+              src="/img/course-card-2.png"
+              alt="course-photo"
+              layout="fill"
+            />
+          )}
+          {isSahajSamadhiMeditationType && (
+            <Image
+              src="/img/course-card-5.png"
+              alt="course-photo"
+              layout="fill"
+            />
+          )}
+          {!isSilentRetreatType &&
+            !isSKYType &&
+            !isSahajSamadhiMeditationType && (
+              <Image
+                src="/img/course-card-1.png"
+                alt="course-photo"
+                layout="fill"
+              />
+            )}
         </div>
         <div className="course__info info">
           <ul className="info__list">
