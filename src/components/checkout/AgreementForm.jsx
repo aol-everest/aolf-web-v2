@@ -52,7 +52,9 @@ export const AgreementForm = ({
               I agree to the{" "}
               <Link
                 href={
-                  isCorporateEvent ? "/policy/ts-cs" : "/policy/workshop-ppa"
+                  isCorporateEvent
+                    ? "/policy/ppa-corporate"
+                    : "/policy/ppa-course"
                 }
               >
                 <a target="_blank" rel="noreferrer">
@@ -168,7 +170,13 @@ export const AgreementForm = ({
           <label htmlFor="ppaAgreement"></label>
           <p className="agreement__text">
             I agree to the{" "}
-            <Link href={isCorporateEvent ? "/policy/ts-cs" : "/policy/ppa"}>
+            <Link
+              href={
+                isCorporateEvent
+                  ? "/policy/ppa-corporate"
+                  : "/policy/ppa-course"
+              }
+            >
               <a target="_blank" rel="noreferrer">
                 Program Participant agreement including privacy and cancellation
                 policy.

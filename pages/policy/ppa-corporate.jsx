@@ -1,37 +1,37 @@
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
-import { api } from "@utils";
-import { useGlobalAlertContext } from "@contexts";
-import { ALERT_TYPES } from "@constants";
+// import { api } from "@utils";
+// import { useGlobalAlertContext } from "@contexts";
+// import { ALERT_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 
-const successMessage = () => {
-  return (
-    <p className="course-join-card__text">
-      We have received your request to withhold your grant of rights.
-    </p>
-  );
-};
+// const successMessage = () => {
+//   return (
+//     <p className="course-join-card__text">
+//       We have received your request to withhold your grant of rights.
+//     </p>
+//   );
+// };
 
-const TAndCWorkshop = () => {
-  const { showAlert } = useGlobalAlertContext();
-  const handleClick = async () => {
-    try {
-      await api.post({
-        path: "waiveOffUserGrants",
-        body: { waiveGrants: true },
-      });
-      showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-        children: successMessage,
-        title: "Confirmed",
-      });
-    } catch (error) {
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: error.message,
-      });
-    }
-  };
+const PPACorporate = () => {
+  // const { showAlert } = useGlobalAlertContext();
+  // const handleClick = async () => {
+  //   try {
+  //     await api.post({
+  //       path: "waiveOffUserGrants",
+  //       body: { waiveGrants: true },
+  //     });
+  //     showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+  //       children: successMessage,
+  //       title: "Confirmed",
+  //     });
+  //   } catch (error) {
+  //     showAlert(ALERT_TYPES.ERROR_ALERT, {
+  //       children: error.message,
+  //     });
+  //   }
+  // };
   return (
     <main className="aol_mainbody">
       <NextSeo title="TERMS OF SERVICE FOR USERS" />
@@ -140,17 +140,6 @@ const TAndCWorkshop = () => {
               the Organization.
             </p>
             <p>
-              I grant unrestricted rights to the Organization to use my image,
-              name, voice and likeness for written, audio and/or visual
-              presentations on behalf of the Organization. I understand that the
-              written, audio and/or visual presentations may be used in print,
-              broadcast and online promotions to advance the purposes of the
-              Organization around the world. If I wish to withhold or withdraw
-              this grant of rights, I may do so by{" "}
-              <span onClick={handleClick}>clicking here</span> or writing to the
-              Organization at support@us.artofliving.org.
-            </p>
-            <p>
               This Agreement is governed by the laws of Commonwealth of Virginia
               and shall be subject to the exclusive jurisdiction of the Courts
               in Commonweath of Virginia. Any failure to enforce any provision
@@ -248,4 +237,6 @@ const TAndCWorkshop = () => {
   );
 };
 
-export default TAndCWorkshop;
+PPACorporate.hideHeader = true;
+
+export default PPACorporate;
