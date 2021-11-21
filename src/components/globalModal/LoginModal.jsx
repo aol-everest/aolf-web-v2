@@ -65,29 +65,31 @@ export const LoginModal = () => {
         setUsername(username);
         setMode(NEW_PASSWORD_REQUEST);
       }
-      if (!hideCloseBtn) {
-        hideModal();
-      }
+      setLoading(false);
+      hideModal();
       if (navigateTo) {
-        setLoading(false);
         return router.push(navigateTo);
-      } else {
-        //return router.reload(window.location.pathname);
       }
     } catch (error) {
       console.error(error);
       setMessage(error.message);
       setShowMessage(true);
     }
-    setLoading(false);
+    // setLoading(false);
   };
 
   const fbLogin = () => {
-    Auth.federatedSignIn({ provider: "Facebook", customState: navigateTo });
+    Auth.federatedSignIn({
+      provider: "Facebook",
+      customState: navigateTo || router.pathname,
+    });
   };
 
   const googleLogin = () => {
-    Auth.federatedSignIn({ provider: "Google", customState: navigateTo });
+    Auth.federatedSignIn({
+      provider: "Google",
+      customState: navigateTo || router.pathname,
+    });
   };
 
   const signUp = async ({ username, password, firstName, lastName }) => {

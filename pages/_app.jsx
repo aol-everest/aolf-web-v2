@@ -39,7 +39,7 @@ Amplify.configure({
   ssr: true,
 });
 
-function App({ Component, pageProps, userInfo }) {
+function App({ Component, pageProps, userInfo = {} }) {
   const [user, setUser] = useState(userInfo);
   useEffect(() => {
     Hub.listen("auth", async ({ payload: { event, data } }) => {
@@ -64,7 +64,23 @@ function App({ Component, pageProps, userInfo }) {
         }
       }
     });
-  });
+    async function fetchData() {
+      // You can await here
+      const user = await Amplify.Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      const res = await api.get({
+        path: "profile",
+        token,
+      });
+      const userInfo = {
+        authenticated: true,
+        username: user.username,
+        profile: res,
+      };
+      setUser(userInfo);
+    }
+    fetchData();
+  }, []);
 
   const queryClient = new QueryClient();
   const gtmParams = { id: process.env.NEXT_PUBLIC_GTM_ID };
@@ -99,30 +115,30 @@ function App({ Component, pageProps, userInfo }) {
   );
 }
 
-App.getInitialProps = async ({ Component, ctx }) => {
-  let pageProps = {};
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
-  }
-  try {
-    const { Auth } = await withSSRContext(ctx);
-    const user = await Auth.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
-    const res = await api.get({
-      path: "profile",
-      token,
-    });
-    const userInfo = {
-      authenticated: true,
-      username: user.username,
-      profile: res,
-    };
+// App.getInitialProps = async ({ Component, ctx }) => {
+//   let pageProps = {};
+//   if (Component.getInitialProps) {
+//     pageProps = await Component.getInitialProps(ctx);
+//   }
+//   try {
+//     const { Auth } = await withSSRContext(ctx);
+//     const user = await Auth.currentAuthenticatedUser();
+//     const token = user.signInUserSession.idToken.jwtToken;
+//     const res = await api.get({
+//       path: "profile",
+//       token,
+//     });
+//     const userInfo = {
+//       authenticated: true,
+//       username: user.username,
+//       profile: res,
+//     };
 
-    return { pageProps, userInfo };
-  } catch (err) {
-    console.log(err);
-    return { pageProps, userInfo: {} };
-  }
-};
+//     return { pageProps, userInfo };
+//   } catch (err) {
+//     console.log(err);
+//     return { pageProps, userInfo: {} };
+//   }
+// };
 
 export default App;

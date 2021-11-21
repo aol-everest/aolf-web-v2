@@ -67,11 +67,18 @@ export const getServerSideProps = async (context) => {
     };
   } catch (err) {
     console.error(err);
-    res.writeHead(302, {
-      Location: `/login?next=${resolvedUrl}`,
-    });
-    res.end();
-    return;
+    return {
+      redirect: {
+        destination: `/login?next=${resolvedUrl}`,
+        permanent: false,
+      },
+    };
+    // };
+    // res.writeHead(302, {
+    //   Location: `/login?next=${resolvedUrl}`,
+    // });
+    // res.end();
+    // return { props };
   }
   const workshopDetail = await api.get({
     path: "workshopDetail",
