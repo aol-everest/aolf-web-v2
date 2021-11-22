@@ -26,17 +26,22 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
   };
 
   const handleSearchDates = () => {
-    let query = { courseType: "SKY_BREATH_MEDITATION" };
-    if (filterStartDate) {
-      query = { ...query, startEndDate: `${filterStartDate}|${filterEndDate}` };
+    if (!isSearchDatesDisabled) {
+      let query = { courseType: "SKY_BREATH_MEDITATION" };
+      if (filterStartDate) {
+        query = {
+          ...query,
+          startEndDate: `${filterStartDate}|${filterEndDate}`,
+        };
+      }
+      if (timeZoneFilter) {
+        query = { ...query, timeZone: timeZoneFilter.value };
+      }
+      router.push({
+        pathname: "/us",
+        query,
+      });
     }
-    if (timeZoneFilter) {
-      query = { ...query, timeZone: timeZoneFilter.value };
-    }
-    router.push({
-      pathname: "/us",
-      query,
-    });
   };
 
   const {
@@ -281,15 +286,16 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </ul>
         )}
         {!corporateName && (
-          <div className="course_detail_btn_box d-flex mt-4 justify-content-center">
-            <a
-              className={`btn btn_box_primary text-center
-                ${isSearchDatesDisabled && "disabled"}`}
-              href="#"
+          <div className="course-details__submit">
+            <button
+              type="button"
+              className={classNames("course-details__submit-button", {
+                disabled: isSearchDatesDisabled,
+              })}
               onClick={handleSearchDates}
             >
               Search Dates
-            </a>
+            </button>
           </div>
         )}
       </div>
