@@ -94,7 +94,10 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
       <div className="course-details__body">
         <h2>{mode} course details</h2>
         <ul className="course-details__list">
-          <h2 className="course-details__title">Date:</h2>
+          <div className="course-details__list__title">
+            <img src="/img/ic-calendar.svg" alt="date" title="date" />
+            <h6>Date:</h6>
+          </div>
           {moment
             .utc(eventStartDate)
             .isSame(moment.utc(eventEndDate), "month") && (
@@ -111,7 +114,10 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           )}
         </ul>
         <ul className="course-details__list">
-          <h2 className="course-details__title">Timings:</h2>
+          <div className="course-details__list__title">
+            <img src="/img/ic-clock.svg" alt="timings" title="timings" />
+            <h6>Timings:</h6>
+          </div>
           {timings &&
             timings.map((time) => {
               return (
@@ -129,33 +135,6 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               Looking for another date/time?
             </h6>
             <div className="course-details__filter__buttons">
-              {/* <button
-                tabIndex="1"
-                type="button"
-                id="datepicker"
-                className="course-details__filter__button"
-              >
-                Dates
-              </button>
-              <div
-                tabIndex="2"
-                className="course-details__filter__button tooltip-button"
-                id="time-zone-button"
-              >
-                <div id="clear-time-zone" className="clear-filter"></div>
-                <span>Time Zone</span>
-              </div>
-              <ul
-                id="time-zone-tooltip"
-                className="tooltip-block"
-                role="tooltip"
-              >
-                <li>Eastern</li>
-                <li>Central</li>
-                <li>Mountain</li>
-                <li>Pacific</li>
-                <li>Hawaii</li>
-              </ul> */}
               <Popup
                 tabIndex="1"
                 value={filterStartDate}
@@ -246,13 +225,23 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </ul>
         )}
         <ul className="course-details__list">
-          <h2 className="course-details__title">Instructor(s):</h2>
+          <div className="course-details__list__title">
+            <img
+              src="/img/ic-instructor.svg"
+              alt="instructor"
+              title="instructor"
+            />
+            <h6>Instructor(s):</h6>
+          </div>
           {primaryTeacherName && <li>{primaryTeacherName}</li>}
           {coTeacher1Name && <li>{coTeacher1Name}</li>}
           {coTeacher2Name && <li>{coTeacher2Name}</li>}
         </ul>
         <ul className="course-details__list">
-          <h2 className="course-details__title">Contact details:</h2>
+          <div className="course-details__list__title">
+            <img src="/img/ic-phone.svg" alt="contact" title="contact" />
+            <h6>Contact details:</h6>
+          </div>
           <li>
             <a href={`tel:${phone1}`}>
               <NumberFormat
@@ -277,6 +266,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
             <a href={`mailto:${email}`}>{email}</a>
           </li>
         </ul>
+
         {productTypeId == 22119 && (
           <ul className="course-details__list">
             <h2 className="course-details__title">Location:</h2>
