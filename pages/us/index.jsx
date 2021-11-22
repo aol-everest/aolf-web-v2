@@ -18,8 +18,7 @@ import {
 } from "@components";
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
-import { InfiniteScrollLoader } from "@components/loader";
-import ContentLoader, { Facebook } from "react-content-loader";
+import ContentLoader from "react-content-loader";
 import Style from "./course/Course.module.scss";
 
 const DATE_PICKER_CONFIG = {
@@ -66,75 +65,75 @@ export const getServerSideProps = async (context) => {
       authenticated: false,
     };
   }
-  const {
-    page = 1,
-    mode = COURSE_MODES.ONLINE,
-    location,
-    courseType,
-    startEndDate,
-    timeZone,
-    instructor,
-  } = context.query;
+  // const {
+  //   page = 1,
+  //   mode = COURSE_MODES.ONLINE,
+  //   location,
+  //   courseType,
+  //   startEndDate,
+  //   timeZone,
+  //   instructor,
+  // } = context.query;
   // Fetch data from external API
-  try {
-    let param = {
-      page,
-      size: 8,
-    };
+  // try {
+  //   let param = {
+  //     page,
+  //     size: 8,
+  //   };
 
-    if (mode) {
-      param = {
-        ...param,
-        mode,
-      };
-    }
-    if (courseType && COURSE_TYPES[courseType]) {
-      param = {
-        ...param,
-        ctype: COURSE_TYPES[courseType].value,
-      };
-    }
-    if (timeZone && TIME_ZONE[timeZone]) {
-      param = {
-        ...param,
-        timeZone: TIME_ZONE[timeZone].value,
-      };
-    }
-    if (instructor && instructor.value) {
-      param = {
-        ...param,
-        teacherId: instructor.value,
-      };
-    }
-    if (startEndDate) {
-      const [startDate, endDate] = startEndDate.split("|");
-      param = {
-        ...param,
-        sdate: startDate,
-        eDate: endDate,
-      };
-    }
+  //   if (mode) {
+  //     param = {
+  //       ...param,
+  //       mode,
+  //     };
+  //   }
+  //   if (courseType && COURSE_TYPES[courseType]) {
+  //     param = {
+  //       ...param,
+  //       ctype: COURSE_TYPES[courseType].value,
+  //     };
+  //   }
+  //   if (timeZone && TIME_ZONE[timeZone]) {
+  //     param = {
+  //       ...param,
+  //       timeZone: TIME_ZONE[timeZone].value,
+  //     };
+  //   }
+  //   if (instructor && instructor.value) {
+  //     param = {
+  //       ...param,
+  //       teacherId: instructor.value,
+  //     };
+  //   }
+  //   if (startEndDate) {
+  //     const [startDate, endDate] = startEndDate.split("|");
+  //     param = {
+  //       ...param,
+  //       sdate: startDate,
+  //       eDate: endDate,
+  //     };
+  //   }
 
-    const res = await api.get({
-      path: "workshops",
-      token,
-      param,
-    });
-    props = {
-      ...props,
-      workshops: {
-        pages: [{ data: res }],
-        pageParams: [null],
-      },
-    };
-  } catch (err) {
-    props = {
-      ...props,
-      workshops: {
-        error: { message: err.message },
-      },
-    };
-  }
+  //   const res = await api.get({
+  //     path: "workshops",
+  //     token,
+  //     param,
+  //   });
+  //   props = {
+  //     ...props,
+  //     workshops: {
+  //       pages: [{ data: res }],
+  //       pageParams: [null],
+  //     },
+  //   };
+  // } catch (err) {
+  //   props = {
+  //     ...props,
+  //     workshops: {
+  //       error: { message: err.message },
+  //     },
+  //   };
+  // }
   // Pass data to the page via props
   return { props };
 };
@@ -327,7 +326,7 @@ const Course = ({ workshops, authenticated }) => {
           : page.currectPage + 1;
       },
     },
-    { initialData: workshops },
+    // { initialData: workshops },
   );
 
   const loadMoreRef = React.useRef();
@@ -891,14 +890,20 @@ const Course = ({ workshops, authenticated }) => {
               )}
             </div>
           </div>
-          <div className="row">
-            <div className="pt-3 col-12 text-center"></div>
-          </div>
+          {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
+            <div className="row">
+              <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                <p className="happines_subtitle">
+                  No more data available to read.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
       {activeFilterType === COURSE_MODES.ONLINE &&
         isSuccess &&
-        data.pages[0].totalCount === 0 &&
+        data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">
@@ -917,7 +922,7 @@ const Course = ({ workshops, authenticated }) => {
         )}
       {activeFilterType === COURSE_MODES.IN_PERSON &&
         isSuccess &&
-        data.pages[0].totalCount === 0 &&
+        data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">

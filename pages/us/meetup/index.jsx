@@ -3,17 +3,18 @@ import { useInfiniteQuery, useQuery } from "react-query";
 import { api } from "@utils";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
+import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
 import { MeetupTile } from "@components/meetup/meetupTile";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import { MeetupType } from "@components/meetup/meetupType";
 import { MeetupEnroll } from "@components/meetup/meetupEnroll";
 import { AddressSearch } from "@components";
-import { InfiniteScrollLoader } from "@components/loader";
 import { useGeolocation } from "@hooks";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
 import { useRouter } from "next/router";
+import ContentLoader from "react-content-loader";
 import {
   Popup,
   SmartInput,
@@ -77,67 +78,67 @@ export const getServerSideProps = async (context) => {
       authenticated: false,
     };
   }
-  const {
-    page = 1,
-    mode = COURSE_MODES.ONLINE,
-    location,
-    meetupType,
-    startEndDate,
-    timeZone,
-    instructor,
-    timesOfDay,
-  } = context.query;
-  // Fetch data from external API
+  // const {
+  //   page = 1,
+  //   mode = COURSE_MODES.ONLINE,
+  //   location,
+  //   meetupType,
+  //   startEndDate,
+  //   timeZone,
+  //   instructor,
+  //   timesOfDay,
+  // } = context.query;
+  // // Fetch data from external API
   try {
-    let param = {
-      page,
-      size: 8,
-    };
+    //   let param = {
+    //     page,
+    //     size: 8,
+    //   };
 
-    if (mode) {
-      param = {
-        ...param,
-        mode,
-      };
-    }
-    if (meetupType) {
-      param = {
-        ...param,
-        filter: meetupType,
-      };
-    }
-    if (timeZone && TIME_ZONE[timeZone]) {
-      param = {
-        ...param,
-        timeZone: TIME_ZONE[timeZone].value,
-      };
-    }
-    if (timesOfDay) {
-      param = {
-        ...param,
-        timesOfDay: timesOfDay,
-      };
-    }
-    if (instructor && instructor.value) {
-      param = {
-        ...param,
-        teacherId: instructor.value,
-      };
-    }
-    if (startEndDate) {
-      const [startDate, endDate] = startEndDate.split("|");
-      param = {
-        ...param,
-        sdate: startDate,
-        eDate: endDate,
-      };
-    }
+    //   if (mode) {
+    //     param = {
+    //       ...param,
+    //       mode,
+    //     };
+    //   }
+    //   if (meetupType) {
+    //     param = {
+    //       ...param,
+    //       filter: meetupType,
+    //     };
+    //   }
+    //   if (timeZone && TIME_ZONE[timeZone]) {
+    //     param = {
+    //       ...param,
+    //       timeZone: TIME_ZONE[timeZone].value,
+    //     };
+    //   }
+    //   if (timesOfDay) {
+    //     param = {
+    //       ...param,
+    //       timesOfDay: timesOfDay,
+    //     };
+    //   }
+    //   if (instructor && instructor.value) {
+    //     param = {
+    //       ...param,
+    //       teacherId: instructor.value,
+    //     };
+    //   }
+    //   if (startEndDate) {
+    //     const [startDate, endDate] = startEndDate.split("|");
+    //     param = {
+    //       ...param,
+    //       sdate: startDate,
+    //       eDate: endDate,
+    //     };
+    //   }
 
-    const res = await api.get({
-      path: "meetups",
-      token,
-      param,
-    });
+    // const res = await api.get({
+    //   path: "meetups",
+    //   token,
+    //   param,
+    // });
 
     const allMeetupMaster = await api.get({
       path: "getAllMeetupMaster",
@@ -146,10 +147,10 @@ export const getServerSideProps = async (context) => {
 
     props = {
       ...props,
-      meetups: {
-        pages: [{ data: res }],
-        pageParams: [null],
-      },
+      // meetups: {
+      //   pages: [{ data: res }],
+      //   pageParams: [null],
+      // },
       allMeetupMaster,
     };
   } catch (err) {
@@ -222,6 +223,12 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
 
   const [searchKey, setSearchKey] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
+  const toggleFilter = () => {
+    setShowFilterModal((showFilterModal) => !showFilterModal);
+  };
+
   const meetupMasters = allMeetupMaster.reduce((acc, meetup) => {
     return { ...acc, [meetup.id]: meetup };
   }, {});
@@ -597,7 +604,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
           : page.currectPage + 1;
       },
     },
-    { initialData: meetups },
+    // { initialData: meetups },
   );
 
   const loadMoreRef = React.useRef();
@@ -607,6 +614,23 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
     onIntersect: fetchNextPage,
     enabled: hasNextPage,
   });
+
+  let filterCount = 0;
+  if (locationFilter) {
+    filterCount++;
+  }
+  if (meetupTypeFilter) {
+    filterCount++;
+  }
+  if (filterStartEndDate) {
+    filterCount++;
+  }
+  if (timeZoneFilter) {
+    filterCount++;
+  }
+  if (instructorFilter) {
+    filterCount++;
+  }
 
   return (
     <main className="meetsup-filter">
@@ -857,14 +881,25 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
             <div className="row m-0 justify-content-between align-items-center">
               <p className="title mb-0">Find a meetup</p>
               <div className="filter">
-                <div className="filter--button d-flex">
+                <div className="filter--button d-flex" onClick={toggleFilter}>
                   <img src="/img/ic-filter.svg" alt="filter" />
                   Filter
-                  <span id="filter-count">0</span>
+                  <span
+                    id="filter-count"
+                    className={classNames({
+                      "filter-count--show": filterCount > 0,
+                    })}
+                  >
+                    {filterCount}
+                  </span>
                 </div>
               </div>
             </div>
-            <div className="filter--box">
+            <div
+              className={classNames("filter--box", {
+                "d-none": !showFilterModal,
+              })}
+            >
               <div
                 id="switch-mobile-filter"
                 className="btn_outline_box full-btn mt-3"
@@ -1105,6 +1140,75 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
             </div>
           </div>
           <div className="row mb-4">
+            {!isSuccess && (
+              <>
+                {" "}
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+                <div className="col-6 col-lg-3 col-md-4">
+                  <div className="upcoming_course_card meetup_course_card">
+                    <ContentLoader viewBox="0 0 80 120">
+                      {/* Only SVG shapes */}
+                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                    </ContentLoader>
+                  </div>
+                </div>
+              </>
+            )}
             {isSuccess &&
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
@@ -1117,19 +1221,149 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
                   ))}
                 </React.Fragment>
               ))}
-          </div>
-          <div className="row">
-            <div className="pt-3 col-12 text-center">
-              <div ref={loadMoreRef}>
-                {isFetchingNextPage && <InfiniteScrollLoader />}
-              </div>
+            <div ref={loadMoreRef} className="col-12">
+              {isFetchingNextPage && (
+                <div className="row">
+                  {" "}
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+
+          {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
+            <div className="row">
+              <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                <p className="happines_subtitle">
+                  No more data available to read.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
       {activeFilterType === COURSE_MODES.ONLINE &&
         isSuccess &&
-        data.pages[0].totalCount === 0 &&
+        data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">
@@ -1148,7 +1382,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
         )}
       {activeFilterType === COURSE_MODES.IN_PERSON &&
         isSuccess &&
-        data.pages[0].totalCount === 0 &&
+        data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">
