@@ -411,7 +411,7 @@ const Course = ({ workshops, authenticated }) => {
                   )}
                 </Popup>
                 <Popup
-                  containerclassName={Style.daterangepickerPopup}
+                  containerClassName={Style.daterangepickerPopup}
                   tabIndex="3"
                   value={filterStartEndDate}
                   buttonText={
@@ -661,7 +661,7 @@ const Course = ({ workshops, authenticated }) => {
                 clearEvent={onFilterClearEvent("instructorFilter")}
               >
                 <SmartInput
-                  containerclassName="smart-input-mobile"
+                  containerClassName="smart-input-mobile"
                   placeholder="Search Instructor"
                   value={searchKey}
                   onSearchKeyChange={(value) => setSearchKey(value)}

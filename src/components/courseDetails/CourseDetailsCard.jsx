@@ -7,11 +7,13 @@ import { ABBRS } from "@constants";
 import { Popup } from "@components";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import { tConvert } from "@utils";
+import { useRouter } from "next/router";
 
-export const CourseDetailsCard = ({ workshop, ...rest }) => {
+export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
+  const router = useRouter();
 
   const onFilterChange = (value) => {
     setTimeZoneFilter(value);
@@ -20,30 +22,21 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
   const onDatesChange = (date) => {
     const { startDate, endDate } = date || {};
     setFilterStartDate(startDate ? startDate.format("YYYY-MM-DD") : null);
-    setFilterStartDate(endDate ? endDate.format("YYYY-MM-DD") : null);
+    setFilterEndDate(endDate ? endDate.format("YYYY-MM-DD") : null);
   };
 
   const handleSearchDates = () => {
-    const { history, courseType } = rest;
-
-    const { name, value } = courseType;
-
-    const courseTypeFilter = { name, value };
-
-    const params = new URLSearchParams();
-    params.set("filterStartDate", filterStartDate);
-    params.set("filterEndDate", filterEndDate);
-    params.set("courseTypeFilter", JSON.stringify(courseTypeFilter));
-    if (timeZoneFilter) {
-      params.set("timeZoneFilter", JSON.stringify(timeZoneFilter));
+    let query = { courseType: "SKY_BREATH_MEDITATION" };
+    if (filterStartDate) {
+      query = { ...query, startEndDate: `${filterStartDate}|${filterEndDate}` };
     }
-
-    const location = {
-      pathname: `workshop`,
-      search: params.toString(),
-    };
-
-    history.replace(location);
+    if (timeZoneFilter) {
+      query = { ...query, timeZone: timeZoneFilter.value };
+    }
+    router.push({
+      pathname: "/us",
+      query,
+    });
   };
 
   const {
@@ -136,6 +129,33 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
               Looking for another date/time?
             </h6>
             <div className="course-details__filter__buttons">
+              {/* <button
+                tabIndex="1"
+                type="button"
+                id="datepicker"
+                className="course-details__filter__button"
+              >
+                Dates
+              </button>
+              <div
+                tabIndex="2"
+                className="course-details__filter__button tooltip-button"
+                id="time-zone-button"
+              >
+                <div id="clear-time-zone" className="clear-filter"></div>
+                <span>Time Zone</span>
+              </div>
+              <ul
+                id="time-zone-tooltip"
+                className="tooltip-block"
+                role="tooltip"
+              >
+                <li>Eastern</li>
+                <li>Central</li>
+                <li>Mountain</li>
+                <li>Pacific</li>
+                <li>Hawaii</li>
+              </ul> */}
               <Popup
                 tabIndex="1"
                 value={filterStartDate}
@@ -145,16 +165,13 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                     : "Dates"
                 }
                 closeEvent={onDatesChange}
-                containerclassName="course-details__popup_calendar"
-                parentclassName={classNames({
-                  "course-details__popup_block": true,
-                  "course-details__popup_block_selected":
-                    filterStartDate !== null,
+                containerClassName="course-details__popup_calendar"
+                parentClassName={classNames({
+                  "hidden-border": true,
                 })}
                 buttonTextclassName={classNames({
-                  "course-details__popup_btn_text": true,
-                  "course-details__popup_btn_text_selected":
-                    filterStartDate !== null,
+                  "course-details__filter__button": true,
+                  active: filterStartDate !== null,
                 })}
               >
                 {({ closeHandler }) => (
@@ -172,15 +189,12 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 value={timeZoneFilter}
                 buttonText={timeZoneFilter ? timeZoneFilter.name : "Time Zone"}
                 closeEvent={onFilterChange}
-                parentclassName={classNames({
-                  "course-details__popup_block": true,
-                  "course-details__popup_block_selected":
-                    timeZoneFilter !== null,
+                parentClassName={classNames({
+                  "hidden-border": true,
                 })}
                 buttonTextclassName={classNames({
-                  "course-details__popup_btn_text": true,
-                  "course-details__popup_btn_text_selected":
-                    timeZoneFilter !== null,
+                  "course-details__filter__button": true,
+                  active: timeZoneFilter !== null,
                 })}
               >
                 {({ closeHandler }) => (

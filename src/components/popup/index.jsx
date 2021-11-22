@@ -8,10 +8,10 @@ export const Popup = (props) => {
     tabindex,
     children,
     value,
-    containerClass = "",
+    containerClassName = "",
     showId = false,
-    parentClass = "",
-    buttonTextClass = "",
+    parentClassName = "",
+    buttonTextclassName = "",
   } = props;
   const [visible, setVisibility] = useState(false);
   const referenceRef = useRef(null);
@@ -76,10 +76,14 @@ export const Popup = (props) => {
       <div
         ref={referenceRef}
         tabIndex={tabindex}
-        className={classNames("btn_outline_box tooltip-button", parentClass, {
-          "tooltip-button_active": visible,
-          active: value != null,
-        })}
+        className={classNames(
+          "btn_outline_box tooltip-button",
+          parentClassName,
+          {
+            "tooltip-button_active": visible,
+            active: value != null,
+          },
+        )}
         onClick={handleDropdownClick}
       >
         {value != null && (
@@ -90,12 +94,12 @@ export const Popup = (props) => {
           ></div>
         )}
 
-        <a className={classNames("btn", buttonTextClass)}>{buttonText}</a>
+        <a className={classNames("btn", buttonTextclassName)}>{buttonText}</a>
       </div>
 
       <ul
         id={showId ? "time-tooltip" : ""}
-        className={classNames("tooltip-block", containerClass, {
+        className={classNames("tooltip-block", containerClassName, {
           active: visible,
         })}
         ref={popperRef}
