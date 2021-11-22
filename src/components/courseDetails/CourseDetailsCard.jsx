@@ -269,7 +269,9 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
         {productTypeId == 22119 && (
           <ul className="course-details__list">
-            <h2 className="course-details__title">Location:</h2>
+            <div className="course-details__list__title">
+              <h6>Location:</h6>
+            </div>
             <li>
               {" "}
               {`${streetAddress1 || ""} ${streetAddress2 || ""}, ${
