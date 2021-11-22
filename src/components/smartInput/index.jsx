@@ -11,6 +11,7 @@ export const SmartInput = ({
   value,
 }) => {
   const [isHidden, setIsHidden] = useState(true);
+  const [searchKey, setSearchKey] = useState(value);
 
   const handleChange = (event) => {
     if (onSearchKeyChange) {
@@ -23,7 +24,8 @@ export const SmartInput = ({
 
   const closeHandlerInner = (data) => (event) => {
     if (closeHandler) {
-      onSearchKeyChange("");
+      setSearchKey(data.label);
+      //onSearchKeyChange("");
       closeHandler(data)();
     }
     setIsHidden(true);
@@ -35,7 +37,7 @@ export const SmartInput = ({
         placeholder={placeholder}
         type="text"
         className={classNames("custom-input", inputclassName)}
-        value={value}
+        value={searchKey}
         onChange={handleChange}
       />
       <div className="smart-input--list">

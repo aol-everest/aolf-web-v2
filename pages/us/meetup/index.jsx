@@ -255,6 +255,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
   };
 
   const onFilterChange = (field) => (value) => {
+    console.log(field, value);
     switch (field) {
       case "meetupTypeFilter":
         setMeetupTypeFilter(value);
@@ -933,18 +934,18 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
               >
                 <div className="dropdown">
                   <AddressSearch
-                    filter={onFilterChange("locationFilter")}
+                    closeHandler={onFilterChange("locationFilter")}
                     placeholder="Search for Location"
                   />
                 </div>
               </MobileFilterModal>
 
               <MobileFilterModal
-                modalTitle="Course Type"
+                modalTitle="Meetup Type"
                 buttonText={
                   meetupTypeFilter
                     ? meetupMasters[meetupTypeFilter].name
-                    : "Course Type"
+                    : "Meetup Type"
                 }
                 clearEvent={onFilterClearEvent("meetupTypeFilter")}
               >
@@ -952,7 +953,9 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
                   <SmartDropDown
                     value={meetupTypeFilter}
                     buttonText={
-                      meetupTypeFilter ? meetupTypeFilter : "Select Course"
+                      meetupTypeFilter
+                        ? meetupMasters[meetupTypeFilter].name
+                        : "Select Meetup"
                     }
                     closeEvent={onFilterChange("meetupTypeFilter")}
                   >
@@ -996,11 +999,14 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
 
               <MobileFilterModal
                 modalTitle="Time"
-                buttonText={
-                  timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                    ? TIME_ZONE[timeZoneFilter].name
-                    : "Timezone"
+                buttonText={`${
+                  TIME_ZONE[timeZoneFilter]
+                    ? TIME_ZONE[timeZoneFilter].name + ", "
+                    : ""
                 }
+                        ${timesOfDayFilter ? timesOfDayFilter : ""}${
+                  timeZoneFilter || timesOfDayFilter ? "" : "Time"
+                }`}
                 clearEvent={onFilterClearEvent("timeZoneFilter")}
               >
                 <div className="dropdown">

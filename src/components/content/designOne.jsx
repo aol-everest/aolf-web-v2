@@ -283,8 +283,8 @@ export const DesignOne = ({
         <p className="title-slider">Browse by Category</p>
         <Swiper {...swiperOption}>
           {nonListingFolders &&
-            nonListingFolders.map((folder, i) => (
-              <SwiperSlide key={i} className="category-slide-item">
+            nonListingFolders.map((folder) => (
+              <SwiperSlide key={folder.id} className="category-slide-item">
                 <Link href={`/us/library/collection/${folder.id}`}>
                   <div
                     className="card image-card image-card-1 contentCard"
