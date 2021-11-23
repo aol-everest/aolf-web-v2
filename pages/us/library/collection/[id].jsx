@@ -9,6 +9,7 @@ import { useUIDSeed } from "react-uid";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
+import Image from "next/image";
 import {
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
@@ -56,6 +57,76 @@ export const getServerSideProps = async (context) => {
   // Pass data to the page via props
   return { props };
 };
+
+function Tile({
+  data,
+  authenticated,
+  markFavorite,
+  meditateClickHandle,
+  additionalClass,
+  favouriteContents = [],
+}) {
+  const {
+    sfid,
+    title,
+    description,
+    coverImage,
+    totalActivities,
+    accessible,
+    category,
+    liveMeetingStartDateTime,
+    liveMeetingDuration,
+    duration,
+    isFavorite,
+    isFree,
+    primaryTeacherName,
+  } = data || {};
+
+  const isFavoriteContent = !!favouriteContents.find((el) => el.sfid === sfid);
+
+  const timeConvert = (data) => {
+    const minutes = data % 60;
+    const hours = (data - minutes) / 60;
+
+    return String(hours).padStart(2, 0) + ":" + String(minutes).padStart(2, 0);
+  };
+
+  return (
+    <div className="col-6 col-lg-3 col-md-4">
+      <div
+        className="upcoming_course_card upcoming_course_card_v1"
+        data-full="false"
+        data-complete="false"
+      >
+        <Image
+          src={coverImage ? coverImage.url : "/img/card-1.png"}
+          alt="bg"
+          layout="fill"
+        />
+
+        <div className="course_data">{timeConvert(duration)}</div>
+        {!accessible && (
+          <span className="lock collection-lock">
+            <img src="/img/ic-lock.png" alt="" />
+          </span>
+        )}
+        {accessible && (
+          <div
+            className={classNames("course-like", {
+              liked: isFavorite || isFavoriteContent,
+            })}
+            onClick={markFavorite}
+          ></div>
+        )}
+        <div className="forClick" onClick={meditateClickHandle}></div>
+        <div className="course_info">
+          <div className="course_name">{title}</div>
+          <div className="course_place">{primaryTeacherName}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Collection({ rootFolder, authenticated }) {
   const router = useRouter();
@@ -147,7 +218,7 @@ function Collection({ rootFolder, authenticated }) {
           <div className="container">
             <div className="row">
               {content.map((content) => (
-                <MeditationTile
+                <Tile
                   key={content.sfid}
                   data={content}
                   authenticated={authenticated}

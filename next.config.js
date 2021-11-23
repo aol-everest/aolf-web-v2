@@ -33,6 +33,9 @@ const moduleExports = withPWA({
       /_middleware.js.map$/,
     ],
   },
+  images: {
+    domains: ["images.ctfassets.net"],
+  },
   // swcMinify: true,
   // basePath: "/us",
   // assetPrefix: "/us/",

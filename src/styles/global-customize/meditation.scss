@@ -278,3 +278,24 @@
     opacity: 0.5;
   }
 }
+
+.upcoming_course_card_v1 .forClick {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 52px;
+  z-index: 998;
+}
+.upcoming_course_card_v1 {
+  margin-top: 13px;
+  height: 330px;
+  margin-bottom: 12px;
+}
+@media screen and (max-width: 991px) {
+  .upcoming_course_card_v1 {
+    height: 200px;
+    margin-bottom: 2px;
+  }
+}
