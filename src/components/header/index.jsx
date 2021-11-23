@@ -48,7 +48,7 @@ export const Header = () => {
             <Nav className="ml-auto" navbar>
               <ActiveLink
                 activeClassName="active"
-                href={`/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
+                href={`/us/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
                 setCollapsed={setCollapsed}
               >
                 <NavItem className="nav-item">
@@ -59,7 +59,7 @@ export const Header = () => {
               </ActiveLink>
               <ActiveLink
                 activeClassName="active"
-                href="/meetup"
+                href="/us/meetup"
                 setCollapsed={setCollapsed}
               >
                 <NavItem className="nav-item">
@@ -70,7 +70,7 @@ export const Header = () => {
               </ActiveLink>
               <ActiveLink
                 activeClassName="active"
-                href="/"
+                href="/us"
                 setCollapsed={setCollapsed}
               >
                 <NavItem className="nav-item">
@@ -81,7 +81,7 @@ export const Header = () => {
               </ActiveLink>
               <ActiveLink
                 activeClassName="active"
-                href={`/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`}
+                href={`/us/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`}
                 setCollapsed={setCollapsed}
               >
                 <NavItem className="nav-item">
@@ -109,7 +109,7 @@ export const Header = () => {
                 <NavItem className={classNames("nav-item", Style.userNavitem)}>
                   <ActiveLink
                     activeClassName="active"
-                    href="/profile"
+                    href="/us/profile"
                     setCollapsed={setCollapsed}
                   >
                     <a className="nav-link">

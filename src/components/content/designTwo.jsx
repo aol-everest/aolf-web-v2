@@ -235,6 +235,11 @@ export const DesignTwo = ({
                     )}
                   </SmartDropDown>
                 </MobileFilterModal>
+                <div className="btn_box_primary btn-modal_dropdown full-btn mt-3 search">
+                  <a className="btn" href="#" onClick={findMeditation}>
+                    Search{" "}
+                  </a>
+                </div>
               </div>
             </div>
           </div>

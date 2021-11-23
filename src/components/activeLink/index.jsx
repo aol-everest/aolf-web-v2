@@ -10,6 +10,7 @@ export const ActiveLink = ({
   ...props
 }) => {
   const { asPath } = useRouter();
+  console.log(asPath);
   const child = Children.only(children);
   const childClassName = child.props.className || "";
 
@@ -17,12 +18,12 @@ export const ActiveLink = ({
   // pages/about.js will be matched via props.href
   // pages/[slug].js will be matched via props.as
   const className =
-    asPath === `/us${href}` || asPath === `/us${props.as}`
+    asPath === href || asPath === props.as
       ? `${childClassName} ${activeClassName}`.trim()
       : childClassName;
 
   return (
-    <Link {...props} href={`/us${href}`}>
+    <Link {...props} href={href}>
       {React.cloneElement(child, {
         className: className || null,
         onClick: () => {
