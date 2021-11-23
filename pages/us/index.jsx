@@ -337,6 +337,23 @@ const Course = ({ workshops, authenticated }) => {
     enabled: hasNextPage,
   });
 
+  let filterCount = 0;
+  if (locationFilter) {
+    filterCount++;
+  }
+  if (courseTypeFilter) {
+    filterCount++;
+  }
+  if (filterStartEndDate) {
+    filterCount++;
+  }
+  if (timeZoneFilter) {
+    filterCount++;
+  }
+  if (instructorFilter) {
+    filterCount++;
+  }
+
   return (
     <main className="meetsup-filter">
       <NextSeo title="Workshops" />
@@ -493,7 +510,14 @@ const Course = ({ workshops, authenticated }) => {
                 <div className="filter--button d-flex" onClick={toggleFilter}>
                   <img src="/img/ic-filter.svg" alt="filter" />
                   Filter
-                  <span id="filter-count">0</span>
+                  <span
+                    id="filter-count"
+                    className={classNames({
+                      "filter-count--show": filterCount > 0,
+                    })}
+                  >
+                    {filterCount}
+                  </span>
                 </div>
               </div>
             </div>
@@ -539,7 +563,9 @@ const Course = ({ workshops, authenticated }) => {
                   <SmartDropDown
                     value={courseTypeFilter}
                     buttonText={
-                      courseTypeFilter ? courseTypeFilter : "Select Course"
+                      courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                        ? COURSE_TYPES[courseTypeFilter].name
+                        : "Select Course"
                     }
                     closeEvent={onFilterChange("courseTypeFilter")}
                   >
