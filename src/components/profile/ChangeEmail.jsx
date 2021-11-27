@@ -93,7 +93,6 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
     setLoading(true);
     try {
       const user = await Auth.currentAuthenticatedUser();
-      console.log(user);
 
       if (user.attributes.email === username) {
         throw new Error(`${username} is already your email address`);
@@ -108,7 +107,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
         },
       });
 
-      await Auth.currentAuthenticatedUser({ bypassCache: true });
+      // await Auth.currentAuthenticatedUser({ bypassCache: true });
       setShowSuccessMessage(true);
       setMessage("");
       setShowMessage(false);
