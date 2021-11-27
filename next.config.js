@@ -39,7 +39,7 @@ const moduleExports = withPWA({
   // swcMinify: true,
   // basePath: "/us",
   // assetPrefix: "/us/",
-  productionBrowserSourceMaps: true,
+  // productionBrowserSourceMaps: true,
   async redirects() {
     return [
       {
