@@ -1,0 +1,23 @@
+.header {
+  .dropdown-item.active,
+  .dropdown-item:active {
+    background-color: rgba(237, 153, 78, 0.15);
+  }
+  .user-profile-link {
+    font-size: 16px;
+    line-height: 22px;
+    height: auto;
+    display: inline-block;
+    color: #313651;
+    line-height: 30px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+}
+.sidebar__body {
+  .dropdown-item.active,
+  .dropdown-item:active {
+    background-color: transparent;
+    color: #ed994e !important;
+  }
+}

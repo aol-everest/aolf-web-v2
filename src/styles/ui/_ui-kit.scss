@@ -1,9 +1,21 @@
+html,
+body {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Work Sans, sans-serif;
+  color: $text-color;
+  position: relative;
+}
+
 b,
 strong {
   font-weight: 600;
 }
 
 aside {
+  width: 100%;
   padding: 11px 0;
   text-align: center;
   background-image: linear-gradient(to left, $blue-hover, $blue);
@@ -11,6 +23,7 @@ aside {
   font-weight: 400;
   line-height: normal;
   color: #fff;
+  white-space: nowrap;
 
   img {
     margin-right: 15px;
@@ -119,7 +132,13 @@ p {
 .dropdown-toggle {
   display: flex;
   align-items: center;
-  color: #31364e !important;
+  color: #31364e;
+
+  &:after {
+    position: static !important;
+    margin-top: 7px;
+    transition: all 0.3s ease-in-out;
+  }
 }
 
 .input-block.error {
@@ -706,9 +725,6 @@ p {
     opacity: 1;
     height: 100vh;
     position: fixed;
-  }
-
-  &.active {
   }
 
   &__header {
@@ -1534,5 +1550,22 @@ p {
       text-align: left;
       margin-left: 10px;
     }
+  }
+}
+
+.sidebar-button {
+  display: block;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+
+  &__icon {
+    display: block;
+  }
+
+  &:focus {
+    outline: none;
   }
 }
