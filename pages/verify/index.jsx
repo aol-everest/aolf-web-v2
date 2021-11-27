@@ -1,0 +1,94 @@
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { api } from "@utils";
+import classNames from "classnames";
+import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
+import { Auth } from "aws-amplify";
+
+// export const getServerSideProps = async (context) => {
+// const { query, req, res } = context;
+// const { next } = query;
+// const { Auth } = await withSSRContext(context);
+// const user = await Auth.currentAuthenticatedUser();
+// const token = user.signInUserSession.idToken.jwtToken;
+// await api.get({
+//   path: "profile",
+//   token,
+// });
+//   res.writeHead(302, {
+//     Location: `/`,
+//   });
+//   res.end();
+
+//   return { props: {} };
+// };
+
+function Token() {
+  const router = useRouter();
+  const [message, setMessage] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    async function fetchData() {
+      try {
+        console.log(router.query);
+        await api.get({
+          path: "change-email-confirm",
+          param: router.query,
+        });
+        setSuccess(true);
+        await Auth.signOut({ global: true });
+      } catch (ex) {
+        const data = ex.response?.data;
+        const { message, statusCode, code } = data || {};
+        setMessage(
+          message ? `Error: ${message} (${statusCode || code})` : ex.message,
+        );
+      }
+    }
+    fetchData();
+  }, [router.isReady]);
+
+  return (
+    <main className="aol_mainbody login-screen profile">
+      <div className="profile-modal active show">
+        <div
+          id="retreat-prerequisite"
+          className="digital-member-join digital-member-join_journey course-join-card retreat-prerequisite active show"
+        >
+          <div className="course-join-card__body alert__body mt-5">
+            <h2 className="course-join-card__title section-title text-center">
+              Verifying Email
+            </h2>
+            <div className="text-center">
+              {!message && !success && (
+                <div className="cover-spin-inline"></div>
+              )}
+              {success && (
+                <div className="icon-container-success">
+                  <FaCheckCircle />
+                </div>
+              )}
+              {message && (
+                <div className="icon-container-error">
+                  <FaMinusCircle />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="course-details-card__footer text-center">
+            {!message && <>Please wait for our checking ...</>}
+            {message && (
+              <p className="validation-input text-center">{message}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+Token.hideHeader = true;
+
+export default Token;

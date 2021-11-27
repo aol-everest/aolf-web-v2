@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { useQueryString } from "@hooks";
 import Style from "./MembershipCancellation.module.scss";
 
-export async function getServerSideProps({ req, res, query }) {
+export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { Auth } = withSSRContext({ req });
   let props = {};
   try {
@@ -23,9 +23,13 @@ export async function getServerSideProps({ req, res, query }) {
     };
   } catch (err) {
     console.error(err);
-    res.writeHead(302, { Location: "/login" });
-    res.end();
-    return { props: {} };
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login?next=${resolvedUrl}`,
+      },
+      props: {},
+    };
   }
   try {
     const user = await Auth.currentAuthenticatedUser();
@@ -43,8 +47,13 @@ export async function getServerSideProps({ req, res, query }) {
     };
   } catch (err) {
     console.error(err);
-    res.writeHead(302, { Location: "/login" });
-    res.end();
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login?next=${resolvedUrl}`,
+      },
+      props: {},
+    };
   }
   return { props };
 }

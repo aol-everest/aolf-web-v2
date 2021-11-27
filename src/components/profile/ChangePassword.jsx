@@ -18,7 +18,12 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
       setShowSuccessMessage(true);
     } catch (ex) {
       console.log(ex);
-      updateCompleteAction({ message: ex.message, isError: true });
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      updateCompleteAction({
+        message: message ? `Error: ${message} (${statusCode})` : ex.message,
+        isError: true,
+      });
     }
     setLoading(false);
   };

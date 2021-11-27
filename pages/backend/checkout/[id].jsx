@@ -30,12 +30,13 @@ export const getServerSideProps = async (context) => {
       token,
     };
   } catch (err) {
-    console.error(err);
-    res.writeHead(302, {
-      Location: `/login?next=${resolvedUrl}`,
-    });
-    res.end();
-    return;
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login?next=${resolvedUrl}`,
+      },
+      props: {},
+    };
   }
 
   const workshopDetail = await api.get({

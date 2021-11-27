@@ -33,7 +33,7 @@ const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Ple
                 at (844) 273-5500 to resolve the issue and cancel your
                 membership.`;
 
-export async function getServerSideProps({ req, res, query }) {
+export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { Auth } = withSSRContext({ req });
   const { tab } = query || {};
   try {
@@ -54,10 +54,14 @@ export async function getServerSideProps({ req, res, query }) {
     };
   } catch (err) {
     console.error(err);
-    res.writeHead(302, { Location: "/login" });
-    res.end();
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login?next=${resolvedUrl}`,
+      },
+      props: {},
+    };
   }
-  return { props: {} };
 }
 
 const Profile = ({ profile, tab }) => {

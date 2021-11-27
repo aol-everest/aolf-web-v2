@@ -33,11 +33,13 @@ export const getServerSideProps = async (context) => {
     };
   } catch (err) {
     console.error(err);
-    res.writeHead(302, {
-      Location: `/login?next=${resolvedUrl}`,
-    });
-    res.end();
-    return;
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login?next=${resolvedUrl}`,
+      },
+      props: {},
+    };
   }
   const meetupDetail = await api.get({
     path: "meetupDetail",

@@ -85,13 +85,20 @@ export const DiscountCodeInput = ({
         setUser(results.user || null);
       }
     } catch (ex) {
-      formikProps.setFieldError(formikKey, ex.message);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      formikProps.setFieldError(
+        formikKey,
+        message ? `Error: ${message} (${statusCode})` : ex.message,
+      );
 
       setIsCouponApplied(false);
       setStatus(2);
       setLoading(false);
       setResponse({
-        discountNotApplicableReason: ex.message,
+        discountNotApplicableReason: message
+          ? `Error: ${message} (${statusCode})`
+          : ex.message,
       });
       applyDiscount(null);
     }

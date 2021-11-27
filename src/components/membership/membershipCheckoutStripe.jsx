@@ -228,8 +228,12 @@ export const MembershipCheckoutStripe = ({
       completeCheckoutCallback(data.orderId);
     } catch (ex) {
       console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
       setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, { children: ex.message });
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
     }
   };
 

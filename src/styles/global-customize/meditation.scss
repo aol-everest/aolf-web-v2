@@ -293,9 +293,26 @@
   height: 315px;
   margin-bottom: 12px;
 }
+
+.inline-edit-input-container .icon {
+  position: absolute;
+  padding: 30px 10px 10px 10px;
+  color: #3d8be8;
+  text-align: left;
+  right: 0px;
+  background-color: #ffffff85;
+}
+.inline-edit-input-container {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 @media screen and (max-width: 991px) {
   .upcoming_course_card_v1 {
     height: 200px;
     margin-bottom: 2px;
+  }
+  .inline-edit-input-container .icon {
+    padding: 0px 10px;
   }
 }

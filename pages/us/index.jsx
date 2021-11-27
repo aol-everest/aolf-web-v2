@@ -148,7 +148,7 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Course = ({ workshops, authenticated }) => {
+const Course = ({ authenticated }) => {
   const seed = useUIDSeed();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {

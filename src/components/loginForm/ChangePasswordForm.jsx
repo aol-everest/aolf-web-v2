@@ -43,7 +43,7 @@ export const ChangePasswordForm = ({
       <input
         type="text"
         {...register("code")}
-        className={classNames({ validate: errors.username })}
+        className={classNames({ validate: errors.code })}
         placeholder="Code"
       />
       {errors.code && <p className="validation-input">{errors.code.message}</p>}
@@ -60,7 +60,7 @@ export const ChangePasswordForm = ({
         {...register("passwordConfirmation")}
         type="password"
         placeholder="Confirm Password"
-        className={classNames({ validate: errors.password })}
+        className={classNames({ validate: errors.passwordConfirmation })}
       />
       {errors.passwordConfirmation && (
         <p className="validation-input">

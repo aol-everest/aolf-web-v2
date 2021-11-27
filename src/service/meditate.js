@@ -72,10 +72,11 @@ export const meditatePlayEvent = async ({
         contentSfid: meditateDetails.sfid,
       });
     }
-  } catch (error) {
-    console.log(error);
+  } catch (ex) {
+    const data = ex.response?.data;
+    const { message, statusCode } = data || {};
     showAlert(ALERT_TYPES.ERROR_ALERT, {
-      children: error.message,
+      children: message ? `Error: ${message} (${statusCode})` : ex.message,
     });
   }
 };

@@ -448,10 +448,12 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
         }
       } catch (ex) {
         console.log(ex);
+        const data = ex.response?.data;
+        const { message, statusCode } = data || {};
 
         setLoading(false);
         showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: ex.message,
+          children: message ? `Error: ${message} (${statusCode})` : ex.message,
         });
       }
     } else {
@@ -519,9 +521,13 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
               );
             },
           });
-        } catch (error) {
+        } catch (ex) {
+          const data = ex.response?.data;
+          const { message, statusCode } = data || {};
           showAlert(ALERT_TYPES.ERROR_ALERT, {
-            children: error.message,
+            children: message
+              ? `Error: ${message} (${statusCode})`
+              : ex.message,
           });
         }
       }

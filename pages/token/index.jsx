@@ -25,6 +25,7 @@ function Token() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!router.isReady) return;
     Hub.listen("auth", async ({ payload: { event, data } }) => {
       switch (event) {
         case "customOAuthState": {
@@ -35,7 +36,7 @@ function Token() {
         }
       }
     });
-  });
+  }, [router.isReady]);
 
   return (
     <main className="aol_mainbody login-screen">

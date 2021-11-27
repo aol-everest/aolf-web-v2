@@ -48,10 +48,14 @@ export async function getServerSideProps(context) {
     };
   } catch (err) {
     console.error(err);
-    res.writeHead(302, { Location: "/us/meetup" });
-    res.end();
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/us/meetup`,
+      },
+      props: {},
+    };
   }
-  return { props: {} };
 }
 
 const AddToCalendar = ({ handleCalendarButtonClick, event }) => {

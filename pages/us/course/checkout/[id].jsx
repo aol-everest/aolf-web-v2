@@ -73,12 +73,6 @@ export const getServerSideProps = async (context) => {
         permanent: false,
       },
     };
-    // };
-    // res.writeHead(302, {
-    //   Location: `/login?next=${resolvedUrl}`,
-    // });
-    // res.end();
-    // return { props };
   }
   const workshopDetail = await api.get({
     path: "workshopDetail",

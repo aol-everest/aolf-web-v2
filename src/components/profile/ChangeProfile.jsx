@@ -4,6 +4,10 @@ import MaskedInput from "react-text-mask";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { api } from "@utils";
+import { FaRegEdit } from "react-icons/fa";
+import { useGlobalModalContext } from "@contexts";
+import { MODAL_TYPES } from "@constants";
+import { ChangeEmail } from "@components/profile";
 
 const phoneNumberMask = [
   "(",
@@ -28,6 +32,20 @@ export const ChangeProfile = ({
   updateCompleteAction,
 }) => {
   const [loading, setLoading] = useState(false);
+  const { showModal, hideModal } = useGlobalModalContext();
+
+  const editEmailAction = () => {
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      children: (handleModalToggle) => {
+        return (
+          <ChangeEmail
+            closeDetailAction={handleModalToggle}
+            existingEmail={profile.email}
+          />
+        );
+      },
+    });
+  };
 
   const submitAction = async (values) => {
     const {
@@ -56,7 +74,12 @@ export const ChangeProfile = ({
       updateCompleteAction({});
     } catch (ex) {
       console.log(ex);
-      updateCompleteAction({ message: ex.message, isError: true });
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      updateCompleteAction({
+        message: message ? `Error: ${message} (${statusCode})` : ex.message,
+        isError: true,
+      });
     }
     setLoading(false);
   };
@@ -252,9 +275,12 @@ export const ChangeProfile = ({
                 </div>
 
                 <div
-                  className={classNames("input-block", {
-                    "w-100": isMobile,
-                  })}
+                  className={classNames(
+                    "input-block inline-edit-input-container",
+                    {
+                      "w-100": isMobile,
+                    },
+                  )}
                 >
                   <input
                     readOnly={true}
@@ -265,6 +291,9 @@ export const ChangeProfile = ({
                     type="email"
                     placeholder="Email"
                   />
+                  <a className="icon" href="#" onClick={editEmailAction}>
+                    <FaRegEdit />
+                  </a>
                 </div>
                 <div
                   className={classNames("input-block", {

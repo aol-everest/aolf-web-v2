@@ -30,10 +30,14 @@ export async function getServerSideProps(context) {
     };
   } catch (err) {
     console.error(err);
-    res.writeHead(302, { Location: "/workshop" });
-    res.end();
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/us`,
+      },
+      props: {},
+    };
   }
-  return { props: {} };
 }
 
 const Thankyou = ({ workshop, attendeeRecord }) => {

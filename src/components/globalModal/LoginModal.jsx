@@ -70,12 +70,14 @@ export const LoginModal = () => {
       if (navigateTo) {
         return router.push(navigateTo);
       }
-    } catch (error) {
-      console.error(error);
-      setMessage(error.message);
+    } catch (ex) {
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+      console.error(ex);
       setShowMessage(true);
+      setLoading(false);
     }
-    // setLoading(false);
   };
 
   const fbLogin = () => {
@@ -106,9 +108,10 @@ export const LoginModal = () => {
         },
       });
       await signIn({ username, password });
-    } catch (error) {
-      console.error(error);
-      setMessage(error.message);
+    } catch (ex) {
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
       setShowMessage(true);
     }
     setLoading(false);
@@ -127,9 +130,10 @@ export const LoginModal = () => {
         setShowSuccessMessage(false);
         setSuccessMessage(null);
       }, 3000);
-    } catch (error) {
-      console.error(error);
-      setMessage(error.message);
+    } catch (ex) {
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
       setShowMessage(true);
     }
     setLoading(false);
@@ -142,9 +146,11 @@ export const LoginModal = () => {
       await Auth.forgotPasswordSubmit(username, "" + code, password);
       setUsername(null);
       setMode(LOGIN_MODE);
-    } catch (error) {
-      console.log("error signing in", error);
-      setMessage(error.message);
+    } catch (ex) {
+      console.log("error signing in", ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
       setShowMessage(true);
     }
     setLoading(false);
@@ -157,9 +163,10 @@ export const LoginModal = () => {
       await Auth.completeNewPassword(username, password);
       setUsername(null);
       setMode(LOGIN_MODE);
-    } catch (error) {
-      console.log("error signing in", error);
-      setMessage(error.message);
+    } catch (ex) {
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
       setShowMessage(true);
     }
     setLoading(false);

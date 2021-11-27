@@ -17,10 +17,13 @@ export const getServerSideProps = async (context) => {
       path: "profile",
       token,
     });
-    res.writeHead(302, {
-      Location: next ? next : `/`,
-    });
-    res.end();
+    return {
+      redirect: {
+        permanent: false,
+        destination: next ? next : `/`,
+      },
+      props: {},
+    };
   } catch (err) {
     console.error(err);
   }

@@ -264,7 +264,6 @@ header .aol_navbar {
   content: "";
   display: block;
   position: absolute;
-  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -279,4 +278,23 @@ header .aol_navbar {
   animation: spin 0.8s linear infinite;
   margin-top: -23px;
   margin-left: -23px;
+}
+.cover-spin-inline {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin: 10px;
+}
+.cover-spin-inline::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-style: solid;
+  border-color: #3d8be8;
+  border-top-color: transparent;
+  border-width: 4px;
+  border-radius: 50%;
+  -webkit-animation: spin 0.8s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
