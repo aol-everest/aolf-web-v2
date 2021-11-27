@@ -219,19 +219,16 @@ export const Header = () => {
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
-  const [collapsed, setCollapsed] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
 
-  const toggle = () => setCollapsed(!collapsed);
   const toggleSidebar = () => setShowSidebar(!showSidebar);
 
   const loginAction = () => {
-    setCollapsed(false);
     showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/us/profile" });
   };
 
   const onMenuSelection = (submenu) => () => {
-    console.log(submenu);
+    setShowSidebar(false);
     router.push(submenu.link);
   };
 
