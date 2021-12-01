@@ -1,9 +1,7 @@
 import React from "react";
 export const NoHeader = () => {
   return (
-    <header
-      style={{ backgroundColor: "#ffffff", position: "relative", zIndex: 9 }}
-    >
+    <header className="bg-white relative z-10">
       <div className="logo">
         <img src="/img/ic-logo.svg" alt="logo" />
       </div>

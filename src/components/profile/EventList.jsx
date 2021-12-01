@@ -201,10 +201,7 @@ const renderEvent = (workshop) => {
     }
     return (
       <div className="col-6 col-lg-3 col-md-4" key={sfid}>
-        <div
-          className="profile-body__card"
-          style={{ backgroundColor: "transparent" }}
-        >
+        <div className="profile-body__card bg-transparent">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           <div className="profile-body__card-date">
             {`${moment.utc(meetupStartDate).format("MMM DD")}, `}
@@ -231,10 +228,7 @@ const renderEvent = (workshop) => {
     }
     return (
       <div className="col-6 col-lg-3 col-md-4" key={sfid}>
-        <div
-          className="profile-body__card"
-          style={{ backgroundColor: "transparent" }}
-        >
+        <div className="profile-body__card bg-transparent">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           {moment
             .utc(eventStartDate)

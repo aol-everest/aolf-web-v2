@@ -252,10 +252,7 @@ export const AgreementForm = ({
                   )}
               </>
             ))}
-            <div
-              className="agreement__group mt-3"
-              style={{ paddingLeft: "19px" }}
-            >
+            <div className="agreement__group mt-3 pl-3">
               <p className="agreement__text">
                 For any health related questions, please contact the health info
                 desk at{" "}

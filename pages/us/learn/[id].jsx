@@ -294,10 +294,7 @@ export default function Learn({ data, authenticated }) {
               {!introContent && (
                 <article className="collection-video">
                   <div className="video-player">
-                    <div
-                      className="video-insighter-container"
-                      style={{ borderRadius: "16px" }}
-                    >
+                    <div className="video-insighter-container rounded-r">
                       <video poster={introContentPoster}></video>
                     </div>
                   </div>

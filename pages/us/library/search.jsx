@@ -551,7 +551,7 @@ const LibrarySearch = ({ meditations, authenticated }) => {
               ))}
           </div>
           {isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage && (
-            <section className="about" style={{ backgroundImage: "none" }}>
+            <section className="about bg-none">
               <div className="container happines_box">
                 <div className="row">
                   <div className="col-lg-8 col-md-10 col-12 m-auto text-center">

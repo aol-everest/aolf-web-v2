@@ -11,8 +11,7 @@ export const BillingInfoForm = ({ formikProps }) => {
     <Fragment>
       <StyledInput
         containerClass={classNames(Style.address, "mt-0")}
-        className={classNames(Style.address, "mt-0")}
-        style={{ width: "100%" }}
+        className={classNames(Style.address, "mt-0 w-full")}
         placeholder="Address"
         formikProps={formikProps}
         formikKey="contactAddress"

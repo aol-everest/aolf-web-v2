@@ -221,7 +221,7 @@ export const RegisterPanel = ({ workshop }) => {
         {earlyBirdFeeIncreasing && (
           <>
             <img src="/img/ic-timer-orange.svg" alt="timer" />
-            <p style={{ fontSize: "15px" }}>
+            <p className="text-xs">
               Register soon. Course fee will go up by $
               {earlyBirdFeeIncreasing.increasingFee} on{" "}
               {moment

@@ -115,9 +115,8 @@ export const MobileCourseOptions = ({
                             <span>
                               {!product.isAddOnSelectionRequired && (
                                 <input
-                                  style={{ width: "auto" }}
                                   type="checkbox"
-                                  className="custom-checkbox"
+                                  className="custom-checkbox w-auto"
                                   placeholder=" "
                                   checked={isChecked}
                                   onChange={formikProps.handleChange(
@@ -190,9 +189,8 @@ export const MobileCourseOptions = ({
                             <span>
                               {!product.isAddOnSelectionRequired && (
                                 <input
-                                  style={{ width: "auto" }}
                                   type="checkbox"
-                                  className="custom-checkbox"
+                                  className="custom-checkbox w-auto"
                                   placeholder=" "
                                   checked={isChecked}
                                   onChange={formikProps.handleChange(
@@ -250,9 +248,8 @@ export const MobileCourseOptions = ({
                           <span>
                             {!product.isAddOnSelectionRequired && (
                               <input
-                                style={{ width: "auto" }}
                                 type="checkbox"
-                                className="custom-checkbox"
+                                className="custom-checkbox w-auto"
                                 placeholder=" "
                                 checked={isChecked}
                                 onChange={formikProps.handleChange(

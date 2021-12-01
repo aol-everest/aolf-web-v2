@@ -310,9 +310,7 @@ export const DesignOne = ({
             <p className="title-slider">
               Most Popular{" "}
               <Link href={`/us/library/search`}>
-                <span style={{ cursor: "pointer" }} className="popular-all">
-                  All
-                </span>
+                <span className="popular-all cursor-pointer">All</span>
               </Link>
             </p>
             <Swiper {...swiperOption}>
@@ -431,8 +429,7 @@ export const DesignOne = ({
 
           <button
             onClick={findMeditation}
-            className="btn tooltip-button_search"
-            style={{ opacity: 1 }}
+            className="btn tooltip-button_search opacity-100"
           >
             Search
           </button>

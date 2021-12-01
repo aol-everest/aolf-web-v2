@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
@@ -634,14 +635,10 @@ export const PaymentForm = ({
                   {formikProps.values.paymentMode ===
                     PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
                     <div
-                      className="order__card__payment-method paypal-info"
-                      style={{ width: "150px" }}
+                      className="order__card__payment-method paypal-info w-[150px]"
                       data-method="paypal"
                     >
-                      <div
-                        className="paypal-info__sign-in"
-                        style={{ position: "relative", zIndex: 0 }}
-                      >
+                      <div className="paypal-info__sign-in relative z-0">
                         <PayPalButton
                           options={{
                             clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,

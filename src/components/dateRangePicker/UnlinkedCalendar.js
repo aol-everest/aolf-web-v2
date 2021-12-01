@@ -90,13 +90,7 @@ class UnlinkedCalendar extends React.Component {
       "daterangepicker ltr show-calendar": true,
     });
     return (
-      <div
-        className={className}
-        style={{
-          left: "auto",
-          display: "block",
-        }}
-      >
+      <div className={classNames(classNames, "left-auto block")}>
         {this.renderTable()}
         {children}
       </div>

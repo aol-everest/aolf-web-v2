@@ -489,10 +489,7 @@ export const MembershipCheckoutStripe = ({
               </div>
             </div>
 
-            <div
-              className="course-popup d-lg-none d-block"
-              style={{ zIndex: 99 }}
-            >
+            <div className="course-popup d-lg-none d-block z-50">
               <div className="course-card">
                 <div className="course-card__info">
                   <div className="course-card__info-wrapper">

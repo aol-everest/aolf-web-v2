@@ -27,15 +27,7 @@ export const GlobalLoading = ({ children }) => {
       return null;
     }
     return (
-      <FadeInAnimation
-        style={{
-          top: 0,
-          width: "100%",
-          height: "100%",
-          position: "fixed",
-          zIndex: 9999,
-        }}
-      >
+      <FadeInAnimation className="t-0 w-full h-full fixed z-50">
         <div className="cover-spin"></div>
       </FadeInAnimation>
     );

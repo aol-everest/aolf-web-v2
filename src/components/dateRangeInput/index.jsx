@@ -38,19 +38,15 @@ export const DateRangeInput = (props) => {
           onClick={handleDropdownClick}
           readOnly
         />
-        <div style={{ position: "relative" }} ref={popperRef}>
+        <div className="relative" ref={popperRef}>
           <ul
-            className={classNames("tooltip-block", containerClass, {
-              active: visible,
-            })}
-            style={{
-              padding: 8,
-
-              left: 0,
-              top: 0,
-              right: "auto",
-              bottom: "auto",
-            }}
+            className={classNames(
+              "tooltip-block p-0 left-0 top-0 right-auto bottom-0",
+              containerClass,
+              {
+                active: visible,
+              },
+            )}
           >
             {visible &&
               children({

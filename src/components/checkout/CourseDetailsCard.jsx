@@ -39,10 +39,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
   return (
     <div className="reciept__details">
       <div className="course">
-        <div
-          className="course__photo"
-          style={{ minWidth: "98px", height: "98px", position: "relative" }}
-        >
+        <div className="course__photo max-w-[98px] h-[98px] relative">
           {isSilentRetreatType && (
             <Image
               src="/img/course-card-4.png"

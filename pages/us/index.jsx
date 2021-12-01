@@ -919,7 +919,7 @@ const Course = ({ authenticated }) => {
           {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
             <div className="row">
               <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
-                <p className="happines_subtitle">
+                <p className="happines_subtitle p-6 text-lg">
                   No more data available to read.
                 </p>
               </div>

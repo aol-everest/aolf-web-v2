@@ -280,10 +280,9 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                   <div className="comments__person">
                     <div className="comments__person-img">
                       <img
-                        className="rounded-circle"
+                        className="rounded-circle w-full h-full"
                         src="/img/Dan-Joy.jpg"
                         alt="comments"
-                        style={{ width: "100%", height: "100%" }}
                       />
                       <span>“</span>
                     </div>

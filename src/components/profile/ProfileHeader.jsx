@@ -112,7 +112,7 @@ export const ProfileHeader = ({
                 )}
                 <ReactTooltip id="Popover1">
                   {modalSubscription.subscriptionBuyingChannel === "WEB" && (
-                    <div style={{ maxWidth: "210px", textAlign: "left" }}>
+                    <div className="max-w-[210px] text-left">
                       Please contact customer service at{" "}
                       <a href="tel:8442735500">(844) 273-5500</a> or{" "}
                       <a href="mailto:app.support@us.artofliving.org">
@@ -122,7 +122,7 @@ export const ProfileHeader = ({
                     </div>
                   )}
                   {modalSubscription.subscriptionBuyingChannel !== "WEB" && (
-                    <div style={{ maxWidth: "210px", textAlign: "left" }}>
+                    <div className="max-w-[210px] text-left">
                       Our records indicate that you signed up for the digital
                       membership from the Journey Mobile App. To cancel your
                       membership, you will need to initiate the cancellation

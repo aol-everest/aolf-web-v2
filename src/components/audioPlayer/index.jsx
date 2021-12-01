@@ -186,7 +186,7 @@ const AudioPlayer = () => {
   }, []);
 
   return (
-    <div className="meditation" style={{ padding: "62px 0px 0px" }}>
+    <div className="meditation p-0 pt-[62px]">
       {isFullPlayer && (
         <div
           id="modal_player"
@@ -202,6 +202,7 @@ const AudioPlayer = () => {
               <div className="mobile-wrapper">
                 <div
                   className="modal-header"
+                  // eslint-disable-next-line no-inline-styles/no-inline-styles
                   style={{ backgroundImage: "url('/img/card-1a.png')" }}
                 >
                   <button
@@ -222,10 +223,9 @@ const AudioPlayer = () => {
                   <span>Alan Watts</span>
                   <div className="audioplayer">
                     <div
-                      className="audioplayer-playpause"
+                      className="audioplayer-playpause w-[40px] h-[40px]"
                       title=""
                       onClick={onPlayPauseClick}
-                      style={{ width: "40px", height: "40px" }}
                     >
                       {!isPlaying && <img src="/img/ic-play-40-hover.svg" />}
                       {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
@@ -244,10 +244,7 @@ const AudioPlayer = () => {
                       onTouchMove={isTouch ? trackerMousemove : () => {}}
                       onTouchCancel={isTouch ? trackerMouseup : () => {}}
                     >
-                      <div
-                        className="audioplayer-bar-loaded"
-                        style={{ width: "100%" }}
-                      ></div>
+                      <div className="audioplayer-bar-loaded w-full"></div>
                       <div
                         className="audioplayer-bar-played"
                         style={{ width: currentPercentage }}
@@ -264,17 +261,16 @@ const AudioPlayer = () => {
         </div>
       )}
       {!isFullPlayer && (
-        <div id="player" className="visible" style={{ bottom: 0, zIndex: 991 }}>
+        <div id="player" className="visible bottom-0 z-50">
           <div
             className={classNames("audioplayer", {
               "audioplayer-playing": isPlaying,
             })}
           >
             <div
-              className="audioplayer-playpause"
+              className="audioplayer-playpause w-[40px]"
               title=""
               onClick={onPlayPauseClick}
-              style={{ width: "40px" }}
             >
               {!isPlaying && <img src="/img/ic-play-40-hover.svg" />}
               {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
@@ -296,10 +292,7 @@ const AudioPlayer = () => {
               onTouchMove={isTouch ? trackerMousemove : () => {}}
               onTouchCancel={isTouch ? trackerMouseup : () => {}}
             >
-              <div
-                className="audioplayer-bar-loaded"
-                style={{ width: "100%" }}
-              ></div>
+              <div className="audioplayer-bar-loaded w-full"></div>
               <div
                 className="audioplayer-bar-played"
                 style={{ width: currentPercentage }}

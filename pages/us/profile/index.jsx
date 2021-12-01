@@ -223,7 +223,7 @@ const Profile = ({ profile, tab }) => {
                   type="file"
                   id="upload-button"
                   accept="image/*"
-                  style={{ display: "none" }}
+                  className="hidden"
                   onChange={handleOnSelectFile}
                 />
                 <div className="profile-header__image wrapper">
