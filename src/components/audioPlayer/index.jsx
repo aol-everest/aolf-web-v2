@@ -186,7 +186,7 @@ const AudioPlayer = () => {
   }, []);
 
   return (
-    <div className="meditation p-0 pt-[62px]">
+    <div className="meditation tw-p-0 tw-pt-[62px]">
       {isFullPlayer && (
         <div
           id="modal_player"
@@ -223,7 +223,7 @@ const AudioPlayer = () => {
                   <span>Alan Watts</span>
                   <div className="audioplayer">
                     <div
-                      className="audioplayer-playpause w-[40px] h-[40px]"
+                      className="audioplayer-playpause tw-w-[40px] tw-h-[40px]"
                       title=""
                       onClick={onPlayPauseClick}
                     >
@@ -244,7 +244,7 @@ const AudioPlayer = () => {
                       onTouchMove={isTouch ? trackerMousemove : () => {}}
                       onTouchCancel={isTouch ? trackerMouseup : () => {}}
                     >
-                      <div className="audioplayer-bar-loaded w-full"></div>
+                      <div className="audioplayer-bar-loaded tw-w-full"></div>
                       <div
                         className="audioplayer-bar-played"
                         style={{ width: currentPercentage }}
@@ -261,14 +261,14 @@ const AudioPlayer = () => {
         </div>
       )}
       {!isFullPlayer && (
-        <div id="player" className="visible bottom-0 z-50">
+        <div id="player" className="visible !tw-bottom-0 tw-z-50">
           <div
             className={classNames("audioplayer", {
               "audioplayer-playing": isPlaying,
             })}
           >
             <div
-              className="audioplayer-playpause w-[40px]"
+              className="audioplayer-playpause tw-w-[40px]"
               title=""
               onClick={onPlayPauseClick}
             >
@@ -292,7 +292,7 @@ const AudioPlayer = () => {
               onTouchMove={isTouch ? trackerMousemove : () => {}}
               onTouchCancel={isTouch ? trackerMouseup : () => {}}
             >
-              <div className="audioplayer-bar-loaded w-full"></div>
+              <div className="audioplayer-bar-loaded tw-w-full"></div>
               <div
                 className="audioplayer-bar-played"
                 style={{ width: currentPercentage }}

@@ -123,7 +123,7 @@ export const MeetupEnroll = ({
                       onClick={checkoutMeetup}
                     >
                       {checkoutLoading && (
-                        <div className="loaded py-0 px-7">
+                        <div className="loaded tw-py-0 tw-px-7">
                           <div className="loader">
                             <div className="loader-inner ball-clip-rotate">
                               <div />
@@ -158,7 +158,7 @@ export const MeetupEnroll = ({
                       </p>
                       <button className="btn" onClick={checkoutMeetup}>
                         {checkoutLoading && (
-                          <div className="loaded py-0 px-7">
+                          <div className="loaded tw-py-0 tw-px-7">
                             <div className="loader">
                               <div className="loader-inner ball-clip-rotate">
                                 <div />

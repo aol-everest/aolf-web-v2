@@ -829,7 +829,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                       {hasGroupedAddOnProducts && (
                         <div className="col-sm-12">
                           <h6
-                            className={classNames("px-[10px] py-0", {
+                            className={classNames("tw-px-[10px] tw-py-0", {
                               "group-error": errors.selectedAddOn,
                             })}
                           >
@@ -980,7 +980,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                       {({ field, form }) => {
                         return (
                           <div
-                            className={classNames("mt-[32px]", {
+                            className={classNames("tw-mt-[32px]", {
                               "text-input-error":
                                 errors.contactState && touched.contactState,
                             })}
@@ -1126,7 +1126,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                             return (
                               <div
                                 className={classNames({
-                                  "text-input-error mt-20":
+                                  "text-input-error tw-mt-20":
                                     errors.billingState && touched.billingState,
                                 })}
                               >

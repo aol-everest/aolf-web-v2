@@ -19,7 +19,7 @@ export const CourseBottomCard = ({ workshop }) => {
       <div className="container">
         <div className="course-bottom-card__container">
           <div className="course-bottom-card__info-block">
-            <div className="course-bottom-card__img d-none d-lg-block max-w-[60px] h-[60px] relative">
+            <div className="course-bottom-card__img d-none d-lg-block tw-max-w-[60px] tw-h-[60px] tw-relative">
               {isSilentRetreatType && (
                 <Image
                   src="/img/course-card-4.png"

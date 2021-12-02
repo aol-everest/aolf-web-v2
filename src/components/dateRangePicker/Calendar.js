@@ -71,7 +71,7 @@ class Calendar extends React.Component {
       "daterangepicker ltr show-calendar": true,
     });
     return (
-      <div className={classNames(classNames, "left-auto block")}>
+      <div className={classNames(classNames, "tw-left-auto tw-block")}>
         {this.renderTable()}
         {children}
       </div>

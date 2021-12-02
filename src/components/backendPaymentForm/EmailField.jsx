@@ -97,7 +97,7 @@ export function EmailField({
             onChange={(evt) => {
               form.setFieldValue(name, evt.target.value.trim().toLowerCase());
             }}
-            className="w-full"
+            className="tw-w-full"
             onBlur={findUser({ field, form })}
             onKeyDown={keyPress({ field, form })}
           />

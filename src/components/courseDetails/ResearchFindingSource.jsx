@@ -778,7 +778,7 @@ export const ResearchFindingSource = () => {
             <>
               <>
                 <h4>
-                  <span className="text-sm">
+                  <span className="tw-text-sm">
                     <strong>
                       Summary of Independent Research findings for Sudarshan
                       Kriya Yoga in the treatment of Depression
@@ -815,12 +815,12 @@ export const ResearchFindingSource = () => {
                   experience.[9, 10]
                 </p>
                 <h4>
-                  <span className="text-sm">
+                  <span className="tw-text-sm">
                     <strong>Highlights of Research Findings:</strong>
                   </span>
                 </h4>
                 <p>
-                  <span className="text-xs">
+                  <span className="tw-text-xs">
                     <strong>
                       Remission from depression is experienced rapidly.
                     </strong>
@@ -838,7 +838,7 @@ export const ResearchFindingSource = () => {
                   depression wane after 4 weeks).
                 </p>
                 <h4>
-                  <span className="text-base">
+                  <span className="tw-text-base">
                     <strong>
                       SKY produced highly beneficial biological effects on brain
                       and hormone function.
@@ -862,7 +862,7 @@ export const ResearchFindingSource = () => {
                   significantly after three weeks.[2]
                 </p>
                 <h4>
-                  <span className="text-sm">
+                  <span className="tw-text-sm">
                     <strong>As Effective as Anti-Depressant Medication</strong>
                   </span>
                 </h4>
@@ -899,7 +899,7 @@ export const ResearchFindingSource = () => {
                   and staff effective as well [3].
                 </p>
                 <h4>
-                  <span className="text-sm">
+                  <span className="tw-text-sm">
                     <strong>
                       Chairman, Department Psychiatry, at NIMHANS reported “SKY
                       has remarkable therapeutic effects”.

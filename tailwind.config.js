@@ -1,6 +1,6 @@
 module.exports = {
   mode: "jit",
-  // prefix: "tw-",
+  prefix: "tw-",
   purge: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",

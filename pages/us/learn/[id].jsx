@@ -294,7 +294,7 @@ export default function Learn({ data, authenticated }) {
               {!introContent && (
                 <article className="collection-video">
                   <div className="video-player">
-                    <div className="video-insighter-container rounded-r">
+                    <div className="video-insighter-container tw-rounded-r">
                       <video poster={introContentPoster}></video>
                     </div>
                   </div>

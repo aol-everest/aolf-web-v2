@@ -193,7 +193,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                   {totalAmountWillBeDeducted > 0 && (
                     <button className="btn-outline" onClick={payAndCancel}>
                       {loading && (
-                        <div className="loaded px-[58px] py-0">
+                        <div className="loaded tw-px-[58px] tw-py-0">
                           <div className="loader">
                             <div className="loader-inner ball-clip-rotate">
                               <div />
@@ -212,7 +212,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                       onClick={payAndCancel}
                     >
                       {loading && (
-                        <div className="loaded px-[58px] py-0">
+                        <div className="loaded tw-px-[58px] tw-py-0">
                           <div className="loader">
                             <div className="loader-inner ball-clip-rotate">
                               <div />
@@ -228,7 +228,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                     onClick={backToProfileAction}
                   >
                     {loading && (
-                      <div className="loaded px-[58px] py-0">
+                      <div className="loaded tw-px-[58px] tw-py-0">
                         <div className="loader">
                           <div className="loader-inner ball-clip-rotate">
                             <div />
@@ -302,7 +302,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
               <div className="btn-wrapper">
                 <button className="btn-secondary" onClick={backToProfileAction}>
                   {loading && (
-                    <div className="loaded px-[58px] py-0">
+                    <div className="loaded tw-px-[58px] tw-py-0">
                       <div className="loader">
                         <div className="loader-inner ball-clip-rotate">
                           <div />
@@ -315,7 +315,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                 {totalAmountWillBeDeducted > 0 && (
                   <button className="btn-outline" onClick={payAndCancel}>
                     {loading && (
-                      <div className="loaded px-[58px] py-0">
+                      <div className="loaded tw-px-[58px] tw-py-0">
                         <div className="loader">
                           <div className="loader-inner ball-clip-rotate">
                             <div />
@@ -329,7 +329,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                 {totalAmountWillBeDeducted === 0 && (
                   <a href="#" className="link link_dark" onClick={payAndCancel}>
                     {loading && (
-                      <div className="loaded px-[58px] py-0">
+                      <div className="loaded tw-px-[58px] tw-py-0">
                         <div className="loader">
                           <div className="loader-inner ball-clip-rotate">
                             <div />

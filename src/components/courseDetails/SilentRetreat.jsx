@@ -366,7 +366,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
-        <section className="about pb-[200px]">
+        <section className="about tw-pb-[200px]">
           <div className="container">
             <h2 className="about__title section-title text-center">
               About the Art of Living

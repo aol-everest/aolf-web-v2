@@ -20,7 +20,7 @@ export function Radiobox({
               <>
                 <input
                   id={id}
-                  className="cbx hidden"
+                  className="cbx tw-hidden"
                   type="checkbox"
                   {...rest}
                   checked={field.value === value}
@@ -55,7 +55,7 @@ export function Radiobox({
               <>
                 <input
                   id={id}
-                  className="cbx hidden"
+                  className="cbx tw-hidden"
                   type="checkbox"
                   {...rest}
                   checked={field.value.find((v) => v.key === value && v.value)}

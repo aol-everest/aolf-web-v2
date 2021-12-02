@@ -635,10 +635,10 @@ export const PaymentForm = ({
                   {formikProps.values.paymentMode ===
                     PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
                     <div
-                      className="order__card__payment-method paypal-info w-[150px]"
+                      className="order__card__payment-method paypal-info tw-w-[150px]"
                       data-method="paypal"
                     >
-                      <div className="paypal-info__sign-in relative z-0">
+                      <div className="paypal-info__sign-in tw-relative tw-z-0">
                         <PayPalButton
                           options={{
                             clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,

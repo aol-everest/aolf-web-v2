@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const Footer = () => {
   return (
-    <div className="text-center py-4 bg-[#282c34]">
+    <div className="text-center tw-py-4 tw-bg-[#282c34]">
       <a
         href="https://github.com/pankod"
         target="_blank"

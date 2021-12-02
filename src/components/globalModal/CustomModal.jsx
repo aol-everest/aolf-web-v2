@@ -20,7 +20,7 @@ export const CustomModal = () => {
     }
   };
   return (
-    <div className="profile-modal active show z-50">
+    <div className="profile-modal active show tw-z-50">
       <div
         className={classNames(`digital-member-join_journey show`, className)}
       >

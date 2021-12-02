@@ -38,7 +38,7 @@ const ChangeEmailStep = ({
           "d-none": !showSuccessMessage,
         })}
       >
-        <div className="success-message text-center p-2">
+        <div className="success-message text-center tw-p-2">
           <div className="icon-container">
             <FaCheckCircle />
           </div>
@@ -50,7 +50,7 @@ const ChangeEmailStep = ({
         <h3 className="course-join-card__title section-title">
           Change user name / email
         </h3>
-        <div className="form-group row p-5">
+        <div className="form-group row tw-p-5">
           <label
             htmlFor="staticEmail"
             className="col-sm-2 col-form-label d-none d-md-block"
@@ -61,7 +61,7 @@ const ChangeEmailStep = ({
             <input
               type="text"
               {...register("username")}
-              className={classNames("w-full", { validate: errors.username })}
+              className={classNames("tw-w-full", { validate: errors.username })}
               placeholder="Enter new email"
             />
             {errors.username && (
@@ -167,7 +167,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
   // }
 
   return (
-    <div className="profile-modal active show z-50">
+    <div className="profile-modal active show tw-z-50">
       <div className="digital-member-join_journey course-join-card show">
         <div className="close-modal new-btn-modal" onClick={closeDetailAction}>
           <div className="close-line"></div>
