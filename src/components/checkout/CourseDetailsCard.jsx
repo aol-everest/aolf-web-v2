@@ -71,20 +71,24 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
               />
             )}
         </div>
-        <div className="course__info info">
+        <div className="course__info info tw-max-w-[190px]">
           <ul className="info__list">
             <h2 className="info__title">Date:</h2>
             {moment
               .utc(eventStartDate)
               .isSame(moment.utc(eventEndDate), "month") && (
-              <li>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${moment
+                .utc(eventStartDate)
+                .format("MMMM DD")}-${moment
                 .utc(eventEndDate)
                 .format("DD, YYYY")}`}</li>
             )}
             {!moment
               .utc(eventStartDate)
               .isSame(moment.utc(eventEndDate), "month") && (
-              <li>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${moment
+                .utc(eventStartDate)
+                .format("MMMM DD")}-${moment
                 .utc(eventEndDate)
                 .format("MMMM DD, YYYY")}`}</li>
             )}
@@ -94,7 +98,10 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
             {timings &&
               timings.map((time) => {
                 return (
-                  <li key={time.startDate}>
+                  <li
+                    className="tw-text-sm tw-truncate tw-tracking-tighter"
+                    key={time.startDate}
+                  >
                     {`${moment.utc(time.startDate).format("dd")}: ${tConvert(
                       time.startTime,
                     )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
@@ -104,13 +111,25 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
           </ul>
           <ul className="info__list mt-3">
             <h2 className="info__title">Instructor(s):</h2>
-            {primaryTeacherName && <li>{primaryTeacherName}</li>}
-            {coTeacher1Name && <li>{coTeacher1Name}</li>}
-            {coTeacher2Name && <li>{coTeacher2Name}</li>}
+            {primaryTeacherName && (
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                {primaryTeacherName}
+              </li>
+            )}
+            {coTeacher1Name && (
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                {coTeacher1Name}
+              </li>
+            )}
+            {coTeacher2Name && (
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                {coTeacher2Name}
+              </li>
+            )}
           </ul>
           <ul className="info__list mt-3">
             <h2 className="info__title">Contact details:</h2>
-            <li>
+            <li className="tw-text-sm tw-truncate tw-tracking-tighter">
               <a href={`tel:${phone1}`}>
                 <NumberFormat
                   value={phone1}
@@ -120,7 +139,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
               </a>
             </li>
             {phone2 && (
-              <li>
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
                 <a href={`tel:${phone2}`}>
                   <NumberFormat
                     value={phone2}
@@ -130,14 +149,14 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 </a>
               </li>
             )}
-            <li>
+            <li className="tw-text-sm tw-truncate tw-tracking-tighter">
               <a href={`mailto:${email}`}>{email}</a>
             </li>
           </ul>
           {mode === COURSE_MODES.IN_PERSON && (
             <ul className="course-details__list">
               <h2 className="course-details__title">Location:</h2>
-              <li>
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
                 {" "}
                 {`${streetAddress1 || ""} ${streetAddress2 || ""}, ${
                   city || ""
