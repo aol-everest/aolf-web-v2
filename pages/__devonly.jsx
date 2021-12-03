@@ -1,8 +1,7 @@
-// import ReactJsonPrint from "react-json-print";
 import { withSSRContext } from "aws-amplify";
-import { api, isSSR } from "@utils";
+import { api } from "@utils";
 
-export async function getServerSideProps({ req, resolvedUrl, query }) {
+export async function getServerSideProps({ req }) {
   const { Auth } = withSSRContext({ req });
   try {
     const user = await Auth.currentAuthenticatedUser();
