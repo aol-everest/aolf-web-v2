@@ -34,7 +34,8 @@ export const ChangeProfile = ({
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
 
-  const editEmailAction = () => {
+  const editEmailAction = (e) => {
+    if (e) e.preventDefault();
     showModal(MODAL_TYPES.EMPTY_MODAL, {
       children: (handleModalToggle) => {
         return (
