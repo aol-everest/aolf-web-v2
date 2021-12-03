@@ -67,28 +67,28 @@ export const PastCourses = ({ data, isMobile }) => {
                 <th>
                   <button
                     type="button"
-                    className="table__sort-button"
+                    className="tw-flex table__sort-button"
                     data-order={workshopOrderAsc ? "asc" : "desc"}
                     onClick={handleOrderChange}
                   >
-                    <span className="table__sort-button__text">
-                      Completion Date
+                    <span className="table__sort-button__text">Start Date</span>
+                    <span className="tw-pt-1">
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="table__sort-button__icon"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9 3.44444C9 3.56481 8.95052 3.66898 8.85156 3.75694L5.35156 6.86806C5.2526 6.95602 5.13542 7 5 7C4.86458 7 4.7474 6.95602 4.64844 6.86806L1.14844 3.75694C1.04948 3.66898 1 3.56481 1 3.44444C1 3.32407 1.04948 3.21991 1.14844 3.13194C1.2474 3.04398 1.36458 3 1.5 3H8.5C8.63542 3 8.7526 3.04398 8.85156 3.13194C8.95052 3.21991 9 3.32407 9 3.44444Z"
+                          fill="#C4C5CC"
+                        ></path>
+                      </svg>
                     </span>
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 10 10"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="table__sort-button__icon"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M9 3.44444C9 3.56481 8.95052 3.66898 8.85156 3.75694L5.35156 6.86806C5.2526 6.95602 5.13542 7 5 7C4.86458 7 4.7474 6.95602 4.64844 6.86806L1.14844 3.75694C1.04948 3.66898 1 3.56481 1 3.44444C1 3.32407 1.04948 3.21991 1.14844 3.13194C1.2474 3.04398 1.36458 3 1.5 3H8.5C8.63542 3 8.7526 3.04398 8.85156 3.13194C8.95052 3.21991 9 3.32407 9 3.44444Z"
-                        fill="#C4C5CC"
-                      ></path>
-                    </svg>
                   </button>
                 </th>
               </tr>
