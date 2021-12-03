@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { api } from "@utils";
 import {
   SKYBreathMeditation,
@@ -10,6 +11,8 @@ import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { NextSeo } from "next-seo";
+import { useAuth } from "@contexts";
+import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import "swiper/swiper.min.css";
 import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
@@ -49,6 +52,25 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function CourseDetail({ data }) {
+  const router = useRouter();
+  const sendDataToGTM = useGTMDispatch();
+  const { profile } = useAuth();
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const { title, productTypeId, unitPrice, id: courseId } = data;
+
+    sendDataToGTM({
+      event: "workshopview",
+      viewType: "workshop",
+      requestType: "Detail",
+      amount: unitPrice,
+      title,
+      ctype: productTypeId,
+      user: profile,
+    });
+  }, [router.isReady]);
+
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
   let swiperOption = {

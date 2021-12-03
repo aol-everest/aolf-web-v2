@@ -9,6 +9,7 @@ import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
 import { ALERT_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
+import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -93,15 +94,63 @@ export const getServerSideProps = async (context) => {
 const Checkout = ({ workshop, profile }) => {
   const router = useRouter();
 
+  const sendDataToGTM = useGTMDispatch();
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
   useEffect(() => {
-    const { preRequisiteFailedReason = [] } = workshop || {};
+    if (!router.isReady) return;
+
+    const {
+      title,
+      name,
+      productTypeId,
+      unitPrice,
+      id: courseId,
+      preRequisiteFailedReason = [],
+      isPreRequisiteCompleted,
+    } = workshop;
+
     const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
-    if (!workshop.isPreRequisiteCompleted) {
+
+    const products = [
+      {
+        id: name,
+        name: title,
+        courseId: courseId,
+        category: "workshop",
+        ctype: productTypeId,
+        variant: "N/A",
+        brand: "Art of Living Foundation",
+        quantity: 1,
+        currencyCode: "USD",
+        price: unitPrice,
+      },
+    ];
+
+    sendDataToGTM({
+      page: `Art of Living ${title} workshop registration page`,
+      event: "eec.checkout",
+      viewType: "workshop",
+      title: title,
+      ctype: productTypeId,
+      amount: unitPrice,
+      requestType: "Detail",
+      hitType: "paymentpage",
+      user: profile.id,
+      ecommerce: {
+        checkout: {
+          actionField: {
+            step: 1,
+          },
+          products: products,
+        },
+      },
+    });
+
+    if (!isPreRequisiteCompleted) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big",
         title: "Retreat Prerequisite",
@@ -125,7 +174,7 @@ const Checkout = ({ workshop, profile }) => {
         ),
       });
     }
-  }, []);
+  }, [router.isReady]);
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
