@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import Amplify from "aws-amplify";
 import { Hub } from "@aws-amplify/core";
 import dynamic from "next/dynamic";
-import Head from "next/head";
-import { withSSRContext } from "aws-amplify";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { api, Compose } from "@utils";
+import { api, Compose, isSSR, Clevertap } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { Layout } from "@components";
@@ -57,15 +55,28 @@ function App({ Component, pageProps, userInfo = {} }) {
             profile: res,
           };
           setUser(userInfo);
+          Clevertap.profile({
+            Site: {
+              Name: userInfo.name, // String
+              Identity: userInfo.id, // String or number
+              Email: userInfo.email, // Email address of the user
+              Phone: userInfo.personMobilePhone, // Phone (with the country code)
+            },
+          });
           break;
         }
         case "signOut": {
           setUser({});
+          Clevertap.logout();
         }
       }
     });
-    async function fetchData() {
-      // You can await here
+
+    if (!isSSR) {
+      Clevertap.initialize();
+    }
+
+    async function fetchProfile() {
       const user = await Amplify.Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
       const res = await api.get({
@@ -78,40 +89,45 @@ function App({ Component, pageProps, userInfo = {} }) {
         profile: res,
       };
       setUser(userInfo);
+      Clevertap.profile({
+        Site: {
+          Name: userInfo.name, // String
+          Identity: userInfo.id, // String or number
+          Email: userInfo.email, // Email address of the user
+          Phone: userInfo.personMobilePhone, // Phone (with the country code)
+        },
+      });
     }
-    fetchData();
+    fetchProfile();
   }, []);
 
   const queryClient = new QueryClient();
   const gtmParams = { id: process.env.NEXT_PUBLIC_GTM_ID };
   return (
-    <>
-      <DefaultSeo {...SEO} />
-
-      <GTMProvider state={gtmParams}>
-        <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <AuthProvider userInfo={user}>
-              <Compose
-                components={[
-                  GlobalModal,
-                  GlobalAlert,
-                  GlobalAudioPlayer,
-                  GlobalVideoPlayer,
-                  GlobalLoading,
-                ]}
-              >
-                <Layout hideHeader={Component.hideHeader}>
-                  <TopProgressBar />
-                  <Component {...pageProps} />
-                  <ReactQueryDevtools initialIsOpen={false} />
-                </Layout>
-              </Compose>
-            </AuthProvider>
-          </Hydrate>
-        </QueryClientProvider>
-      </GTMProvider>
-    </>
+    <GTMProvider state={gtmParams}>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <AuthProvider userInfo={user}>
+            <Compose
+              components={[
+                GlobalModal,
+                GlobalAlert,
+                GlobalAudioPlayer,
+                GlobalVideoPlayer,
+                GlobalLoading,
+              ]}
+            >
+              <Layout hideHeader={Component.hideHeader}>
+                <DefaultSeo {...SEO} />
+                <TopProgressBar />
+                <Component {...pageProps} />
+                <ReactQueryDevtools initialIsOpen={false} />
+              </Layout>
+            </Compose>
+          </AuthProvider>
+        </Hydrate>
+      </QueryClientProvider>
+    </GTMProvider>
   );
 }
 

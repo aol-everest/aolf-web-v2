@@ -3,6 +3,7 @@ export { tConvert } from "./tConvert";
 export { priceCalculation } from "./priceCalculation";
 export { Compose } from "./compose";
 export { buildShareUrl, isInternetExplorer } from "./addToCalendar";
+export { Clevertap } from "./clevertap";
 
 export const isSSR = !(
   typeof window !== "undefined" && window.document?.createElement

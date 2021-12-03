@@ -18,7 +18,7 @@ import {
   ProfilePicCrop,
   PastCourses,
 } from "@components/profile";
-import { api } from "@utils";
+import { api, Clevertap } from "@utils";
 import { ALERT_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { useGlobalAlertContext } from "@contexts";
@@ -127,6 +127,7 @@ const Profile = ({ profile, tab }) => {
   const logoutAction = async () => {
     setLoading(true);
     await Auth.signOut();
+    Clevertap.logout();
     setLoading(false);
     router.push("/us");
   };
