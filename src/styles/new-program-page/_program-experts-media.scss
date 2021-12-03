@@ -1,0 +1,30 @@
+@media screen and (max-width: 1199px) {
+	.program-experts {
+		padding: 90px 0;
+	}
+}
+
+@media screen and (max-width: 991px) {
+	.program-experts {
+		padding: 60px 0 70px;
+
+		&__title {
+			font-size: 28px;
+			line-height: 40px;
+		}
+
+		&__text {
+			font-size: 18px;
+			line-height: 28px;
+
+			&_small {
+				font-size: 16px;
+				line-height: 22px;
+			}
+		}
+	
+		&__image {
+			margin-top: 30px;
+		}
+	}
+}

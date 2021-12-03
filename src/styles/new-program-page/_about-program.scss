@@ -1,0 +1,160 @@
+.about-program {
+	position: relative;
+
+	&__image {
+		position: absolute;
+		z-index: -1;
+
+		img {
+			object-fit: cover;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
+		}
+	}
+
+	&__image, 
+	&__image img, 
+	&__image:after {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__main {
+		padding: 140px 0;
+		color: #1E2232;
+
+		&-type {
+			font-style: normal;
+			font-weight: 500;
+			font-size: 18px;
+			line-height: 24px;
+			text-transform: capitalize;
+			margin-bottom: 8px;
+		}
+
+		&-name {
+			font-weight: 600;
+			font-size: 56px;
+			line-height: 73px;
+			margin: 0;
+
+			&_thin {
+				font-weight: 400;
+				font-size: 48px;
+				line-height: 60px;
+			}
+		}
+
+		&-list {
+			padding: 48px 0;
+	
+			li {
+				font-size: 18px;
+				line-height: 24px;
+	
+				&:not(:last-child) {
+					margin-bottom: 16px;
+				}
+
+				&:before {
+					display: inline-block;
+					content: '';
+					width: 20px;
+					height: 20px;
+					background-image: url('/img/CheckCircle.svg');
+					margin-right: 16px;
+				}
+			}
+
+			&_small {
+				padding: 15px 0 40px;
+			}
+		}
+
+		&-button {
+			width: 272px;
+			border-radius: 8px !important;
+			justify-content: center;
+		}
+	}
+
+	&__details {
+		background-color: white;
+		box-shadow: 0px 6px 60px rgba(50, 25, 60, 0.1);
+		border-radius: 12px;
+		padding: 40px;
+
+		&_small {
+			padding: 30px;
+		}
+
+		&-title {
+			font-weight: bold;
+			font-size: 32px;
+			line-height: 38px;
+			color: #1E2232;
+			text-align: center;
+			margin-bottom: 28px;
+
+			&_small {
+				font-size: 22px;
+				line-height: 30px;
+				text-align: left;
+				margin-bottom: 10px;
+			}
+		}
+
+		.details-table {
+			font-size: 16px;
+			line-height: 22px;
+
+			&__row {
+				display: flex;
+				margin-bottom: 12px;
+			}
+
+			&__column {
+				&_bold {
+					font-weight: bold;
+				}
+
+				&:first-child {
+					width: 30%;
+					margin-right: 16px;
+				}
+
+				&:last-child {
+					width: 70%;
+				}
+			}
+		}
+
+		.details-info {
+			color: $grey;
+			font-size: 16px;
+			line-height: 22px;
+
+			&__item:not(:last-child) {
+				margin-bottom: 10px;
+			}
+
+			&__text {
+				&_bold {
+					font-weight: bold;
+				}
+			}
+		}
+	}
+
+	&.volunteer-program {
+		.about-program__main {
+			padding: 120px 0 200px;
+		}
+	}
+}

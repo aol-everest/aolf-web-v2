@@ -22,7 +22,7 @@
             }
             .collection-video-details {
               padding: 20px;
-              img.play,
+              img.play ,
               img.pause {
                 display: none;
               }
@@ -50,6 +50,7 @@
               .read-more {
                 display: none;
               }
+
             }
           }
         }
@@ -115,7 +116,7 @@
       }
       .audioplayer-playpause {
         display: inline-block;
-        transform: translateY(-13px);
+        transform: translateY(-13px)
       }
       .player-song {
         display: inline-block;
@@ -170,7 +171,7 @@
           font-size: 28px;
           line-height: 40px;
           color: #31364e;
-          font-family: "Lora";
+          font-family: 'Lora';
           margin: 30px 0 10px;
         }
         span {
@@ -244,7 +245,7 @@
       }
     }
     .search_course_form_mobile {
-      .filter--box {
+      .filter--box  {
         max-width: none;
         padding: 0px;
       }

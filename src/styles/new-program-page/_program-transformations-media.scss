@@ -1,0 +1,55 @@
+@media screen and (max-width: 1199px) {
+	.program-transformations {
+		padding: 80px 0;
+
+		&__slider {
+			.transformation {
+				width: 375px;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 991px) {
+	.program-transformations {
+		padding: 60px 0 80px;
+
+		&__title {
+			margin-bottom: 30px;
+		}
+
+		&__slider {
+			&-button {
+				display: none;
+			}
+
+			.transformation {
+				width: 315px;
+
+				.author {
+					margin-bottom: 15px;
+
+					&__image {
+						width: 60px;
+						height: 60px;
+
+						&:after {
+							font-size: 50px;
+							line-height: 59px;
+						}
+					}
+
+					&__name {
+						font-size: 18px;
+						line-height: 28px;
+					}
+				}
+
+				&__text {
+					font-size: 18px;
+					line-height: 28px;
+				}
+			}
+		}
+	}
+}

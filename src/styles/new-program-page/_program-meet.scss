@@ -1,0 +1,126 @@
+.program-meet {
+	position: relative;
+
+	&__container {
+		padding-top: 100px;
+		padding-bottom: 100px;
+	}
+	
+	&__image {
+		position: absolute;
+		z-index: -1;
+
+		img {
+			object-fit: cover;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	}
+	
+	&__image, 
+	&__image img, 
+	&__image:after {
+		width: 100%;
+		height: 100%;
+	}
+
+	&_inspiration {
+		.program-meet__image:after {
+			background: linear-gradient(0, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
+		}
+	}
+
+	&_toolkit {
+		.program-meet__image:after {
+			background: linear-gradient(140deg, #EDF5FC 7.5%, rgba(237, 245, 252, 0) 70%);
+		}
+	}
+
+	&__title,
+	&__subtitle,
+	&__text {
+		color: $text-color;
+	}
+
+	&__title,
+	&__subtitle {
+		font-family: Lora, serif;
+	}
+
+	&__title {
+		margin: 0 0 15px;
+	}
+
+	&__subtitle {
+		margin: 23px 0 30px;
+	}
+
+	&__text {
+		margin: 0 0 15px;
+	}
+
+	&__quote {
+		max-width: 697px;
+		margin: 10px 0 15px;
+		padding: 15px;
+		border-radius: 12px;
+		background-color: transparentize(white, 0.4)
+	}
+
+	.program-meet-card {
+		position: relative;
+		border: 1px solid $border-color;
+		border-radius: 12px;
+		background-color: white;
+		padding: 25px 20px 25px 100px;
+
+		&__icon {
+			position: absolute;
+			top: 25px;
+			left: 20px;
+			width: 60px;
+			height: 60px;
+		}
+
+		&__title {
+			font-size: 20px;
+			line-height: 22px;
+			margin-bottom: 10px;
+
+			&_strong {
+				text-transform: uppercase;
+				font-weight: 600;
+			}
+		}
+
+		&__text {
+			font-size: 16px;
+			line-height: 22px;
+		}
+	}
+
+	&__hint {
+		position: relative;
+		color: white;
+		padding-left: 15px;
+		font-size: 16px;
+		line-height: 22px;
+
+		&:before {
+			content: '*';
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	}
+
+	&__button {
+		justify-content: center;
+		margin-top: 16px;
+	}
+}

@@ -70,3 +70,124 @@ h6 {
   line-height: 1.38;
   letter-spacing: 0.3px;
 }
+
+/*
+ * New typography toolkit
+ */
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  color: $text-color;
+  font-weight: 400;
+
+  &_m {
+    font-weight: 500;
+  }
+
+  &_sb {
+    font-weight: 600;
+  }
+}
+
+.h1,
+.h2,
+.h3 {
+  font-family: Lora, serif;
+}
+
+.h1 {
+  font-size: 48px;
+  line-height: 60px;
+}
+
+.h2 {
+  font-size: 36px;
+  line-height: 48px;
+}
+
+.h3 {
+  font-size: 28px;
+  line-height: 40px;
+}
+
+.h4,
+.h5,
+.h6 {
+  font-family: Work Sans, sans-serif;
+}
+
+.h4 {
+  font-size: 26px;
+  line-height: 34px;
+}
+
+.h5 {
+  font-size: 24px;
+  line-height: 34px;
+}
+
+.h6 {
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.p1,
+.p2,
+.p3,
+.p4,
+.p5,
+.p6 {
+  color: $text-color;
+  font-family: Work Sans, sans-serif;
+  font-weight: 400;
+
+  &_m {
+    font-weight: 500;
+  }
+
+  &_sb {
+    font-weight: 600;
+  }
+}
+
+.p1 {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.p2 {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.p3 {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.p4 {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.p5 {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.caption {
+  color: $text-color;
+  font-family: Work Sans, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 22px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+
+  &_sm {
+    font-size: 16px;
+  }
+}

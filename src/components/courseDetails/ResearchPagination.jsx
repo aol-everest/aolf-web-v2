@@ -57,7 +57,8 @@ export const ResearchPagination = () => {
     <>
       <div className="d-lg-block d-none col-10 m-auto">
         <p className="research__quote">
-          {renderHTML(researchImgItems[activeIndex].quote)}
+          {researchImgItems[activeIndex].quote &&
+            renderHTML(researchImgItems[activeIndex].quote)}
         </p>
         <div className="research__block">
           {researchImgItems.map((research, index) => {

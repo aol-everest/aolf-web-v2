@@ -1569,3 +1569,7 @@ p {
     outline: none;
   }
 }
+
+body._lock {
+  overflow: hidden;
+}

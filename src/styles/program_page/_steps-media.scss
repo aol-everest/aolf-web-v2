@@ -6,7 +6,7 @@
 
 @media screen and (max-width: 991px) {
   .steps {
-    background-image: url("/img/easy-bg-mobile.png");
+    background-image: url('/img/easy-bg-mobile.png');
     padding: 60px 0;
 
     &__title {
@@ -15,6 +15,7 @@
     }
 
     &__step {
+
       &__number {
         padding: 5px 11px;
       }

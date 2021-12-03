@@ -1,8 +1,9 @@
 # aolf-web
 
-![Heroku](https://heroku-badge.herokuapp.com/?app=aolf-web-dev) (Dev)
-![Heroku](https://heroku-badge.herokuapp.com/?app=aolf-web-qa) (Qa)
-![Heroku](https://heroku-badge.herokuapp.com/?app=aolf-web) (Prod)
+![Heroku](https://heroku-badge.herokuapp.com/?app=aolf-web-dev) (Dev)\
+![Heroku](https://heroku-badge.herokuapp.com/?app=aolf-web-qa) (Qa)\
+![Heroku](https://heroku-badge.herokuapp.com/?app=aolf-web) (Prod)\
+
 The next.js Web project for the AOLF web application.
 
 ## Prerequisites

@@ -82,6 +82,7 @@
           font-size: 24px;
           margin-bottom: 30px;
         }
+
       }
 
       .btn-secondary {
@@ -96,6 +97,24 @@
 
           p {
             font-size: 14px;
+          }
+        }
+      }
+    }
+
+    &.volunteer-program {
+      padding: 60px 0 80px;
+
+      .powerful {
+        &__title {
+          br {
+            display: none;
+          }
+        }
+
+        &__block {
+          &-titles {
+            padding: 35px 0 30px;
           }
         }
       }

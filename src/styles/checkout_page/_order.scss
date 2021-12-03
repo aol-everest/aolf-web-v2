@@ -29,6 +29,7 @@
       justify-content: space-between;
       padding: 0;
       margin-bottom: 20px;
+      white-space: nowrap;
 
       &__title {
         font-family: Work Sans, sans-serif;
@@ -173,7 +174,6 @@
 
         label {
           span.discount {
-            font-weight: 400;
             color: #fa5a67;
           }
         }
@@ -282,6 +282,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     margin-top: 40px;
   }
 
@@ -324,7 +325,7 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 20px 30px;
+      padding: 15px 20px;
       margin: 0;
       font-family: Work Sans, sans-serif;
       font-size: 16px;
@@ -341,7 +342,7 @@
       }
 
       &_main {
-        padding: 15px 30px;
+        padding: 13px 20px;
         background-color: rgba(232, 242, 252, 0.5);
         font-weight: 600;
       }
@@ -425,7 +426,7 @@
     }
 
     &__details {
-      padding: 20px 30px 20px 30px;
+      padding: 20px;
 
       &_v2 {
         padding: 20px 30px 20px 45px;
@@ -510,7 +511,7 @@
 
     &__payment {
       width: 100%;
-      padding: 20px 30px;
+      padding: 15px 20px;
       border-top: 1px solid #e8f2fc;
 
       &__title {
@@ -533,7 +534,6 @@
           justify-content: space-between;
 
           span.discount {
-            font-weight: 400;
             color: #fa5a67;
           }
         }
@@ -550,7 +550,7 @@
             line-height: 1.4;
             color: $blue;
             text-transform: uppercase;
-            margin: 12px 0 10px -30px;
+            margin: 12px 0 10px -20px;
             border-radius: 0 4px 4px 0;
           }
         }

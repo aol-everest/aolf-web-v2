@@ -64,10 +64,11 @@
 
   &:not(:last-child) {
     span {
+
       &::after {
         position: absolute;
-        content: "";
-        background-image: url("/img/line.png");
+        content: '';
+        background-image: url('/img/line.png');
         background-repeat: no-repeat;
         width: 1px;
         height: 100%;
@@ -77,4 +78,5 @@
       }
     }
   }
+
 }

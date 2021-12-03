@@ -1,107 +1,107 @@
 .table {
-	overflow: hidden;
-	border-radius: 8px;
+  overflow: hidden;
+  border-radius: 8px;
 
-	thead th,
-	tbody td {
-		font-family: 'Work Sans', sans-serif;
-		border-top: none;
-		border-bottom: 1px solid $border-color;
+  thead th,
+  tbody td {
+    font-family: "Work Sans", sans-serif;
+    border-top: none;
+    border-bottom: 1px solid $border-color;
 
-		&:first-child {
-			padding-left: 20px;
-		}
+    &:first-child {
+      padding-left: 20px;
+    }
 
-		&:last-child {
-			padding-right: 20px;
-		}
-	}
+    &:last-child {
+      padding-right: 20px;
+    }
+  }
 
-	thead {
-		th {
-			background-color: $backgrounds;
-			padding: 10px 15px;
-		}
+  thead {
+    th {
+      background-color: $backgrounds;
+      padding: 10px 15px;
+    }
 
-		th,
-		.table__sort-button {
-			white-space: nowrap;
-			font-weight: 600;
-			font-size: 12px;
-			line-height: 22px;
-			letter-spacing: 0.5px;
-			text-transform: uppercase;
-			color: #9598A6;
-		}
-	}
+    th,
+    .table__sort-button {
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 22px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #9598a6;
+    }
+  }
 
-	tbody td {
-		font-weight: 500;
-		font-size: 14px;
-		line-height: 18px;
-		color: $text-color;
-		padding: 15px;
-	}
+  tbody td {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: $text-color;
+    padding: 15px;
+  }
 
-	&__sort-button {
-		background: none;
-		border: none;
-		padding: 0;
+  &__sort-button {
+    background: none;
+    border: none;
+    padding: 0;
 
-		&__text {
-			transition: color .25s ease-in-out;
-			margin-right: 5px;
-		}
+    &__text {
+      transition: color 0.25s ease-in-out;
+      margin-right: 5px;
+    }
 
-		&__icon {
-			opacity: 0;
-			transition-property: opacity, transform;
-			transition-duration: .25s;
-			transition-timing-function: ease-in-out;
-			width: 10px;
-			height: 10px;
+    &__icon {
+      opacity: 0;
+      transition-property: opacity, transform;
+      transition-duration: 0.25s;
+      transition-timing-function: ease-in-out;
+      width: 10px;
+      height: 10px;
 
-			path {
-				transition: fill .25s ease-in-out;
-			}
-		}
+      path {
+        transition: fill 0.25s ease-in-out;
+      }
+    }
 
-		&[data-order=asc],
-		&[data-order=desc] {
-			.table__sort-button__icon {
-				opacity: 1;
-			}
-		}
+    &[data-order="asc"],
+    &[data-order="desc"] {
+      .table__sort-button__icon {
+        opacity: 1;
+      }
+    }
 
-		&[data-order=asc] {
-			.table__sort-button__icon {
-				transform: rotate(-180deg);
-			}
-		}
+    &[data-order="asc"] {
+      .table__sort-button__icon {
+        transform: rotate(-180deg);
+      }
+    }
 
-		&:hover {
-			.table__sort-button__text {
-				color: $text-color;
-			}
+    &:hover {
+      .table__sort-button__text {
+        color: $text-color;
+      }
 
-			.table__sort-button__icon path {
-				fill: $text-color;
-			}
-		}
+      .table__sort-button__icon path {
+        fill: $text-color;
+      }
+    }
 
-		&:focus {
-			outline: none;
-		}
-	}
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 @media screen and (min-width: 992px) {
-	.table {
-		thead th,
-		tbody td {
-			&:last-child {
-				width: 170px;
-			}
-		}
-	}
+  .table {
+    thead th,
+    tbody td {
+      &:last-child {
+        width: 170px;
+      }
+    }
+  }
 }

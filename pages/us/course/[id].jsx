@@ -6,6 +6,7 @@ import {
   SahajSamadhi,
   SilentRetreat,
   SriSriYoga,
+  VolunteerTrainingProgram,
 } from "@components/courseDetails";
 import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
@@ -128,6 +129,9 @@ export default function CourseDetail({ data }) {
     0;
   const isSriSriYogaMeditationType =
     COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(data.productTypeId) >= 0;
+  const isVolunteerTrainingProgram =
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(data.productTypeId) >=
+    0;
 
   const props = {
     data,
@@ -137,6 +141,7 @@ export default function CourseDetail({ data }) {
   return (
     <>
       <NextSeo title={data.title} />
+      {isVolunteerTrainingProgram && <VolunteerTrainingProgram {...props} />}
       {isSriSriYogaMeditationType && <SriSriYoga {...props} />}
       {isSKYType && <SKYBreathMeditation {...props} />}
       {isSilentRetreatType && <SilentRetreat {...props} />}

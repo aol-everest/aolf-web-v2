@@ -188,4 +188,40 @@
       margin-bottom: 60px;
     }
   }
+
+  &.volunteer-program {
+    background-image: url('/img/volunteer-powerful-bg.png');
+    background-position-y: top;
+
+    .powerful {
+      &__title {
+        text-align: center;
+        margin: 0 0 40px;
+      }
+
+      &__block {
+        padding: 0;
+
+        &-titles {
+          padding: 40px 0;
+        }
+
+        &-caption {
+          margin: 0;
+
+          &:not(:last-child) {
+            margin-bottom: 20px;
+          }
+        }
+
+        .bottom-box {
+          padding: 15px;
+        }
+
+        .btn-secondary {
+          width: auto !important;
+        }
+      }
+    }
+  }
 }
