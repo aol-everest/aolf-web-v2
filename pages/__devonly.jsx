@@ -30,10 +30,10 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
 function DevOnly({ profile = {} }) {
   return (
     <div className="tw-bg-gray-200 tw-text-white tw-text-sm">
-      <div className="tw-bg-gray-500 tw-px-1 tw-py-3 tw-text-yellow-300">
+      <div className="tw-bg-gray-500 tw-px-4 tw-py-3 tw-text-yellow-300">
         <strong>Debug</strong>
       </div>
-      <pre className="tw-block tw-px-1 tw-py-3 tw-m-0 tw-overflow-scroll">
+      <pre className="tw-block tw-px-4 tw-py-3 tw-m-0 tw-overflow-scroll">
         {JSON.stringify(profile, null, 2)}
       </pre>
     </div>
