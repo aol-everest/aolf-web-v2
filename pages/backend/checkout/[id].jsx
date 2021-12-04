@@ -57,7 +57,7 @@ export const getServerSideProps = async (context) => {
 
 const BackEndCheckout = ({ workshop, profile }) => {
   return (
-    <main className="body_wrapper backend-reg-body">
+    <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">
       <div className="container">
         <div className="row">
           <Elements

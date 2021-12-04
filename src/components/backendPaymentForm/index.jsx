@@ -269,7 +269,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
       <div className="col-md-6 col-sm-6 col-xs-12 wlc_left_wrap">
         <div className="row">
           <div className="col-sm-12">
-            <h2 className="title">{title}</h2>
+            <h2 className="title tw-text-5xl">{title}</h2>
             {!isGenericWorkshop && (
               <div className="row">
                 <div className="col-sm-12 col-12 datetime-box">
@@ -567,7 +567,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
               <form
                 name="workshopEnroll"
                 onSubmit={handleSubmit}
-                className="workshopEnroll"
+                className="tw-bg-white tw-p-4 tw-shadow-lg"
               >
                 <div className="row">
                   <div className="col-sm-12 heading_info">
