@@ -502,5 +502,5 @@ const PrivacyPolicy = () => {
     </main>
   );
 };
-
+PrivacyPolicy.hideHeader = true;
 export default PrivacyPolicy;

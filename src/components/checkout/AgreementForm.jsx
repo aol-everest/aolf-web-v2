@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Field, ErrorMessage } from "formik";
 import classNames from "classnames";
 import renderHTML from "react-render-html";
