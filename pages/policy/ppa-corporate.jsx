@@ -39,9 +39,13 @@ const PPACorporate = () => {
         <article className="container">
           <div className="tandc">
             <center>
-              <h4>Art of Living Foundation – USA</h4>
+              <h4 className="tw-text-2xl tw-font-bold">
+                Art of Living Foundation – USA
+              </h4>
 
-              <h5>ART OF LIVING TERMS OF SERVICE FOR USERS</h5>
+              <h5 className="tw-text-xl tw-font-semibold">
+                ART OF LIVING TERMS OF SERVICE FOR USERS
+              </h5>
               <br />
             </center>
             <br />

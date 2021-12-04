@@ -10,8 +10,10 @@ const PrivacyPolicy = () => {
         <article className="container">
           <div className="tandc">
             <center>
-              <h4>Art of Living Foundation – USA</h4>
-              <h5>Privacy Policy</h5>
+              <h4 className="tw-text-2xl tw-font-bold">
+                Art of Living Foundation – USA
+              </h4>
+              <h5 className="tw-text-xl tw-font-semibold">Privacy Policy</h5>
               <br />
               <p>
                 <strong>Last updated on 17 December 2018</strong>
