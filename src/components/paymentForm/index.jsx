@@ -728,6 +728,7 @@ export const PaymentForm = ({
                   isCourseOptionRequired={isCourseOptionRequired}
                   isUsableCreditAvailable={isUsableCreditAvailable}
                   UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
+                  values={values}
                 />
                 <CourseDetailsCard workshop={workshop} />
                 <PostCostDetailsCard
