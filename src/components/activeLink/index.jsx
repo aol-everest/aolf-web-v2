@@ -10,7 +10,6 @@ export const ActiveLink = ({
   ...props
 }) => {
   const { asPath } = useRouter();
-  console.log(asPath);
   const child = Children.only(children);
   const childClassName = child.props.className || "";
 

@@ -33,7 +33,6 @@ function Token() {
 
     async function fetchData() {
       try {
-        console.log(router.query);
         await api.get({
           path: "change-email-confirm",
           param: router.query,

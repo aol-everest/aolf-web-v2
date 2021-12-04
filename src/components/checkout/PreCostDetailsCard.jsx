@@ -51,11 +51,7 @@ export const PreCostDetailsCard = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
-  console.log(
-    isInstalmentAllowed,
-    isComboDetailAvailable,
-    isCourseOptionRequired,
-  );
+
   if (
     !isInstalmentAllowed &&
     !isComboDetailAvailable &&

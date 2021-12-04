@@ -324,12 +324,6 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     filterCount++;
   }
 
-  console.log(
-    data,
-    isFetchingNextPage,
-    isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage,
-  );
-
   return (
     <main className="meetsup-filter">
       <NextSeo title="Meditations" />

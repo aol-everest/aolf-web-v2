@@ -30,7 +30,6 @@ function Token() {
       switch (event) {
         case "customOAuthState": {
           const originalUrl = decodeURIComponent(data);
-          console.log(originalUrl);
           router.replace(originalUrl);
           break;
         }

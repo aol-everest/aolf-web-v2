@@ -203,7 +203,6 @@ const Meetup = ({ allMeetupMaster, authenticated }) => {
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { latitude, longitude, error: geoLocationError } = useGeolocation();
-  console.log(latitude, longitude, geoLocationError);
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
@@ -256,7 +255,6 @@ const Meetup = ({ allMeetupMaster, authenticated }) => {
   };
 
   const onFilterChange = (field) => (value) => {
-    console.log(field, value);
     switch (field) {
       case "meetupTypeFilter":
         setMeetupTypeFilter(value);
@@ -373,13 +371,7 @@ const Meetup = ({ allMeetupMaster, authenticated }) => {
       !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
     const isBasicMember =
       !!userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
-    console.log(
-      isDigitalMember,
-      isPremiumMember,
-      isBasicMember,
-      memberPrice,
-      unitPrice,
-    );
+
     if (
       ((isDigitalMember || isPremiumMember || isBasicMember) &&
         memberPrice === 0) ||
