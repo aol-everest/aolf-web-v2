@@ -196,13 +196,14 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
   );
 };
 
-const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
+const Meetup = ({ allMeetupMaster, authenticated }) => {
   const seed = useUIDSeed();
   const { profile } = useAuth();
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { latitude, longitude, error: geoLocationError } = useGeolocation();
+  console.log(latitude, longitude, geoLocationError);
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
@@ -551,6 +552,7 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
         timeZoneFilter,
         instructorFilter,
         activeFilterType,
+        locationFilter,
       },
     ],
     async ({ pageParam = 1 }) => {
@@ -595,6 +597,14 @@ const Meetup = ({ meetups, allMeetupMaster, authenticated }) => {
           ...param,
           sdate: startDate,
           eDate: endDate,
+        };
+      }
+      if (locationFilter) {
+        const { lat, lng } = locationFilter;
+        param = {
+          ...param,
+          lat,
+          lng,
         };
       }
 

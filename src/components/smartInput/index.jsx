@@ -20,6 +20,7 @@ export const SmartInput = ({
     if (event.target.value) {
       setIsHidden(false);
     }
+    setSearchKey(event.target.value);
   };
 
   const closeHandlerInner = (data) => (event) => {

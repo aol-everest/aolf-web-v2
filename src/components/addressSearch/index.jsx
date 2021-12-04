@@ -5,10 +5,10 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 
-const scriptOptions = {
-  googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
-  libraries: ["places"],
-};
+// const scriptOptions = {
+//   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
+//   libraries: ["places"],
+// };
 
 export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
   const [address, setAddress] = useState("");
@@ -63,15 +63,13 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
         }}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-          <div className="search-bar-container">
-            <div>
-              <input
-                className={classNames("custom-input", "instructor-input")}
-                {...getInputProps({
-                  placeholder,
-                })}
-              />
-            </div>
+          <div className="smart-input">
+            <input
+              className="custom-input tw-mx-auto tw-mt-1 tw-mb-0 tw-w-[85%]"
+              {...getInputProps({
+                placeholder,
+              })}
+            />
             {suggestions.length > 0 && (
               <div>
                 {suggestions.map((suggestion) => {
