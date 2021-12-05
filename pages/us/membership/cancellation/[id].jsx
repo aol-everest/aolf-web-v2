@@ -3,7 +3,6 @@ import { api } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import { useQueryString } from "@hooks";
 import Style from "./MembershipCancellation.module.scss";
 
 export async function getServerSideProps({ req, resolvedUrl, query }) {
@@ -32,14 +31,12 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
     };
   }
   try {
-    const user = await Auth.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
     const result = await api.get({
       path: "cancelSubscriptionStep1",
       param: {
         id: query.id,
       },
-      token,
+      token: props.token,
     });
     props = {
       ...props,
@@ -47,13 +44,13 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
     };
   } catch (err) {
     console.error(err);
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login?next=${resolvedUrl}`,
-      },
-      props: {},
-    };
+    // return {
+    //   redirect: {
+    //     permanent: false,
+    //     destination: `/us/profile?request=1`,
+    //   },
+    //   props: {},
+    // };
   }
   return { props };
 }
@@ -62,7 +59,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { id: subscriptionId } = router.query;
-  const { data, status, error: errorMessage, isError } = cancelSubscription;
+  const { data } = cancelSubscription;
   const { totalAmountWillBeDeducted } = data || [];
 
   const { subscriptions = [] } = profile || {};
@@ -72,7 +69,16 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   });
 
   if (!userSubscriptions) {
-    return <div>Invalid subscription Id</div>;
+    return (
+      <div className="not-found">
+        <div>
+          <h1 className="not-found-heading">500</h1>
+          <div className="not-found-sub-heading-container">
+            <h2 className="not-found-sub-heading">Invalid subscription Id</h2>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const backToProfileAction = (e) => {
@@ -82,7 +88,8 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
     });
   };
 
-  const payAndCancel = async (subsciptionId) => {
+  const payAndCancel = async (e) => {
+    if (e) e.preventDefault();
     if (loading) {
       return false;
     }
@@ -90,18 +97,14 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
     setLoading(true);
 
     try {
-      if (!subsciptionId) {
-        throw new Error("Invalid subsciptionId Id");
-      }
       const {
-        data,
         status,
         error: errorMessage,
         isError,
       } = await api.post({
         path: "cancelSubscriptionStep2",
         body: {
-          id: subsciptionId,
+          id: subscriptionId,
           amountDue: totalAmountWillBeDeducted,
         },
       });
@@ -349,6 +352,6 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   );
 };
 
-MembershipCancellation.hideHeader = true;
+MembershipCancellation.hideHeader = false;
 
 export default MembershipCancellation;
