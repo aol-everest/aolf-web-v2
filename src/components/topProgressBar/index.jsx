@@ -15,11 +15,11 @@ function load() {
   }
 
   state = "loading";
+  if (loader.showLoader) {
+    loader.showLoader();
+  }
 
   timer = setTimeout(function () {
-    if (loader.showLoader) {
-      loader.showLoader();
-    }
     NProgress.start();
   }, delay); // only show progress bar if it takes longer than the delay
 }

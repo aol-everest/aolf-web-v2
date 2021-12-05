@@ -4,7 +4,7 @@ import { FadeInAnimation } from "@components";
 
 export const GlobalLoading = ({ children }) => {
   const [store, setStore] = useState();
-  const { show, playerProps } = store || {};
+  const { show } = store || {};
 
   const showLoader = (props) => {
     setStore({
@@ -27,7 +27,7 @@ export const GlobalLoading = ({ children }) => {
       return null;
     }
     return (
-      <FadeInAnimation className="tw-t-0 tw-w-full tw-h-full ftw-ixed tw-z-50">
+      <FadeInAnimation className="tw-top-0 tw-w-full tw-h-full tw-fixed tw-z-50">
         <div className="cover-spin"></div>
       </FadeInAnimation>
     );
