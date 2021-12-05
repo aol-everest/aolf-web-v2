@@ -400,9 +400,9 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
           </Swiper>
         </section>
 
-        <section className="details">
+        {/* <section className="details">
           <div className="container"></div>
-        </section>
+        </section> */}
       </main>
       <HideOn divID="third" showOnPageInit={false}>
         <CourseBottomCard workshop={data} />

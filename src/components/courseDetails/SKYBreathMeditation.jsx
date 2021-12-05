@@ -758,9 +758,9 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
-        <section className="details">
+        {/* <section className="details">
           <div className="container"></div>
-        </section>
+        </section> */}
       </main>
       <HideOn divID="third" showOnPageInit={false}>
         <CourseBottomCard workshop={data} />
