@@ -154,13 +154,13 @@ export const DiscountCodeInput = ({
               onKeyDown={onKeyDown}
             />
             {loading && (
-              <i className="fas fa-sync fa-spin check-coupon-code-btn" />
+              <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
             )}
           </>
         )}
         {showTag && (
           <>
-            <div className="react-tag-container">
+            <div className="react-tag-container tw-p-0">
               <span
                 className={classNames("badge", "react-tag", {
                   "badge-light": status === 0,
@@ -169,12 +169,17 @@ export const DiscountCodeInput = ({
                 })}
               >
                 {formikProps.values[formikKey]}
-                <a className="react-tag-remove" onClick={removeCoupon}>
+                <a
+                  className={classNames("react-tag-remove", {
+                    "!tw-text-white": status === 2,
+                  })}
+                  onClick={removeCoupon}
+                >
                   ×
                 </a>
               </span>
               {loading && (
-                <i className="fas fa-sync fa-spin check-coupon-code-btn" />
+                <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
               )}
             </div>
           </>
