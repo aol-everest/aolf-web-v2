@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { api } from "@utils";
 import classNames from "classnames";
-import { FaSpinner } from "react-icons/fa";
 
 export function EmailField({
   applyDiscount,
@@ -113,10 +112,7 @@ export function EmailField({
             </label>
           )}
           {loading && (
-            <FaSpinner
-              icon="spinner"
-              className="spinner check-coupon-code-btn"
-            />
+            <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
           )}
         </>
       )}
@@ -134,12 +130,17 @@ export function EmailField({
               })}
             >
               {field.value}
-              <a className="react-tag-remove" onClick={removeUser(form)}>
+              <a
+                className={classNames("react-tag-remove", {
+                  "!tw-text-white": status === 2,
+                })}
+                onClick={removeUser(form)}
+              >
                 ×
               </a>
             </span>
             {loading && (
-              <i className="fas fa-sync fa-spin check-coupon-code-btn" />
+              <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
             )}
           </div>
         </>
