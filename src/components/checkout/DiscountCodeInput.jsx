@@ -153,14 +153,12 @@ export const DiscountCodeInput = ({
               onBlur={applyCoupon}
               onKeyDown={onKeyDown}
             />
-            {loading && (
-              <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
-            )}
+            {loading && <span className="loader-inline"></span>}
           </>
         )}
         {showTag && (
           <>
-            <div className="react-tag-container tw-p-0">
+            <div className="react-tag-container">
               <span
                 className={classNames("badge", "react-tag", {
                   "badge-light": status === 0,
@@ -178,9 +176,7 @@ export const DiscountCodeInput = ({
                   ×
                 </a>
               </span>
-              {loading && (
-                <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
-              )}
+              {loading && <span className="loader-inline"></span>}
             </div>
           </>
         )}
