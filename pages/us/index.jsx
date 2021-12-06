@@ -61,6 +61,7 @@ export const getServerSideProps = async (context) => {
       token,
     };
   } catch (err) {
+    console.log(err);
     props = {
       authenticated: false,
     };

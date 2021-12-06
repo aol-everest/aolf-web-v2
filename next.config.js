@@ -36,7 +36,7 @@ const moduleExports = withPWA({
   images: {
     domains: ["images.ctfassets.net"],
   },
-  swcMinify: true,
+  // swcMinify: true,
   // basePath: "/us",
   // assetPrefix: "/us/",
   // productionBrowserSourceMaps: true,
