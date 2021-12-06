@@ -34,6 +34,8 @@ export const ChangeProfile = ({
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
 
+  const allowEmailEdit = profile.cognito.UserStatus !== "EXTERNAL_PROVIDER";
+
   const editEmailAction = (e) => {
     if (e) e.preventDefault();
     showModal(MODAL_TYPES.EMPTY_MODAL, {
@@ -292,9 +294,11 @@ export const ChangeProfile = ({
                     type="email"
                     placeholder="Email"
                   />
-                  <a className="icon" href="#" onClick={editEmailAction}>
-                    <FaRegEdit />
-                  </a>
+                  {allowEmailEdit && (
+                    <a className="icon" href="#" onClick={editEmailAction}>
+                      <FaRegEdit />
+                    </a>
+                  )}
                 </div>
                 <div
                   className={classNames("input-block", {
