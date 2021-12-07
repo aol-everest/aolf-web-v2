@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 import React, { useEffect } from "react";
-import { api } from "@utils";
+import { api, Clevertap } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useRouter } from "next/router";
@@ -89,6 +89,15 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
           ],
         },
       },
+    });
+    Clevertap.event("Product Purchase Completed", {
+      "Product name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: ammountPaid,
+      affiliation: "Website",
+      coupon: couponCode || "",
     });
   }, [router.isReady]);
 

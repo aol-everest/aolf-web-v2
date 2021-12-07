@@ -58,20 +58,20 @@ function Token() {
           className="digital-member-join digital-member-join_journey course-join-card retreat-prerequisite active show"
         >
           <div className="course-join-card__body alert__body mt-5">
-            <h2 className="course-join-card__title section-title text-center">
+            <h2 className="course-join-card__title section-title tw-text-center">
               Verifying Email
             </h2>
-            <div className="text-center">
+            <div className="tw-m-6 tw-text-center">
               {!message && !success && (
                 <div className="cover-spin-inline"></div>
               )}
               {success && (
-                <div className="icon-container-success">
+                <div className="icon-container-success tw-w-[45px] tw-inline-block">
                   <FaCheckCircle />
                 </div>
               )}
               {message && (
-                <div className="icon-container-error">
+                <div className="icon-container-error tw-w-[45px] tw-inline-block">
                   <FaMinusCircle />
                 </div>
               )}

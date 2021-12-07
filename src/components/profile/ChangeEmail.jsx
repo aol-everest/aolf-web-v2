@@ -34,11 +34,11 @@ const ChangeEmailStep = ({
   return (
     <form className="active show" onSubmit={handleSubmit(onSubmit)}>
       <div
-        className={classNames("success-message-container", {
+        className={classNames("success-message-container-cp", {
           "d-none": !showSuccessMessage,
         })}
       >
-        <div className="success-message text-center tw-p-2">
+        <div className="success-message tw-text-center">
           <div className="icon-container">
             <FaCheckCircle />
           </div>
@@ -65,10 +65,14 @@ const ChangeEmailStep = ({
               placeholder="Enter new email"
             />
             {errors.username && (
-              <p className="validation-input">{errors.username.message}</p>
+              <p className="tw-text-red-700 tw-text-sm">
+                {errors.username.message}
+              </p>
             )}
 
-            {showMessage && <p className="validation-input">{message}</p>}
+            {showMessage && (
+              <p className="tw-text-red-700 tw-text-sm">{message}</p>
+            )}
           </div>
         </div>
       </div>

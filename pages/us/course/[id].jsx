@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { api } from "@utils";
+import { api, Clevertap } from "@utils";
 import {
   SKYBreathMeditation,
   SahajSamadhi,
@@ -69,6 +69,13 @@ export default function CourseDetail({ data }) {
       title,
       ctype: productTypeId,
       user: profile,
+    });
+    Clevertap.event("Product Viewed", {
+      "Product name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: unitPrice,
     });
   }, [router.isReady]);
 

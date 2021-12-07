@@ -6,6 +6,34 @@
   color: rgb(201, 27, 27);
   font-size: 45px;
 }
+.success-message-container-cp {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+  border-radius: 8px;
+  .success-message {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-spacing: 10px;
+    padding: 0px 15px;
+    .icon-container {
+      color: green;
+      font-size: 45px;
+      margin-bottom: 20px;
+    }
+  }
+}
 .auth {
   .success-message-container {
     position: absolute;
@@ -22,13 +50,13 @@
       position: absolute;
       width: 100%;
       top: 40%;
+
       .icon-container {
         color: green;
         font-size: 45px;
       }
     }
   }
-
   .info {
     font-size: 13px;
     line-height: 1.8;
