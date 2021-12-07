@@ -89,12 +89,13 @@ function App({ Component, pageProps, userInfo = {} }) {
         profile: res,
       };
       setUser(userInfo);
+
       Clevertap.profile({
         Site: {
-          Name: userInfo.name, // String
-          Identity: userInfo.id, // String or number
-          Email: userInfo.email, // Email address of the user
-          Phone: userInfo.personMobilePhone, // Phone (with the country code)
+          Name: userInfo.profile.name, // String
+          Identity: userInfo.profile.id, // String or number
+          Email: userInfo.profile.email, // Email address of the user
+          Phone: userInfo.profile.personMobilePhone, // Phone (with the country code)
         },
       });
     }
