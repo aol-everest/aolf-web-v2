@@ -72,10 +72,6 @@ function App({ Component, pageProps, userInfo = {} }) {
       }
     });
 
-    if (!isSSR) {
-      Clevertap.initialize();
-    }
-
     async function fetchProfile() {
       const user = await Amplify.Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;

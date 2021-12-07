@@ -241,6 +241,11 @@ class CustomDocument extends Document {
             strategy="lazyOnload"
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&libraries=places`}
           ></script>
+          <script
+            type="text/javascript"
+            clevertapAccountId={process.env.NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID}
+            src="/vender/clevertap.js"
+          ></script>
         </Head>
         <body>
           <Main />
