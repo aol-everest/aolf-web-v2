@@ -39,6 +39,7 @@ Amplify.configure({
 
 function App({ Component, pageProps, userInfo = {} }) {
   const [user, setUser] = useState(userInfo);
+
   useEffect(() => {
     Hub.listen("auth", async ({ payload: { event, data } }) => {
       switch (event) {
@@ -72,6 +73,10 @@ function App({ Component, pageProps, userInfo = {} }) {
       }
     });
 
+    if (!isSSR) {
+      Clevertap.initialize();
+    }
+
     async function fetchProfile() {
       const user = await Amplify.Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
@@ -91,7 +96,6 @@ function App({ Component, pageProps, userInfo = {} }) {
           Name: userInfo.profile.name, // String
           Identity: userInfo.profile.id, // String or number
           Email: userInfo.profile.email, // Email address of the user
-          Phone: userInfo.profile.personMobilePhone, // Phone (with the country code)
         },
       });
     }

@@ -3,11 +3,12 @@ import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { PaymentForm } from "@components";
-import { api } from "@utils";
+import { api, Clevertap } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
 import { ALERT_TYPES } from "@constants";
+import { useAuth } from "@contexts";
 import { useGlobalAlertContext } from "@contexts";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 
@@ -93,6 +94,7 @@ export const getServerSideProps = async (context) => {
 
 const Checkout = ({ workshop, profile }) => {
   const router = useRouter();
+  const { profile: clientProfile } = useAuth();
 
   const sendDataToGTM = useGTMDispatch();
   const [mbsy_source] = useQueryString("mbsy_source");
@@ -101,7 +103,7 @@ const Checkout = ({ workshop, profile }) => {
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!clientProfile) return;
 
     const {
       title,
@@ -150,6 +152,14 @@ const Checkout = ({ workshop, profile }) => {
       },
     });
 
+    Clevertap.event("Product Checkout", {
+      "Product Name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: unitPrice,
+    });
+
     if (!isPreRequisiteCompleted) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big",
@@ -174,7 +184,7 @@ const Checkout = ({ workshop, profile }) => {
         ),
       });
     }
-  }, [router.isReady]);
+  }, [clientProfile]);
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();

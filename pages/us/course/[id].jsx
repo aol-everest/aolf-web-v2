@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { api, Clevertap } from "@utils";
 import {
@@ -53,11 +52,10 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function CourseDetail({ data }) {
-  const router = useRouter();
   const sendDataToGTM = useGTMDispatch();
   const { profile } = useAuth();
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!profile) return;
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
 
@@ -77,7 +75,7 @@ export default function CourseDetail({ data }) {
       "Product Id": courseId,
       Price: unitPrice,
     });
-  }, [router.isReady]);
+  }, [profile]);
 
   SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 

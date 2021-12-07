@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { api, Clevertap } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
-import { useRouter } from "next/router";
+import { useAuth } from "@contexts";
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
@@ -43,7 +43,7 @@ export async function getServerSideProps(context) {
 
 const Thankyou = ({ workshop, attendeeRecord }) => {
   const sendDataToGTM = useGTMDispatch();
-  const router = useRouter();
+  const { profile } = useAuth();
 
   const {
     meetupTitle,
@@ -55,7 +55,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
   const { ammountPaid, orderExternalId, couponCode } = attendeeRecord;
 
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!profile) return;
     sendDataToGTM({
       event: "transactionComplete",
       viewType: "workshop",
@@ -99,7 +99,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
       affiliation: "Website",
       coupon: couponCode || "",
     });
-  }, [router.isReady]);
+  }, [profile]);
 
   return (
     <>
