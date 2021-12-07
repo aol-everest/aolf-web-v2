@@ -153,6 +153,7 @@ const Checkout = ({ workshop, profile }) => {
     });
 
     Clevertap.event("Product Checkout", {
+      "Request Type": "Payment",
       "Product Name": title,
       Category: "Workshop",
       "Product Type": productTypeId,

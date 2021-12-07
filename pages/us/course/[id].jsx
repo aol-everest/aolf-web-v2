@@ -69,6 +69,7 @@ export default function CourseDetail({ data }) {
       user: profile,
     });
     Clevertap.event("Product Viewed", {
+      "Request Type": "Detail",
       "Product Name": title,
       Category: "Workshop",
       "Product Type": productTypeId,

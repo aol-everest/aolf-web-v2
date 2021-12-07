@@ -91,6 +91,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
       },
     });
     Clevertap.event("Product Purchase Completed", {
+      "Request Type": "Thankyou",
       "Product name": title,
       Category: "Workshop",
       "Product Type": productTypeId,
