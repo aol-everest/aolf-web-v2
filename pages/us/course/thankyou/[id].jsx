@@ -9,36 +9,25 @@ import { useAuth } from "@contexts";
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
   const { Auth } = withSSRContext(context);
-  const { aid } = query;
-  try {
-    const user = await Auth.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
-    const { data, attendeeRecord } = await api.get({
-      path: "getWorkshopByAttendee",
-      param: {
-        aid,
-        skipcheck: 1,
-      },
-      token,
-    });
-    return {
-      props: {
-        authenticated: true,
-        username: user.username,
-        workshop: data,
-        attendeeRecord,
-      },
-    };
-  } catch (err) {
-    console.error(err);
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/us`,
-      },
-      props: {},
-    };
-  }
+  const { id } = query;
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  const { data, attendeeRecord } = await api.get({
+    path: "getWorkshopByAttendee",
+    param: {
+      aid: id,
+      skipcheck: 1,
+    },
+    token,
+  });
+  return {
+    props: {
+      authenticated: true,
+      username: user.username,
+      workshop: data,
+      attendeeRecord,
+    },
+  };
 }
 
 const Thankyou = ({ workshop, attendeeRecord }) => {
