@@ -1,0 +1,12 @@
+.sliderTransformFirst {
+  transform: translate3d(0px, 0px, 0px);
+  transition: all 300ms ease 0s;
+}
+.sliderTransformSecond {
+  transform: translate3d(-339px, 0px, 0px);
+  transition: all 300ms ease 0s;
+}
+.sliderTransformThird {
+  transform: translate3d(-660px, 0px, 0px);
+  transition: all 300ms ease 0s;
+}

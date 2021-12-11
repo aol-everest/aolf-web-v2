@@ -1,115 +1,119 @@
 .program-reviews {
-	padding: 80px 0 60px;
+  padding: 80px 0 60px;
 
-	&__title {
-		color: #1E2232;
-		text-align: center;
-		margin-bottom: 60px;
-		font-weight: bold;
-		font-size: 44px;
-		line-height: 60px;
-	}
+  &__title {
+    color: #1e2232;
+    text-align: center;
+    margin-bottom: 60px;
+    font-weight: bold;
+    font-size: 44px;
+    line-height: 60px;
+  }
 
-	&__slider {
-		margin: 0 -15px;
+  &__slider {
+    margin: 0 -15px;
 
-		&-pagination {
-			margin-top: 15px;
-			text-align: center;
+    &-pagination {
+      margin-top: 15px;
+      text-align: center;
 
-			.swiper-pagination-bullet {
-				width: 6px;
-				height: 6px;
-				background-color: #606270;
+      .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background-color: #606270;
 
-				&:not(:last-child) {
-					margin: 0 5px;
-				}
-				
-				&-active {
-				  background-color: #1E2232;
-				}
-			}
-		}
-	}
+        &:not(:last-child) {
+          margin: 0 5px;
+        }
 
-	&__slide {
-		height: auto;
-		width: 33.333333%;
-		padding: 0 15px;
+        &-active {
+          background-color: #1e2232;
+        }
+      }
+    }
+  }
 
-		&-item {
-			height: 100%;
-			position: relative;
-			background: #FFFFFF;
-			box-shadow: 0px 27px 80px rgba(7, 14, 61, 0.03), 0px 9.85544px 29.2013px rgba(7, 14, 61, 0.0206994), 0px 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887), 0px 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113), 0px 0.927421px 2.74791px rgba(7, 14, 61, 0.00930055);
-			border-radius: 8px;
-			text-align: center;
-			padding: 40px 40px 64px;
-	
-			&:before {
-				content: '';
-				position: absolute;
-				right: 20px;
-				bottom: 0;
-				width: 112px;
-				height: 112px;
-				background-image: url('/img/QuotationMark.svg');
-			}
-	
-			&-image {
-				position: relative;
-				border-radius: 50%;
-				overflow: hidden;
-				width: 120px;
-				height: 120px;
-				margin: 0 auto 20px;
-	
-				img {
-					object-fit: contain;
-					width: 100%;
-					height: 100%;
-				}
-			}
-	
-			&-name {
-				margin-bottom: 4px;
-				font-weight: bold;
-				font-size: 24px;
-				line-height: 32px;
-				color: #2A2A2B;
-			}
-	
-			&-location {
-				font-size: 12px;
-				line-height: 14px;
-				color: rgba(42, 42, 43, 0.6);
-			}
-	
-			&-mark {
-				margin: 30px auto 28px;
-				
-				&__star {
-					display: inline-block;
-					height: 20px;
-					width: 20px;
-					background-image: url('/img/Star.svg');
-					
-					&:not(:last-child) {
-						margin-right: 2px;
-					}
-	
-					&:not(.program-reviews__slide-item-mark__star_active) {
-						filter: saturate(0);
-					}
-				}
-			}
-	
-			&-text {
-				font-size: 14px;
-				line-height: 24px;
-				color: #2A2A2B;
-			}
-		}
-	}
+  &__slide {
+    height: auto !important;
+    width: 33.333333% !important;
+    padding: 0 15px;
+
+    &-item {
+      height: 100%;
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0px 27px 80px rgba(7, 14, 61, 0.03),
+        0px 9.85544px 29.2013px rgba(7, 14, 61, 0.0206994),
+        0px 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887),
+        0px 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113),
+        0px 0.927421px 2.74791px rgba(7, 14, 61, 0.00930055);
+      border-radius: 8px;
+      text-align: center;
+      padding: 40px 40px 64px;
+
+      &:before {
+        content: "";
+        position: absolute;
+        right: 20px;
+        bottom: 0;
+        width: 112px;
+        height: 112px;
+        background-image: url("/img/QuotationMark.svg");
+      }
+
+      &-image {
+        position: relative;
+        border-radius: 50%;
+        overflow: hidden;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+
+        img {
+          object-fit: contain;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      &-name {
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 32px;
+        color: #2a2a2b;
+      }
+
+      &-location {
+        font-size: 12px;
+        line-height: 14px;
+        color: rgba(42, 42, 43, 0.6);
+      }
+
+      &-mark {
+        margin: 30px auto 28px;
+
+        &__star {
+          display: inline-block;
+          height: 20px;
+          width: 20px;
+          background-image: url("/img/Star.svg");
+
+          &:not(:last-child) {
+            margin-right: 2px;
+          }
+
+          &:not(.program-reviews__slide-item-mark__star_active) {
+            filter: saturate(0);
+          }
+        }
+      }
+
+      &-text {
+        font-size: 14px;
+        line-height: 24px;
+        color: #2a2a2b;
+      }
+    }
+  }
 }
