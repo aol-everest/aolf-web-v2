@@ -464,3 +464,29 @@
 .modal-title {
   text-align: center;
 }
+
+.modal-content-title {
+  position: relative;
+  max-width: 100%;
+  padding: 0px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: none;
+  overflow-wrap: break-word;
+  color: #4b5487;
+  font-size: 36px;
+  line-height: 50px;
+  margin-bottom: 15px;
+}
+
+.modal-content-text {
+  z-index: 1;
+  justify-content: center;
+  margin: 0px;
+  padding: 0px;
+  font-size: 1.125em;
+  font-weight: 300;
+  line-height: normal;
+  text-align: left;
+  overflow-wrap: break-word;
+}
