@@ -78,7 +78,7 @@ function Token() {
             </div>
           </div>
           <div className="course-details-card__footer text-center">
-            {!message && <>Please wait for our checking ...</>}
+            {!message && !success && <>Please wait for our checking ...</>}
             {message && (
               <p className="validation-input text-center">{message}</p>
             )}
