@@ -30,6 +30,7 @@ import {
 } from "@constants";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { api } from "@utils";
+import Style from "./BackendPaymentForm.module.scss";
 
 const PARTIAL = "partial";
 const FULL = "";
@@ -1149,7 +1150,9 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                           return (
                             <>
                               <div className="reciept__payment-option reciept__payment-option_special-offer">
-                                <span className="special-offer">
+                                <span
+                                  className={classNames(Style.special_offer)}
+                                >
                                   Special Offer
                                 </span>
                                 <input
