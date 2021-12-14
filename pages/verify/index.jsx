@@ -77,7 +77,7 @@ function Token() {
               )}
             </div>
           </div>
-          <div className="course-details-card__footer text-center">
+          <div className="course-details-card__footer text-center tw-min-h-[62px]">
             {!message && !success && <>Please wait for our checking ...</>}
             {message && (
               <p className="validation-input text-center">{message}</p>
