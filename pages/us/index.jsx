@@ -425,6 +425,9 @@ const Course = ({ authenticated }) => {
                       <li onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}>
                         {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
                       </li>
+                      <li onClick={closeHandler("SRI_SRI_YOGA_MEDITATION")}>
+                        {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
+                      </li>
                     </>
                   )}
                 </Popup>
@@ -589,6 +592,12 @@ const Course = ({ authenticated }) => {
                           onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
                         >
                           {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler("Sri Sri Yoga")}
+                        >
+                          {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
                         </li>
                       </>
                     )}

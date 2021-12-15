@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import CourseDetailsCard from "./CourseDetailsCard";
 import NumberFormat from "react-number-format";
+import { useRouter } from "next/router";
 import { ResearchPagination } from "./ResearchPagination";
 import { Comment } from "./Comment";
 import { ResearchFindingSource } from "./ResearchFindingSource";
@@ -18,6 +19,7 @@ import moment from "moment";
 
 export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
+  const router = useRouter();
 
   const showResearchModal = (e) => {
     if (e) e.preventDefault();
@@ -26,6 +28,16 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
       children: <ResearchFindingSource />,
       className: "research-detail-modal",
       hideConfirm: true,
+    });
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    router.push({
+      pathname: `/us/course/checkout/${data.sfid}`,
+      query: {
+        ctype: data.productTypeId,
+      },
     });
   };
 
@@ -550,7 +562,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
-        <section className="powerful volunteer-program">
+        <section name="registerNowBlock" className="powerful volunteer-program">
           <div className="container">
             <div className="row">
               <div className="col-xl-10 offset-xl-1">
@@ -568,7 +580,10 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                     </h4>
                   </div>
                   <div className="bottom-box justify-content-center">
-                    <button className="btn-secondary register-button">
+                    <button
+                      className="btn-secondary register-button"
+                      onClick={handleRegister}
+                    >
                       Register Today
                     </button>
                   </div>
@@ -682,6 +697,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
             <button
               type="button"
               className="btn-secondary program-meet__button"
+              onClick={handleRegister}
             >
               Let's Get Started
             </button>

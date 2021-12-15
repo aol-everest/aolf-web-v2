@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
+import classNames from "classnames";
 import CourseDetailsCard from "./CourseDetailsCard";
 import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
@@ -12,8 +13,10 @@ import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
 import { HideOn } from "react-hide-on-scroll";
 import { priceCalculation } from "@utils";
 import { useRouter } from "next/router";
+import Style from "./CourseDetails.module.scss";
 
 export const SriSriYoga = ({ data, swiperOption }) => {
+  const [activeSlider, setActiveSlider] = useState(0);
   const router = useRouter();
 
   const handleRegister = (e) => {
@@ -26,8 +29,19 @@ export const SriSriYoga = ({ data, swiperOption }) => {
     });
   };
 
+  const handleSliderBulletClick = (index) => {
+    setActiveSlider(index);
+  };
+
   const { title, workshopTotalHours, mode } = data || {};
   const { fee, delfee, offering } = priceCalculation({ workshop: data });
+
+  const activeSliderClass =
+    activeSlider === 0
+      ? Style.sliderTransformFirst
+      : activeSlider === 1
+      ? Style.sliderTransformSecond
+      : Style.sliderTransformThird;
 
   return (
     <>
@@ -366,74 +380,116 @@ export const SriSriYoga = ({ data, swiperOption }) => {
         <section className="program-reviews">
           <div className="container">
             <h2 className="program-reviews__title">What people are saying</h2>
-            <Swiper className="program-reviews__slider" {...swiperOption}>
-              <SwiperSlide className="program-reviews__slide-item">
-                <div className="program-reviews__slide-item-image">
-                  <img src="/img/reviews-karen.png" alt="Karen" />
+            <div className="program-reviews__slider">
+              <div
+                className={classNames(
+                  "swiper-wrapper program-reviews__slider-wrapper",
+                  activeSliderClass,
+                )}
+              >
+                <div className="swiper-slide program-reviews__slide">
+                  <div className="program-reviews__slide-item">
+                    <div className="program-reviews__slide-item-image">
+                      <img src="/img/reviews-karen.png" alt="Karen" />
+                    </div>
+                    <h3 className="program-reviews__slide-item-name">Karen</h3>
+                    <span className="program-reviews__slide-item-location">
+                      Long Island, NY
+                    </span>
+                    <ul className="program-reviews__slide-item-mark">
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star"></li>
+                    </ul>
+                    <p className="program-reviews__slide-item-text">
+                      I was able to sleep better and noticed that I was more
+                      productive and alert during the day. The workshop gave me
+                      a better understanding of what yoga is all about — not
+                      just asana (yoga poses).
+                    </p>
+                  </div>
                 </div>
-                <h3 className="program-reviews__slide-item-name">Karen</h3>
-                <span className="program-reviews__slide-item-location">
-                  Long Island, NY
-                </span>
-                <ul className="program-reviews__slide-item-mark">
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star"></li>
-                </ul>
-                <p className="program-reviews__slide-item-text">
-                  I was able to sleep better and noticed that I was more
-                  productive and alert during the day. The workshop gave me a
-                  better understanding of what yoga is all about — not just
-                  asana (yoga poses).
-                </p>
-              </SwiperSlide>
-              <SwiperSlide className="program-reviews__slide-item">
-                <div className="program-reviews__slide-item-image">
-                  <img src="/img/reviews-pooja.png" alt="Pooja" />
+                <div className="swiper-slide program-reviews__slide">
+                  <div className="program-reviews__slide-item">
+                    <div className="program-reviews__slide-item-image">
+                      <img src="/img/reviews-pooja.png" alt="Pooja" />
+                    </div>
+                    <h3 className="program-reviews__slide-item-name">Pooja</h3>
+                    <span className="program-reviews__slide-item-location">
+                      Santa Clara, CA
+                    </span>
+                    <ul className="program-reviews__slide-item-mark">
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star"></li>
+                    </ul>
+                    <p className="program-reviews__slide-item-text">
+                      The combination of yoga and meditation made my mind and
+                      body feel more relaxed with sense of completion. The
+                      knowledge given on yoga and how to deal with mind through
+                      body was amazing to learn.
+                    </p>
+                  </div>
                 </div>
-                <h3 className="program-reviews__slide-item-name">Pooja</h3>
-                <span className="program-reviews__slide-item-location">
-                  Santa Clara, CA
-                </span>
-                <ul className="program-reviews__slide-item-mark">
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star"></li>
-                </ul>
-                <p className="program-reviews__slide-item-text">
-                  The combination of yoga and meditation made my mind and body
-                  feel more relaxed with sense of completion. The knowledge
-                  given on yoga and how to deal with mind through body was
-                  amazing to learn.
-                </p>
-              </SwiperSlide>
-              <SwiperSlide className="program-reviews__slide-item">
-                <div className="program-reviews__slide-item-image">
-                  <img src="/img/reviews-emmet.png" alt="Emmet" />
+                <div className="swiper-slide program-reviews__slide">
+                  <div className="program-reviews__slide-item">
+                    <div className="program-reviews__slide-item-image">
+                      <img src="/img/reviews-emmet.png" alt="Emmet" />
+                    </div>
+                    <h3 className="program-reviews__slide-item-name">Emmet</h3>
+                    <span className="program-reviews__slide-item-location">
+                      Atlanta, GA
+                    </span>
+                    <ul className="program-reviews__slide-item-mark">
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
+                      <li className="program-reviews__slide-item-mark__star"></li>
+                    </ul>
+                    <p className="program-reviews__slide-item-text">
+                      I have knee problems, but after the workshop, my knee felt
+                      better and less stiff. The instruction were great both in
+                      knowledge and style. I love that I could incorporate these
+                      sequences of postures in my home practice.
+                    </p>
+                  </div>
                 </div>
-                <h3 className="program-reviews__slide-item-name">Emmet</h3>
-                <span className="program-reviews__slide-item-location">
-                  Atlanta, GA
-                </span>
-                <ul className="program-reviews__slide-item-mark">
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star program-reviews__slide-item-mark__star_active"></li>
-                  <li className="program-reviews__slide-item-mark__star"></li>
-                </ul>
-                <p className="program-reviews__slide-item-text">
-                  I have knee problems, but after the workshop, my knee felt
-                  better and less stiff. The instruction were great both in
-                  knowledge and style. I love that I could incorporate these
-                  sequences of postures in my home practice.
-                </p>
-              </SwiperSlide>
-            </Swiper>
+              </div>
+              <div className="program-reviews__slider-pagination swiper-pagination-clickable swiper-pagination-bullets">
+                <span
+                  className={classNames("swiper-pagination-bullet", {
+                    "swiper-pagination-bullet-active": activeSlider === 0,
+                  })}
+                  tabIndex="0"
+                  role="button"
+                  aria-label="Go to slide 1"
+                  onClick={() => handleSliderBulletClick(0)}
+                ></span>
+                <span
+                  className={classNames("swiper-pagination-bullet", {
+                    "swiper-pagination-bullet-active": activeSlider === 1,
+                  })}
+                  tabIndex="1"
+                  role="button"
+                  aria-label="Go to slide 2"
+                  onClick={() => handleSliderBulletClick(1)}
+                ></span>
+                <span
+                  className={classNames("swiper-pagination-bullet", {
+                    "swiper-pagination-bullet-active": activeSlider === 2,
+                  })}
+                  tabIndex="2"
+                  role="button"
+                  aria-label="Go to slide 3"
+                  onClick={() => handleSliderBulletClick(2)}
+                ></span>
+              </div>
+            </div>
           </div>
         </section>
         <section className="program-answers">
@@ -546,6 +602,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                 <button
                   type="button"
                   className="btn-secondary program-inspiration__button program-inspiration__button_desktop register-button"
+                  onClick={handleRegister}
                 >
                   Let's Get Started
                 </button>
@@ -622,6 +679,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
             <button
               type="button"
               className="btn-secondary program-inspiration__button program-inspiration__button_mobile"
+              onClick={handleRegister}
             >
               Let's Get Started
             </button>
