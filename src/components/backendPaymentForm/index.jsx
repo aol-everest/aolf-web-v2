@@ -30,6 +30,7 @@ import {
 } from "@constants";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { api } from "@utils";
+import Style from "./BackendPaymentForm.module.scss";
 
 const PARTIAL = "partial";
 const FULL = "";
@@ -71,6 +72,11 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
   const [selectedUnitPrice, setSelectedUnitPrice] = useState(null);
   const [selectedListPrice, setSelectedListPrice] = useState(null);
   let _cardElement;
+
+  const { showAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
+  const stripe = useStripe();
+  const elements = useElements();
 
   const paymentOptionChangeAction = (mode) => {
     setPaymentMode(mode);
@@ -171,7 +177,424 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
     );
   };
 
-  const completeEnrollmentAction = (values, resetForm) => {};
+  const onEnrollmentComplete = (
+    data,
+    selectedPaymentOption,
+    handleModalToggle,
+  ) => {
+    return (
+      <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
+        <div className=" modal-dialog modal-dialog-centered active">
+          <div className="modal-content">
+            <h2 className="modal-content-title">
+              Enrollment Completed Successfully.
+            </h2>
+            {selectedPaymentOption === PARTIAL &&
+              data.message !== null &&
+              data.message}
+            {selectedPaymentOption !== PARTIAL && (
+              <div className="modal-content-text tw-text-left">
+                An email notification will be sent to the participant with the
+                following actions required:
+                <ol class="pl-5 tw-space-y-3 tw-list-decimal">
+                  <li>
+                    Participant will need to consent to the Program Participant
+                    Agreement (PPA).
+                  </li>
+                  <li>
+                    Participant will need to consent to the Health declaration
+                    (displayed below).
+                  </li>
+                  <li>
+                    If there is a pending payment, they will need to bring it
+                    along with the registration confirmation at the start of the
+                    program.
+                  </li>
+                </ol>
+              </div>
+            )}
+            <p className="tw-flex tw-justify-center">
+              <a
+                href="#"
+                className="tw-mt-6 btn btn-lg btn-primary"
+                onClick={handleModalToggle}
+              >
+                Close
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const completeEnrollmentAction = async (values, resetForm) => {
+    const {
+      availableTimings,
+      isGenericWorkshop,
+      id: productId,
+      addOnProducts,
+      product,
+    } = workshop;
+
+    const {
+      selectedAddOn,
+      contactPhone,
+      contactAddress,
+      contactState,
+      contactZip,
+      billingPhone,
+      billingAddress,
+      billingState,
+      billingZip,
+      couponCode,
+      firstName,
+      lastName,
+      email,
+      selectedPaymentOption,
+      isChequePayment,
+      isFirstChequePayment,
+      isSecondChequePayment,
+      chequeNumber,
+      chequeRoutingNumber,
+      firstChequeNumber,
+      firstChequeRoutingNumber,
+      secondChequeNumber,
+      secondChequeRoutingNumber,
+      secondPaymentDate,
+      firstPaymentAmount,
+      accommodation,
+    } = values;
+
+    if (!loading) {
+      try {
+        setLoading(true);
+        let tokenizeCC = null;
+        if (
+          (selectedPaymentOption !== PARTIAL && !isChequePayment) ||
+          (selectedPaymentOption === PARTIAL &&
+            (!isFirstChequePayment || !isSecondChequePayment))
+        ) {
+          const cardElement = elements.getElement(CardElement);
+          let createTokenRespone = await stripe.createToken(cardElement, {
+            name: profile.name ? profile.name : firstName + " " + lastName,
+          });
+          let { error, token } = createTokenRespone;
+          if (error) {
+            throw error;
+          }
+          tokenizeCC = token;
+        }
+
+        const selectedAddOn = accommodation?.isExpenseAddOn
+          ? null
+          : accommodation?.productSfid || null;
+
+        let addOnProductsList = addOnProducts
+          ? addOnProducts.map((product) => {
+              if (!product.isAddOnSelectionRequired) {
+                const value = values[product.productName];
+                if (value) {
+                  return product.productSfid;
+                } else {
+                  return null;
+                }
+              }
+              return product.productSfid;
+            })
+          : [];
+
+        let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+
+        AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
+
+        const isRegularOrder = values.comboDetailId
+          ? values.comboDetailId === productId
+          : true;
+
+        const products = isRegularOrder
+          ? {
+              productType: "workshop",
+              productSfId: productId,
+              AddOnProductIds: AddOnProductIds,
+            }
+          : {
+              productType: "bundle",
+              productSfId: values.comboDetailId,
+              childProduct: {
+                productType: "workshop",
+                productSfId: productId,
+                AddOnProductIds: AddOnProductIds,
+              },
+            };
+
+        let shoppingRequest = {
+          contactAddress: {
+            contactPhone,
+            contactAddress,
+            contactState,
+            contactZip,
+          },
+          billingAddress: {
+            billingPhone:
+              billingPhone || billingPhone.trim().length > 0
+                ? billingPhone
+                : contactPhone,
+            billingAddress:
+              billingAddress || billingAddress.trim().length > 0
+                ? billingAddress
+                : contactAddress,
+            billingState:
+              billingState || billingState.trim().length > 0
+                ? billingState
+                : contactState,
+            billingZip:
+              billingZip || billingZip.trim().length > 0
+                ? billingZip
+                : contactZip,
+          },
+          products,
+        };
+
+        // eslint-disable-next-line default-case
+        switch (selectedPaymentOption) {
+          case FULL:
+            shoppingRequest = {
+              ...shoppingRequest,
+              couponCode: showCouponCodeField ? couponCode : "",
+            };
+            if (isChequePayment) {
+              shoppingRequest = {
+                ...shoppingRequest,
+                isOneTimeChequePayment: true,
+                oneTimeChequePaymentInformation: {
+                  chequeNumber,
+                  chequeRoutingNumber,
+                },
+              };
+            } else {
+              shoppingRequest = {
+                ...shoppingRequest,
+                tokenizeCC,
+              };
+            }
+            break;
+          case INSTALMENT:
+            shoppingRequest = {
+              ...shoppingRequest,
+              isInstalmentOpted: true,
+              tokenizeCC,
+            };
+            break;
+          case PARTIAL:
+            let partialPayment = {
+              amountPayingNow: firstPaymentAmount,
+              isCurrentAmountFromCheque: false,
+              isRemainingAmountFromCheque: false,
+              dateForRemainingAmount: secondPaymentDate,
+            };
+            if (isFirstChequePayment) {
+              partialPayment = {
+                ...partialPayment,
+                isCurrentAmountFromCheque: true,
+                currentAmountChequeInformation: {
+                  chequeNumber: firstChequeNumber,
+                  chequeRoutingNumber: firstChequeRoutingNumber,
+                },
+              };
+            }
+            if (isSecondChequePayment) {
+              partialPayment = {
+                ...partialPayment,
+                isRemainingAmountFromCheque: true,
+                remainingAmountChequeInformation: {
+                  chequeNumber: secondChequeNumber,
+                  chequeRoutingNumber: secondChequeRoutingNumber,
+                },
+              };
+            }
+            if (!isFirstChequePayment || !isSecondChequePayment) {
+              shoppingRequest = {
+                ...shoppingRequest,
+                tokenizeCC,
+              };
+            }
+            shoppingRequest = {
+              ...shoppingRequest,
+              couponCode,
+              isPartialPayment: true,
+              partialPayment,
+            };
+            break;
+        }
+
+        let payLoad = {
+          isBackendRequest: true,
+          shoppingRequest: {
+            ...shoppingRequest,
+          },
+        };
+        payLoad = {
+          ...payLoad,
+          user: {
+            firstName,
+            lastName,
+            email,
+          },
+        };
+        if (isGenericWorkshop) {
+          const timeSlot =
+            availableTimings &&
+            Object.values(availableTimings)[0] &&
+            Object.values(Object.values(availableTimings)[0])[0][0]
+              .genericWorkshopSlotSfid;
+          payLoad = {
+            ...payLoad,
+            shoppingRequest: {
+              ...payLoad.shoppingRequest,
+              genericWorkshopSlotSfid: timeSlot,
+            },
+          };
+        }
+        //token.saveCardForFuture = true;
+
+        const {
+          data,
+          status,
+          error: errorMessage,
+          isError,
+        } = await api.post({
+          path: "createAndPayOrder",
+          body: payLoad,
+        });
+
+        setLoading(false);
+
+        if (status === 400 || isError) {
+          throw new Error(errorMessage);
+        } else if (data) {
+          setUser(null);
+          showModal(MODAL_TYPES.EMPTY_MODAL, {
+            title: "Enrollment Completed Successfully.",
+            children: (handleModalToggle) =>
+              onEnrollmentComplete(
+                data,
+                selectedPaymentOption,
+                handleModalToggle,
+              ),
+          });
+        }
+
+        // const { trackingActions } = this.props;
+        // trackingActions.paymentConfirmation(
+        //   { ...product, ...data },
+        //   "workshop",
+        //   couponCode || "",
+        // );
+        resetForm(setFormInitialValues());
+      } catch (ex) {
+        console.log(ex);
+        const data = ex.response?.data;
+        const { message, statusCode } = data || {};
+        setLoading(false);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: message ? `Error: ${message} (${statusCode})` : ex.message,
+        });
+      }
+    }
+  };
+
+  const toggleCouponCodeFieldAction = (e) => {
+    if (e) e.preventDefault();
+    setShowCouponCodeField((showCouponCodeField) => !showCouponCodeField);
+  };
+
+  const updateCourseAddOnFee = (values) => {
+    const { addOnProducts, groupedAddOnProducts } =
+      useWorkshop || workshop || {};
+
+    const expenseAddOn = addOnProducts.find(
+      (product) => product.isExpenseAddOn,
+    );
+
+    const hasGroupedAddOnProducts =
+      groupedAddOnProducts &&
+      !isEmpty(groupedAddOnProducts) &&
+      "Residential Add On" in groupedAddOnProducts &&
+      groupedAddOnProducts["Residential Add On"].length > 0;
+
+    const addOnFee = addOnProducts.reduce(
+      (
+        previousValue,
+        { unitPrice, isAddOnSelectionRequired, productName, isExpenseAddOn },
+      ) => {
+        if (!isExpenseAddOn) {
+          if (
+            (!isAddOnSelectionRequired && values[productName]) ||
+            isAddOnSelectionRequired
+          ) {
+            return previousValue + unitPrice;
+          } else {
+            return previousValue;
+          }
+        } else if (isExpenseAddOn && !hasGroupedAddOnProducts) {
+          if (
+            (!isAddOnSelectionRequired && values[productName]) ||
+            isAddOnSelectionRequired
+          ) {
+            return previousValue + unitPrice;
+          }
+          return previousValue;
+        } else {
+          return previousValue;
+        }
+      },
+      0,
+    );
+
+    const totalFee =
+      (values.accommodation?.isExpenseAddOn
+        ? expenseAddOn?.unitPrice || 0
+        : (values.accommodation?.unitPrice || 0) +
+          (values.accommodation ? expenseAddOn?.unitPrice || 0 : 0)) + addOnFee;
+
+    setCourseAddOnFee(totalFee);
+  };
+
+  const handleAccommodationChange = (formikProps, value) => {
+    formikProps.setFieldValue("accommodation", value);
+    const { values } = formikProps;
+    values["accommodation"] = value;
+    updateCourseAddOnFee(values);
+  };
+
+  const handleAddOnSelection = (formikProps, productName, value) => {
+    formikProps.setFieldValue(productName, value);
+    const { values } = formikProps;
+    values[productName] = value;
+    updateCourseAddOnFee(values);
+  };
+
+  const handleComboDetailChange = (
+    formikProps,
+    comboDetailProductSfid,
+    selectedComboBundle,
+  ) => {
+    formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
+    toggleCouponCodeFieldAction();
+    const { values } = formikProps;
+    if (comboDetailProductSfid === id) {
+      setSelectedComboCourseId(null);
+    } else {
+      setSelectedComboCourseId(comboDetailProductSfid);
+    }
+    const updatedPartialPaymentValue =
+      selectedComboBundle?.minimumPartialPaymentOnBundle ||
+      useWorkshop?.minimumPartialPayment ||
+      1;
+    values["firstPaymentAmount"] = updatedPartialPaymentValue;
+    setSelectedComboBundle(selectedComboBundle);
+  };
 
   const {
     id,
@@ -288,7 +711,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                 </div> */}
               </div>
             )}
-            <p>Venue: {shortAddress}</p>
+            {/* <p>Venue: {shortAddress}</p> */}
           </div>
 
           <div className="col-sm-12 workshopCourseBlk">
@@ -567,7 +990,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
               <form
                 name="workshopEnroll"
                 onSubmit={handleSubmit}
-                className="tw-bg-white tw-p-4 tw-shadow-lg"
+                className="workshopEnroll tw-bg-white tw-p-4 tw-shadow-lg"
               >
                 <div className="row">
                   <div className="col-sm-12 heading_info">
@@ -712,11 +1135,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                                 : true
                             }
                             onChange={() =>
-                              this.handleComboDetailChange(
-                                formikProps,
-                                id,
-                                null,
-                              )
+                              handleComboDetailChange(formikProps, id, null)
                             }
                           />
                           <label htmlFor="payment-lg-meditation">
@@ -731,7 +1150,9 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                           return (
                             <>
                               <div className="reciept__payment-option reciept__payment-option_special-offer">
-                                <span className="special-offer">
+                                <span
+                                  className={classNames(Style.special_offer)}
+                                >
                                   Special Offer
                                 </span>
                                 <input
@@ -741,7 +1162,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                                   id={availableBundle.comboProductSfid}
                                   checked={isChecked}
                                   onChange={() =>
-                                    this.handleComboDetailChange(
+                                    handleComboDetailChange(
                                       formikProps,
                                       availableBundle.comboProductSfid,
                                       availableBundle,
@@ -788,7 +1209,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                                       placeholder=" "
                                       checked={isChecked}
                                       onClick={(e) =>
-                                        this.handleAddOnSelection(
+                                        handleAddOnSelection(
                                           formikProps,
                                           product.productName,
                                           e.target.checked,
@@ -883,7 +1304,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                                     <li
                                       key={residentialAddOn.productSfid}
                                       onClick={() =>
-                                        this.handleAccommodationChange(
+                                        handleAccommodationChange(
                                           formikProps,
                                           residentialAddOn,
                                         )
@@ -1046,7 +1467,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                     </div>
                   </div>
                   {values.selectedPaymentOption !== INSTALMENT && (
-                    <div className="col-sm-12">
+                    <div className="col-sm-12 tw-mt-6">
                       {showCouponCodeField && (
                         <DiscountCodeInput
                           placeholder="Discount Code"
@@ -1125,7 +1546,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                           {({ field, form }) => {
                             return (
                               <div
-                                className={classNames({
+                                className={classNames("tw-mt-[32px]", {
                                   "text-input-error tw-mt-20":
                                     errors.billingState && touched.billingState,
                                 })}
