@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
-import { withSSRContext } from "aws-amplify";
-import { Auth } from "aws-amplify";
+import { withSSRContext, Auth } from "aws-amplify";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import Link from "next/link";

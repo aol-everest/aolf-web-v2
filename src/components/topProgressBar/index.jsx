@@ -39,7 +39,10 @@ function stop() {
 }
 
 Router.events.on("routeChangeStart", load);
-Router.events.on("routeChangeComplete", stop);
+Router.events.on("routeChangeComplete", (url) => {
+  window.analytics.page(url);
+  stop();
+});
 Router.events.on("routeChangeError", stop);
 
 NProgress.configure({

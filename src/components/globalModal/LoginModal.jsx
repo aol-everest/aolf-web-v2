@@ -11,6 +11,7 @@ import {
   ChangePasswordForm,
   NewPasswordForm,
 } from "./../loginForm";
+import { api } from "@utils";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";
@@ -61,6 +62,11 @@ export const LoginModal = () => {
     setShowMessage(false);
     try {
       const user = await Auth.signIn(username, password);
+      const token = user.signInUserSession.idToken.jwtToken;
+      await api.get({
+        path: "profile",
+        token,
+      });
       if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
         setUsername(username);
         setMode(NEW_PASSWORD_REQUEST);
@@ -71,9 +77,16 @@ export const LoginModal = () => {
         return router.push(navigateTo);
       }
     } catch (ex) {
+      await Auth.signOut();
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+      if (statusCode === 500) {
+        setMessage(
+          message ? `Error: Unable to login. (${message})` : ex.message,
+        );
+      } else {
+        setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+      }
       console.error(ex);
       setShowMessage(true);
       setLoading(false);
