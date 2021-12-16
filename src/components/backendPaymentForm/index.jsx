@@ -196,7 +196,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
               <div className="modal-content-text tw-text-left">
                 An email notification will be sent to the participant with the
                 following actions required:
-                <ol class="pl-5 tw-space-y-3 tw-list-decimal">
+                <ol className="pl-5 tw-space-y-3 tw-list-decimal">
                   <li>
                     Participant will need to consent to the Program Participant
                     Agreement (PPA).
@@ -387,6 +387,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
             };
             break;
           case PARTIAL:
+            // eslint-disable-next-line no-case-declarations
             let partialPayment = {
               amountPayingNow: firstPaymentAmount,
               isCurrentAmountFromCheque: false,
