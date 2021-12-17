@@ -20,6 +20,7 @@ export const PreCostDetailsCard = ({
   isUsableCreditAvailable,
   UpdatedFeeAfterCredits,
   values,
+  onComboDetailChange,
 }) => {
   const {
     id,
@@ -396,7 +397,7 @@ export const PreCostDetailsCard = ({
                 checked={
                   values.comboDetailId ? values.comboDetailId === id : true
                 }
-                onChange={() => this.handleComboDetailChange(formikProps, id)}
+                onChange={() => onComboDetailChange(formikProps, id)}
               />
               <label htmlFor="payment-lg-meditation">
                 <span>{title}:</span>
@@ -419,7 +420,7 @@ export const PreCostDetailsCard = ({
                       id={availableBundle.comboProductSfid}
                       checked={isChecked}
                       onChange={() =>
-                        this.handleComboDetailChange(
+                        onComboDetailChange(
                           formikProps,
                           availableBundle.comboProductSfid,
                         )
