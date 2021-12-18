@@ -21,6 +21,7 @@ export const PostCostDetailsCard = ({
   totalFee,
   isUsableCreditAvailable,
   UpdatedFeeAfterCredits,
+  onAccommodationChange,
   ...rest
 }) => {
   const {
@@ -374,10 +375,7 @@ export const PostCostDetailsCard = ({
                         <li
                           key={residentialAddOn.productSfid}
                           onClick={() =>
-                            this.handleAccommodationChange(
-                              formikProps,
-                              residentialAddOn,
-                            )
+                            onAccommodationChange(formikProps, residentialAddOn)
                           }
                         >
                           <label

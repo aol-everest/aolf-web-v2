@@ -5,6 +5,7 @@ import renderHTML from "react-render-html";
 import Select from "react-select";
 import classNames from "classnames";
 
+// eslint-disable-next-line react/display-name
 const questionRender = (formikProps) => (question, index) => {
   const {
     values,
@@ -30,7 +31,7 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label class="item-volonteer__label" for={key}>
+          <label className="item-volonteer__label" htmlFor={key}>
             {question.question && renderHTML(question.question)}
           </label>
           <Field name={key} class="form-control">
@@ -64,7 +65,7 @@ const questionRender = (formikProps) => (question, index) => {
             }}
           </Field>
           {errors[key] && formikProps.touched[key] && (
-            <div class="invalid-feedback">{errors[key]}</div>
+            <div className="invalid-feedback">{errors[key]}</div>
           )}
         </div>
       );
@@ -75,7 +76,7 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label class="item-volonteer__label" for={key}>
+          <label className="item-volonteer__label" htmlFor={key}>
             {question.question && renderHTML(question.question)}
           </label>
           <Field name={key} class="form-control">
@@ -103,7 +104,7 @@ const questionRender = (formikProps) => (question, index) => {
             )}
           </Field>
           {errors[key] && formikProps.touched[key] && (
-            <div class="invalid-feedback">{errors[key]}</div>
+            <div className="invalid-feedback">{errors[key]}</div>
           )}
         </div>
       );
@@ -114,10 +115,10 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label class="item-volonteer__label" for={key}>
+          <label className="item-volonteer__label" htmlFor={key}>
             {question.question && renderHTML(question.question)}
           </label>
-          <div class="form-check">
+          <div className="form-check">
             <Field
               class="form-check-input"
               type="radio"
@@ -125,11 +126,11 @@ const questionRender = (formikProps) => (question, index) => {
               value="Yes"
               id="yes"
             />
-            <label class="form-check-label" for="yes">
+            <label className="form-check-label" htmlFor="yes">
               Yes
             </label>
           </div>
-          <div class="form-check">
+          <div className="form-check">
             <Field
               class="form-check-input"
               type="radio"
@@ -137,12 +138,12 @@ const questionRender = (formikProps) => (question, index) => {
               value="No"
               id="no"
             />
-            <label class="form-check-label" for="no">
+            <label className="form-check-label" htmlFor="no">
               No
             </label>
           </div>
           {errors[key] && formikProps.touched[key] && (
-            <div class="invalid-feedback tw-block">{errors[key]}</div>
+            <div className="invalid-feedback tw-block">{errors[key]}</div>
           )}
         </div>
       );
@@ -153,7 +154,7 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <div class="form-check form-check-inline checkbox">
+          <div className="form-check form-check-inline checkbox">
             <div>
               <Field
                 class="form-check-input"
@@ -162,12 +163,12 @@ const questionRender = (formikProps) => (question, index) => {
                 value="Yes"
                 id={key}
               />
-              <label class="item-volonteer__label" for="inlineRadio1">
+              <label className="item-volonteer__label" htmlFor="inlineRadio1">
                 {question.question && renderHTML(question.question)}
               </label>
             </div>
             {errors[key] && formikProps.touched[key] && (
-              <div class="invalid-feedback">{errors[key]}</div>
+              <div className="invalid-feedback">{errors[key]}</div>
             )}
           </div>
         </div>
@@ -179,7 +180,7 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label class="item-volonteer__label" for={key}>
+          <label className="item-volonteer__label" htmlFor={key}>
             {question.question && renderHTML(question.question)}
           </label>
           <Field name={key}>
@@ -195,7 +196,7 @@ const questionRender = (formikProps) => (question, index) => {
             )}
           </Field>
           {errors[key] && formikProps.touched[key] && (
-            <div class="invalid-feedback">{errors[key]}</div>
+            <div className="invalid-feedback">{errors[key]}</div>
           )}
         </div>
       );
@@ -206,7 +207,7 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label class="form-label" for={key}>
+          <label className="form-label" htmlFor={key}>
             {question.question && renderHTML(question.question)}
           </label>
           <Field name={key}>
@@ -283,19 +284,19 @@ export const ProgramQuestionnaire = ({
       {(formikProps) => {
         return (
           <form onSubmit={formikProps.handleSubmit}>
-            <div class={classNames("volonteer-modal _active-modal")}>
-              <div class="volonteer-modal__body">
-                <div class="volonteer-modal__wrapper">
+            <div className={classNames("volonteer-modal _active-modal")}>
+              <div className="volonteer-modal__body">
+                <div className="volonteer-modal__wrapper">
                   <button
                     type="button"
                     onClick={closeModalAction}
                     on
-                    class="volonteer-modal__close"
+                    className="volonteer-modal__close"
                   >
                     <img src="/img/ic-cross.svg" alt="close" title="close" />
                   </button>
-                  <div class="volonteer-modal__header volonteer-header">
-                    <h5 class="volonteer-header__title">{programName}</h5>
+                  <div className="volonteer-modal__header volonteer-header">
+                    <h5 className="volonteer-header__title">{programName}</h5>
                     {/* <div class="volonteer-header__description">
                       We would like to learn more about you as one of our
                       volunteers. Please answer the following questions to
@@ -303,23 +304,23 @@ export const ProgramQuestionnaire = ({
                     </div> */}
                   </div>
                   <div
-                    class="volonteer-content"
+                    className="volonteer-content"
                     data-select2-id="select2-data-16-e1rv"
                   >
                     {questions.map(questionRender(formikProps))}
                   </div>
-                  <div class="volonteer-modal__footer">
-                    <button class="btn btn-secondary" type="submit">
+                  <div className="volonteer-modal__footer">
+                    <button className="btn btn-secondary" type="submit">
                       Continue Checkout
                     </button>
                   </div>
 
                   <div
-                    class="close-modal d-md-flex d-none"
+                    className="close-modal d-md-flex d-none"
                     onClick={closeModalAction}
                   >
-                    <div class="close-line"></div>
-                    <div class="close-line"></div>
+                    <div className="close-line"></div>
+                    <div className="close-line"></div>
                   </div>
                 </div>
               </div>

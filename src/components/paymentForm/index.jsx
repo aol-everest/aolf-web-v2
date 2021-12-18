@@ -81,6 +81,7 @@ export const PaymentForm = ({
   const [priceType, setPriceType] = useState("");
   const [discount] = useQueryString("discountCode");
   const [dicountResponse, setDicountResponse] = useState(null);
+  const [showCouponCodeField, setShowCouponCodeField] = useState(true);
   const [enrollFormValues, setEnrollFormValues] = useState(null);
   const [showProgramQuestionnaireForm, setShowProgramQuestionnaireForm] =
     useState(false);
@@ -472,6 +473,24 @@ export const PaymentForm = ({
     });
   };
 
+  const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
+    formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
+    const { isInstalmentAllowed } = workshop;
+    if (isInstalmentAllowed && showCouponCodeField) {
+      formikProps.setFieldValue("paymentOption", PAYMENT_TYPES.FULL);
+    }
+    toggleCouponCodeFieldAction();
+  };
+
+  const handleAccommodationChange = (formikProps, value) => {
+    formikProps.setFieldValue("accommodation", value);
+  };
+
+  const toggleCouponCodeFieldAction = (e) => {
+    if (e) e.preventDefault();
+    setShowCouponCodeField((showCouponCodeField) => !showCouponCodeField);
+  };
+
   return (
     <>
       <Formik
@@ -516,7 +535,9 @@ export const PaymentForm = ({
               "Please check the box in order to continue.",
               (value) => value === true,
             ),
-          accommodation: Yup.mixed().notRequired(),
+          accommodation: isAccommodationRequired
+            ? Yup.object().required("ERROR!")
+            : Yup.mixed().notRequired(),
           paymentMode: Yup.string().required("Payment mode is required!"),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
@@ -773,7 +794,7 @@ export const PaymentForm = ({
                     fee={fee}
                     delfee={delfee}
                     offering={offering}
-                    showCouponCodeField={true}
+                    showCouponCodeField={showCouponCodeField}
                     hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                     openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                     isComboDetailAvailable={isComboDetailAvailable}
@@ -781,6 +802,7 @@ export const PaymentForm = ({
                     isUsableCreditAvailable={isUsableCreditAvailable}
                     UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                     values={values}
+                    onComboDetailChange={handleComboDetailChange}
                   />
                   <CourseDetailsCard workshop={workshop} />
                   <PostCostDetailsCard
@@ -798,6 +820,7 @@ export const PaymentForm = ({
                     isUsableCreditAvailable={isUsableCreditAvailable}
                     UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                     totalFee={totalFee}
+                    onAccommodationChange={handleAccommodationChange}
                   />
 
                   {/* <div className="reciept__payment">
