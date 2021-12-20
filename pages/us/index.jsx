@@ -8,6 +8,7 @@ import { useUIDSeed } from "react-uid";
 import { WorkshopTile } from "@components/course/workshopTile";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
+import { AddressSearch } from "@components";
 import { withSSRContext } from "aws-amplify";
 import {
   Popup,
@@ -155,8 +156,11 @@ const Course = ({ authenticated }) => {
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
   });
-  const [locationFilter, setLocationFilter] = useQueryString("location");
+  const [locationFilter, setLocationFilter] = useQueryString("location", {
+    parse: JSON.parse,
+  });
   const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
+  const [ctypesFilter, setCtypesFilter] = useQueryString("ctypes");
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryString("startEndDate");
   const [timeZoneFilter, setTimeZoneFilter] = useQueryString("timeZone");
@@ -192,9 +196,14 @@ const Course = ({ authenticated }) => {
     switch (field) {
       case "courseTypeFilter":
         setCourseTypeFilter(value);
+        setCtypesFilter(null);
         break;
       case "locationFilter":
-        setLocationFilter(JSON.stringify(value));
+        if (value) {
+          setLocationFilter(JSON.stringify(value));
+        } else {
+          setLocationFilter(null);
+        }
         break;
       case "timeZoneFilter":
         setTimeZoneFilter(value);
@@ -213,9 +222,14 @@ const Course = ({ authenticated }) => {
     switch (field) {
       case "courseTypeFilter":
         setCourseTypeFilter(value);
+        setCtypesFilter(null);
         break;
       case "locationFilter":
-        setLocationFilter(JSON.stringify(value));
+        if (value) {
+          setLocationFilter(JSON.stringify(value));
+        } else {
+          setLocationFilter(null);
+        }
         break;
       case "timeZoneFilter":
         setTimeZoneFilter(value);
@@ -268,6 +282,8 @@ const Course = ({ authenticated }) => {
     [
       "workshops",
       {
+        locationFilter,
+        ctypesFilter,
         courseTypeFilter,
         filterStartEndDate,
         timeZoneFilter,
@@ -287,7 +303,12 @@ const Course = ({ authenticated }) => {
           mode: activeFilterType,
         };
       }
-      if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+      if (ctypesFilter) {
+        param = {
+          ...param,
+          ctype: ctypesFilter,
+        };
+      } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
         param = {
           ...param,
           ctype: COURSE_TYPES[courseTypeFilter].value,
@@ -311,6 +332,14 @@ const Course = ({ authenticated }) => {
           ...param,
           sdate: startDate,
           eDate: endDate,
+        };
+      }
+      if (locationFilter) {
+        const { lat, lng } = locationFilter;
+        param = {
+          ...param,
+          lat,
+          lng,
         };
       }
 
@@ -388,18 +417,22 @@ const Course = ({ authenticated }) => {
                 </a>
               </div>
               <div className="switch-flter-container">
-                {false && activeFilterType === COURSE_MODES.IN_PERSON && (
+                {activeFilterType === COURSE_MODES.IN_PERSON && (
                   <Popup
                     tabIndex="1"
                     value={locationFilter}
-                    buttonText={locationFilter ? locationFilter : "Location"}
+                    buttonText={
+                      locationFilter
+                        ? `${locationFilter.loactionName}`
+                        : "Location"
+                    }
                     closeEvent={onFilterChange("locationFilter")}
                   >
                     {({ closeHandler }) => (
-                      <SmartInput
+                      <AddressSearch
                         closeHandler={closeHandler}
-                        inputclassName="location-input"
-                      ></SmartInput>
+                        placeholder="Search for Location"
+                      />
                     )}
                   </Popup>
                 )}
