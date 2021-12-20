@@ -29,7 +29,7 @@ const MENU = [
         link: `/us?courseType=SKY_BREATH_MEDITATION`,
       },
       {
-        name: "Meditation Course",
+        name: "Sahaj Meditation",
         link: `/us?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
@@ -83,7 +83,7 @@ const MENU = [
     name: "Resources",
     submenu: [
       {
-        name: "App",
+        name: "Journey App",
         link: "https://event.us.artofliving.org/us-en/journey-app/",
       },
       {
@@ -94,10 +94,10 @@ const MENU = [
         name: "Wisdom Snippets",
         link: `/us/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
       },
-      {
-        name: "Meditation",
-        link: "https://www.artofliving.org/us-en/meditation",
-      },
+      // {
+      //   name: "Meditation",
+      //   link: "https://www.artofliving.org/us-en/meditation",
+      // },
       {
         name: "Better Sleep",
         link: "https://www.artofliving.org/us-en/blog/start-sleeping-restfully-all-night-using-this-meditation-sleep-guide",
@@ -110,10 +110,10 @@ const MENU = [
         name: "Yoga",
         link: "https://www.artofliving.org/us-en/yoga",
       },
-      {
-        name: "Guided Meditation",
-        link: "https://www.artofliving.org/us-en/online-guided-meditation",
-      },
+      // {
+      //   name: "Guided Meditation",
+      //   link: "https://www.artofliving.org/us-en/online-guided-meditation",
+      // },
       {
         name: "Meditation for Beginners",
         link: "https://www.artofliving.org/us-en/8-tips-get-started-meditation",
