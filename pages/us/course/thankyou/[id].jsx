@@ -1,11 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 import React, { useEffect } from "react";
-import { api, Clevertap } from "@utils";
+import { api, Clevertap, tConvert, calculateBusinessDays } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useAuth, useGlobalAlertContext } from "@contexts";
-import { COURSE_TYPES, ALERT_TYPES } from "@constants";
+import { COURSE_TYPES, ALERT_TYPES, ABBRS } from "@constants";
 import { AddToCalendarModal } from "@components";
 import moment from "moment";
 import Image from "next/image";
@@ -117,7 +117,12 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
-  const { ammountPaid, orderExternalId, couponCode } = attendeeRecord;
+  const {
+    ammountPaid,
+    orderExternalId,
+    couponCode,
+    selectedGenericSlot = {},
+  } = attendeeRecord;
 
   useEffect(() => {
     if (!profile) return;
@@ -177,6 +182,64 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
         hideAlert();
       },
     });
+  };
+
+  const showTiming = (timeZone, option) => {
+    let weekdayTiming = (
+      <p className="program_card_subtitle c_text c_timing">
+        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{" "}
+        {option.weekendStartTime &&
+          calculateBusinessDays(
+            moment.utc(option.startDate),
+            moment.utc(option.endDate),
+          ).weekday}
+      </p>
+    );
+    let weekendTiming = option.weekendStartTime && (
+      <p className="program_card_subtitle c_text c_timing">
+        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{" "}
+        {
+          calculateBusinessDays(
+            moment.utc(option.startDate),
+            moment.utc(option.endDate),
+          ).weekend
+        }
+      </p>
+    );
+    if (
+      moment.utc(option.startDate).day() === 0 ||
+      moment.utc(option.startDate).day() === 6
+    ) {
+      return (
+        <>
+          {weekendTiming}
+          {weekdayTiming}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {weekdayTiming}
+          {weekendTiming}
+        </>
+      );
+    }
+  };
+
+  const getSelectedTimeSlotDetails = (selectedTimeSlot) => {
+    if (selectedTimeSlot) {
+      return (
+        <>
+          <p className="program_card_subtitle c_text">
+            {moment.utc(selectedTimeSlot.startDate).format("MMM D") +
+              " - " +
+              moment.utc(selectedTimeSlot.endDate).format("D, YYYY")}
+          </p>
+          <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
+        </>
+      );
+    }
+    return null;
   };
 
   return (
@@ -257,32 +320,27 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
           <div className="container">
             <div className="program-details">
               <h2 className="program-details__title">Program Details</h2>
-              <ul className="program-details__list-schedule">
-                <li className="program-details__schedule">
-                  <span className="program-details__schedule-date">
-                    October 23, 2020
-                  </span>
-                  <span className="program-details__schedule-time">
-                    6:00 PM - 9:30 PM ET
-                  </span>
-                </li>
-                <li className="program-details__schedule">
-                  <span className="program-details__schedule-date">
-                    October 24, 2020
-                  </span>
-                  <span className="program-details__schedule-time">
-                    7:00 AM - 9:30 PM ET
-                  </span>
-                </li>
-                <li className="program-details__schedule">
-                  <span className="program-details__schedule-date">
-                    October 25, 2020
-                  </span>
-                  <span className="program-details__schedule-time">
-                    7:00 AM - 5:00 PM ET
-                  </span>
-                </li>
-              </ul>
+              {selectedGenericSlot.startDate &&
+                getSelectedTimeSlotDetails(selectedGenericSlot)}
+              {!selectedGenericSlot.startDate && (
+                <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
+                  {timings &&
+                    timings.map((time, i) => {
+                      return (
+                        <li className="program-details__schedule" key={i}>
+                          <span className="program-details__schedule-date">
+                            {moment.utc(time.startDate).format("LL")}
+                          </span>
+                          <span className="program-details__schedule-time">{`${tConvert(
+                            time.startTime,
+                          )} - ${tConvert(time.endTime)} ${
+                            ABBRS[time.timeZone]
+                          }`}</span>
+                        </li>
+                      );
+                    })}
+                </ul>
+              )}
             </div>
             <h2 className="journey-starts__title section-title">
               Your journey starts here
