@@ -1,0 +1,104 @@
+.daterangepicker {
+  border: 0 solid #e9e9e9 !important;
+  position: unset !important;
+  margin-top: 0 !important;
+  table {
+    border-collapse: initial !important;
+  }
+}
+@media (min-width: 564px) {
+  .top-column .course-details__list .course-details__popup_calendar {
+    min-width: 484px;
+    padding: 0px;
+  }
+}
+.daterangepicker {
+  position: initial;
+  border-width: 0px;
+  margin-top: 0px;
+  //box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+  //border: solid 1px #e9e9e9;
+  //margin-top: 16px;
+
+  .drp-calendar.left {
+    padding: 8px 0 8px 0;
+  }
+  .drp-calendar.right {
+    padding: 8px 0 8px 0;
+  }
+  .drp-buttons {
+    display: none !important;
+  }
+  th.available:hover {
+    background-color: transparent;
+    border-color: transparent;
+    color: inherit;
+  }
+  .calendar-table {
+    border: none;
+    table {
+      border-collapse: separate !important;
+    }
+    .next span,
+    .prev span {
+      border-color: #3d8be8;
+      &:hover {
+        background-color: transparent;
+        border-color: #89beec;
+        color: inherit;
+      }
+    }
+    .table-condensed {
+      thead {
+        tr:nth-child(2) {
+          th {
+            background-color: rgba(233, 239, 248, 0.35);
+            border-radius: 0;
+            color: #3d8be8;
+            font-size: 10px;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            font-size: 11px;
+            color: rgba(49, 54, 78, 0.6);
+            &:hover {
+              background-color: transparent;
+              color: #89beec;
+            }
+            &.off {
+              color: rgba(49, 54, 78, 0.34);
+            }
+          }
+          td.in-range {
+            background-color: rgba(233, 239, 248, 0.35);
+            color: #3d8be8;
+          }
+        }
+      }
+    }
+  }
+  &::before {
+    content: initial;
+    border-width: 0px;
+    border-bottom-color: #e9e9e9;
+  }
+  &::after {
+    content: initial;
+    border-width: 0px;
+    border-bottom-color: #e9e9e9;
+  }
+  .month {
+    font-size: 14px !important;
+    color: rgba(49, 54, 78, 0.8);
+  }
+
+  td.active {
+    background-color: transparent !important;
+    color: #3d8be8 !important;
+    border: 1px solid #89beec !important;
+    border-radius: 4px !important;
+  }
+}

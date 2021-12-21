@@ -18,6 +18,7 @@ import "swiper/components/navigation/navigation.min.css";
 import "swiper/components/pagination/pagination.min.css";
 import "swiper/components/a11y/a11y.min.css";
 import "swiper/components/scrollbar/scrollbar.min.css";
+import "bootstrap-daterangepicker/daterangepicker.css";
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query;
