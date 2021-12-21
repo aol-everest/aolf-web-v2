@@ -297,6 +297,11 @@ main.background-image {
   color: $text-color;
 }
 
+[type="submit"].btn-primary {
+  border: none;
+  background: linear-gradient(0deg, $blue 0%, $blue-hover 100%);
+}
+
 .btn-primary {
   border: none;
   background: linear-gradient(0deg, $blue 0%, $blue-hover 100%);

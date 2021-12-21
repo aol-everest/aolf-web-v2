@@ -3,11 +3,10 @@ import { useRouter } from "next/router";
 import { api, isSSR } from "@utils";
 import { useQuery } from "react-query";
 import { DesignOne, DesignTwo } from "@components/content";
-import { Loader } from "@components";
 import { withSSRContext } from "aws-amplify";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useQueryString } from "@hooks";
-import { PurchaseMembershipModal } from "@components";
+import { PurchaseMembershipModal, Loader } from "@components";
 import {
   useGlobalAudioPlayerContext,
   useGlobalAlertContext,

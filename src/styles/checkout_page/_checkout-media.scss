@@ -22,10 +22,6 @@
           box-shadow: $blue-shadow;
         }
 
-        .course-join-card__title {
-          text-align: left;
-        }
-
         .course-join-card__body {
           padding: 0;
         }
@@ -74,7 +70,6 @@
 }
 
 @media screen and (max-width: 425px) {
-
   .modal-window {
     &_no-log {
       #retreat-prerequisite {
@@ -95,7 +90,6 @@
 }
 
 @media screen and (max-height: 600px) {
-
   .modal-window {
     &_no-log {
       #retreat-prerequisite {

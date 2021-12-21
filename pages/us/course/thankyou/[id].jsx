@@ -4,7 +4,11 @@ import React, { useEffect } from "react";
 import { api, Clevertap } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
-import { useAuth } from "@contexts";
+import { useAuth, useGlobalAlertContext } from "@contexts";
+import { COURSE_TYPES, ALERT_TYPES } from "@constants";
+import { AddToCalendarModal } from "@components";
+import moment from "moment";
+import Image from "next/image";
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
@@ -30,17 +34,89 @@ export async function getServerSideProps(context) {
   };
 }
 
+const renderVideo = (productTypeId) => {
+  switch (productTypeId) {
+    case "811570":
+    case "1001309":
+    case "1008432":
+      return (
+        <iframe
+          src="https://player.vimeo.com/video/432237531"
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          allow="autoplay; fullscreen"
+          allowFullScreen
+        ></iframe>
+      );
+    case "811569":
+      return (
+        <iframe
+          src="https://player.vimeo.com/video/411549679"
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          allow="autoplay; fullscreen"
+          allowFullScreen
+        ></iframe>
+      );
+    case "999649":
+      return (
+        <img
+          src="/img/SahajSamadhi.png"
+          alt="course img"
+          className="img-fluid"
+        />
+      );
+    default:
+      return (
+        <img src="/img/image@3x.png" alt="course img" className="img-fluid" />
+      );
+  }
+};
+
 const Thankyou = ({ workshop, attendeeRecord }) => {
   const sendDataToGTM = useGTMDispatch();
   const { profile } = useAuth();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
 
   const {
-    meetupTitle,
     title,
     productTypeId,
     unitPrice,
     id: courseId,
+    formattedStartDateOnly,
+    formattedEndDateOnly,
+    shortAddress,
+    primaryTeacherName,
+    eventStartDate,
+    eventEndDate,
+    phone1,
+    email,
+    timings,
+    isGenericWorkshop,
+    streetAddress1,
+    streetAddress2,
+    city,
+    country,
+    eventStartTime,
+    eventEndTime,
+    meetupStartDate,
+    meetupStartTime,
+    meetupStartDateTimeGMT,
+    eventTimeZone,
+    eventType,
+    eventendDateTimeGMT,
+    eventStartDateTimeGMT,
   } = workshop;
+
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+
   const { ammountPaid, orderExternalId, couponCode } = attendeeRecord;
 
   useEffect(() => {
@@ -49,7 +125,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
       event: "transactionComplete",
       viewType: "workshop",
       amount: unitPrice,
-      title: meetupTitle || title,
+      title: title,
       ctype: productTypeId,
       requestType: "Thankyou",
       // user,
@@ -91,6 +167,18 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
     });
   }, [profile]);
 
+  const addToCalendarAction = (e) => {
+    if (e) e.preventDefault();
+    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+      title: "Add to Calendar",
+
+      children: <AddToCalendarModal event={workshop} />,
+      closeModalAction: () => {
+        hideAlert();
+      },
+    });
+  };
+
   return (
     <>
       <main>
@@ -102,34 +190,70 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
                   <h3 className="get-started__subtitle">You’re going!</h3>
                   <h1 className="get-started__title section-title">{title}</h1>
                   <p className="get-started__text">
-                    You're registered for the {title} from Wed, October 23 -
-                    Fri, October 25, 2020
+                    You're registered for the {title}{" "}
+                    {!isGenericWorkshop && (
+                      <>
+                        {" "}
+                        from {formattedStartDateOnly} - {formattedEndDateOnly}
+                      </>
+                    )}
                   </p>
-                  <a className="get-started__link" href="#">
-                    Add to Calendar
-                  </a>
+                  {!isGenericWorkshop && (
+                    <a
+                      className="get-started__link"
+                      href="#"
+                      onClick={addToCalendarAction}
+                    >
+                      Add to Calendar
+                    </a>
+                  )}
+
                   <p className="get-started__text">
-                    Next step: You will receive an email with details about your
-                    Silent Retreat orientation.
+                    Next step: You will receive an email with details about your{" "}
+                    {title}.
                   </p>
+                </div>
+                <p className="get-started__text">
+                  <br />
+                  To get started, download the app.{" "}
+                  {isGenericWorkshop && (
+                    <>
+                      <span>
+                        We will reach out to schedule dates for your course.
+                      </span>
+                    </>
+                  )}
+                </p>
+                <div className="btn-wrapper">
+                  <a
+                    className="btn-outline tw-mr-2"
+                    href="https://apps.apple.com/us/app/art-of-living-journey/id1469587414?ls=1"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <img src="/img/ic-apple.svg" alt="apple" />
+                    iOS App
+                  </a>
+                  <a
+                    className="btn-outline"
+                    href="https://play.google.com/store/apps/details?id=com.aol.app"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <img src="/img/ic-android.svg" alt="android" />
+                    Android App
+                  </a>
                 </div>
               </div>
               <div className="col-lg-6 col-md-12 offset-lg-1 p-0">
                 <div className="get-started__video">
-                  <iframe
-                    src="https://player.vimeo.com/video/432237531"
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    allow="autoplay; fullscreen"
-                    allowFullScreen
-                  ></iframe>
+                  {renderVideo(productTypeId)}
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <section className="journey-starts">
+        <section className="journey-starts !tw-mb-0">
           <div className="container">
             <div className="program-details">
               <h2 className="program-details__title">Program Details</h2>
@@ -211,17 +335,58 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
         <div className="container">
           <div className="course-bottom-card__container">
             <div className="course-bottom-card__info-block">
-              <div className="course-bottom-card__img d-none d-lg-block">
-                <img src="/img/silent-card-img.png" alt="img" />
+              <div className="course-bottom-card__img d-none d-lg-block tw-max-w-[60px] tw-h-[60px] tw-relative">
+                {isSilentRetreatType && (
+                  <Image
+                    src="/img/course-card-4.png"
+                    alt="course-photo"
+                    layout="fill"
+                  />
+                )}
+                {isSKYType && (
+                  <Image
+                    src="/img/course-card-2.png"
+                    alt="course-photo"
+                    layout="fill"
+                  />
+                )}
+                {isSahajSamadhiMeditationType && (
+                  <Image
+                    src="/img/course-card-5.png"
+                    alt="course-photo"
+                    layout="fill"
+                  />
+                )}
+                {!isSilentRetreatType &&
+                  !isSKYType &&
+                  !isSahajSamadhiMeditationType && (
+                    <Image
+                      src="/img/course-card-1.png"
+                      alt="course-photo"
+                      layout="fill"
+                    />
+                  )}
               </div>
               <div className="course-bottom-card__info">
-                <p>October 23-35, 2020</p>
+                {!isGenericWorkshop && (
+                  <p>
+                    {moment.utc(eventStartDate).format("MMMM D") +
+                      " - " +
+                      moment.utc(eventEndDate).format("MMMM D") +
+                      ", " +
+                      moment.utc(eventEndDate).format("YYYY")}
+                  </p>
+                )}
                 <div>
                   <h3>{title}</h3>
                 </div>
               </div>
             </div>
-            <button id="register-button-2" className="btn-secondary">
+            <button
+              id="register-button-2"
+              className="btn-secondary"
+              onClick={addToCalendarAction}
+            >
               Add to Calendar
             </button>
           </div>

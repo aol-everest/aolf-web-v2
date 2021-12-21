@@ -19,11 +19,11 @@ import { AuthProvider } from "@contexts";
 import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
 import Script from "next/script";
 import * as snippet from "@segment/snippet";
-
+import "@styles/global.scss";
 import "nprogress/nprogress.css";
 import "@styles/global-customize/style.scss";
 import "@styles/style.scss";
-import "@styles/global.scss";
+
 import "@styles/old-design/style.scss";
 
 import config from "./../src/aws-exports";

@@ -1,27 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 import React, { useEffect } from "react";
-import {
-  api,
-  buildShareUrl,
-  isInternetExplorer,
-  calculateBusinessDays,
-  tConvert,
-} from "@utils";
+import { api, calculateBusinessDays, tConvert } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useRouter } from "next/router";
 import moment from "moment";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import {
-  TIME_ZONE,
-  COURSE_MODES,
-  ALERT_TYPES,
-  SHARE_SITES,
-  MODAL_TYPES,
-  MEMBERSHIP_TYPES,
-  ABBRS,
-} from "@constants";
+import { AddToCalendarModal } from "@components";
+import { ALERT_TYPES, ABBRS } from "@constants";
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
@@ -57,23 +44,6 @@ export async function getServerSideProps(context) {
     };
   }
 }
-
-const AddToCalendar = ({ handleCalendarButtonClick, event }) => {
-  return (
-    <p className="text-center">
-      {Object.values(SHARE_SITES).map((item) => (
-        <a
-          className="add-to-calendar-link"
-          key={item}
-          onClick={handleCalendarButtonClick}
-          href={buildShareUrl(event, item)}
-        >
-          {item}
-        </a>
-      ))}
-    </p>
-  );
-};
 
 const Thankyou = ({ meetup, attendeeRecord }) => {
   const sendDataToGTM = useGTMDispatch();
@@ -215,39 +185,14 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
     }
   };
 
-  const handleCalendarButtonClick = (e) => {
-    if (e) e.preventDefault();
-    const url = e.currentTarget.getAttribute("href");
-    if (url.startsWith("BEGIN")) {
-      const filename = "download.ics";
-      const blob = new Blob([url], { type: "text/calendar;charset=utf-8" });
-
-      if (isInternetExplorer()) {
-        window.navigator.msSaveOrOpenBlob(blob, filename);
-      } else {
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.setAttribute("download", filename);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } else {
-      window.open(url, "_blank");
-    }
-  };
-
   const addToCalendarAction = () => {
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      //className: "retreat-prerequisite-big meditation-digital-membership",
       title: "Add to Calendar",
 
-      children: (
-        <AddToCalendar
-          handleCalendarButtonClick={handleCalendarButtonClick}
-          event={meetup}
-        />
-      ),
+      children: <AddToCalendarModal event={meetup} />,
+      closeModalAction: () => {
+        hideAlert();
+      },
     });
   };
 
