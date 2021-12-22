@@ -84,7 +84,7 @@ const MENU = [
     submenu: [
       {
         name: "Journey App",
-        link: "https://event.us.artofliving.org/us-en/journey-app/",
+        link: "/us/journey-app",
       },
       {
         name: "Articles",
