@@ -126,8 +126,6 @@ function App({ Component, pageProps, userInfo = {} }) {
         await Auth.signOut();
       }
     }
-
-    console.log("c----II------");
     fetchProfile();
   }, []);
 

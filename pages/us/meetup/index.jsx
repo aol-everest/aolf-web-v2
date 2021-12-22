@@ -61,110 +61,6 @@ const DATE_PICKER_CONFIG = {
   autoApply: true,
 };
 
-export const getServerSideProps = async (context) => {
-  let props = {};
-  let token = "";
-  try {
-    const { Auth } = await withSSRContext(context);
-    const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
-    props = {
-      authenticated: true,
-      username: user.username,
-      token,
-    };
-  } catch (err) {
-    props = {
-      authenticated: false,
-    };
-  }
-  // const {
-  //   page = 1,
-  //   mode = COURSE_MODES.ONLINE,
-  //   location,
-  //   meetupType,
-  //   startEndDate,
-  //   timeZone,
-  //   instructor,
-  //   timesOfDay,
-  // } = context.query;
-  // // Fetch data from external API
-  try {
-    //   let param = {
-    //     page,
-    //     size: 8,
-    //   };
-
-    //   if (mode) {
-    //     param = {
-    //       ...param,
-    //       mode,
-    //     };
-    //   }
-    //   if (meetupType) {
-    //     param = {
-    //       ...param,
-    //       filter: meetupType,
-    //     };
-    //   }
-    //   if (timeZone && TIME_ZONE[timeZone]) {
-    //     param = {
-    //       ...param,
-    //       timeZone: TIME_ZONE[timeZone].value,
-    //     };
-    //   }
-    //   if (timesOfDay) {
-    //     param = {
-    //       ...param,
-    //       timesOfDay: timesOfDay,
-    //     };
-    //   }
-    //   if (instructor && instructor.value) {
-    //     param = {
-    //       ...param,
-    //       teacherId: instructor.value,
-    //     };
-    //   }
-    //   if (startEndDate) {
-    //     const [startDate, endDate] = startEndDate.split("|");
-    //     param = {
-    //       ...param,
-    //       sdate: startDate,
-    //       eDate: endDate,
-    //     };
-    //   }
-
-    // const res = await api.get({
-    //   path: "meetups",
-    //   token,
-    //   param,
-    // });
-
-    const allMeetupMaster = await api.get({
-      path: "getAllMeetupMaster",
-      token,
-    });
-
-    props = {
-      ...props,
-      // meetups: {
-      //   pages: [{ data: res }],
-      //   pageParams: [null],
-      // },
-      allMeetupMaster,
-    };
-  } catch (err) {
-    props = {
-      ...props,
-      meetups: {
-        error: { message: err.message },
-      },
-    };
-  }
-  // Pass data to the page via props
-  return { props };
-};
-
 async function queryInstructor({ queryKey: [_, term] }) {
   const response = await api.get({
     path: "cf/teachers",
@@ -196,9 +92,9 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
   );
 };
 
-const Meetup = ({ allMeetupMaster, authenticated }) => {
+const Meetup = () => {
   const seed = useUIDSeed();
-  const { profile } = useAuth();
+  const { authenticated, profile } = useAuth();
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
@@ -228,6 +124,19 @@ const Meetup = ({ allMeetupMaster, authenticated }) => {
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
+
+  const { data: allMeetupMaster = [] } = useQuery(
+    "allMeetupMaster",
+    async () => {
+      const response = await api.get({
+        path: "getAllMeetupMaster",
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const meetupMasters = allMeetupMaster.reduce((acc, meetup) => {
     return { ...acc, [meetup.id]: meetup };

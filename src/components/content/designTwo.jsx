@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import classNames from "classnames";
+import { api } from "@utils";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import { Popup, MobileFilterModal, SmartDropDown } from "@components";
 import { DURATION } from "@constants";
+import { useQuery } from "react-query";
 
 const CATEGORY_IMAGES = [
   "/img/card-1a.png",
@@ -93,6 +95,25 @@ export const DesignTwo = ({
   if (instructor) {
     filterCount++;
   }
+
+  const { data: expeditions = [], isSuccess } = useQuery(
+    "expeditions",
+    async () => {
+      const response = await api.get({
+        path: "journey",
+        param: {
+          type: "Journey",
+          subType: "Expedition",
+        },
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  console.log("expeditions", expeditions);
 
   return (
     <main className="background-image meditation insight-collection insight-collection3 tw-pb-[100px]">
@@ -419,67 +440,86 @@ export const DesignTwo = ({
           </div>
         </div>
       </section>
-      {authenticated && (
-        <>
-          {favouriteContentOnly && favouriteContentOnly.length > 0 && (
-            <section className="browse-category most-popular">
-              <p className="title-slider">My Favorites</p>
-              <Swiper className="swiper-container" {...swiperOption}>
-                {favouriteContentOnly.map((meditate) => (
-                  <SwiperSlide
-                    className="swiper-slide popular-slide-item"
-                    key={meditate.sfid}
+      {authenticated &&
+        favouriteContentOnly &&
+        favouriteContentOnly.length > 0 && (
+          <section className="browse-category most-popular">
+            <p className="title-slider">My Favorites</p>
+            <Swiper className="swiper-container" {...swiperOption}>
+              {favouriteContentOnly.map((meditate) => (
+                <SwiperSlide
+                  className="swiper-slide popular-slide-item"
+                  key={meditate.sfid}
+                >
+                  <div
+                    className={classNames(
+                      "card image-card image-card-1 contentCard",
+                    )}
+                    data-play-meditation
+                    style={{
+                      background: `url(${
+                        meditate.coverImage
+                          ? meditate.coverImage.url
+                          : "/img/card-1a.png"
+                      }) no-repeat center/cover`,
+                    }}
                   >
-                    <div
-                      className={classNames(
-                        "card image-card image-card-1 contentCard",
-                      )}
-                      data-play-meditation
-                      style={{
-                        background: `url(${
-                          meditate.coverImage
-                            ? meditate.coverImage.url
-                            : "/img/card-1a.png"
-                        }) no-repeat center/cover`,
-                      }}
-                    >
-                      <div className="duration-wrapper">
-                        <span className="duration">
-                          {timeConvert(meditate.duration)}
+                    <div className="duration-wrapper">
+                      <span className="duration">
+                        {timeConvert(meditate.duration)}
+                      </span>
+                      {!meditate.accessible && (
+                        <span className="lock">
+                          {" "}
+                          <img src="/img/ic-lock.png" />{" "}
                         </span>
-                        {!meditate.accessible && (
-                          <span className="lock">
-                            {" "}
-                            <img src="/img/ic-lock.png" />{" "}
-                          </span>
-                        )}
-                      </div>
-                      {meditate.accessible && (
-                        <div
-                          onClick={markFavorite(meditate)}
-                          className={
-                            meditate.isFavorite
-                              ? "course-like liked"
-                              : "course-like"
-                          }
-                        ></div>
                       )}
-                      <div
-                        className="forClick"
-                        onClick={meditateClickHandle(meditate)}
-                      ></div>
-                      <h5 className="card-title">{meditate.title}</h5>
-                      <p className="card-text">{meditate.primaryTeacherName}</p>
                     </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </section>
-          )}
-        </>
-      )}
+                    {meditate.accessible && (
+                      <div
+                        onClick={markFavorite(meditate)}
+                        className={
+                          meditate.isFavorite
+                            ? "course-like liked"
+                            : "course-like"
+                        }
+                      ></div>
+                    )}
+                    <div
+                      className="forClick"
+                      onClick={meditateClickHandle(meditate)}
+                    ></div>
+                    <h5 className="card-title">{meditate.title}</h5>
+                    <p className="card-text">{meditate.primaryTeacherName}</p>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
+        )}
 
-      <section className="browse-category most-popular">
+      {expeditions &&
+        expeditions.challenges &&
+        expeditions.challenges.length > 0 && (
+          <section className="browse-category most-popular tw-mb-5">
+            <p className="title-slider">Browse by Expedition</p>
+            <Swiper className="swiper-container" {...swiperOption}>
+              {expeditions.challenges.map((challenge) => (
+                <SwiperSlide
+                  className="swiper-slide popular-slide-item"
+                  key={challenge.challengeSfid}
+                >
+                  <div className="card image-card image-card-2">
+                    <div className="duration-wrapper"></div>
+                    <h5 className="card-title">{challenge.challengeName}</h5>
+                    <p className="card-text">{challenge.teacherName}</p>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
+        )}
+      {/* <section className="browse-category most-popular">
         <p className="title-slider">Browse by Expedition</p>
         <div className="swiper-container">
           <div className="swiper-wrapper">
@@ -560,7 +600,7 @@ export const DesignTwo = ({
           <div className="swiper-button-next popular__button-next comments__button-next"></div>
           <div className="swiper-button-prev popular__button-prev comments__button-prev"></div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 };

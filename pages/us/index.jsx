@@ -195,8 +195,8 @@ const Course = ({ authenticated }) => {
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case "courseTypeFilter":
-        setCourseTypeFilter(value);
         setCtypesFilter(null);
+        setCourseTypeFilter(value);
         break;
       case "locationFilter":
         if (value) {
@@ -221,8 +221,8 @@ const Course = ({ authenticated }) => {
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     switch (field) {
       case "courseTypeFilter":
-        setCourseTypeFilter(value);
         setCtypesFilter(null);
+        setCourseTypeFilter(value);
         break;
       case "locationFilter":
         if (value) {
