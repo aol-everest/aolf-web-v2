@@ -4,7 +4,7 @@ import { withSSRContext } from "aws-amplify";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import {
   useGlobalAudioPlayerContext,
   useGlobalAlertContext,
@@ -19,11 +19,17 @@ import { DURATION, MODAL_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
-import "swiper/swiper.min.css";
-import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/pagination/pagination.min.css";
-import "swiper/components/a11y/a11y.min.css";
-import "swiper/components/scrollbar/scrollbar.min.css";
+// swiper bundle styles
+import "swiper/css/bundle";
+
+// swiper core styles
+import "swiper/css";
+
+// modules styles
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/a11y";
+import "swiper/css/scrollbar";
 
 const CATEGORY_IMAGES = [
   "/img/card-1a.png",
@@ -68,7 +74,7 @@ export const getServerSideProps = async (context) => {
 };
 
 const Meditation = ({ authenticated, randomMeditate }) => {
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+  //SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
@@ -262,6 +268,7 @@ const Meditation = ({ authenticated, randomMeditate }) => {
   }
 
   let swiperOption = {
+    modules: [Navigation, Pagination, Scrollbar, A11y],
     allowTouchMove: true,
     slidesPerView: slidesPerView,
     spaceBetween: 30,

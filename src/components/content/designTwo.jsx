@@ -509,8 +509,19 @@ export const DesignTwo = ({
                   className="swiper-slide popular-slide-item"
                   key={challenge.challengeSfid}
                 >
-                  <div className="card image-card image-card-2">
-                    <div className="duration-wrapper"></div>
+                  <div
+                    className="card image-card image-card-2"
+                    style={{
+                      background: `url(${
+                        challenge.coverImage
+                          ? challenge.coverImage.url
+                          : "/img/card-2a.png"
+                      }) no-repeat center/cover`,
+                    }}
+                  >
+                    <div className="duration-wrapper">
+                      {challenge.contentDuration}
+                    </div>
                     <h5 className="card-title">{challenge.challengeName}</h5>
                     <p className="card-text">{challenge.teacherName}</p>
                   </div>

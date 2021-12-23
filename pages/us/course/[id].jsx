@@ -7,17 +7,23 @@ import {
   SriSriYoga,
   VolunteerTrainingProgram,
 } from "@components/courseDetails";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { NextSeo } from "next-seo";
 import { useAuth } from "@contexts";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
-import "swiper/swiper.min.css";
-import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/pagination/pagination.min.css";
-import "swiper/components/a11y/a11y.min.css";
-import "swiper/components/scrollbar/scrollbar.min.css";
+// swiper bundle styles
+import "swiper/css/bundle";
+
+// swiper core styles
+import "swiper/css";
+
+// modules styles
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/a11y";
+import "swiper/css/scrollbar";
 import "bootstrap-daterangepicker/daterangepicker.css";
 
 export const getServerSideProps = async (context) => {
@@ -79,9 +85,8 @@ export default function CourseDetail({ data }) {
     });
   }, [profile]);
 
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
-
   let swiperOption = {
+    modules: [Navigation, Pagination, Scrollbar, A11y],
     allowTouchMove: false,
     slidesPerView: 4,
     spaceBetween: 30,

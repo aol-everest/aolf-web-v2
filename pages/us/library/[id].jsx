@@ -4,7 +4,7 @@ import { api, isSSR } from "@utils";
 import { useQuery } from "react-query";
 import { DesignOne, DesignTwo } from "@components/content";
 import { withSSRContext } from "aws-amplify";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useQueryString } from "@hooks";
 import { PurchaseMembershipModal, Loader } from "@components";
 import {
@@ -16,11 +16,17 @@ import {
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
-import "swiper/swiper.min.css";
-import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/pagination/pagination.min.css";
-import "swiper/components/a11y/a11y.min.css";
-import "swiper/components/scrollbar/scrollbar.min.css";
+// swiper bundle styles
+import "swiper/css/bundle";
+
+// swiper core styles
+import "swiper/css";
+
+// modules styles
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/a11y";
+import "swiper/css/scrollbar";
 
 const CATEGORY_IMAGES = [
   "/img/card-1a.png",
@@ -68,7 +74,7 @@ export const getServerSideProps = async (context) => {
 export default function Library({ data, authenticated }) {
   const [rootFolder] = data.folder;
 
-  SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+  //SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
@@ -277,6 +283,7 @@ export default function Library({ data, authenticated }) {
   }
 
   let swiperOption = {
+    modules: [Navigation, Pagination, Scrollbar, A11y],
     allowTouchMove: true,
     slidesPerView: slidesPerView,
     spaceBetween: 30,
