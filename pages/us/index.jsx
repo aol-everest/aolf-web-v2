@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
-import { api } from "@utils";
+import { api, stringToBoolean } from "@utils";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
@@ -158,9 +158,11 @@ const Course = ({ authenticated }) => {
   });
   const [otherCType] = useQueryString("other-ctype", {
     defaultValue: false,
+    parse: stringToBoolean,
   });
   const [privateEvent] = useQueryString("private-event", {
     defaultValue: false,
+    parse: stringToBoolean,
   });
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,

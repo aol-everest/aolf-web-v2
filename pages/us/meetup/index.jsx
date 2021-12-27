@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
-import { api } from "@utils";
+import { api, stringToBoolean } from "@utils";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
@@ -101,6 +101,7 @@ const Meetup = () => {
   const { latitude, longitude, error: geoLocationError } = useGeolocation();
   const [privateEvent] = useQueryString("private-event", {
     defaultValue: false,
+    parse: stringToBoolean,
   });
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
