@@ -16,13 +16,7 @@ import {
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
-// swiper bundle styles
-import "swiper/css/bundle";
-
-// swiper core styles
 import "swiper/css";
-
-// modules styles
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/a11y";

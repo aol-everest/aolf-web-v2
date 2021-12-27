@@ -19,13 +19,7 @@ import { DURATION, MODAL_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
-// swiper bundle styles
-import "swiper/css/bundle";
-
-// swiper core styles
 import "swiper/css";
-
-// modules styles
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/a11y";

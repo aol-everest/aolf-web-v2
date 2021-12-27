@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 import { api } from "@utils";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
@@ -41,6 +42,7 @@ export const DesignTwo = ({
   favouriteContents,
   onFilterClearEvent,
 }) => {
+  const router = useRouter();
   let favouriteContentOnly = [];
   const contentFolders = data.folder.map((folder) => {
     const content = folder.content.map((content) => {
@@ -96,24 +98,28 @@ export const DesignTwo = ({
     filterCount++;
   }
 
-  const { data: expeditions = [], isSuccess } = useQuery(
-    "expeditions",
-    async () => {
-      const response = await api.get({
-        path: "journey",
-        param: {
-          type: "Journey",
-          subType: "Expedition",
-        },
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  // const { data: expeditions = [], isSuccess } = useQuery(
+  //   "expeditions",
+  //   async () => {
+  //     const response = await api.get({
+  //       path: "journey",
+  //       param: {
+  //         type: "Journey",
+  //         subType: "Expedition",
+  //       },
+  //     });
+  //     return response.data;
+  //   },
+  //   {
+  //     refetchOnWindowFocus: false,
+  //   },
+  // );
 
-  console.log("expeditions", expeditions);
+  const openExpedition = (expedition) => () => {
+    router.push(`/us/journey/${expedition.challengeSfid}`);
+  };
+
+  // console.log("expeditions", expeditions);
 
   return (
     <main className="background-image meditation insight-collection insight-collection3 tw-pb-[100px]">
@@ -498,7 +504,7 @@ export const DesignTwo = ({
           </section>
         )}
 
-      {expeditions &&
+      {/* {expeditions &&
         expeditions.challenges &&
         expeditions.challenges.length > 0 && (
           <section className="browse-category most-popular tw-mb-5">
@@ -510,6 +516,7 @@ export const DesignTwo = ({
                   key={challenge.challengeSfid}
                 >
                   <div
+                    onClick={openExpedition(challenge)}
                     className="card image-card image-card-2"
                     style={{
                       background: `url(${
@@ -529,7 +536,7 @@ export const DesignTwo = ({
               ))}
             </Swiper>
           </section>
-        )}
+        )} */}
       {/* <section className="browse-category most-popular">
         <p className="title-slider">Browse by Expedition</p>
         <div className="swiper-container">

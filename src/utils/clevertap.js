@@ -45,7 +45,11 @@ export const Clevertap = {
   },
 
   logout: function () {
-    if (!window.clevertap.logout || !CLEVERTAP_ACCOUNT_ID) {
+    if (
+      !CLEVERTAP_ACCOUNT_ID ||
+      !window.clevertap ||
+      !window.clevertap.logout
+    ) {
       return null;
     }
     window.clevertap.logout();

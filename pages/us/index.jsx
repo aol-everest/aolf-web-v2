@@ -156,6 +156,12 @@ const Course = ({ authenticated }) => {
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
   });
+  const [otherCType] = useQueryString("other-ctype", {
+    defaultValue: false,
+  });
+  const [privateEvent] = useQueryString("private-event", {
+    defaultValue: false,
+  });
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
   });
@@ -282,6 +288,8 @@ const Course = ({ authenticated }) => {
     [
       "workshops",
       {
+        privateEvent,
+        otherCType,
         locationFilter,
         ctypesFilter,
         courseTypeFilter,
@@ -340,6 +348,18 @@ const Course = ({ authenticated }) => {
           ...param,
           lat,
           lng,
+        };
+      }
+      if (otherCType) {
+        param = {
+          ...param,
+          other: 1,
+        };
+      }
+      if (privateEvent) {
+        param = {
+          ...param,
+          isPrivateEvent: 1,
         };
       }
 
@@ -449,18 +469,36 @@ const Course = ({ authenticated }) => {
                 >
                   {({ closeHandler }) => (
                     <>
-                      <li onClick={closeHandler("SKY_BREATH_MEDITATION")}>
-                        {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                      </li>
-                      <li onClick={closeHandler("SILENT_RETREAT")}>
-                        {COURSE_TYPES.SILENT_RETREAT.name}
-                      </li>
-                      <li onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}>
-                        {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                      </li>
-                      <li onClick={closeHandler("SRI_SRI_YOGA_MEDITATION")}>
-                        {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
-                      </li>
+                      {otherCType && (
+                        <>
+                          <li onClick={closeHandler("CHAKRA_KRIYA")}>
+                            {COURSE_TYPES.CHAKRA_KRIYA.name}
+                          </li>
+                          <li
+                            onClick={closeHandler("VOLUNTEER_TRAINING_PROGRAM")}
+                          >
+                            {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
+                          </li>
+                        </>
+                      )}
+                      {!otherCType && (
+                        <>
+                          <li onClick={closeHandler("SKY_BREATH_MEDITATION")}>
+                            {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                          </li>
+                          <li onClick={closeHandler("SILENT_RETREAT")}>
+                            {COURSE_TYPES.SILENT_RETREAT.name}
+                          </li>
+                          <li
+                            onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
+                          >
+                            {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+                          </li>
+                          <li onClick={closeHandler("SRI_SRI_YOGA_MEDITATION")}>
+                            {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
+                          </li>
+                        </>
+                      )}
                     </>
                   )}
                 </Popup>
@@ -608,30 +646,52 @@ const Course = ({ authenticated }) => {
                   >
                     {({ closeHandler }) => (
                       <>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SKY_BREATH_MEDITATION")}
-                        >
-                          {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SILENT_RETREAT")}
-                        >
-                          {COURSE_TYPES.SILENT_RETREAT.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
-                        >
-                          {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("Sri Sri Yoga")}
-                        >
-                          {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
-                        </li>
+                        {otherCType && (
+                          <>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("CHAKRA_KRIYA")}
+                            >
+                              {COURSE_TYPES.CHAKRA_KRIYA.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(
+                                "VOLUNTEER_TRAINING_PROGRAM",
+                              )}
+                            >
+                              {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
+                            </li>
+                          </>
+                        )}
+                        {!otherCType && (
+                          <>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("SKY_BREATH_MEDITATION")}
+                            >
+                              {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("SILENT_RETREAT")}
+                            >
+                              {COURSE_TYPES.SILENT_RETREAT.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
+                            >
+                              {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("Sri Sri Yoga")}
+                            >
+                              {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
+                            </li>
+                          </>
+                        )}
                       </>
                     )}
                   </SmartDropDown>

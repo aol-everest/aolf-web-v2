@@ -99,7 +99,9 @@ const Meetup = () => {
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { latitude, longitude, error: geoLocationError } = useGeolocation();
-
+  const [privateEvent] = useQueryString("private-event", {
+    defaultValue: false,
+  });
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: COURSE_MODES.ONLINE,
   });
@@ -448,6 +450,7 @@ const Meetup = () => {
     [
       "meetups",
       {
+        privateEvent,
         meetupTypeFilter,
         filterStartEndDate,
         timeZoneFilter,
@@ -506,6 +509,12 @@ const Meetup = () => {
           ...param,
           lat,
           lng,
+        };
+      }
+      if (privateEvent) {
+        param = {
+          ...param,
+          isPrivateEvent: 1,
         };
       }
 

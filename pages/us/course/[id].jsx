@@ -13,17 +13,13 @@ import { COURSE_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { useAuth } from "@contexts";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
-// swiper bundle styles
-import "swiper/css/bundle";
 
-// swiper core styles
 import "swiper/css";
-
-// modules styles
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/a11y";
 import "swiper/css/scrollbar";
+
 import "bootstrap-daterangepicker/daterangepicker.css";
 
 export const getServerSideProps = async (context) => {

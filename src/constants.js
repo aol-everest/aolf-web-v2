@@ -90,6 +90,10 @@ export const COURSE_TYPES = {
     name: "Sri Sri Yoga",
     value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE || "",
   },
+  CHAKRA_KRIYA: {
+    name: "Chakra Kriya",
+    value: process.env.NEXT_PUBLIC_CHAKRA_KRIYA_CTYPE || "",
+  },
   VOLUNTEER_TRAINING_PROGRAM: {
     name: "Volunteer Training Program",
     value: process.env.NEXT_PUBLIC_VOLUNTEER_TRAINING_PROGRAM_CTYPE || "",
