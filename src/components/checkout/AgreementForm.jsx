@@ -51,6 +51,7 @@ export const AgreementForm = ({
             <p className="agreement__text">
               I agree to the{" "}
               <Link
+                prefetch={false}
                 href={
                   isCorporateEvent
                     ? "/policy/ppa-corporate"
@@ -171,6 +172,7 @@ export const AgreementForm = ({
           <p className="agreement__text">
             I agree to the{" "}
             <Link
+              prefetch={false}
               href={
                 isCorporateEvent
                   ? "/policy/ppa-corporate"

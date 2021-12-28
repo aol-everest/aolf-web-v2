@@ -517,7 +517,10 @@ const Meditation = ({ authenticated, randomMeditate }) => {
           {meditationCategory &&
             meditationCategory.map((category, i) => (
               <SwiperSlide key={i} className="category-slide-item">
-                <Link href={`/meditation/collection?type=${category}`}>
+                <Link
+                  href={`/meditation/collection?type=${category}`}
+                  prefetch={false}
+                >
                   <div
                     className="card image-card image-card-1"
                     style={{
@@ -536,7 +539,7 @@ const Meditation = ({ authenticated, randomMeditate }) => {
       <section className="browse-category most-popular">
         <p className="title-slider">
           Most Popular{" "}
-          <Link href={`/meditation`}>
+          <Link href={`/meditation`} prefetch={false}>
             <span className="popular-all">All</span>
           </Link>
         </p>

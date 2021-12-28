@@ -330,7 +330,7 @@ export const Header = () => {
               </button>
             )}
             {authenticated && (
-              <Link href="/us/profile">
+              <Link prefetch={false} href="/us/profile">
                 <a className="user-profile-link">
                   <span className="d-none d-md-inline-block">
                     {first_name || last_name}

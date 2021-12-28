@@ -285,7 +285,10 @@ export const DesignOne = ({
           {nonListingFolders &&
             nonListingFolders.map((folder) => (
               <SwiperSlide key={folder.id} className="category-slide-item">
-                <Link href={`/us/library/collection/${folder.id}`}>
+                <Link
+                  prefetch={false}
+                  href={`/us/library/collection/${folder.id}`}
+                >
                   <div
                     className="card image-card image-card-1 contentCard"
                     style={{
@@ -309,7 +312,7 @@ export const DesignOne = ({
           <section className="browse-category most-popular">
             <p className="title-slider">
               Most Popular{" "}
-              <Link href={`/us/library/search`}>
+              <Link prefetch={false} href={`/us/library/search`}>
                 <span className="popular-all tw-cursor-pointer">All</span>
               </Link>
             </p>

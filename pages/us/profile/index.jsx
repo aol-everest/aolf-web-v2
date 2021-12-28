@@ -343,13 +343,13 @@ const Profile = ({ profile, tab }) => {
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
-                        <Link href="/us">
+                        <Link href="/us" prefetch={false}>
                           <a href="#" className="link link_orange">
                             course
                           </a>
                         </Link>{" "}
                         or{" "}
-                        <Link href="/us/meetup">
+                        <Link href="/us/meetup" prefetch={false}>
                           <a href="#" className="link link_orange">
                             meetup
                           </a>
@@ -446,13 +446,13 @@ const Profile = ({ profile, tab }) => {
                         <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
                           upcoming{" "}
-                          <Link href="/us">
+                          <Link href="/us" prefetch={false}>
                             <a href="#" className="link link_orange">
                               course
                             </a>
                           </Link>{" "}
                           or{" "}
-                          <Link href="/us/meetup">
+                          <Link href="/us/meetup" prefetch={false}>
                             <a href="#" className="link link_orange">
                               meetup
                             </a>

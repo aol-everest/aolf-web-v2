@@ -72,7 +72,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
       <div className="checkbox-wrapper">
         <p className="checkbox-text">
           By signing up, I agree to{" "}
-          <Link href="/policy/ppa-course">
+          <Link prefetch={false} href="/policy/ppa-course">
             <a target="_blank" className="link">
               Terms of Service
             </a>

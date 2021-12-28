@@ -109,7 +109,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
             >
               Enroll
             </a>
-            <Link href={`/us/course/${sfid}`}>
+            <Link prefetch={false} href={`/us/course/${sfid}`}>
               <a className="btn btn-box-light text-center">Details</a>
             </Link>
           </div>
