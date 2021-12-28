@@ -16,7 +16,6 @@ if (process.env.NODE_ENV !== "development") {
     release: "aolf-web@0.1.0",
     environment: process.env.SENTRY_ENVIRONMENT,
     attachStacktrace: true,
-    debug: true,
     // ...
     // Note: if you want to override the automatic release value, do not set a
     // `release` value here - use the environment variable `SENTRY_RELEASE`, so
