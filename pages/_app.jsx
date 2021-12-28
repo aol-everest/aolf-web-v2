@@ -145,7 +145,9 @@ function App({ Component, pageProps, userInfo = {} }) {
                 GlobalLoading,
               ]}
             >
-              <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
+              {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
+                <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
+              )}
               <Layout hideHeader={Component.hideHeader}>
                 <DefaultSeo {...SEO} />
                 <TopProgressBar />
