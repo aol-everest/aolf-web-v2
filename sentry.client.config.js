@@ -6,15 +6,20 @@ import * as Sentry from "@sentry/nextjs";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-Sentry.init({
-  dsn:
-    SENTRY_DSN ||
-    "https://f8deb8a1ba3e4cf29c51097b7dcf0e21@o272363.ingest.sentry.io/1485329",
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1.0,
-  release: process.env.SENTRY_RELEASE,
-  // ...
-  // Note: if you want to override the automatic release value, do not set a
-  // `release` value here - use the environment variable `SENTRY_RELEASE`, so
-  // that it will also get attached to your source maps
-});
+if (process.env.NODE_ENV !== "development") {
+  Sentry.init({
+    dsn:
+      SENTRY_DSN ||
+      "https://f8deb8a1ba3e4cf29c51097b7dcf0e21@o272363.ingest.sentry.io/1485329",
+    // Adjust this value in production, or use tracesSampler for greater control
+    tracesSampleRate: 1.0,
+    release: "aolf-web@0.1.0",
+    environment: process.env.SENTRY_ENVIRONMENT,
+    attachStacktrace: true,
+    debug: true,
+    // ...
+    // Note: if you want to override the automatic release value, do not set a
+    // `release` value here - use the environment variable `SENTRY_RELEASE`, so
+    // that it will also get attached to your source maps
+  });
+}
