@@ -1,16 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import classNames from "classnames";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
-import { useGlobalAlertContext } from "@contexts";
-import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
-import { HideOn } from "react-hide-on-scroll";
 import { priceCalculation } from "@utils";
 import { useRouter } from "next/router";
 import Style from "./CourseDetails.module.scss";

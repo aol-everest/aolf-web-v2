@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { api, Clevertap } from "@utils";
-import {
-  SKYBreathMeditation,
-  SahajSamadhi,
-  SilentRetreat,
-  SriSriYoga,
-  VolunteerTrainingProgram,
-} from "@components/courseDetails";
+import dynamic from "next/dynamic";
+// import {
+//   SKYBreathMeditation,
+//   SahajSamadhi,
+//   SilentRetreat,
+//   SriSriYoga,
+//   VolunteerTrainingProgram,
+// } from "@components/courseDetails";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
@@ -21,6 +22,24 @@ import "swiper/css/a11y";
 import "swiper/css/scrollbar";
 
 import "bootstrap-daterangepicker/daterangepicker.css";
+
+const SKYBreathMeditation = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SKYBreathMeditation),
+);
+const SahajSamadhi = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SahajSamadhi),
+);
+const SilentRetreat = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SilentRetreat),
+);
+const SriSriYoga = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SriSriYoga),
+);
+const VolunteerTrainingProgram = dynamic(() =>
+  import("@components/courseDetails").then(
+    (mod) => mod.VolunteerTrainingProgram,
+  ),
+);
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query;

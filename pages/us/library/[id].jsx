@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import { api, isSSR } from "@utils";
 import { useQuery } from "react-query";
-import { DesignOne, DesignTwo } from "@components/content";
+// import { DesignOne, DesignTwo } from "@components/content";
 import { withSSRContext } from "aws-amplify";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useQueryString } from "@hooks";
@@ -21,6 +22,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/a11y";
 import "swiper/css/scrollbar";
+
+const DesignOne = dynamic(() =>
+  import("@components/content").then((mod) => mod.DesignOne),
+);
+const DesignTwo = dynamic(() =>
+  import("@components/content").then((mod) => mod.DesignTwo),
+);
 
 const CATEGORY_IMAGES = [
   "/img/card-1a.png",

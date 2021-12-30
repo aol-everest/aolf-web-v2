@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 export const SmartDropDown = (props) => {
   const { buttonText, children, value, containerClass = "" } = props;

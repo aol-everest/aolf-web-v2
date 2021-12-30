@@ -1,19 +1,10 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import { api } from "@utils";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import { Popup, MobileFilterModal, SmartDropDown } from "@components";
 import { DURATION } from "@constants";
-import { useQuery } from "react-query";
-
-const CATEGORY_IMAGES = [
-  "/img/card-1a.png",
-  "/img/card-2a.png",
-  "/img/card-6.png",
-  "/img/card-4a.png",
-];
 
 const timeConvert = (data) => {
   const minutes = data % 60;

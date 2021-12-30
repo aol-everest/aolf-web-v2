@@ -3,13 +3,9 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
-import CourseDetailsCard from "./CourseDetailsCard";
 import NumberFormat from "react-number-format";
 import { useRouter } from "next/router";
-import { ResearchPagination } from "./ResearchPagination";
-import { Comment } from "./Comment";
 import { ResearchFindingSource } from "./ResearchFindingSource";
-import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
