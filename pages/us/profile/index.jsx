@@ -18,9 +18,9 @@ import {
   PastCourses,
 } from "@components/profile";
 import { api, Clevertap } from "@utils";
-import { ALERT_TYPES } from "@constants";
+import { ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
-import { useGlobalAlertContext } from "@contexts";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
 const PAST_COURSES = "PAST_COURSES";
@@ -65,9 +65,8 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
 
 const Profile = ({ profile, tab }) => {
   const { showAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const [cropedProfilePic, setCropedProfilePic] = useState(null);
-  const [uploadedProfilePic, setUploadedProfilePic] = useState(null);
   const [userProfile, setUserProfile] = useState(profile);
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: tab || UPCOMING_EVENTS,
@@ -119,10 +118,6 @@ const Profile = ({ profile, tab }) => {
     setEditCardDetail((editCardDetail) => !editCardDetail);
   };
 
-  const handleOnCropChange = (cropedProfilePic) => {
-    setCropedProfilePic(cropedProfilePic);
-  };
-
   const logoutAction = async () => {
     setLoading(true);
     await Auth.signOut();
@@ -134,21 +129,18 @@ const Profile = ({ profile, tab }) => {
   const handleOnSelectFile = (e) => {
     if (e.target.files.length) {
       const reader = new FileReader();
-      reader.addEventListener("load", () =>
-        setUploadedProfilePic(reader.result),
-      );
-      reader.readAsDataURL(e.target.files[0]);
-      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-        title: "Edit Profile Pic",
-        children: (
-          <ProfilePicCrop
-            src={uploadedProfilePic}
-            handleOnCropChange={handleOnCropChange}
-          />
-        ),
-        className: "research-detail-modal",
-        hideConfirm: true,
+      reader.addEventListener("load", () => {
+        showModal(MODAL_TYPES.EMPTY_MODAL, {
+          title: "Enrollment Completed Successfully.",
+          children: (handleModalToggle) => (
+            <ProfilePicCrop
+              src={reader.result}
+              closeDetailAction={handleModalToggle}
+            />
+          ),
+        });
       });
+      reader.readAsDataURL(e.target.files[0]);
     }
   };
 

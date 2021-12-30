@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { api } from "@utils";
+import { useRouter } from "next/router";
 
-export const ProfilePicCrop = ({ src, handleOnCropChange }) => {
+export const ProfilePicCrop = ({ src, closeDetailAction }) => {
   const [crop, setCrop] = useState({ width: 250, aspect: 1 / 1 });
   const [fileUrl, setFileUrl] = useState(null);
   const [blobData, setBlobData] = useState(null);
   const [croppedImageUrl, setCroppedImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   let imageRef;
 
@@ -34,7 +38,6 @@ export const ProfilePicCrop = ({ src, handleOnCropChange }) => {
       );
       setBlobData(blobData);
       setCroppedImageUrl(fileUrl);
-      handleOnCropChange(blobData);
     }
   };
 
@@ -73,25 +76,71 @@ export const ProfilePicCrop = ({ src, handleOnCropChange }) => {
     });
   };
 
+  const updateProfilePicAction = async () => {
+    setLoading(true);
+    try {
+      const file = new File([blobData], "newFile.jpeg", {
+        lastModified: new Date(),
+      });
+      const body = new FormData();
+      body.append("profilePic", file);
+      const { status, error: errorMessage } = await api.post({
+        path: "updateProfilePic",
+        body,
+      });
+      if (status === 400) {
+        throw new Error(errorMessage);
+      }
+      router.reload(window.location.pathname);
+    } catch (ex) {
+      console.log(ex);
+    }
+    setLoading(false);
+  };
+
   return (
-    <table id="prodile-pic-crop-wrapper">
-      <tbody>
-        <tr>
-          <td>
-            {src && (
-              <ReactCrop
-                src={src}
-                crop={crop}
-                ruleOfThirds
-                onImageLoaded={onImageLoaded}
-                onComplete={onCropComplete}
-                onChange={onCropChange}
-              />
-            )}
-            {/* {croppedImageUrl && <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />} */}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
+      <div className=" modal-dialog modal-dialog-centered active">
+        <div className="modal-content">
+          {loading && <div className="cover-spin"></div>}
+          <h2 className="modal-content-title">Edit Profile Pic</h2>
+          <table id="prodile-pic-crop-wrapper">
+            <tbody>
+              <tr>
+                <td>
+                  {src && (
+                    <ReactCrop
+                      src={src}
+                      crop={crop}
+                      ruleOfThirds
+                      onImageLoaded={onImageLoaded}
+                      onComplete={onCropComplete}
+                      onChange={onCropChange}
+                    />
+                  )}
+                  {/* {croppedImageUrl && <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />} */}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="tw-flex tw-justify-end">
+            <a
+              href="#"
+              className="tw-mt-6 btn btn-lg btn-secondary tw-mr-4"
+              onClick={updateProfilePicAction}
+            >
+              Update Profile Pic
+            </a>
+            <a
+              href="#"
+              className="tw-mt-6 btn btn-lg btn-outline"
+              onClick={closeDetailAction}
+            >
+              Cancel
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
