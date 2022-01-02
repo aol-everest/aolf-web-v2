@@ -141,7 +141,7 @@ function App({ Component, pageProps, userInfo = {} }) {
               )}
               <Layout hideHeader={Component.hideHeader}>
                 <DefaultSeo {...SEO} />
-                <TopProgressBar />
+                {/* <TopProgressBar /> */}
                 <Component {...pageProps} />
                 <ReactQueryDevtools initialIsOpen={false} />
               </Layout>

@@ -1,12 +1,12 @@
 import React from "react";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import * as yup from "yup";
+import { object, string } from "yup";
 
-const schema = yup.object().shape({
-  username: yup
-    .string()
+const schema = object().shape({
+  username: string()
     .email("This type of email does not exist. Please enter a valid one.")
     .required("Email is required"),
 });
@@ -14,6 +14,7 @@ const schema = yup.object().shape({
 export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -39,6 +40,7 @@ export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
       <button type="submit" className="mt-4 modal-window__btn btn-primary v2">
         Send email
       </button>
+      <DevTool control={control} />
     </form>
   );
 };

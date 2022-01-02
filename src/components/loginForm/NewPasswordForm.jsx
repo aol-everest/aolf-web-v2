@@ -1,17 +1,18 @@
 import React from "react";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import * as yup from "yup";
+import { object, string, ref } from "yup";
 
-const schema = yup.object().shape({
-  password: yup
-    .string()
+const schema = object().shape({
+  password: string()
     .required("Password is required")
     .min(8, "Must Contain 8 Characters"),
-  passwordConfirmation: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
+  passwordConfirmation: string().oneOf(
+    [ref("password"), null],
+    "Passwords must match",
+  ),
 });
 
 export const NewPasswordForm = ({
@@ -21,6 +22,7 @@ export const NewPasswordForm = ({
 }) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -56,6 +58,7 @@ export const NewPasswordForm = ({
       <button type="submit" className="mt-4 modal-window__btn btn-primary">
         Change Password
       </button>
+      <DevTool control={control} />
     </form>
   );
 };

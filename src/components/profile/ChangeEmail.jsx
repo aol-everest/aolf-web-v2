@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import * as yup from "yup";
+import { object, string } from "yup";
 import { api } from "@utils";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -14,9 +15,8 @@ const ChangeEmailStep = ({
   existingEmail,
   showSuccessMessage,
 }) => {
-  const schema = yup.object().shape({
-    username: yup
-      .string()
+  const schema = object().shape({
+    username: string()
       .notOneOf(
         [existingEmail, null],
         `${existingEmail} is already your email address`,
@@ -26,6 +26,7 @@ const ChangeEmailStep = ({
   });
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -79,6 +80,7 @@ const ChangeEmailStep = ({
       <div className="course-join-card__footer">
         <button className="btn-secondary">Submit new email</button>
       </div>
+      <DevTool control={control} />
     </form>
   );
 };
