@@ -27,9 +27,9 @@ export const GlobalLoading = ({ children }) => {
       return null;
     }
     return (
-      <FadeInAnimation className="tw-top-0 tw-w-full tw-h-full tw-fixed tw-z-50">
+      <div className="tw-top-0 tw-w-full tw-h-full tw-fixed tw-z-50">
         <div className="cover-spin"></div>
-      </FadeInAnimation>
+      </div>
     );
   };
 
