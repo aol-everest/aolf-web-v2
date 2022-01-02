@@ -5,11 +5,10 @@ import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
-import { WorkshopTile } from "@components/course/workshopTile";
-import { LinkedCalendar } from "@components/dateRangePicker";
-import "bootstrap-daterangepicker/daterangepicker.css";
+
 import { AddressSearch } from "@components";
 import { withSSRContext } from "aws-amplify";
+import dynamic from "next/dynamic";
 import {
   Popup,
   SmartInput,
@@ -20,7 +19,16 @@ import {
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
 import ContentLoader from "react-content-loader";
+
 import Style from "./course/Course.module.scss";
+import "bootstrap-daterangepicker/daterangepicker.css";
+
+const WorkshopTile = dynamic(() =>
+  import("@components/course/workshopTile").then((mod) => mod.WorkshopTile),
+);
+const LinkedCalendar = dynamic(() =>
+  import("@components/dateRangePicker").then((mod) => mod.LinkedCalendar),
+);
 
 const DATE_PICKER_CONFIG = {
   opens: "center",

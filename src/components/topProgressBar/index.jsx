@@ -1,10 +1,11 @@
 import Router from "next/router";
 import NProgress from "nprogress";
 import { useGlobalLoadingContext } from "@contexts";
+import "nprogress/nprogress.css";
 
 let timer;
 let state;
-let activeRequests = 0;
+// let activeRequests = 0;
 const delay = 250;
 
 let loader = {};
@@ -25,9 +26,9 @@ function load() {
 }
 
 function stop() {
-  if (activeRequests > 0) {
-    return;
-  }
+  // if (activeRequests > 0) {
+  //   return;
+  // }
 
   state = "stop";
 
@@ -46,6 +47,9 @@ Router.events.on("routeChangeComplete", (url) => {
 Router.events.on("routeChangeError", stop);
 
 NProgress.configure({
+  minimum: 0.3,
+  easing: "ease",
+  speed: 800,
   showSpinner: false,
 });
 
