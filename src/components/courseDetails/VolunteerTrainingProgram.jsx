@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
+import { Link, animateScroll as scroll } from "react-scroll";
 import NumberFormat from "react-number-format";
 import { useRouter } from "next/router";
 import { ResearchFindingSource } from "./ResearchFindingSource";
@@ -11,7 +11,10 @@ import { useGlobalAlertContext } from "@contexts";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
 import { HideOn } from "react-hide-on-scroll";
 import { priceCalculation, tConvert } from "@utils";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -124,21 +127,21 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                       <div className="details-info__text details-info__text_bold">
                         Date:
                       </div>
-                      {moment
+                      {dayjs
                         .utc(eventStartDate)
-                        .isSame(moment.utc(eventEndDate), "month") && (
-                        <div className="details-info__text">{`${moment
+                        .isSame(dayjs.utc(eventEndDate), "month") && (
+                        <div className="details-info__text">{`${dayjs
                           .utc(eventStartDate)
-                          .format("MMMM DD")}-${moment
+                          .format("MMMM DD")}-${dayjs
                           .utc(eventEndDate)
                           .format("DD, YYYY")}`}</div>
                       )}
-                      {!moment
+                      {!dayjs
                         .utc(eventStartDate)
-                        .isSame(moment.utc(eventEndDate), "month") && (
-                        <div className="details-info__text">{`${moment
+                        .isSame(dayjs.utc(eventEndDate), "month") && (
+                        <div className="details-info__text">{`${dayjs
                           .utc(eventStartDate)
-                          .format("MMMM DD")}-${moment
+                          .format("MMMM DD")}-${dayjs
                           .utc(eventEndDate)
                           .format("MMMM DD, YYYY")}`}</div>
                       )}
@@ -152,7 +155,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                           timings.map((time) => {
                             return (
                               <>
-                                {`${moment
+                                {`${dayjs
                                   .utc(time.startDate)
                                   .format("dd")}: ${tConvert(
                                   time.startTime,

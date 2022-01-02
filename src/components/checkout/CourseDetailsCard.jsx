@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import moment from "moment";
-import classNames from "classnames";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import NumberFormat from "react-number-format";
-import renderHTML from "react-render-html";
 import { ABBRS, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { tConvert } from "@utils";
 import Image from "next/image";
+
+dayjs.extend(utc);
 
 export const CourseDetailsCard = ({ workshop, ...rest }) => {
   const {
@@ -74,21 +75,21 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
         <div className="course__info info tw-max-w-[190px]">
           <ul className="info__list">
             <h2 className="info__title">Date:</h2>
-            {moment
+            {dayjs
               .utc(eventStartDate)
-              .isSame(moment.utc(eventEndDate), "month") && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${moment
+              .isSame(dayjs.utc(eventEndDate), "month") && (
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
                 .utc(eventStartDate)
-                .format("MMMM DD")}-${moment
+                .format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("DD, YYYY")}`}</li>
             )}
-            {!moment
+            {!dayjs
               .utc(eventStartDate)
-              .isSame(moment.utc(eventEndDate), "month") && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${moment
+              .isSame(dayjs.utc(eventEndDate), "month") && (
+              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
                 .utc(eventStartDate)
-                .format("MMMM DD")}-${moment
+                .format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("MMMM DD, YYYY")}`}</li>
             )}
@@ -102,7 +103,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                     className="tw-text-sm tw-truncate tw-tracking-tighter"
                     key={time.startDate}
                   >
-                    {`${moment.utc(time.startDate).format("dd")}: ${tConvert(
+                    {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
                       time.startTime,
                     )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
                   </li>

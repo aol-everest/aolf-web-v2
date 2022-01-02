@@ -1,8 +1,11 @@
 import React from "react";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { ABBRS } from "@constants";
 import { tConvert } from "@utils";
 import classNames from "classnames";
+
+dayjs.extend(utc);
 
 export const MeetupTile = ({ data, openEnrollAction }) => {
   const getMeetupImage = () => {
@@ -37,7 +40,7 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
       >
         {getMeetupImage()}
         <div className="course_data">
-          {`${moment.utc(meetupStartDate).format("MMM DD")}, `}
+          {`${dayjs.utc(meetupStartDate).format("MMM DD")}, `}
           {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
           {`${updateMeetupDuration}`}
         </div>

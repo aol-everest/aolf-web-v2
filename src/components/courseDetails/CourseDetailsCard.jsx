@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
 import NumberFormat from "react-number-format";
-import renderHTML from "react-render-html";
 import { ABBRS } from "@constants";
 import { Popup } from "@components";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import { tConvert } from "@utils";
 import { useRouter } from "next/router";
+
+dayjs.extend(utc);
 
 export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
@@ -103,17 +105,17 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
             <img src="/img/ic-calendar.svg" alt="date" title="date" />
             <h6>Date:</h6>
           </div>
-          {moment
+          {dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
-            <li>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+            .isSame(dayjs.utc(eventEndDate), "month") && (
+            <li>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
               .utc(eventEndDate)
               .format("DD, YYYY")}`}</li>
           )}
-          {!moment
+          {!dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
-            <li>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+            .isSame(dayjs.utc(eventEndDate), "month") && (
+            <li>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
               .utc(eventEndDate)
               .format("MMMM DD, YYYY")}`}</li>
           )}
@@ -127,7 +129,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
             timings.map((time) => {
               return (
                 <li key={time.startDate}>
-                  {`${moment.utc(time.startDate).format("dd")}: ${tConvert(
+                  {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
                     time.startTime,
                   )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
                 </li>
@@ -301,9 +303,12 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
       </div>
       {notes && (
         <div className="course-details__footer">
-          <div className="course-details__additional word-wrap">
-            Additional Notes: {renderHTML(notes)}
-          </div>
+          {notes && (
+            <div className="course-details__additional word-wrap">
+              Additional Notes:{" "}
+              <span dangerouslySetInnerHTML={{ __html: notes }}></span>
+            </div>
+          )}
         </div>
       )}
     </div>

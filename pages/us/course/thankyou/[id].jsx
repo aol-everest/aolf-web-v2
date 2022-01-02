@@ -7,8 +7,11 @@ import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useAuth, useGlobalAlertContext } from "@contexts";
 import { COURSE_TYPES, ALERT_TYPES, ABBRS } from "@constants";
 import { AddToCalendarModal } from "@components";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import Image from "next/image";
+
+dayjs.extend(utc);
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
@@ -190,8 +193,8 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
         {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{" "}
         {option.weekendStartTime &&
           calculateBusinessDays(
-            moment.utc(option.startDate),
-            moment.utc(option.endDate),
+            dayjs.utc(option.startDate),
+            dayjs.utc(option.endDate),
           ).weekday}
       </p>
     );
@@ -200,15 +203,15 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
         {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{" "}
         {
           calculateBusinessDays(
-            moment.utc(option.startDate),
-            moment.utc(option.endDate),
+            dayjs.utc(option.startDate),
+            dayjs.utc(option.endDate),
           ).weekend
         }
       </p>
     );
     if (
-      moment.utc(option.startDate).day() === 0 ||
-      moment.utc(option.startDate).day() === 6
+      dayjs.utc(option.startDate).day() === 0 ||
+      dayjs.utc(option.startDate).day() === 6
     ) {
       return (
         <>
@@ -231,9 +234,9 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
       return (
         <>
           <p className="program_card_subtitle c_text">
-            {moment.utc(selectedTimeSlot.startDate).format("MMM D") +
+            {dayjs.utc(selectedTimeSlot.startDate).format("MMM D") +
               " - " +
-              moment.utc(selectedTimeSlot.endDate).format("D, YYYY")}
+              dayjs.utc(selectedTimeSlot.endDate).format("D, YYYY")}
           </p>
           <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
         </>
@@ -329,7 +332,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
                       return (
                         <li className="program-details__schedule" key={i}>
                           <span className="program-details__schedule-date">
-                            {moment.utc(time.startDate).format("LL")}
+                            {dayjs.utc(time.startDate).format("LL")}
                           </span>
                           <span className="program-details__schedule-time">{`${tConvert(
                             time.startTime,
@@ -428,11 +431,11 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
               <div className="course-bottom-card__info">
                 {!isGenericWorkshop && (
                   <p>
-                    {moment.utc(eventStartDate).format("MMMM D") +
+                    {dayjs.utc(eventStartDate).format("MMMM D") +
                       " - " +
-                      moment.utc(eventEndDate).format("MMMM D") +
+                      dayjs.utc(eventEndDate).format("MMMM D") +
                       ", " +
-                      moment.utc(eventEndDate).format("YYYY")}
+                      dayjs.utc(eventEndDate).format("YYYY")}
                   </p>
                 )}
                 <div>

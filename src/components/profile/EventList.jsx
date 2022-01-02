@@ -1,9 +1,12 @@
 import React from "react";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useEmblaCarousel } from "embla-carousel/react";
 import { ABBRS } from "@constants";
 import { tConvert } from "@utils";
 import { COURSE_TYPES } from "@constants";
+
+dayjs.extend(utc);
 
 export const EventList = ({ isMobile, workshops }) => {
   const [emblaRef] = useEmblaCarousel({
@@ -76,7 +79,7 @@ const renderEventMobile = (workshop) => {
             className="profile-body_mobile__course-img"
           />
           <div className="profile-body_mobile__course-date">
-            {`${moment.utc(meetupStartDate).format("MMM DD")}, `}
+            {`${dayjs.utc(meetupStartDate).format("MMM DD")}, `}
             {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
             {`${updateMeetupDuration}`}
           </div>
@@ -120,20 +123,20 @@ const renderEventMobile = (workshop) => {
               alt="bg"
             />
           )}
-          {moment
+          {dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), "month") && (
             <div className="profile-body_mobile__course-date">
-              {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("DD, YYYY")}`}
             </div>
           )}
-          {!moment
+          {!dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), "month") && (
             <div className="profile-body_mobile__course-date">
-              {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("MMMM DD, YYYY")}`}
             </div>
@@ -204,7 +207,7 @@ const renderEvent = (workshop) => {
         <div className="profile-body__card tw-bg-transparent">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           <div className="profile-body__card-date">
-            {`${moment.utc(meetupStartDate).format("MMM DD")}, `}
+            {`${dayjs.utc(meetupStartDate).format("MMM DD")}, `}
             {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
             {`${updateMeetupDuration}`}
           </div>
@@ -230,20 +233,20 @@ const renderEvent = (workshop) => {
       <div className="col-6 col-lg-3 col-md-4" key={sfid}>
         <div className="profile-body__card !tw-bg-transparent">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
-          {moment
+          {dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), "month") && (
             <div className="profile-body__card-date">
-              {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("DD, YYYY")}`}
             </div>
           )}
-          {!moment
+          {!dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), "month") && (
             <div className="profile-body__card-date">
-              {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("MMMM DD, YYYY")}`}
             </div>

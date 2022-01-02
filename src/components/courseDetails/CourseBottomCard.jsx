@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import classNames from "classnames";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { Link } from "react-scroll";
 import { COURSE_TYPES } from "@constants";
 import Image from "next/image";
+
+dayjs.extend(utc);
 
 export const CourseBottomCard = ({ workshop }) => {
   const { title, eventStartDate, eventEndDate, productTypeId } = workshop || {};
@@ -53,7 +56,7 @@ export const CourseBottomCard = ({ workshop }) => {
               <img src="/img/rectangle.png" alt="img" />
             </div>
             <div className="course-bottom-card__info">
-              <p>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              <p>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("DD, YYYY")}`}</p>
               <div>

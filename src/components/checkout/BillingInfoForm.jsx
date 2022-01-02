@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import { Field, ErrorMessage } from "formik";
 import classNames from "classnames";
 import { StyledInput } from "./StyledInput";
 import { Dropdown } from "./Dropdown";

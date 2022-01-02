@@ -5,10 +5,13 @@ import { api, calculateBusinessDays, tConvert } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useRouter } from "next/router";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { AddToCalendarModal } from "@components";
 import { ALERT_TYPES, ABBRS } from "@constants";
+
+dayjs.extend(utc);
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
@@ -132,9 +135,9 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
       return (
         <>
           <p className="program_card_subtitle c_text">
-            {moment.utc(selectedTimeSlot.startDate).format("MMM D") +
+            {dayjs.utc(selectedTimeSlot.startDate).format("MMM D") +
               " - " +
-              moment.utc(selectedTimeSlot.endDate).format("D, YYYY")}
+              dayjs.utc(selectedTimeSlot.endDate).format("D, YYYY")}
           </p>
           <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
         </>
@@ -149,8 +152,8 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
         {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{" "}
         {option.weekendStartTime &&
           calculateBusinessDays(
-            moment.utc(option.startDate),
-            moment.utc(option.endDate),
+            dayjs.utc(option.startDate),
+            dayjs.utc(option.endDate),
           ).weekday}
       </p>
     );
@@ -159,15 +162,15 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
         {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{" "}
         {
           calculateBusinessDays(
-            moment.utc(option.startDate),
-            moment.utc(option.endDate),
+            dayjs.utc(option.startDate),
+            dayjs.utc(option.endDate),
           ).weekend
         }
       </p>
     );
     if (
-      moment.utc(option.startDate).day() === 0 ||
-      moment.utc(option.startDate).day() === 6
+      dayjs.utc(option.startDate).day() === 0 ||
+      dayjs.utc(option.startDate).day() === 6
     ) {
       return (
         <>
@@ -232,7 +235,7 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
                   </h1>
                   <p className="get-started__text">
                     You're registered for the Silent Retreat on{" "}
-                    {moment.utc(meetupStartDate).format("LL")}
+                    {dayjs.utc(meetupStartDate).format("LL")}
                   </p>
                   <a
                     className="get-started__link"
@@ -263,7 +266,7 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
                   <ul className="program-details__list-schedule">
                     <li className="program-details__schedule">
                       <span className="program-details__schedule-date">
-                        {moment.utc(meetupStartDate).format("LL")}
+                        {dayjs.utc(meetupStartDate).format("LL")}
                       </span>
                       <span className="program-details__schedule-time">{`${tConvert(
                         meetupStartTime,
@@ -328,7 +331,7 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
                 <img src="/img/silent-card-img.png" alt="img" />
               </div>
               <div className="course-bottom-card__info">
-                <p>{moment.utc(meetupStartDate).format("LL")}</p>
+                <p>{dayjs.utc(meetupStartDate).format("LL")}</p>
                 <div>
                   <h3>{meetupTitle}</h3>
                 </div>

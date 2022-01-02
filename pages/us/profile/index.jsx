@@ -1,26 +1,39 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import { withSSRContext, Auth } from "aws-amplify";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import Link from "next/link";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
 import { useQuery } from "react-query";
-
-import {
-  EventList,
-  ViewCardDetail,
-  ChangePassword,
-  ChangeProfile,
-  ProfileHeader,
-  ProfilePicCrop,
-  PastCourses,
-} from "@components/profile";
 import { api, Clevertap } from "@utils";
 import { ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+
+const EventList = dynamic(() =>
+  import("@components/profile").then((mod) => mod.EventList),
+);
+const ChangePassword = dynamic(() =>
+  import("@components/profile").then((mod) => mod.ChangePassword),
+);
+const ChangeProfile = dynamic(() =>
+  import("@components/profile").then((mod) => mod.ChangeProfile),
+);
+const PastCourses = dynamic(() =>
+  import("@components/profile").then((mod) => mod.PastCourses),
+);
+const ViewCardDetail = dynamic(() =>
+  import("@components/profile").then((mod) => mod.ViewCardDetail),
+);
+const ProfilePicCrop = dynamic(() =>
+  import("@components/profile").then((mod) => mod.ProfilePicCrop),
+);
+const ProfileHeader = dynamic(() =>
+  import("@components/profile").then((mod) => mod.ProfileHeader),
+);
 
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
 const PAST_COURSES = "PAST_COURSES";

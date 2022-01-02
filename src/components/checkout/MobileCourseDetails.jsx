@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
-import renderHTML from "react-render-html";
 import { COURSE_TYPES, MEMBERSHIP_TYPES, ABBRS } from "@constants";
 import { tConvert } from "@utils";
+
+dayjs.extend(utc);
 
 const CourseFeeRender = ({
   userSubscriptions,
@@ -216,17 +218,17 @@ export const MobileCourseDetails = ({
       <div className="mobile-modal__body">
         <div className="course-detail">
           Your course:{" "}
-          {moment
+          {dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
-            <span>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+            .isSame(dayjs.utc(eventEndDate), "month") && (
+            <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
               .utc(eventEndDate)
               .format("DD, YYYY")}`}</span>
           )}
-          {!moment
+          {!dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
-            <span>{`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+            .isSame(dayjs.utc(eventEndDate), "month") && (
+            <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
               .utc(eventEndDate)
               .format("MMMM DD, YYYY")}`}</span>
           )}
@@ -238,7 +240,7 @@ export const MobileCourseDetails = ({
               return (
                 <>
                   <span>
-                    {`${moment.utc(time.startDate).format("dd")}: ${tConvert(
+                    {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
                       time.startTime,
                     )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
                   </span>
@@ -263,11 +265,19 @@ export const MobileCourseDetails = ({
           <span>{contactEmail}</span>
         </div>
         <div className="course-more word-wrap">
-          {notes && <>Additional Notes: {renderHTML(notes)}</>}
+          {notes && (
+            <>
+              Additional Notes:{" "}
+              <span dangerouslySetInnerHTML={{ __html: notes }}></span>
+            </>
+          )}
           <br />
           <br />
           {description && (
-            <div className="course-more__full">{renderHTML(description)}</div>
+            <div
+              className="course-more__full"
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></div>
           )}
         </div>
       </div>

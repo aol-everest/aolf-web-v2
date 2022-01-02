@@ -1,7 +1,6 @@
 import React from "react";
-import { Field, ErrorMessage } from "formik";
+import { Field } from "formik";
 import classNames from "classnames";
-import renderHTML from "react-render-html";
 import Link from "next/link";
 
 export const AgreementForm = ({
@@ -119,9 +118,12 @@ export const AgreementForm = ({
                   }}
                 </Field>
                 <label htmlFor="health-confirmation"></label>
-                <p className="health-confirmation__text">
-                  {renderHTML(compliance.question)}
-                </p>
+                {compliance.question && (
+                  <p
+                    className="health-confirmation__text"
+                    dangerouslySetInnerHTML={{ __html: compliance.question }}
+                  ></p>
+                )}
               </div>
             ))}
             {formikProps.errors.questionnaire &&
@@ -237,9 +239,12 @@ export const AgreementForm = ({
                     }}
                   </Field>
                   <label htmlFor="health"></label>
-                  <p className="agreement__text">
-                    {renderHTML(compliance.question)}
-                  </p>
+                  {compliance.question && (
+                    <p
+                      className="agreement__text"
+                      dangerouslySetInnerHTML={{ __html: compliance.question }}
+                    ></p>
+                  )}
                 </div>
                 {formikProps.errors.questionnaire &&
                   formikProps.touched.questionnaire && (

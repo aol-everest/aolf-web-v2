@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
-import { Field, ErrorMessage } from "formik";
+import React from "react";
+import { Field } from "formik";
 import classNames from "classnames";
 
 const PAYPAL_PAYMENT_MODE = "PAYPAL_PAYMENT_MODE";

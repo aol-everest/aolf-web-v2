@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import renderHTML from "react-render-html";
 
 const researchImgItems = [
   {
@@ -56,10 +55,15 @@ export const ResearchPagination = () => {
   return (
     <>
       <div className="d-lg-block d-none col-10 m-auto">
-        <p className="research__quote">
-          {researchImgItems[activeIndex].quote &&
-            renderHTML(researchImgItems[activeIndex].quote)}
-        </p>
+        {researchImgItems[activeIndex].quote && (
+          <p
+            className="research__quote"
+            dangerouslySetInnerHTML={{
+              __html: researchImgItems[activeIndex].quote,
+            }}
+          ></p>
+        )}
+
         <div className="research__block">
           {researchImgItems.map((research, index) => {
             if (index === activeIndex) {
@@ -72,9 +76,14 @@ export const ResearchPagination = () => {
       <div className="d-lg-none research__list-container swiper-container">
         <div className="research__list-wrapper swiper-wrapper">
           <div className="research__list-item swiper-slide">
-            <p className="research__quote">
-              {renderHTML(researchImgItems[activeIndex].quote)}
-            </p>
+            {researchImgItems[activeIndex].quote && (
+              <p
+                className="research__quote"
+                dangerouslySetInnerHTML={{
+                  __html: researchImgItems[activeIndex].quote,
+                }}
+              ></p>
+            )}
             <div>
               <img src="/img/research-highlights-ijoy-color.png" alt="ljoy" />
             </div>

@@ -4,10 +4,9 @@ import React, { useEffect, useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
-import renderHTML from "react-render-html";
 import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
-import { isEmpty } from "lodash";
+import { isEmpty } from "@utils";
 import { PayPalButton } from "react-paypal-button-v2";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {

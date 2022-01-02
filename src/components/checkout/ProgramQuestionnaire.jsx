@@ -1,7 +1,6 @@
 import React from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import renderHTML from "react-render-html";
 import Select from "react-select";
 import classNames from "classnames";
 
@@ -31,9 +30,13 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label className="item-volonteer__label" htmlFor={key}>
-            {question.question && renderHTML(question.question)}
-          </label>
+          {question.question && (
+            <label
+              className="item-volonteer__label"
+              htmlFor={key}
+              dangerouslySetInnerHTML={{ __html: question.question }}
+            ></label>
+          )}
           <Field name={key} class="form-control">
             {({ field }) => {
               return (
@@ -76,9 +79,13 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label className="item-volonteer__label" htmlFor={key}>
-            {question.question && renderHTML(question.question)}
-          </label>
+          {question.question && (
+            <label
+              className="item-volonteer__label"
+              htmlFor={key}
+              dangerouslySetInnerHTML={{ __html: question.question }}
+            ></label>
+          )}
           <Field name={key} class="form-control">
             {({ field }) => (
               <Select
@@ -115,9 +122,13 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label className="item-volonteer__label" htmlFor={key}>
-            {question.question && renderHTML(question.question)}
-          </label>
+          {question.question && (
+            <label
+              className="item-volonteer__label"
+              htmlFor={key}
+              dangerouslySetInnerHTML={{ __html: question.question }}
+            ></label>
+          )}
           <div className="form-check">
             <Field
               class="form-check-input"
@@ -163,9 +174,13 @@ const questionRender = (formikProps) => (question, index) => {
                 value="Yes"
                 id={key}
               />
-              <label className="item-volonteer__label" htmlFor="inlineRadio1">
-                {question.question && renderHTML(question.question)}
-              </label>
+              {question.question && (
+                <label
+                  className="item-volonteer__label"
+                  htmlFor={key}
+                  dangerouslySetInnerHTML={{ __html: question.question }}
+                ></label>
+              )}
             </div>
             {errors[key] && formikProps.touched[key] && (
               <div className="invalid-feedback">{errors[key]}</div>
@@ -180,9 +195,13 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label className="item-volonteer__label" htmlFor={key}>
-            {question.question && renderHTML(question.question)}
-          </label>
+          {question.question && (
+            <label
+              className="item-volonteer__label"
+              htmlFor={key}
+              dangerouslySetInnerHTML={{ __html: question.question }}
+            ></label>
+          )}
           <Field name={key}>
             {({ field }) => (
               <input
@@ -207,9 +226,13 @@ const questionRender = (formikProps) => (question, index) => {
             required: question.is_required__c,
           })}
         >
-          <label className="form-label" htmlFor={key}>
-            {question.question && renderHTML(question.question)}
-          </label>
+          {question.question && (
+            <label
+              className="item-volonteer__label"
+              htmlFor={key}
+              dangerouslySetInnerHTML={{ __html: question.question }}
+            ></label>
+          )}
           <Field name={key}>
             {({ field }) => (
               <input

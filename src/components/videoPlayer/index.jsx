@@ -3,7 +3,6 @@ import { useGlobalVideoPlayerContext } from "@contexts";
 import classNames from "classnames";
 import HTMLEllipsis from "react-lines-ellipsis/lib/html";
 import * as RemoveMarkdown from "remove-markdown";
-import ReactHtmlParser from "react-html-parser";
 import "node_modules/video-react/dist/video-react.css";
 import {
   Player,
@@ -169,8 +168,11 @@ const VideoPlayer = () => {
                       </p>
                     </>
                   )}
-                  {showFull && (
-                    <p className="card-text">{ReactHtmlParser(desc)}</p>
+                  {showFull && desc && (
+                    <p
+                      className="card-text"
+                      dangerouslySetInnerHTML={{ __html: desc }}
+                    ></p>
                   )}
                 </div>
               </div>

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import classNames from "classnames";
-import { Formik, Field } from "formik";
 import { PAYMENT_TYPES, COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { isEmpty } from "lodash";
 
 export const PostCostDetailsCard = ({
   workshop,

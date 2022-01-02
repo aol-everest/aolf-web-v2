@@ -1,11 +1,14 @@
 import React from "react";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES, ABBRS, COURSE_TYPES } from "@constants";
 import classNames from "classnames";
+
+dayjs.extend(utc);
 
 export const WorkshopTile = ({ data, authenticated }) => {
   const router = useRouter();
@@ -70,20 +73,20 @@ export const WorkshopTile = ({ data, authenticated }) => {
             <Image src="/img/course-card-1.png" alt="bg" layout="fill" />
           )}
         <div className="parentData">
-          {moment
+          {dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), "month") && (
             <div className="course_data">
-              {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("DD, YYYY")}`}
             </div>
           )}
-          {!moment
+          {!dayjs
             .utc(eventStartDate)
-            .isSame(moment.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), "month") && (
             <div className="course_data">
-              {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("MMMM DD, YYYY")}`}
             </div>

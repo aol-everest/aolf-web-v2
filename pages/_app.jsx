@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Amplify from "aws-amplify";
 import { Auth } from "aws-amplify";
 import { Hub } from "@aws-amplify/core";
-import dynamic from "next/dynamic";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose, isSSR, Clevertap } from "@utils";
@@ -17,6 +16,7 @@ import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
+import TopProgressBar from "@components/topProgressBar";
 import Script from "next/script";
 import * as snippet from "@segment/snippet";
 import "@styles/global.scss";
@@ -28,13 +28,6 @@ import "@styles/old-design/style.scss";
 
 import config from "./../src/aws-exports";
 import SEO from "../next-seo.config";
-
-const TopProgressBar = dynamic(
-  () => {
-    return import("@components/topProgressBar");
-  },
-  { ssr: false },
-);
 
 Amplify.configure({
   ...config,
@@ -150,7 +143,7 @@ function App({ Component, pageProps, userInfo = {} }) {
               )}
               <Layout hideHeader={Component.hideHeader}>
                 <DefaultSeo {...SEO} />
-                {/* <TopProgressBar /> */}
+                <TopProgressBar />
                 <Component {...pageProps} />
                 <ReactQueryDevtools initialIsOpen={false} />
               </Layout>

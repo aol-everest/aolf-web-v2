@@ -3,21 +3,11 @@ import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
-import moment from "moment";
+import dayjs from "dayjs";
 import { Loader } from "@components";
-import { isEmpty } from "lodash";
+import { isEmpty } from "@utils";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import {
-  BillingInfoForm,
-  PayWith,
-  UserInfoForm,
-  CourseOptions,
-  AgreementForm,
-  MobileCourseDetails,
-  DiscountCodeInput,
-  CourseDetailsCard,
-  Dropdown,
-} from "@components/checkout";
+import { DiscountCodeInput, Dropdown } from "@components/checkout";
 import { EmailField } from "./EmailField";
 import { Radiobox } from "./Radiobox";
 import { PriceCalculation } from "./PriceCalculation";
@@ -91,7 +81,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
   };
 
   const setFormInitialValues = () => {
-    const secondPaymentDate = moment(workshop.eventStartDate)
+    const secondPaymentDate = dayjs(workshop.eventStartDate)
       .add(-3, "D")
       .format("YYYY-MM-DD");
     return {
@@ -898,16 +888,16 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                     name: "max",
                     exclusive: true,
                     params: { eventStartDate },
-                    message: `Payment date must be on or before ${moment(
+                    message: `Payment date must be on or before ${dayjs(
                       selectedComboBundle?.remainPartialPaymentDateCap ||
                         eventStartDate,
                     ).format("MM/DD/YYYY")}`,
                     test: (value) => {
-                      return moment(value, [
+                      return dayjs(value, [
                         "MM-DD-YYYY",
                         "YYYY-MM-DD",
                       ]).isSameOrBefore(
-                        moment(
+                        dayjs(
                           selectedComboBundle?.remainPartialPaymentDateCap ||
                             eventStartDate,
                         ),
@@ -920,10 +910,9 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                     params: { eventStartDate },
                     message: `Payment date must be after today`,
                     test: (value) => {
-                      return moment(value, [
-                        "MM-DD-YYYY",
-                        "YYYY-MM-DD",
-                      ]).isAfter(moment(new Date()));
+                      return dayjs(value, ["MM-DD-YYYY", "YYYY-MM-DD"]).isAfter(
+                        dayjs(new Date()),
+                      );
                     },
                   }),
               },

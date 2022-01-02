@@ -5,16 +5,10 @@ import * as Yup from "yup";
 import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import renderHTML from "react-render-html";
 import {
   BillingInfoForm,
-  PayWith,
   UserInfoForm,
-  CourseOptions,
-  AgreementForm,
-  MobileCourseDetails,
   DiscountCodeInput,
-  CourseDetailsCard,
 } from "@components/checkout";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { api } from "@utils";
@@ -441,14 +435,21 @@ export const MembershipCheckoutStripe = ({
                     </li>
                   </ul>
                 </div>
-                <div className="reciept__details reciept__details_v2 subsciption-description">
-                  {subsciption.description &&
-                    renderHTML(subsciption.description)}
-                </div>
+
+                {subsciption.description && (
+                  <div
+                    className="reciept__details reciept__details_v2 subsciption-description"
+                    dangerouslySetInnerHTML={{
+                      __html: subsciption.description,
+                    }}
+                  ></div>
+                )}
+
                 {subsciption.condition && (
-                  <div className="reciept__more">
-                    {renderHTML(subsciption.condition)}
-                  </div>
+                  <div
+                    className="reciept__more"
+                    dangerouslySetInnerHTML={{ __html: subsciption.condition }}
+                  ></div>
                 )}
               </div>
               <div className="agreement v2 mt-4 d-none d-lg-block">
@@ -533,13 +534,23 @@ export const MembershipCheckoutStripe = ({
                   </h6>
                 </div>
                 <div className="mobile-modal__body mobile-modal__body_v2">
-                  <div className="subsciption-description">
-                    {subsciption.description &&
-                      renderHTML(subsciption.description)}
-                  </div>
-                  <div className="course-more">
-                    {subsciption.condition && renderHTML(subsciption.condition)}
-                  </div>
+                  {subsciption.description && (
+                    <div
+                      className="subsciption-description"
+                      dangerouslySetInnerHTML={{
+                        __html: subsciption.description,
+                      }}
+                    ></div>
+                  )}
+
+                  {subsciption.condition && (
+                    <div
+                      className="course-more"
+                      dangerouslySetInnerHTML={{
+                        __html: subsciption.condition,
+                      }}
+                    ></div>
+                  )}
                 </div>
               </div>
             </div>

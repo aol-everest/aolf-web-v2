@@ -1,11 +1,14 @@
 import React from "react";
 import classNames from "classnames";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { Loader } from "@components";
 import { tConvert } from "@utils";
 import { ABBRS, MEMBERSHIP_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useRouter } from "next/router";
+
+dayjs.extend(utc);
 
 export const MeetupEnroll = ({
   checkoutMeetup,
@@ -90,7 +93,7 @@ export const MeetupEnroll = ({
               certified teacher.</p> */}
               <p className="description">{description}</p>
               <p className="date">
-                {`${moment.utc(meetupStartDate).format("MMMM DD")}, `}
+                {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
                 {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
               </p>
               <ul>

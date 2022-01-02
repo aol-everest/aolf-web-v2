@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import { Field, ErrorMessage } from "formik";
 import { StyledInput } from "./StyledInput";
 
 export const UserInfoForm = ({ formikProps }) => {

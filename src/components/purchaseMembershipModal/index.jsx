@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import renderHTML from "react-render-html";
 
 export const PurchaseMembershipModal = ({ modalSubscription }) => {
   return (
@@ -11,8 +10,12 @@ export const PurchaseMembershipModal = ({ modalSubscription }) => {
         included?
       </p>
       <div className="meditateMemberShip">
-        {modalSubscription.description &&
-          renderHTML(modalSubscription.description)}
+        {modalSubscription.description && (
+          <span
+            dangerouslySetInnerHTML={{ __html: modalSubscription.description }}
+          ></span>
+        )}
+
         <p className="modal-gray-text">
           * Available to SKY Breath Meditation graduates
         </p>

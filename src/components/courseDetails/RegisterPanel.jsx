@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { priceCalculation } from "@utils";
 import { useRouter } from "next/router";
-import { isEmpty } from "lodash";
+import { isEmpty } from "@utils";
 import { useAuth } from "@contexts";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
+
+dayjs.extend(utc);
 
 export const RegisterPanel = ({ workshop }) => {
   const { authenticated = false, profile } = useAuth();
@@ -171,7 +174,7 @@ export const RegisterPanel = ({ workshop }) => {
               <p>
                 Register soon. Course fee will go up by $
                 {earlyBirdFeeIncreasing.increasingFee} on{" "}
-                {moment
+                {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)
                   .format("MMM D, YYYY")}
               </p>
@@ -224,7 +227,7 @@ export const RegisterPanel = ({ workshop }) => {
             <p className="tw-text-xs">
               Register soon. Course fee will go up by $
               {earlyBirdFeeIncreasing.increasingFee} on{" "}
-              {moment
+              {dayjs
                 .utc(earlyBirdFeeIncreasing.increasingByDate)
                 .format("MMM D, YYYY")}
             </p>

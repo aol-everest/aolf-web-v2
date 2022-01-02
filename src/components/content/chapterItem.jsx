@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import HTMLEllipsis from "react-lines-ellipsis/lib/html";
 import * as RemoveMarkdown from "remove-markdown";
-import ReactHtmlParser from "react-html-parser";
 import { secondsToHms } from "@utils";
 
 export const ChapterItem = ({ chapter, playChapterAction }) => {
@@ -53,7 +52,12 @@ export const ChapterItem = ({ chapter, playChapterAction }) => {
               </p>
             </>
           )}
-          {showFull && <p className="card-text">{ReactHtmlParser(desc)}</p>}
+          {showFull && desc && (
+            <p
+              className="card-text"
+              dangerouslySetInnerHTML={{ __html: desc }}
+            ></p>
+          )}
         </div>
       </div>
     );
@@ -92,7 +96,12 @@ export const ChapterItem = ({ chapter, playChapterAction }) => {
               </p>
             </>
           )}
-          {showFull && <p className="card-text">{ReactHtmlParser(desc)}</p>}
+          {showFull && desc && (
+            <p
+              className="card-text"
+              dangerouslySetInnerHTML={{ __html: desc }}
+            ></p>
+          )}
         </div>
       </div>
     );
@@ -126,7 +135,12 @@ export const ChapterItem = ({ chapter, playChapterAction }) => {
             </p>
           </>
         )}
-        {showFull && <p className="card-text">{ReactHtmlParser(desc)}</p>}
+        {showFull && desc && (
+          <p
+            className="card-text"
+            dangerouslySetInnerHTML={{ __html: desc }}
+          ></p>
+        )}
       </div>
     </div>
   );

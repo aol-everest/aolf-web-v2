@@ -1,13 +1,15 @@
 import React from "react";
 import { api, tConvert } from "@utils";
 import { withSSRContext } from "aws-amplify";
-import renderHTML from "react-render-html";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { useQuery } from "react-query";
 import { MEMBERSHIP_TYPES, COURSE_TYPES, CONTENT_FOLDER_IDS } from "@constants";
+
+dayjs.extend(utc);
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
@@ -208,15 +210,19 @@ const MembershipThankyou = ({ order, query }) => {
                 "col-11 mx-auto": !!courseId || !!meetupId,
               })}
             >
-              <h1 className="journey-confirmation__title section-title">
-                {afterBuyMessageHeader && renderHTML(afterBuyMessageHeader)}
-              </h1>
+              {afterBuyMessageHeader && (
+                <h1
+                  className="journey-confirmation__title section-title"
+                  dangerouslySetInnerHTML={{ __html: afterBuyMessageHeader }}
+                ></h1>
+              )}
               <div className="journey-confirmation__card mx-auto">
                 <div className="journey-confirmation__info">
-                  {!courseId && !meetupId && (
-                    <p className="journey-confirmation__info-text">
-                      {afterBuyMessageBody && renderHTML(afterBuyMessageBody)}
-                    </p>
+                  {!courseId && !meetupId && afterBuyMessageBody && (
+                    <p
+                      className="journey-confirmation__info-text"
+                      dangerouslySetInnerHTML={{ __html: afterBuyMessageBody }}
+                    ></p>
                   )}
                   {courseId && (
                     <p className="journey-confirmation__info-text">
@@ -290,24 +296,20 @@ const MembershipThankyou = ({ order, query }) => {
                 </div>
                 {courseId && (
                   <div className="journey-confirmation__image">
-                    {moment
+                    {dayjs
                       .utc(eventStartDate)
-                      .isSame(moment.utc(eventEndDate), "month") && (
+                      .isSame(dayjs.utc(eventEndDate), "month") && (
                       <span className="journey-confirmation__date">
-                        {`${moment
-                          .utc(eventStartDate)
-                          .format("MMMM DD")}-${moment
+                        {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                           .utc(eventEndDate)
                           .format("DD, YYYY")}`}
                       </span>
                     )}
-                    {!moment
+                    {!dayjs
                       .utc(eventStartDate)
-                      .isSame(moment.utc(eventEndDate), "month") && (
+                      .isSame(dayjs.utc(eventEndDate), "month") && (
                       <span className="journey-confirmation__date">
-                        {`${moment
-                          .utc(eventStartDate)
-                          .format("MMMM DD")}-${moment
+                        {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                           .utc(eventEndDate)
                           .format("MMMM DD, YYYY")}`}
                       </span>
@@ -328,11 +330,11 @@ const MembershipThankyou = ({ order, query }) => {
                 )}
                 {meetupId && (
                   <div className="journey-confirmation__image">
-                    {moment
+                    {dayjs
                       .utc(eventStartDate)
-                      .isSame(moment.utc(eventEndDate), "month") && (
+                      .isSame(dayjs.utc(eventEndDate), "month") && (
                       <span className="journey-confirmation__date">
-                        {`${moment.utc(meetupStartDate).format("MMMM DD")}, `}
+                        {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
                         {`${tConvert(meetupStartTime)}`}
                       </span>
                     )}
@@ -360,9 +362,12 @@ const MembershipThankyou = ({ order, query }) => {
           <div className="container">
             <div className="col-12">
               <div className="journey-confirmation_mobile__info">
-                <h1 className="journey-confirmation_mobile__title section-title">
-                  {afterBuyMessageHeader && renderHTML(afterBuyMessageHeader)}
-                </h1>
+                {afterBuyMessageHeader && (
+                  <h1
+                    className="journey-confirmation_mobile__title section-title"
+                    dangerouslySetInnerHTML={{ __html: afterBuyMessageHeader }}
+                  ></h1>
+                )}
                 <p className="journey-confirmation_mobile__info-text">
                   You’re just one step away from completing your Silent Retreat
                   registration. If you are not automatically redirected, please
@@ -378,20 +383,20 @@ const MembershipThankyou = ({ order, query }) => {
             </div>
           </div>
           <div className="journey-confirmation_mobile__image">
-            {moment
+            {dayjs
               .utc(eventStartDate)
-              .isSame(moment.utc(eventEndDate), "month") && (
+              .isSame(dayjs.utc(eventEndDate), "month") && (
               <span className="journey-confirmation_mobile__date">
-                {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+                {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                   .utc(eventEndDate)
                   .format("DD, YYYY")}`}
               </span>
             )}
-            {!moment
+            {!dayjs
               .utc(eventStartDate)
-              .isSame(moment.utc(eventEndDate), "month") && (
+              .isSame(dayjs.utc(eventEndDate), "month") && (
               <span className="journey-confirmation_mobile__date">
-                {`${moment.utc(eventStartDate).format("MMMM DD")}-${moment
+                {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                   .utc(eventEndDate)
                   .format("MMMM DD, YYYY")}`}
               </span>

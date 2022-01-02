@@ -1,5 +1,5 @@
 import React from "react";
-import moment from "moment";
+import dayjs from "dayjs";
 import ReactTooltip from "react-tooltip";
 import { MEMBERSHIP_TYPES } from "@constants";
 import { useRouter } from "next/router";
@@ -7,7 +7,6 @@ import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES } from "@constants";
 import { useQuery } from "react-query";
 import { api } from "@utils";
-import renderHTML from "react-render-html";
 
 export const ProfileHeader = ({
   subscriptions = [],
@@ -59,22 +58,32 @@ export const ProfileHeader = ({
       const modalBody = (
         <>
           {modalSubscription.descriptionHeader && (
-            <div className="course-join-card__text-container">
-              {renderHTML(modalSubscription.descriptionHeader)}
-            </div>
+            <div
+              className="course-join-card__text-container"
+              dangerouslySetInnerHTML={{
+                __html: modalSubscription.descriptionHeader,
+              }}
+            ></div>
           )}
 
           <h6 className="course-details-card__subtitle">
             {modalSubscription.name} benefits:
           </h6>
-          <div className="course-details-card__list">
-            {modalSubscription.description &&
-              renderHTML(modalSubscription.description)}
-          </div>
+          {modalSubscription.description && (
+            <div
+              className="course-details-card__list"
+              dangerouslySetInnerHTML={{
+                __html: modalSubscription.description,
+              }}
+            ></div>
+          )}
           {modalSubscription.condition && (
-            <p className="course-join-card__excludes d-lg-block d-none">
-              {renderHTML(modalSubscription.condition)}
-            </p>
+            <p
+              className="course-join-card__excludes d-lg-block d-none"
+              dangerouslySetInnerHTML={{
+                __html: modalSubscription.condition,
+              }}
+            ></p>
           )}
         </>
       );
@@ -173,7 +182,7 @@ export const ProfileHeader = ({
         <strong>{subscription.name} member </strong>
         <span className="profile-header__course-date">
           since{" "}
-          {moment(subscription.subscriptionStartDate).format("MMMM DD, YYYY")}
+          {dayjs(subscription.subscriptionStartDate).format("MMMM DD, YYYY")}
         </span>{" "}
         {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
           subscription.subscriptionMasterSfid && (
