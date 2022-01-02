@@ -61,13 +61,12 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
           })}
         >
           <div className="course_detail_btn_box">
-            <a
+            <button
               className="btn btn_box_primary text-center"
-              href="#"
               onClick={openEnrollAction}
             >
               Enroll
-            </a>
+            </button>
           </div>
         </div>
       </div>

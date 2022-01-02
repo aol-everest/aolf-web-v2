@@ -5,8 +5,6 @@ import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
-
-import { AddressSearch } from "@components";
 import { withSSRContext } from "aws-amplify";
 import dynamic from "next/dynamic";
 import {
@@ -28,6 +26,9 @@ const WorkshopTile = dynamic(() =>
 );
 const LinkedCalendar = dynamic(() =>
   import("@components/dateRangePicker").then((mod) => mod.LinkedCalendar),
+);
+const AddressSearch = dynamic(() =>
+  import("@components").then((mod) => mod.AddressSearch),
 );
 
 const DATE_PICKER_CONFIG = {

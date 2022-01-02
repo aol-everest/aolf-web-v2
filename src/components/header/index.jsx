@@ -173,7 +173,6 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     className="dropdown-toggle"
     href="#"
     role="button"
-    id="meditate-dropdown"
     data-toggle="dropdown"
     aria-haspopup="true"
     aria-expanded="false"

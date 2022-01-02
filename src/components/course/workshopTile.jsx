@@ -106,12 +106,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
           })}
         >
           <div className="course_detail_btn_box">
-            <a
+            <button
               className="btn btn_box_primary text-center"
               onClick={enrollAction(sfid, productTypeId)}
             >
               Enroll
-            </a>
+            </button>
             <Link prefetch={false} href={`/us/course/${sfid}`}>
               <a className="btn btn-box-light text-center">Details</a>
             </Link>
