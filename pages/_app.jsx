@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/inline-script-id */
 import React, { useEffect, useState } from "react";
-import Amplify from "aws-amplify";
-import { Auth } from "aws-amplify";
-import { Hub } from "@aws-amplify/core";
+import Auth from "@aws-amplify/auth";
+import Amplify, { Hub } from "@aws-amplify/core";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose, isSSR, Clevertap } from "@utils";
