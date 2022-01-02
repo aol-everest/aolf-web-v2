@@ -3,7 +3,7 @@ import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 import { api } from "@utils";
 import { FaCheckCircle } from "react-icons/fa";
