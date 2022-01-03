@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
+import { Loader } from "@googlemaps/js-api-loader";
 
 // const scriptOptions = {
 //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
@@ -16,6 +17,18 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
   const [longitude, setLongitude] = useState(null);
   const [isGeocoding, setIsGeocoding] = useState(false);
   const inputEl = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loader = new Loader({
+      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
+      version: "weekly",
+      libraries: ["places"],
+    });
+    loader.load().then(() => {
+      setIsLoading(false);
+    });
+  }, []);
 
   const handleChange = (address) => {
     setAddress(address);
@@ -52,56 +65,63 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
 
   return (
     <>
-      <PlacesAutocomplete
-        value={address}
-        onChange={handleChange}
-        onSelect={handleSelect}
-        searchOptions={{
-          types: ["(cities)"],
-          componentRestrictions: { country: "us" },
-        }}
-      >
-        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-          <div className="smart-input">
-            <input
-              className="custom-input tw-mx-auto tw-mt-1 tw-mb-0 tw-w-[85%]"
-              {...getInputProps({
-                placeholder,
-              })}
-            />
-            {suggestions.length > 0 && (
-              <div>
-                {suggestions.map((suggestion) => {
-                  const className = suggestion.active
-                    ? "suggestion-item--active smart-input--list-item"
-                    : "suggestion-item smart-input--list-item";
-                  // inline style for demonstration purpose
-                  const style = suggestion.active
-                    ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                    : { backgroundColor: "#ffffff", cursor: "pointer" };
-                  return (
-                    <>
-                      <div
-                        {...getSuggestionItemProps(suggestion, {
-                          className,
-                          style,
-                        })}
-                      >
-                        <strong>
-                          {suggestion.formattedSuggestion.mainText}
-                        </strong>{" "}
-                        <small>
-                          {suggestion.formattedSuggestion.secondaryText}
-                        </small>
-                      </div>
-                    </>
-                  );
+      {!isLoading && (
+        <PlacesAutocomplete
+          value={address}
+          onChange={handleChange}
+          onSelect={handleSelect}
+          searchOptions={{
+            types: ["(cities)"],
+            componentRestrictions: { country: "us" },
+          }}
+        >
+          {({
+            getInputProps,
+            suggestions,
+            getSuggestionItemProps,
+            loading,
+          }) => (
+            <div className="smart-input">
+              <input
+                className="custom-input tw-mx-auto tw-mt-1 tw-mb-0 !tw-w-[85%]"
+                {...getInputProps({
+                  placeholder,
                 })}
-              </div>
-            )}
-          </div>
-        )}
-      </PlacesAutocomplete>
+              />
+              {suggestions.length > 0 && (
+                <div>
+                  {suggestions.map((suggestion) => {
+                    const className = suggestion.active
+                      ? "suggestion-item--active smart-input--list-item"
+                      : "suggestion-item smart-input--list-item";
+                    // inline style for demonstration purpose
+                    const style = suggestion.active
+                      ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                      : { backgroundColor: "#ffffff", cursor: "pointer" };
+                    return (
+                      <>
+                        <div
+                          {...getSuggestionItemProps(suggestion, {
+                            className,
+                            style,
+                          })}
+                        >
+                          <strong>
+                            {suggestion.formattedSuggestion.mainText}
+                          </strong>{" "}
+                          <small>
+                            {suggestion.formattedSuggestion.secondaryText}
+                          </small>
+                        </div>
+                      </>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </PlacesAutocomplete>
+      )}
     </>
   );
 };

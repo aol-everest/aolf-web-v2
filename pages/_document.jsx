@@ -237,10 +237,10 @@ class CustomDocument extends Document {
             integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
             crossOrigin="anonymous"
           />
-          <script
+          {/* <script
             strategy="lazyOnload"
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&libraries=places`}
-          ></script>
+          ></script> */}
         </Head>
         <body>
           <Main />

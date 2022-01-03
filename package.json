@@ -20,6 +20,7 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^15.10.0",
     "@elgorditosalsero/react-gtm-hook": "^2.1.1",
+    "@googlemaps/js-api-loader": "^1.12.12",
     "@hookform/devtools": "^4.0.1",
     "@hookform/resolvers": "^2.8.5",
     "@next/bundle-analyzer": "^12.0.7",
