@@ -4,7 +4,7 @@ import Auth from "@aws-amplify/auth";
 import Amplify, { Hub } from "@aws-amplify/core";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { api, Compose, isSSR, Clevertap } from "@utils";
+import { api, Compose, isSSR, Clevertap, Segment } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { Layout } from "@components";
@@ -75,6 +75,10 @@ function App({ Component, pageProps, userInfo = {} }) {
                 Phone: userInfo.personMobilePhone, // Phone (with the country code)
               },
             });
+            Segment.profile(userInfo.profile.id, {
+              email: userInfo.profile.email,
+              name: userInfo.profile.name,
+            });
           } catch (ex) {
             await Auth.signOut();
           }
@@ -83,6 +87,7 @@ function App({ Component, pageProps, userInfo = {} }) {
         case "signOut": {
           setUser({});
           Clevertap.logout();
+          Segment.logout();
         }
       }
     });
@@ -112,6 +117,10 @@ function App({ Component, pageProps, userInfo = {} }) {
             Identity: userInfo.profile.id, // String or number
             Email: userInfo.profile.email, // Email address of the user
           },
+        });
+        Segment.profile(userInfo.profile.id, {
+          email: userInfo.profile.email,
+          name: userInfo.profile.name,
         });
       } catch (ex) {
         await Auth.signOut();

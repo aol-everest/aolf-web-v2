@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { api, Clevertap } from "@utils";
+import { api, Clevertap, Segment } from "@utils";
 import dynamic from "next/dynamic";
 // import {
 //   SKYBreathMeditation,
@@ -91,6 +91,14 @@ export default function CourseDetail({ data }) {
       user: profile,
     });
     Clevertap.event("Product Viewed", {
+      "Request Type": "Detail",
+      "Product Name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: unitPrice,
+    });
+    Segment.event("Product Viewed", {
       "Request Type": "Detail",
       "Product Name": title,
       Category: "Workshop",

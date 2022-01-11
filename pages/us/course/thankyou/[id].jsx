@@ -1,7 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 import React, { useEffect } from "react";
-import { api, Clevertap, tConvert, calculateBusinessDays } from "@utils";
+import {
+  api,
+  Clevertap,
+  tConvert,
+  calculateBusinessDays,
+  Segment,
+} from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useAuth, useGlobalAlertContext } from "@contexts";
@@ -164,6 +170,16 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
       },
     });
     Clevertap.event("Product Purchase Completed", {
+      "Request Type": "Thankyou",
+      "Product name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: ammountPaid,
+      affiliation: "Website",
+      coupon: couponCode || "",
+    });
+    Segment.event("Product Purchase Completed", {
       "Request Type": "Thankyou",
       "Product name": title,
       Category: "Workshop",

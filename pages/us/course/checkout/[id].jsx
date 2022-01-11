@@ -3,7 +3,7 @@ import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { PaymentForm } from "@components";
-import { api, Clevertap } from "@utils";
+import { api, Clevertap, Segment } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
@@ -153,6 +153,14 @@ const Checkout = ({ workshop, profile }) => {
     });
 
     Clevertap.event("Product Checkout", {
+      "Request Type": "Payment",
+      "Product Name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: unitPrice,
+    });
+    Segment.event("Product Checkout", {
       "Request Type": "Payment",
       "Product Name": title,
       Category: "Workshop",
