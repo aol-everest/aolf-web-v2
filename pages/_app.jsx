@@ -15,7 +15,7 @@ import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
-// import TopProgressBar from "@components/topProgressBar";
+import TopProgressBar from "@components/topProgressBar";
 import Script from "next/script";
 import * as snippet from "@segment/snippet";
 import "@styles/global.scss";
@@ -141,7 +141,7 @@ function App({ Component, pageProps, userInfo = {} }) {
               )}
               <Layout hideHeader={Component.hideHeader}>
                 <DefaultSeo {...SEO} />
-                {/* <TopProgressBar /> */}
+                <TopProgressBar />
                 <Component {...pageProps} />
                 <ReactQueryDevtools initialIsOpen={false} />
               </Layout>

@@ -188,11 +188,13 @@ const Course = ({ authenticated }) => {
   const [searchKey, setSearchKey] = useState("");
   const [showFilterModal, setShowFilterModal] = useState(false);
 
-  const toggleFilter = () => {
+  const toggleFilter = (e) => {
+    if (e) e.preventDefault();
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
-  const toggleActiveFilter = (newType) => () => {
+  const toggleActiveFilter = (newType) => (e) => {
+    if (e) e.preventDefault();
     setActiveFilterType(newType);
   };
 
@@ -236,6 +238,7 @@ const Course = ({ authenticated }) => {
   };
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
+    if (e) e.preventDefault();
     switch (field) {
       case "courseTypeFilter":
         setCtypesFilter(null);
@@ -261,7 +264,8 @@ const Course = ({ authenticated }) => {
     }
   };
 
-  const onFilterClearEvent = (field) => async () => {
+  const onFilterClearEvent = (field) => async (e) => {
+    if (e) e.preventDefault();
     switch (field) {
       case "courseTypeFilter":
         setCourseTypeFilter(null);

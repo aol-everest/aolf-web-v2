@@ -124,7 +124,8 @@ const Meetup = () => {
   const [loading, setLoading] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
 
-  const toggleFilter = () => {
+  const toggleFilter = (e) => {
+    if (e) e.preventDefault();
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
@@ -145,7 +146,8 @@ const Meetup = () => {
     return { ...acc, [meetup.id]: meetup };
   }, {});
 
-  const toggleActiveFilter = (newType) => () => {
+  const toggleActiveFilter = (newType) => (e) => {
+    if (e) e.preventDefault();
     setActiveFilterType(newType);
   };
 
@@ -195,6 +197,7 @@ const Meetup = () => {
   };
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
+    if (e) e.preventDefault();
     switch (field) {
       case "meetupTypeFilter":
         setMeetupTypeFilter(value);
@@ -222,7 +225,8 @@ const Meetup = () => {
     }
   };
 
-  const onFilterClearEvent = (field) => async () => {
+  const onFilterClearEvent = (field) => async (e) => {
+    if (e) e.preventDefault();
     switch (field) {
       case "meetupTypeFilter":
         setMeetupTypeFilter(null);

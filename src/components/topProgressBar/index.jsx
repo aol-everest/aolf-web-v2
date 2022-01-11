@@ -39,12 +39,12 @@ function stop() {
   NProgress.done();
 }
 
-Router.events.on("routeChangeStart", load);
+// Router.events.on("routeChangeStart", load);
 Router.events.on("routeChangeComplete", (url) => {
   window.analytics.page(url);
-  stop();
+  // stop();
 });
-Router.events.on("routeChangeError", stop);
+// Router.events.on("routeChangeError", stop);
 
 NProgress.configure({
   minimum: 0.3,
