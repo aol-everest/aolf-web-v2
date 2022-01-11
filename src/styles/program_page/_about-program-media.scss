@@ -1,93 +1,93 @@
 @media only screen and (max-width: 1199px) {
-	.about-program {
-		&__image {
-			img {
-				object-position: left;
-			}
-		}
+  .about-program {
+    &__image {
+      img {
+        object-position: left;
+      }
+    }
 
-		&__main {
-			padding: 90px 0;
-	
-			&-name {
-				font-size: 40px;
-				line-height: 46px;
-			}
-		}
-	}
+    &__main {
+      padding: 90px 0;
+
+      &-name {
+        font-size: 40px;
+        line-height: 46px;
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: 991px) {
-	.about-program {
-		margin-bottom: 106px;
+  .about-program {
+    margin-bottom: 106px;
 
-		&__main {
-			padding: 60px 0 40px;
+    &__main {
+      padding: 60px 0 40px;
 
-			&-type,
-			&-name {
-				text-align: center;
-			}
+      &-type,
+      &-name {
+        text-align: center;
+      }
 
-			&-type {
-				font-size: 16px;
-			}
-	
-			&-name {
-				font-size: 32px;
-				line-height: 38px;
-			}
+      &-type {
+        font-size: 16px;
+      }
 
-			&-list {
-				li {
-					font-size: 16px;
-					line-height: 22px;
-				}
-			}
-		}
+      &-name {
+        font-size: 32px;
+        line-height: 38px;
+      }
 
-		&__details {
-			padding: 28px;
-			margin-bottom: -106px;
+      &-list {
+        li {
+          font-size: 16px;
+          line-height: 22px;
+        }
+      }
+    }
 
-			&-title {
-				font-family: Lora, sans-serif;
-				font-size: 24px;
-				line-height: 32px;
-			}
+    &__details {
+      padding: 28px;
+      margin-bottom: -106px;
 
-			.details-table {
-				font-size: 14px;
-				overflow: hidden;
-			}
-		}
-	}
+      &-title {
+        font-family: Lora, sans-serif;
+        font-size: 24px;
+        line-height: 32px;
+      }
+
+      .details-table {
+        font-size: 14px;
+        overflow: hidden;
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: 767px) {
-	.about-program {
-		&__details {
-			.details-table {
-				&__column {
-					&:first-child {
-						width: 40%;
-					}
-	
-					&:last-child {
-						width: 60%;
-					}
-				}
-			}
-		}
-	}
+  .about-program {
+    &__details {
+      .details-table {
+        &__column {
+          &:first-child {
+            width: 40%;
+          }
+
+          &:last-child {
+            width: 60%;
+          }
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: 575px) {
-	.about-program {
-		&__main {
-			&-button {
-				width: 100%;
-			}
-		}
-	}
+  .about-program {
+    &__main {
+      &-button {
+        width: 100%;
+      }
+    }
+  }
 }

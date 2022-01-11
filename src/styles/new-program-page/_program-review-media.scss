@@ -1,36 +1,36 @@
 @media screen and (max-width: 1199px) {
-	.program-review {
-		padding: 60px 0;
-	}
+  .program-review {
+    padding: 60px 0;
+  }
 }
 
 @media screen and (max-width: 991px) {
-	.program-review {
-		padding: 40px 0;
+  .program-review {
+    padding: 40px 0;
 
-		&__text {
-			font-size: 18px;
-			line-height: 30px;
-			margin-bottom: 20px;
-		}
+    &__text {
+      font-size: 18px;
+      line-height: 30px;
+      margin-bottom: 20px;
+    }
 
-		.author {
-			&__image {
-				width: 60px;
-				height: 60px;
-				margin-right: 23px;
-	
-				&:after {
-					right: -10px;
-					font-size: 40px;
-					line-height: 47px;
-				}
-			}
-	
-			&__name {
- 				font-size: 16px;
-				line-height: 24px;
-			}
-		}
-	}
+    .author {
+      &__image {
+        width: 60px;
+        height: 60px;
+        margin-right: 23px;
+
+        &:after {
+          right: -10px;
+          font-size: 40px;
+          line-height: 47px;
+        }
+      }
+
+      &__name {
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+  }
 }

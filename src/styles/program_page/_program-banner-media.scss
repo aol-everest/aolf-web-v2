@@ -1,41 +1,45 @@
 @media only screen and (max-width: 991px) {
-	.program-banner {
-		padding: 80px 0;
-		text-align: center;
+  .program-banner {
+    padding: 80px 0;
+    text-align: center;
 
-		&__image {
-			&:after {
-				content: '';
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background: linear-gradient(0deg, rgba(30, 34, 50, 0.6), rgba(30, 34, 50, 0.6));
-			}
-		}
+    &__image {
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          0deg,
+          rgba(30, 34, 50, 0.6),
+          rgba(30, 34, 50, 0.6)
+        );
+      }
+    }
 
-		&__title {
-			font-size: 32px;
-			line-height: 38px;
-			margin-bottom: 28px;
-		}
-	
-		&__subtitle {
-			line-height: 19px;
-		}
-	
-		&__price {
-			font-size: 22px;
-			line-height: 26px;
-		}
-	}
+    &__title {
+      font-size: 32px;
+      line-height: 38px;
+      margin-bottom: 28px;
+    }
+
+    &__subtitle {
+      line-height: 19px;
+    }
+
+    &__price {
+      font-size: 22px;
+      line-height: 26px;
+    }
+  }
 }
 
 @media only screen and (max-width: 575px) {
-	.program-banner {
-		&__button {
-			width: 100%;
-		}
-	}
+  .program-banner {
+    &__button {
+      width: 100%;
+    }
+  }
 }
