@@ -239,7 +239,9 @@ export const RegisterPanel = ({ workshop }) => {
           </button>
           {!isUsableCreditAvailable && (
             <button
-              className="btn-secondary"
+              className={`btn-secondary tw-mr-[25px] ${
+                earlyBirdFeeIncreasing ? "tw-mt-2" : ""
+              }`}
               onClick={purchaseMembershipAction(
                 MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
               )}
