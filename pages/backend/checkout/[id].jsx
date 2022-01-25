@@ -44,6 +44,7 @@ export const getServerSideProps = async (context) => {
     token,
     param: {
       id,
+      isBackendRegistration: "1",
     },
   });
   props = {
