@@ -179,7 +179,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
       affiliation: "Website",
       coupon: couponCode || "",
     });
-    Segment.event("Product Purchase Completed", {
+    Segment.event("Checkout Step Completed", {
       "Request Type": "Thankyou",
       "Product name": title,
       Category: "Workshop",

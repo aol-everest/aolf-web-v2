@@ -160,7 +160,7 @@ const Checkout = ({ workshop, profile }) => {
       "Product Id": courseId,
       Price: unitPrice,
     });
-    Segment.event("Product Checkout", {
+    Segment.event("Checkout Started", {
       "Request Type": "Payment",
       "Product Name": title,
       Category: "Workshop",

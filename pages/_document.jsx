@@ -94,6 +94,7 @@ class CustomDocument extends Document {
             name="apple-mobile-web-app-title"
             content="Art of Living Journey"
           />
+          <meta name="theme-color" content="#c1d6f7"></meta>
           <link
             rel="apple-touch-startup-image"
             media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"

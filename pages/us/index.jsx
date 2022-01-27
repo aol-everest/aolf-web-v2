@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
-import { api, stringToBoolean } from "@utils";
+import { api, stringToBoolean, Segment } from "@utils";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
@@ -401,6 +401,12 @@ const Course = ({ authenticated }) => {
     onIntersect: fetchNextPage,
     enabled: hasNextPage,
   });
+
+  useEffect(() => {
+    Segment.event("Product List Viewed", {
+      category: "Course",
+    });
+  }, []);
 
   let filterCount = 0;
   if (locationFilter) {

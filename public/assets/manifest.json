@@ -13,7 +13,8 @@
     {
       "src": "/assets/android-chrome-36x36.png",
       "sizes": "36x36",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/assets/android-chrome-48x48.png",
