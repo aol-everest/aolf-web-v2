@@ -131,34 +131,65 @@ function App({ Component, pageProps, userInfo = {} }) {
 
   const queryClient = new QueryClient();
   const gtmParams = { id: process.env.NEXT_PUBLIC_GTM_ID };
+  if (process.env.NEXT_PUBLIC_GTM_ID) {
+    return (
+      <GTMProvider state={gtmParams}>
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <AuthProvider userInfo={user}>
+              <Compose
+                components={[
+                  GlobalModal,
+                  GlobalAlert,
+                  GlobalAudioPlayer,
+                  GlobalVideoPlayer,
+                  GlobalLoading,
+                ]}
+              >
+                {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
+                  <Script
+                    dangerouslySetInnerHTML={{ __html: renderSnippet() }}
+                  />
+                )}
+                <Layout hideHeader={Component.hideHeader}>
+                  <DefaultSeo {...SEO} />
+                  <TopProgressBar />
+                  <Component {...pageProps} />
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </Layout>
+              </Compose>
+            </AuthProvider>
+          </Hydrate>
+        </QueryClientProvider>
+      </GTMProvider>
+    );
+  }
   return (
-    <GTMProvider state={gtmParams}>
-      <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <AuthProvider userInfo={user}>
-            <Compose
-              components={[
-                GlobalModal,
-                GlobalAlert,
-                GlobalAudioPlayer,
-                GlobalVideoPlayer,
-                GlobalLoading,
-              ]}
-            >
-              {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
-                <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
-              )}
-              <Layout hideHeader={Component.hideHeader}>
-                <DefaultSeo {...SEO} />
-                <TopProgressBar />
-                <Component {...pageProps} />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </Layout>
-            </Compose>
-          </AuthProvider>
-        </Hydrate>
-      </QueryClientProvider>
-    </GTMProvider>
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <AuthProvider userInfo={user}>
+          <Compose
+            components={[
+              GlobalModal,
+              GlobalAlert,
+              GlobalAudioPlayer,
+              GlobalVideoPlayer,
+              GlobalLoading,
+            ]}
+          >
+            {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
+              <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
+            )}
+            <Layout hideHeader={Component.hideHeader}>
+              <DefaultSeo {...SEO} />
+              <TopProgressBar />
+              <Component {...pageProps} />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Layout>
+          </Compose>
+        </AuthProvider>
+      </Hydrate>
+    </QueryClientProvider>
   );
 }
 
