@@ -43,6 +43,32 @@ export const WorkshopTile = ({ data, authenticated }) => {
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
   };
 
+  const isNonGenericWorkshop =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0;
+
+  const detailAction = (workshopId, productTypeId) => () => {
+    if (isNonGenericWorkshop) {
+      router.push({
+        pathname: `/us/course/${workshopId}`,
+      });
+    } else if (authenticated) {
+      router.push({
+        pathname: `/us/course/generic-checkout/${workshopId}`,
+        query: {
+          ctype: productTypeId,
+        },
+      });
+    } else {
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us/course/generic-checkout/${workshopId}?ctype=${productTypeId}`,
+      });
+    }
+  };
+
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
   const isSilentRetreatType =
@@ -112,9 +138,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
             >
               Enroll
             </button>
-            <Link prefetch={false} href={`/us/course/${sfid}`}>
-              <a className="btn btn-box-light text-center">Details</a>
-            </Link>
+            <button
+              className="btn btn-box-light text-center"
+              onClick={detailAction(sfid, productTypeId)}
+            >
+              Details
+            </button>
           </div>
         </div>
       </div>

@@ -1,0 +1,167 @@
+.aol_allModal {
+  width: 500px;
+  margin-top: 20px;
+  .modal-dialog {
+    max-width: 800px;
+  }
+
+  .modal_content {
+    border-radius: 12px;
+    border: none;
+    -webkit-box-shadow: 0 4px 10px 0px rgba(125, 125, 137, 0.3);
+    -moz-box-shadow: 0 4px 10px 0px rgba(125, 125, 137, 0.3);
+    box-shadow: 0 4px 10px 0px rgba(125, 125, 137, 0.3);
+    overflow: hidden;
+  }
+
+  .modal_header {
+    border-width: 0px;
+
+    .modal_title {
+      color: #4b5487;
+      font-size: 14px;
+      line-height: 30px;
+      position: relative;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+  }
+
+  .sessionDetails_videoHeader {
+    background-image: url("/img/journey-starts-bg-new.png");
+    background-position: center center;
+    margin: 10px;
+    min-height: 158px;
+    padding: 42px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal_body {
+    padding: 10px;
+    min-height: 200px;
+  }
+
+  .modalClose {
+    opacity: 1;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    z-index: 99999;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 1px #4b5487;
+    font-size: 20px;
+    font-weight: 400;
+    color: #4b5487;
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 3px #4b5487;
+    }
+  }
+
+  .datetime_box {
+    margin: 10px 0px;
+
+    div {
+      font-size: 16px;
+      color: #4b5487;
+    }
+  }
+}
+
+.teacherWrap {
+  display: flex;
+
+  .name {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .followTaq {
+    color: rgba(75, 84, 135, 0.6);
+    font-size: 10px;
+    line-height: 18px;
+    width: 50px;
+    height: 20px;
+    border: 1px solid #4b5487;
+    border-radius: 4px;
+    margin: 1px 0 0 8px;
+    text-align: center;
+    padding: 3px 5px;
+
+    &:hover {
+      text-decoration: none;
+      opacity: 0.8;
+    }
+  }
+
+  .img {
+    width: 30px;
+    height: 30px;
+    border-radius: 25px;
+    margin: -3px 6px 0 6px;
+    border: 1px solid #ffffff;
+    -webkit-box-shadow: 0 2px 12px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 2px 12px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 12px 0px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.workshopCourseBlk {
+  display: flex;
+  margin: 20px 0 50px;
+  flex-wrap: wrap;
+
+  .leftBlk,
+  .rightBlk {
+    width: 50%;
+    flex: 1;
+  }
+
+  .fullBlk {
+    width: 100%;
+    margin-top: 10px;
+
+    p {
+      margin: 15px 0px 0px 0px;
+    }
+  }
+
+  .contact {
+    margin: 15px 0px 0px 0px;
+  }
+}
+
+.sessionDetails_ModalBody.workshop .title {
+  font-size: 28px;
+  line-height: 30px;
+  margin: 25px 0 25px;
+}
+
+.sessionDetails_ModalBody.workshop h6 {
+  color: #4b5487;
+  font-size: 20px;
+  line-height: 24px;
+  margin-bottom: 10px;
+}
+
+.sessionDetails_ModalBody.workshop p {
+  color: rgba(75, 84, 135, 0.6);
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.sessionDetails_ModalBody.workshop p a {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.sessionDetails_ModalBody .extrMrg {
+  margin-top: 15px;
+}
