@@ -98,6 +98,10 @@ export const COURSE_TYPES = {
     name: "Volunteer Training Program",
     value: process.env.NEXT_PUBLIC_VOLUNTEER_TRAINING_PROGRAM_CTYPE || "",
   },
+  HEALING_BREATH: {
+    name: "Healing Breath",
+    value: process.env.NEXT_PUBLIC_HEALING_BREATH_CTYPE || "",
+  },
 };
 
 export const MEMBERSHIP_TYPES = {

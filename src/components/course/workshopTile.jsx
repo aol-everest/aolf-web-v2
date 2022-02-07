@@ -28,16 +28,31 @@ export const WorkshopTile = ({ data, authenticated }) => {
 
   const enrollAction = (workshopId, productTypeId) => () => {
     if (authenticated) {
-      router.push({
-        pathname: `/us/course/checkout/${workshopId}`,
-        query: {
-          ctype: productTypeId,
-        },
-      });
+      if (COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0) {
+        router.push({
+          pathname: `/us/course/healing-breath-checkout/${workshopId}`,
+          query: {
+            ctype: productTypeId,
+          },
+        });
+      } else {
+        router.push({
+          pathname: `/us/course/checkout/${workshopId}`,
+          query: {
+            ctype: productTypeId,
+          },
+        });
+      }
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us/course/checkout/${workshopId}?ctype=${productTypeId}`,
-      });
+      if (COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0) {
+        showModal(MODAL_TYPES.LOGIN_MODAL, {
+          navigateTo: `/us/course/healing-breath-checkout/${workshopId}?ctype=${productTypeId}`,
+        });
+      } else {
+        showModal(MODAL_TYPES.LOGIN_MODAL, {
+          navigateTo: `/us/course/checkout/${workshopId}?ctype=${productTypeId}`,
+        });
+      }
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });

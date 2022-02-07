@@ -10,6 +10,7 @@ export { SmartDropDown } from "./smartDropDown";
 export { DateRangeInput } from "./dateRangeInput";
 export { PaymentForm } from "./paymentForm";
 export { PaymentFormGeneric } from "./paymentFormGeneric";
+export { PaymentFormHB } from "./paymentFormHB";
 export { Loader } from "./loader";
 export { AddressSearch } from "./addressSearch";
 export { PurchaseMembershipModal } from "./purchaseMembershipModal";
