@@ -7,7 +7,10 @@ import { useIntersectionObserver } from "@hooks";
 import { useAuth } from "@contexts";
 import { useRouter } from "next/router";
 import { useUIDSeed } from "react-uid";
-import { RetreatPrerequisiteWarning } from "@components";
+import {
+  RetreatPrerequisiteWarning,
+  PurchaseMembershipModal,
+} from "@components";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
@@ -21,7 +24,7 @@ import {
 import { useQueryString } from "@hooks";
 import { InfiniteScrollLoader } from "@components/loader";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES, ALERT_TYPES } from "@constants";
+import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 export const getServerSideProps = async (context) => {
   let props = {};
@@ -196,6 +199,41 @@ function Collection({ rootFolder, authenticated }) {
         subsciptionCategories,
         purchaseMembershipAction,
       });
+    } else {
+      const allSubscriptions = subsciptionCategories.reduce(
+        (accumulator, currentValue) => {
+          return {
+            ...accumulator,
+            [currentValue.sfid]: currentValue,
+          };
+        },
+        {},
+      );
+      if (allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
+        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          className: "retreat-prerequisite-big meditation-digital-membership",
+          title: "Go deeper with the Digital Membership",
+          footer: () => {
+            return (
+              <button
+                className="btn-secondary v2"
+                onClick={purchaseMembershipAction(
+                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                )}
+              >
+                Join Digital Membership
+              </button>
+            );
+          },
+          children: (
+            <PurchaseMembershipModal
+              modalSubscription={
+                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
+              }
+            />
+          ),
+        });
+      }
     }
   };
 
