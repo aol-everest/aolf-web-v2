@@ -136,8 +136,8 @@ function Tile({
 function Collection({ rootFolder, authenticated }) {
   const router = useRouter();
   const { profile } = useAuth();
-  const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
+  const { showModal, hideModal } = useGlobalModalContext();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
 
@@ -178,6 +178,8 @@ function Collection({ rootFolder, authenticated }) {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
+    hideModal();
+    hideAlert();
     router.push(`/us/membership/${id}`);
   };
 
