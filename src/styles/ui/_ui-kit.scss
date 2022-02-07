@@ -28,6 +28,10 @@ aside {
   img {
     margin-right: 15px;
   }
+
+  ~ header .menu .menu-item .sub-menu {
+    top: 115px !important;
+  }
 }
 
 .section-title {

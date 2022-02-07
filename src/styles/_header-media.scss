@@ -26,9 +26,9 @@
     }
 
     .menu {
-      &__items {
-        .dropdown {
-          margin-right: 20px;
+      &__list {
+        .menu-item:not(:last-child) {
+          margin-right: 24px;
         }
       }
     }
@@ -40,6 +40,10 @@
     position: fixed;
     top: 0;
     left: 0;
+
+    .logo {
+      margin: 0;
+    }
 
     .navbar {
       .navbar-nav {
@@ -54,6 +58,8 @@
     }
 
     &__container {
+      flex-direction: row-reverse;
+      justify-content: space-between;
       padding: 8px 15px;
     }
 
@@ -63,19 +69,18 @@
     }
 
     .menu {
-      &__items {
-        display: none;
-      }
-
-      &__button {
-        font-size: 14px;
-        line-height: 24px;
-        padding: 4px 15px;
-      }
+      display: none;
     }
 
     ~ main {
       margin-top: 51px;
+    }
+
+    &__button {
+      font-size: 14px !important;
+      line-height: 24px !important;
+      padding: 4px 15px !important;
+      margin-left: 0;
     }
   }
 }

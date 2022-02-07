@@ -80,19 +80,19 @@
 
   &__container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 10px 60px;
   }
 
   &__sidebar-button {
-    margin-right: 50px;
+    margin-left: 50px;
   }
 
   .logo {
     position: relative;
     height: 45px;
     width: 115px;
+    margin-right: 40px;
 
     img {
       width: 100%;
@@ -102,9 +102,76 @@
   }
 
   .menu {
-    &__items,
-    &__button {
-      display: inline-block;
+    &__list {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .menu-item {
+        white-space: nowrap;
+
+        &:not(:last-child) {
+          margin-right: 40px;
+        }
+
+        &__link {
+          color: $text-color;
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 600;
+          text-decoration: none;
+          text-transform: uppercase;
+          padding: 10px 8px;
+        }
+
+        &__arrow {
+          position: relative;
+          z-index: 115;
+          margin-top: -24px;
+          margin-left: 35%;
+          width: 0;
+          height: 0;
+          border-left: 12px solid transparent;
+          border-right: 12px solid transparent;
+          border-bottom: 11px solid $dark-blue;
+          display: none;
+          top: 40px;
+        }
+
+        .sub-menu {
+          width: 100%;
+          top: 75px;
+          background: $dark-blue;
+          z-index: 151;
+          color: white;
+          position: absolute;
+          left: 0;
+          display: none;
+          border-bottom: solid 3px $dark-yellow;
+          padding: 10px 60px;
+
+          &__list {
+            display: flex;
+
+            .sub-menu-item {
+              &:not(:last-child) {
+                margin-right: 20px;
+              }
+
+              &__link {
+                text-transform: initial;
+                text-decoration: none;
+                color: white;
+
+                &:hover {
+                  font-weight: 700;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     &__items {
@@ -179,12 +246,13 @@
         }
       }
     }
+  }
 
-    &__button {
-      font-size: 16px;
-      line-height: 22px;
-      height: auto;
-    }
+  &__button {
+    font-size: 16px !important;
+    line-height: 22px !important;
+    height: auto !important;
+    margin: 0 0 0 auto;
   }
 }
 

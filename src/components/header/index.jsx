@@ -218,6 +218,7 @@ export const Header = () => {
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
   const [showSidebar, setShowSidebar] = useState(false);
+  const [currentActiveMenu, setCurrentActiveMenu] = useState("");
 
   const toggleSidebar = () => setShowSidebar(!showSidebar);
 
@@ -228,6 +229,13 @@ export const Header = () => {
   const onMenuSelection = (submenu) => () => {
     setShowSidebar(false);
     router.push(submenu.link);
+  };
+
+  const onMenuMouseOver = (menuName) => () => {
+    setCurrentActiveMenu(menuName);
+  };
+  const onMenuMouseLeave = () => {
+    // setCurrentActiveMenu("");
   };
 
   return (
@@ -277,7 +285,7 @@ export const Header = () => {
           </nav>
         </div>
       </div>
-      <header className="header">
+      <header className="header" onMouseLeave={onMenuMouseLeave}>
         <div className="header__container">
           <button
             className="sidebar-button header__sidebar-button"
@@ -294,71 +302,92 @@ export const Header = () => {
             <img src="/img/ic-logo.svg" alt="logo" className="logo__image" />
           </a>
           <nav className="menu">
-            <div className="menu__items">
+            <ul className="menu__list" id="desktop-menu-content">
               {MENU.map((menu) => {
                 return (
-                  <Dropdown key={menu.name}>
-                    <Dropdown.Toggle as={CustomToggle}>
-                      {menu.name}
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu as={CustomMenu}>
-                      {menu.submenu.map((submenu) => {
-                        return (
-                          <Dropdown.Item
-                            key={submenu.name}
-                            link={submenu.link}
-                            onSelect={onMenuSelection(submenu)}
-                          >
-                            {submenu.name}
-                          </Dropdown.Item>
-                        );
-                      })}
-                    </Dropdown.Menu>
-                  </Dropdown>
+                  <li
+                    className="menu-item"
+                    key={menu.name}
+                    onMouseOver={onMenuMouseOver(menu.name)}
+                  >
+                    <a className="menu-item__link">{menu.name}</a>
+                    <b
+                      className={classNames(
+                        Style.menuItemArrow,
+                        "menu-item__arrow",
+                      )}
+                      style={{
+                        display:
+                          currentActiveMenu === menu.name ? "block" : "none",
+                      }}
+                    ></b>
+                    <div
+                      className={classNames(Style.subMenu, "sub-menu")}
+                      style={{
+                        display:
+                          currentActiveMenu === menu.name ? "block" : "none",
+                      }}
+                    >
+                      <ul className="sub-menu__list">
+                        {menu.submenu.map((submenu) => {
+                          return (
+                            <li className="sub-menu-item" key={submenu.name}>
+                              <span>
+                                <Link prefetch={false} href={submenu.link}>
+                                  <a className="sub-menu-item__link">
+                                    {submenu.name}
+                                  </a>
+                                </Link>
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </li>
                 );
               })}
-            </div>
-            {!authenticated && (
-              <button
-                className="btn btn-outline menu__button"
-                type="button"
-                onClick={loginAction}
-              >
-                Log In
-              </button>
-            )}
-            {authenticated && (
-              <Link prefetch={false} href="/us/profile">
-                <a className="user-profile-link">
-                  <span className="d-none d-md-inline-block">
-                    {first_name || last_name}
-                  </span>
-                  <div
-                    className={classNames(
-                      "top-nav-bar",
-                      Style.userProfilePic,
-                      Style.profileHeadeImage,
-                    )}
-                  >
-                    <p className={Style.initials}>{initials}</p>
-                    {profilePic && (
-                      <img
-                        src={profilePic}
-                        className={classNames(
-                          "rounded-circle",
-                          Style.userProfilePic,
-                          Style.profilePic,
-                        )}
-                        alt=""
-                        onError={(i) => (i.target.src = "")}
-                      />
-                    )}
-                  </div>
-                </a>
-              </Link>
-            )}
+            </ul>
           </nav>
+          {!authenticated && (
+            <button
+              className="btn btn-outline header__button"
+              type="button"
+              onClick={loginAction}
+            >
+              Log In
+            </button>
+          )}
+          {authenticated && (
+            <Link prefetch={false} href="/us/profile">
+              <a className="user-profile-link header__button">
+                <span className="d-none d-md-inline-block">
+                  {first_name || last_name}
+                </span>
+                <div
+                  className={classNames(
+                    "top-nav-bar",
+                    Style.userProfilePic,
+                    Style.profileHeadeImage,
+                  )}
+                >
+                  <p className={Style.initials}>{initials}</p>
+                  {profilePic && (
+                    <img
+                      src={profilePic}
+                      className={classNames(
+                        "rounded-circle",
+                        Style.userProfilePic,
+                        Style.profilePic,
+                      )}
+                      alt=""
+                      onError={(i) => (i.target.src = "")}
+                    />
+                  )}
+                </div>
+              </a>
+            </Link>
+          )}
         </div>
       </header>
       {/* <header className="aol_header" id="site-header">
