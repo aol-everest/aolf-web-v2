@@ -122,7 +122,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                       <img src="/img/ic-3-day-online-course.svg" alt="day" />
                     </div>
                     <h2 className="achivment__title">
-                      3-Day online <br />
+                      3-Day {mode} <br />
                       course
                     </h2>
 
