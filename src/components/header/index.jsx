@@ -235,7 +235,7 @@ export const Header = () => {
     setCurrentActiveMenu(menuName);
   };
   const onMenuMouseLeave = () => {
-    // setCurrentActiveMenu("");
+    setCurrentActiveMenu("");
   };
 
   return (
