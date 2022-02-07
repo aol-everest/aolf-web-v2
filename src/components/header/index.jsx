@@ -361,7 +361,12 @@ export const Header = () => {
           {authenticated && (
             <Link prefetch={false} href="/us/profile">
               <a className="user-profile-link header__button">
-                <span className="d-none d-md-inline-block">
+                <span
+                  className={classNames(
+                    Style.userName,
+                    "d-none d-md-inline-block userName",
+                  )}
+                >
                   {first_name || last_name}
                 </span>
                 <div

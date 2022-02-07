@@ -4,8 +4,10 @@ import { api } from "@utils";
 import classNames from "classnames";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
+import { useAuth } from "@contexts";
 import { useRouter } from "next/router";
 import { useUIDSeed } from "react-uid";
+import { RetreatPrerequisiteWarning } from "@components";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
@@ -19,7 +21,7 @@ import {
 import { useQueryString } from "@hooks";
 import { InfiniteScrollLoader } from "@components/loader";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES } from "@constants";
+import { MODAL_TYPES, ALERT_TYPES } from "@constants";
 
 export const getServerSideProps = async (context) => {
   let props = {};
@@ -130,6 +132,7 @@ function Tile({
 
 function Collection({ rootFolder, authenticated }) {
   const router = useRouter();
+  const { profile } = useAuth();
   const { showModal } = useGlobalModalContext();
   const { showAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
@@ -179,7 +182,11 @@ function Collection({ rootFolder, authenticated }) {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else {
+    } else if (!profile.isMandatoryWorkshopAttended) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: <RetreatPrerequisiteWarning />,
+      });
+    } else if (meditate.accessible) {
       await meditatePlayEvent({
         meditate,
         showAlert,
