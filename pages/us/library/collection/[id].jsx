@@ -185,10 +185,6 @@ function Collection({ rootFolder, authenticated }) {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else if (!profile.isMandatoryWorkshopAttended) {
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: <RetreatPrerequisiteWarning />,
-      });
     } else if (meditate.accessible) {
       await meditatePlayEvent({
         meditate,
