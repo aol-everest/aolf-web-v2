@@ -41,7 +41,9 @@ function stop() {
 
 // Router.events.on("routeChangeStart", load);
 Router.events.on("routeChangeComplete", (url) => {
-  window.analytics.page(url);
+  if (window.analytics) {
+    window.analytics.page(url);
+  }
   // stop();
 });
 // Router.events.on("routeChangeError", stop);

@@ -75,6 +75,8 @@ export const LoginModal = () => {
       hideModal();
       if (navigateTo) {
         return router.push(navigateTo);
+      } else {
+        router.reload(window.location.pathname);
       }
     } catch (ex) {
       await Auth.signOut();

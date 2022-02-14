@@ -22,6 +22,7 @@ export const MeetupEnroll = ({
 
   const goToCheckout = (e) => {
     if (e) e.preventDefault();
+    closeDetailAction();
     router.push({
       pathname: `/us/membership/${MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value}`,
     });
