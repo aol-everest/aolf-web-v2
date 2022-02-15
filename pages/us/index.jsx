@@ -217,6 +217,9 @@ const Course = ({ authenticated }) => {
         setCtypesFilter(null);
         setCourseTypeFilter(value);
         break;
+      case "activeFilterType":
+        setActiveFilterType(value);
+        break;
       case "locationFilter":
         if (value) {
           setLocationFilter(JSON.stringify(value));
@@ -244,6 +247,9 @@ const Course = ({ authenticated }) => {
         setCtypesFilter(null);
         setCourseTypeFilter(value);
         break;
+      case "activeFilterType":
+        setActiveFilterType(value);
+        break;
       case "locationFilter":
         if (value) {
           setLocationFilter(JSON.stringify(value));
@@ -269,6 +275,9 @@ const Course = ({ authenticated }) => {
     switch (field) {
       case "courseTypeFilter":
         setCourseTypeFilter(null);
+        break;
+      case "activeFilterType":
+        setActiveFilterType(null);
         break;
       case "locationFilter":
         setLocationFilter(null);
@@ -437,7 +446,7 @@ const Course = ({ authenticated }) => {
           </div>
           <div className="row">
             <div className="search-form col-12 d-flex align-items-center">
-              <div id="switch-filter" className="btn_outline_box ml-0">
+              {/* <div id="switch-filter" className="btn_outline_box ml-0">
                 <a
                   className="btn"
                   href="#"
@@ -456,11 +465,37 @@ const Course = ({ authenticated }) => {
                 >
                   In Person
                 </a>
-              </div>
+              </div> */}
               <div className="switch-flter-container">
+                <Popup
+                  tabIndex="1"
+                  value={activeFilterType}
+                  buttonText={
+                    activeFilterType ? activeFilterType : "Course Format"
+                  }
+                  closeEvent={onFilterChange("activeFilterType")}
+                >
+                  {({ closeHandler }) => (
+                    <>
+                      <li onClick={closeHandler(COURSE_MODES.ONLINE)}>
+                        {COURSE_MODES.ONLINE}
+                      </li>
+                      <li onClick={closeHandler(COURSE_MODES.IN_PERSON)}>
+                        {COURSE_MODES.IN_PERSON}
+                      </li>
+                      <li
+                        onClick={closeHandler(
+                          COURSE_MODES.DESTINATION_RETREATS,
+                        )}
+                      >
+                        {COURSE_MODES.DESTINATION_RETREATS}
+                      </li>
+                    </>
+                  )}
+                </Popup>
                 {activeFilterType === COURSE_MODES.IN_PERSON && (
                   <Popup
-                    tabIndex="1"
+                    tabIndex="2"
                     value={locationFilter}
                     buttonText={
                       locationFilter
@@ -479,7 +514,7 @@ const Course = ({ authenticated }) => {
                 )}
 
                 <Popup
-                  tabIndex="2"
+                  tabIndex="3"
                   value={courseTypeFilter}
                   buttonText={
                     courseTypeFilter && COURSE_TYPES[courseTypeFilter]
