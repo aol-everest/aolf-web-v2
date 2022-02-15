@@ -203,42 +203,7 @@ export default function Library({ data, authenticated }) {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else if (!meditate.accessible) {
-      const allSubscriptions = subsciptionCategories.reduce(
-        (accumulator, currentValue) => {
-          return {
-            ...accumulator,
-            [currentValue.sfid]: currentValue,
-          };
-        },
-        {},
-      );
-      if (allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
-        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-          className: "retreat-prerequisite-big meditation-digital-membership",
-          title: "Go deeper with the Digital Membership",
-          footer: () => {
-            return (
-              <button
-                className="btn-secondary v2"
-                onClick={purchaseMembershipAction(
-                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                )}
-              >
-                Join Digital Membership
-              </button>
-            );
-          },
-          children: (
-            <PurchaseMembershipModal
-              modalSubscription={
-                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
-              }
-            />
-          ),
-        });
-      }
-    } else if (meditate.type === "Course") {
+    } else if (meditate.accessible && meditate.type === "Course") {
       router.push(`/us-en/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
@@ -248,6 +213,8 @@ export default function Library({ data, authenticated }) {
         showPlayer,
         hidePlayer,
         showVideoPlayer,
+        subsciptionCategories,
+        purchaseMembershipAction,
       });
       setLoading(false);
     }

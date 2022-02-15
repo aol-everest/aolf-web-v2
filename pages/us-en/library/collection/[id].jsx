@@ -187,7 +187,7 @@ function Collection({ rootFolder, authenticated }) {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else if (meditate.accessible) {
+    } else {
       await meditatePlayEvent({
         meditate,
         showAlert,
@@ -197,41 +197,6 @@ function Collection({ rootFolder, authenticated }) {
         subsciptionCategories,
         purchaseMembershipAction,
       });
-    } else {
-      const allSubscriptions = subsciptionCategories.reduce(
-        (accumulator, currentValue) => {
-          return {
-            ...accumulator,
-            [currentValue.sfid]: currentValue,
-          };
-        },
-        {},
-      );
-      if (allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
-        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-          className: "retreat-prerequisite-big meditation-digital-membership",
-          title: "Go deeper with the Digital Membership",
-          footer: () => {
-            return (
-              <button
-                className="btn-secondary v2"
-                onClick={purchaseMembershipAction(
-                  MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                )}
-              >
-                Join Digital Membership
-              </button>
-            );
-          },
-          children: (
-            <PurchaseMembershipModal
-              modalSubscription={
-                allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
-              }
-            />
-          ),
-        });
-      }
     }
   };
 
