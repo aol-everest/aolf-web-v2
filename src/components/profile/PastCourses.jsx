@@ -1,8 +1,24 @@
 import React, { useState } from "react";
+import { useQuery } from "react-query";
+import { api } from "@utils";
 
-export const PastCourses = ({ data, isMobile }) => {
-  const [pastWorkshops, setPastWorkshops] = useState(data);
+export const PastCourses = ({ isMobile }) => {
+  const [pastWorkshops, setPastWorkshops] = useState([]);
   const [workshopOrderAsc, setWorkshopOrderAsc] = useState(true);
+
+  const { data = [], isSuccess } = useQuery(
+    "userPastCourses",
+    async () => {
+      const response = await api.get({
+        path: "getUserPastCourses",
+      });
+      setPastWorkshops(response.pastWorkshops);
+      return response.pastWorkshops;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const handleOrderChange = () => {
     setWorkshopOrderAsc(!workshopOrderAsc);

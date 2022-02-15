@@ -109,18 +109,19 @@ const Profile = ({ profile, tab }) => {
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
-  const { data = {}, isSuccess } = useQuery(
-    "userPastCourses",
-    async () => {
-      const response = await api.get({
-        path: "getUserPastCourses",
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  // const { data = {}, isSuccess } = useQuery(
+  //   "userPastCourses",
+  //   async () => {
+  //     const response = await api.get({
+  //       path: "getUserPastCourses",
+  //     });
+  //     return response;
+  //   },
+  //   {
+  //     refetchOnWindowFocus: false,
+  //   },
+  // );
+  // console.log("userPastCourses", data);
 
   const switchTab = (tab) => (e) => {
     if (e) e.preventDefault();
@@ -181,8 +182,6 @@ const Profile = ({ profile, tab }) => {
       setLoading(false);
     }
   };
-
-  const { pastWorkshops = [] } = data;
 
   return (
     <>
@@ -372,7 +371,7 @@ const Profile = ({ profile, tab }) => {
                   show: activeTab === PAST_COURSES,
                 })}
               >
-                <PastCourses data={pastWorkshops} />
+                <PastCourses />
               </div>
               <div
                 className={classNames("tab-pane profile-update fade", {
@@ -490,7 +489,7 @@ const Profile = ({ profile, tab }) => {
                   })}
                 >
                   <div className="profile-body_mobile__card-body">
-                    <PastCourses isMobile data={pastWorkshops} />
+                    <PastCourses isMobile />
                   </div>
                 </div>
               </div>
