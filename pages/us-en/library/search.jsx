@@ -9,6 +9,7 @@ import { useUIDSeed } from "react-uid";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { withSSRContext } from "aws-amplify";
+import ContentLoader from "react-content-loader";
 import {
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
@@ -543,6 +544,133 @@ const LibrarySearch = ({ meditations, authenticated }) => {
                   ))}
                 </React.Fragment>
               ))}
+            <div ref={loadMoreRef} className="col-12">
+              {isFetchingNextPage && (
+                <div className="row">
+                  {" "}
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                  <div className="col-6 col-lg-3 col-md-4">
+                    <div className="upcoming_course_card meetup_course_card">
+                      <ContentLoader viewBox="0 0 80 120">
+                        {/* Only SVG shapes */}
+                        <rect
+                          x="0"
+                          y="0"
+                          rx="5"
+                          ry="5"
+                          width="80"
+                          height="110"
+                        />
+                      </ContentLoader>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           {isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage && (
             <section className="about tw-bg-none">
@@ -560,13 +688,6 @@ const LibrarySearch = ({ meditations, authenticated }) => {
               </div>
             </section>
           )}
-          <div className="row">
-            <div className="pt-3 col-12 text-center">
-              <div ref={loadMoreRef}>
-                {isFetchingNextPage && <InfiniteScrollLoader />}
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </main>
