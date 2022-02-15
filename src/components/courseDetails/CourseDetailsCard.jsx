@@ -40,7 +40,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         query = { ...query, timeZone: timeZoneFilter.value };
       }
       router.push({
-        pathname: "/us",
+        pathname: "/us-en",
         query,
       });
     }

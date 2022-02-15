@@ -30,14 +30,14 @@ export const WorkshopTile = ({ data, authenticated }) => {
     if (authenticated) {
       if (COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0) {
         router.push({
-          pathname: `/us/course/healing-breath-checkout/${workshopId}`,
+          pathname: `/us-en/course/healing-breath-checkout/${workshopId}`,
           query: {
             ctype: productTypeId,
           },
         });
       } else {
         router.push({
-          pathname: `/us/course/checkout/${workshopId}`,
+          pathname: `/us-en/course/checkout/${workshopId}`,
           query: {
             ctype: productTypeId,
           },
@@ -46,11 +46,11 @@ export const WorkshopTile = ({ data, authenticated }) => {
     } else {
       if (COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0) {
         showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us/course/healing-breath-checkout/${workshopId}?ctype=${productTypeId}`,
+          navigateTo: `/us-en/course/healing-breath-checkout/${workshopId}?ctype=${productTypeId}`,
         });
       } else {
         showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us/course/checkout/${workshopId}?ctype=${productTypeId}`,
+          navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}`,
         });
       }
     }
@@ -68,18 +68,18 @@ export const WorkshopTile = ({ data, authenticated }) => {
   const detailAction = (workshopId, productTypeId) => () => {
     if (isNonGenericWorkshop) {
       router.push({
-        pathname: `/us/course/${workshopId}`,
+        pathname: `/us-en/course/${workshopId}`,
       });
     } else if (authenticated) {
       router.push({
-        pathname: `/us/course/generic-checkout/${workshopId}`,
+        pathname: `/us-en/course/generic-checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
         },
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us/course/generic-checkout/${workshopId}?ctype=${productTypeId}`,
+        navigateTo: `/us-en/course/generic-checkout/${workshopId}?ctype=${productTypeId}`,
       });
     }
   };

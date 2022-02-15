@@ -47,7 +47,7 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
     // return {
     //   redirect: {
     //     permanent: false,
-    //     destination: `/us/profile?request=1`,
+    //     destination: `/us-en/profile?request=1`,
     //   },
     //   props: {},
     // };
@@ -84,7 +84,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   const backToProfileAction = (e) => {
     if (e) e.preventDefault();
     router.push({
-      pathname: `/us/profile`,
+      pathname: `/us-en/profile`,
     });
   };
 
@@ -113,7 +113,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
         throw new Error(errorMessage);
       }
       router.push({
-        pathname: `/us/profile`,
+        pathname: `/us-en/profile`,
         query: {
           request: 2,
         },
@@ -122,7 +122,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
       console.log(error);
 
       router.push({
-        pathname: `/us/profile`,
+        pathname: `/us-en/profile`,
         query: {
           request: 1,
         },

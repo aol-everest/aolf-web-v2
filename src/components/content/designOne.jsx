@@ -106,7 +106,7 @@ export const DesignOne = ({
 
   const findACourseAction = () => {
     router.push({
-      pathname: "/us",
+      pathname: "/us-en",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },
@@ -287,7 +287,7 @@ export const DesignOne = ({
               <SwiperSlide key={folder.id} className="category-slide-item">
                 <Link
                   prefetch={false}
-                  href={`/us/library/collection/${folder.id}`}
+                  href={`/us-en/library/collection/${folder.id}`}
                 >
                   <div
                     className="card image-card image-card-1 contentCard"
@@ -312,7 +312,7 @@ export const DesignOne = ({
           <section className="browse-category most-popular">
             <p className="title-slider">
               Most Popular{" "}
-              <Link prefetch={false} href={`/us/library/search`}>
+              <Link prefetch={false} href={`/us-en/library/search`}>
                 <span className="popular-all tw-cursor-pointer">All</span>
               </Link>
             </p>

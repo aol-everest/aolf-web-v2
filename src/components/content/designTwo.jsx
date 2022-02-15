@@ -107,7 +107,7 @@ export const DesignTwo = ({
   // );
 
   const openExpedition = (expedition) => () => {
-    router.push(`/us/journey/${expedition.challengeSfid}`);
+    router.push(`/us-en/journey/${expedition.challengeSfid}`);
   };
 
   // console.log("expeditions", expeditions);
@@ -340,7 +340,7 @@ export const DesignTwo = ({
               <SwiperSlide key={i} className="category-slide-item">
                 <Link
                   prefetch={false}
-                  href={`/us/library/collection/${folder.id}`}
+                  href={`/us-en/library/collection/${folder.id}`}
                 >
                   <div
                     className="card image-card image-card-1 contentCard"

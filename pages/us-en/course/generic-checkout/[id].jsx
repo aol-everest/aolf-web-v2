@@ -1,16 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { MeetupPaymentForm } from "@components/meetup/meetupPaymentForm";
-import { api } from "@utils";
+import { PaymentFormGeneric } from "@components";
+import { api, Clevertap, Segment } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
+import { ALERT_TYPES } from "@constants";
+import { useAuth } from "@contexts";
+import { useGlobalAlertContext } from "@contexts";
+import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
+
+const RetreatPrerequisiteWarning = ({
+  firstPreRequisiteFailedReason,
+  title,
+}) => {
+  return (
+    <>
+      <p className="course-join-card__text">
+        Our records indicate that you have not yet taken the prerequisite for
+        the {title}, which is{" "}
+        <strong>
+          {firstPreRequisiteFailedReason &&
+          firstPreRequisiteFailedReason.totalCount <
+            firstPreRequisiteFailedReason.requiredCount &&
+          firstPreRequisiteFailedReason.requiredCount > 1
+            ? firstPreRequisiteFailedReason.requiredCount
+            : ""}{" "}
+          {firstPreRequisiteFailedReason && firstPreRequisiteFailedReason.type}
+        </strong>
+        .
+      </p>
+      <p className="course-join-card__text">
+        If our records are not accurate, please contact customer service at{" "}
+        <a href="tel:8442735500">(844) 273-5500</a> or email us at{" "}
+        <a href="mailto:app.support@us.artofliving.org">
+          app.support@us.artofliving.org
+        </a>
+        . We will be happy to help you so you can sign up for the {title}.
+      </p>
+    </>
+  );
+};
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
@@ -35,14 +71,13 @@ export const getServerSideProps = async (context) => {
     console.error(err);
     return {
       redirect: {
-        permanent: false,
         destination: `/login?next=${resolvedUrl}`,
+        permanent: false,
       },
-      props: {},
     };
   }
-  const meetupDetail = await api.get({
-    path: "meetupDetail",
+  const workshopDetail = await api.get({
+    path: "workshopDetail",
     token,
     param: {
       id,
@@ -50,25 +85,132 @@ export const getServerSideProps = async (context) => {
   });
   props = {
     ...props,
-    meetup: meetupDetail.data,
+    workshop: workshopDetail.data,
   };
 
   // Pass data to the page via props
   return { props };
 };
 
-const Checkout = ({ meetup, profile }) => {
+const GenericCheckout = ({ workshop, profile }) => {
   const router = useRouter();
+  const { profile: clientProfile } = useAuth();
 
+  const sendDataToGTM = useGTMDispatch();
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
+  const { showAlert, hideAlert } = useGlobalAlertContext();
+
+  useEffect(() => {
+    if (!clientProfile) return;
+
+    const {
+      title,
+      name,
+      productTypeId,
+      unitPrice,
+      id: courseId,
+      preRequisiteFailedReason = [],
+      isPreRequisiteCompleted,
+    } = workshop;
+
+    const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
+
+    const products = [
+      {
+        id: name,
+        name: title,
+        courseId: courseId,
+        category: "workshop",
+        ctype: productTypeId,
+        variant: "N/A",
+        brand: "Art of Living Foundation",
+        quantity: 1,
+        currencyCode: "USD",
+        price: unitPrice,
+      },
+    ];
+
+    sendDataToGTM({
+      page: `Art of Living ${title} workshop registration page`,
+      event: "eec.checkout",
+      viewType: "workshop",
+      title: title,
+      ctype: productTypeId,
+      amount: unitPrice,
+      requestType: "Detail",
+      hitType: "paymentpage",
+      user: profile.id,
+      ecommerce: {
+        checkout: {
+          actionField: {
+            step: 1,
+          },
+          products: products,
+        },
+      },
+    });
+
+    Clevertap.event("Product Checkout", {
+      "Request Type": "Payment",
+      "Product Name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: unitPrice,
+    });
+    Segment.event("Product Checkout", {
+      "Request Type": "Payment",
+      "Product Name": title,
+      Category: "Workshop",
+      "Product Type": productTypeId,
+      "Product Id": courseId,
+      Price: unitPrice,
+    });
+
+    if (!isPreRequisiteCompleted) {
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: "retreat-prerequisite-big",
+        title: "Retreat Prerequisite",
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary"
+              onClick={closeRetreatPrerequisiteWarning}
+            >
+              Discover{" "}
+              {firstPreRequisiteFailedReason &&
+                firstPreRequisiteFailedReason.type}
+            </button>
+          );
+        },
+        children: (
+          <RetreatPrerequisiteWarning
+            firstPreRequisiteFailedReason={firstPreRequisiteFailedReason}
+            title={workshop.title}
+          />
+        ),
+      });
+    }
+  }, [clientProfile]);
+
+  const closeRetreatPrerequisiteWarning = (e) => {
+    if (e) e.preventDefault();
+    hideAlert();
+    router.push({
+      pathname: "/us-en/course",
+      query: {
+        courseType: "SKY_BREATH_MEDITATION",
+      },
+    });
+  };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     router.replace({
-      pathname: `/us/meetup/thankyou/${attendeeId}`,
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
-        ctype: meetup.productTypeId,
+        ctype: workshop.productTypeId,
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
         mbsy,
@@ -78,13 +220,13 @@ const Checkout = ({ meetup, profile }) => {
 
   return (
     <>
-      <NextSeo title={meetup.meetupTitle} />
+      <NextSeo title={workshop.title} />
       <main>
         <section className="order">
           <div className="container">
-            <h1 className="title title_thin">{meetup.meetupTitle}</h1>
+            <h1 className="title title_thin">{workshop.title}</h1>
             <p className="order__detail">
-              Reconnect with your practice and community
+              The Most Effective Way to Feel Calm & Clear, Day After Day
             </p>
             <Elements
               stripe={stripePromise}
@@ -95,10 +237,11 @@ const Checkout = ({ meetup, profile }) => {
                 },
               ]}
             >
-              <MeetupPaymentForm
-                meetup={meetup}
+              <PaymentFormGeneric
+                workshop={workshop}
                 profile={profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
+                isGenericCheckout
               />
             </Elements>
           </div>
@@ -171,6 +314,6 @@ const Checkout = ({ meetup, profile }) => {
   );
 };
 
-Checkout.hideHeader = true;
+GenericCheckout.hideHeader = true;
 
-export default Checkout;
+export default GenericCheckout;

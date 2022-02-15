@@ -259,7 +259,7 @@ const Meetup = () => {
     if (e) e.preventDefault();
     hideAlert();
     router.push({
-      pathname: "/us",
+      pathname: "/us-en",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },
@@ -367,7 +367,7 @@ const Meetup = () => {
       }
     } else {
       router.push({
-        pathname: `/us/meetup/checkout/${sfid}`,
+        pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
         },
@@ -379,7 +379,7 @@ const Meetup = () => {
     const { attendeeId } = data;
 
     router.push({
-      pathname: `/us/meetup/thankyou/${attendeeId}`,
+      pathname: `/us-en/meetup/thankyou/${attendeeId}`,
       query: {
         cid: selectedMeetup.sfid,
         ctype: selectedMeetup.productTypeId,

@@ -41,7 +41,7 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         permanent: false,
-        destination: `/us/meetup`,
+        destination: `/us-en/meetup`,
       },
       props: {},
     };

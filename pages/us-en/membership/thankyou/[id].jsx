@@ -114,7 +114,7 @@ const MembershipThankyou = ({ order, query }) => {
 
   const searchSilentRetreatsAction = () => {
     router.push({
-      pathname: "/us",
+      pathname: "/us-en",
       query: {
         courseType: "SILENT_RETREAT",
       },
@@ -125,23 +125,23 @@ const MembershipThankyou = ({ order, query }) => {
     if (courseId) {
       if (page === "detail") {
         router.push({
-          pathname: `/us/course/${courseId}`,
+          pathname: `/us-en/course/${courseId}`,
         });
       } else {
         router.push({
-          pathname: `/us/course/checkout/${courseId}`,
+          pathname: `/us-en/course/checkout/${courseId}`,
         });
       }
     } else if (meetupId) {
       router.push({
-        pathname: `/us/meetup/checkout/${meetupId}`,
+        pathname: `/us-en/meetup/checkout/${meetupId}`,
       });
     }
   };
 
   const exploreMeditationsAction = () => {
     router.push({
-      pathname: `/us/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+      pathname: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
     });
   };
 

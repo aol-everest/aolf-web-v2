@@ -131,25 +131,25 @@ export const getServerSideProps = ({ res }) => {
         <priority>0.8</priority>
         </url>
         <url>
-        <loc>http://localhost:3000/us/journey-app</loc>
+        <loc>http://localhost:3000/us-en/journey-app</loc>
         <lastmod>2021-12-28T15:21:56.940Z</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         </url>
         <url>
-        <loc>http://localhost:3000/us/library/search</loc>
+        <loc>http://localhost:3000/us-en/library/search</loc>
         <lastmod>2021-12-28T15:21:56.940Z</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         </url>
         <url>
-        <loc>http://localhost:3000/us/meetup</loc>
+        <loc>http://localhost:3000/us-en/meetup</loc>
         <lastmod>2021-12-28T15:21:56.940Z</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         </url>
         <url>
-        <loc>http://localhost:3000/us/profile</loc>
+        <loc>http://localhost:3000/us-en/profile</loc>
         <lastmod>2021-12-28T15:21:56.940Z</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>

@@ -45,7 +45,7 @@ function Login() {
     try {
       await Auth.signIn(username, password);
 
-      router.push("/us/course");
+      router.push("/us-en/course");
     } catch (error) {
       console.log("error signing in", error);
     }

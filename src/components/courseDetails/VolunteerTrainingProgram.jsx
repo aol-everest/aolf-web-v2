@@ -33,7 +33,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
   const handleRegister = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/us/course/checkout/${data.sfid}`,
+      pathname: `/us-en/course/checkout/${data.sfid}`,
       query: {
         ctype: data.productTypeId,
       },

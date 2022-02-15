@@ -199,7 +199,7 @@ const Checkout = ({ workshop, profile }) => {
     if (e) e.preventDefault();
     hideAlert();
     router.push({
-      pathname: "/us/course",
+      pathname: "/us-en/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },
@@ -208,7 +208,7 @@ const Checkout = ({ workshop, profile }) => {
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     router.replace({
-      pathname: `/us/course/thankyou/${attendeeId}`,
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,

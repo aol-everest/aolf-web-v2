@@ -26,15 +26,15 @@ const MENU = [
       },
       {
         name: "SKY Breath Meditation",
-        link: `/us?courseType=SKY_BREATH_MEDITATION`,
+        link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
       },
       {
         name: "Sahaj Meditation",
-        link: `/us?courseType=SAHAJ_SAMADHI_MEDITATION`,
+        link: `/us-en?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
         name: "Silent Retreat",
-        link: `/us?courseType=SILENT_RETREAT`,
+        link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
         name: "Healthcare Providers",
@@ -63,11 +63,11 @@ const MENU = [
     submenu: [
       {
         name: "Guided meditations",
-        link: `/us/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
       },
       {
         name: "Live meetups",
-        link: "/us/meetup",
+        link: "/us-en/meetup",
       },
       {
         name: "Guided breathwork",
@@ -84,7 +84,7 @@ const MENU = [
     submenu: [
       {
         name: "Journey App",
-        link: "/us/journey-app",
+        link: "/us-en/journey-app",
       },
       {
         name: "Articles",
@@ -92,7 +92,7 @@ const MENU = [
       },
       {
         name: "Wisdom Snippets",
-        link: `/us/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
       },
       // {
       //   name: "Meditation",
@@ -223,7 +223,7 @@ export const Header = () => {
   const toggleSidebar = () => setShowSidebar(!showSidebar);
 
   const loginAction = () => {
-    showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/us/profile" });
+    showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/us-en/profile" });
   };
 
   const onMenuSelection = (submenu) => () => {
@@ -359,7 +359,7 @@ export const Header = () => {
             </button>
           )}
           {authenticated && (
-            <Link prefetch={false} href="/us/profile">
+            <Link prefetch={false} href="/us-en/profile">
               <a className="user-profile-link header__button">
                 <span
                   className={classNames(
@@ -417,7 +417,7 @@ export const Header = () => {
               <Nav className="ml-auto" navbar>
                 <ActiveLink
                   activeClassName="active"
-                  href={`/us/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
+                  href={`/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
                   setCollapsed={setCollapsed}
                 >
                   <NavItem className="nav-item">
@@ -428,7 +428,7 @@ export const Header = () => {
                 </ActiveLink>
                 <ActiveLink
                   activeClassName="active"
-                  href="/us/meetup"
+                  href="/us-en/meetup"
                   setCollapsed={setCollapsed}
                 >
                   <NavItem className="nav-item">
@@ -439,7 +439,7 @@ export const Header = () => {
                 </ActiveLink>
                 <ActiveLink
                   activeClassName="active"
-                  href="/us"
+                  href="/us-en"
                   setCollapsed={setCollapsed}
                 >
                   <NavItem className="nav-item">
@@ -450,7 +450,7 @@ export const Header = () => {
                 </ActiveLink>
                 <ActiveLink
                   activeClassName="active"
-                  href={`/us/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`}
+                  href={`/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`}
                   setCollapsed={setCollapsed}
                 >
                   <NavItem className="nav-item">
@@ -480,7 +480,7 @@ export const Header = () => {
                   >
                     <ActiveLink
                       activeClassName="active"
-                      href="/us/profile"
+                      href="/us-en/profile"
                       setCollapsed={setCollapsed}
                     >
                       <a className="nav-link">

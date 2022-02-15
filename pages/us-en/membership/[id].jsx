@@ -178,7 +178,7 @@ function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
     if (e) e.preventDefault();
     hideAlert();
     router.push({
-      pathname: "/us/course",
+      pathname: "/us-en/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },
@@ -191,7 +191,7 @@ function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
       query = { cid: courseId, page: returnPage };
     }
     router.push({
-      pathname: `/us/membership/thankyou/${orderId}`,
+      pathname: `/us-en/membership/thankyou/${orderId}`,
       query,
     });
   };

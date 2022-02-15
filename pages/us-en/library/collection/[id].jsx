@@ -180,7 +180,7 @@ function Collection({ rootFolder, authenticated }) {
   const purchaseMembershipAction = (id) => (e) => {
     hideModal();
     hideAlert();
-    router.push(`/us/membership/${id}`);
+    router.push(`/us-en/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {

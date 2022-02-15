@@ -38,7 +38,7 @@ export const RegisterPanel = ({ workshop }) => {
   const handleRegister = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/us/course/checkout/${sfid}`,
+      pathname: `/us-en/course/checkout/${sfid}`,
       query: {
         ctype: productTypeId,
       },
@@ -48,7 +48,7 @@ export const RegisterPanel = ({ workshop }) => {
   const purchaseMembershipAction = (id) => (e) => {
     if (e) e.preventDefault();
     router.push({
-      pathname: `/us/membership/${id}`,
+      pathname: `/us-en/membership/${id}`,
       query: { cid: sfid, page: "detail" },
     });
   };

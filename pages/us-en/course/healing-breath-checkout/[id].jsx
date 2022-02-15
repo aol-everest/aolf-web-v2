@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { PaymentFormGeneric } from "@components";
+import { PaymentFormHB } from "@components";
 import { api, Clevertap, Segment } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
@@ -92,7 +92,7 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const GenericCheckout = ({ workshop, profile }) => {
+const HealingBreathCheckout = ({ workshop, profile }) => {
   const router = useRouter();
   const { profile: clientProfile } = useAuth();
 
@@ -160,7 +160,7 @@ const GenericCheckout = ({ workshop, profile }) => {
       "Product Id": courseId,
       Price: unitPrice,
     });
-    Segment.event("Product Checkout", {
+    Segment.event("Checkout Started", {
       "Request Type": "Payment",
       "Product Name": title,
       Category: "Workshop",
@@ -199,7 +199,7 @@ const GenericCheckout = ({ workshop, profile }) => {
     if (e) e.preventDefault();
     hideAlert();
     router.push({
-      pathname: "/us/course",
+      pathname: "/us-en/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
       },
@@ -208,7 +208,7 @@ const GenericCheckout = ({ workshop, profile }) => {
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     router.replace({
-      pathname: `/us/course/thankyou/${attendeeId}`,
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
@@ -228,6 +228,9 @@ const GenericCheckout = ({ workshop, profile }) => {
             <p className="order__detail">
               The Most Effective Way to Feel Calm & Clear, Day After Day
             </p>
+            <div className="corporate-title">
+              {workshop.isCorporateEvent && <h1>{workshop.corporateName}</h1>}
+            </div>
             <Elements
               stripe={stripePromise}
               fonts={[
@@ -237,11 +240,10 @@ const GenericCheckout = ({ workshop, profile }) => {
                 },
               ]}
             >
-              <PaymentFormGeneric
+              <PaymentFormHB
                 workshop={workshop}
                 profile={profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
-                isGenericCheckout
               />
             </Elements>
           </div>
@@ -314,6 +316,6 @@ const GenericCheckout = ({ workshop, profile }) => {
   );
 };
 
-GenericCheckout.hideHeader = true;
+HealingBreathCheckout.hideHeader = true;
 
-export default GenericCheckout;
+export default HealingBreathCheckout;

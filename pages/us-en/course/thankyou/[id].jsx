@@ -309,7 +309,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
                 <div className="btn-wrapper">
                   <a
                     className="btn-outline tw-mr-2"
-                    href="https://apps.apple.com/us/app/art-of-living-journey/id1469587414?ls=1"
+                    href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
                     target="_blank"
                     rel="noreferrer"
                   >

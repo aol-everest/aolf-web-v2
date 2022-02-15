@@ -196,7 +196,7 @@ export default function Library({ data, authenticated }) {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/us/membership/${id}`);
+    router.push(`/us-en/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {
@@ -239,7 +239,7 @@ export default function Library({ data, authenticated }) {
         });
       }
     } else if (meditate.type === "Course") {
-      router.push(`/us/learn/${meditate.sfid}`);
+      router.push(`/us-en/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
       await meditatePlayEvent({
@@ -265,7 +265,7 @@ export default function Library({ data, authenticated }) {
       query = { ...query, instructor };
     }
     router.push({
-      pathname: "/us/library/search",
+      pathname: "/us-en/library/search",
       query,
     });
   };

@@ -62,8 +62,8 @@ module.exports = withPlugins(
   ],
   {
     // swcMinify: true,
-    // basePath: "/us",
-    // assetPrefix: "/us/",
+    // basePath: "/us-en",
+    // assetPrefix: "/us-en/",
     // productionBrowserSourceMaps: true,
     images: {
       domains: ["images.ctfassets.net"],
@@ -76,12 +76,12 @@ module.exports = withPlugins(
       return [
         {
           source: "/",
-          destination: "/us",
+          destination: "/us-en",
           permanent: true,
         },
         {
-          source: "/us/course",
-          destination: "/us",
+          source: "/us-en/course",
+          destination: "/us-en",
           permanent: true,
         },
       ];

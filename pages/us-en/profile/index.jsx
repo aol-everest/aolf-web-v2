@@ -137,7 +137,7 @@ const Profile = ({ profile, tab }) => {
     await Auth.signOut();
     Clevertap.logout();
     setLoading(false);
-    router.push("/us");
+    router.push("/us-en");
   };
 
   const handleOnSelectFile = (e) => {
@@ -347,13 +347,13 @@ const Profile = ({ profile, tab }) => {
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
-                        <Link href="/us" prefetch={false}>
+                        <Link href="/us-en" prefetch={false}>
                           <a href="#" className="link link_orange">
                             course
                           </a>
                         </Link>{" "}
                         or{" "}
-                        <Link href="/us/meetup" prefetch={false}>
+                        <Link href="/us-en/meetup" prefetch={false}>
                           <a href="#" className="link link_orange">
                             meetup
                           </a>
@@ -450,13 +450,13 @@ const Profile = ({ profile, tab }) => {
                         <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
                           upcoming{" "}
-                          <Link href="/us" prefetch={false}>
+                          <Link href="/us-en" prefetch={false}>
                             <a href="#" className="link link_orange">
                               course
                             </a>
                           </Link>{" "}
                           or{" "}
-                          <Link href="/us/meetup" prefetch={false}>
+                          <Link href="/us-en/meetup" prefetch={false}>
                             <a href="#" className="link link_orange">
                               meetup
                             </a>
