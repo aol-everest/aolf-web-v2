@@ -104,9 +104,9 @@ export const getServerSideProps = async (context) => {
 const LibrarySearch = ({ meditations, authenticated }) => {
   const seed = useUIDSeed();
   const router = useRouter();
-  const { showModal } = useGlobalModalContext();
+  const { showModal, hideModal } = useGlobalModalContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
-  const { showAlert } = useGlobalAlertContext();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
@@ -184,6 +184,8 @@ const LibrarySearch = ({ meditations, authenticated }) => {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
+    hideModal();
+    hideAlert();
     router.push(`/us-en/membership/${id}`);
   };
 

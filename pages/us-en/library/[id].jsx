@@ -78,8 +78,8 @@ export default function Library({ data, authenticated }) {
 
   //SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
-  const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
+  const { showModal, hideModal } = useGlobalModalContext();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -196,6 +196,8 @@ export default function Library({ data, authenticated }) {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
+    hideModal();
+    hideAlert();
     router.push(`/us-en/membership/${id}`);
   };
 

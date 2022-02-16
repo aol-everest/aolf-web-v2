@@ -1,4 +1,4 @@
-export const RetreatPrerequisiteWarning = (warningPayload) => {
+export const RetreatPrerequisiteWarning = ({ warningPayload }) => {
   return (
     <>
       <p className="course-join-card__text">
