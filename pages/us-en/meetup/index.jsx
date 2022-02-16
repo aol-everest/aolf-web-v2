@@ -467,7 +467,7 @@ const Meetup = () => {
     async ({ pageParam = 1 }) => {
       let param = {
         page: pageParam,
-        size: 8,
+        size: 12,
       };
 
       if (activeFilterType) {

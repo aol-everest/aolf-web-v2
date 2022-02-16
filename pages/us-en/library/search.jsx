@@ -54,7 +54,7 @@ export const getServerSideProps = async (context) => {
   try {
     let param = {
       page,
-      size: 8,
+      size: 12,
       deviceType: "Web",
     };
 
@@ -269,7 +269,7 @@ const LibrarySearch = ({ meditations, authenticated }) => {
     async ({ pageParam = 1 }) => {
       let param = {
         page: pageParam,
-        size: 8,
+        size: 12,
         deviceType: "Web",
       };
 
