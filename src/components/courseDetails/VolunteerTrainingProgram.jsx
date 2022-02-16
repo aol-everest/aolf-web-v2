@@ -9,7 +9,7 @@ import { ResearchFindingSource } from "./ResearchFindingSource";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
-import { HideOn } from "react-hide-on-scroll";
+import { HideOn } from "@components";
 import { priceCalculation, tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";

@@ -6,7 +6,7 @@ import { Comment } from "./Comment";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { ALERT_TYPES, COURSE_TYPES } from "@constants";
 import { RegisterPanel } from "./RegisterPanel";
-import { HideOn } from "react-hide-on-scroll";
+import { HideOn } from "@components";
 import { useGlobalAlertContext } from "@contexts";
 
 export const SahajSamadhi = ({ data, swiperOption }) => {

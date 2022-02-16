@@ -6,7 +6,7 @@ import CourseDetailsCard from "./CourseDetailsCard";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { ABBRS, COURSE_TYPES } from "@constants";
 import { RegisterPanel } from "./RegisterPanel";
-import { HideOn } from "react-hide-on-scroll";
+import { HideOn } from "@components";
 
 export const SilentRetreat = ({ data, swiperOption }) => {
   const { title, mode } = data || {};

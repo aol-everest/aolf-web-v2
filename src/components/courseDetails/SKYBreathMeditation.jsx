@@ -11,7 +11,7 @@ import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
-import { HideOn } from "react-hide-on-scroll";
+import { HideOn } from "@components";
 import { priceCalculation } from "@utils";
 
 export const SKYBreathMeditation = ({ data, swiperOption }) => {
