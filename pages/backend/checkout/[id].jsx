@@ -23,12 +23,28 @@ export const getServerSideProps = async (context) => {
       path: "profile",
       token,
     });
-    props = {
-      authenticated: true,
-      username: user.username,
-      profile: res,
-      token,
-    };
+    if (
+      res &&
+      (res.userType === "Teacher" ||
+        res.userType === "Organiser" ||
+        res.userType === "Assistant Teacher")
+    ) {
+      props = {
+        authenticated: true,
+        username: user.username,
+        profile: res,
+        token,
+        isTeacher: true,
+      };
+    } else {
+      props = {
+        authenticated: true,
+        username: user.username,
+        profile: res,
+        token,
+        isTeacher: false,
+      };
+    }
   } catch (err) {
     return {
       redirect: {
@@ -56,7 +72,25 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-const BackEndCheckout = ({ workshop, profile }) => {
+const BackEndCheckout = ({ workshop, profile, isTeacher }) => {
+  if (!isTeacher) {
+    return (
+      <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 tw-max-w-[450px] tw-m-auto tw-p-5 tw-my-[50px]">
+              <h2>Forbidden!</h2>
+              <h4>Code 403</h4>
+              <div>
+                Access Denied. You do not have the permission to access this
+                page on this server.
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
   return (
     <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">
       <div className="container">
@@ -77,6 +111,6 @@ const BackEndCheckout = ({ workshop, profile }) => {
     </main>
   );
 };
-BackEndCheckout.hideHeader = true;
+BackEndCheckout.hideHeader = false;
 
 export default BackEndCheckout;
