@@ -176,7 +176,7 @@ export const PaymentForm = ({
       addOnProducts,
     } = workshop;
 
-    const { isCreditCardRequired } = {};
+    const { isCreditCardRequired } = dicountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -390,7 +390,7 @@ export const PaymentForm = ({
 
   const { fee, delfee, offering } = priceCalculation({
     workshop,
-    discount,
+    dicountResponse,
   });
 
   const {
