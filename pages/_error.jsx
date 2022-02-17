@@ -21,7 +21,7 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
               ? `An error ${statusCode} occurred on server`
               : "An error occurred on client"}
           </h2>
-          <span>{err?.message}</span>
+          {/* <span>{err?.message}</span> */}
         </div>
       </div>
     </div>
@@ -33,13 +33,13 @@ MyError.getInitialProps = async ({ res, err, asPath }) => {
     res,
     err,
   });
-  errorInitialProps.statusCode = res
-    ? res.statusCode
-    : err
-    ? err.statusCode
-    : 500;
-  errorInitialProps.err = err;
-  errorInitialProps.res = res;
+  // errorInitialProps.statusCode = res
+  //   ? res.statusCode
+  //   : err
+  //   ? err.statusCode
+  //   : 500;
+  // errorInitialProps.err = err;
+  // errorInitialProps.res = res;
 
   // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
   // getInitialProps has run
