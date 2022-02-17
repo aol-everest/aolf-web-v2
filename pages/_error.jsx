@@ -21,6 +21,7 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
               ? `An error ${statusCode} occurred on server`
               : "An error occurred on client"}
           </h2>
+          <span>{err.name + ": " + err.message}</span>
         </div>
       </div>
     </div>
