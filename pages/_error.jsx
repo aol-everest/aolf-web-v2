@@ -33,6 +33,13 @@ MyError.getInitialProps = async ({ res, err, asPath }) => {
     res,
     err,
   });
+  errorInitialProps.statusCode = res
+    ? res.statusCode
+    : err
+    ? err.statusCode
+    : 500;
+  errorInitialProps.err = err;
+  errorInitialProps.res = res;
 
   // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
   // getInitialProps has run
