@@ -104,7 +104,7 @@ const Meetup = () => {
     parse: stringToBoolean,
   });
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
-    defaultValue: COURSE_MODES.ONLINE,
+    defaultValue: "ONLINE",
   });
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
@@ -470,10 +470,10 @@ const Meetup = () => {
         size: 12,
       };
 
-      if (activeFilterType) {
+      if (activeFilterType && COURSE_MODES[activeFilterType]) {
         param = {
           ...param,
-          mode: activeFilterType,
+          mode: COURSE_MODES[activeFilterType].value,
         };
       }
       if (meetupTypeFilter) {
@@ -580,18 +580,16 @@ const Meetup = () => {
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
-                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                  data-swicth-active={activeFilterType === "ONLINE"}
+                  onClick={toggleActiveFilter("ONLINE")}
                 >
                   Online
                 </a>
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={
-                    activeFilterType === COURSE_MODES.IN_PERSON
-                  }
-                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
+                  data-swicth-active={activeFilterType === "IN_PERSON"}
+                  onClick={toggleActiveFilter("IN_PERSON")}
                 >
                   In Person
                 </a>
@@ -839,18 +837,16 @@ const Meetup = () => {
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
-                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                  data-swicth-active={activeFilterType === "ONLINE"}
+                  onClick={toggleActiveFilter("ONLINE")}
                 >
                   Online
                 </a>
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={
-                    activeFilterType === COURSE_MODES.IN_PERSON
-                  }
-                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
+                  data-swicth-active={activeFilterType === "IN_PERSON"}
+                  onClick={toggleActiveFilter("IN_PERSON")}
                 >
                   In Person
                 </a>
@@ -1298,7 +1294,7 @@ const Meetup = () => {
           )}
         </div>
       </section>
-      {activeFilterType === COURSE_MODES.ONLINE &&
+      {activeFilterType === "ONLINE" &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1317,7 +1313,7 @@ const Meetup = () => {
             </div>
           </section>
         )}
-      {activeFilterType === COURSE_MODES.IN_PERSON &&
+      {activeFilterType === "IN_PERSON" &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1326,14 +1322,15 @@ const Meetup = () => {
               <div className="row">
                 <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
                   <h1 className="happines_title">
-                    Currently there are no {activeFilterType} courses available.
+                    Currently there are no {COURSE_MODES[activeFilterType].name}{" "}
+                    courses available.
                   </h1>
                   <p className="happines_subtitle">
                     Please check out our{" "}
                     <a
                       href="#"
                       className="link v2"
-                      onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                      onClick={toggleActiveFilter("ONLINE")}
                     >
                       online offerings
                     </a>

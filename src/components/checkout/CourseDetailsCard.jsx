@@ -154,7 +154,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
               <a href={`mailto:${email}`}>{email}</a>
             </li>
           </ul>
-          {mode === COURSE_MODES.IN_PERSON && (
+          {mode === COURSE_MODES.IN_PERSON.value && (
             <ul className="course-details__list">
               <h2 className="course-details__title">Location:</h2>
               <li className="tw-text-sm tw-truncate tw-tracking-tighter">

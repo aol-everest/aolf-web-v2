@@ -163,7 +163,7 @@ const Course = ({ authenticated }) => {
   const seed = useUIDSeed();
 
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
-    defaultValue: COURSE_MODES.ONLINE,
+    defaultValue: "ONLINE",
   });
   const [otherCType] = useQueryString("other-ctype", {
     defaultValue: false,
@@ -329,10 +329,10 @@ const Course = ({ authenticated }) => {
         size: 12,
       };
 
-      if (activeFilterType) {
+      if (activeFilterType && COURSE_MODES[activeFilterType]) {
         param = {
           ...param,
-          mode: activeFilterType,
+          mode: COURSE_MODES[activeFilterType].value,
         };
       }
       if (ctypesFilter) {
@@ -471,29 +471,27 @@ const Course = ({ authenticated }) => {
                   tabIndex="1"
                   value={activeFilterType}
                   buttonText={
-                    activeFilterType ? activeFilterType : "Course Format"
+                    activeFilterType && COURSE_MODES[activeFilterType]
+                      ? COURSE_MODES[activeFilterType].name
+                      : "Course Format"
                   }
                   closeEvent={onFilterChange("activeFilterType")}
                 >
                   {({ closeHandler }) => (
                     <>
-                      <li onClick={closeHandler(COURSE_MODES.ONLINE)}>
-                        {COURSE_MODES.ONLINE}
+                      <li onClick={closeHandler("ONLINE")}>
+                        {COURSE_MODES.ONLINE.name}
                       </li>
-                      <li onClick={closeHandler(COURSE_MODES.IN_PERSON)}>
-                        {COURSE_MODES.IN_PERSON}
+                      <li onClick={closeHandler("IN_PERSON")}>
+                        {COURSE_MODES.IN_PERSON.name}
                       </li>
-                      <li
-                        onClick={closeHandler(
-                          COURSE_MODES.DESTINATION_RETREATS,
-                        )}
-                      >
-                        {COURSE_MODES.DESTINATION_RETREATS}
+                      <li onClick={closeHandler("DESTINATION_RETREATS")}>
+                        {COURSE_MODES.DESTINATION_RETREATS.name}
                       </li>
                     </>
                   )}
                 </Popup>
-                {activeFilterType === COURSE_MODES.IN_PERSON && (
+                {activeFilterType === "IN_PERSON" && (
                   <Popup
                     tabIndex="2"
                     value={locationFilter}
@@ -657,7 +655,7 @@ const Course = ({ authenticated }) => {
                 "d-none": !showFilterModal,
               })}
             >
-              <div
+              {/* <div
                 id="switch-mobile-filter"
                 className="btn_outline_box full-btn mt-3"
               >
@@ -675,11 +673,56 @@ const Course = ({ authenticated }) => {
                   data-swicth-active={
                     activeFilterType === COURSE_MODES.IN_PERSON
                   }
-                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
+                  onClick={toggleActiveFilter("IN_PERSON")}
                 >
                   In Person
                 </a>
-              </div>
+              </div> */}
+
+              <MobileFilterModal
+                modalTitle="Course Type"
+                buttonText={
+                  activeFilterType && COURSE_MODES[activeFilterType]
+                    ? COURSE_MODES[activeFilterType].name
+                    : "Course Format"
+                }
+                clearEvent={onFilterClearEvent("activeFilterType")}
+              >
+                <div className="dropdown">
+                  <SmartDropDown
+                    value={activeFilterType}
+                    buttonText={
+                      activeFilterType && COURSE_MODES[activeFilterType]
+                        ? COURSE_MODES[activeFilterType].name
+                        : "Select Course Format"
+                    }
+                    closeEvent={onFilterChange("activeFilterType")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler("ONLINE")}
+                        >
+                          {COURSE_MODES.ONLINE.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler("IN_PERSON")}
+                        >
+                          {COURSE_MODES.IN_PERSON.name}
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={closeHandler("DESTINATION_RETREATS")}
+                        >
+                          {COURSE_MODES.DESTINATION_RETREATS.name}
+                        </li>
+                      </>
+                    )}
+                  </SmartDropDown>
+                </div>
+              </MobileFilterModal>
 
               <MobileFilterModal
                 modalTitle="Course Type"
@@ -861,7 +904,7 @@ const Course = ({ authenticated }) => {
           <div className="row">
             <div className="col-12">
               <p className="title mb-1 mt-lg-5 mt-3">
-                Upcoming {activeFilterType} courses
+                Upcoming {COURSE_MODES[activeFilterType].name} courses
               </p>
             </div>
           </div>
@@ -1086,7 +1129,7 @@ const Course = ({ authenticated }) => {
           )}
         </div>
       </section>
-      {activeFilterType === COURSE_MODES.ONLINE &&
+      {activeFilterType === "ONLINE" &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1105,7 +1148,7 @@ const Course = ({ authenticated }) => {
             </div>
           </section>
         )}
-      {activeFilterType === COURSE_MODES.IN_PERSON &&
+      {activeFilterType === "IN_PERSON" &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1114,14 +1157,15 @@ const Course = ({ authenticated }) => {
               <div className="row">
                 <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
                   <h1 className="happines_title">
-                    Currently there are no {activeFilterType} courses available.
+                    Currently there are no {COURSE_MODES[activeFilterType].name}{" "}
+                    courses available.
                   </h1>
                   <p className="happines_subtitle">
                     Please check out our{" "}
                     <a
                       href="#"
                       className="link v2"
-                      onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                      onClick={toggleActiveFilter("ONLINE")}
                     >
                       online offerings
                     </a>

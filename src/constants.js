@@ -51,9 +51,18 @@ export const PAYMENT_MODES = {
 };
 
 export const COURSE_MODES = {
-  ONLINE: "online",
-  IN_PERSON: "in person",
-  DESTINATION_RETREATS: "Destination Retreats",
+  ONLINE: {
+    name: "Online",
+    value: "online",
+  },
+  IN_PERSON: {
+    name: "In person",
+    value: "in person",
+  },
+  DESTINATION_RETREATS: {
+    name: "Destination Retreats",
+    value: "destination retreats",
+  },
 };
 
 export const MODAL_TYPES = {
