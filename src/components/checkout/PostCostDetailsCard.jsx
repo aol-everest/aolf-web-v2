@@ -54,6 +54,8 @@ export const PostCostDetailsCard = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
+  console.log(isCourseOptionRequired);
+
   if (isCourseOptionRequired) {
     return (
       <>
@@ -197,7 +199,7 @@ export const PostCostDetailsCard = ({
                             ${discount.newPrice}
                           </span>
                         )}
-                        {discount === null && premiumRate && (
+                        {!discount && premiumRate && (
                           <span>
                             {premiumRate &&
                               premiumRate.listPrice &&
