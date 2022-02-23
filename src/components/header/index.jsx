@@ -328,10 +328,21 @@ export const Header = () => {
                           currentActiveMenu === menu.name ? "block" : "none",
                       }}
                     >
-                      <ul className="sub-menu__list">
+                      <ul
+                        className={classNames(
+                          "sub-menu__list",
+                          Style.sub_menu__list,
+                        )}
+                      >
                         {menu.submenu.map((submenu) => {
                           return (
-                            <li className="sub-menu-item" key={submenu.name}>
+                            <li
+                              className={classNames(
+                                "sub-menu-item",
+                                Style.sub_menu__item,
+                              )}
+                              key={submenu.name}
+                            >
                               <span>
                                 <Link prefetch={false} href={submenu.link}>
                                   <a className="sub-menu-item__link">
@@ -360,7 +371,12 @@ export const Header = () => {
           )}
           {authenticated && (
             <Link prefetch={false} href="/us-en/profile">
-              <a className="user-profile-link header__button">
+              <a
+                className={classNames(
+                  Style.header__button,
+                  "user-profile-link header__button",
+                )}
+              >
                 <span
                   className={classNames(
                     Style.userName,
