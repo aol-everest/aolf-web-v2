@@ -18,7 +18,7 @@ const MENU = [
     submenu: [
       {
         name: "Join A Free Intro",
-        link: "https://event.us.artofliving.org/us-en/introtalks/",
+        link: "/us-en/lp/introtalks",
       },
       {
         name: "Overview",
