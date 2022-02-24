@@ -1,0 +1,11 @@
+.iframe {
+  height: calc(100vh - 80px);
+  width: 100%;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+}
+.iframe::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+  width: 0px;
+  height: 0px;
+}

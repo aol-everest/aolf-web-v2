@@ -151,7 +151,10 @@ function App({ Component, pageProps, userInfo = {} }) {
                     dangerouslySetInnerHTML={{ __html: renderSnippet() }}
                   />
                 )}
-                <Layout hideHeader={Component.hideHeader}>
+                <Layout
+                  hideHeader={Component.hideHeader}
+                  hideFooter={Component.hideFooter}
+                >
                   <DefaultSeo {...SEO} />
                   <TopProgressBar />
                   <Component {...pageProps} />
@@ -180,7 +183,10 @@ function App({ Component, pageProps, userInfo = {} }) {
             {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
               <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
             )}
-            <Layout hideHeader={Component.hideHeader}>
+            <Layout
+              hideHeader={Component.hideHeader}
+              hideFooter={Component.hideFooter}
+            >
               <DefaultSeo {...SEO} />
               <TopProgressBar />
               <Component {...pageProps} />
