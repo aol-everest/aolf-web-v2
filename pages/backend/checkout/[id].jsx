@@ -12,7 +12,7 @@ const stripePromise = loadStripe(
 
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
-  const { id } = query;
+  const { id, coupon = null } = query;
   let props = {};
   let token = "";
   try {
@@ -66,13 +66,14 @@ export const getServerSideProps = async (context) => {
   props = {
     ...props,
     workshop: workshopDetail.data,
+    coupon,
   };
 
   // Pass data to the page via props
   return { props };
 };
 
-const BackEndCheckout = ({ workshop, profile, isTeacher }) => {
+const BackEndCheckout = ({ workshop, profile, isTeacher, coupon }) => {
   if (!isTeacher) {
     return (
       <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">
@@ -104,7 +105,11 @@ const BackEndCheckout = ({ workshop, profile, isTeacher }) => {
               },
             ]}
           >
-            <BackendPaymentForm useWorkshop={workshop} profile={profile} />
+            <BackendPaymentForm
+              useWorkshop={workshop}
+              profile={profile}
+              coupon={coupon}
+            />
           </Elements>
         </div>
       </div>
