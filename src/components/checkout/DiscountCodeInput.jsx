@@ -1,5 +1,5 @@
 import { FieldWrapper } from "./FieldWrapper";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classNames from "classnames";
 import { api } from "@utils";
 
@@ -22,6 +22,13 @@ export const DiscountCodeInput = ({
   const [status, setStatus] = useState(0);
   const [isCouponApplied, setIsCouponApplied] = useState(false);
   const [response, setResponse] = useState(null);
+
+  // Validating coupon if present on the initial load
+  useEffect(() => {
+    if (formikProps.values[formikKey]) {
+      applyCoupon();
+    }
+  }, []);
 
   const onChangeAction = (evt) => {
     formikProps.setFieldTouched(formikKey);

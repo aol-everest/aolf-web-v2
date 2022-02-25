@@ -4,6 +4,7 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
 import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { Loader } from "@components";
 import { isEmpty } from "@utils";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -21,6 +22,8 @@ import {
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { api } from "@utils";
 import Style from "./BackendPaymentForm.module.scss";
+
+dayjs.extend(isSameOrBefore);
 
 const PARTIAL = "partial";
 const FULL = "";
@@ -47,8 +50,12 @@ const createOptions = {
   },
 };
 
-export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
-  const [couponCode, setCouponCode] = useState("");
+export const BackendPaymentForm = ({
+  useWorkshop = {},
+  profile = {},
+  coupon,
+}) => {
+  const [couponCode, setCouponCode] = useState(coupon);
   const [selectedComboBundle, setSelectedComboBundle] = useState(null);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
@@ -1343,6 +1350,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                     >
                       <input
                         type="text"
+                        id="contactPhone"
                         className="form-control"
                         placeholder=" "
                         onChange={handleChange}
@@ -1631,7 +1639,7 @@ export const BackendPaymentForm = ({ useWorkshop = {}, profile = {} }) => {
                             group={"selectedPaymentOption"}
                             value={PARTIAL}
                             dtype={1}
-                            action={this.paymentOptionChangeAction}
+                            action={paymentOptionChangeAction}
                             label={`Partial Payment`}
                           />
                         </p>

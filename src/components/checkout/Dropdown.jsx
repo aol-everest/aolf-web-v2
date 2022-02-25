@@ -31,7 +31,7 @@ export const Dropdown = ({
                 <Field
                   className="select-box__input"
                   type="radio"
-                  id={option.value}
+                  id={`${formikKey}${option.value}`}
                   name={formikKey}
                   checked={formikProps.values[formikKey] === option.value}
                   value={option.value}
@@ -53,7 +53,7 @@ export const Dropdown = ({
             return (
               <li key={option.value}>
                 <label
-                  htmlFor={option.value}
+                  htmlFor={`${formikKey}${option.value}`}
                   aria-hidden="aria-hidden"
                   data-value="card"
                   className="select-box__option"
