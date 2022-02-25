@@ -20,6 +20,7 @@ export const PreCostDetailsCard = ({
   UpdatedFeeAfterCredits,
   values,
   onComboDetailChange,
+  paymentOptionChange,
 }) => {
   const {
     id,
@@ -340,6 +341,9 @@ export const PreCostDetailsCard = ({
                 }
                 name="paymentOption"
                 value={PAYMENT_TYPES.FULL}
+                onChange={() =>
+                  paymentOptionChange(formikProps, PAYMENT_TYPES.FULL)
+                }
               />
               <label htmlFor="payment-lg-full">
                 <span>Pay in full:</span>
@@ -359,6 +363,9 @@ export const PreCostDetailsCard = ({
                 }
                 name="paymentOption"
                 value={PAYMENT_TYPES.LATER}
+                onChange={() =>
+                  paymentOptionChange(formikProps, PAYMENT_TYPES.LATER)
+                }
                 disabled={!showCouponCodeField}
               />
               <label htmlFor="payment-lg-later">

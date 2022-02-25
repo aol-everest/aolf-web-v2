@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import { Formik, Field } from "formik";
-import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import classNames from "classnames";
 import { Auth } from "aws-amplify";
@@ -85,11 +84,8 @@ export const PaymentForm = ({
   const [enrollFormValues, setEnrollFormValues] = useState(null);
   const [showProgramQuestionnaireForm, setShowProgramQuestionnaireForm] =
     useState(false);
-  const [
-    programQuestionnaireResult,
-    setProgramQuestionnaireResult,
-    currentRef,
-  ] = useState(null);
+  const [programQuestionnaireResult, setProgramQuestionnaireResult] =
+    useState(null);
 
   const router = useRouter();
 
@@ -160,6 +156,158 @@ export const PaymentForm = ({
       setShowProgramQuestionnaireForm(true);
     } else {
       await completeEnrollmentAction(values);
+    }
+  };
+
+  const createPaypalOrder = async (values) => {
+    if (loading) {
+      return null;
+    }
+    const {
+      id: productId,
+      isCCNotRequired,
+      availableTimings,
+      isGenericWorkshop,
+      addOnProducts,
+    } = workshop;
+
+    const { isCreditCardRequired } = dicountResponse || {};
+    const {
+      questionnaire,
+      contactPhone,
+      contactAddress,
+      contactState,
+      contactZip,
+      couponCode,
+      firstName,
+      lastName,
+      paymentOption,
+      paymentMode,
+      accommodation,
+    } = values;
+
+    if (paymentMode !== PAYMENT_MODES.PAYPAL_PAYMENT_MODE) {
+      return null;
+    }
+
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? "Yes" : "No",
+      }),
+      {},
+    );
+
+    try {
+      setLoading(true);
+
+      const selectedAddOn = accommodation?.isExpenseAddOn
+        ? null
+        : accommodation?.productSfid || null;
+
+      let addOnProductsList = addOnProducts
+        ? addOnProducts.map((product) => {
+            if (!product.isAddOnSelectionRequired) {
+              const value = values[product.productName];
+              if (value) {
+                return product.productSfid;
+              } else {
+                return null;
+              }
+            }
+            return product.productSfid;
+          })
+        : [];
+
+      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+
+      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
+
+      const isRegularOrder = values.comboDetailId
+        ? values.comboDetailId === productId
+        : true;
+
+      const products = isRegularOrder
+        ? {
+            productType: "workshop",
+            productSfId: productId,
+            AddOnProductIds: AddOnProductIds,
+          }
+        : {
+            productType: "bundle",
+            productSfId: values.comboDetailId,
+            childProduct: {
+              productType: "workshop",
+              productSfId: productId,
+              AddOnProductIds: AddOnProductIds,
+              complianceQuestionnaire,
+            },
+          };
+
+      let payLoad = {
+        shoppingRequest: {
+          couponCode: showCouponCodeField ? couponCode : "",
+          contactAddress: {
+            contactPhone,
+            contactAddress,
+            contactState,
+            contactZip,
+          },
+          billingAddress: {
+            billingPhone: contactPhone,
+            billingAddress: contactAddress,
+            billingState: contactState,
+            billingZip: contactZip,
+          },
+          products,
+          complianceQuestionnaire,
+          programQuestionnaireResult,
+          isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
+          isPaypalPayment: true,
+        },
+      };
+
+      if (isGenericWorkshop) {
+        const timeSlot =
+          availableTimings &&
+          Object.values(availableTimings)[0] &&
+          Object.values(Object.values(availableTimings)[0])[0][0]
+            .genericWorkshopSlotSfid;
+        payLoad = {
+          ...payLoad,
+          shoppingRequest: {
+            ...payLoad.shoppingRequest,
+            genericWorkshopSlotSfid: timeSlot,
+          },
+        };
+      }
+
+      //token.saveCardForFuture = true;
+      const {
+        paypalObj,
+        status,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: "createAndPayOrder",
+        body: payLoad,
+      });
+      setLoading(false);
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      if (paypalObj) {
+        return paypalObj.id;
+      }
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
     }
   };
 
@@ -482,6 +630,16 @@ export const PaymentForm = ({
     toggleCouponCodeFieldAction();
   };
 
+  const handlePaymentOptionChange = (formikProps, paymentOption) => {
+    formikProps.setFieldValue("paymentOption", paymentOption);
+    if (paymentOption === PAYMENT_TYPES.LATER) {
+      formikProps.setFieldValue(
+        "paymentMode",
+        PAYMENT_MODES.STRIPE_PAYMENT_MODE,
+      );
+    }
+  };
+
   const handleAccommodationChange = (formikProps, value) => {
     formikProps.setFieldValue("accommodation", value);
   };
@@ -707,7 +865,7 @@ export const PaymentForm = ({
                     {formikProps.values.paymentMode ===
                       PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
                       <div
-                        className="order__card__payment-method paypal-info tw-w-[150px]"
+                        className="order__card__payment-method paypal-info !tw-w-[150px]"
                         data-method="paypal"
                       >
                         <div className="paypal-info__sign-in tw-relative tw-z-0">
@@ -735,7 +893,7 @@ export const PaymentForm = ({
                               }
                             }}
                             createOrder={async (data, actions) => {
-                              return await this.createPaypalOrder(
+                              return await createPaypalOrder(
                                 formikProps.values,
                               );
                             }}
@@ -803,6 +961,7 @@ export const PaymentForm = ({
                     UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                     values={values}
                     onComboDetailChange={handleComboDetailChange}
+                    paymentOptionChange={handlePaymentOptionChange}
                   />
                   <CourseDetailsCard workshop={workshop} />
                   <PostCostDetailsCard
