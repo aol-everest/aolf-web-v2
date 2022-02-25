@@ -79,7 +79,7 @@ export const PaymentForm = ({
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [priceType, setPriceType] = useState("");
   const [discount] = useQueryString("discountCode");
-  const [dicountResponse, setDicountResponse] = useState(null);
+  const [discountResponse, setDiscountResponse] = useState(null);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
   const [enrollFormValues, setEnrollFormValues] = useState(null);
   const [showProgramQuestionnaireForm, setShowProgramQuestionnaireForm] =
@@ -114,7 +114,7 @@ export const PaymentForm = ({
   };
 
   const applyDiscount = (discount) => {
-    setDicountResponse(discount);
+    setDiscountResponse(discount);
   };
 
   const openSubscriptionPaywallPage = (id) => (e) => {
@@ -171,7 +171,7 @@ export const PaymentForm = ({
       addOnProducts,
     } = workshop;
 
-    const { isCreditCardRequired } = dicountResponse || {};
+    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -324,7 +324,7 @@ export const PaymentForm = ({
       addOnProducts,
     } = workshop;
 
-    const { isCreditCardRequired } = dicountResponse || {};
+    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -538,7 +538,7 @@ export const PaymentForm = ({
 
   const { fee, delfee, offering } = priceCalculation({
     workshop,
-    dicountResponse,
+    discount: discountResponse,
   });
 
   const {
@@ -962,6 +962,7 @@ export const PaymentForm = ({
                     values={values}
                     onComboDetailChange={handleComboDetailChange}
                     paymentOptionChange={handlePaymentOptionChange}
+                    discount={discountResponse}
                   />
                   <CourseDetailsCard workshop={workshop} />
                   <PostCostDetailsCard
@@ -980,6 +981,7 @@ export const PaymentForm = ({
                     UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                     totalFee={totalFee}
                     onAccommodationChange={handleAccommodationChange}
+                    discount={discountResponse}
                   />
 
                   {/* <div className="reciept__payment">

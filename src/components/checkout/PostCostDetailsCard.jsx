@@ -54,7 +54,6 @@ export const PostCostDetailsCard = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
-  console.log(isCourseOptionRequired);
 
   if (isCourseOptionRequired) {
     return (
