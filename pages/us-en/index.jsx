@@ -121,7 +121,7 @@ export const getServerSideProps = async (context) => {
   //     param = {
   //       ...param,
   //       sdate: startDate,
-  //       eDate: endDate,
+  //       edate: endDate,
   //     };
   //   }
 
@@ -363,7 +363,7 @@ const Course = ({ authenticated }) => {
         param = {
           ...param,
           sdate: startDate,
-          eDate: endDate,
+          edate: endDate,
         };
       }
       if (locationFilter) {

@@ -506,7 +506,7 @@ const Meetup = () => {
         param = {
           ...param,
           sdate: startDate,
-          eDate: endDate,
+          edate: endDate,
         };
       }
       if (locationFilter) {
