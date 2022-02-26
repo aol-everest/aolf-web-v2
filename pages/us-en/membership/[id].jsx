@@ -159,6 +159,7 @@ function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big meditation-digital-membership",
         title: "Retreat Prerequisite",
+        closeModalAction: closeRetreatPrerequisiteWarning,
         footer: () => {
           return (
             <button

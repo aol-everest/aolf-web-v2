@@ -174,6 +174,7 @@ const Checkout = ({ workshop, profile }) => {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big",
         title: "Retreat Prerequisite",
+        closeModalAction: closeRetreatPrerequisiteWarning,
         footer: () => {
           return (
             <button
