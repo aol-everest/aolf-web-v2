@@ -7,11 +7,13 @@ import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { AddToCalendarModal } from "@components";
 import { ALERT_TYPES, ABBRS } from "@constants";
 
 dayjs.extend(utc);
+dayjs.extend(localizedFormat);
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;

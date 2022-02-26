@@ -15,9 +15,11 @@ import { COURSE_TYPES, ALERT_TYPES, ABBRS } from "@constants";
 import { AddToCalendarModal } from "@components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import Image from "next/image";
 
 dayjs.extend(utc);
+dayjs.extend(localizedFormat);
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;

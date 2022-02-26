@@ -133,8 +133,6 @@ export const PaymentForm = ({
     setIsChangingCard((isChangingCard) => !isChangingCard);
   };
 
-  const paypalBuyAcknowledgement = async () => {};
-
   const submitProgramQuestionnaire = async (programQuestionnaireResult) => {
     setProgramQuestionnaireResult(programQuestionnaireResult);
     setShowProgramQuestionnaireForm(false);
@@ -156,6 +154,26 @@ export const PaymentForm = ({
       setShowProgramQuestionnaireForm(true);
     } else {
       await completeEnrollmentAction(values);
+    }
+  };
+
+  const paypalBuyAcknowledgement = async (paypalData) => {
+    setLoading(true);
+    const {
+      data,
+      status,
+      error: errorMessage,
+      isError,
+    } = await api.post({
+      path: "paypalBuyAcknowledgement",
+      body: { orderID: paypalData.orderID },
+    });
+
+    setLoading(false);
+    if (status === 400 || isError) {
+      throw new Error(errorMessage);
+    } else if (data) {
+      enrollmentCompletionAction(data);
     }
   };
 
@@ -939,7 +957,10 @@ export const PaymentForm = ({
                         <span>SSL Secured</span>
                       </p>
                     </div>
-                    <button className="btn-primary">Complete Checkout</button>
+                    {formikProps.values.paymentMode !==
+                      PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
+                      <button className="btn-primary">Complete Checkout</button>
+                    )}
                   </div>
                 </form>
               </div>
