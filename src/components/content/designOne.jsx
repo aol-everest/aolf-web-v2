@@ -49,6 +49,20 @@ export const DesignOne = ({
       refetchOnWindowFocus: false,
     },
   );
+
+  const { data: dailyPractice = {} } = useQuery(
+    "dailyPractice",
+    async () => {
+      const response = await api.get({
+        path: "dailyPractice",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
   let favouriteContentOnly = [];
   const contentFolders = data.folder.map((folder) => {
     const content = folder.content.map((content) => {
@@ -468,6 +482,61 @@ export const DesignOne = ({
           </div>
         </div>
       </section>
+      {dailyPractice && dailyPractice.length > 0 && (
+        <section className="browse-category most-popular">
+          <p className="title-slider">Daily Practice</p>
+          <Swiper {...swiperOption}>
+            {dailyPractice.map((meditate) => (
+              <SwiperSlide
+                className="swiper-slide popular-slide-item"
+                key={meditate.sfid}
+              >
+                <div
+                  className={classNames(
+                    "card image-card image-card-1 contentCard",
+                  )}
+                  data-play-meditation
+                  style={{
+                    background: `url(${
+                      meditate.coverImage
+                        ? meditate.coverImage.url
+                        : "/img/card-1a.png"
+                    }) no-repeat center/cover`,
+                  }}
+                >
+                  <div className="duration-wrapper">
+                    <span className="duration">
+                      {timeConvert(meditate.duration)}
+                    </span>
+                    {!meditate.accessible && (
+                      <span className="lock">
+                        {" "}
+                        <img src="/img/ic-lock.png" />{" "}
+                      </span>
+                    )}
+                  </div>
+                  {meditate.accessible && (
+                    <div
+                      onClick={markFavorite(meditate)}
+                      className={
+                        meditate.isFavorite
+                          ? "course-like liked"
+                          : "course-like"
+                      }
+                    ></div>
+                  )}
+                  <div
+                    className="forClick"
+                    onClick={meditateClickHandle(meditate)}
+                  ></div>
+                  <h5 className="card-title">{meditate.title}</h5>
+                  <p className="card-text">{meditate.primaryTeacherName}</p>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </section>
+      )}
       {listingFolders &&
         listingFolders.map((folder) => {
           return (
