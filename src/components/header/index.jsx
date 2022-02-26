@@ -9,7 +9,7 @@ import { ActiveLink } from "@components";
 import Link from "next/link";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import Style from "./Header.module.scss";
-import { FaUserCircle } from "react-icons/fa";
+// import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
 const MENU = [
@@ -267,21 +267,31 @@ export const Header = () => {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu as={CustomMenu}>
-                    {menu.submenu.map((submenu) => {
-                      return (
-                        <Dropdown.Item
-                          key={submenu.name}
-                          link={submenu.link}
-                          onSelect={onMenuSelection(submenu)}
-                        >
-                          {submenu.name}
-                        </Dropdown.Item>
-                      );
-                    })}
+                    {menu.submenu &&
+                      menu.submenu.map((submenu) => {
+                        return (
+                          <Dropdown.Item
+                            key={submenu.name}
+                            link={submenu.link}
+                            onSelect={onMenuSelection(submenu)}
+                          >
+                            {submenu.name}
+                          </Dropdown.Item>
+                        );
+                      })}
                   </Dropdown.Menu>
                 </Dropdown>
               );
             })}
+            <div className="dropdown">
+              <a
+                className={classNames(Style.phone_number)}
+                href="tel:8552024400"
+              >
+                <FiPhone size={20} className="tw-mr-4" />
+                (855) 202-4400
+              </a>
+            </div>
           </nav>
         </div>
       </div>
@@ -310,54 +320,79 @@ export const Header = () => {
                     key={menu.name}
                     onMouseOver={onMenuMouseOver(menu.name)}
                   >
-                    <a className="menu-item__link">{menu.name}</a>
-                    <b
-                      className={classNames(
-                        Style.menuItemArrow,
-                        "menu-item__arrow",
-                      )}
-                      style={{
-                        display:
-                          currentActiveMenu === menu.name ? "block" : "none",
-                      }}
-                    ></b>
-                    <div
-                      className={classNames(Style.subMenu, "sub-menu")}
-                      style={{
-                        display:
-                          currentActiveMenu === menu.name ? "block" : "none",
-                      }}
-                    >
-                      <ul
-                        className={classNames(
-                          "sub-menu__list",
-                          Style.sub_menu__list,
-                        )}
-                      >
-                        {menu.submenu.map((submenu) => {
-                          return (
-                            <li
-                              className={classNames(
-                                "sub-menu-item",
-                                Style.sub_menu__item,
-                              )}
-                              key={submenu.name}
-                            >
-                              <span>
-                                <Link prefetch={false} href={submenu.link}>
-                                  <a className="sub-menu-item__link">
-                                    {submenu.name}
-                                  </a>
-                                </Link>
-                              </span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
+                    {menu.link && (
+                      <Link prefetch={false} href={menu.link}>
+                        <a className="menu-item__link">
+                          {menu.icon || ""}
+                          {menu.name}
+                        </a>
+                      </Link>
+                    )}
+                    {!menu.link && (
+                      <a className="menu-item__link">{menu.name}</a>
+                    )}
+
+                    {menu.submenu && (
+                      <>
+                        <b
+                          className={classNames(
+                            Style.menuItemArrow,
+                            "menu-item__arrow",
+                          )}
+                          style={{
+                            display:
+                              currentActiveMenu === menu.name
+                                ? "block"
+                                : "none",
+                          }}
+                        ></b>
+                        <div
+                          className={classNames(Style.subMenu, "sub-menu")}
+                          style={{
+                            display:
+                              currentActiveMenu === menu.name
+                                ? "block"
+                                : "none",
+                          }}
+                        >
+                          <ul
+                            className={classNames(
+                              "sub-menu__list",
+                              Style.sub_menu__list,
+                            )}
+                          >
+                            {menu.submenu.map((submenu) => {
+                              return (
+                                <li
+                                  className={classNames(
+                                    "sub-menu-item",
+                                    Style.sub_menu__item,
+                                  )}
+                                  key={submenu.name}
+                                >
+                                  <span>
+                                    <Link prefetch={false} href={submenu.link}>
+                                      <a className="sub-menu-item__link">
+                                        {submenu.name}
+                                      </a>
+                                    </Link>
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      </>
+                    )}
                   </li>
                 );
               })}
+              <li className="menu-item">
+                <a className="menu-item__link" href="tel:8552024400">
+                  <FiPhone size={20} className="tw-mr-2" />
+                  (855) 202-4400
+                </a>
+              </li>
             </ul>
           </nav>
           {!authenticated && (
