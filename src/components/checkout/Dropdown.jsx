@@ -19,7 +19,7 @@ export const Dropdown = ({
       label={label}
       formikKey={formikKey}
       formikProps={formikProps}
-      containerclassName={containerClass}
+      containerClass={containerClass}
       fullWidth={fullWidth}
     >
       <div className="select-box order__card__payment-select">

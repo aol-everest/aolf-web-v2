@@ -6,8 +6,10 @@ import * as Yup from "yup";
 import { api } from "@utils";
 import { FaRegEdit } from "react-icons/fa";
 import { useGlobalModalContext } from "@contexts";
-import { MODAL_TYPES } from "@constants";
+import { MODAL_TYPES, US_STATES } from "@constants";
+import { StyledInput, Dropdown } from "@components/checkout";
 import { ChangeEmail } from "@components/profile";
+import Style from "./ChangeProfile.module.scss";
 
 const phoneNumberMask = [
   "(",
@@ -147,101 +149,29 @@ export const ChangeProfile = ({
           return (
             <form className="profile-update__form" onSubmit={handleSubmit}>
               {!isMobile && <h6 className="profile-update__title">Profile:</h6>}
-              <div className="profile-update__card">
-                <div
-                  className={classNames("input-block w-100", {
-                    "mt-0": !isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    placeholder="Street Address"
-                    className={classNames("mt-0 w-100", {
-                      validate: errors.contactAddress && touched.contactAddress,
-                    })}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.contactAddress}
-                    name="contactAddress"
-                  />
-                  {errors.contactAddress && touched.contactAddress && (
-                    <p className="validation-input">{errors.contactAddress}</p>
-                  )}
-                </div>
-
-                <div
-                  id="city-input"
-                  className={classNames("input-block", {
-                    "w-100": isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    placeholder="City"
-                    className={classNames({
-                      validate: errors.contactCity && touched.contactCity,
-                      "w-100": isMobile,
-                    })}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.contactCity}
-                    name="contactCity"
-                  />
-                  {errors.contactCity && touched.contactCity && (
-                    <p className="validation-input">{errors.contactCity}</p>
-                  )}
-                </div>
-
-                <div
-                  id="state-input"
-                  className={classNames("input-block", {
-                    "w-100": isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    placeholder="State"
-                    maxLength="2"
-                    className={classNames({
-                      validate: errors.contactState && touched.contactState,
-                      "w-100": isMobile,
-                    })}
-                    onChange={(e) => {
-                      let value = e.target.value || "";
-                      value = value.toUpperCase().trim();
-                      props.setFieldValue("contactState", value);
-                    }}
-                    onBlur={handleBlur}
-                    value={values.contactState}
-                    name="contactState"
-                  />
-                  {errors.contactState && touched.contactState && (
-                    <p className="validation-input">{errors.contactState}</p>
-                  )}
-                </div>
-
-                <div
-                  id="zip-input"
-                  className={classNames("input-block", {
-                    "w-100": isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    placeholder="Zip"
-                    className={classNames({
-                      validate: errors.contactZip && touched.contactZip,
-                      "w-100": isMobile,
-                    })}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.contactZip}
-                    name="contactZip"
-                  />
-                  {errors.contactZip && touched.contactZip && (
-                    <p className="validation-input">{errors.contactZip}</p>
-                  )}
-                </div>
+              <div className="profile-update__card order__card">
+                <StyledInput
+                  containerClass={classNames(Style.address, "tw-mt-0")}
+                  className={classNames(Style.address, "tw-mt-0 !tw-w-full")}
+                  placeholder="Address"
+                  formikProps={props}
+                  formikKey="contactAddress"
+                  fullWidth
+                ></StyledInput>
+                <Dropdown
+                  containerClass={classNames({ "w-100": isMobile })}
+                  placeholder="State"
+                  formikProps={props}
+                  formikKey="contactState"
+                  options={US_STATES}
+                ></Dropdown>
+                <StyledInput
+                  containerClass={classNames({ "w-100": isMobile })}
+                  className="zip"
+                  placeholder="Zip"
+                  formikProps={props}
+                  formikKey="contactZip"
+                ></StyledInput>
 
                 <div
                   className={classNames("input-block", {
