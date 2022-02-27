@@ -597,7 +597,7 @@ export const DesignOne = ({
         })}
       {authenticated && (
         <>
-          {favouriteContentOnly && favouriteContentOnly.length > 0 && (
+          {favouriteContents && favouriteContents.length > 0 && (
             <section className="browse-category most-popular">
               <p className="title-slider">My Favorites</p>
               <Swiper
@@ -605,7 +605,7 @@ export const DesignOne = ({
                 className="swiper-container"
                 {...swiperOption}
               >
-                {favouriteContentOnly.map((meditate) => (
+                {favouriteContents.map((meditate) => (
                   <SwiperSlide
                     className="swiper-slide popular-slide-item"
                     key={meditate.sfid}
@@ -637,11 +637,7 @@ export const DesignOne = ({
                       {meditate.accessible && (
                         <div
                           onClick={markFavorite(meditate)}
-                          className={
-                            meditate.isFavorite
-                              ? "course-like liked"
-                              : "course-like"
-                          }
+                          className="course-like liked"
                         ></div>
                       )}
                       <div
