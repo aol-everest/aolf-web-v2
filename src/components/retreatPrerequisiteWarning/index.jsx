@@ -10,8 +10,7 @@ export const RetreatPrerequisiteWarning = ({ warningPayload }) => {
         <a href="mailto:app.support@us.artofliving.org">
           app.support@us.artofliving.org
         </a>
-        . We will be happy to help you so you can sign up for the Silent
-        Retreat.
+        .
       </p>
     </>
   );
