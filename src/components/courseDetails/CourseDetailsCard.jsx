@@ -120,7 +120,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               .format("MMMM DD, YYYY")}`}</li>
           )}
         </ul>
-        <ul className="course-details__list">
+        <ul className="course-details__list tw-max-h-[300px] tw-overflow-y-auto tw-overflow-x-hidden">
           <div className="course-details__list__title">
             <img src="/img/ic-clock.svg" alt="timings" title="timings" />
             <h6>Timings:</h6>

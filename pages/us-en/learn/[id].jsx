@@ -77,7 +77,7 @@ export default function Learn({ data, authenticated }) {
     title,
     introContent,
     cardImage,
-    whatYoullLearn,
+    whatYouWillLearn,
     whoIsItFor,
   } = data;
 
@@ -220,7 +220,7 @@ export default function Learn({ data, authenticated }) {
               </p>
 
               <div className="accordion">
-                {whatYoullLearn && (
+                {whatYouWillLearn && (
                   <div className="card">
                     <div className="card-header">
                       <h2 className="mb-0">
@@ -249,7 +249,7 @@ export default function Learn({ data, authenticated }) {
                       data-parent="#accordionExample"
                     >
                       <div className="card-body">
-                        {documentToReactComponents(whatYoullLearn)}
+                        {documentToReactComponents(whatYouWillLearn)}
                       </div>
                     </div>
                   </div>
