@@ -557,7 +557,7 @@ export const PaymentFormHB = ({
               (value) => value === true,
             ),
           accommodation: isAccommodationRequired
-            ? Yup.object().required("ERROR!")
+            ? Yup.object().required("Room & Board is required!")
             : Yup.mixed().notRequired(),
           paymentMode: Yup.string().required("Payment mode is required!"),
           contactTitle: Yup.string().required("Title is required"),

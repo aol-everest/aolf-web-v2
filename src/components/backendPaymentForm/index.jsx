@@ -950,7 +950,7 @@ export const BackendPaymentForm = ({
                 }),
             }),
             accommodation: isAccommodationRequired
-              ? Yup.object().required("ERROR!")
+              ? Yup.object().required("Room & Board is required!")
               : Yup.mixed().notRequired(),
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -1474,6 +1474,7 @@ export const BackendPaymentForm = ({
                           product={workshop.sfid}
                           applyDiscount={applyDiscount}
                           addOnProducts={addOnProducts}
+                          userId={user?.id}
                         ></DiscountCodeInput>
                       )}
                     </div>
