@@ -69,14 +69,14 @@ const MENU = [
         name: "Live meetups",
         link: "/us-en/meetup",
       },
-      {
-        name: "Guided breathwork",
-        link: "#",
-      },
-      {
-        name: "Guided Yoga",
-        link: "#",
-      },
+      // {
+      //   name: "Guided breathwork",
+      //   link: "#",
+      // },
+      // {
+      //   name: "Guided Yoga",
+      //   link: "#",
+      // },
     ],
   },
   {
