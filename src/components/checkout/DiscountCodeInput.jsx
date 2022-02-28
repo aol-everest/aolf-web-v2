@@ -15,6 +15,7 @@ export const DiscountCodeInput = ({
   applyDiscount,
   clearCoupon,
   setUser,
+  userId = null,
   ...rest
 }) => {
   const [showTag, setShowTag] = useState(false);
@@ -61,8 +62,16 @@ export const DiscountCodeInput = ({
         ? [formikProps.values.selectedAddOn]
         : [];
 
+      const accommodationAddon = formikProps.values.accommodation
+        ?.isExpenseAddOn
+        ? []
+        : formikProps.values.accommodation?.productSfid
+        ? [formikProps.values.accommodation?.productSfid]
+        : [];
+
       AddOnProductIds = [
         ...AddOnProductIds,
+        ...accommodationAddon,
         ...addOnProducts.map(({ productSfid }) => productSfid),
       ];
       const payLoad = {
@@ -74,6 +83,7 @@ export const DiscountCodeInput = ({
           },
           couponCode: value,
         },
+        userId,
       };
       let results = await api.post({
         path: "applyCoupon",

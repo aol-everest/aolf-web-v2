@@ -542,7 +542,7 @@ export const PaymentFormGeneric = ({
               (value) => value === true,
             ),
           accommodation: isAccommodationRequired
-            ? Yup.object().required("ERROR!")
+            ? Yup.object().required("Room & Board is required!")
             : Yup.mixed().notRequired(),
           paymentMode: Yup.string().required("Payment mode is required!"),
         })}
