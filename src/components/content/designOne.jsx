@@ -91,9 +91,7 @@ export const DesignOne = ({
     };
   });
 
-  console.log("favouriteContentOnly", favouriteContentOnly);
   favouriteContentOnly = uniqBy(favouriteContentOnly, "sfid");
-  console.log("favouriteContentOnly", favouriteContentOnly);
 
   let listingFolders = contentFolders.filter(
     (folder) => folder.isListingFolder,
