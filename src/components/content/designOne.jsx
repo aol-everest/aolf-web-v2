@@ -8,6 +8,7 @@ import { NextSeo } from "next-seo";
 import { api } from "@utils";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import { uniqBy } from "lodash";
 
 const timeConvert = (data) => {
   const minutes = data % 60;
@@ -89,6 +90,11 @@ export const DesignOne = ({
       content,
     };
   });
+
+  console.log("favouriteContentOnly", favouriteContentOnly);
+  favouriteContentOnly = uniqBy(favouriteContentOnly, "sfid");
+  console.log("favouriteContentOnly", favouriteContentOnly);
+
   let listingFolders = contentFolders.filter(
     (folder) => folder.isListingFolder,
   );
@@ -597,7 +603,7 @@ export const DesignOne = ({
         })}
       {authenticated && (
         <>
-          {favouriteContents && favouriteContents.length > 0 && (
+          {favouriteContentOnly && favouriteContentOnly.length > 0 && (
             <section className="browse-category most-popular">
               <p className="title-slider">My Favorites</p>
               <Swiper
@@ -605,7 +611,7 @@ export const DesignOne = ({
                 className="swiper-container"
                 {...swiperOption}
               >
-                {favouriteContents.map((meditate) => (
+                {favouriteContentOnly.map((meditate) => (
                   <SwiperSlide
                     className="swiper-slide popular-slide-item"
                     key={meditate.sfid}
