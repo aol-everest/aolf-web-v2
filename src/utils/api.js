@@ -2,6 +2,15 @@ import Axios from "axios";
 import queryString from "query-string";
 import { Auth } from "aws-amplify";
 
+class HTTPError extends Error {
+  constructor(message, statusCode, stack = null) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = "HTTPError";
+    this.stack = stack;
+  }
+}
+
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
   ? process.env.NEXT_PUBLIC_SERVER_URL
   : "http://localhost:3000";
@@ -49,72 +58,122 @@ axiosClient.interceptors.request.use(function (config) {
 export const api = {
   get: async (config) => {
     const qs = config.param ? queryString.stringify(config.param) : "";
-
-    const result = await axiosClient.get(SERVER_URL + config.path + "?" + qs, {
-      headers: {
-        Authorization: `Bearer ${config.token}`,
-      },
-    });
-    return result.data;
+    try {
+      const result = await axiosClient.get(
+        SERVER_URL + config.path + "?" + qs,
+        {
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (error) {
+      throw new HTTPError(
+        error.response?.data?.message || error.message,
+        error.response?.data?.statusCode || 500,
+        error.response?.data?.stack,
+      );
+    }
   },
 
   getFile: async (config) => {
-    const result = await axiosClient.get(SERVER_URL + config.path, {
-      headers: {
-        Authorization: `Bearer ${config.token}`,
-      },
-      responseType: "blob",
-    });
-    return result.data;
+    try {
+      const result = await axiosClient.get(SERVER_URL + config.path, {
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+        },
+        responseType: "blob",
+      });
+      return result.data;
+    } catch (error) {
+      throw new HTTPError(
+        error.response?.data?.message || error.message,
+        error.response?.data?.statusCode || 500,
+        error.response?.data?.stack,
+      );
+    }
   },
 
   post: async (config) => {
-    const result = await axiosClient.post(
-      SERVER_URL + config.path,
-      config.body,
-      {
-        headers: {
-          Authorization: `Bearer ${config.token}`,
+    try {
+      const result = await axiosClient.post(
+        SERVER_URL + config.path,
+        config.body,
+        {
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+          },
         },
-      },
-    );
-    return result.data;
+      );
+      return result.data;
+    } catch (error) {
+      throw new HTTPError(
+        error.response?.data?.message || error.message,
+        error.response?.data?.statusCode || 500,
+        error.response?.data?.stack,
+      );
+    }
   },
 
   postFormData: async (config) => {
-    const result = await axiosClient.post(
-      SERVER_URL + config.path,
-      config.body,
-      {
-        headers: {
-          Authorization: `Bearer ${config.token}`,
-          "Content-Type": "multipart/form-data",
+    try {
+      const result = await axiosClient.post(
+        SERVER_URL + config.path,
+        config.body,
+        {
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+            "Content-Type": "multipart/form-data",
+          },
         },
-      },
-    );
-    return result.data;
+      );
+      return result.data;
+    } catch (error) {
+      throw new HTTPError(
+        error.response?.data?.message || error.message,
+        error.response?.data?.statusCode || 500,
+        error.response?.data?.stack,
+      );
+    }
   },
 
   put: async (config) => {
-    const result = await axiosClient.put(
-      SERVER_URL + config.path,
-      config.body,
-      {
-        headers: {
-          Authorization: `Bearer ${config.token}`,
-          "Content-Type": "application/json",
+    try {
+      const result = await axiosClient.put(
+        SERVER_URL + config.path,
+        config.body,
+        {
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+            "Content-Type": "application/json",
+          },
         },
-      },
-    );
-    return result.data;
+      );
+      return result.data;
+    } catch (error) {
+      throw new HTTPError(
+        error.response?.data?.message || error.message,
+        error.response?.data?.statusCode || 500,
+        error.response?.data?.stack,
+      );
+    }
   },
 
   delete: async (config) => {
-    const result = await axiosClient.delete(SERVER_URL + config.path, {
-      headers: {
-        Authorization: `Bearer ${config.token}`,
-      },
-    });
-    return result.data;
+    try {
+      const result = await axiosClient.delete(SERVER_URL + config.path, {
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+        },
+      });
+      return result.data;
+    } catch (error) {
+      throw new HTTPError(
+        error.response?.data?.message || error.message,
+        error.response?.data?.statusCode || 500,
+        error.response?.data?.stack,
+      );
+    }
   },
 };

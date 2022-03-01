@@ -58,6 +58,7 @@ export const getServerSideProps = async (context) => {
       authenticated: false,
     };
   }
+
   const workshopDetail = await api.get({
     path: "workshopDetail",
     token,
