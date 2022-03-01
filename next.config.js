@@ -64,7 +64,7 @@ module.exports = withPlugins(
     // swcMinify: true,
     // basePath: "/us-en",
     // assetPrefix: "/us-en/",
-    // productionBrowserSourceMaps: true,
+    productionBrowserSourceMaps: true,
     images: {
       domains: ["images.ctfassets.net"],
     },

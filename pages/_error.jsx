@@ -1,5 +1,4 @@
 import NextErrorComponent from "next/error";
-
 import * as Sentry from "@sentry/nextjs";
 
 const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
@@ -21,7 +20,9 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
               ? `An error ${statusCode} occurred on server`
               : "An error occurred on client"}
           </h2>
-          {/* <span>{err?.message}</span> */}
+        </div>
+        <div className="tw-text-left tw-text-xs tw-text-red-400 tw-mt-2">
+          Error: {err?.message}
         </div>
       </div>
     </div>
@@ -38,7 +39,9 @@ MyError.getInitialProps = async ({ res, err, asPath }) => {
   //   : err
   //   ? err.statusCode
   //   : 500;
-  // errorInitialProps.err = err;
+  errorInitialProps.err = {
+    message: err?.message,
+  };
   // errorInitialProps.res = res;
 
   // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
