@@ -4,8 +4,17 @@ import DefaultErrorPage from "next/error";
 import Head from "next/head";
 import "@builder.io/widgets";
 import { NextSeo } from "next-seo";
+import NextLink from "next/link";
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY);
+
+const Link = ({ href, children, ...props }) => {
+  return (
+    <NextLink href={href}>
+      <a {...props}>{children}</a>
+    </NextLink>
+  );
+};
 
 export async function getStaticProps({ params }) {
   const page =
@@ -56,11 +65,30 @@ export default function Page({ page }) {
       </>
     );
   }
-
+  const { title, description, image } = page?.data || {};
   return (
     <>
-      <NextSeo title={page.data.title} />
-      <BuilderComponent model="page" content={page} />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <NextSeo
+        title={title}
+        description={description}
+        openGraph={{
+          type: "website",
+          title,
+          description,
+          images: [
+            {
+              url: image,
+              width: 800,
+              height: 600,
+              alt: title,
+            },
+          ],
+        }}
+      />
+      <BuilderComponent renderLink={Link} model="page" content={page} />
     </>
   );
 }
