@@ -26,7 +26,8 @@ const MENU = [
       },
       {
         name: "SKY Breath Meditation",
-        link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
+        link: "/us-en/lp/online-course-2",
+        // link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
       },
       {
         name: "Sahaj Meditation",
@@ -34,7 +35,8 @@ const MENU = [
       },
       {
         name: "Silent Retreat",
-        link: `/us-en?courseType=SILENT_RETREAT`,
+        link: "/us-en/lp/silent-retreat",
+        // link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
         name: "Healthcare Providers",

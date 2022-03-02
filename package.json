@@ -18,6 +18,8 @@
     "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss}\""
   },
   "dependencies": {
+    "@builder.io/react": "^1.1.49",
+    "@builder.io/widgets": "^1.2.21",
     "@contentful/rich-text-react-renderer": "^15.11.1",
     "@elgorditosalsero/react-gtm-hook": "^2.3.1",
     "@googlemaps/js-api-loader": "^1.13.7",
