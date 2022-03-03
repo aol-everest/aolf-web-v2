@@ -44,7 +44,7 @@ const MENU = [
       },
       {
         name: "Yoga Foundations",
-        link: "https://event.us.artofliving.org/us-en/online-foundation-program/",
+        link: "/us-en/lp/online-foundation-program/",
       },
       {
         name: "College Courses",
@@ -127,7 +127,7 @@ const MENU = [
     submenu: [
       {
         name: "Art of Living",
-        link: "https://www.artofliving.org/us-en/about-us",
+        link: "/us-en/lp/about-us",
       },
       {
         name: "Founder",
