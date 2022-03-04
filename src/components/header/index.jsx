@@ -35,7 +35,7 @@ const MENU = [
       },
       {
         name: "Silent Retreat",
-        link: "/us-en/lp/silent-retreat",
+        link: "https://www.artofliving.org/us-en/silence-retreat",
         // link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
@@ -127,7 +127,7 @@ const MENU = [
     submenu: [
       {
         name: "Art of Living",
-        link: "/us-en/lp/about-us",
+        link: "https://www.artofliving.org/us-en/about-us",
       },
       {
         name: "Founder",
