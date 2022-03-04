@@ -14,3 +14,4 @@ export { PostCostDetailsCard } from "./PostCostDetailsCard";
 export { ProgramQuestionnaire } from "./ProgramQuestionnaire";
 export { AttendanceForm } from "./AttendanceForm";
 export { InputDropDown } from "./InputDropDown";
+export { MobileBottomBar } from "./MobileBottomBar";

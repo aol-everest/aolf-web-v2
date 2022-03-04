@@ -28,6 +28,8 @@ const CourseFeeRender = ({
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
   const isSriSriYogaMeditationType =
     COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isHealingBreathProgram =
+    COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0;
   if (isSilentRetreatType) {
     if (!isJourneyPremium && !isJourneyPlus) {
       return (
@@ -84,21 +86,19 @@ const CourseFeeRender = ({
       }
     }
   }
-  if (isSKYType) {
-    return (
-      <>
-        {delfee && (
-          <>
-            <h2 className="new-price">Limited Time Offer: ${fee}</h2>
-            <h3 className="common-price">
-              Regular Course Fee: <span className="discount">${delfee}</span>
-            </h3>
-          </>
-        )}
-        {!delfee && <h2 className="new-price">Regular Course Fee: ${fee}</h2>}
-      </>
-    );
-  }
+  return (
+    <>
+      {delfee && (
+        <>
+          <h2 className="new-price">Limited Time Offer: ${fee}</h2>
+          <h3 className="common-price">
+            Regular Course Fee: <span className="discount">${delfee}</span>
+          </h3>
+        </>
+      )}
+      {!delfee && <h2 className="new-price">Regular Course Fee: ${fee}</h2>}
+    </>
+  );
 };
 
 const CourseButtonRender = ({
@@ -112,6 +112,7 @@ const CourseButtonRender = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
+
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
   const isSilentRetreatType =
@@ -166,6 +167,7 @@ export const MobileCourseDetails = ({
     notes,
     description,
     premiumRate,
+    isGenericWorkshop,
   } = workshop || {};
 
   const isSKYType =
@@ -216,38 +218,43 @@ export const MobileCourseDetails = ({
         />
       </div>
       <div className="mobile-modal__body">
-        <div className="course-detail">
-          Your course:{" "}
-          {dayjs
-            .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
-            <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-              .utc(eventEndDate)
-              .format("DD, YYYY")}`}</span>
-          )}
-          {!dayjs
-            .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
-            <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-              .utc(eventEndDate)
-              .format("MMMM DD, YYYY")}`}</span>
-          )}
-        </div>
-        <div className="course-detail">
-          Timings:
-          {timings &&
-            timings.map((time) => {
-              return (
-                <>
-                  <span>
-                    {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
-                      time.startTime,
-                    )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
-                  </span>
-                </>
-              );
-            })}
-        </div>
+        {!isGenericWorkshop && (
+          <>
+            <div className="course-detail">
+              Your course:{" "}
+              {dayjs
+                .utc(eventStartDate)
+                .isSame(dayjs.utc(eventEndDate), "month") && (
+                <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                  .utc(eventEndDate)
+                  .format("DD, YYYY")}`}</span>
+              )}
+              {!dayjs
+                .utc(eventStartDate)
+                .isSame(dayjs.utc(eventEndDate), "month") && (
+                <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                  .utc(eventEndDate)
+                  .format("MMMM DD, YYYY")}`}</span>
+              )}
+            </div>
+
+            <div className="course-detail">
+              Timings:
+              {timings &&
+                timings.map((time) => {
+                  return (
+                    <>
+                      <span>
+                        {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
+                          time.startTime,
+                        )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
+                      </span>
+                    </>
+                  );
+                })}
+            </div>
+          </>
+        )}
         <div className="course-detail">
           Instructor(s):
           {primaryTeacherName && <span>{primaryTeacherName}</span>}

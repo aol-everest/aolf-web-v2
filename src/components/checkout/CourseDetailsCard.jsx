@@ -28,6 +28,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
     productTypeId,
     mode,
     corporateName,
+    isGenericWorkshop,
   } = workshop || {};
 
   const isSKYType =
@@ -73,43 +74,47 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
             )}
         </div>
         <div className="course__info info tw-max-w-[190px]">
-          <ul className="info__list">
-            <h2 className="info__title">Date:</h2>
-            {dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
-                .utc(eventStartDate)
-                .format("MMMM DD")}-${dayjs
-                .utc(eventEndDate)
-                .format("DD, YYYY")}`}</li>
-            )}
-            {!dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
-                .utc(eventStartDate)
-                .format("MMMM DD")}-${dayjs
-                .utc(eventEndDate)
-                .format("MMMM DD, YYYY")}`}</li>
-            )}
-          </ul>
-          <ul className="info__list mt-3">
-            <h2 className="info__title">Timings:</h2>
-            {timings &&
-              timings.map((time) => {
-                return (
-                  <li
-                    className="tw-text-sm tw-truncate tw-tracking-tighter"
-                    key={time.startDate}
-                  >
-                    {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
-                      time.startTime,
-                    )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
-                  </li>
-                );
-              })}
-          </ul>
+          {!isGenericWorkshop && (
+            <>
+              <ul className="info__list">
+                <h2 className="info__title">Date:</h2>
+                {dayjs
+                  .utc(eventStartDate)
+                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
+                    .utc(eventStartDate)
+                    .format("MMMM DD")}-${dayjs
+                    .utc(eventEndDate)
+                    .format("DD, YYYY")}`}</li>
+                )}
+                {!dayjs
+                  .utc(eventStartDate)
+                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
+                    .utc(eventStartDate)
+                    .format("MMMM DD")}-${dayjs
+                    .utc(eventEndDate)
+                    .format("MMMM DD, YYYY")}`}</li>
+                )}
+              </ul>
+              <ul className="info__list mt-3">
+                <h2 className="info__title">Timings:</h2>
+                {timings &&
+                  timings.map((time) => {
+                    return (
+                      <li
+                        className="tw-text-sm tw-truncate tw-tracking-tighter"
+                        key={time.startDate}
+                      >
+                        {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
+                          time.startTime,
+                        )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
+                      </li>
+                    );
+                  })}
+              </ul>
+            </>
+          )}
           <ul className="info__list mt-3">
             <h2 className="info__title">Instructor(s):</h2>
             {primaryTeacherName && (

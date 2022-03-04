@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { PaymentForm } from "@components";
+import { PaymentForm, PaymentFormHB, PaymentFormGeneric } from "@components";
 import { api, Clevertap, Segment } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
@@ -11,6 +11,7 @@ import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useGlobalAlertContext } from "@contexts";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { COURSE_TYPES } from "@constants";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -220,16 +221,77 @@ const Checkout = ({ workshop, profile }) => {
     });
   };
 
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
+    0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
+  const isSriSriYogaMeditationType =
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
+  const isVolunteerTrainingProgram =
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
+  const isHealingBreathProgram =
+    COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
+
+  const renderPaymentForm = () => {
+    if (isHealingBreathProgram) {
+      return (
+        <PaymentFormHB
+          workshop={workshop}
+          profile={profile}
+          enrollmentCompletionAction={enrollmentCompletionAction}
+        />
+      );
+    }
+    if (
+      isSKYType ||
+      isSilentRetreatType ||
+      isSahajSamadhiMeditationType ||
+      isSriSriYogaMeditationType ||
+      isVolunteerTrainingProgram
+    ) {
+      return (
+        <PaymentForm
+          workshop={workshop}
+          profile={profile}
+          enrollmentCompletionAction={enrollmentCompletionAction}
+        />
+      );
+    }
+    return (
+      <PaymentFormGeneric
+        workshop={workshop}
+        profile={profile}
+        enrollmentCompletionAction={enrollmentCompletionAction}
+      />
+    );
+  };
+
   return (
     <>
       <NextSeo title={workshop.title} />
       <main>
         <section className="order">
           <div className="container">
-            <h1 className="title title_thin">{workshop.title}</h1>
+            <h1 className="title">{workshop.title}</h1>
             <p className="order__detail">
               The Most Effective Way to Feel Calm & Clear, Day After Day
             </p>
+            {workshop.isCorporateEvent && (
+              <div className="tw-mb-[60px]">
+                <h1 className="tw-text-2xl tw-font-bold tw-text-center tw-text-[#31364e]">
+                  {workshop.corporateName}
+                </h1>
+              </div>
+            )}
             <Elements
               stripe={stripePromise}
               fonts={[
@@ -239,11 +301,7 @@ const Checkout = ({ workshop, profile }) => {
                 },
               ]}
             >
-              <PaymentForm
-                workshop={workshop}
-                profile={profile}
-                enrollmentCompletionAction={enrollmentCompletionAction}
-              />
+              {renderPaymentForm()}
             </Elements>
           </div>
         </section>

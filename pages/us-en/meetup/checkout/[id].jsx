@@ -82,7 +82,7 @@ const Checkout = ({ meetup, profile }) => {
       <main>
         <section className="order">
           <div className="container">
-            <h1 className="title title_thin">{meetup.meetupTitle}</h1>
+            <h1 className="title">{meetup.meetupTitle}</h1>
             <p className="order__detail">
               Reconnect with your practice and community
             </p>

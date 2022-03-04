@@ -28,37 +28,22 @@ export const WorkshopTile = ({ data, authenticated }) => {
 
   const enrollAction = (workshopId, productTypeId) => () => {
     if (authenticated) {
-      if (COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0) {
-        router.push({
-          pathname: `/us-en/course/healing-breath-checkout/${workshopId}`,
-          query: {
-            ctype: productTypeId,
-          },
-        });
-      } else {
-        router.push({
-          pathname: `/us-en/course/checkout/${workshopId}`,
-          query: {
-            ctype: productTypeId,
-          },
-        });
-      }
+      router.push({
+        pathname: `/us-en/course/checkout/${workshopId}`,
+        query: {
+          ctype: productTypeId,
+        },
+      });
     } else {
-      if (COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0) {
-        showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us-en/course/healing-breath-checkout/${workshopId}?ctype=${productTypeId}`,
-        });
-      } else {
-        showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}`,
-        });
-      }
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}`,
+      });
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
   };
 
-  const isNonGenericWorkshop =
+  const isKnownWorkshop =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0 ||
@@ -66,20 +51,20 @@ export const WorkshopTile = ({ data, authenticated }) => {
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0;
 
   const detailAction = (workshopId, productTypeId) => () => {
-    if (isNonGenericWorkshop) {
+    if (isKnownWorkshop) {
       router.push({
         pathname: `/us-en/course/${workshopId}`,
       });
     } else if (authenticated) {
       router.push({
-        pathname: `/us-en/course/generic-checkout/${workshopId}`,
+        pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
         },
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/generic-checkout/${workshopId}?ctype=${productTypeId}`,
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}`,
       });
     }
   };

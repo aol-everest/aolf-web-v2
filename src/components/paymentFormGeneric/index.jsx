@@ -23,6 +23,7 @@ import {
   PreCostDetailsCard,
   PostCostDetailsCard,
   ProgramQuestionnaire,
+  MobileBottomBar,
 } from "@components/checkout";
 
 import { priceCalculation } from "@utils";
@@ -1014,27 +1015,10 @@ export const PaymentFormGeneric = ({
                   />
                 </div>
               )}
-              <div className="course-popup d-lg-none d-block">
-                <div className="course-card">
-                  <div className="course-card__info">
-                    <div className="course-card__info-wrapper">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <p className="course-card__date">May 5-7, 2020</p>
-                        <button
-                          id="course-details"
-                          className="link"
-                          onClick={toggleDetailMobileModal}
-                        >
-                          See details
-                        </button>
-                      </div>
-                      <h3 className="course-card__course-name">
-                        SKY Breath Meditation
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <MobileBottomBar
+                workshop={workshop}
+                toggleDetailMobileModal={toggleDetailMobileModal}
+              />
             </div>
           );
         }}
