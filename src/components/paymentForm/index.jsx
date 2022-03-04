@@ -541,6 +541,7 @@ export const PaymentForm = ({
     usableCredit,
     programQuestionnaire,
     title,
+    productTypeId,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -1215,6 +1216,7 @@ export const PaymentForm = ({
           questions={programQuestionnaire}
           submitResult={submitProgramQuestionnaire}
           closeModalAction={closeModalProgramQuestionnaireAction}
+          productTypeId={productTypeId}
         ></ProgramQuestionnaire>
       )}
     </>

@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
+import { COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 
 // eslint-disable-next-line react/display-name
@@ -258,6 +259,7 @@ export const ProgramQuestionnaire = ({
   questions,
   closeModalAction,
   submitResult,
+  productTypeId = null,
 }) => {
   const questionMap = questions.reduce((acc, question, index) => {
     acc = { ...acc, ["q-" + index]: question };
@@ -298,6 +300,9 @@ export const ProgramQuestionnaire = ({
     submitResult(result);
   };
 
+  const isVolunteerTrainingProgram =
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0;
+
   return (
     <Formik
       initialValues={initialValues}
@@ -320,11 +325,13 @@ export const ProgramQuestionnaire = ({
                   </button>
                   <div className="volonteer-modal__header volonteer-header">
                     <h5 className="volonteer-header__title">{programName}</h5>
-                    {/* <div class="volonteer-header__description">
-                      We would like to learn more about you as one of our
-                      volunteers. Please answer the following questions to
-                      accompany your application.
-                    </div> */}
+                    {isVolunteerTrainingProgram && (
+                      <div className="volonteer-header__description">
+                        We would like to learn more about you as one of our
+                        volunteers. Please answer the following questions to
+                        accompany your application.
+                      </div>
+                    )}
                   </div>
                   <div
                     className="volonteer-content"
