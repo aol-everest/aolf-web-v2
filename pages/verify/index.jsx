@@ -59,7 +59,7 @@ function Token() {
         >
           <div className="course-join-card__body alert__body mt-5">
             <h2 className="course-join-card__title section-title tw-text-center">
-              Verifying Email
+              Email Verification
             </h2>
             <div className="tw-m-6 tw-text-center">
               {!message && !success && (

@@ -64,7 +64,7 @@ function Token() {
         >
           <div className="course-join-card__body alert__body mt-5">
             <h2 className="course-join-card__title section-title tw-text-center">
-              Verifying Email
+              Account Verification
             </h2>
             <div className="tw-m-6 tw-text-center">
               {!message && !success && (
@@ -76,7 +76,7 @@ function Token() {
                     <FaCheckCircle />
                   </div>
                   <div className="tw-text-sm tw-mt-3">
-                    Your Email has been successfully verified.
+                    Corporate user marked successfully.
                   </div>
                 </>
               )}
