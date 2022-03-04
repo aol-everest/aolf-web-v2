@@ -31,7 +31,7 @@ const MENU = [
       },
       {
         name: "Sahaj Meditation",
-        link: `/us-en?courseType=SAHAJ_SAMADHI_MEDITATION`,
+        link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
         name: "Silent Retreat",

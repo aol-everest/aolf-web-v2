@@ -73,12 +73,12 @@ module.exports = withPlugins(
       return [
         {
           source: "/",
-          destination: "/us-en",
+          destination: "/us-en/course",
           permanent: true,
         },
         {
-          source: "/us-en/course",
-          destination: "/us-en",
+          source: "/us-en",
+          destination: "/us-en/course",
           permanent: true,
         },
       ];

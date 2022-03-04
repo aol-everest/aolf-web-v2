@@ -18,7 +18,7 @@ import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
 import ContentLoader from "react-content-loader";
 
-import Style from "./course/Course.module.scss";
+import Style from "./Course.module.scss";
 import "bootstrap-daterangepicker/daterangepicker.css";
 
 const WorkshopTile = dynamic(() =>

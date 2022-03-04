@@ -15,7 +15,8 @@
     "lint": "next lint",
     "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons",
     "eslint": "./node_modules/.bin/eslint --fix \"./**/*.{js,jsx}\"",
-    "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss}\""
+    "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss}\"",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@builder.io/react": "^1.1.49",
@@ -84,7 +85,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-no-inline-styles": "^1.0.5",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^4.3.7",
+    "husky": "^7.0.4",
     "lint-staged": "^12.1.7",
     "postcss": "^8.4.7",
     "prettier": "^2.5.1",
@@ -94,6 +95,18 @@
     "*.{js,jsx}": [
       "eslint --quiet --fix",
       "prettier --write"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "cross-env NODE_ENV=development eslint --cache"
+    ],
+    "*.json,.{eslintrc,prettierrc}": [
+      "prettier --ignore-path .eslintignore --parser json --write"
+    ],
+    "*.{css,scss}": [
+      "prettier --ignore-path .eslintignore --single-quote --write"
+    ],
+    "*.{html,md,yml}": [
+      "prettier --ignore-path .eslintignore --single-quote --write"
     ]
   },
   "husky": {
