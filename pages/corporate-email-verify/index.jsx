@@ -71,19 +71,28 @@ function Token() {
                 <div className="cover-spin-inline"></div>
               )}
               {success && (
-                <div className="icon-container-success tw-w-[45px] tw-inline-block">
-                  <FaCheckCircle />
-                </div>
+                <>
+                  <div className="icon-container-success tw-w-[45px] tw-inline-block">
+                    <FaCheckCircle />
+                  </div>
+                  <div className="tw-text-sm tw-mt-3">
+                    Your Email has been successfully verified.
+                  </div>
+                </>
               )}
               {message && (
-                <div className="icon-container-error tw-w-[45px] tw-inline-block">
-                  <FaMinusCircle />
-                </div>
+                <>
+                  <div className="icon-container-error tw-w-[45px] tw-inline-block">
+                    <FaMinusCircle />
+                  </div>
+                </>
               )}
             </div>
           </div>
           <div className="course-details-card__footer text-center tw-min-h-[62px]">
-            {!message && !success && <>Please wait for our checking ...</>}
+            {!message && !success && (
+              <>Please wait while we verify your email...</>
+            )}
             {message && (
               <p className="validation-input text-center">{message}</p>
             )}
