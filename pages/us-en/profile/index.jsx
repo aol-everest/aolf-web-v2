@@ -42,7 +42,7 @@ const CARD_DETAILS = "CARD_DETAILS";
 const CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
 const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Please contact the help desk
-                at (844) 273-5500 to resolve the issue and cancel your
+                at (855) 202-4400 to resolve the issue and cancel your
                 membership.`;
 
 export async function getServerSideProps({ req, resolvedUrl, query }) {

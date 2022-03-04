@@ -123,7 +123,7 @@ export const ProfileHeader = ({
                   {modalSubscription.subscriptionBuyingChannel === "WEB" && (
                     <div className="tw-max-w-[210px] tw-text-left">
                       Please contact customer service at{" "}
-                      <a href="tel:8442735500">(844) 273-5500</a> or{" "}
+                      <a href="tel:8552024400">(855) 202-4400</a> or{" "}
                       <a href="mailto:app.support@us.artofliving.org">
                         app.support@us.artofliving.org
                       </a>{" "}

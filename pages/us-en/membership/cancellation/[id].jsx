@@ -148,7 +148,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                 <p className="journey-cancellation__card-text">
                   We are sorry to see you go. Is there anything we could do to
                   support your journey? Please reach out to our team at{" "}
-                  <a href="tel:8442735500">(844) 273-5500</a> or
+                  <a href="tel:8552024400">(855) 202-4400</a> or
                 </p>
                 <p className="journey-cancellation__card-text">
                   <a
@@ -258,7 +258,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
                 <p className="journey-cancellation_mobile__text">
                   We are sorry to see you go. Is there anything we could do to
                   support your journey? Please reach out to our team at{" "}
-                  <a href="tel:8442735500">(844) 273-5500</a> or
+                  <a href="tel:8552024400">(855) 202-4400</a> or
                 </p>
                 <p className="journey-cancellation_mobile__text">
                   <a
