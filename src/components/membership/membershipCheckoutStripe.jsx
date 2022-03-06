@@ -61,6 +61,7 @@ const RetreatPrerequisiteWarning = () => {
 };
 
 export const MembershipCheckoutStripe = ({
+  isOfferingUpgrade = false,
   offeringId,
   subsciption,
   activeSubscription,
@@ -177,7 +178,23 @@ export const MembershipCheckoutStripe = ({
       };
 
       if (offeringId) {
-        products = { ...products, offeringId };
+        if (isOfferingUpgrade) {
+          products = { ...products, offeringId, isOfferingUpgrade: true };
+          const oldSubscription = subscriptions.find(
+            ({ subscriptionMasterSfid }) =>
+              subscriptionMasterSfid === subsciption.sfid,
+          );
+
+          if (oldSubscription) {
+            products = {
+              ...products,
+              oldPurchasedSubscriptionId:
+                oldSubscription.purchaseSubscriptionSfid,
+            };
+          }
+        } else {
+          products = { ...products, offeringId };
+        }
       }
 
       let payLoad = {
@@ -430,10 +447,32 @@ export const MembershipCheckoutStripe = ({
                 <div className="reciept__header">
                   <p className="reciept__item_main">Enroll</p>
                   <ul className="reciept__item_list">
-                    <li>
-                      <span>{subsciption.name}</span>
-                      <span>${activeSubscription.price}/mo</span>
-                    </li>
+                    {!isOfferingUpgrade ? (
+                      <li>
+                        <span>{subsciption.name}</span>
+                        <span>${activeSubscription.price}/mo</span>
+                      </li>
+                    ) : (
+                      <>
+                        <li>
+                          <span>One time processing fee: </span>
+                          <span>
+                            $
+                            {
+                              subsciption.activeSubscriptions[0]
+                                .oneTimeProcessingFee
+                            }
+                          </span>
+                        </li>
+                        <li>
+                          <span>Payment interval: </span>
+                          <span>
+                            ${subsciption.activeSubscriptions[0].price}/
+                            {subsciption.activeSubscriptions[0].interval}
+                          </span>
+                        </li>
+                      </>
+                    )}
                   </ul>
                 </div>
 
