@@ -15,6 +15,11 @@ export const AttendanceForm = ({ formikProps }) => {
       <div className="details mb-4 mt-5">
         <h2 className="details__title">CME/CNE & Attendance Form</h2>
       </div>
+      <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+        Please note, to claim CE credits, your name on the Healing Breaths’ SKY
+        program registration should exactly match your name on your professional
+        license for which you seek CE credits.
+      </p>
       <div className="order__card">
         <StyledInput
           class="mt-0"
