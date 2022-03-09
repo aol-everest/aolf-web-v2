@@ -31,7 +31,8 @@ const MENU = [
       },
       {
         name: "Sahaj Meditation",
-        link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
+        link: `https://www.artofliving.org/us-en/sahaj-samadhi-meditation`,
+        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
         name: "Silent Retreat",
@@ -43,7 +44,7 @@ const MENU = [
         link: "https://www.healingbreaths.org/",
       },
       {
-        name: "Yoga Foundations",
+        name: "Yoga Course",
         link: "/us-en/lp/online-foundation-program/",
       },
       {
