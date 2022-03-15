@@ -13,7 +13,6 @@ export const MobileCourseOptions = ({
   formikProps,
   userSubscriptions,
   openSubscriptionPaywallPage,
-  handlePriceTypeChange,
   discount,
 }) => {
   const {
@@ -63,11 +62,11 @@ export const MobileCourseOptions = ({
                       <input
                         className="custom-radio"
                         type="radio"
-                        name="payment-type"
+                        name="priceType"
                         id="payment-lg-regular-card"
                         value="regular"
-                        defaultChecked
-                        onChange={handlePriceTypeChange}
+                        checked={formikProps.values.priceType === "regular"}
+                        onChange={formikProps.handleChange("priceType")}
                       />
                       <label htmlFor="payment-lg-regular-card">
                         <span>Regular rate</span>
@@ -83,10 +82,11 @@ export const MobileCourseOptions = ({
                       <input
                         className="custom-radio"
                         type="radio"
-                        name="payment-type"
+                        name="priceType"
                         id="payment-lg-premium-card"
+                        checked={formikProps.values.priceType === "premium"}
                         value="premium"
-                        onChange={handlePriceTypeChange}
+                        onChange={formikProps.handleChange("priceType")}
                       />
                       <label htmlFor="payment-lg-premium-card">
                         <span>Premium/Journey+ rate:</span>

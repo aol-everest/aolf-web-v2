@@ -78,7 +78,6 @@ export const PaymentForm = ({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
-  const [priceType, setPriceType] = useState("");
   const [discount] = useQueryString("discountCode");
   const [discountResponse, setDiscountResponse] = useState(null);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
@@ -102,10 +101,6 @@ export const PaymentForm = ({
       // }
     }
   }, [programQuestionnaireResult]);
-
-  const handlePriceTypeChange = (event) => {
-    setPriceType({ priceType: event.currentTarget.value });
-  };
 
   const logout = async (event) => {
     await Auth.signOut();
@@ -587,8 +582,6 @@ export const PaymentForm = ({
     "Residential Add On" in groupedAddOnProducts &&
     groupedAddOnProducts["Residential Add On"].length > 0;
 
-  const isRegularPrice = priceType === null || priceType === "regular";
-
   const residentialAddOnRequired =
     hasGroupedAddOnProducts &&
     groupedAddOnProducts["Residential Add On"].some(
@@ -623,7 +616,7 @@ export const PaymentForm = ({
     }
   }
 
-  const toggleDetailMobileModal = () => {
+  const toggleDetailMobileModal = (isRegularPrice) => () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
       children: (handleModalToggle) => {
         return (
@@ -758,6 +751,8 @@ export const PaymentForm = ({
             },
             0,
           );
+          const isRegularPrice =
+            values.priceType === null || values.priceType === "regular";
           const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
 
           const totalFee =
@@ -942,7 +937,6 @@ export const PaymentForm = ({
                       delfee={fee}
                       formikProps={formikProps}
                       userSubscriptions={userSubscriptions}
-                      handlePriceTypeChange={handlePriceTypeChange}
                       openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                       hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                       totalFee={totalFee}
@@ -1207,7 +1201,9 @@ export const PaymentForm = ({
               </div>
               <MobileBottomBar
                 workshop={workshop}
-                toggleDetailMobileModal={toggleDetailMobileModal}
+                toggleDetailMobileModal={toggleDetailMobileModal(
+                  isRegularPrice,
+                )}
               />
             </div>
           );
