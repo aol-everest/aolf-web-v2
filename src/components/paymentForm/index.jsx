@@ -185,7 +185,6 @@ export const PaymentForm = ({
       addOnProducts,
     } = workshop;
 
-    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -627,7 +626,7 @@ export const PaymentForm = ({
             price={{ fee, delfee, offering, isRegularPrice }}
             openSubscriptionPaywallPage={openSubscriptionPaywallPage}
             isUsableCreditAvailable={isUsableCreditAvailable}
-            discount={discount}
+            discount={discountResponse}
           />
         );
       },

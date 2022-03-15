@@ -76,7 +76,7 @@ export const MeetupPaymentForm = ({
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [priceType, setPriceType] = useState("");
   const [discount] = useQueryString("discountCode");
-  const [dicountResponse, setDicountResponse] = useState(null);
+  const [discountResponse, setDiscountResponse] = useState(null);
   const router = useRouter();
 
   const handlePriceTypeChange = (event) => {
@@ -91,7 +91,7 @@ export const MeetupPaymentForm = ({
   };
 
   const applyDiscount = (discount) => {
-    setDicountResponse(discount);
+    setDiscountResponse(discount);
   };
 
   const openSubscriptionPaywallPage = (id) => (e) => {
@@ -125,7 +125,7 @@ export const MeetupPaymentForm = ({
       addOnProducts,
     } = meetup;
 
-    const { isCreditCardRequired } = {};
+    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -294,7 +294,7 @@ export const MeetupPaymentForm = ({
 
   const { fee, delfee, offering } = priceCalculation({
     meetup,
-    discount,
+    discountResponse,
   });
 
   const isRegularPrice = priceType === null || priceType === "regular";

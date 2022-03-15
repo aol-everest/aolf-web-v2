@@ -80,9 +80,8 @@ export const PaymentFormHB = ({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
-  const [priceType, setPriceType] = useState("");
   const [discount] = useQueryString("discountCode");
-  const [dicountResponse, setDicountResponse] = useState(null);
+  const [discountResponse, setDiscountResponse] = useState(null);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
   const [enrollFormValues, setEnrollFormValues] = useState(null);
   const [showProgramQuestionnaireForm, setShowProgramQuestionnaireForm] =
@@ -108,10 +107,6 @@ export const PaymentFormHB = ({
     }
   }, [programQuestionnaireResult]);
 
-  const handlePriceTypeChange = (event) => {
-    setPriceType({ priceType: event.currentTarget.value });
-  };
-
   const logout = async (event) => {
     await Auth.signOut();
     router.push(
@@ -120,7 +115,7 @@ export const PaymentFormHB = ({
   };
 
   const applyDiscount = (discount) => {
-    setDicountResponse(discount);
+    setDiscountResponse(discount);
   };
 
   const openSubscriptionPaywallPage = (id) => (e) => {
@@ -178,7 +173,7 @@ export const PaymentFormHB = ({
       addOnProducts,
     } = workshop;
 
-    const { isCreditCardRequired } = {};
+    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -435,8 +430,6 @@ export const PaymentFormHB = ({
     "Residential Add On" in groupedAddOnProducts &&
     groupedAddOnProducts["Residential Add On"].length > 0;
 
-  const isRegularPrice = priceType === null || priceType === "regular";
-
   const residentialAddOnRequired =
     hasGroupedAddOnProducts &&
     groupedAddOnProducts["Residential Add On"].some(
@@ -471,7 +464,7 @@ export const PaymentFormHB = ({
     }
   }
 
-  const toggleDetailMobileModal = () => {
+  const toggleDetailMobileModal = (isRegularPrice) => (isRegularPrice) => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
       children: (handleModalToggle) => {
         return (
@@ -482,7 +475,7 @@ export const PaymentFormHB = ({
             price={{ fee, delfee, offering, isRegularPrice }}
             openSubscriptionPaywallPage={openSubscriptionPaywallPage}
             isUsableCreditAvailable={isUsableCreditAvailable}
-            discount={discount}
+            discount={discountResponse}
           />
         );
       },
@@ -618,8 +611,14 @@ export const PaymentFormHB = ({
             0,
           );
 
+          const isRegularPrice =
+            values.priceType === null || values.priceType === "regular";
+          const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
+
           const totalFee =
-            (isRegularPrice ? fee : premiumRate.unitPrice) +
+            (isUsableCreditAvailable && usableCredit.creditMeasureUnit
+              ? UpdatedFeeAfterCredits
+              : courseFee) +
             (values.accommodation?.isExpenseAddOn
               ? expenseAddOn?.unitPrice || 0
               : (values.accommodation?.unitPrice || 0) +
@@ -798,7 +797,6 @@ export const PaymentFormHB = ({
                       delfee={fee}
                       formikProps={formikProps}
                       userSubscriptions={userSubscriptions}
-                      handlePriceTypeChange={handlePriceTypeChange}
                       openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                       hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                       totalFee={totalFee}
@@ -841,6 +839,7 @@ export const PaymentFormHB = ({
                     UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                     values={values}
                     onComboDetailChange={handleComboDetailChange}
+                    discount={discountResponse}
                   />
                   <CourseDetailsCard workshop={workshop} />
                   <PostCostDetailsCard
@@ -859,6 +858,7 @@ export const PaymentFormHB = ({
                     UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                     totalFee={totalFee}
                     onAccommodationChange={handleAccommodationChange}
+                    discount={discountResponse}
                   />
 
                   {/* <div className="reciept__payment">
@@ -1058,7 +1058,9 @@ export const PaymentFormHB = ({
               </div>
               <MobileBottomBar
                 workshop={workshop}
-                toggleDetailMobileModal={toggleDetailMobileModal}
+                toggleDetailMobileModal={toggleDetailMobileModal(
+                  isRegularPrice,
+                )}
               />
             </div>
           );
