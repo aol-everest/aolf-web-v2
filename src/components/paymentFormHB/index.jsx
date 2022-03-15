@@ -86,11 +86,8 @@ export const PaymentFormHB = ({
   const [enrollFormValues, setEnrollFormValues] = useState(null);
   const [showProgramQuestionnaireForm, setShowProgramQuestionnaireForm] =
     useState(false);
-  const [
-    programQuestionnaireResult,
-    setProgramQuestionnaireResult,
-    currentRef,
-  ] = useState(null);
+  const [programQuestionnaireResult, setProgramQuestionnaireResult] =
+    useState(null);
 
   const router = useRouter();
 

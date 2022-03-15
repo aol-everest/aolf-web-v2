@@ -12,9 +12,9 @@ const SentryWebpackPluginOptions = {
   // recommended:
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
-  org: "aolf",
-  project: "member-web-app",
-  authToken: process.env.SENTRY_AUTH_TOKEN,
+  // org: "aolf",
+  // project: "member-web-app",
+  // authToken: process.env.SENTRY_AUTH_TOKEN,
 
   silent: true, // Suppresses all logs
   // For all available options, see:
