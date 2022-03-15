@@ -802,7 +802,7 @@ export const PaymentFormGeneric = ({
                 </form>
               </div>
               <div className="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-xl-1 tw-mb-2">
-                <div className="reciept d-none d-lg-block tw-w-[500px]">
+                <div className="reciept d-none d-lg-block">
                   <PreCostDetailsCard
                     workshop={workshop}
                     userSubscriptions={userSubscriptions}
@@ -845,10 +845,6 @@ export const PaymentFormGeneric = ({
                       id="workshopsDetailsModal"
                     >
                       <div
-                        className={classNames(Style.sessionDetails_videoHeader)}
-                      />
-
-                      <div
                         className={classNames(
                           Style.sessionDetails_ModalBody,
                           Style.workshop,
@@ -857,20 +853,14 @@ export const PaymentFormGeneric = ({
                         {/* <h2 className={classNames(Style.title)}>{title}</h2> */}
                         <div className="row tw-pl-3 tw-pr-3">
                           <div
-                            className={classNames(
-                              "col-sm-6 col-12",
-                              Style.datetime_box,
-                            )}
+                            className={classNames("col-12", Style.datetime_box)}
                           >
                             <h6>Date:</h6>
                             <div>Start: {formattedStartDateOnly}</div>
                             <div>End: {formattedEndDateOnly}</div>
                           </div>
                           <div
-                            className={classNames(
-                              "col-sm-6 col-12",
-                              Style.datetime_box,
-                            )}
+                            className={classNames("col-12", Style.datetime_box)}
                           >
                             <h6>Time:</h6>
                             {timings &&
@@ -893,107 +883,63 @@ export const PaymentFormGeneric = ({
                         {/* <p>Venue: {shortAddress}</p> */}
 
                         <div
-                          className={classNames(
-                            Style.workshopCourseBlk,
-                            "tw-pl-3 tw-pr-3",
-                          )}
+                          className={classNames("col-12", Style.datetime_box)}
                         >
-                          <div className="leftBlk">
-                            {/* <p>Course ID: {productId}</p> */}
-
-                            <div
-                              className={classNames(
-                                "extrMrg",
-                                Style.teacherWrap,
-                              )}
-                            >
-                              <span className={classNames(Style.name)}>
-                                Teacher:
-                              </span>
-                              <div className="row">
-                                {primaryTeacherName && (
-                                  <div className="col-sm-12">
-                                    <img
-                                      className={classNames(Style.img)}
-                                      src={
-                                        primaryTeacherPic ||
-                                        "/assets/images/user.png"
-                                      }
-                                    />
-                                    <a
-                                      href="#"
-                                      className={classNames(Style.name)}
-                                    >
-                                      {primaryTeacherName}
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className={classNames(Style.followTaq)}
-                                    >
-                                      follow
-                                    </a>
-                                  </div>
+                          <h6>Teacher:</h6>
+                          {primaryTeacherName && (
+                            <div>
+                              <img
+                                className={classNames(
+                                  Style.img,
+                                  "rounded-circle",
                                 )}
-                                {coTeacher1Name && (
-                                  <div className="col-sm-12">
-                                    {"  "}
-                                    <img
-                                      className={classNames(Style.img)}
-                                      src={
-                                        coTeacher1Pic ||
-                                        "/assets/images/user.png"
-                                      }
-                                    />
-                                    <a
-                                      href="#"
-                                      className={classNames(Style.name)}
-                                    >
-                                      {coTeacher1Name}
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className={classNames(Style.followTaq)}
-                                    >
-                                      follow
-                                    </a>
-                                  </div>
+                                src={
+                                  primaryTeacherPic || "/assets/images/user.png"
+                                }
+                              />
+                              {primaryTeacherName}
+                            </div>
+                          )}
+                          {coTeacher1Name && (
+                            <div>
+                              <img
+                                className={classNames(
+                                  Style.img,
+                                  "rounded-circle",
                                 )}
-                                {coTeacher2Name && (
-                                  <div className="col-sm-12">
-                                    {"  "}
-                                    <img
-                                      className={classNames(Style.img)}
-                                      src={
-                                        coTeacher2Pic ||
-                                        "/assets/images/user.png"
-                                      }
-                                    />
-                                    <a
-                                      href="#"
-                                      className={classNames(Style.name)}
-                                    >
-                                      {coTeacher2Name}
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className={classNames(Style.followTaq)}
-                                    >
-                                      follow
-                                    </a>
-                                  </div>
+                                src={coTeacher1Pic || "/assets/images/user.png"}
+                              />
+                              {coTeacher1Name}
+                            </div>
+                          )}
+                          {coTeacher2Name && (
+                            <div>
+                              <img
+                                className={classNames(
+                                  Style.img,
+                                  "rounded-circle",
                                 )}
+                                src={coTeacher2Pic || "/assets/images/user.png"}
+                              />
+                              {coTeacher2Name}
+                            </div>
+                          )}
+                        </div>
+                        <div
+                          className={classNames("col-12", Style.datetime_box)}
+                        >
+                          <h6>Contact:</h6>
+                          {contactName && (
+                            <div>
+                              {contactName},{" "}
+                              <div>
+                                <a href={`tel:${phone1}`}>{phone1}</a>
+                              </div>
+                              <div>
+                                <a href={`mailto:${email}`}>{email}</a>
                               </div>
                             </div>
-                          </div>
-                          <div className={classNames(Style.rightBlk)}>
-                            <p className={classNames(Style.contact)}>
-                              Contact: {contactName},{" "}
-                              <a href={`tel:${phone1}`}>{phone1},</a>
-                            </p>
-                            <p className={classNames(Style.contact)}>
-                              <a href={`mailto:${email}`}>{email}</a>
-                            </p>
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>
