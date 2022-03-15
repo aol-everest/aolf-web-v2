@@ -758,9 +758,12 @@ export const PaymentForm = ({
             },
             0,
           );
+          const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
 
           const totalFee =
-            (isRegularPrice ? fee : premiumRate.unitPrice) +
+            (isUsableCreditAvailable && usableCredit.creditMeasureUnit
+              ? UpdatedFeeAfterCredits
+              : courseFee) +
             (values.accommodation?.isExpenseAddOn
               ? expenseAddOn?.unitPrice || 0
               : (values.accommodation?.unitPrice || 0) +
