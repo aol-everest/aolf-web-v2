@@ -214,6 +214,7 @@ const Checkout = ({ workshop, profile }) => {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
+        page: "ty",
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
         mbsy,

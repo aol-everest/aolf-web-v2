@@ -10,7 +10,9 @@ export const getServerSideProps = async (context) => {
   return {
     redirect: {
       permanent: false,
-      destination: `/us-en/course/checkout/${id}?${urlParameters || ""}`,
+      destination: `/us-en/course/checkout/${id}?${
+        urlParameters + "&page=c-o" || "page=c-o"
+      }`,
     },
     props: {},
   };

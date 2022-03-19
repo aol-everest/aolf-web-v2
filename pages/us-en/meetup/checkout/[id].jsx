@@ -69,6 +69,7 @@ const Checkout = ({ meetup, profile }) => {
       pathname: `/us-en/meetup/thankyou/${attendeeId}`,
       query: {
         ctype: meetup.productTypeId,
+        page: "ty",
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
         mbsy,

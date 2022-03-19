@@ -18,6 +18,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
       pathname: `/us-en/course/checkout/${data.sfid}`,
       query: {
         ctype: data.productTypeId,
+        page: "c-o",
       },
     });
   };

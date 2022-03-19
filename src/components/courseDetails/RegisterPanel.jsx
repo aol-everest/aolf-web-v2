@@ -41,6 +41,7 @@ export const RegisterPanel = ({ workshop }) => {
       pathname: `/us-en/course/checkout/${sfid}`,
       query: {
         ctype: productTypeId,
+        page: "c-o",
       },
     });
   };

@@ -130,11 +130,17 @@ const MembershipThankyou = ({ order, query }) => {
       } else {
         router.push({
           pathname: `/us-en/course/checkout/${courseId}`,
+          query: {
+            page: "c-o",
+          },
         });
       }
     } else if (meetupId) {
       router.push({
         pathname: `/us-en/meetup/checkout/${meetupId}`,
+        query: {
+          page: "m-o",
+        },
       });
     }
   };

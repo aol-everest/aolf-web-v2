@@ -32,11 +32,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
+          page: "c-o",
         },
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}`,
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o`,
       });
     }
 
@@ -60,11 +61,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
+          page: "c-o",
         },
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}`,
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o`,
       });
     }
   };
