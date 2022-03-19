@@ -29,6 +29,7 @@ export const StyledInput = ({
   isReadOnly = false,
   textToUpperCase = false,
   tooltip,
+  tip,
   fullWidth,
   ...rest
 }) => {
@@ -111,6 +112,7 @@ export const StyledInput = ({
           {tooltip}
         </div>
       )}
+      {tip && <p className="agreement__text !tw-ml-0 tw-w-[249px]">{tip}</p>}
     </FieldWrapper>
   );
 };

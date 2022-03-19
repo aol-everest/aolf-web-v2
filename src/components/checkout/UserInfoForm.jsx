@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { StyledInput } from "./StyledInput";
 
-export const UserInfoForm = ({ formikProps }) => {
+export const UserInfoForm = ({ formikProps, isHBCheckout = false }) => {
   return (
     <Fragment>
       <StyledInput
@@ -40,6 +40,11 @@ export const UserInfoForm = ({ formikProps }) => {
         type="tel"
         formikProps={formikProps}
         formikKey="contactPhone"
+        tip={
+          isHBCheckout
+            ? "This number will be used to send reminder texts"
+            : null
+        }
       ></StyledInput>
     </Fragment>
   );
