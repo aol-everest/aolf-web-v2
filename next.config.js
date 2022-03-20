@@ -3,8 +3,8 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
-const withPWA = require("next-pwa");
-const runtimeCaching = require("next-pwa/cache");
+// const withPWA = require("next-pwa");
+// const runtimeCaching = require("next-pwa/cache");
 
 const SentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -43,19 +43,19 @@ const securityHeaders = [
 
 module.exports = withPlugins(
   [
-    withPWA,
-    {
-      pwa: {
-        dest: "public",
-        disable: process.env.NODE_ENV === "development",
-        runtimeCaching,
-        buildExcludes: [
-          /middleware-manifest\.json$/,
-          /_middleware.js$/,
-          /_middleware.js.map$/,
-        ],
-      },
-    },
+    // withPWA,
+    // {
+    //   pwa: {
+    //     dest: "public",
+    //     disable: true,
+    //     runtimeCaching,
+    //     buildExcludes: [
+    //       /middleware-manifest\.json$/,
+    //       /_middleware.js$/,
+    //       /_middleware.js.map$/,
+    //     ],
+    //   },
+    // },
     withBundleAnalyzer,
     withSentryConfig,
     SentryWebpackPluginOptions,
