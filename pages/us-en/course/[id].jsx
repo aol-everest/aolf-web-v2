@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { api, Clevertap, Segment } from "@utils";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 // import {
 //   SKYBreathMeditation,
 //   SahajSamadhi,
@@ -168,6 +169,27 @@ export default function CourseDetail({ data }) {
   const isVolunteerTrainingProgram =
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(data.productTypeId) >=
     0;
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (
+      !isSKYType &&
+      !isSilentRetreatType &&
+      !isSahajSamadhiMeditationType &&
+      !isSriSriYogaMeditationType &&
+      !isVolunteerTrainingProgram
+    ) {
+      router.push({
+        pathname: `/us-en/course/checkout/${data.id}`,
+        query: {
+          ctype: data.productTypeId,
+          page: "c-o",
+        },
+      });
+    }
+  }, [router.isReady]);
 
   const props = {
     data,

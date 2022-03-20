@@ -55,6 +55,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
     if (isKnownWorkshop) {
       router.push({
         pathname: `/us-en/course/${workshopId}`,
+        query: {
+          ctype: productTypeId,
+        },
       });
     } else if (authenticated) {
       router.push({
