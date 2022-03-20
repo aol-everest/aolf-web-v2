@@ -16,8 +16,13 @@ import {
   AgreementForm,
   MobileCourseDetails,
   DiscountCodeInput,
-  CourseDetailsCard,
 } from "@components/checkout";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import NumberFormat from "react-number-format";
+import { ABBRS } from "@constants";
+import { tConvert } from "@utils";
+import Image from "next/image";
 
 import { priceCalculation } from "@utils";
 import { useQueryString } from "@hooks";
@@ -31,6 +36,8 @@ import {
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";
+
+dayjs.extend(utc);
 
 const createOptions = {
   style: {
@@ -276,6 +283,7 @@ export const MeetupPaymentForm = ({
     primaryTeacherMobilePhone,
     primaryTeacherPhone,
     primaryTeacherEmail,
+    mode,
   } = meetup;
 
   const { subscriptions = [] } = profile;
@@ -334,6 +342,7 @@ export const MeetupPaymentForm = ({
     : [];
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
+  const day = meetupStartDateTime && meetupStartDateTime.split(",")[0];
 
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
@@ -708,7 +717,126 @@ export const MeetupPaymentForm = ({
                     </ul>
                   )}
                 </div>
-                <CourseDetailsCard workshop={meetup} />
+                <div className="reciept__details">
+                  <div className="course">
+                    <div className="course__photo tw-max-w-[98px] tw-h-[98px] tw-relative">
+                      <Image
+                        src="/img/course-card-1.png"
+                        alt="course-photo"
+                        layout="fill"
+                      />
+                    </div>
+                    <div className="course__info info tw-max-w-[190px]">
+                      <ul className="info__list">
+                        <h2 className="info__title">Your meetup:</h2>
+                        {meetupStartDate && dayjs.utc(meetupStartDate) && (
+                          <li>{`${dayjs
+                            .utc(meetupStartDate)
+                            .format("MMMM DD")}, ${dayjs
+                            .utc(meetupStartDate)
+                            .format("YYYY")}`}</li>
+                        )}
+                        {!dayjs
+                          .utc(eventStartDate)
+                          .isSame(dayjs.utc(eventEndDate), "month") && (
+                          <li>{`${dayjs
+                            .utc(eventStartDate)
+                            .format("MMMM DD")}-${dayjs
+                            .utc(eventEndDate)
+                            .format("MMMM DD, YYYY")}`}</li>
+                        )}
+                      </ul>
+                      <ul className="info__list mt-3">
+                        <h2 className="info__title">Timings:</h2>
+                        <li>
+                          {`${day}: ${tConvert(meetupStartTime)} ${
+                            ABBRS[eventTimeZone]
+                          }`}
+                        </li>
+                      </ul>
+
+                      <ul className="info__list mt-3">
+                        <h2 className="info__title">Instructor(s):</h2>
+                        {primaryTeacherName && (
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                            {primaryTeacherName}
+                          </li>
+                        )}
+                        {coTeacher1Name && (
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                            {coTeacher1Name}
+                          </li>
+                        )}
+                        {coTeacher2Name && (
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                            {coTeacher2Name}
+                          </li>
+                        )}
+                      </ul>
+                      <ul className="info__list mt-3">
+                        <h2 className="info__title">Contact details:</h2>
+                        <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                          <a href={`tel:${phone1}`}>
+                            <NumberFormat
+                              value={phone1}
+                              displayType={"text"}
+                              format="+1 (###) ###-####"
+                            ></NumberFormat>
+                          </a>
+                        </li>
+                        {phone2 && (
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                            <a href={`tel:${phone2}`}>
+                              <NumberFormat
+                                value={phone2}
+                                displayType={"text"}
+                                format="+1 (###) ###-####"
+                              ></NumberFormat>
+                            </a>
+                          </li>
+                        )}
+                        <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                          <a href={`mailto:${email}`}>{email}</a>
+                        </li>
+                      </ul>
+                      <ul className="info__list mt-3">
+                        <h2 className="info__title">Instructor(s):</h2>
+                        {primaryTeacherName && <li>{primaryTeacherName}</li>}
+                        {coTeacher1Name && <li>{coTeacher1Name}</li>}
+                        {coTeacher2Name && <li>{coTeacher2Name}</li>}
+                      </ul>
+                      <ul className="info__list mt-3">
+                        <h2 className="info__title">Contact details:</h2>
+                        <li>
+                          <a href={`tel:${primaryTeacherMobilePhone}`}>
+                            <NumberFormat
+                              value={primaryTeacherMobilePhone}
+                              displayType={"text"}
+                              format="+1 (###) ###-####"
+                            ></NumberFormat>
+                          </a>
+                        </li>
+                        {primaryTeacherPhone && (
+                          <li>
+                            <a href={`tel:${primaryTeacherPhone}`}>
+                              <NumberFormat
+                                value={primaryTeacherPhone}
+                                displayType={"text"}
+                                format="+1 (###) ###-####"
+                              ></NumberFormat>
+                            </a>
+                          </li>
+                        )}
+                        {/* <li>{contactPersonName1}</li> */}
+                        <li className="meetup-emial">
+                          <a href={`mailto:${primaryTeacherEmail}`}>
+                            {primaryTeacherEmail}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
 
                 <div className="reciept__agreement">
                   <AgreementForm
