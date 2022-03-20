@@ -13,38 +13,18 @@ const stripePromise = loadStripe(
 export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
   const { id, coupon = null } = query;
-  let props = {};
+  let props = null;
   let token = "";
+  let profile = {};
+  let user = null;
   try {
     const { Auth } = await withSSRContext(context);
-    const user = await Auth.currentAuthenticatedUser();
+    user = await Auth.currentAuthenticatedUser();
     token = user.signInUserSession.idToken.jwtToken;
-    const res = await api.get({
+    profile = await api.get({
       path: "profile",
       token,
     });
-    if (
-      res &&
-      (res.userType === "Teacher" ||
-        res.userType === "Organiser" ||
-        res.userType === "Assistant Teacher")
-    ) {
-      props = {
-        authenticated: true,
-        username: user.username,
-        profile: res,
-        token,
-        isTeacher: true,
-      };
-    } else {
-      props = {
-        authenticated: true,
-        username: user.username,
-        profile: res,
-        token,
-        isTeacher: false,
-      };
-    }
   } catch (err) {
     return {
       redirect: {
@@ -52,6 +32,28 @@ export const getServerSideProps = async (context) => {
         destination: `/login?next=${resolvedUrl}`,
       },
       props: {},
+    };
+  }
+  if (
+    profile &&
+    (profile.userType === "Teacher" ||
+      profile.userType === "Organiser" ||
+      profile.userType === "Assistant Teacher")
+  ) {
+    props = {
+      authenticated: true,
+      username: user.username,
+      profile: profile,
+      token,
+      isTeacher: true,
+    };
+  } else {
+    props = {
+      authenticated: true,
+      username: user.username,
+      profile: res,
+      token,
+      isTeacher: false,
     };
   }
 

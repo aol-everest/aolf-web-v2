@@ -200,7 +200,7 @@ function Collection({ rootFolder, authenticated }) {
     }
   };
 
-  const content = rootFolder.content.map((content) => {
+  const content = (rootFolder.content || []).map((content) => {
     const isFavorite = favouriteContents.find((el) => el.sfid === content.sfid);
     return {
       ...content,
