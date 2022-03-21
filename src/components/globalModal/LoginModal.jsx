@@ -36,6 +36,7 @@ export const LoginModal = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [mode, setMode] = useState(LOGIN_MODE);
   const [username, setUsername] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const handleModalToggle = () => {
     hideModal();
@@ -62,21 +63,24 @@ export const LoginModal = () => {
     setShowMessage(false);
     try {
       const user = await Auth.signIn(username, password);
-      const token = user.signInUserSession.idToken.jwtToken;
-      await api.get({
-        path: "profile",
-        token,
-      });
       if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-        setUsername(username);
+        setCurrentUser(user);
         setMode(NEW_PASSWORD_REQUEST);
-      }
-      setLoading(false);
-      hideModal();
-      if (navigateTo) {
-        return router.push(navigateTo);
+        setLoading(false);
       } else {
-        router.reload(window.location.pathname);
+        const token = user.signInUserSession.idToken.jwtToken;
+        await api.get({
+          path: "profile",
+          token,
+        });
+
+        setLoading(false);
+        hideModal();
+        if (navigateTo) {
+          return router.push(navigateTo);
+        } else {
+          router.reload(window.location.pathname);
+        }
       }
     } catch (ex) {
       await Auth.signOut();
@@ -175,10 +179,11 @@ export const LoginModal = () => {
     setLoading(true);
     setShowMessage(false);
     try {
-      await Auth.completeNewPassword(username, password);
+      await Auth.completeNewPassword(currentUser, password);
       setUsername(null);
       setMode(LOGIN_MODE);
     } catch (ex) {
+      console.log(ex);
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
       setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
