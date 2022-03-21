@@ -16,6 +16,7 @@ export const DiscountCodeInput = ({
   clearCoupon,
   setUser,
   userId = null,
+  isBackendRequest = false,
   ...rest
 }) => {
   const [showTag, setShowTag] = useState(false);
@@ -74,7 +75,7 @@ export const DiscountCodeInput = ({
         ...accommodationAddon,
         ...addOnProducts.map(({ productSfid }) => productSfid),
       ];
-      const payLoad = {
+      let payLoad = {
         shoppingRequest: {
           products: {
             productType,
@@ -85,6 +86,10 @@ export const DiscountCodeInput = ({
         },
         userId,
       };
+      if (isBackendRequest) {
+        const userEmail = formikProps.values["email"];
+        payLoad = { ...payLoad, isBackendRequest: true, email: userEmail };
+      }
       let results = await api.post({
         path: "applyCoupon",
         body: payLoad,
