@@ -190,6 +190,7 @@ const Profile = ({ profile, tab }) => {
       });
       setUserProfile(res);
       setLoading(false);
+      setEditCardDetail(false);
     }
   };
 
