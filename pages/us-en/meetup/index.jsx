@@ -11,8 +11,8 @@ import { MeetupType } from "@components/meetup/meetupType";
 import { MeetupEnroll } from "@components/meetup/meetupEnroll";
 import { AddressSearch } from "@components";
 import { useGeolocation } from "@hooks";
+import { useAuth } from "@contexts";
 import "bootstrap-daterangepicker/daterangepicker.css";
-import { withSSRContext } from "aws-amplify";
 import { useRouter } from "next/router";
 import ContentLoader from "react-content-loader";
 import {
@@ -31,7 +31,6 @@ import {
   MEMBERSHIP_TYPES,
 } from "@constants";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { useAuth } from "@contexts";
 import Style from "./Meetup.module.scss";
 
 const DATE_PICKER_CONFIG = {
@@ -394,7 +393,7 @@ const Meetup = () => {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      if (!selectedMeetup.isMandatoryWorkshopAttended) {
+      if (!profile.isMandatoryWorkshopAttended) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
           className: "retreat-prerequisite-big meditation-digital-membership",
           title: "Retreat Prerequisite",
