@@ -1475,6 +1475,7 @@ export const BackendPaymentForm = ({
                           applyDiscount={applyDiscount}
                           addOnProducts={addOnProducts}
                           userId={user?.id}
+                          isBackendRequest
                         ></DiscountCodeInput>
                       )}
                     </div>
