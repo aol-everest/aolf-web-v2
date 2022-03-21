@@ -12,6 +12,12 @@ import { api, Clevertap } from "@utils";
 import { ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+);
 
 const EventList = dynamic(() =>
   import("@components/profile").then((mod) => mod.EventList),
@@ -33,6 +39,10 @@ const ProfilePicCrop = dynamic(() =>
 );
 const ProfileHeader = dynamic(() =>
   import("@components/profile").then((mod) => mod.ProfileHeader),
+);
+
+const ChangeCardDetail = dynamic(() =>
+  import("@components/profile").then((mod) => mod.ChangeCardDetail),
 );
 
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
@@ -395,15 +405,21 @@ const Profile = ({ profile, tab }) => {
                     switchCardDetailView={switchCardDetailView}
                   ></ViewCardDetail>
                 )}
-                {/* {editCardDetail && (
-                  <StripeProvider apiKey={APP.STRIPE_PUBLISHABLE_KEY}>
-                    <Elements>
-                      <ChangeCardDetail
-                        updateCompleteAction={updateCompleteAction}
-                      />
-                    </Elements>
-                  </StripeProvider>
-                )} */}
+                {editCardDetail && (
+                  <Elements
+                    stripe={stripePromise}
+                    fonts={[
+                      {
+                        cssSrc:
+                          "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                      },
+                    ]}
+                  >
+                    <ChangeCardDetail
+                      updateCompleteAction={updateCompleteAction}
+                    />
+                  </Elements>
+                )}
               </div>
               <div
                 className={classNames("tab-pane fade", {
@@ -547,15 +563,21 @@ const Profile = ({ profile, tab }) => {
                         switchCardDetailView={switchCardDetailView}
                       ></ViewCardDetail>
                     )}
-                    {/* {editCardDetail && (
-                      <StripeProvider apiKey={APP.STRIPE_PUBLISHABLE_KEY}>
-                        <Elements>
-                          <ChangeCardDetail
-                            updateCompleteAction={updateCompleteAction}
-                          />
-                        </Elements>
-                      </StripeProvider>
-                    )} */}
+                    {editCardDetail && (
+                      <Elements
+                        stripe={stripePromise}
+                        fonts={[
+                          {
+                            cssSrc:
+                              "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                          },
+                        ]}
+                      >
+                        <ChangeCardDetail
+                          updateCompleteAction={updateCompleteAction}
+                        />
+                      </Elements>
+                    )}
                   </div>
                 </div>
               </div>

@@ -6,3 +6,4 @@ export { ProfileHeader } from "./ProfileHeader";
 export { ProfilePicCrop } from "./ProfilePicCrop";
 export { PastCourses } from "./PastCourses";
 export { ChangeEmail } from "./ChangeEmail";
+export { ChangeCardDetail } from "./ChangeCardDetail";
