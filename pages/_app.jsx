@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/inline-script-id */
 import React, { useEffect, useState } from "react";
-import Auth from "@aws-amplify/auth";
-import Amplify, { Hub } from "@aws-amplify/core";
+import { Amplify, Auth, Hub } from "aws-amplify";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose, isSSR, Clevertap, Segment } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
-import { Layout } from "@components";
+import { Layout, ReInstate, CardUpdateRequired } from "@components";
 import { GlobalModal } from "@components/globalModal";
 import { GlobalAlert } from "@components/globalAlert";
 import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
@@ -49,13 +48,18 @@ const renderSnippet = () => {
 
 function App({ Component, pageProps, userInfo = {} }) {
   const [user, setUser] = useState(userInfo);
+  const [isReInstateRequired, setIsReInstateRequired] = useState(false);
+  const [reinstateRequiredSubscription, setReinstateRequiredSubscription] =
+    useState(null);
+  const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
+  const [pendingAgreements, setPendingAgreements] = useState([]);
 
   useEffect(() => {
     Hub.listen("auth", async ({ payload: { event, data } }) => {
       switch (event) {
         case "signIn": {
           try {
-            const user = await Amplify.Auth.currentAuthenticatedUser();
+            const user = await Auth.currentAuthenticatedUser();
             const token = user.signInUserSession.idToken.jwtToken;
             const res = await api.get({
               path: "profile",
@@ -98,7 +102,7 @@ function App({ Component, pageProps, userInfo = {} }) {
 
     async function fetchProfile() {
       try {
-        const user = await Amplify.Auth.currentAuthenticatedUser();
+        const user = await Auth.currentAuthenticatedUser();
         const token = user.signInUserSession.idToken.jwtToken;
         const res = await api.get({
           path: "profile",
@@ -110,6 +114,25 @@ function App({ Component, pageProps, userInfo = {} }) {
           profile: res,
         };
         setUser(userInfo);
+
+        const pendingAgreementRes = await api.get({
+          path: "getPendingHealthQuestionAgreement",
+          token,
+        });
+
+        setPendingAgreements(pendingAgreementRes || []);
+
+        const { subscriptions = [], isCCUpdateRequiredForSubscription } =
+          userInfo.profile;
+        setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
+        const reinstateRequiredForSubscription = subscriptions.find(
+          ({ isReinstateRequiredForSubscription }) =>
+            isReinstateRequiredForSubscription,
+        );
+        if (reinstateRequiredForSubscription) {
+          setIsReInstateRequired(true);
+          setReinstateRequiredSubscription(reinstateRequiredForSubscription);
+        }
 
         Clevertap.profile({
           Site: {
@@ -131,71 +154,42 @@ function App({ Component, pageProps, userInfo = {} }) {
 
   const queryClient = new QueryClient();
   const gtmParams = { id: process.env.NEXT_PUBLIC_GTM_ID };
-  if (process.env.NEXT_PUBLIC_GTM_ID) {
-    return (
-      <GTMProvider state={gtmParams}>
-        <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <AuthProvider userInfo={user}>
-              <Compose
-                components={[
-                  GlobalModal,
-                  GlobalAlert,
-                  GlobalAudioPlayer,
-                  GlobalVideoPlayer,
-                  GlobalLoading,
-                ]}
-              >
-                {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
-                  <Script
-                    dangerouslySetInnerHTML={{ __html: renderSnippet() }}
-                  />
-                )}
-                <Layout
-                  hideHeader={Component.hideHeader}
-                  hideFooter={Component.hideFooter}
-                >
-                  <DefaultSeo {...SEO} />
-                  <TopProgressBar />
-                  <Component {...pageProps} />
-                  <ReactQueryDevtools initialIsOpen={false} />
-                </Layout>
-              </Compose>
-            </AuthProvider>
-          </Hydrate>
-        </QueryClientProvider>
-      </GTMProvider>
-    );
-  }
   return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <AuthProvider userInfo={user}>
-          <Compose
-            components={[
-              GlobalModal,
-              GlobalAlert,
-              GlobalAudioPlayer,
-              GlobalVideoPlayer,
-              GlobalLoading,
-            ]}
-          >
-            {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
-              <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
-            )}
-            <Layout
-              hideHeader={Component.hideHeader}
-              hideFooter={Component.hideFooter}
+    <GTMProvider state={gtmParams}>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <AuthProvider userInfo={user}>
+            <Compose
+              components={[
+                GlobalModal,
+                GlobalAlert,
+                GlobalAudioPlayer,
+                GlobalVideoPlayer,
+                GlobalLoading,
+              ]}
             >
-              <DefaultSeo {...SEO} />
-              <TopProgressBar />
-              <Component {...pageProps} />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </Layout>
-          </Compose>
-        </AuthProvider>
-      </Hydrate>
-    </QueryClientProvider>
+              {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
+                <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
+              )}
+              <Layout
+                hideHeader={Component.hideHeader}
+                hideFooter={Component.hideFooter}
+              >
+                <DefaultSeo {...SEO} />
+                <TopProgressBar />
+                {isReInstateRequired && (
+                  <ReInstate subscription={reinstateRequiredSubscription} />
+                )}
+                {isCCUpdateRequired && <CardUpdateRequired />}
+                {/* {pendingAgreements.length > 0 && <CardUpdateRequired />} */}
+                <Component {...pageProps} />
+                <ReactQueryDevtools initialIsOpen={false} />
+              </Layout>
+            </Compose>
+          </AuthProvider>
+        </Hydrate>
+      </QueryClientProvider>
+    </GTMProvider>
   );
 }
 

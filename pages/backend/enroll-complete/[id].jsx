@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { withSSRContext } from "aws-amplify";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
-import { useQueryString } from "@hooks";
 import classNames from "classnames";
 
 import { api } from "@utils";
