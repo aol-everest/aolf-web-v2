@@ -71,6 +71,20 @@ function App({ Component, pageProps, userInfo = {} }) {
               profile: res,
             };
             setUser(userInfo);
+
+            const { subscriptions = [], isCCUpdateRequiredForSubscription } =
+              userInfo.profile;
+            setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
+            const reinstateRequiredForSubscription = subscriptions.find(
+              ({ isReinstateRequiredForSubscription }) =>
+                isReinstateRequiredForSubscription,
+            );
+            if (reinstateRequiredForSubscription) {
+              setIsReInstateRequired(true);
+              setReinstateRequiredSubscription(
+                reinstateRequiredForSubscription,
+              );
+            }
             Clevertap.profile({
               Site: {
                 Name: userInfo.name, // String

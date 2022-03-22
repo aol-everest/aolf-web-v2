@@ -117,7 +117,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
         </div>
         {!loading && (
           <button type="submit" className="btn btn-link">
-            <img src="assets/images/check-circle.png" alt="img" /> Save card
+            <img src="/img/check-circle.png" alt="img" /> Save card
           </button>
         )}
       </form>

@@ -96,12 +96,12 @@ export const ReInstate = ({ subscription }) => {
   const { showAlert } = useGlobalAlertContext();
 
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router.isReady || !subscription) return;
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       children: <ReInstateModal subscription={subscription} />,
       title: "Action required",
     });
-  }, [router.isReady]);
+  }, [router.isReady, subscription]);
 
   return null;
 };
