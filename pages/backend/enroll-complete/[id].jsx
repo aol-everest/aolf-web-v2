@@ -103,16 +103,12 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
           },
         });
 
-        if (!results.ok) {
-          throw new Error(results.statusText);
+        const { status } = results;
+
+        if (status === "error" || status === 400) {
+          throw new Error(results.message);
         }
         setInlineLoading(false);
-
-        const { status, error: errorMessage } = await results.json();
-
-        if (status === 400) {
-          throw new Error(errorMessage);
-        }
 
         showModal(MODAL_TYPES.EMPTY_MODAL, {
           children: (handleModalToggle) =>
@@ -183,6 +179,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                 lastName: last_name,
                 email: personemail,
                 questionnaire: questionnaire,
+                agreement: "agreement",
               }}
               onSubmit={async (values, { setSubmitting }) => {
                 await completeRegisterationStep2(values);

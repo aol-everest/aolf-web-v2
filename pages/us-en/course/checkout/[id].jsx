@@ -276,6 +276,14 @@ const Checkout = ({ workshop, profile }) => {
     );
   };
 
+  const isGenericCheckout =
+    !isHealingBreathProgram &&
+    !isSKYType &&
+    !isSilentRetreatType &&
+    !isSahajSamadhiMeditationType &&
+    !isSriSriYogaMeditationType &&
+    !isVolunteerTrainingProgram;
+
   return (
     <>
       <NextSeo title={workshop.title} />
@@ -283,9 +291,21 @@ const Checkout = ({ workshop, profile }) => {
         <section className="order">
           <div className="container">
             <h1 className="title">{workshop.title}</h1>
-            <p className="order__detail">
-              The Most Effective Way to Feel Calm & Clear, Day After Day
-            </p>
+            {isGenericCheckout ? (
+              <p className="order__detail">
+                Once you register, you will be contacted to schedule your course
+                date
+                <br />
+                <span>
+                  SKY is offered every week of the year across time zones.
+                </span>
+              </p>
+            ) : (
+              <p className="order__detail">
+                The Most Effective Way to Feel Calm & Clear, Day After Day
+              </p>
+            )}
+
             {workshop.isCorporateEvent && (
               <div className="tw-mb-[60px]">
                 <h1 className="tw-text-2xl tw-font-bold tw-text-center tw-text-[#31364e]">
