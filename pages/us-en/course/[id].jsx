@@ -169,6 +169,8 @@ export default function CourseDetail({ data }) {
   const isVolunteerTrainingProgram =
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(data.productTypeId) >=
     0;
+  const isHealingBreathType =
+    COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
 
   const router = useRouter();
 
@@ -179,7 +181,8 @@ export default function CourseDetail({ data }) {
       !isSilentRetreatType &&
       !isSahajSamadhiMeditationType &&
       !isSriSriYogaMeditationType &&
-      !isVolunteerTrainingProgram
+      !isVolunteerTrainingProgram &&
+      !isHealingBreathType
     ) {
       router.push({
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -201,7 +204,7 @@ export default function CourseDetail({ data }) {
       <NextSeo title={data.title} />
       {isVolunteerTrainingProgram && <VolunteerTrainingProgram {...props} />}
       {isSriSriYogaMeditationType && <SriSriYoga {...props} />}
-      {isSKYType && <SKYBreathMeditation {...props} />}
+      {(isSKYType || isHealingBreathType) && <SKYBreathMeditation {...props} />}
       {isSilentRetreatType && <SilentRetreat {...props} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
     </>
