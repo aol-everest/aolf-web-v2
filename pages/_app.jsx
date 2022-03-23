@@ -176,7 +176,8 @@ function App({ Component, pageProps, userInfo = {} }) {
           name: userInfo.profile.name,
         });
       } catch (ex) {
-        await Auth.signOut();
+        console.log(ex);
+        // await Auth.signOut();
       }
     }
     fetchProfile();

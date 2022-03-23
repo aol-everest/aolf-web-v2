@@ -78,7 +78,7 @@ export const PostCostDetailsCard = ({
                     </p>
                   )}
                   {!isJourneyPremium && !isJourneyPlus && (
-                    <ul className="reciept__payment_list">
+                    <ul className="reciept__payment_list !tw-p-0 !tw-py-2">
                       <div className="reciept__payment-option">
                         <input
                           className="custom-radio"
@@ -261,7 +261,7 @@ export const PostCostDetailsCard = ({
 
               {!isSilentRetreatType && (
                 <>
-                  <div className="reciept__header_v1 full-padding">
+                  <div>
                     {delfee && (
                       <>
                         <h1 className="title reciept__title_v1">
@@ -275,50 +275,52 @@ export const PostCostDetailsCard = ({
                     )}
                     {!delfee && <p className="price">Course Fee: ${fee}</p>}
                   </div>
-                  <ul className="reciept__payment_list">
-                    {isUsableCreditAvailable && (
-                      <div className="credit-text">
-                        {usableCredit.message} ${UpdatedFeeAfterCredits}.
-                      </div>
-                    )}
-                    {addOnProducts.map((product) => {
-                      if (
-                        !product.isExpenseAddOn ||
-                        (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                      ) {
-                        const isChecked = product.isAddOnSelectionRequired
-                          ? true
-                          : formikProps.values[product.productName];
+                  {isUsableCreditAvailable && (
+                    <div className="credit-text">
+                      {usableCredit.message} ${UpdatedFeeAfterCredits}.
+                    </div>
+                  )}
+                  {addOnProducts && addOnProducts.length > 0 && (
+                    <ul className="reciept__payment_list">
+                      {addOnProducts.map((product) => {
+                        if (
+                          !product.isExpenseAddOn ||
+                          (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                        ) {
+                          const isChecked = product.isAddOnSelectionRequired
+                            ? true
+                            : formikProps.values[product.productName];
 
-                        return (
-                          <li>
-                            <span>
-                              {!product.isAddOnSelectionRequired && (
-                                <input
-                                  type="checkbox"
-                                  className="custom-checkbox"
-                                  placeholder=" "
-                                  checked={isChecked}
-                                  onChange={formikProps.handleChange(
-                                    product.productName,
-                                  )}
-                                  value={product.productName}
-                                  name={product.productName}
-                                  id={product.productSfid}
-                                  disabled={product.isAddOnSelectionRequired}
-                                />
-                              )}
-                              <label htmlFor={product.productSfid}></label>
-                              <span className="ml-2">
-                                {product.productName} Required:
+                          return (
+                            <li>
+                              <span>
+                                {!product.isAddOnSelectionRequired && (
+                                  <input
+                                    type="checkbox"
+                                    className="custom-checkbox"
+                                    placeholder=" "
+                                    checked={isChecked}
+                                    onChange={formikProps.handleChange(
+                                      product.productName,
+                                    )}
+                                    value={product.productName}
+                                    name={product.productName}
+                                    id={product.productSfid}
+                                    disabled={product.isAddOnSelectionRequired}
+                                  />
+                                )}
+                                <label htmlFor={product.productSfid}></label>
+                                <span className="ml-2">
+                                  {product.productName} Required:
+                                </span>
                               </span>
-                            </span>
-                            <span className="ml-2">${product.unitPrice}</span>
-                          </li>
-                        );
-                      }
-                    })}
-                  </ul>
+                              <span className="ml-2">${product.unitPrice}</span>
+                            </li>
+                          );
+                        }
+                      })}
+                    </ul>
+                  )}
                 </>
               )}
             </>
