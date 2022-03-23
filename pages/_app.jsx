@@ -6,7 +6,12 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose, isSSR, Clevertap, Segment } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
-import { Layout, ReInstate, CardUpdateRequired } from "@components";
+import {
+  Layout,
+  ReInstate,
+  CardUpdateRequired,
+  PendingAgreement,
+} from "@components";
 import { GlobalModal } from "@components/globalModal";
 import { GlobalAlert } from "@components/globalAlert";
 import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
@@ -52,7 +57,7 @@ function App({ Component, pageProps, userInfo = {} }) {
   const [reinstateRequiredSubscription, setReinstateRequiredSubscription] =
     useState(null);
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
-  const [pendingAgreements, setPendingAgreements] = useState([]);
+  const [isPendingAgreement, setIsPendingAgreement] = useState(false);
 
   useEffect(() => {
     Hub.listen("auth", async ({ payload: { event, data } }) => {
@@ -72,6 +77,15 @@ function App({ Component, pageProps, userInfo = {} }) {
             };
             setUser(userInfo);
 
+            const pendingAgreementRes = await api.get({
+              path: "getPendingHealthQuestionAgreement",
+              token,
+            });
+
+            setIsPendingAgreement(
+              pendingAgreementRes && pendingAgreementRes.length > 0,
+            );
+
             const { subscriptions = [], isCCUpdateRequiredForSubscription } =
               userInfo.profile;
             setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
@@ -80,10 +94,10 @@ function App({ Component, pageProps, userInfo = {} }) {
                 isReinstateRequiredForSubscription,
             );
             if (reinstateRequiredForSubscription) {
-              setIsReInstateRequired(true);
               setReinstateRequiredSubscription(
                 reinstateRequiredForSubscription,
               );
+              setIsReInstateRequired(true);
             }
             Clevertap.profile({
               Site: {
@@ -134,7 +148,9 @@ function App({ Component, pageProps, userInfo = {} }) {
           token,
         });
 
-        setPendingAgreements(pendingAgreementRes || []);
+        setIsPendingAgreement(
+          pendingAgreementRes && pendingAgreementRes.length > 0,
+        );
 
         const { subscriptions = [], isCCUpdateRequiredForSubscription } =
           userInfo.profile;
@@ -195,7 +211,7 @@ function App({ Component, pageProps, userInfo = {} }) {
                   <ReInstate subscription={reinstateRequiredSubscription} />
                 )}
                 {isCCUpdateRequired && <CardUpdateRequired />}
-                {/* {pendingAgreements.length > 0 && <CardUpdateRequired />} */}
+                {isPendingAgreement && <PendingAgreement />}
                 <Component {...pageProps} />
                 <ReactQueryDevtools initialIsOpen={false} />
               </Layout>

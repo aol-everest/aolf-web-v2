@@ -20,3 +20,4 @@ export { AddToCalendarModal } from "./addToCalendarModal";
 export { HideOn } from "./hideOnScroll";
 export { ReInstate } from "./reInstate";
 export { CardUpdateRequired } from "./cardUpdateRequired";
+export { PendingAgreement } from "./pendingAgreement";

@@ -27,7 +27,7 @@ export const GlobalLoading = ({ children }) => {
       return null;
     }
     return (
-      <div className="tw-top-0 tw-w-full tw-h-full tw-fixed tw-z-[200]">
+      <div className="tw-top-0 tw-w-full tw-h-full tw-fixed tw-z-[99999]">
         <div className="cover-spin"></div>
       </div>
     );
