@@ -7,7 +7,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
-import { useQuery } from "react-query";
+import { useAuth } from "@contexts";
 import { api, Clevertap } from "@utils";
 import { ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
@@ -86,10 +86,11 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
   }
 }
 
-const Profile = ({ profile, tab }) => {
+const Profile = ({ tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
+  const { profile } = useAuth();
   const [userProfile, setUserProfile] = useState(profile);
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: tab || UPCOMING_EVENTS,
@@ -105,7 +106,7 @@ const Profile = ({ profile, tab }) => {
     upcomingWorkshop = [],
     upcomingMeetup = [],
     subscriptions = [],
-  } = profile || {};
+  } = userProfile || {};
   const upcomingEvents = [...upcomingWorkshop, ...upcomingMeetup];
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
@@ -392,7 +393,7 @@ const Profile = ({ profile, tab }) => {
               >
                 <ChangeProfile
                   updateCompleteAction={updateCompleteAction}
-                  profile={profile}
+                  profile={userProfile}
                 ></ChangeProfile>
               </div>
               <div
@@ -533,7 +534,7 @@ const Profile = ({ profile, tab }) => {
                     <ChangeProfile
                       isMobile
                       updateCompleteAction={updateCompleteAction}
-                      profile={profile}
+                      profile={userProfile}
                     ></ChangeProfile>
                   </div>
                 </div>
