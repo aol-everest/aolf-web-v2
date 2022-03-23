@@ -23,10 +23,11 @@ dayjs.extend(localizedFormat);
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
-  const { Auth } = withSSRContext(context);
+  const { Auth } = withSSRContext({ req });
   const { id } = query;
   const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
+  const currentSession = await Auth.currentSession();
+  const token = currentSession.idToken.jwtToken;
   const { data, attendeeRecord } = await api.get({
     path: "getWorkshopByAttendee",
     param: {

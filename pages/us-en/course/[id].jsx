@@ -43,13 +43,15 @@ const VolunteerTrainingProgram = dynamic(() =>
 );
 
 export const getServerSideProps = async (context) => {
-  const { id } = context.query;
+  const { query, req, res } = context;
+  const { id } = query;
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     props = {
       authenticated: true,
       username: user.username,

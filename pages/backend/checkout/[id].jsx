@@ -18,7 +18,7 @@ export const getServerSideProps = async (context) => {
   let profile = {};
   let user = null;
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     user = await Auth.currentAuthenticatedUser();
     token = user.signInUserSession.idToken.jwtToken;
     profile = await api.get({

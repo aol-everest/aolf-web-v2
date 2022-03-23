@@ -65,7 +65,8 @@ function App({ Component, pageProps, userInfo = {} }) {
         case "signIn": {
           try {
             const user = await Auth.currentAuthenticatedUser();
-            const token = user.signInUserSession.idToken.jwtToken;
+            const currentSession = await Auth.currentSession();
+            const token = currentSession.idToken.jwtToken;
             const res = await api.get({
               path: "profile",
               token,
@@ -131,7 +132,8 @@ function App({ Component, pageProps, userInfo = {} }) {
     async function fetchProfile() {
       try {
         const user = await Auth.currentAuthenticatedUser();
-        const token = user.signInUserSession.idToken.jwtToken;
+        const currentSession = await Auth.currentSession();
+        const token = currentSession.idToken.jwtToken;
         const res = await api.get({
           path: "profile",
           token,

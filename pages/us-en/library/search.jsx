@@ -34,12 +34,14 @@ import { InfiniteScrollLoader } from "@components/loader";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 
 export const getServerSideProps = async (context) => {
+  const { query, req, res } = context;
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     props = {
       authenticated: true,
       token,
