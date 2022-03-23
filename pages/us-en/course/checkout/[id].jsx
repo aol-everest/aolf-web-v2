@@ -277,14 +277,6 @@ const Checkout = ({ workshop, profile }) => {
     );
   };
 
-  const isGenericCheckout =
-    !isHealingBreathProgram &&
-    !isSKYType &&
-    !isSilentRetreatType &&
-    !isSahajSamadhiMeditationType &&
-    !isSriSriYogaMeditationType &&
-    !isVolunteerTrainingProgram;
-
   return (
     <>
       <NextSeo title={workshop.title} />
@@ -292,7 +284,7 @@ const Checkout = ({ workshop, profile }) => {
         <section className="order">
           <div className="container">
             <h1 className="title">{workshop.title}</h1>
-            {isGenericCheckout ? (
+            {workshop.isGenericWorkshop ? (
               <p className="order__detail">
                 Once you register, you will be contacted to schedule your course
                 date

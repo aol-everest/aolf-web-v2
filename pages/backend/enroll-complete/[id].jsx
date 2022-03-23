@@ -45,19 +45,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
     isInstalmentPayment,
   } = attendeeRecord;
 
-  const onEnrollmentComplete = (title, handleModalToggle, redirect) => {
-    const onCloseAction = () => {
-      handleModalToggle();
-      if (redirect) {
-        router.replace({
-          pathname: `/us-en/course/thankyou/${attendeeRecord.sfid}`,
-          query: {
-            ctype: productTypeId,
-            page: "ty",
-          },
-        });
-      }
-    };
+  const onEnrollmentComplete = (title, handleModalToggle) => {
     return (
       <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
         <div className=" modal-dialog modal-dialog-centered active">
@@ -68,7 +56,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
               <a
                 href="#"
                 className="tw-mt-6 btn btn-lg btn-primary"
-                onClick={onCloseAction}
+                onClick={handleModalToggle}
               >
                 Close
               </a>
@@ -108,13 +96,12 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
         }
         setInlineLoading(false);
 
-        showModal(MODAL_TYPES.EMPTY_MODAL, {
-          children: (handleModalToggle) =>
-            onEnrollmentComplete(
-              "Enrollment Completed Successfully.",
-              handleModalToggle,
-              true,
-            ),
+        router.replace({
+          pathname: `/us-en/course/thankyou/${attendeeRecord.sfid}`,
+          query: {
+            ctype: productTypeId,
+            page: "ty",
+          },
         });
       }
     } catch (ex) {
@@ -125,7 +112,6 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
           onEnrollmentComplete(
             "Error in processing your request.",
             handleModalToggle,
-            false,
           ),
       });
     }
