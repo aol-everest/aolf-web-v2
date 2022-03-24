@@ -36,22 +36,26 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
     if (!router.isReady) return;
     async function fetchPendingSubscriptionInvoices() {
       setLoading(true);
-      const response = await api.get({
-        path: "pendingSubscriptionInvoices",
-        param: {
-          stripeSubscriptionId: subscription.stripeSubscriptionId,
-        },
-      });
-      const {
-        status: pendingSubscriptionInvoicesStatus,
-        error: pendingSubscriptionInvoicesErrorMessage,
-        data,
-      } = response;
-      if (pendingSubscriptionInvoicesStatus === 400) {
-        throw new Error(pendingSubscriptionInvoicesErrorMessage);
+      try {
+        const response = await api.get({
+          path: "pendingSubscriptionInvoices",
+          param: {
+            stripeSubscriptionId: subscription.stripeSubscriptionId,
+          },
+        });
+        const {
+          status: pendingSubscriptionInvoicesStatus,
+          error: pendingSubscriptionInvoicesErrorMessage,
+          data,
+        } = response;
+        if (pendingSubscriptionInvoicesStatus === 400) {
+          throw new Error(pendingSubscriptionInvoicesErrorMessage);
+        }
+        setAmount(data.totalPendingAmount);
+      } catch (ex) {
+        updateError(ex.message);
       }
       setLoading(false);
-      setAmount(data.totalPendingAmount);
     }
     fetchPendingSubscriptionInvoices();
   }, [router.isReady]);

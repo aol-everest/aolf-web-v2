@@ -55,7 +55,9 @@ export const ReInstateModal = ({ subscription }) => {
                 <p className="error-message">
                   We're sorry, but something went wrong. Please try again or
                   contact support.
-                  <p className="error-detail">{error}</p>
+                  <p className="error-detail tw-text-xs tw-italic tw-text-orange-600 tw-pt-2">
+                    Error: {error}
+                  </p>
                 </p>
               </div>
             )}
