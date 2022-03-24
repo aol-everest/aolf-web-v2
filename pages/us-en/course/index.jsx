@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
 import { withSSRContext } from "aws-amplify";
 import dynamic from "next/dynamic";
+import { useAuth } from "@contexts";
 import {
   Popup,
   SmartInput,
@@ -161,9 +162,9 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Course = ({ authenticated }) => {
+const Course = () => {
   const seed = useUIDSeed();
-
+  const { authenticated } = useAuth();
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: "ONLINE",
   });
