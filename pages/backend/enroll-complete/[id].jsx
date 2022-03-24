@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-
 import { api } from "@utils";
-import { MODAL_TYPES } from "@constants";
-import { useGlobalModalContext } from "@contexts";
+import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { Radiobox } from "@components/backendPaymentForm/Radiobox";
 import { BackendRegisterationDetail } from "@components/backendRegisterationDetail";
 
@@ -33,7 +32,7 @@ export const getServerSideProps = async (context) => {
 const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
   const [inlineLoading, setInlineLoading] = useState(false);
   const router = useRouter();
-  const { showModal } = useGlobalModalContext();
+  const { showAlert } = useGlobalAlertContext();
 
   const { complianceQuestionnaire, productTypeId } = workshop;
 
@@ -44,28 +43,6 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
     email: personemail,
     isInstalmentPayment,
   } = attendeeRecord;
-
-  const onEnrollmentComplete = (title, handleModalToggle) => {
-    return (
-      <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
-        <div className=" modal-dialog modal-dialog-centered active">
-          <div className="modal-content">
-            <h2 className="modal-content-title">{title}</h2>
-
-            <p className="tw-flex tw-justify-center">
-              <a
-                href="#"
-                className="tw-mt-6 btn btn-lg btn-primary"
-                onClick={handleModalToggle}
-              >
-                Close
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   const completeRegisterationStep2 = async (values) => {
     try {
@@ -106,14 +83,12 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
       }
     } catch (ex) {
       console.log(ex);
-      setInlineLoading(false);
-      showModal(MODAL_TYPES.EMPTY_MODAL, {
-        children: (handleModalToggle) =>
-          onEnrollmentComplete(
-            "Error in processing your request.",
-            handleModalToggle,
-          ),
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
       });
+      setInlineLoading(false);
     }
   };
 
