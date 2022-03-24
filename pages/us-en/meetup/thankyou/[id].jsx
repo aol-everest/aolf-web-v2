@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { api, calculateBusinessDays, tConvert } from "@utils";
 import { withSSRContext } from "aws-amplify";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -52,7 +52,6 @@ export async function getServerSideProps(context) {
 }
 
 const Thankyou = ({ meetup, attendeeRecord }) => {
-  const sendDataToGTM = useGTMDispatch();
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { id: attendeeId } = router.query;
@@ -97,37 +96,39 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
   } = attendeeRecord || {};
 
   useEffect(() => {
-    sendDataToGTM({
+    trackEvent({
       event: "transactionComplete",
-      viewType: "workshop",
-      amount: unitPrice,
-      title: meetupTitle || title,
-      ctype: productTypeId,
-      requestType: "Thankyou",
-      // user,
-      ecommerce: {
-        currencyCode: "USD",
-        purchase: {
-          actionField: {
-            id: orderExternalId,
-            affiliation: "Website",
-            revenue: ammountPaid,
-            tax: "0.00",
-            shipping: "0.00",
-            coupon: couponCode || "",
-          },
-          products: [
-            {
-              id: courseId,
-              courseId: courseId,
-              name: title,
-              category: "workshop",
-              variant: "N/A",
-              brand: "Art of Living Foundation",
-              quantity: 1,
-              // price: totalOrderAmount,
+      data: {
+        viewType: "workshop",
+        amount: unitPrice,
+        title: meetupTitle || title,
+        ctype: productTypeId,
+        requestType: "Thankyou",
+        // user,
+        ecommerce: {
+          currencyCode: "USD",
+          purchase: {
+            actionField: {
+              id: orderExternalId,
+              affiliation: "Website",
+              revenue: ammountPaid,
+              tax: "0.00",
+              shipping: "0.00",
+              coupon: couponCode || "",
             },
-          ],
+            products: [
+              {
+                id: courseId,
+                courseId: courseId,
+                name: title,
+                category: "workshop",
+                variant: "N/A",
+                brand: "Art of Living Foundation",
+                quantity: 1,
+                // price: totalOrderAmount,
+              },
+            ],
+          },
         },
       },
     });

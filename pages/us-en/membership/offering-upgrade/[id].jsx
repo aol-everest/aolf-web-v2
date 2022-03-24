@@ -10,7 +10,7 @@ import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -104,7 +104,6 @@ export const getServerSideProps = async (context) => {
 
 function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
   const [couponCode] = useQueryString("coupon");
-  const sendDataToGTM = useGTMDispatch();
   const [offeringId] = useQueryString("ofid");
   const [courseId] = useQueryString("cid", {
     defaultValue: cid,
@@ -138,22 +137,24 @@ function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
       }),
     );
 
-    sendDataToGTM({
-      page: `Art of Living subscription page`,
+    trackEvent({
       event: "eec.checkout",
-      viewType: "subscription",
-      title: activeSubscription.subscriptionName || "",
-      ctype: activeSubscription.sfid || "",
-      amount: activeSubscription.price || "",
-      requestType: "Detail",
-      hitType: "paymentpage",
-      user: profile.id,
-      ecommerce: {
-        checkout: {
-          actionField: {
-            step: 1,
+      data: {
+        page: `Art of Living subscription page`,
+        viewType: "subscription",
+        title: activeSubscription.subscriptionName || "",
+        ctype: activeSubscription.sfid || "",
+        amount: activeSubscription.price || "",
+        requestType: "Detail",
+        hitType: "paymentpage",
+        user: profile.id,
+        ecommerce: {
+          checkout: {
+            actionField: {
+              step: 1,
+            },
+            products: products,
           },
-          products: products,
         },
       },
     });

@@ -10,7 +10,7 @@ import { NextSeo } from "next-seo";
 import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useGlobalAlertContext } from "@contexts";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 import { COURSE_TYPES } from "@constants";
 
 const stripePromise = loadStripe(
@@ -99,7 +99,6 @@ const Checkout = ({ workshop, profile }) => {
   const router = useRouter();
   const { profile: clientProfile } = useAuth();
 
-  const sendDataToGTM = useGTMDispatch();
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
@@ -135,22 +134,24 @@ const Checkout = ({ workshop, profile }) => {
       },
     ];
 
-    sendDataToGTM({
-      page: `Art of Living ${title} workshop registration page`,
+    trackEvent({
       event: "eec.checkout",
-      viewType: "workshop",
-      title: title,
-      ctype: productTypeId,
-      amount: unitPrice,
-      requestType: "Detail",
-      hitType: "paymentpage",
-      user: profile.id,
-      ecommerce: {
-        checkout: {
-          actionField: {
-            step: 1,
+      data: {
+        page: `Art of Living ${title} workshop registration page`,
+        viewType: "workshop",
+        title: title,
+        ctype: productTypeId,
+        amount: unitPrice,
+        requestType: "Detail",
+        hitType: "paymentpage",
+        user: profile.id,
+        ecommerce: {
+          checkout: {
+            actionField: {
+              step: 1,
+            },
+            products: products,
           },
-          products: products,
         },
       },
     });

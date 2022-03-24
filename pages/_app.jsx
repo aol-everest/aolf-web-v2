@@ -5,12 +5,12 @@ import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose, isSSR, Clevertap, Segment } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Hydrate } from "react-query/hydration";
 import {
   Layout,
   ReInstate,
   CardUpdateRequired,
   PendingAgreement,
+  UsePagesViews,
 } from "@components";
 import { GlobalModal } from "@components/globalModal";
 import { GlobalAlert } from "@components/globalAlert";
@@ -18,7 +18,7 @@ import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
 import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
-import { GTMProvider } from "@elgorditosalsero/react-gtm-hook";
+import { TrackingHeadScript } from "@phntms/next-gtm";
 import TopProgressBar from "@components/topProgressBar";
 import Script from "next/script";
 import * as snippet from "@segment/snippet";
@@ -186,43 +186,44 @@ function App({ Component, pageProps, userInfo = {} }) {
   }, []);
 
   const queryClient = new QueryClient();
-  const gtmParams = { id: process.env.NEXT_PUBLIC_GTM_ID };
   return (
-    <GTMProvider state={gtmParams}>
+    <>
+      {process.env.NEXT_PUBLIC_GTM_ID && (
+        <TrackingHeadScript id={process.env.NEXT_PUBLIC_GTM_ID} />
+      )}
       <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <AuthProvider userInfo={user}>
-            <Compose
-              components={[
-                GlobalModal,
-                GlobalAlert,
-                GlobalAudioPlayer,
-                GlobalVideoPlayer,
-                GlobalLoading,
-              ]}
+        <AuthProvider userInfo={user}>
+          <Compose
+            components={[
+              GlobalModal,
+              GlobalAlert,
+              GlobalAudioPlayer,
+              GlobalVideoPlayer,
+              GlobalLoading,
+            ]}
+          >
+            {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
+              <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
+            )}
+            <Layout
+              hideHeader={Component.hideHeader}
+              hideFooter={Component.hideFooter}
             >
-              {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
-                <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
+              <DefaultSeo {...SEO} />
+              <UsePagesViews />
+              <TopProgressBar />
+              {isReInstateRequired && (
+                <ReInstate subscription={reinstateRequiredSubscription} />
               )}
-              <Layout
-                hideHeader={Component.hideHeader}
-                hideFooter={Component.hideFooter}
-              >
-                <DefaultSeo {...SEO} />
-                <TopProgressBar />
-                {isReInstateRequired && (
-                  <ReInstate subscription={reinstateRequiredSubscription} />
-                )}
-                {isCCUpdateRequired && <CardUpdateRequired />}
-                {isPendingAgreement && <PendingAgreement />}
-                <Component {...pageProps} />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </Layout>
-            </Compose>
-          </AuthProvider>
-        </Hydrate>
+              {isCCUpdateRequired && <CardUpdateRequired />}
+              {isPendingAgreement && <PendingAgreement />}
+              <Component {...pageProps} />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Layout>
+          </Compose>
+        </AuthProvider>
       </QueryClientProvider>
-    </GTMProvider>
+    </>
   );
 }
 

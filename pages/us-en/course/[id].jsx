@@ -14,7 +14,7 @@ import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { useAuth } from "@contexts";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -78,21 +78,22 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function CourseDetail({ data }) {
-  const sendDataToGTM = useGTMDispatch();
   const { profile } = useAuth();
   useEffect(() => {
     if (!profile) return;
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
 
-    sendDataToGTM({
+    trackEvent({
       event: "workshopview",
-      viewType: "workshop",
-      requestType: "Detail",
-      amount: unitPrice,
-      title,
-      ctype: productTypeId,
-      user: profile,
+      data: {
+        viewType: "workshop",
+        requestType: "Detail",
+        amount: unitPrice,
+        title,
+        ctype: productTypeId,
+        user: profile,
+      },
     });
     Clevertap.event("Product Viewed", {
       "Request Type": "Detail",
