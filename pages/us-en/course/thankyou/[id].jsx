@@ -8,7 +8,6 @@ import {
   calculateBusinessDays,
   Segment,
 } from "@utils";
-import { withSSRContext } from "aws-amplify";
 import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
 import { useAuth, useGlobalAlertContext } from "@contexts";
 import { COURSE_TYPES, ALERT_TYPES, ABBRS } from "@constants";
@@ -23,23 +22,16 @@ dayjs.extend(localizedFormat);
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
-  const { Auth } = withSSRContext({ req });
   const { id } = query;
-  const user = await Auth.currentAuthenticatedUser();
-  const currentSession = await Auth.currentSession();
-  const token = currentSession.idToken.jwtToken;
   const { data, attendeeRecord } = await api.get({
     path: "getWorkshopByAttendee",
     param: {
       aid: id,
       skipcheck: 1,
     },
-    token,
   });
   return {
     props: {
-      authenticated: true,
-      username: user.username,
       workshop: data,
       attendeeRecord,
     },
