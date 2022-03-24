@@ -501,6 +501,7 @@ export const MeetupPaymentForm = ({
                     product={productId}
                     applyDiscount={applyDiscount}
                     addOnProducts={addOnProducts}
+                    productType="meetup"
                   ></DiscountCodeInput>
                   {/* <input
                     id="discount-code"

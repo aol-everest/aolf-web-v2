@@ -351,6 +351,7 @@ export const MembershipCheckoutStripe = ({
                     formikProps={formikProps}
                     formikKey="couponCode"
                     product={activeSubscription.sfid}
+                    productType="subscription"
                     applyDiscount={applyDiscount}
                   ></DiscountCodeInput>
 
