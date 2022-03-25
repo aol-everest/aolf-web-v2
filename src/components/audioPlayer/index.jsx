@@ -66,6 +66,12 @@ const AudioPlayer = () => {
   };
 
   const onPlayPauseClick = () => {
+    if (!isPlaying) {
+      audioRef.current.play();
+      startTimer();
+    } else {
+      audioRef.current.pause();
+    }
     setIsPlaying((isPlaying) => !isPlaying);
   };
 
@@ -141,14 +147,14 @@ const AudioPlayer = () => {
   //   console.log("oo", currentTime);
   // };
 
-  useEffect(() => {
-    if (isPlaying) {
-      audioRef.current.play();
-      startTimer();
-    } else {
-      audioRef.current.pause();
-    }
-  }, [isPlaying]);
+  // useEffect(() => {
+  //   if (isPlaying) {
+  //     audioRef.current.play();
+  //     startTimer();
+  //   } else {
+  //     audioRef.current.pause();
+  //   }
+  // }, [isPlaying]);
 
   // Handles cleanup and setup when changing tracks
   useEffect(() => {
