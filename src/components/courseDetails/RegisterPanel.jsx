@@ -11,7 +11,7 @@ import { MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
 dayjs.extend(utc);
 
 export const RegisterPanel = ({ workshop }) => {
-  const { authenticated = false, profile } = useAuth();
+  const [{ authenticated = false, profile }] = useAuth();
   const router = useRouter();
   const { fee, delfee, offering } = priceCalculation({ workshop });
   const {

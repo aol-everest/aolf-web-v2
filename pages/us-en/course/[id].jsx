@@ -78,7 +78,7 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function CourseDetail({ data }) {
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
   useEffect(() => {
     if (!profile) return;
 

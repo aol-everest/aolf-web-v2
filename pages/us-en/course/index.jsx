@@ -164,7 +164,7 @@ async function queryInstructor({ queryKey: [_, term] }) {
 
 const Course = () => {
   const seed = useUIDSeed();
-  const { authenticated } = useAuth();
+  const [{ authenticated }] = useAuth();
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: "ONLINE",
   });

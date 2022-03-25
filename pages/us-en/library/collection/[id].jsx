@@ -137,7 +137,7 @@ function Tile({
 
 function Collection({ rootFolder, authenticated }) {
   const router = useRouter();
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();

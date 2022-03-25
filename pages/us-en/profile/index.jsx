@@ -91,8 +91,7 @@ const Profile = ({ tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const { profile } = useAuth();
-  const [userProfile, setUserProfile] = useState(profile);
+  const [{ profile }, reloadProfile] = useAuth();
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: tab || UPCOMING_EVENTS,
   });
@@ -107,7 +106,7 @@ const Profile = ({ tab }) => {
     upcomingWorkshop = [],
     upcomingMeetup = [],
     subscriptions = [],
-  } = userProfile || {};
+  } = profile || {};
   const upcomingEvents = [...upcomingWorkshop, ...upcomingMeetup];
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
@@ -187,14 +186,14 @@ const Profile = ({ tab }) => {
       });
     } else {
       setLoading(true);
-      const res = await api.get({
-        path: "profile",
-      });
-      setUserProfile(res);
+      await reloadProfile();
       setLoading(false);
       setEditCardDetail(false);
     }
   };
+  if (!profile) {
+    return null;
+  }
 
   return (
     <>
@@ -394,7 +393,7 @@ const Profile = ({ tab }) => {
               >
                 <ChangeProfile
                   updateCompleteAction={updateCompleteAction}
-                  profile={userProfile}
+                  profile={profile}
                 ></ChangeProfile>
               </div>
               <div
@@ -535,7 +534,7 @@ const Profile = ({ tab }) => {
                     <ChangeProfile
                       isMobile
                       updateCompleteAction={updateCompleteAction}
-                      profile={userProfile}
+                      profile={profile}
                     ></ChangeProfile>
                   </div>
                 </div>

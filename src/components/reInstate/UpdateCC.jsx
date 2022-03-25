@@ -29,7 +29,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
   const [amount, setAmount] = useState(0);
   const stripe = useStripe();
   const elements = useElements();
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
   const router = useRouter();
 
   useEffect(() => {

@@ -2,9 +2,11 @@ import React, { createContext, useContext } from "react";
 
 const AuthContext = createContext({});
 
-export const AuthProvider = ({ children, userInfo }) => {
+export const AuthProvider = ({ children, userInfo, reloadProfile }) => {
   return (
-    <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={[userInfo, reloadProfile]}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

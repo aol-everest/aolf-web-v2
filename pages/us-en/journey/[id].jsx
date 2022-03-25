@@ -48,7 +48,6 @@ export const getServerSideProps = async (context) => {
 };
 
 function Journey({ data }) {
-  console.log(data);
   let slidesPerView = 5;
   if (!isSSR) {
     const screenWidth = window.innerWidth;

@@ -27,7 +27,7 @@ export const ChangeCardDetail = ({ updateCompleteAction }) => {
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();

@@ -80,7 +80,7 @@ const renderVideo = (productTypeId) => {
 };
 
 const Thankyou = ({ workshop, attendeeRecord }) => {
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
   const {

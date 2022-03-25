@@ -64,54 +64,7 @@ function App({ Component, pageProps, userInfo = {} }) {
       switch (event) {
         case "signIn": {
           try {
-            const user = await Auth.currentAuthenticatedUser();
-            const currentSession = await Auth.currentSession();
-            const token = currentSession.idToken.jwtToken;
-            const res = await api.get({
-              path: "profile",
-              token,
-            });
-            const userInfo = {
-              authenticated: true,
-              username: user.username,
-              profile: res,
-            };
-            setUser(userInfo);
-
-            const pendingAgreementRes = await api.get({
-              path: "getPendingHealthQuestionAgreement",
-              token,
-            });
-
-            setIsPendingAgreement(
-              pendingAgreementRes && pendingAgreementRes.length > 0,
-            );
-
-            const { subscriptions = [], isCCUpdateRequiredForSubscription } =
-              userInfo.profile;
-            setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
-            const reinstateRequiredForSubscription = subscriptions.find(
-              ({ isReinstateRequiredForSubscription }) =>
-                isReinstateRequiredForSubscription,
-            );
-            if (reinstateRequiredForSubscription) {
-              setReinstateRequiredSubscription(
-                reinstateRequiredForSubscription,
-              );
-              setIsReInstateRequired(true);
-            }
-            Clevertap.profile({
-              Site: {
-                Name: userInfo.name, // String
-                Identity: userInfo.id, // String or number
-                Email: userInfo.email, // Email address of the user
-                Phone: userInfo.personMobilePhone, // Phone (with the country code)
-              },
-            });
-            Segment.profile(userInfo.profile.id, {
-              email: userInfo.profile.email,
-              name: userInfo.profile.name,
-            });
+            fetchProfile();
           } catch (ex) {
             await Auth.signOut();
           }
@@ -128,62 +81,61 @@ function App({ Component, pageProps, userInfo = {} }) {
     if (!isSSR) {
       Clevertap.initialize();
     }
-
-    async function fetchProfile() {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        const currentSession = await Auth.currentSession();
-        const token = currentSession.idToken.jwtToken;
-        const res = await api.get({
-          path: "profile",
-          token,
-        });
-        const userInfo = {
-          authenticated: true,
-          username: user.username,
-          profile: res,
-        };
-        setUser(userInfo);
-
-        const pendingAgreementRes = await api.get({
-          path: "getPendingHealthQuestionAgreement",
-          token,
-        });
-
-        setIsPendingAgreement(
-          pendingAgreementRes && pendingAgreementRes.length > 0,
-        );
-
-        const { subscriptions = [], isCCUpdateRequiredForSubscription } =
-          userInfo.profile;
-        setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
-        const reinstateRequiredForSubscription = subscriptions.find(
-          ({ isReinstateRequiredForSubscription }) =>
-            isReinstateRequiredForSubscription,
-        );
-        if (reinstateRequiredForSubscription) {
-          setIsReInstateRequired(true);
-          setReinstateRequiredSubscription(reinstateRequiredForSubscription);
-        }
-
-        Clevertap.profile({
-          Site: {
-            Name: userInfo.profile.name, // String
-            Identity: userInfo.profile.id, // String or number
-            Email: userInfo.profile.email, // Email address of the user
-          },
-        });
-        Segment.profile(userInfo.profile.id, {
-          email: userInfo.profile.email,
-          name: userInfo.profile.name,
-        });
-      } catch (ex) {
-        console.log(ex);
-        // await Auth.signOut();
-      }
-    }
     fetchProfile();
   }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const currentSession = await Auth.currentSession();
+      const token = currentSession.idToken.jwtToken;
+      const res = await api.get({
+        path: "profile",
+        token,
+      });
+      const userInfo = {
+        authenticated: true,
+        username: user.username,
+        profile: res,
+      };
+      setUser(userInfo);
+
+      const pendingAgreementRes = await api.get({
+        path: "getPendingHealthQuestionAgreement",
+        token,
+      });
+
+      setIsPendingAgreement(
+        pendingAgreementRes && pendingAgreementRes.length > 0,
+      );
+
+      const { subscriptions = [], isCCUpdateRequiredForSubscription } =
+        userInfo.profile;
+      setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
+      const reinstateRequiredForSubscription = subscriptions.find(
+        ({ isReinstateRequiredForSubscription }) =>
+          isReinstateRequiredForSubscription,
+      );
+      if (reinstateRequiredForSubscription) {
+        setIsReInstateRequired(true);
+        setReinstateRequiredSubscription(reinstateRequiredForSubscription);
+      }
+
+      // Clevertap.profile({
+      //   Site: {
+      //     Name: userInfo.profile.name, // String
+      //     Identity: userInfo.profile.id, // String or number
+      //     Email: userInfo.profile.email, // Email address of the user
+      //   },
+      // });
+      // Segment.profile(userInfo.profile.id, {
+      //   email: userInfo.profile.email,
+      //   name: userInfo.profile.name,
+      // });
+    } catch (ex) {
+      await Auth.signOut();
+    }
+  };
 
   const queryClient = new QueryClient();
   return (
@@ -192,7 +144,7 @@ function App({ Component, pageProps, userInfo = {} }) {
         <TrackingHeadScript id={process.env.NEXT_PUBLIC_GTM_ID} />
       )}
       <QueryClientProvider client={queryClient}>
-        <AuthProvider userInfo={user}>
+        <AuthProvider userInfo={user} reloadProfile={fetchProfile}>
           <Compose
             components={[
               GlobalModal,
