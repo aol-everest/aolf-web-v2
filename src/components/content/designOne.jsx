@@ -341,9 +341,7 @@ export const DesignOne = ({
                   key={meditate.sfid}
                 >
                   <div
-                    className={classNames(
-                      "card image-card image-card-1 contentCard",
-                    )}
+                    className="card image-card image-card-1 contentCard"
                     data-play-meditation
                     style={{
                       background: `url(${

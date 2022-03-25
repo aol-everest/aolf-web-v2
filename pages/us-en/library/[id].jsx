@@ -14,6 +14,7 @@ import {
   useGlobalVideoPlayerContext,
   useGlobalModalContext,
 } from "@contexts";
+import { useAuth } from "@contexts";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
@@ -75,8 +76,9 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-export default function Library({ data, authenticated }) {
+export default function Library({ data }) {
   const [rootFolder] = data.folder;
+  const [{ authenticated }] = useAuth();
 
   //SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();
