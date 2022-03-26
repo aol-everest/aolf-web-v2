@@ -660,11 +660,13 @@ export const PaymentFormGeneric = ({
                         data-method="card"
                       >
                         <>
-                          {!isRegisteredStripeCustomer && (
-                            <div className="card-element">
-                              <CardElement options={createOptions} />
-                            </div>
-                          )}
+                          {!isRegisteredStripeCustomer &&
+                            !isCCNotRequired &&
+                            isCreditCardRequired !== false && (
+                              <div className="card-element">
+                                <CardElement options={createOptions} />
+                              </div>
+                            )}
 
                           {isRegisteredStripeCustomer &&
                             !isChangingCard &&

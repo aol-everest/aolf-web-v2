@@ -654,7 +654,7 @@ export const PaymentFormHB = ({
                     <UserInfoForm formikProps={formikProps} isHBCheckout />
                   </div>
                   <div className="details mt-5">
-                    <h2 className="details__title">Billing Details:</h2>
+                    <h2 className="details__title">Billing Detailsssss:</h2>
                     <p className="details__content">
                       <img src="/img/ic-visa.svg" alt="visa" />
                       <img src="/img/ic-mc.svg" alt="mc" />
@@ -690,11 +690,13 @@ export const PaymentFormHB = ({
                         data-method="card"
                       >
                         <>
-                          {!isRegisteredStripeCustomer && (
-                            <div className="card-element">
-                              <CardElement options={createOptions} />
-                            </div>
-                          )}
+                          {!isRegisteredStripeCustomer &&
+                            !isCCNotRequired &&
+                            isCreditCardRequired !== false && (
+                              <div className="card-element">
+                                <CardElement options={createOptions} />
+                              </div>
+                            )}
 
                           {isRegisteredStripeCustomer &&
                             !isChangingCard &&
