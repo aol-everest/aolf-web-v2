@@ -173,7 +173,7 @@ export const PreCostDetailsCard = ({
                       <button
                         className="btn-outline"
                         onClick={openSubscriptionPaywallPage(
-                          process.env.REACT_APP_JOURNEY_PLUS_ID,
+                          MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
                         )}
                       >
                         Join Journey+
