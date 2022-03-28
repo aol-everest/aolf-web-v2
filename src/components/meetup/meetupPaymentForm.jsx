@@ -631,7 +631,7 @@ export const MeetupPaymentForm = ({
                     handlePriceTypeChange={handlePriceTypeChange}
                     openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                     hasGroupedAddOnProducts={hasGroupedAddOnProducts}
-                    totalFee={totalFee}
+                    totalFee={isDigitalMember ? memberPrice : unitPrice}
                   />
                 </div>
                 <AgreementForm
