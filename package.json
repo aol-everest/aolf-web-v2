@@ -5,6 +5,9 @@
   "cacheDirectories": [
     ".next/cache"
   ],
+  "engines": {
+    "node": ">=12.22 <=14"
+  },
   "scripts": {
     "develop": "NODE_ENV=development next dev",
     "develop:qa": "NODE_ENV=test next dev",
