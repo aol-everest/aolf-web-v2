@@ -36,7 +36,7 @@ export const ChangeProfile = ({
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
 
-  const allowEmailEdit = profile.cognito.UserStatus !== "EXTERNAL_PROVIDER";
+  const allowEmailEdit = false;
 
   const editEmailAction = (e) => {
     if (e) e.preventDefault();
@@ -53,19 +53,12 @@ export const ChangeProfile = ({
   };
 
   const submitAction = async (values) => {
-    const {
-      contactCity,
-      contactPhone,
-      contactAddress,
-      contactState,
-      contactZip,
-    } = values;
+    const { contactPhone, contactAddress, contactState, contactZip } = values;
     setLoading(true);
     try {
       const { status, error: errorMessage } = await api.post({
         path: "updateProfile",
         body: {
-          contactCity,
           contactPhone,
           contactAddress,
           contactState,
@@ -108,14 +101,12 @@ export const ChangeProfile = ({
         initialValues={{
           firstName: first_name || "",
           lastName: last_name || "",
-          contactCity: personMailingCity || "",
           contactPhone: personMobilePhone || "",
           contactAddress: personMailingStreet || "",
           contactState: personMailingState || "",
           contactZip: personMailingPostalCode || "",
         }}
         validationSchema={Yup.object().shape({
-          contactCity: Yup.string().required("City is required"),
           contactPhone: Yup.string()
             .required("Phone is required")
             .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })

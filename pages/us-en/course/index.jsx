@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
 import { withSSRContext } from "aws-amplify";
 import dynamic from "next/dynamic";
+import { useAuth } from "@contexts";
 import {
   Popup,
   SmartInput,
@@ -59,12 +60,14 @@ const DATE_PICKER_CONFIG = {
 };
 
 export const getServerSideProps = async (context) => {
+  const { req } = context;
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     props = {
       authenticated: true,
       username: user.username,
@@ -159,9 +162,9 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
-const Course = ({ authenticated }) => {
+const Course = () => {
   const seed = useUIDSeed();
-
+  const [{ authenticated }] = useAuth();
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: "ONLINE",
   });

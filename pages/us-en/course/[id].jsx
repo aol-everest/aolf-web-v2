@@ -14,7 +14,7 @@ import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { useAuth } from "@contexts";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -43,13 +43,15 @@ const VolunteerTrainingProgram = dynamic(() =>
 );
 
 export const getServerSideProps = async (context) => {
-  const { id } = context.query;
+  const { query, req, res } = context;
+  const { id } = query;
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     props = {
       authenticated: true,
       username: user.username,
@@ -76,21 +78,22 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function CourseDetail({ data }) {
-  const sendDataToGTM = useGTMDispatch();
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
   useEffect(() => {
     if (!profile) return;
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
 
-    sendDataToGTM({
+    trackEvent({
       event: "workshopview",
-      viewType: "workshop",
-      requestType: "Detail",
-      amount: unitPrice,
-      title,
-      ctype: productTypeId,
-      user: profile,
+      data: {
+        viewType: "workshop",
+        requestType: "Detail",
+        amount: unitPrice,
+        title,
+        ctype: productTypeId,
+        user: profile,
+      },
     });
     Clevertap.event("Product Viewed", {
       "Request Type": "Detail",
@@ -169,6 +172,8 @@ export default function CourseDetail({ data }) {
   const isVolunteerTrainingProgram =
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(data.productTypeId) >=
     0;
+  const isHealingBreathType =
+    COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
 
   const router = useRouter();
 
@@ -179,7 +184,8 @@ export default function CourseDetail({ data }) {
       !isSilentRetreatType &&
       !isSahajSamadhiMeditationType &&
       !isSriSriYogaMeditationType &&
-      !isVolunteerTrainingProgram
+      !isVolunteerTrainingProgram &&
+      !isHealingBreathType
     ) {
       router.push({
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -201,7 +207,7 @@ export default function CourseDetail({ data }) {
       <NextSeo title={data.title} />
       {isVolunteerTrainingProgram && <VolunteerTrainingProgram {...props} />}
       {isSriSriYogaMeditationType && <SriSriYoga {...props} />}
-      {isSKYType && <SKYBreathMeditation {...props} />}
+      {(isSKYType || isHealingBreathType) && <SKYBreathMeditation {...props} />}
       {isSilentRetreatType && <SilentRetreat {...props} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
     </>

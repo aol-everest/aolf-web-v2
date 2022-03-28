@@ -10,7 +10,7 @@ import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -45,9 +45,10 @@ export const getServerSideProps = async (context) => {
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     const res = await api.get({
       path: "profile",
       token,
@@ -100,7 +101,6 @@ export const getServerSideProps = async (context) => {
 
 function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
   const [couponCode] = useQueryString("coupon");
-  const sendDataToGTM = useGTMDispatch();
   const [offeringId] = useQueryString("ofid");
   const [courseId] = useQueryString("cid", {
     defaultValue: cid,
@@ -132,22 +132,24 @@ function MembershipCheckout({ subsciption, authenticated, profile, cid }) {
       }),
     );
 
-    sendDataToGTM({
-      page: `Art of Living subscription page`,
+    trackEvent({
       event: "eec.checkout",
-      viewType: "subscription",
-      title: activeSubscription.subscriptionName,
-      ctype: activeSubscription.sfid,
-      amount: activeSubscription.price,
-      requestType: "Detail",
-      hitType: "paymentpage",
-      user: profile.id,
-      ecommerce: {
-        checkout: {
-          actionField: {
-            step: 1,
+      data: {
+        page: `Art of Living subscription page`,
+        viewType: "subscription",
+        title: activeSubscription.subscriptionName,
+        ctype: activeSubscription.sfid,
+        amount: activeSubscription.price,
+        requestType: "Detail",
+        hitType: "paymentpage",
+        user: profile.id,
+        ecommerce: {
+          checkout: {
+            actionField: {
+              step: 1,
+            },
+            products: products,
           },
-          products: products,
         },
       },
     });

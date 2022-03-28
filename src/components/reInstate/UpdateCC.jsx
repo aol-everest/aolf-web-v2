@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "@utils";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useAuth } from "@contexts";
-import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 const createOptions = {
   style: {
@@ -24,11 +24,41 @@ const createOptions = {
     },
   },
 };
-export const UpdateCC = ({ updateCompleteAction, subscription }) => {
+export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
   const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState(0);
   const stripe = useStripe();
   const elements = useElements();
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    async function fetchPendingSubscriptionInvoices() {
+      setLoading(true);
+      try {
+        const response = await api.get({
+          path: "pendingSubscriptionInvoices",
+          param: {
+            stripeSubscriptionId: subscription.stripeSubscriptionId,
+          },
+        });
+        const {
+          status: pendingSubscriptionInvoicesStatus,
+          error: pendingSubscriptionInvoicesErrorMessage,
+          data,
+        } = response;
+        if (pendingSubscriptionInvoicesStatus === 400) {
+          throw new Error(pendingSubscriptionInvoicesErrorMessage);
+        }
+        setAmount(data.totalPendingAmount);
+      } catch (ex) {
+        updateError(ex.message);
+      }
+      setLoading(false);
+    }
+    fetchPendingSubscriptionInvoices();
+  }, [router.isReady]);
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
@@ -73,9 +103,9 @@ export const UpdateCC = ({ updateCompleteAction, subscription }) => {
       if (status === 400) {
         throw new Error(errorMessage);
       }
-      updateCompleteAction({ payload: { editCardDetail: false } });
+      updateSuccess(data.totalPendingAmount);
     } catch (ex) {
-      updateCompleteAction({ message: ex.message, isError: true });
+      updateError(ex.message);
     }
     setLoading(false);
   };
@@ -83,7 +113,7 @@ export const UpdateCC = ({ updateCompleteAction, subscription }) => {
     <>
       {loading && <div className="cover-spin"></div>}
       <form name="profile-edit" onSubmit={handleSubmit}>
-        {/* <span>Current Balance due - {amount}</span> */}
+        <span>Current Balance due - {amount}</span>
         <div className="input_card">
           <div className="card-element">
             <CardElement options={createOptions} />
@@ -91,7 +121,7 @@ export const UpdateCC = ({ updateCompleteAction, subscription }) => {
         </div>
         {!loading && (
           <button type="submit" className="btn btn-link">
-            <img src="assets/images/check-circle.png" alt="img" /> Save card
+            <img src="/img/check-circle.png" alt="img" /> Save card
           </button>
         )}
       </form>

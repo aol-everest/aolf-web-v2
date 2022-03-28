@@ -10,7 +10,7 @@ import { NextSeo } from "next-seo";
 import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useGlobalAlertContext } from "@contexts";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 import { COURSE_TYPES } from "@constants";
 
 const stripePromise = loadStripe(
@@ -55,9 +55,10 @@ export const getServerSideProps = async (context) => {
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     const res = await api.get({
       path: "profile",
       token,
@@ -98,7 +99,6 @@ const Checkout = ({ workshop, profile }) => {
   const router = useRouter();
   const { profile: clientProfile } = useAuth();
 
-  const sendDataToGTM = useGTMDispatch();
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
@@ -134,22 +134,24 @@ const Checkout = ({ workshop, profile }) => {
       },
     ];
 
-    sendDataToGTM({
-      page: `Art of Living ${title} workshop registration page`,
+    trackEvent({
       event: "eec.checkout",
-      viewType: "workshop",
-      title: title,
-      ctype: productTypeId,
-      amount: unitPrice,
-      requestType: "Detail",
-      hitType: "paymentpage",
-      user: profile.id,
-      ecommerce: {
-        checkout: {
-          actionField: {
-            step: 1,
+      data: {
+        page: `Art of Living ${title} workshop registration page`,
+        viewType: "workshop",
+        title: title,
+        ctype: productTypeId,
+        amount: unitPrice,
+        requestType: "Detail",
+        hitType: "paymentpage",
+        user: profile.id,
+        ecommerce: {
+          checkout: {
+            actionField: {
+              step: 1,
+            },
+            products: products,
           },
-          products: products,
         },
       },
     });
@@ -283,9 +285,21 @@ const Checkout = ({ workshop, profile }) => {
         <section className="order">
           <div className="container">
             <h1 className="title">{workshop.title}</h1>
-            <p className="order__detail">
-              The Most Effective Way to Feel Calm & Clear, Day After Day
-            </p>
+            {workshop.isGenericWorkshop ? (
+              <p className="order__detail">
+                Once you register, you will be contacted to schedule your course
+                date
+                <br />
+                <span>
+                  SKY is offered every week of the year across time zones.
+                </span>
+              </p>
+            ) : (
+              <p className="order__detail">
+                The Most Effective Way to Feel Calm & Clear, Day After Day
+              </p>
+            )}
+
             {workshop.isCorporateEvent && (
               <div className="tw-mb-[60px]">
                 <h1 className="tw-text-2xl tw-font-bold tw-text-center tw-text-[#31364e]">

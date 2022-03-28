@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Loader } from "@components";
-import { Hub } from "@aws-amplify/core";
+import { Hub } from "aws-amplify";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;

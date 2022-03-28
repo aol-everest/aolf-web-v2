@@ -51,10 +51,10 @@ const MENU = [
         name: "College Courses",
         link: "https://www.skycampushappiness.org/",
       },
-      {
-        name: "Youth Courses",
-        link: "https://www.skyforkids.org/",
-      },
+      // {
+      //   name: "Youth Courses",
+      //   link: "https://www.skyforkids.org/",
+      // },
       {
         name: "Destination Retreats",
         link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
@@ -90,7 +90,7 @@ const MENU = [
         link: "/us-en/lp/journey-app",
       },
       {
-        name: "Articles",
+        name: "Blog",
         link: "https://www.artofliving.org/us-en/blog",
       },
       {
@@ -214,7 +214,7 @@ const CustomMenu = React.forwardRef(
 
 export const Header = () => {
   const router = useRouter();
-  const { authenticated = false, profile } = useAuth();
+  const [{ authenticated = false, profile }] = useAuth();
   const { showModal } = useGlobalModalContext();
   const { userProfilePic: profilePic, first_name, last_name } = profile || {};
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];

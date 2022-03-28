@@ -93,7 +93,7 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
 
 const Meetup = () => {
   const seed = useUIDSeed();
-  const { authenticated, profile } = useAuth();
+  const [{ authenticated, profile }] = useAuth();
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();

@@ -17,7 +17,7 @@ export const MeetupEnroll = ({
   loading,
   checkoutLoading,
 }) => {
-  const { authenticated = false, profile } = useAuth();
+  const [{ authenticated = false, profile }] = useAuth();
   const router = useRouter();
 
   const goToCheckout = (e) => {

@@ -181,7 +181,8 @@ export const LoginModal = () => {
     try {
       await Auth.completeNewPassword(currentUser, password);
       setUsername(null);
-      setMode(LOGIN_MODE);
+      // setMode(LOGIN_MODE);
+      hideModal();
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;

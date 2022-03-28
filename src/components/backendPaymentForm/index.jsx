@@ -59,7 +59,7 @@ export const BackendPaymentForm = ({
   const [selectedComboBundle, setSelectedComboBundle] = useState(null);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
-  const [sameAsBillingCardDetail, setSameAsBillingCardDetail] = useState(false);
+  const [sameAsBillingCardDetail, setSameAsBillingCardDetail] = useState(true);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
   const [discount, setDiscount] = useState(null);
   const [paymentMode, setPaymentMode] = useState(FULL);
@@ -88,9 +88,9 @@ export const BackendPaymentForm = ({
   };
 
   const setFormInitialValues = () => {
-    const secondPaymentDate = dayjs(workshop.eventStartDate)
-      .add(-3, "D")
-      .format("YYYY-MM-DD");
+    const secondPaymentDate = dayjs(
+      workshop.remainPartialPaymentDateCap || workshop.eventStartDate,
+    ).format("YYYY-MM-DD");
     return {
       firstName: "",
       lastName: "",
@@ -638,6 +638,7 @@ export const BackendPaymentForm = ({
     isPartialPaymentAllowed,
     minimumPartialPayment,
     groupedAddOnProducts,
+    remainPartialPaymentDateCap,
   } = workshop;
 
   const comboPrice = availableBundles?.find(
@@ -897,6 +898,7 @@ export const BackendPaymentForm = ({
                     params: { eventStartDate },
                     message: `Payment date must be on or before ${dayjs(
                       selectedComboBundle?.remainPartialPaymentDateCap ||
+                        remainPartialPaymentDateCap ||
                         eventStartDate,
                     ).format("MM/DD/YYYY")}`,
                     test: (value) => {
@@ -906,6 +908,7 @@ export const BackendPaymentForm = ({
                       ]).isSameOrBefore(
                         dayjs(
                           selectedComboBundle?.remainPartialPaymentDateCap ||
+                            remainPartialPaymentDateCap ||
                             eventStartDate,
                         ),
                       );
@@ -1937,6 +1940,7 @@ export const BackendPaymentForm = ({
                               max={
                                 new Date(
                                   selectedComboBundle?.remainPartialPaymentDateCap ||
+                                    remainPartialPaymentDateCap ||
                                     eventStartDate,
                                 )
                                   .toISOString()

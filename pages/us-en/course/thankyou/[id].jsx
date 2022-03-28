@@ -8,8 +8,7 @@ import {
   calculateBusinessDays,
   Segment,
 } from "@utils";
-import { withSSRContext } from "aws-amplify";
-import { useGTMDispatch } from "@elgorditosalsero/react-gtm-hook";
+import { trackEvent } from "@phntms/react-gtm";
 import { useAuth, useGlobalAlertContext } from "@contexts";
 import { COURSE_TYPES, ALERT_TYPES, ABBRS } from "@constants";
 import { AddToCalendarModal } from "@components";
@@ -23,22 +22,16 @@ dayjs.extend(localizedFormat);
 
 export async function getServerSideProps(context) {
   const { query, req, res } = context;
-  const { Auth } = withSSRContext(context);
   const { id } = query;
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
   const { data, attendeeRecord } = await api.get({
     path: "getWorkshopByAttendee",
     param: {
       aid: id,
       skipcheck: 1,
     },
-    token,
   });
   return {
     props: {
-      authenticated: true,
-      username: user.username,
       workshop: data,
       attendeeRecord,
     },
@@ -87,8 +80,7 @@ const renderVideo = (productTypeId) => {
 };
 
 const Thankyou = ({ workshop, attendeeRecord }) => {
-  const sendDataToGTM = useGTMDispatch();
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
   const {
@@ -137,37 +129,39 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
 
   useEffect(() => {
     if (!profile) return;
-    sendDataToGTM({
+    trackEvent({
       event: "transactionComplete",
-      viewType: "workshop",
-      amount: unitPrice,
-      title: title,
-      ctype: productTypeId,
-      requestType: "Thankyou",
-      // user,
-      ecommerce: {
-        currencyCode: "USD",
-        purchase: {
-          actionField: {
-            id: orderExternalId,
-            affiliation: "Website",
-            revenue: ammountPaid,
-            tax: "0.00",
-            shipping: "0.00",
-            coupon: couponCode || "",
-          },
-          products: [
-            {
-              id: courseId,
-              courseId: courseId,
-              name: title,
-              category: "workshop",
-              variant: "N/A",
-              brand: "Art of Living Foundation",
-              quantity: 1,
-              // price: totalOrderAmount,
+      data: {
+        viewType: "workshop",
+        amount: unitPrice,
+        title: title,
+        ctype: productTypeId,
+        requestType: "Thankyou",
+        // user,
+        ecommerce: {
+          currencyCode: "USD",
+          purchase: {
+            actionField: {
+              id: orderExternalId,
+              affiliation: "Website",
+              revenue: ammountPaid,
+              tax: "0.00",
+              shipping: "0.00",
+              coupon: couponCode || "",
             },
-          ],
+            products: [
+              {
+                id: courseId,
+                courseId: courseId,
+                name: title,
+                category: "workshop",
+                variant: "N/A",
+                brand: "Art of Living Foundation",
+                quantity: 1,
+                // price: totalOrderAmount,
+              },
+            ],
+          },
         },
       },
     });

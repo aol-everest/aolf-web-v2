@@ -7,7 +7,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
-import { useQuery } from "react-query";
+import { useAuth } from "@contexts";
 import { api, Clevertap } from "@utils";
 import { ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
@@ -60,7 +60,8 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { tab } = query || {};
   try {
     const user = await Auth.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    const token = currentSession.idToken.jwtToken;
     const res = await api.get({
       path: "profile",
       token,
@@ -86,11 +87,11 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
   }
 }
 
-const Profile = ({ profile, tab }) => {
+const Profile = ({ tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const [userProfile, setUserProfile] = useState(profile);
+  const [{ profile }, reloadProfile] = useAuth();
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: tab || UPCOMING_EVENTS,
   });
@@ -185,14 +186,14 @@ const Profile = ({ profile, tab }) => {
       });
     } else {
       setLoading(true);
-      const res = await api.get({
-        path: "profile",
-      });
-      setUserProfile(res);
+      await reloadProfile();
       setLoading(false);
       setEditCardDetail(false);
     }
   };
+  if (!profile) {
+    return null;
+  }
 
   return (
     <>

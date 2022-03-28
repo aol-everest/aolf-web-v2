@@ -2996,11 +2996,6 @@
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.11.1.tgz#755e3efd5e0ac277d554e6f731ba9fdc1c45f6fe"
   integrity sha512-seO8Nl9cp894v7an6R8isX+HqYwVUesviGULTh/rIj2DCv2tXUU1GCqzSkt84XN6c6nbFYow9+Wzezkxx/IdIA==
 
-"@elgorditosalsero/react-gtm-hook@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@elgorditosalsero/react-gtm-hook/-/react-gtm-hook-2.3.1.tgz#b685bebb711d9edb9b8ab414c41c302073f844c0"
-  integrity sha512-TgbYUGwBcjx61XGXoZqnPKNvkT7TdzMmsulxoSTpsojjfofP7/ScLB6okYkQQgwfLRPvsdSiOmeM8BbXxZCBmg==
-
 "@emotion/babel-plugin@^11.3.0", "@emotion/babel-plugin@^11.7.1":
   version "11.7.2"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.7.2.tgz#fec75f38a6ab5b304b0601c74e2a5e77c95e5fa0"
@@ -3720,6 +3715,18 @@
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/context-base/-/context-base-0.14.0.tgz#c67fc20a4d891447ca1a855d7d70fa79a3533001"
   integrity sha512-sDOAZcYwynHFTbLo6n8kIbLiVF3a3BLkrmehJUyEbT9F+Smbi47kLGS2gG2g0fjBLR/Lr1InPD7kXL7FaTqEkw==
+
+"@phntms/next-gtm@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@phntms/next-gtm/-/next-gtm-0.1.0.tgz#87d8bc89e7fb506b6862e312fe83a0516911ad7c"
+  integrity sha512-TfCpEVwFKRbp7gvJySuqEmedyh9T9IBg5kHexriJYD1GQ41GO/uU/8EnZGqSWH7+aJZ15FSco1jaN058KpCFPg==
+  dependencies:
+    "@phntms/react-gtm" "^0.1.1"
+
+"@phntms/react-gtm@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@phntms/react-gtm/-/react-gtm-0.1.1.tgz#e857243bd4a58f496ab5e8abda70ef0b155ce761"
+  integrity sha512-kZ5LRzvVe0eWFYLHPEhwrK939Z+NN8OETVIw9RQ6xsDie4vMj5i07kN5n2OepGnWlK6Z0Npm7e0QqoWKXTh4rw==
 
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"

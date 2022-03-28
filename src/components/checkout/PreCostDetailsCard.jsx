@@ -173,7 +173,7 @@ export const PreCostDetailsCard = ({
                       <button
                         className="btn-outline"
                         onClick={openSubscriptionPaywallPage(
-                          process.env.REACT_APP_JOURNEY_PLUS_ID,
+                          MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
                         )}
                       >
                         Join Journey+
@@ -255,7 +255,7 @@ export const PreCostDetailsCard = ({
     } else {
       return (
         <>
-          <div className="reciept__header reciept__header_v1 full-padding">
+          <div className="reciept__header_v1">
             {delfee && (
               <>
                 <h1 className="title reciept__title_v1">
@@ -274,45 +274,47 @@ export const PreCostDetailsCard = ({
               {usableCredit.message} ${UpdatedFeeAfterCredits}.
             </div>
           )}
-          <ul className="reciept__payment_list">
-            {addOnProducts.map((product) => {
-              if (
-                !product.isExpenseAddOn ||
-                (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-              ) {
-                const isChecked = product.isAddOnSelectionRequired
-                  ? true
-                  : formikProps.values[product.productName];
+          {addOnProducts && addOnProducts.length > 0 && (
+            <ul className="reciept__payment_list">
+              {addOnProducts.map((product) => {
+                if (
+                  !product.isExpenseAddOn ||
+                  (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                ) {
+                  const isChecked = product.isAddOnSelectionRequired
+                    ? true
+                    : formikProps.values[product.productName];
 
-                return (
-                  <li>
-                    <span>
-                      {!product.isAddOnSelectionRequired && (
-                        <input
-                          type="checkbox"
-                          className="custom-checkbox"
-                          placeholder=" "
-                          checked={isChecked}
-                          onChange={formikProps.handleChange(
-                            product.productName,
-                          )}
-                          value={product.productName}
-                          name={product.productName}
-                          id={product.productSfid}
-                          disabled={product.isAddOnSelectionRequired}
-                        />
-                      )}
-                      <label htmlFor={workshop.productSfid}></label>
-                      <span className="ml-2">
-                        {product.productName} Required:
+                  return (
+                    <li>
+                      <span>
+                        {!product.isAddOnSelectionRequired && (
+                          <input
+                            type="checkbox"
+                            className="custom-checkbox"
+                            placeholder=" "
+                            checked={isChecked}
+                            onChange={formikProps.handleChange(
+                              product.productName,
+                            )}
+                            value={product.productName}
+                            name={product.productName}
+                            id={product.productSfid}
+                            disabled={product.isAddOnSelectionRequired}
+                          />
+                        )}
+                        <label htmlFor={workshop.productSfid}></label>
+                        <span className="ml-2">
+                          {product.productName} Required:
+                        </span>
                       </span>
-                    </span>
-                    <span className="ml-2">${product.unitPrice}</span>
-                  </li>
-                );
-              }
-            })}
-          </ul>
+                      <span className="ml-2">${product.unitPrice}</span>
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          )}
         </>
       );
     }

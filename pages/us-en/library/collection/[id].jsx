@@ -27,12 +27,14 @@ import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 export const getServerSideProps = async (context) => {
+  const { query, req, res } = context;
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     props = {
       authenticated: true,
       token,
@@ -135,7 +137,7 @@ function Tile({
 
 function Collection({ rootFolder, authenticated }) {
   const router = useRouter();
-  const { profile } = useAuth();
+  const [{ profile }] = useAuth();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();

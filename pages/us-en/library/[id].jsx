@@ -14,6 +14,7 @@ import {
   useGlobalVideoPlayerContext,
   useGlobalModalContext,
 } from "@contexts";
+import { useAuth } from "@contexts";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
@@ -38,13 +39,15 @@ const CATEGORY_IMAGES = [
 ];
 
 export const getServerSideProps = async (context) => {
-  const { id } = context.query;
+  const { query, req, res } = context;
+  const { id } = query;
   let props = {};
   let token = "";
   try {
-    const { Auth } = await withSSRContext(context);
+    const { Auth } = await withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const currentSession = await Auth.currentSession();
+    token = currentSession.idToken.jwtToken;
     props = {
       authenticated: true,
       username: user.username,
@@ -73,8 +76,9 @@ export const getServerSideProps = async (context) => {
   return { props };
 };
 
-export default function Library({ data, authenticated }) {
+export default function Library({ data }) {
   const [rootFolder] = data.folder;
+  const [{ authenticated }] = useAuth();
 
   //SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const router = useRouter();

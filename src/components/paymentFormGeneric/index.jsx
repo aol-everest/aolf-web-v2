@@ -373,6 +373,7 @@ export const PaymentFormGeneric = ({
     contactName,
     phone1,
     description,
+    isCCNotRequired,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -391,6 +392,8 @@ export const PaymentFormGeneric = ({
     workshop,
     discount,
   });
+
+  const { isCreditCardRequired } = discountResponse || {};
 
   const {
     first_name,
@@ -643,10 +646,12 @@ export const PaymentFormGeneric = ({
                     type="text"
                     placeholder="Discount Code"
                   /> */}
-                    <PayWith
-                      formikProps={formikProps}
-                      otherPaymentOptions={otherPaymentOptions}
-                    />
+                    {!isCCNotRequired && isCreditCardRequired !== false && (
+                      <PayWith
+                        formikProps={formikProps}
+                        otherPaymentOptions={otherPaymentOptions}
+                      />
+                    )}
 
                     {formikProps.values.paymentMode ===
                       PAYMENT_MODES.STRIPE_PAYMENT_MODE && (
@@ -655,42 +660,48 @@ export const PaymentFormGeneric = ({
                         data-method="card"
                       >
                         <>
-                          {!isRegisteredStripeCustomer && (
-                            <div className="card-element">
-                              <CardElement options={createOptions} />
-                            </div>
-                          )}
+                          {!isRegisteredStripeCustomer &&
+                            !isCCNotRequired &&
+                            isCreditCardRequired !== false && (
+                              <div className="card-element">
+                                <CardElement options={createOptions} />
+                              </div>
+                            )}
 
-                          {isRegisteredStripeCustomer && !isChangingCard && (
-                            <>
-                              <div className="bank-card-info">
-                                <input
-                                  id="card-number"
-                                  className="full-width"
-                                  type="text"
-                                  value={`**** **** **** ${cardLast4Digit}`}
-                                  placeholder="Card Number"
-                                />
-                                <input
-                                  id="mm-yy"
-                                  type="text"
-                                  placeholder="MM/YY"
-                                  value={`**/**`}
-                                />
-                                <input
-                                  id="cvc"
-                                  type="text"
-                                  placeholder="CVC"
-                                  value={`****`}
-                                />
-                              </div>
-                              <div className="change-cc-detail-link">
-                                <a href="#" onClick={toggleCardChangeDetail}>
-                                  Would you like to use a different credit card?
-                                </a>
-                              </div>
-                            </>
-                          )}
+                          {isRegisteredStripeCustomer &&
+                            !isChangingCard &&
+                            !isCCNotRequired &&
+                            isCreditCardRequired !== false && (
+                              <>
+                                <div className="bank-card-info">
+                                  <input
+                                    id="card-number"
+                                    className="full-width"
+                                    type="text"
+                                    value={`**** **** **** ${cardLast4Digit}`}
+                                    placeholder="Card Number"
+                                  />
+                                  <input
+                                    id="mm-yy"
+                                    type="text"
+                                    placeholder="MM/YY"
+                                    value={`**/**`}
+                                  />
+                                  <input
+                                    id="cvc"
+                                    type="text"
+                                    placeholder="CVC"
+                                    value={`****`}
+                                  />
+                                </div>
+                                <div className="change-cc-detail-link">
+                                  <a href="#" onClick={toggleCardChangeDetail}>
+                                    Would you like to use a different credit
+                                    card?
+                                  </a>
+                                </div>
+                              </>
+                            )}
 
                           {isRegisteredStripeCustomer && isChangingCard && (
                             <>
