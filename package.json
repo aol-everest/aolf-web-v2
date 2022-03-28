@@ -6,7 +6,7 @@
     ".next/cache"
   ],
   "engines": {
-    "node": "16.x"
+    "node": "14.x"
   },
   "scripts": {
     "develop": "NODE_ENV=development next dev",

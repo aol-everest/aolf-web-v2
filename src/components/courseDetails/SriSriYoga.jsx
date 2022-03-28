@@ -226,9 +226,11 @@ export const SriSriYoga = ({ data, swiperOption }) => {
               <p className="program-banner__subtitle">
                 Sri Sri School of Yoga Foundation Program:
               </p>
-              <p class="program-banner__price">
+              <p className="program-banner__price">
                 {delfee && (
-                  <span class="program-banner__price_previous">${delfee}</span>
+                  <span className="program-banner__price_previous">
+                    ${delfee}
+                  </span>
                 )}
                 <span> ${fee}</span>
               </p>
