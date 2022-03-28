@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import classNames from "classnames";
+import CourseDetailsCard from "./CourseDetailsCard";
 import { CourseBottomCard } from "./CourseBottomCard";
+import { COURSE_TYPES } from "@constants";
 import { priceCalculation } from "@utils";
 import { useRouter } from "next/router";
 import Style from "./CourseDetails.module.scss";
@@ -74,66 +76,13 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                   </Link>
                 </div>
               </div>
-
-              <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-0 col-xl-5 d-flex flex-column justify-content-end">
-                <div className="about-program__details">
-                  <h3 className="about-program__details-title">
-                    Online course details
-                  </h3>
-                  <div className="details-table about-program__details-table">
-                    <div className="details-table__row">
-                      <div className="details-table__column details-table__column_bold">
-                        Date:
-                      </div>
-                      <div className="details-table__column">
-                        August 20-22, 2021
-                      </div>
-                    </div>
-                    <div className="details-table__row">
-                      <div className="details-table__column details-table__column_bold">
-                        Timings:
-                      </div>
-                      <div className="details-table__column">
-                        Fr: 4:00 PM-7:00 PM PT
-                        <br />
-                        Sa: 4:00 PM-7:00 PM PT
-                        <br />
-                        Su: 4:00 PM-7:00 PM PT
-                      </div>
-                    </div>
-                    <div className="details-table__row">
-                      <div className="details-table__column details-table__column_bold">
-                        Instructor(s):
-                      </div>
-                      <div className="details-table__column">
-                        Prachee Sharma
-                        <br />
-                        Poornima Raman
-                        <br />
-                        Rachel Harvey
-                      </div>
-                    </div>
-                    <div className="details-table__row">
-                      <div className="details-table__column details-table__column_bold">
-                        Contacts:
-                      </div>
-                      <div className="details-table__column">
-                        <a href="tel:+13104046599" className="link">
-                          +1 (310) 404-6599
-                        </a>
-                        <br />
-                        <a
-                          href="mailto:prachee.sharma@artofliving.org"
-                          className="link"
-                        >
-                          prachee.sharma@artofliving.org
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+          </div>
+          <div className="top-column !tw-bg-none !tw-p-[0px]">
+            <CourseDetailsCard
+              workshop={data}
+              courseType={COURSE_TYPES.SRI_SRI_YOGA_MEDITATION}
+            ></CourseDetailsCard>
           </div>
         </section>
         <section className="program-benefits">
@@ -277,9 +226,11 @@ export const SriSriYoga = ({ data, swiperOption }) => {
               <p className="program-banner__subtitle">
                 Sri Sri School of Yoga Foundation Program:
               </p>
-              <p className="program-banner__price">
-                <span className="program-banner__price_previous">$200</span>
-                <span>$100</span>
+              <p class="program-banner__price">
+                {delfee && (
+                  <span class="program-banner__price_previous">${delfee}</span>
+                )}
+                <span> ${fee}</span>
               </p>
               <button
                 type="button"
