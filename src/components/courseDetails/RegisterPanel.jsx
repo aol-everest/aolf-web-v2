@@ -6,14 +6,17 @@ import { isEmpty } from "@utils";
 import { useAuth } from "@contexts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
+import { useGlobalModalContext } from "@contexts";
+import { MEMBERSHIP_TYPES, COURSE_TYPES, MODAL_TYPES } from "@constants";
 
 dayjs.extend(utc);
 
 export const RegisterPanel = ({ workshop }) => {
   const [{ authenticated = false, profile }] = useAuth();
+  const { showModal } = useGlobalModalContext();
   const router = useRouter();
   const { fee, delfee, offering } = priceCalculation({ workshop });
+
   const {
     title,
     sfid,
@@ -37,13 +40,20 @@ export const RegisterPanel = ({ workshop }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    router.push({
-      pathname: `/us-en/course/checkout/${sfid}`,
-      query: {
-        ctype: productTypeId,
-        page: "c-o",
-      },
-    });
+    if (authenticated) {
+      router.push({
+        pathname: `/us-en/course/checkout/${sfid}`,
+        query: {
+          ctype: productTypeId,
+          page: "c-o",
+        },
+      });
+    } else {
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o`,
+        defaultView: "SIGNUP_MODE",
+      });
+    }
   };
 
   const purchaseMembershipAction = (id) => (e) => {

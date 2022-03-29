@@ -27,19 +27,27 @@ export const LoginModal = () => {
   const router = useRouter();
   const { hideModal, store } = useGlobalModalContext();
   const { modalProps } = store || {};
-  const { navigateTo, hideCloseBtn = false } = modalProps || {};
+  const {
+    navigateTo,
+    hideCloseBtn = false,
+    closeModalAction,
+    defaultView = LOGIN_MODE,
+  } = modalProps || {};
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [mode, setMode] = useState(LOGIN_MODE);
+  const [mode, setMode] = useState(defaultView);
   const [username, setUsername] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
 
   const handleModalToggle = () => {
     hideModal();
+    if (closeModalAction) {
+      closeModalAction();
+    }
   };
 
   const switchView = (view) => (e) => {

@@ -97,12 +97,13 @@ export const getServerSideProps = async (context) => {
 
 const Checkout = ({ workshop, profile }) => {
   const router = useRouter();
-  const { profile: clientProfile } = useAuth();
+  const [{ profile: clientProfile }] = useAuth();
 
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
   const { showAlert, hideAlert } = useGlobalAlertContext();
+  const [showTopMessage, setShowTopMessage] = useState(false);
 
   useEffect(() => {
     if (!clientProfile) return;
@@ -115,7 +116,9 @@ const Checkout = ({ workshop, profile }) => {
       id: courseId,
       preRequisiteFailedReason = [],
       isPreRequisiteCompleted,
+      earlyBirdFeeIncreasing,
     } = workshop;
+    setShowTopMessage(!!earlyBirdFeeIncreasing);
 
     const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
 
@@ -282,6 +285,16 @@ const Checkout = ({ workshop, profile }) => {
     <>
       <NextSeo title={workshop.title} />
       <main>
+        {showTopMessage && (
+          <aside>
+            <img src="/img/ic-timer-white.svg" alt="timer" />
+            <span>
+              Register soon. Course fee will go up by $
+              {workshop.earlyBirdFeeIncreasing.increasingFee} on{" "}
+              {workshop.earlyBirdFeeIncreasing.increasingBy}
+            </span>
+          </aside>
+        )}
         <section className="order">
           <div className="container">
             <h1 className="title">{workshop.title}</h1>

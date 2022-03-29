@@ -38,7 +38,9 @@ function Login() {
     const navigateTo = router.query.next || "/";
     showModal(MODAL_TYPES.LOGIN_MODAL, {
       navigateTo,
-      hideCloseBtn: true,
+      closeModalAction: () => {
+        router.push("/us-en/course");
+      },
     });
   }, []);
 
