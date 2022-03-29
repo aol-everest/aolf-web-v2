@@ -27,6 +27,12 @@ export const priceCalculation = ({
     fee = unitPrice;
     delfee = listPrice;
   }
+  if (fee > delfee) {
+    return {
+      fee,
+      delfee: null,
+    };
+  }
   return {
     fee,
     delfee,
