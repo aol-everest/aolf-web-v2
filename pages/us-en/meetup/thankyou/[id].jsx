@@ -238,7 +238,7 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
                     {meetupTitle || title}
                   </h1>
                   <p className="get-started__text">
-                    You're registered for the Silent Retreat on{" "}
+                    You're registered for the {meetupTitle || title} on{" "}
                     {dayjs.utc(meetupStartDate).format("LL")}
                   </p>
                   <a
