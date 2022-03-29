@@ -1,6 +1,6 @@
 import React from "react";
 import { isEmpty } from "lodash";
-import PriceCalculation from "@components/backendPaymentForm/PriceCalculation";
+import PriceCalculationComponent from "@components/backendPaymentForm/PriceCalculationComponent";
 
 export function BackendRegisterationDetail({
   workshop,
@@ -114,7 +114,7 @@ export function BackendRegisterationDetail({
               <p>Course ID: {name}</p>
               {priceToShow}
               {!priceToShow && (
-                <PriceCalculation
+                <PriceCalculationComponent
                   // groupedAddOnProductsFirst={groupedAddOnProductsFirst}
                   // addOnProductFirst={addOnProductFirst}
                   listPrice={listPrice}
