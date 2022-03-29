@@ -390,7 +390,7 @@ export const PaymentFormGeneric = ({
 
   const { fee, delfee, offering } = priceCalculation({
     workshop,
-    discount,
+    discount: discountResponse,
   });
 
   const { isCreditCardRequired } = discountResponse || {};

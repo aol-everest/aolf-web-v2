@@ -1,6 +1,6 @@
 import React from "react";
 
-export const PriceCalculation = ({
+export const PriceCalculationComponent = ({
   savingFromOfferings,
   priceBookName,
   listPrice,
