@@ -399,7 +399,7 @@ export const PaymentFormHB = ({
 
   const { fee, delfee, offering } = priceCalculation({
     workshop,
-    discount,
+    discount: discountResponse,
   });
 
   const { isCreditCardRequired } = discountResponse || {};

@@ -78,7 +78,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
               </div>
             </div>
           </div>
-          <div className="top-column !tw-bg-none !tw-p-[0px]">
+          <div className="top-column !tw-bg-none !tw-p-[0px] tw-bottom-24">
             <CourseDetailsCard
               workshop={data}
               courseType={COURSE_TYPES.SRI_SRI_YOGA_MEDITATION}
@@ -157,8 +157,8 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                         Limited time only
                       </h6>
                       <p className="program-benefits__item-text">
-                        This program is regularly $200 and currently offered
-                        online for $100
+                        This program is regularly ${delfee} and currently
+                        offered online for ${fee}
                       </p>
                     </div>
                   </div>

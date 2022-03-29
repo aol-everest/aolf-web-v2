@@ -11,7 +11,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { DiscountCodeInput, Dropdown } from "@components/checkout";
 import { EmailField } from "./EmailField";
 import { Radiobox } from "./Radiobox";
-import { PriceCalculation } from "./PriceCalculation";
+import { PriceCalculationComponent } from "./PriceCalculationComponent";
 import {
   PAYMENT_MODES,
   PAYMENT_TYPES,
@@ -718,7 +718,7 @@ export const BackendPaymentForm = ({
               <div className="col-sm-12 col-md-6 leftBlk">
                 <p>Course ID: {name}</p>
 
-                <PriceCalculation
+                <PriceCalculationComponent
                   // groupedAddOnProductsFirst={groupedAddOnProductsFirst}
                   // addOnProductFirst={addOnProductFirst}
                   listPrice={listPrice}
