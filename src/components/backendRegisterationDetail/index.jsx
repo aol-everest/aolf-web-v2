@@ -1,6 +1,6 @@
 import React from "react";
 import { isEmpty } from "lodash";
-import PriceCalculationComponent from "@components/backendPaymentForm/PriceCalculationComponent";
+import { PriceCalculationComponent } from "@components/backendPaymentForm/PriceCalculationComponent";
 
 export function BackendRegisterationDetail({
   workshop,
