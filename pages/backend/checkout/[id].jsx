@@ -51,7 +51,7 @@ export const getServerSideProps = async (context) => {
     props = {
       authenticated: true,
       username: user.username,
-      profile: res,
+      profile: profile,
       token,
       isTeacher: false,
     };
