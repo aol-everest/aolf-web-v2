@@ -37,7 +37,7 @@ export const getServerSideProps = async (context) => {
   if (
     profile &&
     (profile.userType === "Teacher" ||
-      profile.userType === "Organiser" ||
+      profile.userType === "Organizer" ||
       profile.userType === "Assistant Teacher")
   ) {
     props = {
