@@ -183,7 +183,14 @@ const Meetup = () => {
         setTimesOfDayFilter(value);
         break;
       case "timeZoneFilter":
-        setTimeZoneFilter(value);
+        if (value) {
+          setTimeZoneFilter(value);
+        } else {
+          setTimeZoneFilter(null);
+          setTimeout(() => {
+            setTimesOfDayFilter(null);
+          }, 0);
+        }
         break;
       case "instructorFilter":
         if (value) {
@@ -238,6 +245,9 @@ const Meetup = () => {
         break;
       case "timeZoneFilter":
         setTimeZoneFilter(null);
+        setTimeout(() => {
+          setTimesOfDayFilter(null);
+        }, 0);
         break;
       case "instructorFilter":
         setInstructorFilter(null);
@@ -766,19 +776,19 @@ const Meetup = () => {
                             className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.MST.value)}
                           >
-                            {TIME_ZONE.MST.value}
+                            {TIME_ZONE.MST.name}
                           </li>
                           <li
                             className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.PST.value)}
                           >
-                            {TIME_ZONE.PST.value}
+                            {TIME_ZONE.PST.name}
                           </li>
                           <li
                             className="dropdown-item text-left"
                             onClick={closeHandler(TIME_ZONE.HST.value)}
                           >
-                            {TIME_ZONE.HST.value}
+                            {TIME_ZONE.HST.name}
                           </li>
                         </ul>
                       </div>

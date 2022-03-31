@@ -8,7 +8,7 @@ import Image from "next/image";
 
 dayjs.extend(utc);
 
-export const CourseBottomCard = ({ workshop }) => {
+export const CourseBottomCard = ({ workshop, onRegister = null }) => {
   const { title, eventStartDate, eventEndDate, productTypeId } = workshop || {};
 
   const isSKYType =
@@ -70,6 +70,7 @@ export const CourseBottomCard = ({ workshop }) => {
             activeClassName="active"
             className="btn-secondary"
             to="registerNowBlock"
+            onClick={onRegister}
             spy={true}
             smooth={true}
             duration={500}

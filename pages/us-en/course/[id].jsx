@@ -41,6 +41,9 @@ const VolunteerTrainingProgram = dynamic(() =>
     (mod) => mod.VolunteerTrainingProgram,
   ),
 );
+const HealingBreath = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.HealingBreath),
+);
 
 export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -207,9 +210,10 @@ export default function CourseDetail({ data }) {
       <NextSeo title={data.title} />
       {isVolunteerTrainingProgram && <VolunteerTrainingProgram {...props} />}
       {isSriSriYogaMeditationType && <SriSriYoga {...props} />}
-      {(isSKYType || isHealingBreathType) && <SKYBreathMeditation {...props} />}
+      {isSKYType && <SKYBreathMeditation {...props} />}
       {isSilentRetreatType && <SilentRetreat {...props} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
+      {isHealingBreathType && <HealingBreath {...props} />}
     </>
   );
 }
