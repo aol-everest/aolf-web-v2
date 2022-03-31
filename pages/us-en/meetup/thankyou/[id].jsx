@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 import React, { useEffect } from "react";
+import moment from "moment";
 import { api, calculateBusinessDays, tConvert } from "@utils";
 import { withSSRContext } from "aws-amplify";
 import { trackEvent } from "@phntms/react-gtm";
@@ -94,6 +95,28 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
     orderExternalId,
     couponCode,
   } = attendeeRecord || {};
+
+  const newTitle = title || meetupTitle;
+  const duration = 2;
+
+  let startDatetime = null;
+  if (eventStartDateTimeGMT) {
+    startDatetime = moment.utc(`${eventStartDateTimeGMT || ""}`);
+  } else if (eventStartDate) {
+    startDatetime = moment.utc(
+      `${eventStartDate || ""} ${eventStartTime || ""}`,
+    );
+  } else {
+    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`);
+  }
+  let endDatetime = null;
+  if (eventendDateTimeGMT) {
+    endDatetime = moment.utc(`${eventendDateTimeGMT || ""}`);
+  } else if (eventEndDate) {
+    endDatetime = moment.utc(`${eventEndDate || ""} ${eventEndTime || ""}`);
+  } else {
+    endDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`).add(2, "hours");
+  }
 
   useEffect(() => {
     trackEvent({
@@ -192,11 +215,23 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
     }
   };
 
+  const event = {
+    timezone: "Etc/GMT",
+    description: newTitle,
+    duration,
+    endDatetime: endDatetime.format("YYYYMMDDTHHmmss"),
+    location: `${streetAddress1 || ""} ${streetAddress2 || ""} ${city || ""} ${
+      country || ""
+    }`,
+    startDatetime: startDatetime.format("YYYYMMDDTHHmmss"),
+    title: newTitle,
+  };
+
   const addToCalendarAction = () => {
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       title: "Add to Calendar",
 
-      children: <AddToCalendarModal event={meetup} />,
+      children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
         hideAlert();
       },

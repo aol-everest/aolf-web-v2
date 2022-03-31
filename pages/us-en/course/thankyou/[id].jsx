@@ -9,6 +9,7 @@ import {
   Segment,
 } from "@utils";
 import { trackEvent } from "@phntms/react-gtm";
+import moment from "moment";
 import { useAuth, useGlobalAlertContext } from "@contexts";
 import { COURSE_TYPES, ALERT_TYPES, ABBRS } from "@constants";
 import { AddToCalendarModal } from "@components";
@@ -85,6 +86,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
 
   const {
     title,
+    meetupTitle,
     productTypeId,
     unitPrice,
     id: courseId,
@@ -119,6 +121,28 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+
+  const newTitle = title || meetupTitle;
+  const duration = 2;
+
+  let startDatetime = null;
+  if (eventStartDateTimeGMT) {
+    startDatetime = moment.utc(`${eventStartDateTimeGMT || ""}`);
+  } else if (eventStartDate) {
+    startDatetime = moment.utc(
+      `${eventStartDate || ""} ${eventStartTime || ""}`,
+    );
+  } else {
+    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`);
+  }
+  let endDatetime = null;
+  if (eventendDateTimeGMT) {
+    endDatetime = moment.utc(`${eventendDateTimeGMT || ""}`);
+  } else if (eventEndDate) {
+    endDatetime = moment.utc(`${eventEndDate || ""} ${eventEndTime || ""}`);
+  } else {
+    endDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`).add(2, "hours");
+  }
 
   const {
     ammountPaid,
@@ -187,12 +211,24 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
     });
   }, [profile]);
 
+  const event = {
+    timezone: "Etc/GMT",
+    description: newTitle,
+    duration,
+    endDatetime: endDatetime.format("YYYYMMDDTHHmmss"),
+    location: `${streetAddress1 || ""} ${streetAddress2 || ""} ${city || ""} ${
+      country || ""
+    }`,
+    startDatetime: startDatetime.format("YYYYMMDDTHHmmss"),
+    title: newTitle,
+  };
+
   const addToCalendarAction = (e) => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       title: "Add to Calendar",
 
-      children: <AddToCalendarModal event={workshop} />,
+      children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
         hideAlert();
       },

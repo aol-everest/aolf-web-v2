@@ -315,7 +315,7 @@ const Checkout = ({ workshop, profile }) => {
 
             {workshop.isCorporateEvent && (
               <div className="tw-mb-[60px]">
-                <h1 className="tw-text-2xl tw-font-bold tw-text-center tw-text-[#31364e]">
+                <h1 className="tw-text-4xl tw-font-bold tw-text-center tw-text-[#31364e]">
                   {workshop.corporateName}
                 </h1>
               </div>

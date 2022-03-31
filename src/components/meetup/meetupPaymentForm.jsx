@@ -919,9 +919,7 @@ export const MeetupPaymentForm = ({
                         See details
                       </button>
                     </div>
-                    <h3 className="course-card__course-name">
-                      SKY Breath Meditation
-                    </h3>
+                    <h3 className="course-card__course-name">{meetupTitle}</h3>
                   </div>
                 </div>
               </div>
