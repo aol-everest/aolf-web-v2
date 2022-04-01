@@ -102,7 +102,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
         </section>
         <section className="progress-section">
           <div className="container">
-            <h5 class="progress-section__title">
+            <h5 className="progress-section__title">
               Discover the transformation that 4,000+
               <br />
               <span>healthcare professionals</span> have
@@ -119,11 +119,11 @@ export const HealingBreath = ({ data, swiperOption }) => {
                         alt="years"
                       />
                     </div>
-                    <h6 class="achivment__title">
+                    <h6 className="achivment__title">
                       Backed by 100+ <br />
                       independent studies
                     </h6>
-                    <p class="achivment__text">
+                    <p className="achivment__text">
                       <span>2x</span> better sleep <br />
                       <span> 56% </span> reduced anxiety <br />
                       <span>5x</span> improved immunity
@@ -135,12 +135,12 @@ export const HealingBreath = ({ data, swiperOption }) => {
                     <div className="achivment__logo">
                       <img src="/img/ic-3-day-online-course.svg" alt="day" />
                     </div>
-                    <h6 class="achivment__title">
+                    <h6 className="achivment__title">
                       3-Day {mode}
                       <br />
                       course
                     </h6>
-                    <p class="achivment__text">
+                    <p className="achivment__text">
                       {workshopTotalHours} hours a day live interactive sessions
                       with certified instructors
                     </p>
@@ -151,8 +151,8 @@ export const HealingBreath = ({ data, swiperOption }) => {
                     <div className="achivment__logo">
                       <img src="/img/ic-comfort-of-your-home.svg" alt="day" />
                     </div>
-                    <h6 class="achivment__title">SKY community</h6>
-                    <p class="achivment__text">
+                    <h6 className="achivment__title">SKY community</h6>
+                    <p className="achivment__text">
                       You’ll have access to online follow-up sessions to help
                       support your continual self-care journey
                     </p>
@@ -163,12 +163,12 @@ export const HealingBreath = ({ data, swiperOption }) => {
                     <div className="achivment__logo">
                       <img src="/img/ic-limited-time-only.svg" alt="day" />
                     </div>
-                    <h6 class="achivment__title">
+                    <h6 className="achivment__title">
                       CEs available for every
                       <br />
                       hour of attendance
                     </h6>
-                    <p class="achivment__text">
+                    <p className="achivment__text">
                       Accredited program by NYU
                       <br />
                       Langone School of Medicine
@@ -204,13 +204,15 @@ export const HealingBreath = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
-        <section class="how-it-works how-it-works_alt">
-          <div class="container">
-            <div class="how-it-works__block">
-              <h2 class="how-it-works__title section-title">Our Program:</h2>
+        <section className="how-it-works how-it-works_alt">
+          <div className="container">
+            <div className="how-it-works__block">
+              <h2 className="how-it-works__title section-title">
+                Our Program:
+              </h2>
             </div>
-            <div class="how-it-works__list">
-              <div class="how-it-works__item">
+            <div className="how-it-works__list">
+              <div className="how-it-works__item">
                 <ul>
                   <li>
                     <span>
@@ -238,30 +240,30 @@ export const HealingBreath = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
-        <section class="comments">
-          <div class="container">
-            <h2 class="comments__title section-title text-center">
+        <section className="comments">
+          <div className="container">
+            <h2 className="comments__title section-title text-center">
               How this workshop is changing lives
             </h2>
           </div>
-          <div class="comments__video">
+          <div className="comments__video">
             <iframe
               src="https://www.dropbox.com/s/ebiy5vaba9z228c/testimonials-childrensNatnl-%28short%29_v4.1.mp4?raw=1"
               width="100%"
               height="100%"
-              frameborder="0"
+              frameBorder="0"
               allow="autoplay; fullscreen"
-              allowfullscreen
+              allowFullScreen
             ></iframe>
           </div>
-          <div class="container mb-5">
-            <h2 class="comments__title section-title text-center">
+          <div className="container mb-5">
+            <h2 className="comments__title section-title text-center">
               Testimonials
             </h2>
           </div>
           <Swiper className="px-3 px-lg-0 comments__item_new" {...swiperOption}>
             <SwiperSlide class="swiper-slide">
-              <div class="comments__text">
+              <div className="comments__text">
                 <p>
                   I feel humane. I have all the clinical skills to teach me not
                   to feel bad, to be professional, to keep up with everything
@@ -269,14 +271,14 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   and process what I can control and take things as it is.
                 </p>
               </div>
-              <p class="comments__quote text-right">
+              <p className="comments__quote text-right">
                 - Sokhamony Pheng,
                 <br /> Mental Health Caseworker
               </p>
             </SwiperSlide>
 
             <SwiperSlide class="swiper-slide">
-              <div class="comments__text">
+              <div className="comments__text">
                 <p>
                   The providers thoroughly enjoyed the class and found the
                   techniques learned and taught to be tremendously beneficial
@@ -287,13 +289,13 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   and mental well-being.
                 </p>
               </div>
-              <p class="comments__quote text-right">
+              <p className="comments__quote text-right">
                 - Kaiser Permanente Staff
               </p>
             </SwiperSlide>
 
             <SwiperSlide class="swiper-slide">
-              <div class="comments__text">
+              <div className="comments__text">
                 <p>
                   Fabulous! Excellent! Very Positive! I will recomment it to
                   everyone I know. All physicians need it! Excellent!
@@ -302,13 +304,13 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   environment, to learn new perspectives and skills!
                 </p>
               </div>
-              <p class="comments__quote text-right">
+              <p className="comments__quote text-right">
                 - Kaiser Permanente Staff
               </p>
             </SwiperSlide>
 
             <SwiperSlide class="swiper-slide">
-              <div class="comments__text">
+              <div className="comments__text">
                 <p>
                   This course was an eye opener for me. I have never experienced
                   anything like that before. The breathing exercises, meditation
@@ -317,11 +319,13 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   is searching for peace and tranquility in their life.
                 </p>
               </div>
-              <p class="comments__quote text-right">- S. Chandramohan, M.D</p>
+              <p className="comments__quote text-right">
+                - S. Chandramohan, M.D
+              </p>
             </SwiperSlide>
 
             <SwiperSlide class="swiper-slide">
-              <div class="comments__text">
+              <div className="comments__text">
                 <p>
                   A lot of us deal with very sick patients, with very needy
                   families and we just give, give, give and it's hard to give
@@ -331,13 +335,13 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   and know that it works.
                 </p>
               </div>
-              <p class="comments__quote text-right">
+              <p className="comments__quote text-right">
                 - Theiline T. Gborkorquellie, MD
               </p>
             </SwiperSlide>
 
             <SwiperSlide class="swiper-slide">
-              <div class="comments__text">
+              <div className="comments__text">
                 <p>
                   I am now committed to myself and to make this program work for
                   me. I can honestly say that when I’m done with the deep
@@ -345,24 +349,24 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   sleep better and wake up feeling more refreshed.
                 </p>
               </div>
-              <p class="comments__quote text-right">
+              <p className="comments__quote text-right">
                 - Margaretha Cash,
                 <br /> Clinical Nurse Specialist, NICU
               </p>
             </SwiperSlide>
           </Swiper>
         </section>
-        <section class="studies">
-          <div class="container">
-            <h2 class="col-lg-10 p-0 mx-auto studies__title section-title">
+        <section className="studies">
+          <div className="container">
+            <h2 className="col-lg-10 p-0 mx-auto studies__title section-title">
               An evidence-based practice that can significantly lower stress
               from the very 1st session!
             </h2>
-            <div class="studies__block">
-              <div class="studies__info-block">
-                <div class="studies__info">
-                  <h4 class="studies__number">100+</h4>
-                  <h4 class="studies__name">
+            <div className="studies__block">
+              <div className="studies__info-block">
+                <div className="studies__info">
+                  <h4 className="studies__number">100+</h4>
+                  <h4 className="studies__name">
                     independent <br />
                     studies
                   </h4>
@@ -370,7 +374,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                 </div>
                 <p>on SKY Breath Meditation (SKY)</p>
               </div>
-              <p class="studies__text">
+              <p className="studies__text">
                 <span>
                   From reducing stress to getting better rest, the SKY Breath
                   Meditation techniques have demonstrated measurable impact on
@@ -388,22 +392,22 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   </p> */}
               </p>
             </div>
-            <div class="studies__result">
-              <h3 class="studies__result-title section-title">
+            <div className="studies__result">
+              <h3 className="studies__result-title section-title">
                 Research result key findings
               </h3>
-              <div class="studies__list">
-                <div class="container col-12 col-lg-10">
-                  <div class="row">
-                    <div class="col-12 col-md-3 studies__item studies__item_violet">
+              <div className="studies__list">
+                <div className="container col-12 col-lg-10">
+                  <div className="row">
+                    <div className="col-12 col-md-3 studies__item studies__item_violet">
                       <h6>Deep Sleep Increases</h6>
 
-                      <div class="studies__item-img">
+                      <div className="studies__item-img">
                         218%
                         <img src="/img/ic-arrow-violet.svg" alt="violet" />
                       </div>
 
-                      <div class="studies__item-text">
+                      <div className="studies__item-text">
                         <h3>Deep Sleep Increases</h3>
                         <p>
                           <span>INCREASE</span>
@@ -411,15 +415,15 @@ export const HealingBreath = ({ data, swiperOption }) => {
                         </p>
                       </div>
                     </div>
-                    <div class="col-12 col-md-3 studies__item studies__item_violet">
+                    <div className="col-12 col-md-3 studies__item studies__item_violet">
                       <h6>Well-Being Hormones Increase</h6>
 
-                      <div class="studies__item-img">
+                      <div className="studies__item-img">
                         50%
                         <img src="/img/ic-arrow-violet.svg" alt="violet" />
                       </div>
 
-                      <div class="studies__item-text">
+                      <div className="studies__item-text">
                         <h3>Well-Being Hormones Increase</h3>
                         <p>
                           <span>INCREASE</span>
@@ -427,30 +431,30 @@ export const HealingBreath = ({ data, swiperOption }) => {
                         </p>
                       </div>
                     </div>
-                    <div class="col-12 col-md-3 studies__item studies__item_blue">
+                    <div className="col-12 col-md-3 studies__item studies__item_blue">
                       <h6>Depression Decreases</h6>
 
-                      <div class="studies__item-img">
+                      <div className="studies__item-img">
                         70%
                         <img src="/img/ic-arrow-blue.svg" alt="blue" />
                       </div>
 
-                      <div class="studies__item-text">
+                      <div className="studies__item-text">
                         <h3>Depression Decreases</h3>
                         <p>
                           <span>REMISSION RATE</span> in depression in 1 month
                         </p>
                       </div>
                     </div>
-                    <div class="col-12 col-md-3 studies__item studies__item_blue">
+                    <div className="col-12 col-md-3 studies__item studies__item_blue">
                       <h6>Stress Hormones Decrease</h6>
 
-                      <div class="studies__item-img">
+                      <div className="studies__item-img">
                         56%
                         <img src="/img/ic-arrow-blue.svg" alt="blue" />
                       </div>
 
-                      <div class="studies__item-text">
+                      <div className="studies__item-text">
                         <h3>Stress Hormones Decrease</h3>
                         <p>
                           <span>REDUCTION</span>
@@ -464,9 +468,9 @@ export const HealingBreath = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
-        <section class="research text-center">
-          <div class="container">
-            <h2 class="research__title section-title research__title_new">
+        <section className="research text-center">
+          <div className="container">
+            <h2 className="research__title section-title research__title_new">
               Research highlights
             </h2>
 
@@ -478,7 +482,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
             >
               <SwiperSlide class="research__list-item swiper-slide">
                 <p
-                  class="research__quote"
+                  className="research__quote"
                   onClick={() =>
                     window.open(
                       "https://news.yale.edu/2020/07/27/improve-students-mental-health-yale-study-finds-teach-them-breathe",
@@ -493,7 +497,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               </SwiperSlide>
               <SwiperSlide class="research__list-item swiper-slide">
                 <p
-                  class="research__quote"
+                  className="research__quote"
                   onClick={() =>
                     window.open(
                       "https://news.stanford.edu/news/2014/september/meditation-helps-ptsd-090514.html",
@@ -508,7 +512,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               </SwiperSlide>
               <SwiperSlide class="research__list-item swiper-slide">
                 <p
-                  class="research__quote"
+                  className="research__quote"
                   onClick={() =>
                     window.open("https://hms.harvard.edu/news/be-kind-unwind")
                   }
@@ -522,7 +526,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   />
                 </div>
               </SwiperSlide>
-              <div class="research__list-pagination"></div>
+              <div className="research__list-pagination"></div>
             </Swiper>
           </div>
         </section>
@@ -532,37 +536,37 @@ export const HealingBreath = ({ data, swiperOption }) => {
             <h2 className="about__title section-title text-center">
               About the Art of Living
             </h2>
-            <div class="row">
-              <div class="col-12 col-md-3 text-center about__card">
-                <div class="about__logo">
+            <div className="row">
+              <div className="col-12 col-md-3 text-center about__card">
+                <div className="about__logo">
                   <img src="/img/ic-39-years.svg" alt="years" />
                 </div>
-                <p class="about__text">
+                <p className="about__text">
                   <span>Since 2016</span> providing service to healthcare
                   professionals
                 </p>
               </div>
-              <div class="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div class="about__logo">
+              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
+                <div className="about__logo">
                   <img src="/img/ic-15-hospitals.svg" alt="centers" />
                 </div>
-                <p class="about__text">
+                <p className="about__text">
                   <span>15+ hospitals</span> across the U.S
                 </p>
               </div>
-              <div class="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div class="about__logo">
+              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
+                <div className="about__logo">
                   <img src="/img/ic-30-cities.svg" alt="countries" />
                 </div>
-                <p class="about__text">
+                <p className="about__text">
                   <span>30+ cities</span> where our programs made a difference
                 </p>
               </div>
-              <div class="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div class="about__logo">
+              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
+                <div className="about__logo">
                   <img src="/img/ic-450-m-lives.svg" alt="lives" />
                 </div>
-                <p class="about__text">
+                <p className="about__text">
                   <span>4,000+ lives</span> touched through our courses & events
                 </p>
               </div>

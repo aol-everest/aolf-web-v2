@@ -405,6 +405,7 @@ const Profile = ({ tab }) => {
                 {!editCardDetail && (
                   <ViewCardDetail
                     switchCardDetailView={switchCardDetailView}
+                    profile={profile}
                   ></ViewCardDetail>
                 )}
                 {editCardDetail && (
@@ -563,6 +564,7 @@ const Profile = ({ tab }) => {
                       <ViewCardDetail
                         isMobile
                         switchCardDetailView={switchCardDetailView}
+                        profile={profile}
                       ></ViewCardDetail>
                     )}
                     {editCardDetail && (
