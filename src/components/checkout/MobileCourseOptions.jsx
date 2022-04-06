@@ -395,11 +395,11 @@ export const MobileCourseOptions = ({
                 paymentOptionChange(formikProps, PAYMENT_TYPES.FULL)
               }
             />
-            <label for="payment-full">
+            <label htmlFor="payment-full">
               Pay in full <span>${fee}</span>
             </label>
           </div>
-          <div class="order__card__payment-option">
+          <div className="order__card__payment-option">
             <Field
               className={classNames("form-check-input radio", {
                 error:
@@ -415,7 +415,7 @@ export const MobileCourseOptions = ({
                 paymentOptionChange(formikProps, PAYMENT_TYPES.LATER)
               }
             />
-            <label for="payment-later">
+            <label htmlFor="payment-later">
               Pay later <span>${instalmentAmount} today</span>
             </label>
           </div>
