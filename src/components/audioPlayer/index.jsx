@@ -163,28 +163,29 @@ const AudioPlayer = () => {
     audioRef.current = new Audio(audioSrc);
     setTrackProgress(audioRef.current.currentTime);
 
-    if (isReady.current) {
-      audioRef.current.play();
-      setIsPlaying(true);
-      startTimer();
-    } else {
-      // Set the isReady ref as true for the next pass
-      isReady.current = true;
-    }
+    setIsPlaying(false);
+    // if (isReady.current) {
+    //   audioRef.current.play();
+    //   setIsPlaying(true);
+    //   startTimer();
+    // } else {
+    //   // Set the isReady ref as true for the next pass
+    //   isReady.current = true;
+    // }
   }, [audioSrc]);
 
   useEffect(() => {
     // Pause and clean up on unmount
-    setIsPlaying(true);
-    audioRef.current.oncanplay = () => {
-      console.log("Can play");
-    };
-    audioRef.current.oncanplaythrough = () => {
-      console.log("Can play through");
-    };
-    audioRef.current.onloadeddata = () => {
-      console.log("Loaded data");
-    };
+    // setIsPlaying(true);
+    // audioRef.current.oncanplay = () => {
+    //   console.log("Can play");
+    // };
+    // audioRef.current.oncanplaythrough = () => {
+    //   console.log("Can play through");
+    // };
+    // audioRef.current.onloadeddata = () => {
+    //   console.log("Loaded data");
+    // };
     return () => {
       audioRef.current.pause();
       clearInterval(intervalRef.current);

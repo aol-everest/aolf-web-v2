@@ -482,6 +482,16 @@ export const PaymentFormGeneric = ({
     toggleCouponCodeFieldAction();
   };
 
+  const handlePaymentOptionChange = (formikProps, paymentOption) => {
+    formikProps.setFieldValue("paymentOption", paymentOption);
+    if (paymentOption === PAYMENT_TYPES.LATER) {
+      formikProps.setFieldValue(
+        "paymentMode",
+        PAYMENT_MODES.STRIPE_PAYMENT_MODE,
+      );
+    }
+  };
+
   const handleAccommodationChange = (formikProps, value) => {
     formikProps.setFieldValue("accommodation", value);
   };
@@ -778,6 +788,8 @@ export const PaymentFormGeneric = ({
                       openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                       hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                       totalFee={totalFee}
+                      paymentOptionChange={handlePaymentOptionChange}
+                      showCouponCodeField={showCouponCodeField}
                     />
                   </div>
 

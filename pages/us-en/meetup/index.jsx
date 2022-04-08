@@ -1086,39 +1086,6 @@ const Meetup = () => {
           <div className="row mb-4">
             {!isSuccess && (
               <>
-                {" "}
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
-                </div>
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
-                </div>
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
-                </div>
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
-                </div>
                 <div className="col-6 col-lg-3 col-md-4">
                   <div className="upcoming_course_card meetup_course_card">
                     <ContentLoader viewBox="0 0 80 120">
@@ -1169,66 +1136,6 @@ const Meetup = () => {
               {isFetchingNextPage && (
                 <div className="row">
                   {" "}
-                  <div className="col-6 col-lg-3 col-md-4">
-                    <div className="upcoming_course_card meetup_course_card">
-                      <ContentLoader viewBox="0 0 80 120">
-                        {/* Only SVG shapes */}
-                        <rect
-                          x="0"
-                          y="0"
-                          rx="5"
-                          ry="5"
-                          width="80"
-                          height="110"
-                        />
-                      </ContentLoader>
-                    </div>
-                  </div>
-                  <div className="col-6 col-lg-3 col-md-4">
-                    <div className="upcoming_course_card meetup_course_card">
-                      <ContentLoader viewBox="0 0 80 120">
-                        {/* Only SVG shapes */}
-                        <rect
-                          x="0"
-                          y="0"
-                          rx="5"
-                          ry="5"
-                          width="80"
-                          height="110"
-                        />
-                      </ContentLoader>
-                    </div>
-                  </div>
-                  <div className="col-6 col-lg-3 col-md-4">
-                    <div className="upcoming_course_card meetup_course_card">
-                      <ContentLoader viewBox="0 0 80 120">
-                        {/* Only SVG shapes */}
-                        <rect
-                          x="0"
-                          y="0"
-                          rx="5"
-                          ry="5"
-                          width="80"
-                          height="110"
-                        />
-                      </ContentLoader>
-                    </div>
-                  </div>
-                  <div className="col-6 col-lg-3 col-md-4">
-                    <div className="upcoming_course_card meetup_course_card">
-                      <ContentLoader viewBox="0 0 80 120">
-                        {/* Only SVG shapes */}
-                        <rect
-                          x="0"
-                          y="0"
-                          rx="5"
-                          ry="5"
-                          width="80"
-                          height="110"
-                        />
-                      </ContentLoader>
-                    </div>
-                  </div>
                   <div className="col-6 col-lg-3 col-md-4">
                     <div className="upcoming_course_card meetup_course_card">
                       <ContentLoader viewBox="0 0 80 120">

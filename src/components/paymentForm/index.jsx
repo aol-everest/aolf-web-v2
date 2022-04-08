@@ -950,6 +950,8 @@ export const PaymentForm = ({
                       openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                       hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                       totalFee={totalFee}
+                      paymentOptionChange={handlePaymentOptionChange}
+                      showCouponCodeField={showCouponCodeField}
                     />
                   </div>
                   <AgreementForm
