@@ -1,0 +1,1880 @@
+.container_md {
+  margin: 0 auto;
+  padding: 0 20px;
+  max-width: 1212px;
+}
+
+.container_sm {
+  margin: 0 auto;
+  padding: 0 20px;
+  max-width: 1012px;
+}
+
+.meditation-title {
+  font-family: Lora, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 38px;
+}
+
+.block-title {
+  font-family: Lora, sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 48px;
+}
+
+.paragraph-title {
+  font-family: Work Sans, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 34px;
+}
+
+.meditation-title_blue {
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 32px;
+  color: #5b86ec;
+}
+
+.meditation-row {
+  display: flex;
+  gap: 100px;
+}
+
+.sky-button {
+  background-size: 100%;
+  position: relative;
+  min-width: 272px;
+  justify-content: center;
+  transition: all 0.3s ease-in 0s;
+  background: linear-gradient(155.49deg, #ffd16f 15.74%, #ff865b 84.42%);
+  border-radius: 8px;
+  height: 52px;
+  z-index: 0;
+
+  &:hover {
+    &:before {
+      opacity: 1;
+    }
+  }
+
+  &:before {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(155.49deg, #ff865b 15.74%, #ffd16f 84.42%);
+    z-index: -100;
+    opacity: 0;
+    transition: opacity 0.4s linear;
+    border-radius: 8px;
+  }
+}
+
+.sky-header {
+  padding: 100px 0 70px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("/img/sky-silent-header.jpg");
+
+  @media (min-width: 1500px) {
+    background-position: top;
+  }
+
+  &__container {
+    max-width: 1200px;
+    padding: 0 20px;
+  }
+
+  &__wrapper {
+    max-width: 575px;
+  }
+
+  &__status {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    margin-bottom: 20px;
+  }
+
+  &__description {
+    margin-bottom: 40px;
+
+    &_bold {
+      font-weight: 600;
+    }
+  }
+
+  &__actions {
+    margin-top: 40px;
+  }
+}
+
+.details-header {
+  &__title {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    margin-bottom: 24px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 500px;
+  }
+
+  &__item {
+    display: flex;
+    gap: 16px;
+
+    &-icon {
+      margin-top: 3px;
+      align-self: flex-start;
+    }
+  }
+
+  &__description {
+    margin-top: 24px;
+
+    & span {
+      font-weight: 600;
+    }
+  }
+}
+
+.sky-course {
+  padding: 30px 0 50px;
+
+  &__container {
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__details {
+    max-width: 972px;
+    flex-grow: 1;
+    box-shadow: 0 6px 60px rgba(50, 25, 60, 0.1);
+    border-radius: 12px;
+    padding: 40px;
+  }
+
+  &__title {
+    font-family: Lora, sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 38px;
+    color: #1e2232;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+}
+
+.course-content {
+  display: flex;
+  justify-content: space-between;
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__body {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__label {
+    font-weight: 700;
+    min-width: 120px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.sky-meditation {
+  padding: 80px 0;
+
+  &__container {
+    display: flex;
+    gap: 130px;
+  }
+}
+
+.meditation-preview {
+  padding-top: 48px;
+  max-width: 500px;
+  position: relative;
+
+  &__title {
+    color: #5b86ec;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 20px;
+  }
+
+  &__description {
+    font-weight: 700;
+  }
+
+  &__background {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+}
+
+.meditation-content {
+  padding-top: 45px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__text {
+    color: #606270;
+
+    span {
+      font-weight: 600;
+    }
+  }
+}
+
+.benefits {
+  padding: 80px 0 60px;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    margin-bottom: 28px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 500px;
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  &__item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  &__icon {
+    margin-top: 2px;
+  }
+}
+
+.highlights {
+  padding: 120px 0 80px;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
+    #e7efff;
+
+  &__container {
+    max-width: 812px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  &__title {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  &__description {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 80px;
+  }
+
+  &__logos,
+  &__col {
+    display: flex;
+    gap: 61px;
+  }
+
+  &__slider {
+    display: none;
+  }
+}
+
+.practices {
+  padding: 100px 0 80px;
+
+  &__title {
+    font-family: Lora, sans-serif;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 80px;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 38px;
+  }
+
+  &__row {
+    display: flex;
+    gap: 100px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.stats-practices {
+  flex: 0 0 400px;
+  padding-top: 20px;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 8px;
+
+  &__background {
+    width: 342px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__metrics {
+    font-family: Lora, sans-serif;
+    font-weight: 600;
+    font-size: 80px;
+    line-height: 102px;
+  }
+
+  &__details {
+    font-family: Lora, sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  &__sign {
+    color: #606270;
+  }
+}
+
+.reviews {
+  padding: 80px 0;
+
+  &__title {
+    max-width: 840px;
+    margin: 0 auto 60px;
+    text-align: center;
+  }
+
+  &__video {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+  }
+
+  &__player {
+    width: 100%;
+    height: calc(100vw - 100vw / 2.3);
+
+    @media (min-width: 576px) {
+      width: 570px;
+      height: 300px;
+    }
+  }
+
+  &__wrapper {
+    padding: 40px;
+    margin: 0 -40px;
+  }
+
+  &__pagination {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: static !important;
+
+    & .swiper-pagination-bullet {
+      margin: 0 6px !important;
+    }
+
+    & .swiper-pagination-bullet-active {
+      width: 12px;
+      height: 12px;
+    }
+
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 495px;
+  width: 372px !important;
+  margin-right: 28px !important;
+  padding: 40px;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 27px 40px rgba(7, 14, 61, 0.03),
+    0 9.85544px 29.2013px rgba(7, 14, 61, 0.0206994),
+    0 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887),
+    0 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113),
+    0 0.927421px 2.74791px rgba(7, 14, 61, 0.00930055);
+
+  &__logo {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    margin-bottom: 4px;
+    font-family: Lora, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  &__description {
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 30px;
+  }
+
+  &__rating {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+  }
+
+  &__text {
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  &__quotes {
+    display: flex;
+    gap: 16px;
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+  }
+}
+
+.silence {
+  padding: 80px 0 120px;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    gap: 100px;
+  }
+
+  &__preview {
+    padding-top: 75px;
+  }
+}
+
+.occupation {
+  margin-bottom: 80px;
+
+  &__container {
+    display: flex;
+    gap: 100px;
+    justify-content: space-between;
+  }
+
+  &__title {
+    margin-bottom: 20px;
+  }
+
+  &__body {
+    padding-top: 8px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+}
+
+.player-occupation {
+  display: flex;
+  position: relative;
+  flex: 0 0 500px;
+  align-self: flex-start;
+
+  &__overlay {
+    border-radius: 8px;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
+}
+
+.experience {
+  padding: 80px 0 60px;
+
+  &__container {
+    justify-content: space-between;
+  }
+
+  &__preview {
+    padding-top: 133px;
+    flex: 0 0 500px;
+    position: relative;
+  }
+
+  &__title {
+    font-weight: 700;
+  }
+
+  &__background {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    z-index: -1;
+  }
+
+  &__content {
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  &__sign {
+    span {
+      font-weight: 600;
+    }
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+}
+
+.card-experience {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+
+  &__image {
+    align-self: flex-start;
+    height: 190px;
+    object-fit: cover;
+    width: 172px;
+    border-radius: 8px;
+  }
+
+  &__content {
+    max-width: 360px;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 16px;
+    max-width: 293px;
+  }
+}
+
+.pillars {
+  padding: 120px 0 100px;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
+    #e7efff;
+
+  &__title {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  &__list {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+  }
+}
+
+.pillar {
+  flex: 0 0 325px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &__icon {
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    margin-bottom: 12px;
+    font-size: 24px;
+    line-height: 34px;
+    font-weight: 600;
+  }
+}
+
+.offer {
+  padding: 100px 0 80px;
+
+  &__row {
+    margin-bottom: 100px;
+  }
+
+  &__title {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+  }
+
+  &__list {
+    display: flex;
+    gap: 56px;
+  }
+
+  &__questions {
+    flex: 0 0 480px;
+  }
+
+  &__item {
+    flex: 0 0 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    text-align: center;
+
+    &-info {
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 24px;
+    }
+  }
+
+  &__subtitle {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 32px;
+    margin-bottom: 60px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__text {
+    color: #606270;
+
+    & span {
+      font-weight: 600;
+    }
+  }
+}
+
+.banner-offer {
+  padding: 60px 120px;
+  box-shadow: 0px 9.85544px 29.2013px rgba(7, 14, 61, 0.0206994),
+    0px 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887),
+    0px 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113),
+    0px 6px 60px rgba(50, 25, 60, 0.1),
+    0px 0.927421px 2.74791px rgba(7, 14, 61, 0.00930055);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-image: url("/img/offer-bg.jpg");
+
+  &__title {
+    margin: 0;
+  }
+
+  &__discount {
+    font-size: 24px;
+    line-height: 34px;
+
+    & span {
+      color: #ff4949;
+      font-weight: 600;
+      text-decoration: line-through;
+    }
+  }
+
+  &__register {
+    align-self: flex-start;
+  }
+}
+
+.sky-reviews {
+  padding: 80px 0 160px;
+
+  &__title {
+    max-width: 520px;
+    text-align: center;
+    margin: 0 auto 60px;
+  }
+
+  &__pagination {
+    display: flex;
+    position: static !important;
+    margin-top: 40px;
+  }
+}
+
+.transformations {
+  padding-bottom: 220px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url("/img/transformations-bg.png");
+  &__title {
+    font-family: Lora, sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 60px;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  &__list {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__item {
+    flex: 0 0 250px;
+  }
+}
+
+.retreat {
+  padding: 100px 0 80px;
+
+  &__row {
+    align-items: center;
+  }
+
+  &__preview {
+    padding-top: 104px;
+  }
+
+  &__register {
+    margin-top: 40px;
+
+    &_responsive {
+      display: none;
+    }
+  }
+
+  &__img {
+    & img {
+      border-radius: 8px;
+    }
+  }
+}
+
+.about-sky {
+  padding: 80px 0 120px;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
+    #e7efff;
+
+  &__title {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  &__list {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+}
+
+.about-item {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  &__icon {
+    align-self: center;
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 12px;
+  }
+}
+
+.program-footer {
+  padding-bottom: 43px;
+  margin-bottom: 0;
+}
+
+.course-bottom-card {
+  padding: 22px 0;
+
+  &__img {
+    img {
+      border-radius: 8px;
+    }
+  }
+
+  &__info {
+    p {
+      color: #5b86ec;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    &-course-name {
+      font-family: Lora, sans-serif;
+      font-weight: 700 !important;
+      font-size: 28px !important;
+      line-height: 38px !important;
+    }
+  }
+
+  &__discount {
+    & span {
+      color: #ff4949;
+      text-decoration: line-through;
+    }
+  }
+}
+
+@media (max-width: 1270px) {
+  .meditation-row {
+    gap: 30px;
+  }
+
+  .sky-header {
+    background-position: center;
+
+    &__wrapper {
+      padding-left: 80px;
+    }
+  }
+
+  .sky-meditation {
+    &__container {
+      gap: 80px;
+    }
+  }
+
+  .benefits {
+    &__container {
+      gap: 30px;
+    }
+
+    &__img {
+      flex: 0 0 50%;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .silence {
+    &__container {
+      gap: 40px;
+    }
+
+    &__image {
+      flex: 0 0 50%;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .occupation {
+    &__container {
+      gap: 30px;
+    }
+
+    &__image {
+      flex: 0 0 50%;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .experience {
+    &__preview {
+      padding-top: 90px;
+    }
+
+    &__background {
+      top: 5px;
+      right: 30px;
+    }
+  }
+
+  .card-experience {
+    gap: 25px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .experience {
+    &__container {
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+    }
+
+    &__preview {
+      flex: auto;
+      width: 500px;
+    }
+  }
+
+  .card-experience {
+    &__title {
+      max-width: 360px;
+    }
+
+    &__content {
+      max-width: 450px;
+    }
+  }
+
+  .pillar {
+    flex-shrink: 1;
+  }
+
+  .retreat {
+    &__img {
+      flex: 0 0 50%;
+
+      & img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .course-content {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 12px;
+
+    &__col {
+      min-width: 60%;
+      margin: 0 auto;
+    }
+  }
+
+  .sky-meditation {
+    &__container {
+      flex-direction: column;
+      align-items: center;
+      max-width: 80%;
+      gap: 0;
+    }
+  }
+
+  .benefits {
+    padding: 60px 0;
+
+    &__container {
+      gap: 60px;
+      flex-direction: column;
+    }
+
+    &__img {
+      flex: auto;
+
+      img {
+        width: auto;
+      }
+    }
+  }
+
+  .highlights {
+    &__logos {
+      flex-wrap: wrap;
+    }
+
+    &__col {
+      flex: 1 1 100%;
+      justify-content: center;
+    }
+  }
+
+  .practices {
+    &__row {
+      gap: 30px;
+    }
+
+    &__title {
+      margin: 0 auto 60px;
+      max-width: 80%;
+    }
+
+    &__metrics {
+      font-family: Lora, sans-serif;
+      font-weight: 600;
+      font-size: 60px;
+      line-height: 90px;
+    }
+
+    &__details {
+      font-family: Lora, sans-serif;
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    &__sign {
+      color: #606270;
+    }
+  }
+
+  .stats-practices {
+    flex-basis: 350px;
+  }
+
+  .silence {
+    gap: 0;
+    padding: 60px 0 40px;
+
+    &__preview {
+      margin: 0 auto;
+    }
+
+    &__image {
+      display: none;
+    }
+  }
+
+  .occupation {
+    &__container {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    &__body {
+      max-width: 70%;
+    }
+  }
+
+  .player-occupation {
+    flex: auto;
+    align-self: auto;
+
+    &__overlay {
+      width: 100%;
+    }
+  }
+
+  .pillars {
+    &__list {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  .pillar {
+    flex: 0 0 45%;
+  }
+
+  .offer {
+    &__row {
+      flex-direction: column;
+      gap: 50px;
+      align-items: center;
+      margin-bottom: 80px;
+    }
+
+    &__content {
+      max-width: 80%;
+    }
+
+    &__questions {
+      flex: auto;
+    }
+
+    &__subtitle {
+      text-align: center;
+    }
+
+    &__list {
+      justify-content: center;
+    }
+  }
+
+  .banner-offer {
+    padding: 40px 80px;
+  }
+
+  .transformations {
+    padding-bottom: 200px;
+
+    &__title {
+      font-size: 38px;
+      line-height: 46px;
+    }
+
+    &__item {
+      flex: 0 0 220px;
+    }
+  }
+
+  .retreat {
+    &__row {
+      flex-direction: column;
+      gap: 50px;
+    }
+
+    &__register {
+      display: none;
+
+      &_responsive {
+        display: block;
+      }
+    }
+
+    &__background {
+      transform: translateX(50%);
+      right: 50%;
+    }
+  }
+
+  .about-sky {
+    &__list {
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+    }
+  }
+
+  .about-item {
+    flex: 0 0 45%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    &__info {
+      max-width: 220px;
+      align-self: center;
+    }
+  }
+
+  .course-bottom-card__register {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .meditation-title {
+    font-size: 28px;
+    line-height: 38px;
+  }
+
+  .block-title {
+    font-size: 28px;
+    line-height: 38px;
+  }
+
+  .sky-header {
+    &__wrapper {
+      padding-left: 40px;
+    }
+
+    &__actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    &__register {
+      min-width: auto;
+    }
+
+    &__title {
+      font-size: 32px;
+      font-weight: 700;
+    }
+  }
+
+  .sky-course {
+    &__title {
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 28px;
+    }
+  }
+
+  .course-content {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 12px;
+
+    &__col {
+      min-width: 100%;
+      margin: 0;
+    }
+
+    &__body {
+      word-break: break-all;
+    }
+  }
+
+  .sky-meditation {
+    padding: 60px 0;
+
+    &__container {
+      max-width: 100%;
+      gap: 0;
+    }
+  }
+
+  .meditation-preview {
+    padding-top: 20px;
+
+    &__title {
+      font-size: 32px;
+      line-height: 34px;
+      margin-bottom: 16px;
+    }
+
+    &__description {
+      font-size: 32px;
+      line-height: 38px;
+    }
+
+    &__background {
+      width: 295px;
+    }
+  }
+
+  .meditation-content {
+    padding-top: 28px;
+  }
+
+  .benefits {
+    &__img {
+      flex: auto;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .highlights {
+    padding: 80px 0 60px;
+
+    &__title {
+      margin-bottom: 16px;
+    }
+
+    &__description {
+      margin-bottom: 60px;
+    }
+  }
+
+  .practices {
+    padding: 60px 0 40px;
+
+    &__row {
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+    }
+
+    &__title {
+      margin: 0 auto 30px;
+      max-width: 90%;
+    }
+  }
+
+  .stats-practices {
+    flex-basis: auto;
+    align-self: center;
+    padding-top: 35px;
+
+    &__metrics {
+      font-size: 68px;
+      line-height: 80px;
+    }
+
+    &__details {
+      font-size: 22px;
+      line-height: 28px;
+      max-width: 150px;
+    }
+
+    &__background {
+      right: -78px;
+    }
+  }
+
+  .reviews {
+    padding: 60px 0 20px;
+
+    &__title {
+      margin-bottom: 50px;
+    }
+
+    &__video {
+      margin-bottom: 50px;
+    }
+
+    &__wrapper {
+      padding: 28px;
+      margin: 0 -28px;
+    }
+  }
+
+  .silence {
+    &__preview {
+      padding-top: 11px;
+      max-width: 400px;
+    }
+  }
+
+  .occupation {
+    &__body {
+      max-width: 90%;
+    }
+  }
+
+  .experience {
+    padding: 60px 0 20px;
+
+    &__title {
+      font-size: 32px;
+    }
+
+    &__preview,
+    &__content {
+      margin: 0 auto;
+    }
+
+    &__background {
+      max-width: 350px;
+      right: 0;
+    }
+  }
+
+  .pillars__list {
+    gap: 30px;
+  }
+
+  .pillar {
+    flex: 1 1 100%;
+  }
+
+  .offer {
+    padding: 80px 0 40px;
+
+    &__title {
+      max-width: 80%;
+      margin-bottom: 40px;
+    }
+
+    &__subtitle {
+      font-size: 24px;
+      line-height: 28px;
+    }
+
+    &__content {
+      max-width: 100%;
+    }
+  }
+
+  .banner-offer {
+    padding: 40px;
+    gap: 18px;
+
+    &__discount {
+      font-size: 22px;
+    }
+  }
+
+  .sky-reviews {
+    padding: 60px 0 80px;
+
+    &__title {
+      margin-bottom: 40px;
+    }
+
+    &__pagination {
+      margin-top: 20px;
+    }
+  }
+
+  .transformations {
+    padding-bottom: 180px;
+
+    &__title {
+      font-size: 28px;
+      line-height: 38px;
+    }
+
+    &__list {
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    &__item {
+      flex: auto;
+    }
+  }
+
+  .retreat {
+    padding: 60px 0;
+
+    &__preview {
+      padding-top: 68px;
+    }
+
+    &__row {
+      gap: 40px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .sky-header {
+    background-position: top right 10%;
+    background-size: auto 380px;
+    padding: 280px 0 40px;
+
+    &__title {
+      font-size: 32px;
+    }
+
+    &__description {
+      margin-bottom: 28px;
+    }
+
+    &__wrapper {
+      padding-left: 0;
+    }
+  }
+
+  .sky-course {
+    &__details {
+      padding: 28px;
+    }
+  }
+
+  .course-content {
+    &__label {
+      min-width: 94px;
+    }
+
+    &__body {
+      font-size: 14px;
+    }
+  }
+
+  .meditation-preview {
+    &__title {
+      font-size: 24px;
+    }
+
+    &__description {
+      font-size: 28px;
+    }
+  }
+
+  .highlights {
+    &__logos {
+      display: none;
+    }
+
+    &__slider {
+      display: block;
+      width: 100%;
+
+      & .swiper-slide {
+        width: max-content;
+      }
+    }
+  }
+
+  .practices {
+    padding-bottom: 20px;
+
+    &__title {
+      max-width: 100%;
+      text-align: left;
+    }
+  }
+
+  .stats-practices {
+    align-self: flex-start;
+    padding-top: 20px;
+
+    &__background {
+      max-width: 295px;
+      left: 30px;
+    }
+  }
+
+  .reviews {
+    &__title {
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    &__video {
+      margin-bottom: 40px;
+    }
+  }
+
+  .occupation {
+    margin-bottom: 20px;
+
+    &__body {
+      max-width: 100%;
+    }
+  }
+
+  .player-occupation__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .experience {
+    padding: 60px 0 20px;
+
+    &__title {
+      font-size: 28px;
+      line-height: 38px;
+    }
+
+    &__preview {
+      padding-top: 50px;
+      width: auto;
+    }
+
+    &__background {
+      max-width: 295px;
+      right: 50%;
+      transform: translate(50%);
+    }
+  }
+
+  .card-experience {
+    flex-direction: column;
+
+    &__content {
+      max-width: 100%;
+    }
+
+    &__image {
+      width: 100%;
+      height: auto;
+    }
+
+    &__title {
+      font-size: 24px;
+      line-height: 34px;
+      margin-bottom: 12px;
+    }
+
+    &__text {
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
+  .pillars {
+    gap: 60px 0;
+
+    &__title {
+      margin-bottom: 40px;
+      text-align: left;
+    }
+  }
+
+  .pillar {
+    &__icon {
+      margin-bottom: 16px;
+    }
+
+    &__description {
+      font-size: 14px;
+    }
+  }
+
+  .offer {
+    padding: 60px 0;
+
+    &__title {
+      max-width: 100%;
+      text-align: left;
+    }
+
+    &__row {
+      align-items: flex-start;
+    }
+
+    &__subtitle {
+      font-size: 20px;
+      line-height: 28px;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    &__content {
+      max-width: 100%;
+    }
+
+    &__list {
+      justify-content: flex-start;
+      gap: 23px;
+    }
+
+    &__item {
+      flex: 0 0 96px;
+
+      &-icon {
+        width: 48px;
+        height: 48px;
+      }
+
+      &-info {
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+  }
+
+  .banner-offer {
+    padding: 260px 16px 40px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+    gap: 20px;
+
+    &__title {
+      font-size: 24px;
+      line-height: 34px;
+    }
+
+    &__register {
+      align-self: stretch;
+      min-width: auto;
+    }
+  }
+
+  .sky-reviews {
+    padding: 20px 0 80px;
+
+    &__title {
+      margin-bottom: 40px;
+    }
+
+    &__pagination {
+      margin-top: 10px;
+    }
+  }
+
+  .transformations {
+    background-size: contain;
+    background-position: bottom;
+  }
+
+  .about-sky {
+    padding: 20px 0 60px;
+
+    &__title {
+      margin-bottom: 40px;
+    }
+
+    &__list {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+  }
+
+  .about-item {
+    flex: 0 0 100%;
+
+    &__icon {
+      margin-bottom: 12px;
+    }
+  }
+
+  .course-bottom-card__container {
+    gap: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .course-bottom-card__info div .course-bottom-card__info-course-name {
+    max-width: 100%;
+    text-overflow: unset;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 375px) {
+  .sky-header {
+    background-position: top right 15%;
+
+    &__actions {
+      margin-top: 28px;
+    }
+
+    &__register {
+      min-width: 100%;
+    }
+  }
+
+  .sky-course {
+    padding: 0;
+  }
+
+  .stats-practices {
+    align-self: flex-start;
+    padding-top: 20px;
+
+    &__background {
+      max-width: 295px;
+      left: 30px;
+    }
+  }
+
+  .benefits__text {
+    font-size: 16px;
+  }
+
+  .offer__questions {
+    width: 100%;
+  }
+
+  .offer__list {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .offer__banner {
+    background-size: auto;
+    /* background-image: url(img/offer-bg.jpg); */
+    //background: linear-gradient(0.61deg, #FFFFFF 60.37%, rgba(255, 255, 255, 0.864107) 54%, rgba(255, 255, 255, 0) 85.53%), linear-gradient(155.49deg, rgba(255, 209, 111, 0.08) 11.74%, rgba(255, 134, 91, 0.08) 55.42%), url('../img/offer-bg.jpg');
+    background-repeat: no-repeat;
+    background-position-y: -66%;
+    background-position-x: 62%;
+  }
+
+  .retreat {
+    &__preview {
+      padding-top: 68px;
+    }
+
+    &__row {
+      gap: 40px;
+    }
+
+    &__register_responsive {
+      align-self: stretch;
+    }
+  }
+
+  .program-footer {
+    margin-bottom: 0;
+  }
+
+  .course-bottom-card__register {
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 360px) {
+  .paragraph-title {
+    font-size: 22px;
+    line-height: 26px;
+  }
+
+  .stats-practices {
+    &__background {
+      max-width: 275px;
+      left: 0;
+    }
+  }
+
+  .experience {
+    &__title {
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    &__background {
+      max-width: 275px;
+    }
+  }
+
+  .banner-offer {
+    //padding-top: 200px;
+  }
+}
