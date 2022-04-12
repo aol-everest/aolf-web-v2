@@ -25,7 +25,7 @@ const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
   {
     key: "Strict-Transport-Security",
-    value: "max-age=63072000; includeSubDomains; preload",
+    value: "max-age=63072000; includeSubDomains",
   },
   {
     key: "X-XSS-Protection",
@@ -38,6 +38,10 @@ const securityHeaders = [
   {
     key: "X-Content-Type-Options",
     value: "nosniff",
+  },
+  {
+    key: "Cache-Control",
+    value: "no-cache",
   },
 ];
 
@@ -96,7 +100,7 @@ module.exports = withPlugins(
           headers: [
             {
               key: "Cache-Control",
-              value: "public, max-age=31536000, immutable",
+              value: "public, max-age=604800 must-revalidate",
             },
           ],
         },
