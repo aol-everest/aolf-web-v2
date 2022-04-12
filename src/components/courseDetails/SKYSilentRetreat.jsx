@@ -214,15 +214,17 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                       {timings &&
                         timings.map((time) => {
                           return (
-                            <div className="course-content__item">
-                              {`${dayjs
-                                .utc(time.startDate)
-                                .format("dd")}: ${tConvert(
-                                time.startTime,
-                              )}-${tConvert(time.endTime)} ${
-                                ABBRS[time.timeZone]
-                              }`}
-                            </div>
+                            <>
+                              <div className="course-content__item">
+                                {`${dayjs
+                                  .utc(time.startDate)
+                                  .format("dd")}: ${tConvert(
+                                  time.startTime,
+                                )}-${tConvert(time.endTime)} ${
+                                  ABBRS[time.timeZone]
+                                }`}
+                              </div>
+                            </>
                           );
                         })}
                     </div>
@@ -1183,13 +1185,13 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                 </div>
               </div>
 
-              <div class="swiper-pagination sky-reviews__pagination reviews__pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+              <div className="swiper-pagination sky-reviews__pagination reviews__pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
                 <span
                   className={classNames("swiper-pagination-bullet", {
                     "swiper-pagination-bullet-active":
                       pastCommentsActiveSlider === 0,
                   })}
-                  tabindex="0"
+                  tabIndex="0"
                   role="button"
                   aria-label="Go to slide 1"
                   aria-current={pastCommentsActiveSlider === 0}
@@ -1200,7 +1202,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                     "swiper-pagination-bullet-active":
                       pastCommentsActiveSlider === 1,
                   })}
-                  tabindex="0"
+                  tabIndex="0"
                   role="button"
                   aria-label="Go to slide 2"
                   aria-current={pastCommentsActiveSlider === 1}
@@ -1211,7 +1213,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                     "swiper-pagination-bullet-active":
                       pastCommentsActiveSlider === 2,
                   })}
-                  tabindex="0"
+                  tabIndex="0"
                   role="button"
                   aria-label="Go to slide 3"
                   aria-current={pastCommentsActiveSlider === 2}
