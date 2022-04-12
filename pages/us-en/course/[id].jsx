@@ -44,6 +44,9 @@ const VolunteerTrainingProgram = dynamic(() =>
 const HealingBreath = dynamic(() =>
   import("@components/courseDetails").then((mod) => mod.HealingBreath),
 );
+const SKYSilentRetreat = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SKYSilentRetreat),
+);
 
 export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -177,6 +180,8 @@ export default function CourseDetail({ data }) {
     0;
   const isHealingBreathType =
     COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
+  const isSKYSilentRetreatType =
+    COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
 
   const router = useRouter();
 
@@ -188,7 +193,8 @@ export default function CourseDetail({ data }) {
       !isSahajSamadhiMeditationType &&
       !isSriSriYogaMeditationType &&
       !isVolunteerTrainingProgram &&
-      !isHealingBreathType
+      !isHealingBreathType &&
+      !isSKYSilentRetreatType
     ) {
       router.push({
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -214,6 +220,7 @@ export default function CourseDetail({ data }) {
       {isSilentRetreatType && <SilentRetreat {...props} />}
       {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
       {isHealingBreathType && <HealingBreath {...props} />}
+      {isSKYSilentRetreatType && <SKYSilentRetreat {...props} />}
     </>
   );
 }
