@@ -341,6 +341,7 @@ export const DesignTwo = ({
                 <Link
                   prefetch={false}
                   href={`/us-en/library/collection/${folder.id}`}
+                  passHref
                 >
                   <div
                     className="card image-card image-card-1 contentCard"
