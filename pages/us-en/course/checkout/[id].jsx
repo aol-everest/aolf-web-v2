@@ -286,7 +286,7 @@ const Checkout = ({ workshop, profile }) => {
       <NextSeo title={workshop.title} />
       <main>
         {showTopMessage && (
-          <aside>
+          <aside className="tw-relative tw-whitespace-normal tw-text-center">
             <img src="/img/ic-timer-white.svg" alt="timer" />
             <span>
               Register soon. Course fee will go up by $
