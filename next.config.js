@@ -65,7 +65,7 @@ module.exports = withPlugins(
     SentryWebpackPluginOptions,
   ],
   {
-    // swcMinify: true,
+    swcMinify: true,
     // basePath: "/us-en",
     // assetPrefix: "/us-en/",
     productionBrowserSourceMaps: true,
