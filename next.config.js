@@ -23,27 +23,27 @@ const SentryWebpackPluginOptions = {
 
 const securityHeaders = [
   {
-    key: "X-Frame-Options",
+    key: "x-frame-options",
     value: "SAMEORIGIN",
   },
   {
-    key: "X-Content-Type-Options",
+    key: "x-content-type-options",
     value: "nosniff",
   },
   {
-    key: "Referrer-Policy",
+    key: "referrer-policy",
     value: "origin-when-cross-origin",
   },
   {
-    key: "Permissions-Policy",
+    key: "permissions-policy",
     value: "camera=(), geolocation=(self), microphone=(self), autoplay=(self)",
   },
   {
-    key: "Strict-Transport-Security",
+    key: "strict-transport-security",
     value: "max-age=31536000; includeSubDomains",
   },
   {
-    key: "Cache-Control",
+    key: "cache-control",
     value: "no-cache, no-store, must-revalidate",
   },
 ];
@@ -102,7 +102,7 @@ module.exports = withPlugins(
           locale: false,
           headers: [
             {
-              key: "Cache-Control",
+              key: "cache-control",
               value: "public, max-age=800 must-revalidate",
             },
           ],
