@@ -96,6 +96,9 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
   return (
     <>
       <section className="sky-header">
+        <div class="sky-header__image">
+          <img src="/img/sky-silent-header.jpg" alt="SKY Silent Retreat" />
+        </div>
         <div className="sky-header__container container">
           <div className="sky-header__wrapper">
             <div className="sky-header__status">{mode}</div>
@@ -1033,7 +1036,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
               >
                 <div className="swiper-slide reviews__slide review-card">
                   <img
-                    src="/img/sky-reviews-1.png"
+                    src="/img/daniel-moss.jpg"
                     className="review-card__logo"
                     alt="review-logo"
                   />
@@ -1085,7 +1088,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
 
                 <div className="swiper-slide reviews__slide review-card">
                   <img
-                    src="/img/sky-reviews-2.png"
+                    src="/img/max-goldberg.png"
                     className="review-card__logo"
                     alt="review-logo"
                   />
@@ -1136,7 +1139,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
 
                 <div className="swiper-slide reviews__slide review-card">
                   <img
-                    src="/img/sky-reviews-3.png"
+                    src="/img/julie-madeley.jpg"
                     className="review-card__logo"
                     alt="review-logo"
                   />
