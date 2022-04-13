@@ -96,7 +96,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
   return (
     <>
       <section className="sky-header">
-        <div class="sky-header__image">
+        <div className="sky-header__image">
           <img src="/img/sky-silent-header.jpg" alt="SKY Silent Retreat" />
         </div>
         <div className="sky-header__container container">
