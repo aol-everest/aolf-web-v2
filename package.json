@@ -45,6 +45,7 @@
     "express": "^4.17.3",
     "formik": "^2.2.9",
     "gsap": "^3.9.1",
+    "helmet": "^5.0.2",
     "heroku-ssl-redirect": "^0.1.1",
     "next": "^12.1.0",
     "next-compose-plugins": "^2.2.1",

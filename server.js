@@ -1,5 +1,6 @@
 const next = require("next");
 const express = require("express");
+const helmet = require("helmet");
 const sslRedirect = require("heroku-ssl-redirect").default; // to make it work with 'require' keyword.
 
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ app.prepare().then(() => {
 
   // Express's middleware to automatically redirect to 'https'.
   server.use(sslRedirect());
+  server.use(helmet());
 
   server.all("*", (req, res) => {
     return handle(req, res);
