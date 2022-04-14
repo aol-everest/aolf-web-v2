@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { api, Clevertap, Segment } from "@utils";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import ErrorPage from "next/error";
 // import {
 //   SKYBreathMeditation,
 //   SahajSamadhi,
@@ -211,16 +212,35 @@ export default function CourseDetail({ data }) {
     swiperOption,
   };
 
+  const renderCourseDetail = () => {
+    if (isVolunteerTrainingProgram) {
+      return <VolunteerTrainingProgram {...props} />;
+    }
+    if (isSriSriYogaMeditationType) {
+      return <SriSriYoga {...props} />;
+    }
+    if (isSKYType) {
+      return <SKYBreathMeditation {...props} />;
+    }
+    if (isSilentRetreatType) {
+      return <SilentRetreat {...props} />;
+    }
+    if (isSahajSamadhiMeditationType) {
+      return <SahajSamadhi {...props} />;
+    }
+    if (isHealingBreathType) {
+      return <HealingBreath {...props} />;
+    }
+    if (isSKYSilentRetreatType) {
+      return <SKYSilentRetreat {...props} />;
+    }
+    return <ErrorPage statusCode={404} />;
+  };
+
   return (
     <>
       <NextSeo title={data.title} />
-      {isVolunteerTrainingProgram && <VolunteerTrainingProgram {...props} />}
-      {isSriSriYogaMeditationType && <SriSriYoga {...props} />}
-      {isSKYType && <SKYBreathMeditation {...props} />}
-      {isSilentRetreatType && <SilentRetreat {...props} />}
-      {isSahajSamadhiMeditationType && <SahajSamadhi {...props} />}
-      {isHealingBreathType && <HealingBreath {...props} />}
-      {isSKYSilentRetreatType && <SKYSilentRetreat {...props} />}
+      {renderCourseDetail()}
     </>
   );
 }
