@@ -908,7 +908,7 @@
 }
 
 .course-bottom-card {
-  padding: 22px 0;
+  // padding: 22px 0;
 
   &__img {
     img {
@@ -925,9 +925,9 @@
 
     &-course-name {
       font-family: Lora, sans-serif;
-      font-weight: 700 !important;
-      font-size: 28px !important;
-      line-height: 38px !important;
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 38px;
     }
   }
 
@@ -1810,7 +1810,7 @@
   }
 
   .course-bottom-card__container {
-    gap: 20px;
+    // gap: 20px;
     flex-direction: column;
     align-items: flex-start;
   }
