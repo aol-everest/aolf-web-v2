@@ -34,9 +34,6 @@ class CustomDocument extends Document {
             color="#5bbad5"
           ></link>
           <link rel="shortcut icon" href="/assets/favicon.ico"></link>
-          <meta httpEquiv="cache-control" content="no-cache"></meta>
-          <meta httpEquiv="expires" content="0"></meta>
-          <meta httpEquiv="pragma" content="no-cache"></meta>
           <meta name="msapplication-TileColor" content="#da532c"></meta>
           <meta name="theme-color" content="#ffffff"></meta>
           <meta name="apple-mobile-web-app-capable" content="yes" />
