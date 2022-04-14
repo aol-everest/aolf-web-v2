@@ -140,7 +140,7 @@ const MembershipThankyou = ({ order, query }) => {
       router.push({
         pathname: `/us-en/meetup/checkout/${meetupId}`,
         query: {
-          page: "m-o",
+          page: "c-o",
         },
       });
     }
