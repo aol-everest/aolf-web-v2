@@ -361,6 +361,7 @@ export const DesignOne = ({
                 <Link
                   prefetch={false}
                   href={`/us-en/library/collection/${folder.id}`}
+                  passHref
                 >
                   <div
                     className="card image-card image-card-1 contentCard"
@@ -385,7 +386,7 @@ export const DesignOne = ({
           <section className="browse-category most-popular">
             <p className="title-slider">
               Most Popular{" "}
-              <Link prefetch={false} href={`/us-en/library/search`}>
+              <Link prefetch={false} href={`/us-en/library/search`} passHref>
                 <span className="popular-all tw-cursor-pointer">All</span>
               </Link>
             </p>

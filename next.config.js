@@ -22,22 +22,29 @@ const SentryWebpackPluginOptions = {
 };
 
 const securityHeaders = [
-  { key: "X-DNS-Prefetch-Control", value: "on" },
   {
-    key: "Strict-Transport-Security",
-    value: "max-age=63072000; includeSubDomains; preload",
-  },
-  {
-    key: "X-XSS-Protection",
-    value: "1; mode=block",
-  },
-  {
-    key: "X-Frame-Options",
+    key: "x-frame-options",
     value: "SAMEORIGIN",
   },
   {
-    key: "X-Content-Type-Options",
+    key: "x-content-type-options",
     value: "nosniff",
+  },
+  {
+    key: "referrer-policy",
+    value: "origin-when-cross-origin",
+  },
+  {
+    key: "permissions-policy",
+    value: "camera=(), geolocation=(self), microphone=(self), autoplay=(self)",
+  },
+  {
+    key: "strict-transport-security",
+    value: "max-age=31536000; includeSubDomains",
+  },
+  {
+    key: "cache-control",
+    value: "no-cache, no-store, must-revalidate",
   },
 ];
 
@@ -61,7 +68,7 @@ module.exports = withPlugins(
     SentryWebpackPluginOptions,
   ],
   {
-    // swcMinify: true,
+    swcMinify: true,
     // basePath: "/us-en",
     // assetPrefix: "/us-en/",
     productionBrowserSourceMaps: true,
@@ -95,8 +102,8 @@ module.exports = withPlugins(
           locale: false,
           headers: [
             {
-              key: "Cache-Control",
-              value: "public, max-age=31536000, immutable",
+              key: "cache-control",
+              value: "public, max-age=800 must-revalidate",
             },
           ],
         },

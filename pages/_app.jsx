@@ -20,8 +20,8 @@ import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { TrackingHeadScript } from "@phntms/next-gtm";
 import TopProgressBar from "@components/topProgressBar";
-import Script from "next/script";
-import * as snippet from "@segment/snippet";
+// import Script from "next/script";
+// import * as snippet from "@segment/snippet";
 import "@styles/global.scss";
 import "@styles/global-customize/style.scss";
 import "@styles/style.scss";
@@ -36,20 +36,20 @@ Amplify.configure({
   ssr: true,
 });
 
-const renderSnippet = () => {
-  const opts = {
-    apiKey: process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY,
-    // note: the page option only covers SSR tracking.
-    // Page.js is used to track other events using `window.analytics.page()`
-    page: true,
-  };
+// const renderSnippet = () => {
+//   const opts = {
+//     apiKey: process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY,
+//     // note: the page option only covers SSR tracking.
+//     // Page.js is used to track other events using `window.analytics.page()`
+//     page: true,
+//   };
 
-  if (process.env.NODE_ENV === "development") {
-    return snippet.max(opts);
-  }
+//   if (process.env.NODE_ENV === "development") {
+//     return snippet.max(opts);
+//   }
 
-  return snippet.min(opts);
-};
+//   return snippet.min(opts);
+// };
 
 function App({ Component, pageProps, userInfo = {} }) {
   const [user, setUser] = useState(userInfo);
@@ -154,9 +154,9 @@ function App({ Component, pageProps, userInfo = {} }) {
               GlobalLoading,
             ]}
           >
-            {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
+            {/* {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
               <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
-            )}
+            )} */}
             <Layout
               hideHeader={Component.hideHeader}
               hideFooter={Component.hideFooter}
