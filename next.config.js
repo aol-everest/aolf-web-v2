@@ -1,25 +1,9 @@
-const withPlugins = require("next-compose-plugins");
+// This file sets a custom webpack configuration to use your Next.js app
+// with Sentry.
+// https://nextjs.org/docs/api-reference/next.config.js/introduction
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/
+
 const { withSentryConfig } = require("@sentry/nextjs");
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
-});
-// const withPWA = require("next-pwa");
-// const runtimeCaching = require("next-pwa/cache");
-
-const SentryWebpackPluginOptions = {
-  // Additional config options for the Sentry Webpack plugin. Keep in mind that
-  // the following options are set automatically, and overriding them is not
-  // recommended:
-  //   release, url, org, project, authToken, configFile, stripPrefix,
-  //   urlPrefix, include, ignore
-  // org: "aolf",
-  // project: "member-web-app",
-  // authToken: process.env.SENTRY_AUTH_TOKEN,
-
-  silent: true, // Suppresses all logs
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options.
-};
 
 const securityHeaders = [
   {
@@ -42,76 +26,64 @@ const securityHeaders = [
     key: "strict-transport-security",
     value: "max-age=31536000; includeSubDomains",
   },
-  {
-    key: "cache-control",
-    value: "no-cache, no-store, must-revalidate",
-  },
 ];
 
-module.exports = withPlugins(
-  [
-    // withPWA,
-    // {
-    //   pwa: {
-    //     dest: "public",
-    //     disable: true,
-    //     runtimeCaching,
-    //     buildExcludes: [
-    //       /middleware-manifest\.json$/,
-    //       /_middleware.js$/,
-    //       /_middleware.js.map$/,
-    //     ],
-    //   },
-    // },
-    withBundleAnalyzer,
-    withSentryConfig,
-    SentryWebpackPluginOptions,
-  ],
-  {
-    swcMinify: true,
-    // basePath: "/us-en",
-    // assetPrefix: "/us-en/",
-    productionBrowserSourceMaps: true,
-    images: {
-      domains: ["images.ctfassets.net"],
-    },
-
-    async redirects() {
-      return [
-        {
-          source: "/",
-          destination: "/us-en/course",
-          permanent: true,
-        },
-        {
-          source: "/us-en",
-          destination: "/us-en/course",
-          permanent: true,
-        },
-      ];
-    },
-    async headers() {
-      return [
-        {
-          // Apply these headers to all routes in your application.
-          source: "/(.*)",
-          headers: securityHeaders,
-        },
-        {
-          source: "/:all*(svg|jpg|png)",
-          locale: false,
-          headers: [
-            {
-              key: "cache-control",
-              value: "public, max-age=800 must-revalidate",
-            },
-          ],
-        },
-      ];
-    },
+const moduleExports = {
+  swcMinify: true,
+  // basePath: "/us-en",
+  // assetPrefix: "/us-en/",
+  productionBrowserSourceMaps: true,
+  images: {
+    domains: ["images.ctfassets.net"],
   },
-);
+
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/us-en/course",
+        permanent: true,
+      },
+      {
+        source: "/us-en",
+        destination: "/us-en/course",
+        permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: "/(.*)",
+        headers: securityHeaders,
+      },
+      {
+        source: "/:all*(svg|jpg|png)",
+        locale: false,
+        headers: [
+          {
+            key: "cache-control",
+            value: "public, max-age=800 must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
+};
+
+const sentryWebpackPluginOptions = {
+  // Additional config options for the Sentry Webpack plugin. Keep in mind that
+  // the following options are set automatically, and overriding them is not
+  // recommended:
+  //   release, url, org, project, authToken, configFile, stripPrefix,
+  //   urlPrefix, include, ignore
+
+  silent: true, // Suppresses all logs
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options.
+};
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-// module.exports = withSentryConfig(moduleExports, SentryWebpackPluginOptions);
+module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
