@@ -379,7 +379,7 @@ const Meetup = () => {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "m-o",
+          page: "c-o",
         },
       });
     }
