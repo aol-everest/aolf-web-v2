@@ -51,7 +51,7 @@ function DevOnly({ profile = {} }) {
     <>
       <div className="tw-p-5 tw-text-center">
         <button className="btn btn-warning" onClick={clearCaches}>
-          Reload App
+          Re-load App
         </button>
       </div>
       {log && (
