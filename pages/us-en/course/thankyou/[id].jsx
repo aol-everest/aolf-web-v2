@@ -369,30 +369,32 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
         </section>
         <section className="journey-starts !tw-mb-0">
           <div className="container">
-            <div className="program-details">
-              <h2 className="program-details__title">Program Details</h2>
-              {selectedGenericSlot.startDate &&
-                getSelectedTimeSlotDetails(selectedGenericSlot)}
-              {!selectedGenericSlot.startDate && (
-                <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
-                  {timings &&
-                    timings.map((time, i) => {
-                      return (
-                        <li className="program-details__schedule" key={i}>
-                          <span className="program-details__schedule-date">
-                            {dayjs.utc(time.startDate).format("LL")}
-                          </span>
-                          <span className="program-details__schedule-time">{`${tConvert(
-                            time.startTime,
-                          )} - ${tConvert(time.endTime)} ${
-                            ABBRS[time.timeZone]
-                          }`}</span>
-                        </li>
-                      );
-                    })}
-                </ul>
-              )}
-            </div>
+            {!isGenericWorkshop && (
+              <div className="program-details">
+                <h2 className="program-details__title">Program Details</h2>
+                {selectedGenericSlot.startDate &&
+                  getSelectedTimeSlotDetails(selectedGenericSlot)}
+                {!selectedGenericSlot.startDate && (
+                  <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
+                    {timings &&
+                      timings.map((time, i) => {
+                        return (
+                          <li className="program-details__schedule" key={i}>
+                            <span className="program-details__schedule-date">
+                              {dayjs.utc(time.startDate).format("LL")}
+                            </span>
+                            <span className="program-details__schedule-time">{`${tConvert(
+                              time.startTime,
+                            )} - ${tConvert(time.endTime)} ${
+                              ABBRS[time.timeZone]
+                            }`}</span>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                )}
+              </div>
+            )}
             <h2 className="journey-starts__title section-title">
               Your journey starts here
             </h2>
