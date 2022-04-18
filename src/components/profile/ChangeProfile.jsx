@@ -4,7 +4,7 @@ import MaskedInput from "react-text-mask";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { api } from "@utils";
-import { FaRegEdit } from "react-icons/fa";
+import { FaRegEdit, FaCheckCircle } from "react-icons/fa";
 import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES, US_STATES } from "@constants";
 import { StyledInput, Dropdown } from "@components/checkout";
@@ -27,6 +27,9 @@ const phoneNumberMask = [
   /\d/,
   /\d/,
 ];
+
+const MESSAGE_EMAIL_VERIFICATION_SUCCESS =
+  "A verification link has been emailed to you. Please use the link to verify your student email.";
 
 export const ChangeProfile = ({
   isMobile,
@@ -82,6 +85,51 @@ export const ChangeProfile = ({
     setLoading(false);
   };
 
+  const validateStudentEmail = (email) => {
+    const regex = new RegExp("[a-z0-9]+@[a-z]+.edu$");
+    const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+    return isStudentEmail;
+  };
+
+  const handleVerifyStudentEmail = async () => {
+    setLoading(true);
+    try {
+      await api.post({
+        path: "verify-email",
+        body: {
+          email: email,
+        },
+      });
+    } catch (ex) {
+      console.log(ex);
+    }
+    setLoading(false);
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      title: "Verification code sent.",
+      children: (handleModalToggle) => (
+        <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
+          <div className=" modal-dialog modal-dialog-centered active">
+            <div className="modal-content">
+              <h2 className="modal-content-title !tw-text-2xl">
+                {MESSAGE_EMAIL_VERIFICATION_SUCCESS}
+              </h2>
+
+              <p className="tw-flex tw-justify-center">
+                <a
+                  href="#"
+                  className="tw-mt-6 btn btn-lg btn-primary"
+                  onClick={handleModalToggle}
+                >
+                  Close
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    });
+  };
+
   const {
     first_name,
     last_name,
@@ -93,6 +141,9 @@ export const ChangeProfile = ({
     personMailingStreet,
     email,
   } = profile;
+
+  const isStudent = validateStudentEmail(email);
+
   return (
     <>
       {loading && <div className="cover-spin"></div>}
@@ -245,12 +296,20 @@ export const ChangeProfile = ({
                   )}
                 </div>
               </div>
-              <button
-                type="submit"
-                className="btn-primary d-block ml-auto mt-4 v2"
-              >
-                Update Profile
-              </button>
+              <div className="tw-flex tw-justify-end tw-mt-6">
+                {isStudent && (
+                  <button
+                    type="button"
+                    className="btn-primary ml-auto v2"
+                    onClick={handleVerifyStudentEmail}
+                  >
+                    Verify Student Status
+                  </button>
+                )}
+                <button type="submit" className="btn-primary d-block ml-4 v2">
+                  Update Profile
+                </button>
+              </div>
             </form>
           );
         }}
