@@ -135,7 +135,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
     <main>
       <section
         className={classNames(
-          "journey-cancellation",
+          "journey-cancellation !tw-pt-[108px] !tw-pb-[117px] !tw-px-0",
           Style.journeyCancellation,
         )}
       >
