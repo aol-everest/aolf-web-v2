@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/inline-script-id */
 import React, { useEffect, useState } from "react";
-import { Amplify, Auth, Hub } from "aws-amplify";
+import { Amplify, Auth, Hub, withSSRContext } from "aws-amplify";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose, isSSR, Clevertap, Segment } from "@utils";
@@ -35,6 +35,7 @@ Amplify.configure({
   ...config,
   ssr: true,
 });
+Amplify.Logger.LOG_LEVEL = "DEBUG";
 
 // const renderSnippet = () => {
 //   const opts = {
@@ -86,7 +87,7 @@ function App({ Component, pageProps, userInfo = {} }) {
 
   const fetchProfile = async () => {
     try {
-      const user = await Auth.currentAuthenticatedUser();
+      // const user = await Auth.currentAuthenticatedUser();
       const currentSession = await Auth.currentSession();
       const token = currentSession.idToken.jwtToken;
       const res = await api.get({
