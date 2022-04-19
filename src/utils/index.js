@@ -16,7 +16,7 @@ export function configurePool(ctx) {
     userPoolWebClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
     storage: new NextStorage(ctx, {
       domain: process.env.NEXT_PUBLIC_AMPLIFY_COOKIE_DOMAIN,
-      expires: 2,
+      expires: 10,
       path: "/",
       secure: true,
     }),
