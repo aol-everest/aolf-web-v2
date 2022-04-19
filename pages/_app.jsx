@@ -5,6 +5,7 @@ import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { api, Compose, isSSR, Clevertap, Segment } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
+import fetch from "node-fetch";
 import {
   Layout,
   ReInstate,
@@ -20,6 +21,7 @@ import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { TrackingHeadScript } from "@phntms/next-gtm";
 import TopProgressBar from "@components/topProgressBar";
+import { configurePool } from "@utils";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
 import "@styles/global.scss";
@@ -31,6 +33,7 @@ import "@styles/old-design/style.scss";
 import config from "./../src/aws-exports";
 import SEO from "../next-seo.config";
 
+global.fetch = fetch;
 Amplify.configure({
   ...config,
   ssr: true,
@@ -60,6 +63,8 @@ function App({ Component, pageProps, userInfo = {} }) {
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
   const [isPendingAgreement, setIsPendingAgreement] = useState(false);
 
+  configurePool();
+
   useEffect(() => {
     Hub.listen("auth", async ({ payload: { event, data } }) => {
       switch (event) {
@@ -82,7 +87,7 @@ function App({ Component, pageProps, userInfo = {} }) {
     if (!isSSR) {
       Clevertap.initialize();
     }
-    fetchProfile();
+    // fetchProfile();
   }, []);
 
   const fetchProfile = async () => {
@@ -180,30 +185,58 @@ function App({ Component, pageProps, userInfo = {} }) {
   );
 }
 
-// App.getInitialProps = async ({ Component, ctx }) => {
-//   let pageProps = {};
-//   if (Component.getInitialProps) {
-//     pageProps = await Component.getInitialProps(ctx);
-//   }
-//   try {
-//     const { Auth } = await withSSRContext(ctx);
-//     const user = await Auth.currentAuthenticatedUser();
-//     const token = user.signInUserSession.idToken.jwtToken;
-//     const res = await api.get({
-//       path: "profile",
-//       token,
-//     });
-//     const userInfo = {
-//       authenticated: true,
-//       username: user.username,
-//       profile: res,
-//     };
+App.getInitialProps = async (appContext) => {
+  // let pageProps = {};
+  // if (Component.getInitialProps) {
+  //   pageProps = await Component.getInitialProps(ctx);
+  // }
+  // try {
+  //   const { Auth } = await withSSRContext(ctx);
+  //   const user = await Auth.currentAuthenticatedUser();
+  //   const token = user.signInUserSession.idToken.jwtToken;
+  //   const res = await api.get({
+  //     path: "profile",
+  //     token,
+  //   });
+  //   const userInfo = {
+  //     authenticated: true,
+  //     username: user.username,
+  //     profile: res,
+  //   };
 
-//     return { pageProps, userInfo };
-//   } catch (err) {
-//     console.log(err);
-//     return { pageProps, userInfo: {} };
-//   }
-// };
+  //   return { pageProps, userInfo };
+  // } catch (err) {
+  //   console.log(err);
+  //   return { pageProps, userInfo: {} };
+  // }
+  let pageProps = {};
+  if (appContext.Component.getInitialProps) {
+    pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+  }
+
+  // However, we need to configure the pool every time it's needed within getInitialProps
+
+  // configurePool(appContext.ctx);
+
+  try {
+    const { Auth } = await withSSRContext(appContext.ctx);
+    const user = await Auth.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    const res = await api.get({
+      path: "profile",
+      token,
+    });
+    const userInfo = {
+      authenticated: true,
+      username: user.username,
+      profile: res,
+    };
+
+    return { pageProps, userInfo };
+  } catch (err) {
+    console.log(err);
+    return { pageProps, userInfo: {} };
+  }
+};
 
 export default App;
