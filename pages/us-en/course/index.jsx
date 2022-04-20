@@ -179,6 +179,7 @@ const Course = () => {
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
   });
+  const [cityFilter, setCityFilter] = useQueryString("city");
   const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
   const [ctypesFilter, setCtypesFilter] = useQueryString("ctypes");
   const [filterStartEndDate, setFilterStartEndDate] =
@@ -324,6 +325,7 @@ const Course = () => {
         timeZoneFilter,
         instructorFilter,
         activeFilterType,
+        cityFilter,
       },
     ],
     async ({ pageParam = 1 }) => {
@@ -387,6 +389,12 @@ const Course = () => {
         param = {
           ...param,
           isPrivateEvent: 1,
+        };
+      }
+      if (cityFilter) {
+        param = {
+          ...param,
+          city: cityFilter,
         };
       }
 
