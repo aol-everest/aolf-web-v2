@@ -6,21 +6,21 @@ on:
       - qa
 
 jobs:
-  build:
+  deploy-qa:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Deploy To QA
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_email: "sandeepkhoj@gmail.com"
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "aolf-web-qa"
-
-      - name: Deploy To Dev
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+          
+  deploy-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_email: "sandeepkhoj@gmail.com"
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
