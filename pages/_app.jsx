@@ -21,7 +21,7 @@ import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { TrackingHeadScript } from "@phntms/next-gtm";
 import TopProgressBar from "@components/topProgressBar";
-import { configurePool } from "@utils";
+// import { configurePool } from "@utils";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
 import "@styles/global.scss";
@@ -38,7 +38,9 @@ Amplify.configure({
   ...config,
   ssr: true,
 });
-Amplify.Logger.LOG_LEVEL = "DEBUG";
+if (process.env.NODE_ENV !== "production") {
+  Amplify.Logger.LOG_LEVEL = "DEBUG";
+}
 
 // const renderSnippet = () => {
 //   const opts = {
@@ -63,7 +65,7 @@ function App({ Component, pageProps, userInfo = {} }) {
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
   const [isPendingAgreement, setIsPendingAgreement] = useState(false);
 
-  configurePool();
+  // configurePool();
 
   useEffect(() => {
     Hub.listen("auth", async ({ payload: { event, data } }) => {
