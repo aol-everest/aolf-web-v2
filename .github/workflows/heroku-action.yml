@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to dev & qa
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
           heroku_email: "sandeepkhoj@gmail.com"
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "aolf-web-qa"
-          
+
   deploy-dev:
     runs-on: ubuntu-latest
     steps:
