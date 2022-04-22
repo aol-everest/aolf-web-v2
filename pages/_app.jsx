@@ -21,7 +21,7 @@ import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { TrackingHeadScript } from "@phntms/next-gtm";
 import TopProgressBar from "@components/topProgressBar";
-// import { configurePool } from "@utils";
+import { configurePool } from "@utils";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
 import "@styles/global.scss";
@@ -65,7 +65,7 @@ function App({ Component, pageProps, userInfo = {} }) {
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
   const [isPendingAgreement, setIsPendingAgreement] = useState(false);
 
-  // configurePool();
+  configurePool();
 
   useEffect(() => {
     Hub.listen("auth", async ({ payload: { event, data } }) => {
@@ -94,9 +94,9 @@ function App({ Component, pageProps, userInfo = {} }) {
 
   const fetchProfile = async () => {
     try {
-      // const user = await Auth.currentAuthenticatedUser();
       const currentSession = await Auth.currentSession();
       const token = currentSession.idToken.jwtToken;
+      const user = await Auth.currentAuthenticatedUser();
       const res = await api.get({
         path: "profile",
         token,
@@ -218,12 +218,13 @@ App.getInitialProps = async (appContext) => {
 
   // However, we need to configure the pool every time it's needed within getInitialProps
 
-  // configurePool(appContext.ctx);
+  configurePool(appContext.ctx);
 
   try {
     const { Auth } = await withSSRContext(appContext.ctx);
+    const currentSession = await Auth.currentSession();
+    const token = currentSession.idToken.jwtToken;
     const user = await Auth.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
     const res = await api.get({
       path: "profile",
       token,
