@@ -1,12 +1,8 @@
-name: Deploy
-
-on:
-  push:
-    branches:
-      - main
-
+name: Deploy to Prod
+on:[workflow_dispatch]
 jobs:
-  deploy-prod:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
