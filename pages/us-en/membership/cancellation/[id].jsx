@@ -60,7 +60,7 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { id: subscriptionId } = router.query;
-  const { data } = cancelSubscription;
+  const { data, isError } = cancelSubscription;
   const { totalAmountWillBeDeducted } = data || [];
 
   const { subscriptions = [] } = profile || {};
@@ -68,6 +68,21 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
   const userSubscriptions = subscriptions.find((subscription) => {
     return subscription.sfid === subscriptionId;
   });
+
+  if (isError) {
+    return (
+      <div className="not-found">
+        <div>
+          <h1 className="not-found-heading">500</h1>
+          <div className="not-found-sub-heading-container">
+            <h2 className="not-found-sub-heading">
+              {cancelSubscription.error}
+            </h2>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!userSubscriptions) {
     return (

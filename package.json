@@ -35,6 +35,7 @@
     "@sentry/nextjs": "^6.18.1",
     "@stripe/react-stripe-js": "^1.7.0",
     "@stripe/stripe-js": "^1.23.0",
+    "amplify-auth-next-storage": "^1.1.1",
     "aws-amplify": "^4.3.15",
     "axios": "^0.26.0",
     "bootstrap": "^4.5.3",

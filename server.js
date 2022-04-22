@@ -30,7 +30,7 @@ app.prepare().then(() => {
   server.use(helmet.permittedCrossDomainPolicies());
   server.use(helmet.referrerPolicy());
   server.use(helmet.xssFilter());
-  server.use(nocache());
+  // server.use(nocache());
 
   server.all("*", (req, res) => {
     return handle(req, res);
