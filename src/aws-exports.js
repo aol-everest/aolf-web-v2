@@ -3,6 +3,9 @@
 
 const awsConfig = {
   aws_project_region: process.env.NEXT_PUBLIC_COGNITO_REGION,
+  // aws_cognito_region: process.env.NEXT_PUBLIC_COGNITO_REGION,
+  // aws_user_pools_id: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
+  // aws_user_pools_web_client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   Analytics: {
     disabled: true,
   },
@@ -18,10 +21,7 @@ const awsConfig = {
       sameSite: "strict",
       secure: true,
     },
-    // aws_project_region: process.env.NEXT_PUBLIC_COGNITO_REGION,
-    // aws_cognito_region: process.env.NEXT_PUBLIC_COGNITO_REGION,
-    // aws_user_pools_id: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
-    // aws_user_pools_web_client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+
     oauth: {
       domain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
       scope: [

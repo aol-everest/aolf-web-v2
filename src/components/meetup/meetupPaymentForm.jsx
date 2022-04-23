@@ -835,6 +835,64 @@ export const MeetupPaymentForm = ({
                           </a>
                         </li>
                       </ul>
+                      {meetup.mode === "In Person" && (
+                        <>
+                          {!meetup.isLocationEmpty && (
+                            <ul className="info__list mt-3">
+                              <h2 className="info__title">Location:</h2>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  meetup.locationStreet || ""
+                                }, ${meetup.locationCity} ${
+                                  meetup.locationProvince
+                                } ${meetup.locationPostalCode} ${
+                                  meetup.locationCountry
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {meetup.locationStreet && (
+                                  <li>{meetup.locationStreet}</li>
+                                )}
+                                <li>
+                                  {meetup.locationCity || ""}
+                                  {", "}
+                                  {meetup.locationProvince || ""}{" "}
+                                  {meetup.locationPostalCode || ""}
+                                </li>
+                              </a>
+                            </ul>
+                          )}
+                          {meetup.isLocationEmpty && (
+                            <ul className="info__list mt-3">
+                              <h2 className="info__title">Location:</h2>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  meetup.streetAddress1 || ""
+                                },${meetup.streetAddress2 || ""} ${
+                                  meetup.city
+                                } ${meetup.state} ${meetup.zip} ${
+                                  meetup.country
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {meetup.streetAddress1 && (
+                                  <li>{meetup.streetAddress1}</li>
+                                )}
+                                {meetup.streetAddress2 && (
+                                  <li>{meetup.streetAddress2}</li>
+                                )}
+                                <li>
+                                  {meetup.city || ""}
+                                  {", "}
+                                  {meetup.state || ""} {meetup.zip || ""}
+                                </li>
+                              </a>
+                            </ul>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
