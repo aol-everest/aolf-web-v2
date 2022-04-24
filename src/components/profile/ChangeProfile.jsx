@@ -3,6 +3,7 @@ import classNames from "classnames";
 import MaskedInput from "react-text-mask";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import dayjs from "dayjs";
 import { api } from "@utils";
 import { FaRegEdit, FaCheckCircle } from "react-icons/fa";
 import { useGlobalModalContext } from "@contexts";
@@ -140,9 +141,17 @@ export const ChangeProfile = ({
     personMobilePhone,
     personMailingStreet,
     email,
+    isStudentVerified,
+    studentVerificationDate,
+    studentVerificationExpiryDate,
   } = profile;
 
-  const isStudent = validateStudentEmail(email);
+  const showVerifyStudentStatus =
+    validateStudentEmail(email) &&
+    (!isStudentVerified ||
+      (isStudentVerified &&
+        dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
+        dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
   return (
     <>
@@ -297,7 +306,7 @@ export const ChangeProfile = ({
                 </div>
               </div>
               <div className="tw-flex tw-justify-end tw-mt-6">
-                {isStudent && (
+                {showVerifyStudentStatus && (
                   <button
                     type="button"
                     className="btn-primary ml-auto v2"
