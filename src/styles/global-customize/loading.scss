@@ -421,11 +421,6 @@ $hovershadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transform: translateY(-50%) translateX(-50%);
     width: ($master * 20);
 
-    &:hover {
-      background: $cardhoverbackground;
-      box-shadow: $hovershadow;
-    }
-
     h5 {
       color: $color;
       font-size: ($master + ($master / 2));

@@ -4,6 +4,7 @@ import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES } from "@constants";
 import { api, Auth } from "@utils";
 import { useAuth } from "@contexts";
+import { PageLoading } from "@components";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -32,9 +33,9 @@ import { useAuth } from "@contexts";
 
 function Login() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const { showModal } = useGlobalModalContext();
-  const { authenticated, user } = useAuth();
+  const { authenticated } = useAuth();
 
   useEffect(() => {
     if (!router.isReady && authenticated) return;
@@ -44,7 +45,7 @@ function Login() {
         pathname: navigateTo,
       });
     } else {
-      setLoading(false);
+      // setLoading(false);
       showModal(MODAL_TYPES.LOGIN_MODAL, {
         navigateTo,
         closeModalAction: () => {
@@ -54,7 +55,7 @@ function Login() {
     }
   }, [router.isReady]);
 
-  async function signIn({ username, password }) {
+  /* async function signIn({ username, password }) {
     try {
       await Auth.authenticateUser(username, password);
 
@@ -62,15 +63,11 @@ function Login() {
     } catch (error) {
       console.log("error signing in", error);
     }
-  }
+  } */
 
   return (
     <main className="aol_mainbody login-screen">
-      {loading && (
-        <div className="tw-top-0 tw-w-full tw-h-full tw-fixed tw-z-[99999]">
-          <div className="cover-spin"></div>
-        </div>
-      )}
+      {/* {loading && <PageLoading />} */}
     </main>
   );
 }

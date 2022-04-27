@@ -23,7 +23,6 @@ export const createCognitoAuth = () => {
     RedirectUriSignIn: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
     RedirectUriSignOut: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT,
   };
-  console.log(config);
 
   return new CognitoAuth(config);
 };
@@ -39,6 +38,10 @@ export const parseCognitoWebResponse = (href) => {
         resolve(result);
       },
       onFailure: function (err) {
+        console.log(
+          "🚀 ~ file: auth.js ~ line 43 ~ returnnewPromise ~ err",
+          err,
+        );
         console.log(err);
         reject(new Error("Failure parsing Cognito web response: " + err));
       },

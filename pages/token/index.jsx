@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { Loader } from "@components";
 import { Auth } from "@utils";
 import * as Sentry from "@sentry/browser";
 import { useAuth } from "@contexts";
 import { ALERT_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
+import { PageLoading } from "@components";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -37,6 +37,11 @@ function Token() {
 
   const authenticateUserFromToken = async () => {
     try {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      if (!params.code) {
+        throw new Error("Failure parsing Cognito web response. No code found.");
+      }
       const state = new URLSearchParams(location.search).get("state");
       await Auth.parseCognitoWebResponse(window.location.href);
       const { user, session } = await Auth.getSession();
@@ -50,6 +55,7 @@ function Token() {
         token,
       };
       setUser(userInfo);
+
       Sentry.setUser({ ...userInfo });
       router.push({
         pathname: state || "/",
@@ -58,13 +64,18 @@ function Token() {
       console.log(error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: error.message,
+        closeModalAction: () => {
+          router.push({
+            pathname: "/",
+          });
+        },
       });
     }
   };
 
   return (
     <main className="aol_mainbody login-screen">
-      <Loader />
+      <PageLoading />
     </main>
   );
 }
