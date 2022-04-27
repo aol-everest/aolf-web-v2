@@ -1,99 +1,48 @@
 import React, { useState } from "react";
-import { withSSRContext } from "aws-amplify";
 import { api } from "@utils";
-
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { BackendPaymentForm } from "@components/backendPaymentForm";
+import { withAuth } from "@hoc";
+import { useAuth } from "@contexts";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
 
-export const getServerSideProps = async (context) => {
-  const { query, req, res, resolvedUrl } = context;
-  const { id, coupon = null } = query;
-  let props = null;
-  let token = "";
-  let profile = {};
-  let user = null;
-  try {
-    const { Auth } = await withSSRContext({ req });
-    user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
-    profile = await api.get({
-      path: "profile",
-      token,
-    });
-  } catch (err) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login?next=${resolvedUrl}`,
-      },
-      props: {},
-    };
-  }
-  if (
-    profile &&
-    (profile.userType === "Teacher" ||
-      profile.userType === "Organizer" ||
-      profile.userType === "Assistant Teacher")
-  ) {
-    props = {
-      authenticated: true,
-      username: user.username,
-      profile: profile,
-      token,
-      isTeacher: true,
-    };
-  } else {
-    props = {
-      authenticated: true,
-      username: user.username,
-      profile: profile,
-      token,
-      isTeacher: false,
-    };
-  }
-
-  const workshopDetail = await api.get({
-    path: "workshopDetail",
-    token,
-    param: {
-      id,
-      isBackendRegistration: "1",
+const BackEndCheckout = () => {
+  const router = useRouter();
+  const { user } = useAuth();
+  const { id: workshopId, coupon } = router.query;
+  const {
+    data: workshop = {},
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "bcWorkshopDetail",
+    async () => {
+      const response = await api.get({
+        path: "workshopDetail",
+        param: {
+          id: workshopId,
+          isBackendRegistration: "1",
+        },
+      });
+      return response.data;
     },
-  });
-  props = {
-    ...props,
-    workshop: workshopDetail.data,
-    coupon,
-  };
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
-  // Pass data to the page via props
-  return { props };
-};
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
 
-const BackEndCheckout = ({ workshop, profile, isTeacher, coupon }) => {
-  if (!isTeacher) {
-    return (
-      <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">
-        <div className="container">
-          <div className="row">
-            <div className="col-12 tw-max-w-[450px] tw-m-auto tw-p-5 tw-my-[50px]">
-              <h2>Forbidden!</h2>
-              <h4>Code 403</h4>
-              <div>
-                Access Denied. You do not have the permission to access this
-                page on this server.
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
-  }
   return (
     <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">
       <div className="container">
@@ -109,7 +58,7 @@ const BackEndCheckout = ({ workshop, profile, isTeacher, coupon }) => {
           >
             <BackendPaymentForm
               useWorkshop={workshop}
-              profile={profile}
+              profile={user.profile}
               coupon={coupon}
             />
           </Elements>
@@ -120,4 +69,6 @@ const BackEndCheckout = ({ workshop, profile, isTeacher, coupon }) => {
 };
 BackEndCheckout.hideHeader = false;
 
-export default BackEndCheckout;
+export default withAuth(BackEndCheckout, {
+  role: ["Teacher", "Organizer", "Assistant Teacher"],
+});

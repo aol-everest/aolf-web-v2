@@ -12,7 +12,7 @@ import { MEMBERSHIP_TYPES, COURSE_TYPES, MODAL_TYPES } from "@constants";
 dayjs.extend(utc);
 
 export const RegisterPanel = ({ workshop }) => {
-  const [{ authenticated = false, profile }] = useAuth();
+  const { authenticated = false, user } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
   const { fee, delfee, offering } = priceCalculation({ workshop });
@@ -64,7 +64,7 @@ export const RegisterPanel = ({ workshop }) => {
     });
   };
 
-  const { subscriptions = [] } = profile || {};
+  const { subscriptions = [] } = user.profile || {};
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
       return {

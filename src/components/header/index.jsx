@@ -227,9 +227,14 @@ const CustomMenu = React.forwardRef(
 
 export const Header = () => {
   const router = useRouter();
-  const [{ authenticated = false, profile }] = useAuth();
+  const { authenticated = false, user } = useAuth();
+
   const { showModal } = useGlobalModalContext();
-  const { userProfilePic: profilePic, first_name, last_name } = profile || {};
+  const {
+    userProfilePic: profilePic,
+    first_name,
+    last_name,
+  } = user?.profile || {};
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 

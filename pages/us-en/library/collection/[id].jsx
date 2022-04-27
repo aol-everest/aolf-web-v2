@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { api } from "@utils";
 import classNames from "classnames";
 import { NextSeo } from "next-seo";
-import { useIntersectionObserver } from "@hooks";
 import { useAuth } from "@contexts";
 import { useRouter } from "next/router";
-import { useUIDSeed } from "react-uid";
-import {
-  RetreatPrerequisiteWarning,
-  PurchaseMembershipModal,
-} from "@components";
-import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
-import { withSSRContext } from "aws-amplify";
 import Image from "next/image";
 import {
   useGlobalAlertContext,
@@ -22,11 +14,12 @@ import {
   useGlobalModalContext,
 } from "@contexts";
 import { useQueryString } from "@hooks";
-import { InfiniteScrollLoader } from "@components/loader";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   let props = {};
   let token = "";
@@ -63,7 +56,7 @@ export const getServerSideProps = async (context) => {
   };
   // Pass data to the page via props
   return { props };
-};
+}; */
 
 function Tile({
   data,
@@ -135,9 +128,32 @@ function Tile({
   );
 }
 
-function Collection({ rootFolder, authenticated }) {
+function Collection() {
   const router = useRouter();
-  const [{ profile }] = useAuth();
+  const { user, authenticated } = useAuth();
+  const { id: courseId } = router.query;
+  const {
+    data: rootFolder,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "library",
+    async () => {
+      const response = await api.get({
+        path: "library",
+        param: {
+          id: courseId,
+        },
+      });
+      const [rootFolder] = response.data.folder;
+      return rootFolder;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+  console.log(rootFolder);
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
@@ -201,6 +217,8 @@ function Collection({ rootFolder, authenticated }) {
       });
     }
   };
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
 
   const content = (rootFolder.content || []).map((content) => {
     const isFavorite = favouriteContents.find((el) => el.sfid === content.sfid);

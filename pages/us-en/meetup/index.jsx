@@ -93,7 +93,7 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
 
 const Meetup = () => {
   const seed = useUIDSeed();
-  const [{ authenticated, profile }] = useAuth();
+  const { authenticated, user } = useAuth();
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
@@ -277,7 +277,7 @@ const Meetup = () => {
 
   const checkoutMeetup = (selectedMeetup) => async () => {
     const { unitPrice, memberPrice, sfid, productTypeId } = selectedMeetup;
-    const { subscriptions = [] } = profile;
+    const { subscriptions = [] } = user.profile;
     hideAlert();
     hideModal();
 
@@ -310,7 +310,7 @@ const Meetup = () => {
           personMailingStreet,
           personMailingState,
           personMailingPostalCode,
-        } = profile || {};
+        } = user.profile || {};
 
         setLoading(true);
         let payLoad = {
@@ -403,7 +403,7 @@ const Meetup = () => {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
-      if (!profile.isMandatoryWorkshopAttended) {
+      if (!user.profile.isMandatoryWorkshopAttended) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
           className: "retreat-prerequisite-big meditation-digital-membership",
           title: "Retreat Prerequisite",
