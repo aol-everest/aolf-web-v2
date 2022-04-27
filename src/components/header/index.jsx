@@ -59,6 +59,10 @@ const MENU = [
         name: "Destination Retreats",
         link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
       },
+      {
+        name: "All Courses",
+        link: "/us-en/course",
+      },
     ],
   },
   {
@@ -166,6 +170,15 @@ const MENU = [
       {
         name: "Donate",
         link: "https://aolf.kindful.com/",
+      },
+    ],
+  },
+  {
+    name: "EVENTS",
+    submenu: [
+      {
+        name: "Gurudev 2022 Tour",
+        link: "/us-en/lp/meet-gurudev2022",
       },
     ],
   },
