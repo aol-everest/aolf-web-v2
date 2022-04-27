@@ -89,6 +89,7 @@ function CourseDetail() {
   const { user, authenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId } = router.query;
+  console.log(router.query);
   const { data, isLoading, isError, error } = useQuery(
     "workshopDetail",
     async () => {
@@ -102,6 +103,7 @@ function CourseDetail() {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: router.isReady,
     },
   );
   useEffect(() => {
@@ -191,7 +193,7 @@ function CourseDetail() {
   }
 
   if (isError) return <ErrorPage statusCode={500} title={error} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;

@@ -64,7 +64,7 @@ export const RegisterPanel = ({ workshop }) => {
     });
   };
 
-  const { subscriptions = [] } = user.profile || {};
+  const { subscriptions = [] } = user?.profile || {};
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
       return {
