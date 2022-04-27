@@ -131,7 +131,7 @@ function Tile({
 function Collection() {
   const router = useRouter();
   const { user, authenticated } = useAuth();
-  const { id: courseId } = router.query;
+  const { id: folderId } = router.query;
   const {
     data: rootFolder,
     isLoading,
@@ -143,7 +143,7 @@ function Collection() {
       const response = await api.get({
         path: "library",
         param: {
-          id: courseId,
+          folderId,
         },
       });
       const [rootFolder] = response.data.folder;
