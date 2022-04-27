@@ -1079,7 +1079,7 @@ const Meetup = () => {
           <div className="row">
             <div className="col-12">
               <p className="title mb-1 mt-lg-5 mt-3">
-                Upcoming {activeFilterType} meetups
+                Upcoming {COURSE_MODES[activeFilterType].name} meetups
               </p>
             </div>
           </div>

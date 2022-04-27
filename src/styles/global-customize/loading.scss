@@ -1,4 +1,4 @@
-.global-loader-container1 {
+.global-loader-container-full {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -6,15 +6,25 @@
   background: #ffffff;
   z-index: 99999;
 }
-.global-loader-container {
-  width: 112px;
+.global-loader-container-inner {
+  width: 156px;
   height: 112px;
   margin: 0 auto;
   position: absolute;
   left: 50%;
-  top: 50%;
-  margin-left: -56px;
+  top: 30%;
+  margin-left: -78px;
   margin-top: -56px;
+  .message {
+    margin: 10px 0px;
+    font-weight: 600;
+  }
+}
+.global-loader-container {
+  width: 112px;
+  height: 112px;
+  margin: 0 auto;
+  position: relative;
 }
 .global-loader-container .box1,
 .global-loader-container .box2,

@@ -102,11 +102,14 @@ function App({ Component, pageProps }) {
   const queryClient = new QueryClient();
   if (loading) {
     return (
-      <div className="global-loader-container1">
-        <div className="global-loader-container">
-          <div className="box1"></div>
-          <div className="box2"></div>
-          <div className="box3"></div>
+      <div className="global-loader-container-full">
+        <div className="global-loader-container-inner">
+          <div className="global-loader-container">
+            <div className="box1"></div>
+            <div className="box2"></div>
+            <div className="box3"></div>
+          </div>
+          <div className="message">THE ART OF LIVING</div>
         </div>
       </div>
     );
