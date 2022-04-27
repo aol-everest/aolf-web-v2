@@ -57,7 +57,7 @@ const Checkout = () => {
   const { user } = useAuth();
   const { id: workshopId, coupon } = router.query;
   const {
-    data: workshop = {},
+    data: workshop,
     isLoading,
     isError,
     error,
@@ -188,6 +188,9 @@ const Checkout = () => {
     });
   };
 
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
+
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
     0;
@@ -241,8 +244,7 @@ const Checkout = () => {
       />
     );
   };
-  if (isError) return <ErrorPage statusCode={500} title={error} />;
-  if (isLoading) return <PageLoading />;
+
   return (
     <>
       <NextSeo title={workshop.title} />
