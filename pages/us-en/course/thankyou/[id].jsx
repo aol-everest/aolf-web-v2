@@ -8,6 +8,8 @@ import {
   calculateBusinessDays,
   Segment,
 } from "@utils";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 import { trackEvent } from "@phntms/react-gtm";
 import moment from "moment";
 import { useAuth, useGlobalAlertContext } from "@contexts";
@@ -17,11 +19,13 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import Image from "next/image";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 
-export async function getServerSideProps(context) {
+/* export async function getServerSideProps(context) {
   const { query, req, res } = context;
   const { id } = query;
   const { data, attendeeRecord } = await api.get({
@@ -37,7 +41,7 @@ export async function getServerSideProps(context) {
       attendeeRecord,
     },
   };
-}
+} */
 
 const renderVideo = (productTypeId) => {
   switch (productTypeId) {
@@ -80,8 +84,33 @@ const renderVideo = (productTypeId) => {
   }
 };
 
-const Thankyou = ({ workshop, attendeeRecord }) => {
-  const [{ profile }] = useAuth();
+const Thankyou = () => {
+  const { authenticated } = useAuth();
+  const router = useRouter();
+
+  const { id: attendeeId } = router.query;
+  const {
+    data: result,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "attendeeRecord",
+    async () => {
+      const response = await api.get({
+        path: "getWorkshopByAttendee",
+        param: {
+          aid: attendeeId,
+          skipcheck: "1",
+        },
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+  const { data: workshop, attendeeRecord } = result;
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
   const {
@@ -152,7 +181,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
   } = attendeeRecord;
 
   useEffect(() => {
-    if (!profile) return;
+    if (!authenticated) return;
     trackEvent({
       event: "transactionComplete",
       data: {
@@ -189,27 +218,7 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
         },
       },
     });
-    Clevertap.event("Product Purchase Completed", {
-      "Request Type": "Thankyou",
-      "Product name": title,
-      Category: "Workshop",
-      "Product Type": productTypeId,
-      "Product Id": courseId,
-      Price: ammountPaid,
-      affiliation: "Website",
-      coupon: couponCode || "",
-    });
-    Segment.event("Checkout Step Completed", {
-      "Request Type": "Thankyou",
-      "Product name": title,
-      Category: "Workshop",
-      "Product Type": productTypeId,
-      "Product Id": courseId,
-      Price: ammountPaid,
-      affiliation: "Website",
-      coupon: couponCode || "",
-    });
-  }, [profile]);
+  }, [authenticated]);
 
   const event = {
     timezone: "Etc/GMT",
@@ -292,6 +301,9 @@ const Thankyou = ({ workshop, attendeeRecord }) => {
     }
     return null;
   };
+
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
 
   return (
     <>

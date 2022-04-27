@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
-import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
-import { isEmpty } from "@utils";
+import { isEmpty, Auth } from "@utils";
 import { PayPalButton } from "react-paypal-button-v2";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
@@ -103,7 +102,7 @@ export const PaymentForm = ({
   }, [programQuestionnaireResult]);
 
   const logout = async (event) => {
-    await Auth.signOut();
+    await Auth.logout();
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );

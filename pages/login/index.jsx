@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Auth } from "aws-amplify";
-import { withSSRContext } from "aws-amplify";
 import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES } from "@constants";
-import { api } from "@utils";
+import { api, Auth } from "@utils";
+import { useAuth } from "@contexts";
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { next } = query;
   try {
@@ -29,25 +28,22 @@ export const getServerSideProps = async (context) => {
     console.error(err);
   }
   return { props: {} };
-};
+}; */
 
 function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const { showModal } = useGlobalModalContext();
+  const { authenticated, user } = useAuth();
 
   useEffect(() => {
-    if (!router.isReady) return;
-    handleLogin();
-  }, [router.isReady]);
-
-  async function handleLogin() {
+    if (!router.isReady && authenticated) return;
     const navigateTo = router.query.next || "/";
-    try {
-      const currentSession = await Auth.currentSession();
-      router.push(navigateTo);
-    } catch (err) {
-      console.log(err);
+    if (authenticated) {
+      router.push({
+        pathname: navigateTo,
+      });
+    } else {
       setLoading(false);
       showModal(MODAL_TYPES.LOGIN_MODAL, {
         navigateTo,
@@ -56,11 +52,11 @@ function Login() {
         },
       });
     }
-  }
+  }, [router.isReady]);
 
   async function signIn({ username, password }) {
     try {
-      await Auth.signIn(username, password);
+      await Auth.authenticateUser(username, password);
 
       router.push("/us-en/course");
     } catch (error) {

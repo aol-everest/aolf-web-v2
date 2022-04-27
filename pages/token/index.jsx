@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Loader } from "@components";
-import { Hub } from "aws-amplify";
+import { Auth } from "@utils";
+import * as Sentry from "@sentry/browser";
+import { useAuth } from "@contexts";
+import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -23,19 +27,40 @@ import { Hub } from "aws-amplify";
 
 function Token() {
   const router = useRouter();
+  const { setUser } = useAuth();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
 
   useEffect(() => {
     if (!router.isReady) return;
-    Hub.listen("auth", async ({ payload: { event, data } }) => {
-      switch (event) {
-        case "customOAuthState": {
-          const originalUrl = decodeURIComponent(data);
-          router.replace(originalUrl);
-          break;
-        }
-      }
-    });
+    authenticateUserFromToken();
   }, [router.isReady]);
+
+  const authenticateUserFromToken = async () => {
+    try {
+      const state = new URLSearchParams(location.search).get("state");
+      await Auth.parseCognitoWebResponse(window.location.href);
+      const { user, session } = await Auth.getSession();
+      const token = session.idToken.jwtToken;
+      const userAttributes = await Auth.getUserAttributes(user);
+      const profile = await Auth.fetchUserProfile(token);
+      const userInfo = {
+        session,
+        userAttributes,
+        profile,
+        token,
+      };
+      setUser(userInfo);
+      Sentry.setUser({ ...userInfo });
+      router.push({
+        pathname: state || "/",
+      });
+    } catch (error) {
+      console.log(error);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: error.message,
+      });
+    }
+  };
 
   return (
     <main className="aol_mainbody login-screen">

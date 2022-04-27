@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { api, isSSR } from "@utils";
 import { useQuery } from "react-query";
 // import { DesignOne, DesignTwo } from "@components/content";
-import { withSSRContext } from "aws-amplify";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useQueryString } from "@hooks";
 import { PurchaseMembershipModal, Loader } from "@components";
@@ -17,6 +16,8 @@ import {
 import { useAuth } from "@contexts";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -38,7 +39,7 @@ const CATEGORY_IMAGES = [
   "/img/card-4a.png",
 ];
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
   let props = {};
@@ -74,14 +75,35 @@ export const getServerSideProps = async (context) => {
   };
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-export default function Library({ data }) {
-  const [rootFolder] = data.folder;
-  const [{ authenticated }] = useAuth();
+export default function Library() {
+  const { user, authenticated } = useAuth();
+  const router = useRouter();
+  const { id: folderId } = router.query;
+  const {
+    data: rootFolder,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "library",
+    async () => {
+      const response = await api.get({
+        path: "library",
+        param: {
+          folderId,
+        },
+      });
+      const [data] = response.data.folder;
+      return data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   //SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
-  const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
@@ -306,6 +328,9 @@ export default function Library({ data }) {
     favouriteContents,
     onFilterClearEvent,
   };
+
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
 
   switch (rootFolder.screenDesign) {
     case "Design 1":

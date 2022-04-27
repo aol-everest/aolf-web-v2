@@ -1,6 +1,6 @@
 import Axios from "axios";
 import queryString from "query-string";
-import { Auth } from "aws-amplify";
+import { Auth } from "./auth";
 
 class HTTPError extends Error {
   constructor(message, statusCode, stack = null) {
@@ -25,28 +25,11 @@ const axiosClient = Axios.create({
 
 axiosClient.interceptors.request.use(function (config) {
   return new Promise((resolve, reject) => {
-    Auth.currentSession()
-      .then((session) => {
-        const idTokenExpire = session.getIdToken().getExpiration();
-        const refreshToken = session.getRefreshToken();
-        const currentTimeSeconds = Math.round(+new Date() / 1000);
-        if (idTokenExpire < currentTimeSeconds) {
-          Auth.currentAuthenticatedUser().then((res) => {
-            res.refreshSession(refreshToken, (err, data) => {
-              if (err) {
-                Auth.signOut();
-              } else {
-                config.headers.Authorization =
-                  "Bearer " + data.getIdToken().getJwtToken();
-                resolve(config);
-              }
-            });
-          });
-        } else {
-          config.headers.Authorization =
-            "Bearer " + session.getIdToken().getJwtToken();
-          resolve(config);
-        }
+    Auth.getSession()
+      .then(({ session }) => {
+        const token = session.idToken.jwtToken;
+        config.headers.Authorization = "Bearer " + token;
+        resolve(config);
       })
       .catch(() => {
         // No logged-in user: don't set auth header

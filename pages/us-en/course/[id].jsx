@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { api, Clevertap, Segment } from "@utils";
+import { api } from "@utils";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
@@ -11,11 +11,12 @@ import ErrorPage from "next/error";
 //   VolunteerTrainingProgram,
 // } from "@components/courseDetails";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import { withSSRContext } from "aws-amplify";
 import { COURSE_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { useAuth } from "@contexts";
 import { trackEvent } from "@phntms/react-gtm";
+import { PageLoading } from "@components";
+import { useQuery } from "react-query";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -49,7 +50,7 @@ const SKYSilentRetreat = dynamic(() =>
   import("@components/courseDetails").then((mod) => mod.SKYSilentRetreat),
 );
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
   let props = {};
@@ -83,11 +84,28 @@ export const getServerSideProps = async (context) => {
   // Pass data to the page via props
   return { props };
 };
-
-export default function CourseDetail({ data }) {
-  const [{ profile }] = useAuth();
+ */
+function CourseDetail() {
+  const { user, authenticated } = useAuth();
+  const router = useRouter();
+  const { id: workshopId } = router.query;
+  const { data, isLoading, isError, error } = useQuery(
+    "workshopDetail",
+    async () => {
+      const response = await api.get({
+        path: "workshopDetail",
+        param: {
+          id: workshopId,
+        },
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
   useEffect(() => {
-    if (!profile) return;
+    if (!authenticated || !data) return;
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
 
@@ -99,26 +117,31 @@ export default function CourseDetail({ data }) {
         amount: unitPrice,
         title,
         ctype: productTypeId,
-        user: profile,
+        user: user.profile,
       },
     });
-    Clevertap.event("Product Viewed", {
-      "Request Type": "Detail",
-      "Product Name": title,
-      Category: "Workshop",
-      "Product Type": productTypeId,
-      "Product Id": courseId,
-      Price: unitPrice,
-    });
-    Segment.event("Product Viewed", {
-      "Request Type": "Detail",
-      "Product Name": title,
-      Category: "Workshop",
-      "Product Type": productTypeId,
-      "Product Id": courseId,
-      Price: unitPrice,
-    });
-  }, [profile]);
+  }, [authenticated, data]);
+
+  useEffect(() => {
+    if (!router.isReady || !data) return;
+    if (
+      !isSKYType &&
+      !isSilentRetreatType &&
+      !isSahajSamadhiMeditationType &&
+      !isSriSriYogaMeditationType &&
+      !isVolunteerTrainingProgram &&
+      !isHealingBreathType &&
+      !isSKYSilentRetreatType
+    ) {
+      router.push({
+        pathname: `/us-en/course/checkout/${data.id}`,
+        query: {
+          ctype: data.productTypeId,
+          page: "c-o",
+        },
+      });
+    }
+  }, [router.isReady, data]);
 
   let swiperOption = {
     modules: [Navigation, Pagination, Scrollbar, A11y],
@@ -167,6 +190,9 @@ export default function CourseDetail({ data }) {
     }
   }
 
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
+
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
   const isSilentRetreatType =
@@ -183,29 +209,6 @@ export default function CourseDetail({ data }) {
     COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
   const isSKYSilentRetreatType =
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!router.isReady) return;
-    if (
-      !isSKYType &&
-      !isSilentRetreatType &&
-      !isSahajSamadhiMeditationType &&
-      !isSriSriYogaMeditationType &&
-      !isVolunteerTrainingProgram &&
-      !isHealingBreathType &&
-      !isSKYSilentRetreatType
-    ) {
-      router.push({
-        pathname: `/us-en/course/checkout/${data.id}`,
-        query: {
-          ctype: data.productTypeId,
-          page: "c-o",
-        },
-      });
-    }
-  }, [router.isReady]);
 
   const props = {
     data,
@@ -244,3 +247,5 @@ export default function CourseDetail({ data }) {
     </>
   );
 }
+
+export default CourseDetail;

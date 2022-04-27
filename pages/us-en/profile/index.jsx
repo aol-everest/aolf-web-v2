@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
-import { withSSRContext, Auth } from "aws-amplify";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import classNames from "classnames";
@@ -8,7 +7,7 @@ import Link from "next/link";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
 import { useAuth } from "@contexts";
-import { api, Clevertap } from "@utils";
+import { api, Auth } from "@utils";
 import { ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
@@ -55,43 +54,43 @@ const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Ple
                 at (855) 202-4400 to resolve the issue and cancel your
                 membership.`;
 
-export async function getServerSideProps({ req, resolvedUrl, query }) {
-  const { Auth } = withSSRContext({ req });
-  const { tab } = query || {};
-  try {
-    const user = await Auth.currentAuthenticatedUser();
-    const currentSession = await Auth.currentSession();
-    const token = currentSession.idToken.jwtToken;
-    const res = await api.get({
-      path: "profile",
-      token,
-    });
-    return {
-      props: {
-        authenticated: true,
-        username: user.username,
-        profile: res,
-        token,
-        tab: tab || UPCOMING_EVENTS,
-      },
-    };
-  } catch (err) {
-    console.error(err);
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login?next=${resolvedUrl}`,
-      },
-      props: {},
-    };
-  }
-}
+// export async function getServerSideProps({ req, resolvedUrl, query }) {
+//   const { Auth } = withSSRContext({ req });
+//   const { tab } = query || {};
+//   try {
+//     const user = await Auth.currentAuthenticatedUser();
+//     const currentSession = await Auth.currentSession();
+//     const token = currentSession.idToken.jwtToken;
+//     const res = await api.get({
+//       path: "profile",
+//       token,
+//     });
+//     return {
+//       props: {
+//         authenticated: true,
+//         username: user.username,
+//         profile: res,
+//         token,
+//         tab: tab || UPCOMING_EVENTS,
+//       },
+//     };
+//   } catch (err) {
+//     console.error(err);
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: `/login?next=${resolvedUrl}`,
+//       },
+//       props: {},
+//     };
+//   }
+// }
 
 const Profile = ({ tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const [{ profile }, reloadProfile] = useAuth();
+  const { user, reloadProfile, authenticated } = useAuth();
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: tab || UPCOMING_EVENTS,
   });
@@ -106,7 +105,7 @@ const Profile = ({ tab }) => {
     upcomingWorkshop = [],
     upcomingMeetup = [],
     subscriptions = [],
-  } = profile || {};
+  } = user?.profile || {};
   const upcomingEvents = [...upcomingWorkshop, ...upcomingMeetup];
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
@@ -145,8 +144,7 @@ const Profile = ({ tab }) => {
 
   const logoutAction = async () => {
     setLoading(true);
-    await Auth.signOut();
-    Clevertap.logout();
+    await Auth.logout();
     setLoading(false);
     router.push("/us-en");
   };
@@ -191,7 +189,7 @@ const Profile = ({ tab }) => {
       setEditCardDetail(false);
     }
   };
-  if (!profile) {
+  if (!authenticated) {
     return null;
   }
 
@@ -393,7 +391,7 @@ const Profile = ({ tab }) => {
               >
                 <ChangeProfile
                   updateCompleteAction={updateCompleteAction}
-                  profile={profile}
+                  profile={user.profile}
                 ></ChangeProfile>
               </div>
               <div
@@ -405,7 +403,7 @@ const Profile = ({ tab }) => {
                 {!editCardDetail && (
                   <ViewCardDetail
                     switchCardDetailView={switchCardDetailView}
-                    profile={profile}
+                    profile={user.profile}
                   ></ViewCardDetail>
                 )}
                 {editCardDetail && (
@@ -535,7 +533,7 @@ const Profile = ({ tab }) => {
                     <ChangeProfile
                       isMobile
                       updateCompleteAction={updateCompleteAction}
-                      profile={profile}
+                      profile={user.profile}
                     ></ChangeProfile>
                   </div>
                 </div>
@@ -564,7 +562,7 @@ const Profile = ({ tab }) => {
                       <ViewCardDetail
                         isMobile
                         switchCardDetailView={switchCardDetailView}
-                        profile={profile}
+                        profile={user.profile}
                       ></ViewCardDetail>
                     )}
                     {editCardDetail && (

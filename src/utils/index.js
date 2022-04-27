@@ -1,6 +1,3 @@
-import { Auth } from "@aws-amplify/auth";
-import NextStorage from "amplify-auth-next-storage";
-
 export { api } from "./api";
 export { tConvert } from "./tConvert";
 export { priceCalculation } from "./priceCalculation";
@@ -8,20 +5,7 @@ export { Compose } from "./compose";
 export { buildShareUrl, isInternetExplorer } from "./addToCalendar";
 export { Clevertap } from "./clevertap";
 export { Segment } from "./segment";
-
-export function configurePool(ctx) {
-  Auth.configure({
-    region: process.env.NEXT_PUBLIC_COGNITO_REGION,
-    userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
-    userPoolWebClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-    storage: new NextStorage(ctx, {
-      domain: process.env.NEXT_PUBLIC_AMPLIFY_COOKIE_DOMAIN,
-      expires: 10,
-      path: "/",
-      secure: true,
-    }),
-  });
-}
+export { Auth } from "./auth";
 
 export const isSSR = !(
   typeof window !== "undefined" && window.document?.createElement

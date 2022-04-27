@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { MeetupPaymentForm } from "@components/meetup/meetupPaymentForm";
@@ -7,12 +6,17 @@ import { api } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
+import { withAuth } from "@hoc";
+import { PageLoading } from "@components";
+import { useQuery } from "react-query";
+import { useAuth } from "@contexts";
+import ErrorPage from "next/error";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
   const { id } = query;
   let props = {};
@@ -56,10 +60,32 @@ export const getServerSideProps = async (context) => {
 
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-const Checkout = ({ meetup, profile }) => {
+const Checkout = () => {
+  const { user, authenticated } = useAuth();
   const router = useRouter();
+  const { id: workshopId } = router.query;
+  const {
+    data: meetup,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "meetupDetail",
+    async () => {
+      const response = await api.get({
+        path: "meetupDetail",
+        param: {
+          id: workshopId,
+        },
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
@@ -77,7 +103,8 @@ const Checkout = ({ meetup, profile }) => {
       },
     });
   };
-
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
   return (
     <>
       <NextSeo title={meetup.meetupTitle} />
@@ -99,7 +126,7 @@ const Checkout = ({ meetup, profile }) => {
             >
               <MeetupPaymentForm
                 meetup={meetup}
-                profile={profile}
+                profile={user.profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
               />
             </Elements>
@@ -175,4 +202,4 @@ const Checkout = ({ meetup, profile }) => {
 
 Checkout.hideHeader = true;
 
-export default Checkout;
+export default withAuth(Checkout);
