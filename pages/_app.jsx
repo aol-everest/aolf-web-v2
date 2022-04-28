@@ -94,11 +94,9 @@ function App({ Component, pageProps }) {
       <div className="global-loader-container-full">
         <div className="global-loader-container-inner">
           <div className="global-loader-container">
-            <div className="box1"></div>
-            <div className="box2"></div>
-            <div className="box3"></div>
+            <img src="/img/ic-logo.svg" alt="logo" className="logo__image" />
           </div>
-          <div className="message">THE ART OF LIVING</div>
+          <div className="message">Fetching profile... please wait!</div>
         </div>
       </div>
     );
