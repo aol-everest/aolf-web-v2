@@ -79,7 +79,7 @@ const renderVideo = (productTypeId) => {
 };
 
 const Thankyou = () => {
-  const { authenticated } = useAuth();
+  const { authenticated, reloadProfile } = useAuth();
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
@@ -144,6 +144,7 @@ const Thankyou = () => {
         },
       },
     });
+    reloadProfile();
   }, [authenticated, result]);
 
   if (isError) return <ErrorPage statusCode={500} title={error} />;

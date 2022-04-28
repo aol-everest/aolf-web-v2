@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import classNames from "classnames";
@@ -97,6 +97,12 @@ const Profile = ({ tab }) => {
   const [editCardDetail, setEditCardDetail] = useState(false);
   const [request, setRequest] = useQueryString("request");
   const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    reloadProfile();
+  }, [router.isReady]);
+
   const {
     first_name,
     last_name,

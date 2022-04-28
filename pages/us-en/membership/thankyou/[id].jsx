@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { api, tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -72,7 +72,7 @@ dayjs.extend(utc);
 }; */
 
 const MembershipThankyou = () => {
-  const { user, authenticated } = useAuth();
+  const { reloadProfile, authenticated } = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const {
@@ -96,6 +96,11 @@ const MembershipThankyou = () => {
       enabled: router.isReady,
     },
   );
+  useEffect(() => {
+    if (!authenticated || !order) return;
+    reloadProfile();
+  }, [authenticated, order]);
+
   const [courseId] = useQueryString("cid");
   const [meetupId] = useQueryString("mid");
   const [page] = useQueryString("page", {
