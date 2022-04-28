@@ -8,7 +8,11 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import {
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalModalContext,
+} from "@contexts";
 import { AddToCalendarModal } from "@components";
 import { ALERT_TYPES, ABBRS } from "@constants";
 import { useQuery } from "react-query";
@@ -55,6 +59,7 @@ dayjs.extend(localizedFormat);
 } */
 
 const Thankyou = () => {
+  const { authenticated } = useAuth();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const router = useRouter();
 
@@ -80,6 +85,49 @@ const Thankyou = () => {
       refetchOnWindowFocus: false,
     },
   );
+
+  useEffect(() => {
+    if (!authenticated || !result) return;
+    trackEvent({
+      event: "transactionComplete",
+      data: {
+        viewType: "workshop",
+        amount: unitPrice,
+        title: meetupTitle || title,
+        ctype: productTypeId,
+        requestType: "Thankyou",
+        // user,
+        ecommerce: {
+          currencyCode: "USD",
+          purchase: {
+            actionField: {
+              id: orderExternalId,
+              affiliation: "Website",
+              revenue: ammountPaid,
+              tax: "0.00",
+              shipping: "0.00",
+              coupon: couponCode || "",
+            },
+            products: [
+              {
+                id: courseId,
+                courseId: courseId,
+                name: title,
+                category: "workshop",
+                variant: "N/A",
+                brand: "Art of Living Foundation",
+                quantity: 1,
+                // price: totalOrderAmount,
+              },
+            ],
+          },
+        },
+      },
+    });
+  }, [authenticated, result]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
   const { data: meetup, attendeeRecord } = result;
 
   const {
@@ -142,45 +190,6 @@ const Thankyou = () => {
   } else {
     endDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`).add(2, "hours");
   }
-
-  useEffect(() => {
-    trackEvent({
-      event: "transactionComplete",
-      data: {
-        viewType: "workshop",
-        amount: unitPrice,
-        title: meetupTitle || title,
-        ctype: productTypeId,
-        requestType: "Thankyou",
-        // user,
-        ecommerce: {
-          currencyCode: "USD",
-          purchase: {
-            actionField: {
-              id: orderExternalId,
-              affiliation: "Website",
-              revenue: ammountPaid,
-              tax: "0.00",
-              shipping: "0.00",
-              coupon: couponCode || "",
-            },
-            products: [
-              {
-                id: courseId,
-                courseId: courseId,
-                name: title,
-                category: "workshop",
-                variant: "N/A",
-                brand: "Art of Living Foundation",
-                quantity: 1,
-                // price: totalOrderAmount,
-              },
-            ],
-          },
-        },
-      },
-    });
-  }, []);
 
   const getSelectedTimeSlotDetails = (selectedTimeSlot) => {
     if (selectedTimeSlot) {
@@ -279,9 +288,6 @@ const Thankyou = () => {
         );
     }
   };
-
-  if (isError) return <ErrorPage statusCode={500} title={error} />;
-  if (isLoading) return <PageLoading />;
 
   return (
     <>

@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { api, Compose, isS } from "@utils";
+import { api, Compose, Auth } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Auth } from "@utils";
 import {
   Layout,
   ReInstate,
@@ -60,29 +59,19 @@ function App({ Component, pageProps }) {
 
   const fetchProfile = async () => {
     try {
-      const { user, session } = await Auth.getSession();
-      const token = session.idToken.jwtToken;
-      const userAttributes = await Auth.getUserAttributes(user);
-      const profile = await Auth.fetchUserProfile(token);
-      const userInfo = {
-        session,
-        userAttributes,
-        profile,
-        token,
-      };
-
+      const userInfo = await Auth.reFetchProfile();
       setUser(userInfo);
 
       const pendingAgreementRes = await api.get({
         path: "getPendingHealthQuestionAgreement",
-        token,
       });
 
       setIsPendingAgreement(
         pendingAgreementRes && pendingAgreementRes.length > 0,
       );
 
-      const { subscriptions = [], isCCUpdateRequiredForSubscription } = profile;
+      const { subscriptions = [], isCCUpdateRequiredForSubscription } =
+        userInfo.profile;
       setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
       const reinstateRequiredForSubscription = subscriptions.find(
         ({ isReinstateRequiredForSubscription }) =>

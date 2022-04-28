@@ -44,16 +44,7 @@ function Token() {
       }
       const state = new URLSearchParams(location.search).get("state");
       await Auth.parseCognitoWebResponse(window.location.href);
-      const { user, session } = await Auth.getSession();
-      const token = session.idToken.jwtToken;
-      const userAttributes = await Auth.getUserAttributes(user);
-      const profile = await Auth.fetchUserProfile(token);
-      const userInfo = {
-        session,
-        userAttributes,
-        profile,
-        token,
-      };
+      const userInfo = await Auth.reFetchProfile();
       setUser(userInfo);
 
       Sentry.setUser({ ...userInfo });

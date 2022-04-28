@@ -322,6 +322,27 @@ export const renewToken = ({ refreshToken, email }) => {
   });
 };
 
+const reFetchProfile = async () => {
+  try {
+    const { user, session } = await getSession();
+    const token = session.idToken.jwtToken;
+    const userAttributes = await getUserAttributes(user);
+    const profile = await fetchUserProfile(token);
+    const userInfo = {
+      session,
+      userAttributes,
+      profile,
+      token,
+    };
+
+    return userInfo;
+  } catch (ex) {
+    console.log(ex);
+    await logout();
+  }
+  throw new Error("Something is wrong. Try again.");
+};
+
 export const Auth = {
   parseCognitoWebResponse,
   authenticateUser,
@@ -335,4 +356,5 @@ export const Auth = {
   sendCode,
   resetPassword,
   renewToken,
+  reFetchProfile,
 };

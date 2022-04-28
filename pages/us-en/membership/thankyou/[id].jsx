@@ -10,6 +10,7 @@ import { MEMBERSHIP_TYPES, COURSE_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { useAuth } from "@contexts";
+import { withAuth } from "@hoc";
 
 dayjs.extend(utc);
 
@@ -92,6 +93,7 @@ const MembershipThankyou = () => {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: router.isReady,
     },
   );
   const [courseId] = useQueryString("cid");
@@ -213,7 +215,7 @@ const MembershipThankyou = () => {
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const {
     title,
@@ -460,4 +462,4 @@ const MembershipThankyou = () => {
 
 MembershipThankyou.hideHeader = true;
 
-export default MembershipThankyou;
+export default withAuth(MembershipThankyou);

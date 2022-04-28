@@ -12,16 +12,7 @@ function DevOnly() {
 
   const fetchProfile = async () => {
     try {
-      const { user, session } = await Auth.getSession();
-      const token = session.idToken.jwtToken;
-      const userAttributes = await Auth.getUserAttributes(user);
-      const profile = await Auth.fetchUserProfile(token);
-      const userInfo = {
-        session,
-        userAttributes,
-        profile,
-        token,
-      };
+      const userInfo = await Auth.reFetchProfile();
 
       setUser(userInfo);
     } catch (ex) {

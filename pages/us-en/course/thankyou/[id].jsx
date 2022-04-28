@@ -1,13 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 import React, { useEffect } from "react";
-import {
-  api,
-  Clevertap,
-  tConvert,
-  calculateBusinessDays,
-  Segment,
-} from "@utils";
+import { api, tConvert, calculateBusinessDays } from "@utils";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { trackEvent } from "@phntms/react-gtm";
@@ -87,6 +81,7 @@ const renderVideo = (productTypeId) => {
 const Thankyou = () => {
   const { authenticated } = useAuth();
   const router = useRouter();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
 
   const { id: attendeeId } = router.query;
   const {
@@ -110,8 +105,50 @@ const Thankyou = () => {
       refetchOnWindowFocus: false,
     },
   );
+
+  useEffect(() => {
+    if (!authenticated || !result) return;
+    trackEvent({
+      event: "transactionComplete",
+      data: {
+        viewType: "workshop",
+        amount: unitPrice,
+        title: title,
+        ctype: productTypeId,
+        requestType: "Thankyou",
+        // user,
+        ecommerce: {
+          currencyCode: "USD",
+          purchase: {
+            actionField: {
+              id: orderExternalId,
+              affiliation: "Website",
+              revenue: ammountPaid,
+              tax: "0.00",
+              shipping: "0.00",
+              coupon: couponCode || "",
+            },
+            products: [
+              {
+                id: courseId,
+                courseId: courseId,
+                name: title,
+                category: "workshop",
+                variant: "N/A",
+                brand: "Art of Living Foundation",
+                quantity: 1,
+                // price: totalOrderAmount,
+              },
+            ],
+          },
+        },
+      },
+    });
+  }, [authenticated, result]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isLoading) return <PageLoading />;
   const { data: workshop, attendeeRecord } = result;
-  const { showAlert, hideAlert } = useGlobalAlertContext();
 
   const {
     title,
@@ -179,46 +216,6 @@ const Thankyou = () => {
     couponCode,
     selectedGenericSlot = {},
   } = attendeeRecord;
-
-  useEffect(() => {
-    if (!authenticated) return;
-    trackEvent({
-      event: "transactionComplete",
-      data: {
-        viewType: "workshop",
-        amount: unitPrice,
-        title: title,
-        ctype: productTypeId,
-        requestType: "Thankyou",
-        // user,
-        ecommerce: {
-          currencyCode: "USD",
-          purchase: {
-            actionField: {
-              id: orderExternalId,
-              affiliation: "Website",
-              revenue: ammountPaid,
-              tax: "0.00",
-              shipping: "0.00",
-              coupon: couponCode || "",
-            },
-            products: [
-              {
-                id: courseId,
-                courseId: courseId,
-                name: title,
-                category: "workshop",
-                variant: "N/A",
-                brand: "Art of Living Foundation",
-                quantity: 1,
-                // price: totalOrderAmount,
-              },
-            ],
-          },
-        },
-      },
-    });
-  }, [authenticated]);
 
   const event = {
     timezone: "Etc/GMT",
@@ -301,9 +298,6 @@ const Thankyou = () => {
     }
     return null;
   };
-
-  if (isError) return <ErrorPage statusCode={500} title={error} />;
-  if (isLoading) return <PageLoading />;
 
   return (
     <>
