@@ -52,6 +52,7 @@ function App({ Component, pageProps }) {
     useState(null);
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
   const [isPendingAgreement, setIsPendingAgreement] = useState(false);
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     fetchProfile();
@@ -88,7 +89,6 @@ function App({ Component, pageProps }) {
     setLoading(false);
   };
 
-  const queryClient = new QueryClient();
   if (loading) {
     return (
       <div className="global-loader-container-full">

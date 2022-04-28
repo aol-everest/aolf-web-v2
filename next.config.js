@@ -25,11 +25,11 @@ const securityHeaders = [
   {
     key: "strict-transport-security",
     value: "max-age=31536000; includeSubDomains",
-  }
+  },
 ];
 
 const moduleExports = {
-  swcMinify: true,
+  swcMinify: false,
   generateEtags: false,
   // basePath: "/us-en",
   // assetPrefix: "/us-en/",
