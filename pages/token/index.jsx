@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Auth } from "@utils";
-import * as Sentry from "@sentry/browser";
 import { useAuth } from "@contexts";
 import { ALERT_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
@@ -47,7 +46,6 @@ function Token() {
       const userInfo = await Auth.reFetchProfile();
       setUser(userInfo);
 
-      Sentry.setUser({ ...userInfo });
       router.push({
         pathname: state || "/",
       });

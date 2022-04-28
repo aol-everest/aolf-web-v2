@@ -86,16 +86,8 @@ export const LoginModal = () => {
         setMode(NEW_PASSWORD_REQUEST);
         setLoading(false);
       } else {
-        const { user, session } = await Auth.getSession();
-        const userAttributes = await Auth.getUserAttributes(user);
-        const profile = await Auth.fetchUserProfile(session.idToken.jwtToken);
-        const userData = {
-          session,
-          userAttributes,
-          profile,
-          token: session.idToken.jwtToken,
-        };
-        setUser(userData);
+        const userInfo = await Auth.reFetchProfile();
+        setUser(userInfo);
 
         setLoading(false);
         hideModal();
