@@ -329,7 +329,7 @@ export default function Library() {
     onFilterClearEvent,
   };
 
-  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <PageLoading />;
 
   switch (rootFolder.screenDesign) {

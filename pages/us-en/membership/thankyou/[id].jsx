@@ -219,7 +219,7 @@ const MembershipThankyou = () => {
     }
   };
 
-  if (isError) return <ErrorPage statusCode={500} title={error} />;
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
   const {
