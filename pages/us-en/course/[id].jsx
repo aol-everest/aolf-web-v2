@@ -89,7 +89,6 @@ function CourseDetail() {
   const { user, authenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId } = router.query;
-  console.log(router.query);
   const { data, isLoading, isError, error } = useQuery(
     "workshopDetail",
     async () => {

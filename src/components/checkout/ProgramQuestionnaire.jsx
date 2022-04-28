@@ -16,7 +16,6 @@ const checkBoxQuestion = ({
 }) => {
   const handleChange = (e) => {
     const { checked } = e.target;
-    console.log(checked, id);
     if (checked) {
       formikProps.setFieldValue(id, "Yes");
     } else {
@@ -30,9 +29,9 @@ const checkBoxQuestion = ({
       value={value}
       name={id}
       id={id}
-      checked={field.value === "Yes"}
       {...field}
       {...props}
+      checked={field.value === "Yes"}
       onChange={handleChange}
     />
   );
@@ -316,10 +315,6 @@ export const ProgramQuestionnaire = ({
   const validationSchema = Yup.object().shape(validation);
 
   const onSubmit = (fields) => {
-    console.log(
-      "🚀 ~ file: ProgramQuestionnaire.jsx ~ line 286 ~ onSubmit ~ fields",
-      fields,
-    );
     const result = Object.entries(fields).reduce((acc, [key, value]) => {
       acc = [
         ...acc,
@@ -347,7 +342,6 @@ export const ProgramQuestionnaire = ({
       onSubmit={onSubmit}
     >
       {(formikProps) => {
-        console.log(formikProps);
         return (
           <form onSubmit={formikProps.handleSubmit}>
             <div className={classNames("volonteer-modal _active-modal")}>

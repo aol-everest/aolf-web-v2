@@ -108,7 +108,7 @@ function MembershipCheckout() {
   const { user, authenticated } = useAuth();
   const { id, ofid, cid } = router.query;
   const {
-    data: subsciption = {},
+    data: subsciption,
     isLoading,
     isError,
     error,
@@ -123,10 +123,15 @@ function MembershipCheckout() {
           ofid: ofid,
         },
       });
-      return response.data[0];
+      const [result] = response.data;
+      if (!result) {
+        throw new Error("No subscription found");
+      }
+      return result;
     },
     {
       refetchOnWindowFocus: false,
+      enabled: router.isReady,
     },
   );
   const [couponCode] = useQueryString("coupon");
@@ -137,11 +142,10 @@ function MembershipCheckout() {
   const [returnPage] = useQueryString("page", {
     defaultValue: "detail",
   });
-  const { showModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
   useEffect(() => {
-    if (!router.isReady || isLoading) return;
+    if (!router.isReady || !subsciption) return;
 
     const [activeSubscription] = subsciption.activeSubscriptions;
 
@@ -201,9 +205,9 @@ function MembershipCheckout() {
         children: <RetreatPrerequisiteWarning />,
       });
     }
-  }, [router.isReady, isLoading]);
+  }, [router.isReady, subsciption]);
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const [activeSubscription] = subsciption.activeSubscriptions;
 
