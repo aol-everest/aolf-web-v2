@@ -78,7 +78,7 @@ const CATEGORY_IMAGES = [
 }; */
 
 export default function Library() {
-  const { user, authenticated } = useAuth();
+  const { authenticated } = useAuth();
   const router = useRouter();
   const { id: folderId } = router.query;
   const {
@@ -96,6 +96,9 @@ export default function Library() {
         },
       });
       const [data] = response.data.folder;
+      if (!data) {
+        throw new Error("No library found");
+      }
       return data;
     },
     {
@@ -180,6 +183,8 @@ export default function Library() {
       return CATEGORY_IMAGES[backgroundIterator];
     }
   };
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
@@ -328,9 +333,6 @@ export default function Library() {
     favouriteContents,
     onFilterClearEvent,
   };
-
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
 
   switch (rootFolder.screenDesign) {
     case "Design 1":

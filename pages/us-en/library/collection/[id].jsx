@@ -147,13 +147,16 @@ function Collection() {
         },
       });
       const [rootFolder] = response.data.folder;
+      if (!rootFolder) {
+        throw new Error("No library found");
+      }
       return rootFolder;
     },
     {
       refetchOnWindowFocus: false,
     },
   );
-  console.log(rootFolder);
+
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
@@ -185,6 +188,8 @@ function Collection() {
         refetchOnWindowFocus: false,
       },
     );
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
 
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
@@ -217,8 +222,6 @@ function Collection() {
       });
     }
   };
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
 
   const content = (rootFolder.content || []).map((content) => {
     const isFavorite = favouriteContents.find((el) => el.sfid === content.sfid);
