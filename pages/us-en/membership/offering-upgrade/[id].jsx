@@ -125,7 +125,11 @@ function OfferingUpgradeCheckout() {
           ofid: ofid,
         },
       });
-      return response.data;
+      const [result] = response.data;
+      if (!result) {
+        throw new Error("No subscription found");
+      }
+      return result;
     },
     {
       refetchOnWindowFocus: false,
@@ -139,17 +143,10 @@ function OfferingUpgradeCheckout() {
   const [returnPage] = useQueryString("page", {
     defaultValue: "detail",
   });
-  const { showModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
-  const [activeSubscription] = subsciption?.activeSubscriptions || [
-    { activeSubscriptions: {} },
-  ];
-
-  const { name, sfid } = subsciption || {};
-
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router.isReady || !subsciption) return;
 
     const products = subsciption?.activeSubscriptions.map(
       (activeSubscription) => ({
@@ -207,7 +204,16 @@ function OfferingUpgradeCheckout() {
         children: <RetreatPrerequisiteWarning />,
       });
     }
-  }, [router.isReady]);
+  }, [router.isReady, subsciption]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
+
+  const [activeSubscription] = subsciption?.activeSubscriptions || [
+    { activeSubscriptions: {} },
+  ];
+
+  const { name, sfid } = subsciption || {};
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
@@ -230,9 +236,6 @@ function OfferingUpgradeCheckout() {
       query,
     });
   };
-
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
 
   return (
     <main>
