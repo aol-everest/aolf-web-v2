@@ -148,12 +148,13 @@ function Collection() {
       });
       const [rootFolder] = response.data.folder;
       if (!rootFolder) {
-        throw new Error("No library found");
+        throw new Error("No library found. Invalid Folder Id.");
       }
       return rootFolder;
     },
     {
       refetchOnWindowFocus: false,
+      enabled: router.isReady,
     },
   );
 
@@ -189,7 +190,7 @@ function Collection() {
       },
     );
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();

@@ -81,13 +81,14 @@ export default function Library() {
   const { authenticated } = useAuth();
   const router = useRouter();
   const { id: folderId } = router.query;
+  console.log("folderId", folderId);
   const {
     data: rootFolder,
     isLoading,
     isError,
     error,
   } = useQuery(
-    "library",
+    ["library", folderId],
     async () => {
       const response = await api.get({
         path: "library",
@@ -95,14 +96,16 @@ export default function Library() {
           folderId,
         },
       });
-      const [data] = response.data.folder;
-      if (!data) {
-        throw new Error("No library found");
+      const [rootFolder] = response.data.folder;
+      if (!rootFolder) {
+        throw new Error("No library found. Invalid Folder Id.");
       }
-      return data;
+      return rootFolder;
     },
     {
+      refetchOnMount: true,
       refetchOnWindowFocus: false,
+      enabled: router.isReady,
     },
   );
 
@@ -128,6 +131,7 @@ export default function Library() {
       },
       {
         refetchOnWindowFocus: false,
+        enabled: authenticated,
       },
     );
 
@@ -184,7 +188,7 @@ export default function Library() {
     }
   };
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
