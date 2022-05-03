@@ -39,6 +39,10 @@ export const NewPasswordForm = ({
         type="password"
         placeholder="Password"
         className={classNames({ validate: errors.password })}
+        autoComplete="new-password"
+        aria-invalid="false"
+        aria-haspopup="false"
+        spellCheck="false"
       />
       {errors.password && (
         <p className="validation-input">{errors.password.message}</p>
@@ -48,6 +52,10 @@ export const NewPasswordForm = ({
         type="password"
         placeholder="Password"
         className={classNames({ validate: errors.password })}
+        autoComplete="new-password"
+        aria-invalid="false"
+        aria-haspopup="false"
+        spellCheck="false"
       />
       {errors.passwordConfirmation && (
         <p className="validation-input">
