@@ -81,7 +81,6 @@ export default function Library() {
   const { authenticated } = useAuth();
   const router = useRouter();
   const { id: folderId } = router.query;
-  console.log("folderId", folderId);
   const {
     data: rootFolder,
     isLoading,

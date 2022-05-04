@@ -85,7 +85,6 @@ const MembershipCancellation = () => {
     },
   );
   const [loading, setLoading] = useState(false);
-  console.log(cancelSubscription, error, apiError);
 
   if (apiError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <PageLoading />;
