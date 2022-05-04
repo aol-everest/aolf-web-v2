@@ -50,7 +50,7 @@ export const NewPasswordForm = ({
       <input
         {...register("passwordConfirmation")}
         type="password"
-        placeholder="Password"
+        placeholder="Confirm Password"
         className={classNames({ validate: errors.password })}
         autoComplete="new-password"
         aria-invalid="false"

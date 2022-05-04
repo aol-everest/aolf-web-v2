@@ -82,7 +82,7 @@ export const LoginModal = () => {
         password,
       );
       if (newPasswordRequired) {
-        setCurrentUser(username);
+        setCurrentUser({ username, password });
         setMode(NEW_PASSWORD_REQUEST);
         setLoading(false);
       } else {
@@ -227,13 +227,13 @@ export const LoginModal = () => {
     setShowMessage(false);
     try {
       await Auth.changeNewPassword({
-        email: currentUser,
-        password,
+        email: currentUser.username,
+        password: currentUser.password,
         newPassword: password,
       });
-      setUsername(null);
-      // setMode(LOGIN_MODE);
-      hideModal();
+      setCurrentUser(null);
+      setMode(LOGIN_MODE);
+      // hideModal();
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;
