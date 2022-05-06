@@ -146,9 +146,12 @@ export const PreCostDetailsCard = ({
                               className="custom-checkbox"
                               placeholder=" "
                               checked={isChecked}
-                              onChange={formikProps.handleChange(
-                                product.productName,
-                              )}
+                              onChange={() =>
+                                formikProps.setFieldValue(
+                                  product.productName,
+                                  !isChecked,
+                                )
+                              }
                               value={product.productName}
                               name={product.productName}
                               id={product.productSfid}
@@ -228,9 +231,12 @@ export const PreCostDetailsCard = ({
                               className="custom-checkbox"
                               placeholder=" "
                               checked={isChecked}
-                              onChange={formikProps.handleChange(
-                                product.productName,
-                              )}
+                              onChange={() =>
+                                formikProps.setFieldValue(
+                                  product.productName,
+                                  !isChecked,
+                                )
+                              }
                               value={product.productName}
                               name={product.productName}
                               id={product.productSfid}
@@ -294,9 +300,12 @@ export const PreCostDetailsCard = ({
                             className="custom-checkbox"
                             placeholder=" "
                             checked={isChecked}
-                            onChange={formikProps.handleChange(
-                              product.productName,
-                            )}
+                            onChange={() =>
+                              formikProps.setFieldValue(
+                                product.productName,
+                                !isChecked,
+                              )
+                            }
                             value={product.productName}
                             name={product.productName}
                             id={product.productSfid}
