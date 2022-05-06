@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { withSSRContext } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { PaymentForm, PaymentFormHB, PaymentFormGeneric } from "@components";
-import { api, Clevertap, Segment } from "@utils";
+import { api } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
@@ -12,6 +11,10 @@ import { useAuth } from "@contexts";
 import { useGlobalAlertContext } from "@contexts";
 import { trackEvent } from "@phntms/react-gtm";
 import { COURSE_TYPES } from "@constants";
+import { withAuth } from "@hoc";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
+import { useQuery } from "react-query";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -49,55 +52,30 @@ const RetreatPrerequisiteWarning = ({
   );
 };
 
-export const getServerSideProps = async (context) => {
-  const { query, req, res, resolvedUrl } = context;
-  const { id } = query;
-  let props = {};
-  let token = "";
-  try {
-    const { Auth } = await withSSRContext({ req });
-    const user = await Auth.currentAuthenticatedUser();
-    const currentSession = await Auth.currentSession();
-    token = currentSession.idToken.jwtToken;
-    const res = await api.get({
-      path: "profile",
-      token,
-    });
-
-    props = {
-      authenticated: true,
-      username: user.username,
-      profile: res,
-      token,
-    };
-  } catch (err) {
-    console.error(err);
-    return {
-      redirect: {
-        destination: `/login?next=${resolvedUrl}`,
-        permanent: false,
-      },
-    };
-  }
-  const workshopDetail = await api.get({
-    path: "workshopDetail",
-    token,
-    param: {
-      id,
-    },
-  });
-  props = {
-    ...props,
-    workshop: workshopDetail.data,
-  };
-
-  // Pass data to the page via props
-  return { props };
-};
-
-const Checkout = ({ workshop, profile }) => {
+const Checkout = () => {
   const router = useRouter();
-  const [{ profile: clientProfile }] = useAuth();
+  const { user } = useAuth();
+  const { id: workshopId, coupon } = router.query;
+  const {
+    data: workshop,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "workshopDetail",
+    async () => {
+      const response = await api.get({
+        path: "workshopDetail",
+        param: {
+          id: workshopId,
+        },
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
@@ -106,7 +84,7 @@ const Checkout = ({ workshop, profile }) => {
   const [showTopMessage, setShowTopMessage] = useState(false);
 
   useEffect(() => {
-    if (!clientProfile) return;
+    if (!user || !workshop) return;
 
     const {
       title,
@@ -147,7 +125,7 @@ const Checkout = ({ workshop, profile }) => {
         amount: unitPrice,
         requestType: "Detail",
         hitType: "paymentpage",
-        user: profile.id,
+        user: user.profile.id,
         ecommerce: {
           checkout: {
             actionField: {
@@ -157,23 +135,6 @@ const Checkout = ({ workshop, profile }) => {
           },
         },
       },
-    });
-
-    Clevertap.event("Product Checkout", {
-      "Request Type": "Payment",
-      "Product Name": title,
-      Category: "Workshop",
-      "Product Type": productTypeId,
-      "Product Id": courseId,
-      Price: unitPrice,
-    });
-    Segment.event("Checkout Started", {
-      "Request Type": "Payment",
-      "Product Name": title,
-      Category: "Workshop",
-      "Product Type": productTypeId,
-      "Product Id": courseId,
-      Price: unitPrice,
     });
 
     if (!isPreRequisiteCompleted) {
@@ -201,7 +162,7 @@ const Checkout = ({ workshop, profile }) => {
         ),
       });
     }
-  }, [clientProfile]);
+  }, [user, workshop]);
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
@@ -226,6 +187,9 @@ const Checkout = ({ workshop, profile }) => {
       },
     });
   };
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
@@ -252,7 +216,7 @@ const Checkout = ({ workshop, profile }) => {
       return (
         <PaymentFormHB
           workshop={workshop}
-          profile={profile}
+          profile={user.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
         />
       );
@@ -267,7 +231,7 @@ const Checkout = ({ workshop, profile }) => {
       return (
         <PaymentForm
           workshop={workshop}
-          profile={profile}
+          profile={user.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
         />
       );
@@ -275,7 +239,7 @@ const Checkout = ({ workshop, profile }) => {
     return (
       <PaymentFormGeneric
         workshop={workshop}
-        profile={profile}
+        profile={user.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
       />
     );
@@ -403,4 +367,4 @@ const Checkout = ({ workshop, profile }) => {
 
 Checkout.hideHeader = true;
 
-export default Checkout;
+export default withAuth(Checkout);

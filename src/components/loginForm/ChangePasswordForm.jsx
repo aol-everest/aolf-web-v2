@@ -36,7 +36,11 @@ export const ChangePasswordForm = ({
   });
 
   return (
-    <form className="active show" onSubmit={handleSubmit(changePassword)}>
+    <form
+      className="active show"
+      autoComplete="off"
+      onSubmit={handleSubmit(changePassword)}
+    >
       <p className="info">
         We have sent a password reset code by email ({username}). Enter it below
         to reset your password.
@@ -46,6 +50,10 @@ export const ChangePasswordForm = ({
         {...register("code")}
         className={classNames({ validate: errors.code })}
         placeholder="Code"
+        autoComplete="off"
+        aria-invalid="false"
+        aria-haspopup="false"
+        spellCheck="false"
       />
       {errors.code && <p className="validation-input">{errors.code.message}</p>}
       <input
@@ -53,6 +61,10 @@ export const ChangePasswordForm = ({
         type="password"
         placeholder="New Password"
         className={classNames({ validate: errors.password })}
+        autoComplete="new-password"
+        aria-invalid="false"
+        aria-haspopup="false"
+        spellCheck="false"
       />
       {errors.password && (
         <p className="validation-input">{errors.password.message}</p>
@@ -62,6 +74,10 @@ export const ChangePasswordForm = ({
         type="password"
         placeholder="Confirm Password"
         className={classNames({ validate: errors.passwordConfirmation })}
+        autoComplete="new-password"
+        aria-invalid="false"
+        aria-haspopup="false"
+        spellCheck="false"
       />
       {errors.passwordConfirmation && (
         <p className="validation-input">

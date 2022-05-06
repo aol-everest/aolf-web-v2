@@ -22,3 +22,4 @@ export { ReInstate } from "./reInstate";
 export { CardUpdateRequired } from "./cardUpdateRequired";
 export { PendingAgreement } from "./pendingAgreement";
 export { UsePagesViews } from "./usePagesViews";
+export { PageLoading } from "./pageLoading";

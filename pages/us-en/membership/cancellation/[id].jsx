@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { api } from "@utils";
-import { withSSRContext } from "aws-amplify";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import Style from "./MembershipCancellation.module.scss";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
+import { withAuth } from "@hoc";
+import { useQuery } from "react-query";
+import { useAuth } from "@contexts";
 
-export async function getServerSideProps({ req, resolvedUrl, query }) {
+/* export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { Auth } = withSSRContext({ req });
   let props = {};
   try {
@@ -54,16 +58,41 @@ export async function getServerSideProps({ req, resolvedUrl, query }) {
     // };
   }
   return { props };
-}
+} */
 
-const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
+const MembershipCancellation = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { user, authenticated } = useAuth();
   const { id: subscriptionId } = router.query;
+  const {
+    data: cancelSubscription = {},
+    isLoading,
+    isError: apiError,
+    error,
+  } = useQuery(
+    "cancelSubscription",
+    async () => {
+      const response = await api.get({
+        path: "cancelSubscriptionStep1",
+        param: {
+          id: subscriptionId,
+        },
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+  const [loading, setLoading] = useState(false);
+
+  if (apiError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
+
   const { data, isError } = cancelSubscription;
   const { totalAmountWillBeDeducted } = data || [];
 
-  const { subscriptions = [] } = profile || {};
+  const { subscriptions = [] } = user.profile || {};
 
   const userSubscriptions = subscriptions.find((subscription) => {
     return subscription.sfid === subscriptionId;
@@ -370,4 +399,4 @@ const MembershipCancellation = ({ cancelSubscription, profile, query }) => {
 
 MembershipCancellation.hideHeader = false;
 
-export default MembershipCancellation;
+export default withAuth(MembershipCancellation);

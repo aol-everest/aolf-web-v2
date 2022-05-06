@@ -19,4 +19,4 @@ export {
   useGlobalLoadingContext,
 } from "./GlobalLoadingContext";
 
-export { AuthProvider, useAuth } from "./auth";
+export { AuthProvider, useAuth } from "./auth.context";

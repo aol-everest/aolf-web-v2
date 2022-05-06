@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { api, isSSR } from "@utils";
 import classNames from "classnames";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { withSSRContext } from "aws-amplify";
 import { secondsToHms } from "@utils";
 import { NextSeo } from "next-seo";
 import {
@@ -33,8 +32,12 @@ import {
   FullscreenToggle,
 } from "video-react";
 import Styles from "./Learn.module.scss";
+import { PageLoading } from "@components";
+import { useQuery } from "react-query";
+import ErrorPage from "next/error";
+import { useAuth } from "@contexts";
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
   let props = {};
@@ -67,9 +70,27 @@ export const getServerSideProps = async (context) => {
   };
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-export default function Learn({ data, authenticated }) {
+export default function Learn() {
+  const { user, authenticated } = useAuth();
+  const router = useRouter();
+  const { id: courseId } = router.query;
+  const { data, isLoading, isError, error } = useQuery(
+    "courseDetail",
+    async () => {
+      const response = await api.get({
+        path: "journeyBySfid",
+        param: {
+          id: courseId,
+        },
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
   const {
     sfid,
     subTitle,
@@ -91,7 +112,6 @@ export default function Learn({ data, authenticated }) {
     introContentPoster = cardImage.url;
   }
 
-  const router = useRouter();
   const playerEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -199,6 +219,9 @@ export default function Learn({ data, authenticated }) {
     }
     setLoading(false);
   };
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
 
   return (
     <main className="background-image meditation">

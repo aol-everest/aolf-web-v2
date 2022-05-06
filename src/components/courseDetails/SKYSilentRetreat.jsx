@@ -14,7 +14,7 @@ import { priceCalculation, tConvert } from "@utils";
 import Style from "./CourseDetails.module.scss";
 
 export const SKYSilentRetreat = ({ data, swiperOption }) => {
-  const [{ authenticated = false }] = useAuth();
+  const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
 

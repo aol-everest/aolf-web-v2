@@ -25,6 +25,7 @@
       "@redux": ["src/redux"],
       "@utils": ["src/utils"],
       "@hooks": ["src/hooks"],
+      "@hoc": ["src/hoc"],
       "@constants": ["src/constants"],
       "@contexts": ["src/contexts"],
       "@service": ["src/service"]

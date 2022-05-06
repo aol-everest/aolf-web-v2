@@ -27,7 +27,7 @@ export const ChangeCardDetail = ({ updateCompleteAction }) => {
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  const [{ profile }] = useAuth();
+  const { user } = useAuth();
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
@@ -35,7 +35,7 @@ export const ChangeCardDetail = ({ updateCompleteAction }) => {
     try {
       const cardElement = elements.getElement(CardElement);
       let createTokenRespone = await stripe.createToken(cardElement, {
-        name: profile.name,
+        name: user?.profile.name,
       });
       let { error, token } = createTokenRespone;
       if (error) {

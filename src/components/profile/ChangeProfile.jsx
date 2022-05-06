@@ -36,7 +36,7 @@ export const ChangeProfile = ({
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
 
-  const allowEmailEdit = false;
+  const allowEmailEdit = profile.cognito.UserStatus !== "EXTERNAL_PROVIDER";
 
   const editEmailAction = (e) => {
     if (e) e.preventDefault();

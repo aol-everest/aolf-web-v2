@@ -1,7 +1,10 @@
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { api, isSSR } from "@utils";
-import { withSSRContext } from "aws-amplify";
+import { PageLoading } from "@components";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
+import ErrorPage from "next/error";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -9,7 +12,7 @@ import "swiper/css/pagination";
 import "swiper/css/a11y";
 import "swiper/css/scrollbar";
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
   let props = {};
@@ -45,9 +48,26 @@ export const getServerSideProps = async (context) => {
   };
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-function Journey({ data }) {
+function Journey() {
+  const router = useRouter();
+  const { id: challengeSfid } = router.query;
+  const { data, isLoading, isError, error } = useQuery(
+    "journeyBySfid",
+    async () => {
+      const response = await api.get({
+        path: "journeyBySfid",
+        param: {
+          challengeSfid,
+        },
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
   let slidesPerView = 5;
   if (!isSSR) {
     const screenWidth = window.innerWidth;
@@ -87,6 +107,9 @@ function Journey({ data }) {
       },
     },
   };
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
 
   return (
     <main className="background-image meditation">

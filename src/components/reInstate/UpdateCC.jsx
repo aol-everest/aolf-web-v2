@@ -29,7 +29,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
   const [amount, setAmount] = useState(0);
   const stripe = useStripe();
   const elements = useElements();
-  const [{ profile }] = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
     try {
       const cardElement = elements.getElement(CardElement);
       let createTokenRespone = await stripe.createToken(cardElement, {
-        name: profile.name,
+        name: user?.profile.name,
       });
       let { error, token } = createTokenRespone;
       if (error) {

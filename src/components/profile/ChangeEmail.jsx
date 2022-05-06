@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
@@ -7,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 import { api } from "@utils";
 import { FaCheckCircle } from "react-icons/fa";
+import { useAuth } from "@contexts";
 
 const ChangeEmailStep = ({
   onSubmit,
@@ -86,6 +86,7 @@ const ChangeEmailStep = ({
 };
 
 export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
+  const { user } = useAuth();
   const [submittedEmail, setSubmittedEmail] = useState(null);
   const [message, setMessage] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
@@ -94,9 +95,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
   async function onChangeEmailSubmitted({ username }) {
     setLoading(true);
     try {
-      const user = await Auth.currentAuthenticatedUser();
-
-      if (user.attributes.email === username) {
+      if (user.profile.email === username) {
         throw new Error(`${username} is already your email address`);
       }
 
@@ -125,7 +124,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
   async function onConfirmCodeSubmitted({ code }) {
     setLoading(true);
     try {
-      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
+      /* const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
       await api.post({
         path: "change-email-confirm",
         body: {
@@ -136,7 +135,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
         },
       });
 
-      await Auth.currentAuthenticatedUser({ bypassCache: true });
+      await Auth.currentAuthenticatedUser({ bypassCache: true }); */
       // setStep("change-email");
       setMessage("");
       setShowMessage(false);

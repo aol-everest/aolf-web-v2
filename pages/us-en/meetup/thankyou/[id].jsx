@@ -3,20 +3,26 @@
 import React, { useEffect } from "react";
 import moment from "moment";
 import { api, calculateBusinessDays, tConvert } from "@utils";
-import { withSSRContext } from "aws-amplify";
 import { trackEvent } from "@phntms/react-gtm";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import {
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalModalContext,
+} from "@contexts";
 import { AddToCalendarModal } from "@components";
 import { ALERT_TYPES, ABBRS } from "@constants";
+import { useQuery } from "react-query";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 
-export async function getServerSideProps(context) {
+/* export async function getServerSideProps(context) {
   const { query, req, res } = context;
   const { Auth } = withSSRContext({ req });
   const { id } = query;
@@ -50,12 +56,80 @@ export async function getServerSideProps(context) {
       props: {},
     };
   }
-}
+} */
 
-const Thankyou = ({ meetup, attendeeRecord }) => {
-  const router = useRouter();
+const Thankyou = () => {
+  const { authenticated, reloadProfile } = useAuth();
   const { showAlert, hideAlert } = useGlobalAlertContext();
+  const router = useRouter();
+
   const { id: attendeeId } = router.query;
+  const {
+    data: result,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "attendeeRecord",
+    async () => {
+      const response = await api.get({
+        path: "getWorkshopByAttendee",
+        param: {
+          aid: attendeeId,
+          skipcheck: "1",
+        },
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  useEffect(() => {
+    if (!authenticated || !result) return;
+    trackEvent({
+      event: "transactionComplete",
+      data: {
+        viewType: "workshop",
+        amount: unitPrice,
+        title: meetupTitle || title,
+        ctype: productTypeId,
+        requestType: "Thankyou",
+        // user,
+        ecommerce: {
+          currencyCode: "USD",
+          purchase: {
+            actionField: {
+              id: orderExternalId,
+              affiliation: "Website",
+              revenue: ammountPaid,
+              tax: "0.00",
+              shipping: "0.00",
+              coupon: couponCode || "",
+            },
+            products: [
+              {
+                id: courseId,
+                courseId: courseId,
+                name: title,
+                category: "workshop",
+                variant: "N/A",
+                brand: "Art of Living Foundation",
+                quantity: 1,
+                // price: totalOrderAmount,
+              },
+            ],
+          },
+        },
+      },
+    });
+    reloadProfile();
+  }, [authenticated, result]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
+  const { data: meetup, attendeeRecord } = result;
 
   const {
     formattedStartDateOnly,
@@ -117,45 +191,6 @@ const Thankyou = ({ meetup, attendeeRecord }) => {
   } else {
     endDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`).add(2, "hours");
   }
-
-  useEffect(() => {
-    trackEvent({
-      event: "transactionComplete",
-      data: {
-        viewType: "workshop",
-        amount: unitPrice,
-        title: meetupTitle || title,
-        ctype: productTypeId,
-        requestType: "Thankyou",
-        // user,
-        ecommerce: {
-          currencyCode: "USD",
-          purchase: {
-            actionField: {
-              id: orderExternalId,
-              affiliation: "Website",
-              revenue: ammountPaid,
-              tax: "0.00",
-              shipping: "0.00",
-              coupon: couponCode || "",
-            },
-            products: [
-              {
-                id: courseId,
-                courseId: courseId,
-                name: title,
-                category: "workshop",
-                variant: "N/A",
-                brand: "Art of Living Foundation",
-                quantity: 1,
-                // price: totalOrderAmount,
-              },
-            ],
-          },
-        },
-      },
-    });
-  }, []);
 
   const getSelectedTimeSlotDetails = (selectedTimeSlot) => {
     if (selectedTimeSlot) {

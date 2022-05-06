@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useGlobalModalContext } from "@contexts";
-import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { FaCheckCircle } from "react-icons/fa";
@@ -11,7 +10,8 @@ import {
   ChangePasswordForm,
   NewPasswordForm,
 } from "./../loginForm";
-import { api } from "@utils";
+import { api, Auth } from "@utils";
+import { useAuth } from "@contexts";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";
@@ -23,8 +23,15 @@ const MESSAGE_SIGNUP_SUCCESS = "Sign up completed successfully.";
 const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
   "A verification code has been emailed to you. Please use the verification code and reset your password.";
 
+const encodeFormData = (data) => {
+  return Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
+};
+
 export const LoginModal = () => {
   const router = useRouter();
+  const { setUser } = useAuth();
   const { hideModal, store } = useGlobalModalContext();
   const { modalProps } = store || {};
   const {
@@ -70,17 +77,17 @@ export const LoginModal = () => {
     setLoading(true);
     setShowMessage(false);
     try {
-      const user = await Auth.signIn(username, password);
-      if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-        setCurrentUser(user);
+      const { newPasswordRequired } = await Auth.authenticateUser(
+        username,
+        password,
+      );
+      if (newPasswordRequired) {
+        setCurrentUser({ username, password });
         setMode(NEW_PASSWORD_REQUEST);
         setLoading(false);
       } else {
-        const token = user.signInUserSession.idToken.jwtToken;
-        await api.get({
-          path: "profile",
-          token,
-        });
+        const userInfo = await Auth.reFetchProfile();
+        setUser(userInfo);
 
         setLoading(false);
         hideModal();
@@ -90,8 +97,28 @@ export const LoginModal = () => {
           router.reload(window.location.pathname);
         }
       }
+      // const user = await Auth.signIn(username, password);
+      // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
+      //   setCurrentUser(user);
+      //   setMode(NEW_PASSWORD_REQUEST);
+      //   setLoading(false);
+      // } else {
+      //   const token = user.signInUserSession.idToken.jwtToken;
+      //   await api.get({
+      //     path: "profile",
+      //     token,
+      //   });
+
+      //   setLoading(false);
+      //   hideModal();
+      //   if (navigateTo) {
+      //     return router.push(navigateTo);
+      //   } else {
+      //     router.reload(window.location.pathname);
+      //   }
+      // }
     } catch (ex) {
-      await Auth.signOut();
+      // await Auth.signOut();
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
       if (statusCode === 500) {
@@ -108,32 +135,42 @@ export const LoginModal = () => {
   };
 
   const fbLogin = () => {
-    Auth.federatedSignIn({
-      provider: "Facebook",
-      customState: navigateTo || router.pathname,
-    });
+    const params = {
+      state: navigateTo,
+      identity_provider: "Facebook",
+      redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
+      client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+      response_type: "CODE",
+      scope: "email phone profile aws.cognito.signin.user.admin openid",
+    };
+    window.location.replace(
+      `https://${
+        process.env.NEXT_PUBLIC_COGNITO_DOMAIN
+      }/oauth2/authorize?${encodeFormData(params)}`,
+    );
   };
 
   const googleLogin = () => {
-    Auth.federatedSignIn({
-      provider: "Google",
-      customState: navigateTo || router.pathname,
-    });
+    const params = {
+      state: navigateTo,
+      identity_provider: "Google",
+      redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
+      client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+      response_type: "CODE",
+      scope: "email phone profile aws.cognito.signin.user.admin openid",
+    };
+    window.location.replace(
+      `https://${
+        process.env.NEXT_PUBLIC_COGNITO_DOMAIN
+      }/oauth2/authorize?${encodeFormData(params)}`,
+    );
   };
 
   const signUp = async ({ username, password, firstName, lastName }) => {
     setLoading(true);
     setShowMessage(false);
     try {
-      await Auth.signUp({
-        username,
-        password,
-        attributes: {
-          email: username,
-          given_name: firstName,
-          family_name: lastName,
-        },
-      });
+      await Auth.signup({ email: username, password, firstName, lastName });
       await signIn({ username, password });
     } catch (ex) {
       const data = ex.response?.data;
@@ -148,12 +185,14 @@ export const LoginModal = () => {
     setLoading(true);
     setShowMessage(false);
     try {
-      await Auth.forgotPassword(username);
+      const { resendTemporaryPassword } = await Auth.sendCode({
+        email: username,
+      });
       setUsername(username);
       setShowSuccessMessage(true);
       setSuccessMessage(MESSAGE_VERIFICATION_CODE_SENT_SUCCESS);
       setTimeout(() => {
-        setMode(CHANGE_PASSWORD_REQUEST);
+        setMode(resendTemporaryPassword ? LOGIN_MODE : CHANGE_PASSWORD_REQUEST);
         setShowSuccessMessage(false);
         setSuccessMessage(null);
       }, 3000);
@@ -170,7 +209,7 @@ export const LoginModal = () => {
     setLoading(true);
     setShowMessage(false);
     try {
-      await Auth.forgotPasswordSubmit(username, "" + code, password);
+      await Auth.resetPassword({ email: username, code: "" + code, password });
       setUsername(null);
       setMode(LOGIN_MODE);
     } catch (ex) {
@@ -187,10 +226,14 @@ export const LoginModal = () => {
     setLoading(true);
     setShowMessage(false);
     try {
-      await Auth.completeNewPassword(currentUser, password);
-      setUsername(null);
-      // setMode(LOGIN_MODE);
-      hideModal();
+      await Auth.changeNewPassword({
+        email: currentUser.username,
+        password: currentUser.password,
+        newPassword: password,
+      });
+      setCurrentUser(null);
+      setMode(LOGIN_MODE);
+      // hideModal();
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;

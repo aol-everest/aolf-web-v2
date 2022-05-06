@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { api, tConvert } from "@utils";
-import { withSSRContext } from "aws-amplify";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
@@ -8,10 +7,14 @@ import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { useQuery } from "react-query";
 import { MEMBERSHIP_TYPES, COURSE_TYPES, CONTENT_FOLDER_IDS } from "@constants";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
+import { useAuth } from "@contexts";
+import { withAuth } from "@hoc";
 
 dayjs.extend(utc);
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
   const { id, cid = null } = query;
   let props = {};
@@ -66,9 +69,38 @@ export const getServerSideProps = async (context) => {
 
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-const MembershipThankyou = ({ order, query }) => {
+const MembershipThankyou = () => {
+  const { reloadProfile, authenticated } = useAuth();
+  const router = useRouter();
+  const { id } = router.query;
+  const {
+    data: order,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "getSubscriptionOrderDetails",
+    async () => {
+      const response = await api.get({
+        path: "getSubscriptionOrderDetails",
+        param: {
+          oid: id,
+        },
+      });
+      return response.order;
+    },
+    {
+      refetchOnWindowFocus: false,
+      enabled: router.isReady,
+    },
+  );
+  useEffect(() => {
+    if (!authenticated || !order) return;
+    reloadProfile();
+  }, [authenticated, order]);
+
   const [courseId] = useQueryString("cid");
   const [meetupId] = useQueryString("mid");
   const [page] = useQueryString("page", {
@@ -77,7 +109,6 @@ const MembershipThankyou = ({ order, query }) => {
   const [courseCType] = useQueryString("ctype");
   const { afterBuyMessageBody, afterBuyMessageHeader, subscriptionMasterSfid } =
     order || {};
-  const router = useRouter();
 
   const { data: workshopDetail = [] } = useQuery(
     "workshopDetail",
@@ -187,6 +218,9 @@ const MembershipThankyou = ({ order, query }) => {
       return <img src="/img/Silence_desktop.png" alt="card" />;
     }
   };
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const {
     title,
@@ -433,4 +467,4 @@ const MembershipThankyou = ({ order, query }) => {
 
 MembershipThankyou.hideHeader = true;
 
-export default MembershipThankyou;
+export default withAuth(MembershipThankyou);

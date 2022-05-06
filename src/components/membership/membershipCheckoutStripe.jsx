@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import {
@@ -11,7 +10,7 @@ import {
   DiscountCodeInput,
 } from "@components/checkout";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { api } from "@utils";
+import { api, Auth } from "@utils";
 import { Loader } from "@components";
 import { useGlobalAlertContext } from "@contexts";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
@@ -254,7 +253,7 @@ export const MembershipCheckoutStripe = ({
   };
 
   const logout = async (event) => {
-    await Auth.signOut();
+    await Auth.logout();
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );

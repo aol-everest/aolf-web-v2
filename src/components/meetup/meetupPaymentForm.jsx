@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
 import { isEmpty } from "@utils";
 import { PayPalButton } from "react-paypal-button-v2";
@@ -24,7 +23,7 @@ import { ABBRS } from "@constants";
 import { tConvert } from "@utils";
 import Image from "next/image";
 
-import { priceCalculation } from "@utils";
+import { priceCalculation, Auth } from "@utils";
 import { useQueryString } from "@hooks";
 import {
   PAYMENT_MODES,
@@ -91,7 +90,7 @@ export const MeetupPaymentForm = ({
   };
 
   const logout = async (event) => {
-    await Auth.signOut();
+    await Auth.logout();
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
@@ -675,29 +674,33 @@ export const MeetupPaymentForm = ({
                         )}
                         {unitPrice === listPrice && <span>${unitPrice}</span>}
                       </li>
-                      <li>
-                        <span>Digital Member rate:</span>
-                        {memberPrice !== listPrice && (
-                          <span>
-                            <span className="discount">${listPrice}</span> $
-                            {memberPrice}
-                          </span>
-                        )}
-                        {memberPrice === listPrice && (
-                          <span>${memberPrice}</span>
-                        )}
-                      </li>
+                      {mode !== "In Person" && (
+                        <>
+                          <li>
+                            <span>Digital Member rate:</span>
+                            {memberPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {memberPrice}
+                              </span>
+                            )}
+                            {memberPrice === listPrice && (
+                              <span>${memberPrice}</span>
+                            )}
+                          </li>
 
-                      <li className="btn-item">
-                        <button
-                          className="btn-outline"
-                          onClick={openSubscriptionPaywallPage(
-                            MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                          )}
-                        >
-                          Join Digital Membership
-                        </button>
-                      </li>
+                          <li className="btn-item">
+                            <button
+                              className="btn-outline"
+                              onClick={openSubscriptionPaywallPage(
+                                MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                              )}
+                            >
+                              Join Digital Membership
+                            </button>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   )}
 
