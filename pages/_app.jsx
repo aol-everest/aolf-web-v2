@@ -18,6 +18,7 @@ import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { TrackingHeadScript } from "@phntms/next-gtm";
+import ContentLoader from "react-content-loader";
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
@@ -96,7 +97,10 @@ function App({ Component, pageProps }) {
           <div className="global-loader-container">
             <img src="/img/ic-logo.svg" alt="logo" className="logo__image" />
           </div>
-          <div className="message">Fetching profile... please wait!</div>
+          <div className="message">
+            <div className="dot-flashing dot"></div>
+            please wait!
+          </div>
         </div>
       </div>
     );
