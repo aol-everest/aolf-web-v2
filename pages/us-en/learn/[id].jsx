@@ -94,6 +94,11 @@ export default function Learn() {
           id: courseId,
         },
       });
+      if (response.isError) {
+        throw new Error(
+          response.error || "No content found. Invalid content Id.",
+        );
+      }
       return response.data;
     },
     {
