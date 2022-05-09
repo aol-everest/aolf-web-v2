@@ -183,6 +183,11 @@ function Collection() {
         const response = await api.get({
           path: "getFavouriteContents",
         });
+        if (response.isError) {
+          throw new Error(
+            response.error || "No content found. Invalid content Id.",
+          );
+        }
         return response.data;
       },
       {
