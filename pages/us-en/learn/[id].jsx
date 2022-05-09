@@ -75,12 +75,21 @@ import { useAuth } from "@contexts";
 export default function Learn() {
   const { user, authenticated } = useAuth();
   const router = useRouter();
+  const playerEl = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showWhatYoullLearn, setShowWhatYoullLearn] = useState(true);
+  const [showWhoIsItFor, setShowWhoIsItFor] = useState(false);
+  const { showModal } = useGlobalModalContext();
+  const { showAlert } = useGlobalAlertContext();
+  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
+  const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const { id: courseId } = router.query;
   const { data, isLoading, isError, error } = useQuery(
     "courseDetail",
     async () => {
       const response = await api.get({
-        path: "journeyBySfid",
+        path: "courseDetail",
         param: {
           id: courseId,
         },
@@ -89,8 +98,13 @@ export default function Learn() {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: router.isReady,
     },
   );
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
+
   const {
     sfid,
     subTitle,
@@ -111,16 +125,6 @@ export default function Learn() {
   } else if (cardImage) {
     introContentPoster = cardImage.url;
   }
-
-  const playerEl = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showWhatYoullLearn, setShowWhatYoullLearn] = useState(true);
-  const [showWhoIsItFor, setShowWhoIsItFor] = useState(false);
-  const { showModal } = useGlobalModalContext();
-  const { showAlert } = useGlobalAlertContext();
-  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
-  const { showVideoPlayer } = useGlobalVideoPlayerContext();
 
   // Call this function whenever you want to
   // refresh props!
@@ -219,9 +223,6 @@ export default function Learn() {
     }
     setLoading(false);
   };
-
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
 
   return (
     <main className="background-image meditation">
