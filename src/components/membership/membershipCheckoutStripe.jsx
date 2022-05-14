@@ -406,7 +406,7 @@ export const MembershipCheckoutStripe = ({
                     <label htmlFor="ppaAgreement"></label>
                     <p className="agreement__text">
                       I agree to the{" "}
-                      <a href="/us-en/ts-cs" target="_blank">
+                      <a href="/policy/ppa-course" target="_blank">
                         Program Participant agreement including privacy and
                         cancellation policy.
                       </a>
@@ -510,7 +510,7 @@ export const MembershipCheckoutStripe = ({
                   <label htmlFor="ppaAgreement"></label>
                   <p className="agreement__text">
                     I agree to the{" "}
-                    <a href="/us-en/ts-cs" target="_blank">
+                    <a href="/policy/ppa-course" target="_blank">
                       Program Participant agreement including privacy and
                       cancellation policy.
                     </a>
