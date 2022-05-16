@@ -26,7 +26,7 @@ export const MeetupEnroll = ({
     router.push({
       pathname: `/us-en/membership/${MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value}`,
       query: {
-        cid: selectedMeetup.sfid,
+        mid: selectedMeetup.sfid,
         page: "checkout",
       },
     });

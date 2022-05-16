@@ -106,7 +106,7 @@ const RetreatPrerequisiteWarning = () => {
 function MembershipCheckout() {
   const router = useRouter();
   const { user, authenticated } = useAuth();
-  const { id, ofid, cid } = router.query;
+  const { id, ofid, cid, mid } = router.query;
   const {
     data: subsciption,
     isLoading,
@@ -138,6 +138,9 @@ function MembershipCheckout() {
   const [offeringId] = useQueryString("ofid");
   const [courseId] = useQueryString("cid", {
     defaultValue: cid,
+  });
+  const [meetingId] = useQueryString("mid", {
+    defaultValue: mid,
   });
   const [returnPage] = useQueryString("page", {
     defaultValue: "detail",
@@ -228,6 +231,9 @@ function MembershipCheckout() {
     let query = {};
     if (courseId) {
       query = { cid: courseId, page: returnPage };
+    }
+    if (meetingId) {
+      query = { mid: meetingId, page: returnPage };
     }
     router.push({
       pathname: `/us-en/membership/thankyou/${orderId}`,
