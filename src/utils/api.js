@@ -40,7 +40,10 @@ axiosClient.interceptors.request.use(function (config) {
 
 export const api = {
   get: async (config) => {
-    const qs = config.param ? queryString.stringify(config.param) : "";
+    const param = config.param
+      ? { ...config.param, org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME }
+      : null;
+    const qs = param ? queryString.stringify(param) : "";
     try {
       const result = await axiosClient.get(
         SERVER_URL + config.path + "?" + qs,
@@ -61,13 +64,19 @@ export const api = {
   },
 
   getFile: async (config) => {
+    const qs = queryString.stringify({
+      org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
+    });
     try {
-      const result = await axiosClient.get(SERVER_URL + config.path, {
-        headers: {
-          Authorization: `Bearer ${config.token}`,
+      const result = await axiosClient.get(
+        SERVER_URL + config.path + "?" + qs,
+        {
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+          },
+          responseType: "blob",
         },
-        responseType: "blob",
-      });
+      );
       return result.data;
     } catch (error) {
       throw new HTTPError(
@@ -79,9 +88,12 @@ export const api = {
   },
 
   post: async (config) => {
+    const qs = queryString.stringify({
+      org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
+    });
     try {
       const result = await axiosClient.post(
-        SERVER_URL + config.path,
+        SERVER_URL + config.path + "?" + qs,
         config.body,
         {
           headers: {
@@ -100,9 +112,12 @@ export const api = {
   },
 
   postFormData: async (config) => {
+    const qs = queryString.stringify({
+      org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
+    });
     try {
       const result = await axiosClient.post(
-        SERVER_URL + config.path,
+        SERVER_URL + config.path + "?" + qs,
         config.body,
         {
           headers: {

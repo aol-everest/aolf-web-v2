@@ -25,6 +25,10 @@ export const MeetupEnroll = ({
     closeDetailAction();
     router.push({
       pathname: `/us-en/membership/${MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value}`,
+      query: {
+        mid: selectedMeetup.sfid,
+        page: "checkout",
+      },
     });
   };
 

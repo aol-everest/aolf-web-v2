@@ -1,7 +1,7 @@
 name: Deploy to Prod
 on: workflow_dispatch
 jobs:
-  deploy:
+  deploy-aolf:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
@@ -11,3 +11,14 @@ jobs:
           heroku_email: "sandeepkhoj@gmail.com"
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "aolf-web"
+
+  deploy-hb:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_email: "sandeepkhoj@gmail.com"
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "aolf-hb-web"

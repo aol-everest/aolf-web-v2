@@ -28,7 +28,8 @@
       "@hoc": ["src/hoc"],
       "@constants": ["src/constants"],
       "@contexts": ["src/contexts"],
-      "@service": ["src/service"]
+      "@service": ["src/service"],
+      "@org": ["src/organization-config"]
     }
   },
   "include": ["next-env.d.js", "**/*.js", "**/*.jsx"],

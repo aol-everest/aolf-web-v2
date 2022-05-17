@@ -144,6 +144,8 @@ const MembershipThankyou = () => {
     },
   );
 
+  const courseDetail = courseId ? workshopDetail : meetupDetail;
+
   const searchSilentRetreatsAction = () => {
     router.push({
       pathname: "/us-en",
@@ -184,19 +186,21 @@ const MembershipThankyou = () => {
   };
 
   const getEventImage = () => {
-    if (workshopDetail.eventType === "Meetup") {
-      switch (workshopDetail.meetupType) {
+    if (courseDetail.eventType === "Meetup") {
+      switch (courseDetail.meetupType) {
         case "Short SKY Meditation Meetup":
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
         case "Guided Meditation Meetup":
-          return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
+          return (
+            <img src="/img/Sahaj_meetup_desktop.png" alt="card" layout="fill" />
+          );
         default:
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
       }
-    } else if (workshopDetail.eventType === "Workshop") {
+    } else if (courseDetail.eventType === "Workshop") {
       if (
         `${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(
-          workshopDetail.productTypeId,
+          courseDetail.productTypeId,
         ) >= 0
       ) {
         return <img src="/img/Silence_desktop.png" alt="card" />;
@@ -210,7 +214,7 @@ const MembershipThankyou = () => {
       }
       if (
         `${COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value}`.indexOf(
-          workshopDetail.productTypeId,
+          courseDetail.productTypeId,
         ) >= 0
       ) {
         return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
@@ -232,7 +236,7 @@ const MembershipThankyou = () => {
     primaryTeacherName,
     eventStartDate,
     eventEndDate,
-  } = workshopDetail || {};
+  } = courseDetail || {};
 
   return (
     <main>
@@ -371,23 +375,19 @@ const MembershipThankyou = () => {
                 )}
                 {meetupId && (
                   <div className="journey-confirmation__image">
-                    {dayjs
-                      .utc(eventStartDate)
-                      .isSame(dayjs.utc(eventEndDate), "month") && (
-                      <span className="journey-confirmation__date">
-                        {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
-                        {`${tConvert(meetupStartTime)}`}
-                      </span>
-                    )}
+                    <span className="journey-confirmation__date">
+                      {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
+                      {`${tConvert(meetupStartTime)}`}
+                    </span>
                     {getEventImage()}
-                    <div className="journey-confirmation__course-detail">
-                      <h4 className="journey-confirmation__course-type">
+                    <div className="journey-confirmation__course-detail ">
+                      <h4 className="journey-confirmation__course-type !tw-text-slate-700">
                         {mode}
                       </h4>
-                      <h2 className="journey-confirmation__course-name">
+                      <h2 className="journey-confirmation__course-name !tw-text-slate-700">
                         {meetupTitle}
                       </h2>
-                      <h3 className="journey-confirmation__course-trainer">
+                      <h3 className="journey-confirmation__course-trainer !tw-text-slate-700">
                         {primaryTeacherName}
                       </h3>
                     </div>
@@ -424,37 +424,48 @@ const MembershipThankyou = () => {
             </div>
           </div>
           <div className="journey-confirmation_mobile__image">
-            {dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") && (
+            {courseId && (
+              <>
+                {dayjs
+                  .utc(eventStartDate)
+                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  <span className="journey-confirmation_mobile__date">
+                    {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                      .utc(eventEndDate)
+                      .format("DD, YYYY")}`}
+                  </span>
+                )}
+                {!dayjs
+                  .utc(eventStartDate)
+                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  <span className="journey-confirmation_mobile__date">
+                    {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                      .utc(eventEndDate)
+                      .format("MMMM DD, YYYY")}`}
+                  </span>
+                )}
+              </>
+            )}
+            {meetupId && (
               <span className="journey-confirmation_mobile__date">
-                {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                  .utc(eventEndDate)
-                  .format("DD, YYYY")}`}
+                {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
+                {`${tConvert(meetupStartTime)}`}
               </span>
             )}
-            {!dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") && (
-              <span className="journey-confirmation_mobile__date">
-                {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                  .utc(eventEndDate)
-                  .format("MMMM DD, YYYY")}`}
-              </span>
-            )}
+
             {getEventImage()}
             {/* <img
                 src={require('../../assests/images/new_design/journey-card-bg.png')}
                 alt="card"
               /> */}
             <div className="journey-confirmation_mobile__course-detail">
-              <h4 className="journey-confirmation_mobile__course-type">
+              <h4 className="journey-confirmation_mobile__course-type !tw-text-slate-700">
                 {mode}
               </h4>
-              <h2 className="journey-confirmation_mobile__course-name">
+              <h2 className="journey-confirmation_mobile__course-name !tw-text-slate-700">
                 {title}
               </h2>
-              <h3 className="journey-confirmation_mobile__course-trainer">
+              <h3 className="journey-confirmation_mobile__course-trainer !tw-text-slate-700">
                 {primaryTeacherName}
               </h3>
             </div>
