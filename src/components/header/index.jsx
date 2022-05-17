@@ -1,14 +1,13 @@
 /* eslint-disable react/display-name */
 import React, { useState } from "react";
-import { Collapse, Navbar, NavbarToggler, Nav, NavItem } from "reactstrap";
 import { useRouter } from "next/router";
 import Dropdown from "react-bootstrap/Dropdown";
 import { FiPhone } from "react-icons/fi";
 import classNames from "classnames";
-import { ActiveLink } from "@components";
 import Link from "next/link";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import Style from "./Header.module.scss";
+import { orgConfig } from "@org";
 // import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
@@ -330,7 +329,13 @@ export const Header = () => {
             />
           </button>
           <a href="https://www.artofliving.org/" className="logo">
-            <img src="/img/ic-logo.svg" alt="logo" className="logo__image" />
+            <img
+              src={`/img/${orgConfig.logo}`}
+              alt="logo
+            "
+              className="logo__image
+           "
+            />
           </a>
           <nav className="menu">
             <ul className="menu__list" id="desktop-menu-content">

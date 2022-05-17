@@ -1,4 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import { orgConfig } from "@org";
 
 class CustomDocument extends Document {
   static async getInitialProps(ctx) {
@@ -13,19 +14,19 @@ class CustomDocument extends Document {
           <link
             rel="apple-touch-icon"
             sizes="180x180"
-            href="/assets/apple-touch-icon.png"
+            href={`/assets/${orgConfig.favicon180}`}
           ></link>
           <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="/assets/favicon-32x32.png"
+            href={`/assets/${orgConfig.favicon32}`}
           ></link>
           <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="/assets/favicon-16x16.png"
+            href={`/assets/${orgConfig.favicon16}`}
           ></link>
           <link rel="manifest" href="/assets/site.webmanifest"></link>
           <link
@@ -33,7 +34,10 @@ class CustomDocument extends Document {
             href="/assets/safari-pinned-tab.svg"
             color="#5bbad5"
           ></link>
-          <link rel="shortcut icon" href="/assets/favicon.ico"></link>
+          <link
+            rel="shortcut icon"
+            href={`/assets/${orgConfig.favicon}`}
+          ></link>
           <meta name="msapplication-TileColor" content="#da532c"></meta>
           <meta name="theme-color" content="#ffffff"></meta>
           <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -41,10 +45,7 @@ class CustomDocument extends Document {
             name="apple-mobile-web-app-status-bar-style"
             content="black-translucent"
           />
-          <meta
-            name="apple-mobile-web-app-title"
-            content="Art of Living Journey"
-          />
+          <meta name="apple-mobile-web-app-title" content={orgConfig.title} />
           <link
             href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
             rel="stylesheet"
