@@ -331,10 +331,8 @@ export const Header = () => {
           <a href="https://www.artofliving.org/" className="logo">
             <img
               src={`/img/${orgConfig.logo}`}
-              alt="logo
-            "
-              className="logo__image
-           "
+              alt="logo"
+              className="logo__image"
             />
           </a>
           <nav className="menu">
