@@ -1,5 +1,4 @@
 import { orgConfig } from "./src/organization-config";
-console.log(orgConfig);
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   titleTemplate: `${orgConfig.title} | %s`,

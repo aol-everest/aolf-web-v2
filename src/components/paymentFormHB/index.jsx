@@ -33,7 +33,11 @@ import {
   ALERT_TYPES,
   MODAL_TYPES,
 } from "@constants";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import {
+  useGlobalAlertContext,
+  useGlobalModalContext,
+  useAuth,
+} from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";
 
@@ -76,6 +80,7 @@ export const PaymentFormHB = ({
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
+  const { setUser } = useAuth();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
@@ -105,6 +110,7 @@ export const PaymentFormHB = ({
 
   const logout = async (event) => {
     await Auth.logout();
+    setUser(null);
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );

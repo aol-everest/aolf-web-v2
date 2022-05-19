@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import NumberFormat from "react-number-format";
 import { ABBRS } from "@constants";
+import { useAuth } from "@contexts";
 import { tConvert } from "@utils";
 import Image from "next/image";
 
@@ -74,6 +75,7 @@ export const MeetupPaymentForm = ({
   // } = this.state;
   // const { isCreditCardRequired } = discount || {};
 
+  const { setUser } = useAuth();
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
@@ -91,6 +93,7 @@ export const MeetupPaymentForm = ({
 
   const logout = async (event) => {
     await Auth.logout();
+    setUser(null);
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );

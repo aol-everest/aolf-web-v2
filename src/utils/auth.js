@@ -216,7 +216,7 @@ export const getUserAttributes = (user) => {
 export const logout = async () => {
   const cognitoUser = UserPool.getCurrentUser();
   if (cognitoUser) {
-    cognitoUser.signOut();
+    await cognitoUser.signOut();
   }
 };
 

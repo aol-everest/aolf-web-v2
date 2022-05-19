@@ -31,7 +31,11 @@ import {
   ALERT_TYPES,
   MODAL_TYPES,
 } from "@constants";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import {
+  useGlobalAlertContext,
+  useGlobalModalContext,
+  useAuth,
+} from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";
 
@@ -75,6 +79,7 @@ export const PaymentForm = ({
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const elements = useElements();
+  const { setUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [discount] = useQueryString("discountCode");
@@ -103,6 +108,7 @@ export const PaymentForm = ({
 
   const logout = async (event) => {
     await Auth.logout();
+    setUser(null);
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
