@@ -41,9 +41,7 @@ function Login() {
     if (!router.isReady && authenticated) return;
     const navigateTo = router.query.next || "/";
     if (authenticated) {
-      router.push({
-        pathname: navigateTo,
-      });
+      router.push(navigateTo);
     } else {
       // setLoading(false);
       showModal(MODAL_TYPES.LOGIN_MODAL, {

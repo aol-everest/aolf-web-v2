@@ -89,11 +89,15 @@ export const MeetupPaymentForm = ({
     setPriceType({ priceType: event.currentTarget.value });
   };
 
+  const navigateTo = `/login?next=${location.pathname + location.search}`;
   const logout = async (event) => {
     await Auth.logout();
-    router.push(
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
-    );
+    showModal(MODAL_TYPES.LOGIN_MODAL, {
+      navigateTo,
+      closeModalAction: () => {
+        router.push("/us-en");
+      },
+    });
   };
 
   const applyDiscount = (discount) => {

@@ -12,8 +12,8 @@ import {
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { api, Auth } from "@utils";
 import { Loader } from "@components";
-import { useGlobalAlertContext } from "@contexts";
-import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import { ALERT_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from "@constants";
 
 const createOptions = {
   style: {
@@ -75,6 +75,7 @@ export const MembershipCheckoutStripe = ({
   const [showDetailMobileModal, setShowDetailMobileModal] = useState(false);
   const router = useRouter();
   const { showAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
   const elements = useElements();
   const stripe = useStripe();
 
@@ -252,11 +253,15 @@ export const MembershipCheckoutStripe = ({
     setDiscount(discount);
   };
 
+  const navigateTo = `/login?next=${location.pathname + location.search}`;
   const logout = async (event) => {
     await Auth.logout();
-    router.push(
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
-    );
+    showModal(MODAL_TYPES.LOGIN_MODAL, {
+      navigateTo,
+      closeModalAction: () => {
+        router.push("/us-en");
+      },
+    });
   };
 
   const toggleDetailMobileModal = () => {
