@@ -279,7 +279,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                         )}
                       <div className="col-sm-12">
                         <div>
-                          {isInstalmentPayment && (
+                          {/* {isInstalmentPayment && (
                             <p className={Style.agreementNote}>
                               <Radiobox
                                 name="installment"
@@ -292,7 +292,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                               {workshop.instalmentTenure} months and subscribe
                               to these terms.
                             </p>
-                          )}
+                          )} */}
                           <p className={Style.agreementNote}>
                             <Radiobox
                               name="agreement"
