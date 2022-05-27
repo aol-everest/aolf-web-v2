@@ -260,13 +260,6 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                                   </p>
                                 </>
                               ))}
-                              <p className="alrtCondi !tw-mt-[30px] !tw-font-semibold">
-                                For other support related questions, please
-                                contact us at{" "}
-                                <a href="mailto:app.support@us.artofliving.org">
-                                  app.support@us.artofliving.org
-                                </a>
-                              </p>
                               <p className="alrtCondi tw-mt-4">
                                 For any health related questions, please contact
                                 us at{" "}
