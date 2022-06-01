@@ -260,13 +260,6 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                                   </p>
                                 </>
                               ))}
-                              <p className="alrtCondi !tw-mt-[30px] !tw-font-semibold">
-                                For other support related questions, please
-                                contact us at{" "}
-                                <a href="mailto:app.support@us.artofliving.org">
-                                  app.support@us.artofliving.org
-                                </a>
-                              </p>
                               <p className="alrtCondi tw-mt-4">
                                 For any health related questions, please contact
                                 us at{" "}
@@ -279,7 +272,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                         )}
                       <div className="col-sm-12">
                         <div>
-                          {isInstalmentPayment && (
+                          {/* {isInstalmentPayment && (
                             <p className={Style.agreementNote}>
                               <Radiobox
                                 name="installment"
@@ -292,7 +285,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                               {workshop.instalmentTenure} months and subscribe
                               to these terms.
                             </p>
-                          )}
+                          )} */}
                           <p className={Style.agreementNote}>
                             <Radiobox
                               name="agreement"

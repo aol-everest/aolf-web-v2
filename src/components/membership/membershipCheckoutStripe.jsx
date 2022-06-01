@@ -12,7 +12,7 @@ import {
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { api, Auth } from "@utils";
 import { Loader } from "@components";
-import { useGlobalAlertContext } from "@contexts";
+import { useGlobalAlertContext, useAuth } from "@contexts";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 const createOptions = {
@@ -77,6 +77,7 @@ export const MembershipCheckoutStripe = ({
   const { showAlert } = useGlobalAlertContext();
   const elements = useElements();
   const stripe = useStripe();
+  const { setUser } = useAuth();
 
   const {
     first_name,
@@ -254,6 +255,7 @@ export const MembershipCheckoutStripe = ({
 
   const logout = async (event) => {
     await Auth.logout();
+    setUser(null);
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );

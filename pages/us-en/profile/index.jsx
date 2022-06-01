@@ -90,7 +90,7 @@ const Profile = ({ tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const { user, reloadProfile, authenticated } = useAuth();
+  const { user, setUser, reloadProfile, authenticated } = useAuth();
   const [activeTab, setActiveTab] = useQueryString("tab", {
     defaultValue: tab || UPCOMING_EVENTS,
   });
@@ -152,6 +152,7 @@ const Profile = ({ tab }) => {
     setLoading(true);
     await Auth.logout();
     setLoading(false);
+    setUser(null);
     router.push("/us-en");
   };
 
