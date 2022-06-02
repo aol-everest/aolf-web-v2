@@ -11,7 +11,109 @@ import { orgConfig } from "@org";
 // import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
-const MENU = [
+const HB_MENU = [
+  {
+    name: "Courses",
+    submenu: [
+      {
+        name: "Join A Free Intro",
+        link: "/us-en/lp/introtalks",
+      },
+      {
+        name: "Overview",
+        link: "https://www.artofliving.org/us-en/courses",
+      },
+      {
+        name: "SKY Breath Meditation",
+        link: "/us-en/lp/online-course-2",
+        // link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
+      },
+      {
+        name: "Sahaj Meditation",
+        link: `https://www.artofliving.org/us-en/sahaj-samadhi-meditation`,
+        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
+      },
+      {
+        name: "Silent Retreat",
+        link: "https://www.artofliving.org/us-en/silence-retreat",
+        // link: `/us-en?courseType=SILENT_RETREAT`,
+      },
+      {
+        name: "Healthcare Providers",
+        link: "https://www.healingbreaths.org/",
+      },
+      {
+        name: "Yoga Course",
+        link: "/us-en/lp/online-foundation-program/",
+      },
+      {
+        name: "College Courses",
+        link: "https://www.skycampushappiness.org/",
+      },
+      // {
+      //   name: "Youth Courses",
+      //   link: "https://www.skyforkids.org/",
+      // },
+      {
+        name: "Destination Retreats",
+        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
+      },
+      {
+        name: "All Courses",
+        link: "/us-en/course",
+      },
+    ],
+  },
+  {
+    name: "Services",
+    submenu: [
+      {
+        name: "Institutions",
+        link: "https://healingbreaths.org/institutions/",
+      },
+      {
+        name: "Professionals",
+        link: "https://healingbreaths.org/healthcare-professionals/",
+      },
+    ],
+  },
+  {
+    name: "The Science",
+    link: `https://healingbreaths.org/the-science/`,
+  },
+  {
+    name: "Experiences",
+    link: `https://healingbreaths.org/experiences/`,
+  },
+  {
+    name: "Insights",
+    submenu: [
+      {
+        name: "Stories",
+        link: "https://healingbreaths.org/stories/",
+      },
+      {
+        name: "Infographics and E-books",
+        link: "https://healingbreaths.org/infographics-and-e-books/",
+      },
+    ],
+  },
+  {
+    name: "Who We Are",
+    submenu: [
+      {
+        name: "About Us",
+        link: "https://healingbreaths.org/about-us/",
+      },
+    ],
+  },
+  {
+    name: "News",
+    link: "https://healingbreaths.org/news/",
+  },
+];
+
+const AOL_MENU = [
   {
     name: "Courses",
     submenu: [
@@ -182,6 +284,8 @@ const MENU = [
     ],
   },
 ];
+
+const MENU = orgConfig.name === "AOL" ? AOL_MENU : HB_MENU;
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
