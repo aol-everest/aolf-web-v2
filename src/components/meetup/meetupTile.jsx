@@ -30,7 +30,7 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
     meetupDuration,
     isOnlineMeetup,
   } = data || {};
-  const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");
+  const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, "")} Min`;
   return (
     <div className="col-6 col-lg-3 col-md-4">
       <div
