@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { api } from "@utils";
+import { api, Auth } from "@utils";
 import classNames from "classnames";
 import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
-import { Auth } from "aws-amplify";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -40,7 +39,7 @@ function Token() {
           param: router.query,
         });
         setSuccess(true);
-        await Auth.signOut({ global: true });
+        await Auth.logout({ global: true });
       } catch (ex) {
         const data = ex.response?.data;
         const { message, statusCode, code } = data || {};

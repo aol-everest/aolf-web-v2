@@ -1,6 +1,6 @@
 import Axios from "axios";
 import queryString from "query-string";
-import { Auth } from "aws-amplify";
+import { Auth } from "./auth";
 
 class HTTPError extends Error {
   constructor(message, statusCode, stack = null) {
@@ -25,28 +25,11 @@ const axiosClient = Axios.create({
 
 axiosClient.interceptors.request.use(function (config) {
   return new Promise((resolve, reject) => {
-    Auth.currentSession()
-      .then((session) => {
-        const idTokenExpire = session.getIdToken().getExpiration();
-        const refreshToken = session.getRefreshToken();
-        const currentTimeSeconds = Math.round(+new Date() / 1000);
-        if (idTokenExpire < currentTimeSeconds) {
-          Auth.currentAuthenticatedUser().then((res) => {
-            res.refreshSession(refreshToken, (err, data) => {
-              if (err) {
-                Auth.signOut();
-              } else {
-                config.headers.Authorization =
-                  "Bearer " + data.getIdToken().getJwtToken();
-                resolve(config);
-              }
-            });
-          });
-        } else {
-          config.headers.Authorization =
-            "Bearer " + session.getIdToken().getJwtToken();
-          resolve(config);
-        }
+    Auth.getSession()
+      .then(({ session }) => {
+        const token = session.idToken.jwtToken;
+        config.headers.Authorization = "Bearer " + token;
+        resolve(config);
       })
       .catch(() => {
         // No logged-in user: don't set auth header
@@ -57,7 +40,10 @@ axiosClient.interceptors.request.use(function (config) {
 
 export const api = {
   get: async (config) => {
-    const qs = config.param ? queryString.stringify(config.param) : "";
+    const param = config.param
+      ? { ...config.param, org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME }
+      : null;
+    const qs = param ? queryString.stringify(param) : "";
     try {
       const result = await axiosClient.get(
         SERVER_URL + config.path + "?" + qs,
@@ -78,13 +64,19 @@ export const api = {
   },
 
   getFile: async (config) => {
+    const qs = queryString.stringify({
+      org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
+    });
     try {
-      const result = await axiosClient.get(SERVER_URL + config.path, {
-        headers: {
-          Authorization: `Bearer ${config.token}`,
+      const result = await axiosClient.get(
+        SERVER_URL + config.path + "?" + qs,
+        {
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+          },
+          responseType: "blob",
         },
-        responseType: "blob",
-      });
+      );
       return result.data;
     } catch (error) {
       throw new HTTPError(
@@ -96,9 +88,12 @@ export const api = {
   },
 
   post: async (config) => {
+    const qs = queryString.stringify({
+      org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
+    });
     try {
       const result = await axiosClient.post(
-        SERVER_URL + config.path,
+        SERVER_URL + config.path + "?" + qs,
         config.body,
         {
           headers: {
@@ -117,9 +112,12 @@ export const api = {
   },
 
   postFormData: async (config) => {
+    const qs = queryString.stringify({
+      org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
+    });
     try {
       const result = await axiosClient.post(
-        SERVER_URL + config.path,
+        SERVER_URL + config.path + "?" + qs,
         config.body,
         {
           headers: {

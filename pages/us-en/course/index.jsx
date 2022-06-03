@@ -5,7 +5,6 @@ import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
 import { useUIDSeed } from "react-uid";
-import { withSSRContext } from "aws-amplify";
 import dynamic from "next/dynamic";
 import { useAuth } from "@contexts";
 import {
@@ -59,7 +58,7 @@ const DATE_PICKER_CONFIG = {
   autoApply: true,
 };
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { req } = context;
   let props = {};
   let token = "";
@@ -150,7 +149,7 @@ export const getServerSideProps = async (context) => {
   // }
   // Pass data to the page via props
   return { props };
-};
+}; */
 
 async function queryInstructor({ queryKey: [_, term] }) {
   const response = await api.get({
@@ -164,7 +163,7 @@ async function queryInstructor({ queryKey: [_, term] }) {
 
 const Course = () => {
   const seed = useUIDSeed();
-  const [{ authenticated }] = useAuth();
+  const { authenticated } = useAuth();
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: "ONLINE",
   });
@@ -179,6 +178,7 @@ const Course = () => {
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
   });
+  const [cityFilter, setCityFilter] = useQueryString("city");
   const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
   const [ctypesFilter, setCtypesFilter] = useQueryString("ctypes");
   const [filterStartEndDate, setFilterStartEndDate] =
@@ -324,6 +324,7 @@ const Course = () => {
         timeZoneFilter,
         instructorFilter,
         activeFilterType,
+        cityFilter,
       },
     ],
     async ({ pageParam = 1 }) => {
@@ -387,6 +388,12 @@ const Course = () => {
         param = {
           ...param,
           isPrivateEvent: 1,
+        };
+      }
+      if (cityFilter) {
+        param = {
+          ...param,
+          city: cityFilter,
         };
       }
 

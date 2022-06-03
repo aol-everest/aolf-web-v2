@@ -160,15 +160,64 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
             </li>
           </ul>
           {mode === COURSE_MODES.IN_PERSON.value && (
-            <ul className="course-details__list">
-              <h2 className="course-details__title">Location:</h2>
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
-                {" "}
-                {`${streetAddress1 || ""} ${streetAddress2 || ""}, ${
-                  city || ""
-                }, ${country || ""}`}
-              </li>
-            </ul>
+            <>
+              {!workshop.isLocationEmpty && (
+                <ul className="course-details__list">
+                  <h2 className="course-details__title">Location:</h2>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${
+                      workshop.locationStreet || ""
+                    }, ${workshop.locationCity} ${workshop.locationProvince} ${
+                      workshop.locationPostalCode
+                    } ${workshop.locationCountry}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {workshop.locationStreet && (
+                      <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                        {workshop.locationStreet}
+                      </li>
+                    )}
+                    <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                      {workshop.locationCity || ""}
+                      {", "}
+                      {workshop.locationProvince || ""}{" "}
+                      {workshop.locationPostalCode || ""}
+                    </li>
+                  </a>
+                </ul>
+              )}
+              {workshop.isLocationEmpty && (
+                <ul className="course-details__list">
+                  <h2 className="course-details__title">Location:</h2>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${
+                      workshop.streetAddress1 || ""
+                    },${workshop.streetAddress2 || ""} ${workshop.city} ${
+                      workshop.state
+                    } ${workshop.zip} ${workshop.country}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {workshop.streetAddress1 && (
+                      <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                        {workshop.streetAddress1}
+                      </li>
+                    )}
+                    {workshop.streetAddress2 && (
+                      <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                        {workshop.streetAddress2}
+                      </li>
+                    )}
+                    <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                      {workshop.city || ""}
+                      {", "}
+                      {workshop.state || ""} {workshop.zip || ""}
+                    </li>
+                  </a>
+                </ul>
+              )}
+            </>
           )}
         </div>
       </div>

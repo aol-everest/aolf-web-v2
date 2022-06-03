@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import { Auth } from "aws-amplify";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import {
@@ -11,9 +10,9 @@ import {
   DiscountCodeInput,
 } from "@components/checkout";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { api } from "@utils";
+import { api, Auth } from "@utils";
 import { Loader } from "@components";
-import { useGlobalAlertContext } from "@contexts";
+import { useGlobalAlertContext, useAuth } from "@contexts";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 const createOptions = {
@@ -78,6 +77,7 @@ export const MembershipCheckoutStripe = ({
   const { showAlert } = useGlobalAlertContext();
   const elements = useElements();
   const stripe = useStripe();
+  const { setUser } = useAuth();
 
   const {
     first_name,
@@ -254,7 +254,8 @@ export const MembershipCheckoutStripe = ({
   };
 
   const logout = async (event) => {
-    await Auth.signOut();
+    await Auth.logout();
+    setUser(null);
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
@@ -407,7 +408,7 @@ export const MembershipCheckoutStripe = ({
                     <label htmlFor="ppaAgreement"></label>
                     <p className="agreement__text">
                       I agree to the{" "}
-                      <a href="/us-en/ts-cs" target="_blank">
+                      <a href="/policy/ppa-course" target="_blank">
                         Program Participant agreement including privacy and
                         cancellation policy.
                       </a>
@@ -511,7 +512,7 @@ export const MembershipCheckoutStripe = ({
                   <label htmlFor="ppaAgreement"></label>
                   <p className="agreement__text">
                     I agree to the{" "}
-                    <a href="/us-en/ts-cs" target="_blank">
+                    <a href="/policy/ppa-course" target="_blank">
                       Program Participant agreement including privacy and
                       cancellation policy.
                     </a>

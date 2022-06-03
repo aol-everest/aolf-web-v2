@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/inline-script-id */
 import React, { useEffect, useState } from "react";
-import { Amplify, Auth, Hub, withSSRContext } from "aws-amplify";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { api, Compose, isSSR, Clevertap, Segment } from "@utils";
+import { api, Compose, Auth } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {
   Layout,
@@ -19,7 +18,8 @@ import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { TrackingHeadScript } from "@phntms/next-gtm";
-import TopProgressBar from "@components/topProgressBar";
+import { orgConfig } from "@org";
+// import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
 import "@styles/global.scss";
@@ -28,14 +28,7 @@ import "@styles/style.scss";
 
 import "@styles/old-design/style.scss";
 
-import config from "./../src/aws-exports";
 import SEO from "../next-seo.config";
-
-Amplify.configure({
-  ...config,
-  ssr: true,
-});
-Amplify.Logger.LOG_LEVEL = "DEBUG";
 
 // const renderSnippet = () => {
 //   const opts = {
@@ -52,58 +45,27 @@ Amplify.Logger.LOG_LEVEL = "DEBUG";
 //   return snippet.min(opts);
 // };
 
-function App({ Component, pageProps, userInfo = {} }) {
-  const [user, setUser] = useState(userInfo);
+function App({ Component, pageProps }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
   const [reinstateRequiredSubscription, setReinstateRequiredSubscription] =
     useState(null);
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
   const [isPendingAgreement, setIsPendingAgreement] = useState(false);
+  const queryClient = new QueryClient();
 
   useEffect(() => {
-    Hub.listen("auth", async ({ payload: { event, data } }) => {
-      switch (event) {
-        case "signIn": {
-          try {
-            fetchProfile();
-          } catch (ex) {
-            await Auth.signOut();
-          }
-          break;
-        }
-        case "signOut": {
-          setUser({});
-          Clevertap.logout();
-          Segment.logout();
-        }
-      }
-    });
-
-    if (!isSSR) {
-      Clevertap.initialize();
-    }
     fetchProfile();
   }, []);
 
   const fetchProfile = async () => {
     try {
-      // const user = await Auth.currentAuthenticatedUser();
-      const currentSession = await Auth.currentSession();
-      const token = currentSession.idToken.jwtToken;
-      const res = await api.get({
-        path: "profile",
-        token,
-      });
-      const userInfo = {
-        authenticated: true,
-        username: user.username,
-        profile: res,
-      };
+      const userInfo = await Auth.reFetchProfile();
       setUser(userInfo);
 
       const pendingAgreementRes = await api.get({
         path: "getPendingHealthQuestionAgreement",
-        token,
       });
 
       setIsPendingAgreement(
@@ -121,31 +83,44 @@ function App({ Component, pageProps, userInfo = {} }) {
         setIsReInstateRequired(true);
         setReinstateRequiredSubscription(reinstateRequiredForSubscription);
       }
-
-      // Clevertap.profile({
-      //   Site: {
-      //     Name: userInfo.profile.name, // String
-      //     Identity: userInfo.profile.id, // String or number
-      //     Email: userInfo.profile.email, // Email address of the user
-      //   },
-      // });
-      // Segment.profile(userInfo.profile.id, {
-      //   email: userInfo.profile.email,
-      //   name: userInfo.profile.name,
-      // });
     } catch (ex) {
-      await Auth.signOut();
+      console.log(ex);
+      await Auth.logout();
     }
+    setLoading(false);
   };
 
-  const queryClient = new QueryClient();
+  if (loading) {
+    return (
+      <div className="global-loader-container-full">
+        <div className="global-loader-container-inner">
+          <div className="global-loader-container">
+            <img
+              src={`/img/${orgConfig.logo}`}
+              alt="logo"
+              className="logo__image"
+            />
+          </div>
+          <div className="message">
+            <div className="dot-flashing dot"></div>
+            please wait!
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       {process.env.NEXT_PUBLIC_GTM_ID && (
         <TrackingHeadScript id={process.env.NEXT_PUBLIC_GTM_ID} />
       )}
       <QueryClientProvider client={queryClient}>
-        <AuthProvider userInfo={user} reloadProfile={fetchProfile}>
+        <AuthProvider
+          userInfo={user}
+          setUserInfo={setUser}
+          reloadProfile={fetchProfile}
+          authenticated={!!user}
+        >
           <Compose
             components={[
               GlobalModal,
@@ -164,7 +139,7 @@ function App({ Component, pageProps, userInfo = {} }) {
             >
               <DefaultSeo {...SEO} />
               <UsePagesViews />
-              <TopProgressBar />
+              {/* <TopProgressBar /> */}
               {isReInstateRequired && (
                 <ReInstate subscription={reinstateRequiredSubscription} />
               )}
@@ -179,31 +154,5 @@ function App({ Component, pageProps, userInfo = {} }) {
     </>
   );
 }
-
-// App.getInitialProps = async ({ Component, ctx }) => {
-//   let pageProps = {};
-//   if (Component.getInitialProps) {
-//     pageProps = await Component.getInitialProps(ctx);
-//   }
-//   try {
-//     const { Auth } = await withSSRContext(ctx);
-//     const user = await Auth.currentAuthenticatedUser();
-//     const token = user.signInUserSession.idToken.jwtToken;
-//     const res = await api.get({
-//       path: "profile",
-//       token,
-//     });
-//     const userInfo = {
-//       authenticated: true,
-//       username: user.username,
-//       profile: res,
-//     };
-
-//     return { pageProps, userInfo };
-//   } catch (err) {
-//     console.log(err);
-//     return { pageProps, userInfo: {} };
-//   }
-// };
 
 export default App;

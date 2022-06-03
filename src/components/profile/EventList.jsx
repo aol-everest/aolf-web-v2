@@ -204,7 +204,7 @@ const renderEvent = (workshop) => {
     }
     return (
       <div className="col-6 col-lg-3 col-md-4" key={sfid}>
-        <div className="profile-body__card tw-bg-transparent">
+        <div className="profile-body__card !tw-bg-transparent">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           <div className="profile-body__card-date">
             {`${dayjs.utc(meetupStartDate).format("MMM DD")}, `}

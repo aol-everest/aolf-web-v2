@@ -6,10 +6,8 @@ import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import dayjs from "dayjs";
 import classNames from "classnames";
-import Link from "next/link";
-import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
-import { isEmpty } from "@utils";
+import { isEmpty, Auth } from "@utils";
 import { PayPalButton } from "react-paypal-button-v2";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
@@ -36,7 +34,11 @@ import {
   ALERT_TYPES,
   MODAL_TYPES,
 } from "@constants";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import {
+  useGlobalAlertContext,
+  useGlobalModalContext,
+  useAuth,
+} from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";
 
@@ -79,6 +81,7 @@ export const PaymentFormHB = ({
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
+  const { setUser } = useAuth();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
@@ -107,7 +110,8 @@ export const PaymentFormHB = ({
   }, [programQuestionnaireResult]);
 
   const logout = async (event) => {
-    await Auth.signOut();
+    await Auth.logout();
+    setUser(null);
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
@@ -830,7 +834,7 @@ export const PaymentFormHB = ({
                       isOfflineExpense={isOfflineExpense}
                       workshop={workshop}
                       fee={fee}
-                      delfee={fee}
+                      delfee={delfee}
                       formikProps={formikProps}
                       userSubscriptions={userSubscriptions}
                       openSubscriptionPaywallPage={openSubscriptionPaywallPage}

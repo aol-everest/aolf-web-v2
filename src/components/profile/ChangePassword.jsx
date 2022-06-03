@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Auth } from "aws-amplify";
+import { useAuth } from "@contexts";
+import { Auth } from "@utils";
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -12,7 +14,6 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
     const { password: newPassword, oldPassword } = values;
     setLoading(true);
     try {
-      const user = await Auth.currentAuthenticatedUser();
       await Auth.changePassword(user, oldPassword, newPassword);
       updateCompleteAction({});
       setShowSuccessMessage(true);

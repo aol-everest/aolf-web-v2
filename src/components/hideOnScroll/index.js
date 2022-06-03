@@ -37,7 +37,6 @@ export class HideOn extends React.Component {
 
     let divTopOffset = height ? height || 0 : getOffsetTop(div);
     let divBottomOffset = height ? height || 0 : getOffsetBottom(div);
-    console.log(divTopOffset, divBottomOffset);
 
     if (!height && offset) {
       divTopOffset += offset;

@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
 import { isEmpty } from "@utils";
 import { PayPalButton } from "react-paypal-button-v2";
@@ -21,10 +20,11 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import NumberFormat from "react-number-format";
 import { ABBRS } from "@constants";
+import { useAuth } from "@contexts";
 import { tConvert } from "@utils";
 import Image from "next/image";
 
-import { priceCalculation } from "@utils";
+import { priceCalculation, Auth } from "@utils";
 import { useQueryString } from "@hooks";
 import {
   PAYMENT_MODES,
@@ -75,6 +75,7 @@ export const MeetupPaymentForm = ({
   // } = this.state;
   // const { isCreditCardRequired } = discount || {};
 
+  const { setUser } = useAuth();
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
@@ -91,7 +92,8 @@ export const MeetupPaymentForm = ({
   };
 
   const logout = async (event) => {
-    await Auth.signOut();
+    await Auth.logout();
+    setUser(null);
     router.push(
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
@@ -625,7 +627,7 @@ export const MeetupPaymentForm = ({
                     isOfflineExpense={isOfflineExpense}
                     workshop={meetup}
                     fee={fee}
-                    delfee={fee}
+                    delfee={delfee}
                     formikProps={formikProps}
                     userSubscriptions={userSubscriptions}
                     handlePriceTypeChange={handlePriceTypeChange}
@@ -675,29 +677,33 @@ export const MeetupPaymentForm = ({
                         )}
                         {unitPrice === listPrice && <span>${unitPrice}</span>}
                       </li>
-                      <li>
-                        <span>Digital Member rate:</span>
-                        {memberPrice !== listPrice && (
-                          <span>
-                            <span className="discount">${listPrice}</span> $
-                            {memberPrice}
-                          </span>
-                        )}
-                        {memberPrice === listPrice && (
-                          <span>${memberPrice}</span>
-                        )}
-                      </li>
+                      {mode !== "In Person" && (
+                        <>
+                          <li>
+                            <span>Digital Member rate:</span>
+                            {memberPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {memberPrice}
+                              </span>
+                            )}
+                            {memberPrice === listPrice && (
+                              <span>${memberPrice}</span>
+                            )}
+                          </li>
 
-                      <li className="btn-item">
-                        <button
-                          className="btn-outline"
-                          onClick={openSubscriptionPaywallPage(
-                            MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                          )}
-                        >
-                          Join Digital Membership
-                        </button>
-                      </li>
+                          <li className="btn-item">
+                            <button
+                              className="btn-outline"
+                              onClick={openSubscriptionPaywallPage(
+                                MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                              )}
+                            >
+                              Join Digital Membership
+                            </button>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   )}
 
@@ -835,6 +841,64 @@ export const MeetupPaymentForm = ({
                           </a>
                         </li>
                       </ul>
+                      {meetup.mode === "In Person" && (
+                        <>
+                          {!meetup.isLocationEmpty && (
+                            <ul className="info__list mt-3">
+                              <h2 className="info__title">Location:</h2>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  meetup.locationStreet || ""
+                                }, ${meetup.locationCity} ${
+                                  meetup.locationProvince
+                                } ${meetup.locationPostalCode} ${
+                                  meetup.locationCountry
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {meetup.locationStreet && (
+                                  <li>{meetup.locationStreet}</li>
+                                )}
+                                <li>
+                                  {meetup.locationCity || ""}
+                                  {", "}
+                                  {meetup.locationProvince || ""}{" "}
+                                  {meetup.locationPostalCode || ""}
+                                </li>
+                              </a>
+                            </ul>
+                          )}
+                          {meetup.isLocationEmpty && (
+                            <ul className="info__list mt-3">
+                              <h2 className="info__title">Location:</h2>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  meetup.streetAddress1 || ""
+                                },${meetup.streetAddress2 || ""} ${
+                                  meetup.city
+                                } ${meetup.state} ${meetup.zip} ${
+                                  meetup.country
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {meetup.streetAddress1 && (
+                                  <li>{meetup.streetAddress1}</li>
+                                )}
+                                {meetup.streetAddress2 && (
+                                  <li>{meetup.streetAddress2}</li>
+                                )}
+                                <li>
+                                  {meetup.city || ""}
+                                  {", "}
+                                  {meetup.state || ""} {meetup.zip || ""}
+                                </li>
+                              </a>
+                            </ul>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

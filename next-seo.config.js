@@ -1,22 +1,22 @@
+import { orgConfig } from "./src/organization-config";
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  titleTemplate: "Art of Living Journey | %s",
-  defaultTitle: "Art of Living Journey",
-  description:
-    "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
+  titleTemplate: `${orgConfig.title} | %s`,
+  defaultTitle: orgConfig.title,
+  description: orgConfig.seo.description,
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://members.us.artofliving.org",
-    site_name: "Art of Living Journey",
-    title: "Art of Living Journey",
-    description:
-      "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
+    url: orgConfig.seo.url,
+    site_name: orgConfig.title,
+    title: orgConfig.title,
+    description: orgConfig.seo.description,
     images: [
       {
-        url: "https://www.artofliving.org/sites/www.artofliving.org/files/images/logo/logo-2x-cropped.png",
+        url: orgConfig.seo.image,
         width: 200,
         height: 100,
-        alt: "Art of Living logo",
+        alt: `${orgConfig.title} logo`,
       },
     ],
   },

@@ -5,6 +5,38 @@ import Select from "react-select";
 import { COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 
+const checkBoxQuestion = ({
+  formikProps,
+  field,
+  label,
+  name,
+  id,
+  value,
+  ...props
+}) => {
+  const handleChange = (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      formikProps.setFieldValue(id, "Yes");
+    } else {
+      formikProps.setFieldValue(id, "No");
+    }
+  };
+  return (
+    <input
+      type="checkbox"
+      className="form-check-input"
+      value={value}
+      name={id}
+      id={id}
+      {...field}
+      {...props}
+      checked={field.value === "Yes"}
+      onChange={handleChange}
+    />
+  );
+};
+
 // eslint-disable-next-line react/display-name
 const questionRender = (formikProps) => (question, index) => {
   const {
@@ -170,10 +202,10 @@ const questionRender = (formikProps) => (question, index) => {
             <div>
               <Field
                 class="form-check-input"
-                type="checkbox"
                 name={key}
-                value="Yes"
+                component={checkBoxQuestion}
                 id={key}
+                formikProps={formikProps}
               />
               {question.question && (
                 <label
@@ -313,8 +345,8 @@ export const ProgramQuestionnaire = ({
         return (
           <form onSubmit={formikProps.handleSubmit}>
             <div className={classNames("volonteer-modal _active-modal")}>
-              <div className="volonteer-modal__body">
-                <div className="volonteer-modal__wrapper">
+              <div className="volonteer-modal__body tw-max-h-[682px]">
+                <div className="volonteer-modal__wrapper tw-max-h-[682px]">
                   <button
                     type="button"
                     onClick={closeModalAction}

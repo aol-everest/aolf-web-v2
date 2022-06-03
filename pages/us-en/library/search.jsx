@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { useUIDSeed } from "react-uid";
 import { MeditationTile } from "@components/meditation/meditationTile";
 import "bootstrap-daterangepicker/daterangepicker.css";
-import { withSSRContext } from "aws-amplify";
 import ContentLoader from "react-content-loader";
 import {
   useGlobalAlertContext,
@@ -32,8 +31,11 @@ import {
 } from "@constants";
 import { InfiniteScrollLoader } from "@components/loader";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
+import { useAuth } from "@contexts";
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   let props = {};
   let token = "";
@@ -101,11 +103,10 @@ export const getServerSideProps = async (context) => {
   }
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-const LibrarySearch = ({ meditations, authenticated }) => {
+const LibrarySearch = () => {
   const seed = useUIDSeed();
-  const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
@@ -113,6 +114,8 @@ const LibrarySearch = ({ meditations, authenticated }) => {
   const [topic, setTopic] = useQueryString("topic");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
+  const { user, authenticated } = useAuth();
+  const router = useRouter();
 
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -307,7 +310,6 @@ const LibrarySearch = ({ meditations, authenticated }) => {
           : page.currectPage + 1;
       },
     },
-    { initialData: meditations },
   );
 
   const loadMoreRef = React.useRef();

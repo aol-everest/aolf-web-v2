@@ -60,7 +60,15 @@ function LandingPage() {
       </>
     );
   }
-  return <ErrorPage statusCode={404} />;
+  return (
+    <iframe
+      src={`https://event.us.artofliving.org/us-en/${id}`}
+      width="100%"
+      frameBorder="0"
+      seamless="seamless"
+      className={Style.iframe}
+    ></iframe>
+  );
 }
 
 LandingPage.hideFooter = true;

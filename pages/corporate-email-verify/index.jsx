@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { api } from "@utils";
 import classNames from "classnames";
 import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
-import { Auth } from "aws-amplify";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;

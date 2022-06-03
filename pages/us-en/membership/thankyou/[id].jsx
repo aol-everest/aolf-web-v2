@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { api, tConvert } from "@utils";
-import { withSSRContext } from "aws-amplify";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
@@ -8,10 +7,14 @@ import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
 import { useQuery } from "react-query";
 import { MEMBERSHIP_TYPES, COURSE_TYPES, CONTENT_FOLDER_IDS } from "@constants";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
+import { useAuth } from "@contexts";
+import { withAuth } from "@hoc";
 
 dayjs.extend(utc);
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
   const { id, cid = null } = query;
   let props = {};
@@ -66,9 +69,38 @@ export const getServerSideProps = async (context) => {
 
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-const MembershipThankyou = ({ order, query }) => {
+const MembershipThankyou = () => {
+  const { reloadProfile, authenticated } = useAuth();
+  const router = useRouter();
+  const { id } = router.query;
+  const {
+    data: order,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "getSubscriptionOrderDetails",
+    async () => {
+      const response = await api.get({
+        path: "getSubscriptionOrderDetails",
+        param: {
+          oid: id,
+        },
+      });
+      return response.order;
+    },
+    {
+      refetchOnWindowFocus: false,
+      enabled: router.isReady,
+    },
+  );
+  useEffect(() => {
+    if (!authenticated || !order) return;
+    reloadProfile();
+  }, [authenticated, order]);
+
   const [courseId] = useQueryString("cid");
   const [meetupId] = useQueryString("mid");
   const [page] = useQueryString("page", {
@@ -77,7 +109,6 @@ const MembershipThankyou = ({ order, query }) => {
   const [courseCType] = useQueryString("ctype");
   const { afterBuyMessageBody, afterBuyMessageHeader, subscriptionMasterSfid } =
     order || {};
-  const router = useRouter();
 
   const { data: workshopDetail = [] } = useQuery(
     "workshopDetail",
@@ -112,6 +143,8 @@ const MembershipThankyou = ({ order, query }) => {
       enabled: !!meetupId,
     },
   );
+
+  const courseDetail = courseId ? workshopDetail : meetupDetail;
 
   const searchSilentRetreatsAction = () => {
     router.push({
@@ -153,19 +186,21 @@ const MembershipThankyou = ({ order, query }) => {
   };
 
   const getEventImage = () => {
-    if (workshopDetail.eventType === "Meetup") {
-      switch (workshopDetail.meetupType) {
+    if (courseDetail.eventType === "Meetup") {
+      switch (courseDetail.meetupType) {
         case "Short SKY Meditation Meetup":
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
         case "Guided Meditation Meetup":
-          return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
+          return (
+            <img src="/img/Sahaj_meetup_desktop.png" alt="card" layout="fill" />
+          );
         default:
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
       }
-    } else if (workshopDetail.eventType === "Workshop") {
+    } else if (courseDetail.eventType === "Workshop") {
       if (
         `${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(
-          workshopDetail.productTypeId,
+          courseDetail.productTypeId,
         ) >= 0
       ) {
         return <img src="/img/Silence_desktop.png" alt="card" />;
@@ -179,7 +214,7 @@ const MembershipThankyou = ({ order, query }) => {
       }
       if (
         `${COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value}`.indexOf(
-          workshopDetail.productTypeId,
+          courseDetail.productTypeId,
         ) >= 0
       ) {
         return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
@@ -187,6 +222,9 @@ const MembershipThankyou = ({ order, query }) => {
       return <img src="/img/Silence_desktop.png" alt="card" />;
     }
   };
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const {
     title,
@@ -198,7 +236,7 @@ const MembershipThankyou = ({ order, query }) => {
     primaryTeacherName,
     eventStartDate,
     eventEndDate,
-  } = workshopDetail || {};
+  } = courseDetail || {};
 
   return (
     <main>
@@ -337,23 +375,19 @@ const MembershipThankyou = ({ order, query }) => {
                 )}
                 {meetupId && (
                   <div className="journey-confirmation__image">
-                    {dayjs
-                      .utc(eventStartDate)
-                      .isSame(dayjs.utc(eventEndDate), "month") && (
-                      <span className="journey-confirmation__date">
-                        {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
-                        {`${tConvert(meetupStartTime)}`}
-                      </span>
-                    )}
+                    <span className="journey-confirmation__date">
+                      {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
+                      {`${tConvert(meetupStartTime)}`}
+                    </span>
                     {getEventImage()}
-                    <div className="journey-confirmation__course-detail">
-                      <h4 className="journey-confirmation__course-type">
+                    <div className="journey-confirmation__course-detail ">
+                      <h4 className="journey-confirmation__course-type !tw-text-slate-700">
                         {mode}
                       </h4>
-                      <h2 className="journey-confirmation__course-name">
+                      <h2 className="journey-confirmation__course-name !tw-text-slate-700">
                         {meetupTitle}
                       </h2>
-                      <h3 className="journey-confirmation__course-trainer">
+                      <h3 className="journey-confirmation__course-trainer !tw-text-slate-700">
                         {primaryTeacherName}
                       </h3>
                     </div>
@@ -390,37 +424,48 @@ const MembershipThankyou = ({ order, query }) => {
             </div>
           </div>
           <div className="journey-confirmation_mobile__image">
-            {dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") && (
+            {courseId && (
+              <>
+                {dayjs
+                  .utc(eventStartDate)
+                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  <span className="journey-confirmation_mobile__date">
+                    {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                      .utc(eventEndDate)
+                      .format("DD, YYYY")}`}
+                  </span>
+                )}
+                {!dayjs
+                  .utc(eventStartDate)
+                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  <span className="journey-confirmation_mobile__date">
+                    {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                      .utc(eventEndDate)
+                      .format("MMMM DD, YYYY")}`}
+                  </span>
+                )}
+              </>
+            )}
+            {meetupId && (
               <span className="journey-confirmation_mobile__date">
-                {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                  .utc(eventEndDate)
-                  .format("DD, YYYY")}`}
+                {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
+                {`${tConvert(meetupStartTime)}`}
               </span>
             )}
-            {!dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") && (
-              <span className="journey-confirmation_mobile__date">
-                {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                  .utc(eventEndDate)
-                  .format("MMMM DD, YYYY")}`}
-              </span>
-            )}
+
             {getEventImage()}
             {/* <img
                 src={require('../../assests/images/new_design/journey-card-bg.png')}
                 alt="card"
               /> */}
             <div className="journey-confirmation_mobile__course-detail">
-              <h4 className="journey-confirmation_mobile__course-type">
+              <h4 className="journey-confirmation_mobile__course-type !tw-text-slate-700">
                 {mode}
               </h4>
-              <h2 className="journey-confirmation_mobile__course-name">
+              <h2 className="journey-confirmation_mobile__course-name !tw-text-slate-700">
                 {title}
               </h2>
-              <h3 className="journey-confirmation_mobile__course-trainer">
+              <h3 className="journey-confirmation_mobile__course-trainer !tw-text-slate-700">
                 {primaryTeacherName}
               </h3>
             </div>
@@ -433,4 +478,4 @@ const MembershipThankyou = ({ order, query }) => {
 
 MembershipThankyou.hideHeader = true;
 
-export default MembershipThankyou;
+export default withAuth(MembershipThankyou);

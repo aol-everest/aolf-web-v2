@@ -17,7 +17,7 @@ export const MeetupEnroll = ({
   loading,
   checkoutLoading,
 }) => {
-  const [{ authenticated = false, profile }] = useAuth();
+  const { authenticated = false, user } = useAuth();
   const router = useRouter();
 
   const goToCheckout = (e) => {
@@ -25,6 +25,10 @@ export const MeetupEnroll = ({
     closeDetailAction();
     router.push({
       pathname: `/us-en/membership/${MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value}`,
+      query: {
+        mid: selectedMeetup.sfid,
+        page: "checkout",
+      },
     });
   };
 
@@ -43,7 +47,7 @@ export const MeetupEnroll = ({
   } = selectedMeetup;
 
   // const isMandatoryWorkshopRequired = meetupMandatoryWorkshopId && isLoggedIn;
-  const { subscriptions = [] } = profile;
+  const { subscriptions = [] } = user.profile;
 
   const userSubscriptions =
     subscriptions &&

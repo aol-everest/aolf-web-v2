@@ -1,18 +1,17 @@
 /* eslint-disable react/display-name */
 import React, { useState } from "react";
-import { Collapse, Navbar, NavbarToggler, Nav, NavItem } from "reactstrap";
 import { useRouter } from "next/router";
 import Dropdown from "react-bootstrap/Dropdown";
 import { FiPhone } from "react-icons/fi";
 import classNames from "classnames";
-import { ActiveLink } from "@components";
 import Link from "next/link";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import Style from "./Header.module.scss";
+import { orgConfig } from "@org";
 // import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
-const MENU = [
+const HB_MENU = [
   {
     name: "Courses",
     submenu: [
@@ -58,6 +57,112 @@ const MENU = [
       {
         name: "Destination Retreats",
         link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
+      },
+      {
+        name: "All Courses",
+        link: "/us-en/course",
+      },
+    ],
+  },
+  {
+    name: "Services",
+    submenu: [
+      {
+        name: "Institutions",
+        link: "https://healingbreaths.org/institutions/",
+      },
+      {
+        name: "Professionals",
+        link: "https://healingbreaths.org/healthcare-professionals/",
+      },
+    ],
+  },
+  {
+    name: "The Science",
+    link: `https://healingbreaths.org/the-science/`,
+  },
+  {
+    name: "Experiences",
+    link: `https://healingbreaths.org/experiences/`,
+  },
+  {
+    name: "Insights",
+    submenu: [
+      {
+        name: "Stories",
+        link: "https://healingbreaths.org/stories/",
+      },
+      {
+        name: "Infographics and E-books",
+        link: "https://healingbreaths.org/infographics-and-e-books/",
+      },
+    ],
+  },
+  {
+    name: "Who We Are",
+    submenu: [
+      {
+        name: "About Us",
+        link: "https://healingbreaths.org/about-us/",
+      },
+    ],
+  },
+  {
+    name: "News",
+    link: "https://healingbreaths.org/news/",
+  },
+];
+
+const AOL_MENU = [
+  {
+    name: "Courses",
+    submenu: [
+      {
+        name: "Join A Free Intro",
+        link: "/us-en/lp/introtalks",
+      },
+      {
+        name: "Overview",
+        link: "https://www.artofliving.org/us-en/courses",
+      },
+      {
+        name: "SKY Breath Meditation",
+        link: "/us-en/lp/online-course-2",
+        // link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
+      },
+      {
+        name: "Sahaj Meditation",
+        link: `https://www.artofliving.org/us-en/sahaj-samadhi-meditation`,
+        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
+      },
+      {
+        name: "Silent Retreat",
+        link: "https://www.artofliving.org/us-en/silence-retreat",
+        // link: `/us-en?courseType=SILENT_RETREAT`,
+      },
+      {
+        name: "Healthcare Providers",
+        link: "https://www.healingbreaths.org/",
+      },
+      {
+        name: "Yoga Course",
+        link: "/us-en/lp/online-foundation-program/",
+      },
+      {
+        name: "College Courses",
+        link: "https://www.skycampushappiness.org/",
+      },
+      // {
+      //   name: "Youth Courses",
+      //   link: "https://www.skyforkids.org/",
+      // },
+      {
+        name: "Destination Retreats",
+        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
+      },
+      {
+        name: "All Courses",
+        link: "/us-en/course",
       },
     ],
   },
@@ -169,7 +274,18 @@ const MENU = [
       },
     ],
   },
+  {
+    name: "EVENTS",
+    submenu: [
+      {
+        name: "Gurudev 2022 Tour",
+        link: "/us-en/lp/meet-gurudev2022",
+      },
+    ],
+  },
 ];
+
+const MENU = orgConfig.name === "AOL" ? AOL_MENU : HB_MENU;
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
@@ -214,9 +330,14 @@ const CustomMenu = React.forwardRef(
 
 export const Header = () => {
   const router = useRouter();
-  const [{ authenticated = false, profile }] = useAuth();
+  const { authenticated = false, user } = useAuth();
+
   const { showModal } = useGlobalModalContext();
-  const { userProfilePic: profilePic, first_name, last_name } = profile || {};
+  const {
+    userProfilePic: profilePic,
+    first_name,
+    last_name,
+  } = user?.profile || {};
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
@@ -312,7 +433,11 @@ export const Header = () => {
             />
           </button>
           <a href="https://www.artofliving.org/" className="logo">
-            <img src="/img/ic-logo.svg" alt="logo" className="logo__image" />
+            <img
+              src={`/img/${orgConfig.logo}`}
+              alt="logo"
+              className="logo__image"
+            />
           </a>
           <nav className="menu">
             <ul className="menu__list" id="desktop-menu-content">

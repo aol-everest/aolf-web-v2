@@ -26,18 +26,10 @@ const securityHeaders = [
     key: "strict-transport-security",
     value: "max-age=31536000; includeSubDomains",
   },
-  {
-    key: "Cache-Control",
-    value: "no-cache, no-store, must-revalidate",
-  },
-  {
-    key: "Pragma",
-    value: "no-cache",
-  },
 ];
 
 const moduleExports = {
-  swcMinify: true,
+  swcMinify: false,
   generateEtags: false,
   // basePath: "/us-en",
   // assetPrefix: "/us-en/",
@@ -67,16 +59,16 @@ const moduleExports = {
         source: "/(.*)",
         headers: securityHeaders,
       },
-      // {
-      //   source: "/:all*(svg|jpg|png)",
-      //   locale: false,
-      //   headers: [
-      //     {
-      //       key: "cache-control",
-      //       value: "public, max-age=800 must-revalidate",
-      //     },
-      //   ],
-      // },
+      {
+        source: "/:all*(svg|jpg|png)",
+        locale: false,
+        headers: [
+          {
+            key: "cache-control",
+            value: "public, max-age=800 must-revalidate",
+          },
+        ],
+      },
     ];
   },
 };

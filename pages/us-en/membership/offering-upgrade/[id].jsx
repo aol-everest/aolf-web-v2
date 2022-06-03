@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect } from "react";
-import { withSSRContext } from "aws-amplify";
 import { api, tConvert } from "@utils";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { Elements } from "@stripe/react-stripe-js";
@@ -11,6 +10,10 @@ import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { trackEvent } from "@phntms/react-gtm";
+import { PageLoading } from "@components";
+import ErrorPage from "next/error";
+import { useQuery } from "react-query";
+import { useAuth } from "@contexts";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -39,7 +42,7 @@ const RetreatPrerequisiteWarning = () => {
   );
 };
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const { query, req, res, resolvedUrl } = context;
   const { id, ofid = null, cid = null } = query;
   let props = {};
@@ -100,9 +103,38 @@ export const getServerSideProps = async (context) => {
   }
   // Pass data to the page via props
   return { props };
-};
+}; */
 
-function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
+function OfferingUpgradeCheckout() {
+  const { user, authenticated } = useAuth();
+  const router = useRouter();
+  const { id, ofid, cid } = router.query;
+  const {
+    data: subsciption,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    "subsciption",
+    async () => {
+      const response = await api.get({
+        path: "subsciption",
+        param: {
+          id,
+          system_default: 1,
+          ofid: ofid,
+        },
+      });
+      const [result] = response.data;
+      if (!result) {
+        throw new Error("No subscription found");
+      }
+      return result;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
   const [couponCode] = useQueryString("coupon");
   const [offeringId] = useQueryString("ofid");
   const [courseId] = useQueryString("cid", {
@@ -111,18 +143,10 @@ function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
   const [returnPage] = useQueryString("page", {
     defaultValue: "detail",
   });
-  const { showModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const router = useRouter();
-
-  const [activeSubscription] = subsciption?.activeSubscriptions || [
-    { activeSubscriptions: {} },
-  ];
-
-  const { name, sfid } = subsciption || {};
 
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router.isReady || !subsciption) return;
 
     const products = subsciption?.activeSubscriptions.map(
       (activeSubscription) => ({
@@ -147,7 +171,7 @@ function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
         amount: activeSubscription.price || "",
         requestType: "Detail",
         hitType: "paymentpage",
-        user: profile.id,
+        user: user.profile.id,
         ecommerce: {
           checkout: {
             actionField: {
@@ -161,7 +185,7 @@ function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
 
     if (
       MEMBERSHIP_TYPES.JOURNEY_PLUS.value === sfid &&
-      !profile.isMandatoryWorkshopAttended
+      !user.profile.isMandatoryWorkshopAttended
     ) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big meditation-digital-membership",
@@ -180,7 +204,16 @@ function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
         children: <RetreatPrerequisiteWarning />,
       });
     }
-  }, [router.isReady]);
+  }, [router.isReady, subsciption]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
+
+  const [activeSubscription] = subsciption?.activeSubscriptions || [
+    { activeSubscriptions: {} },
+  ];
+
+  const { name, sfid } = subsciption || {};
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
@@ -227,7 +260,7 @@ function OfferingUpgradeCheckout({ subsciption, authenticated, profile, cid }) {
                 subsciption={subsciption}
                 activeSubscription={activeSubscription}
                 couponCode={couponCode}
-                profile={profile}
+                profile={user.profile}
                 authenticated={authenticated}
                 completeCheckoutCallback={completeCheckoutCallback}
                 closeRetreatPrerequisiteWarning={

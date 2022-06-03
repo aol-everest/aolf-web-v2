@@ -20,7 +20,7 @@ import { HideOn } from "@components";
 import { priceCalculation } from "@utils";
 
 export const HealingBreath = ({ data, swiperOption }) => {
-  const [{ authenticated = false, profile }] = useAuth();
+  const { authenticated = false, user } = useAuth();
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
