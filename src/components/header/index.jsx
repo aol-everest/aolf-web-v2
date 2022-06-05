@@ -14,55 +14,7 @@ import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 const HB_MENU = [
   {
     name: "Courses",
-    submenu: [
-      {
-        name: "Join A Free Intro",
-        link: "/us-en/lp/introtalks",
-      },
-      {
-        name: "Overview",
-        link: "https://www.artofliving.org/us-en/courses",
-      },
-      {
-        name: "SKY Breath Meditation",
-        link: "/us-en/lp/online-course-2",
-        // link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
-      },
-      {
-        name: "Sahaj Meditation",
-        link: `https://www.artofliving.org/us-en/sahaj-samadhi-meditation`,
-        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
-      },
-      {
-        name: "Silent Retreat",
-        link: "https://www.artofliving.org/us-en/silence-retreat",
-        // link: `/us-en?courseType=SILENT_RETREAT`,
-      },
-      {
-        name: "Healthcare Providers",
-        link: "https://www.healingbreaths.org/",
-      },
-      {
-        name: "Yoga Course",
-        link: "/us-en/lp/online-foundation-program/",
-      },
-      {
-        name: "College Courses",
-        link: "https://www.skycampushappiness.org/",
-      },
-      // {
-      //   name: "Youth Courses",
-      //   link: "https://www.skyforkids.org/",
-      // },
-      {
-        name: "Destination Retreats",
-        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
-      },
-      {
-        name: "All Courses",
-        link: "/us-en/course",
-      },
-    ],
+    link: "/us-en/course",
   },
   {
     name: "Services",

@@ -17,6 +17,7 @@ import {
 import { useQueryString } from "@hooks";
 import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
 import ContentLoader from "react-content-loader";
+import { orgConfig } from "@org";
 
 import Style from "./Course.module.scss";
 import "bootstrap-daterangepicker/daterangepicker.css";
@@ -448,15 +449,17 @@ const Course = () => {
     <main className="meetsup-filter">
       <NextSeo title="Workshops" />
       <section className="courses">
-        <div className="container search_course_form d-lg-block d-none mb-2">
-          <div className="row">
-            <div className="col">
-              <p className="title mb-3">Find a course </p>
-            </div>
-          </div>
-          <div className="row">
-            <div className="search-form col-12 d-flex align-items-center">
-              {/* <div id="switch-filter" className="btn_outline_box ml-0">
+        {orgConfig.name !== "HB" && (
+          <>
+            <div className="container search_course_form d-lg-block d-none mb-2">
+              <div className="row">
+                <div className="col">
+                  <p className="title mb-3">Find a course </p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="search-form col-12 d-flex align-items-center">
+                  {/* <div id="switch-filter" className="btn_outline_box ml-0">
                 <a
                   className="btn"
                   href="#"
@@ -476,196 +479,209 @@ const Course = () => {
                   In Person
                 </a>
               </div> */}
-              <div className="switch-flter-container">
-                <Popup
-                  tabIndex="1"
-                  value={activeFilterType}
-                  buttonText={
-                    activeFilterType && COURSE_MODES[activeFilterType]
-                      ? COURSE_MODES[activeFilterType].name
-                      : "Course Format"
-                  }
-                  closeEvent={onFilterChange("activeFilterType")}
-                >
-                  {({ closeHandler }) => (
-                    <>
-                      <li onClick={closeHandler("ONLINE")}>
-                        {COURSE_MODES.ONLINE.name}
-                      </li>
-                      <li onClick={closeHandler("IN_PERSON")}>
-                        {COURSE_MODES.IN_PERSON.name}
-                      </li>
-                      <li onClick={closeHandler("DESTINATION_RETREATS")}>
-                        {COURSE_MODES.DESTINATION_RETREATS.name}
-                      </li>
-                    </>
-                  )}
-                </Popup>
-                {activeFilterType === "IN_PERSON" && (
-                  <Popup
-                    tabIndex="2"
-                    value={locationFilter}
-                    buttonText={
-                      locationFilter
-                        ? `${locationFilter.loactionName}`
-                        : "Location"
-                    }
-                    closeEvent={onFilterChange("locationFilter")}
-                  >
-                    {({ closeHandler }) => (
-                      <AddressSearch
-                        closeHandler={closeHandler}
-                        placeholder="Search for Location"
-                      />
+                  <div className="switch-flter-container">
+                    <Popup
+                      tabIndex="1"
+                      value={activeFilterType}
+                      buttonText={
+                        activeFilterType && COURSE_MODES[activeFilterType]
+                          ? COURSE_MODES[activeFilterType].name
+                          : "Course Format"
+                      }
+                      closeEvent={onFilterChange("activeFilterType")}
+                    >
+                      {({ closeHandler }) => (
+                        <>
+                          <li onClick={closeHandler("ONLINE")}>
+                            {COURSE_MODES.ONLINE.name}
+                          </li>
+                          <li onClick={closeHandler("IN_PERSON")}>
+                            {COURSE_MODES.IN_PERSON.name}
+                          </li>
+                          <li onClick={closeHandler("DESTINATION_RETREATS")}>
+                            {COURSE_MODES.DESTINATION_RETREATS.name}
+                          </li>
+                        </>
+                      )}
+                    </Popup>
+                    {activeFilterType === "IN_PERSON" && (
+                      <Popup
+                        tabIndex="2"
+                        value={locationFilter}
+                        buttonText={
+                          locationFilter
+                            ? `${locationFilter.loactionName}`
+                            : "Location"
+                        }
+                        closeEvent={onFilterChange("locationFilter")}
+                      >
+                        {({ closeHandler }) => (
+                          <AddressSearch
+                            closeHandler={closeHandler}
+                            placeholder="Search for Location"
+                          />
+                        )}
+                      </Popup>
                     )}
-                  </Popup>
-                )}
 
-                <Popup
-                  tabIndex="3"
-                  value={courseTypeFilter}
-                  buttonText={
-                    courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                      ? COURSE_TYPES[courseTypeFilter].name
-                      : "Course Type"
-                  }
-                  closeEvent={onFilterChange("courseTypeFilter")}
-                >
-                  {({ closeHandler }) => (
-                    <>
-                      {otherCType && (
+                    <Popup
+                      tabIndex="3"
+                      value={courseTypeFilter}
+                      buttonText={
+                        courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                          ? COURSE_TYPES[courseTypeFilter].name
+                          : "Course Type"
+                      }
+                      closeEvent={onFilterChange("courseTypeFilter")}
+                    >
+                      {({ closeHandler }) => (
                         <>
-                          <li onClick={closeHandler("CHAKRA_KRIYA")}>
-                            {COURSE_TYPES.CHAKRA_KRIYA.name}
+                          {otherCType && (
+                            <>
+                              <li onClick={closeHandler("CHAKRA_KRIYA")}>
+                                {COURSE_TYPES.CHAKRA_KRIYA.name}
+                              </li>
+                              <li
+                                onClick={closeHandler(
+                                  "VOLUNTEER_TRAINING_PROGRAM",
+                                )}
+                              >
+                                {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
+                              </li>
+                            </>
+                          )}
+                          {!otherCType && (
+                            <>
+                              <li
+                                onClick={closeHandler("SKY_BREATH_MEDITATION")}
+                              >
+                                {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                              </li>
+                              <li onClick={closeHandler("SILENT_RETREAT")}>
+                                {COURSE_TYPES.SILENT_RETREAT.name}
+                              </li>
+                              <li
+                                onClick={closeHandler(
+                                  "SAHAJ_SAMADHI_MEDITATION",
+                                )}
+                              >
+                                {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+                              </li>
+                              <li
+                                onClick={closeHandler(
+                                  "SRI_SRI_YOGA_MEDITATION",
+                                )}
+                              >
+                                {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
+                              </li>
+                            </>
+                          )}
+                        </>
+                      )}
+                    </Popup>
+                    <Popup
+                      containerClassName={Style.daterangepickerPopup}
+                      tabIndex="3"
+                      value={filterStartEndDate}
+                      buttonText={
+                        filterStartEndDate
+                          ? filterStartEndDate.split("|").join(" - ")
+                          : "Dates"
+                      }
+                      closeEvent={onDatesChange}
+                    >
+                      {({ closeHandler }) => (
+                        <LinkedCalendar
+                          {...DATE_PICKER_CONFIG}
+                          noFooter
+                          noInfo
+                          noCancel
+                          onDatesChange={closeHandler}
+                          className={Style.daterangepicker}
+                        />
+                      )}
+                    </Popup>
+                    <Popup
+                      tabIndex="4"
+                      value={timeZoneFilter}
+                      buttonText={
+                        timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                          ? TIME_ZONE[timeZoneFilter].name
+                          : "Time Zone"
+                      }
+                      closeEvent={onFilterChange("timeZoneFilter")}
+                    >
+                      {({ closeHandler }) => (
+                        <>
+                          <li onClick={closeHandler(TIME_ZONE.EST.value)}>
+                            {TIME_ZONE.EST.name}
                           </li>
-                          <li
-                            onClick={closeHandler("VOLUNTEER_TRAINING_PROGRAM")}
-                          >
-                            {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
+                          <li onClick={closeHandler(TIME_ZONE.CST.value)}>
+                            {TIME_ZONE.CST.name}
+                          </li>
+                          <li onClick={closeHandler(TIME_ZONE.MST.value)}>
+                            {TIME_ZONE.MST.name}
+                          </li>
+                          <li onClick={closeHandler(TIME_ZONE.PST.value)}>
+                            {TIME_ZONE.PST.name}
+                          </li>
+                          <li onClick={closeHandler(TIME_ZONE.HST.value)}>
+                            {TIME_ZONE.HST.name}
                           </li>
                         </>
                       )}
-                      {!otherCType && (
-                        <>
-                          <li onClick={closeHandler("SKY_BREATH_MEDITATION")}>
-                            {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                          </li>
-                          <li onClick={closeHandler("SILENT_RETREAT")}>
-                            {COURSE_TYPES.SILENT_RETREAT.name}
-                          </li>
-                          <li
-                            onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
-                          >
-                            {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                          </li>
-                          <li onClick={closeHandler("SRI_SRI_YOGA_MEDITATION")}>
-                            {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
-                          </li>
-                        </>
-                      )}
-                    </>
-                  )}
-                </Popup>
-                <Popup
-                  containerClassName={Style.daterangepickerPopup}
-                  tabIndex="3"
-                  value={filterStartEndDate}
-                  buttonText={
-                    filterStartEndDate
-                      ? filterStartEndDate.split("|").join(" - ")
-                      : "Dates"
-                  }
-                  closeEvent={onDatesChange}
-                >
-                  {({ closeHandler }) => (
-                    <LinkedCalendar
-                      {...DATE_PICKER_CONFIG}
-                      noFooter
-                      noInfo
-                      noCancel
-                      onDatesChange={closeHandler}
-                      className={Style.daterangepicker}
-                    />
-                  )}
-                </Popup>
-                <Popup
-                  tabIndex="4"
-                  value={timeZoneFilter}
-                  buttonText={
-                    timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                      ? TIME_ZONE[timeZoneFilter].name
-                      : "Time Zone"
-                  }
-                  closeEvent={onFilterChange("timeZoneFilter")}
-                >
-                  {({ closeHandler }) => (
-                    <>
-                      <li onClick={closeHandler(TIME_ZONE.EST.value)}>
-                        {TIME_ZONE.EST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.CST.value)}>
-                        {TIME_ZONE.CST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.MST.value)}>
-                        {TIME_ZONE.MST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.PST.value)}>
-                        {TIME_ZONE.PST.name}
-                      </li>
-                      <li onClick={closeHandler(TIME_ZONE.HST.value)}>
-                        {TIME_ZONE.HST.name}
-                      </li>
-                    </>
-                  )}
-                </Popup>
+                    </Popup>
 
-                <Popup
-                  tabIndex="5"
-                  value={instructorFilter ? instructorFilter.label : null}
-                  buttonText={
-                    instructorFilter ? instructorFilter.label : "Instructor"
-                  }
-                  closeEvent={onFilterChange("instructorFilter")}
-                >
-                  {({ closeHandler }) => (
-                    <SmartInput
-                      inputclassName={Style.instructor_input}
-                      onSearchKeyChange={(value) => setSearchKey(value)}
-                      dataList={instructorList}
-                      closeHandler={closeHandler}
-                      value={searchKey}
-                    ></SmartInput>
-                  )}
-                </Popup>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="search_course_form_mobile d-lg-none d-block">
-          <div className="container">
-            <div className="row m-0 justify-content-between align-items-center">
-              <p className="title mb-0">Find a course</p>
-              <div className="filter">
-                <div className="filter--button d-flex" onClick={toggleFilter}>
-                  <img src="/img/ic-filter.svg" alt="filter" />
-                  Filter
-                  <span
-                    id="filter-count"
-                    className={classNames({
-                      "filter-count--show": filterCount > 0,
-                    })}
-                  >
-                    {filterCount}
-                  </span>
+                    <Popup
+                      tabIndex="5"
+                      value={instructorFilter ? instructorFilter.label : null}
+                      buttonText={
+                        instructorFilter ? instructorFilter.label : "Instructor"
+                      }
+                      closeEvent={onFilterChange("instructorFilter")}
+                    >
+                      {({ closeHandler }) => (
+                        <SmartInput
+                          inputclassName={Style.instructor_input}
+                          onSearchKeyChange={(value) => setSearchKey(value)}
+                          dataList={instructorList}
+                          closeHandler={closeHandler}
+                          value={searchKey}
+                        ></SmartInput>
+                      )}
+                    </Popup>
+                  </div>
                 </div>
               </div>
             </div>
-            <div
-              className={classNames("filter--box", {
-                "d-none": !showFilterModal,
-              })}
-            >
-              {/* <div
+            <div className="search_course_form_mobile d-lg-none d-block">
+              <div className="container">
+                <div className="row m-0 justify-content-between align-items-center">
+                  <p className="title mb-0">Find a course</p>
+                  <div className="filter">
+                    <div
+                      className="filter--button d-flex"
+                      onClick={toggleFilter}
+                    >
+                      <img src="/img/ic-filter.svg" alt="filter" />
+                      Filter
+                      <span
+                        id="filter-count"
+                        className={classNames({
+                          "filter-count--show": filterCount > 0,
+                        })}
+                      >
+                        {filterCount}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={classNames("filter--box", {
+                    "d-none": !showFilterModal,
+                  })}
+                >
+                  {/* <div
                 id="switch-mobile-filter"
                 className="btn_outline_box full-btn mt-3"
               >
@@ -689,227 +705,233 @@ const Course = () => {
                 </a>
               </div> */}
 
-              <MobileFilterModal
-                modalTitle="Course Type"
-                buttonText={
-                  activeFilterType && COURSE_MODES[activeFilterType]
-                    ? COURSE_MODES[activeFilterType].name
-                    : "Course Format"
-                }
-                clearEvent={onFilterClearEvent("activeFilterType")}
-              >
-                <div className="dropdown">
-                  <SmartDropDown
-                    value={activeFilterType}
+                  <MobileFilterModal
+                    modalTitle="Course Type"
                     buttonText={
                       activeFilterType && COURSE_MODES[activeFilterType]
                         ? COURSE_MODES[activeFilterType].name
-                        : "Select Course Format"
+                        : "Course Format"
                     }
-                    closeEvent={onFilterChange("activeFilterType")}
+                    clearEvent={onFilterClearEvent("activeFilterType")}
                   >
-                    {({ closeHandler }) => (
-                      <>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("ONLINE")}
-                        >
-                          {COURSE_MODES.ONLINE.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("IN_PERSON")}
-                        >
-                          {COURSE_MODES.IN_PERSON.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler("DESTINATION_RETREATS")}
-                        >
-                          {COURSE_MODES.DESTINATION_RETREATS.name}
-                        </li>
-                      </>
-                    )}
-                  </SmartDropDown>
-                </div>
-              </MobileFilterModal>
+                    <div className="dropdown">
+                      <SmartDropDown
+                        value={activeFilterType}
+                        buttonText={
+                          activeFilterType && COURSE_MODES[activeFilterType]
+                            ? COURSE_MODES[activeFilterType].name
+                            : "Select Course Format"
+                        }
+                        closeEvent={onFilterChange("activeFilterType")}
+                      >
+                        {({ closeHandler }) => (
+                          <>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("ONLINE")}
+                            >
+                              {COURSE_MODES.ONLINE.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("IN_PERSON")}
+                            >
+                              {COURSE_MODES.IN_PERSON.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler("DESTINATION_RETREATS")}
+                            >
+                              {COURSE_MODES.DESTINATION_RETREATS.name}
+                            </li>
+                          </>
+                        )}
+                      </SmartDropDown>
+                    </div>
+                  </MobileFilterModal>
 
-              <MobileFilterModal
-                modalTitle="Course Type"
-                buttonText={
-                  courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                    ? COURSE_TYPES[courseTypeFilter].name
-                    : "Course Type"
-                }
-                clearEvent={onFilterClearEvent("courseTypeFilter")}
-              >
-                <div className="dropdown">
-                  <SmartDropDown
-                    value={courseTypeFilter}
+                  <MobileFilterModal
+                    modalTitle="Course Type"
                     buttonText={
                       courseTypeFilter && COURSE_TYPES[courseTypeFilter]
                         ? COURSE_TYPES[courseTypeFilter].name
-                        : "Select Course"
+                        : "Course Type"
                     }
-                    closeEvent={onFilterChange("courseTypeFilter")}
+                    clearEvent={onFilterClearEvent("courseTypeFilter")}
                   >
-                    {({ closeHandler }) => (
-                      <>
-                        {otherCType && (
+                    <div className="dropdown">
+                      <SmartDropDown
+                        value={courseTypeFilter}
+                        buttonText={
+                          courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                            ? COURSE_TYPES[courseTypeFilter].name
+                            : "Select Course"
+                        }
+                        closeEvent={onFilterChange("courseTypeFilter")}
+                      >
+                        {({ closeHandler }) => (
                           <>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("CHAKRA_KRIYA")}
-                            >
-                              {COURSE_TYPES.CHAKRA_KRIYA.name}
-                            </li>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler(
-                                "VOLUNTEER_TRAINING_PROGRAM",
-                              )}
-                            >
-                              {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
-                            </li>
+                            {otherCType && (
+                              <>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler("CHAKRA_KRIYA")}
+                                >
+                                  {COURSE_TYPES.CHAKRA_KRIYA.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(
+                                    "VOLUNTEER_TRAINING_PROGRAM",
+                                  )}
+                                >
+                                  {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
+                                </li>
+                              </>
+                            )}
+                            {!otherCType && (
+                              <>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(
+                                    "SKY_BREATH_MEDITATION",
+                                  )}
+                                >
+                                  {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler("SILENT_RETREAT")}
+                                >
+                                  {COURSE_TYPES.SILENT_RETREAT.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(
+                                    "SAHAJ_SAMADHI_MEDITATION",
+                                  )}
+                                >
+                                  {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler("Sri Sri Yoga")}
+                                >
+                                  {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
+                                </li>
+                              </>
+                            )}
                           </>
                         )}
-                        {!otherCType && (
-                          <>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("SKY_BREATH_MEDITATION")}
-                            >
-                              {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                            </li>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("SILENT_RETREAT")}
-                            >
-                              {COURSE_TYPES.SILENT_RETREAT.name}
-                            </li>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("SAHAJ_SAMADHI_MEDITATION")}
-                            >
-                              {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                            </li>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("Sri Sri Yoga")}
-                            >
-                              {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
-                            </li>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </SmartDropDown>
-                </div>
-              </MobileFilterModal>
+                      </SmartDropDown>
+                    </div>
+                  </MobileFilterModal>
 
-              <MobileFilterModal
-                modalTitle="Dates"
-                buttonText={
-                  filterStartEndDate
-                    ? filterStartEndDate.split("|").join(" - ")
-                    : "Dates"
-                }
-                clearEvent={onDatesChange}
-              >
-                <DateRangeInput
-                  value={filterStartEndDate}
-                  buttonText={
-                    filterStartEndDate
-                      ? filterStartEndDate.split("|").join(" - ")
-                      : "Select Dates"
-                  }
-                  closeEvent={onDatesChange}
-                >
-                  {({ closeHandler }) => (
-                    <LinkedCalendar
-                      {...DATE_PICKER_CONFIG}
-                      onDatesChange={closeHandler}
-                    />
-                  )}
-                </DateRangeInput>
-              </MobileFilterModal>
+                  <MobileFilterModal
+                    modalTitle="Dates"
+                    buttonText={
+                      filterStartEndDate
+                        ? filterStartEndDate.split("|").join(" - ")
+                        : "Dates"
+                    }
+                    clearEvent={onDatesChange}
+                  >
+                    <DateRangeInput
+                      value={filterStartEndDate}
+                      buttonText={
+                        filterStartEndDate
+                          ? filterStartEndDate.split("|").join(" - ")
+                          : "Select Dates"
+                      }
+                      closeEvent={onDatesChange}
+                    >
+                      {({ closeHandler }) => (
+                        <LinkedCalendar
+                          {...DATE_PICKER_CONFIG}
+                          onDatesChange={closeHandler}
+                        />
+                      )}
+                    </DateRangeInput>
+                  </MobileFilterModal>
 
-              <MobileFilterModal
-                modalTitle="Time"
-                buttonText={
-                  timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                    ? TIME_ZONE[timeZoneFilter].name
-                    : "Timezone"
-                }
-                clearEvent={onFilterClearEvent("timeZoneFilter")}
-              >
-                <div className="dropdown">
-                  <SmartDropDown
-                    value={timeZoneFilter}
+                  <MobileFilterModal
+                    modalTitle="Time"
                     buttonText={
                       timeZoneFilter && TIME_ZONE[timeZoneFilter]
                         ? TIME_ZONE[timeZoneFilter].name
-                        : "Select Timezone"
+                        : "Timezone"
                     }
-                    closeEvent={onFilterChange("timeZoneFilter")}
+                    clearEvent={onFilterClearEvent("timeZoneFilter")}
                   >
-                    {({ closeHandler }) => (
-                      <>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.EST.value)}
-                        >
-                          {TIME_ZONE.EST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.CST.value)}
-                        >
-                          {TIME_ZONE.CST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.MST.value)}
-                        >
-                          {TIME_ZONE.MST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.PST.value)}
-                        >
-                          {TIME_ZONE.PST.name}
-                        </li>
-                        <li
-                          className="dropdown-item"
-                          onClick={closeHandler(TIME_ZONE.HST.value)}
-                        >
-                          {TIME_ZONE.HST.name}
-                        </li>
-                      </>
-                    )}
-                  </SmartDropDown>
-                </div>
-              </MobileFilterModal>
+                    <div className="dropdown">
+                      <SmartDropDown
+                        value={timeZoneFilter}
+                        buttonText={
+                          timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                            ? TIME_ZONE[timeZoneFilter].name
+                            : "Select Timezone"
+                        }
+                        closeEvent={onFilterChange("timeZoneFilter")}
+                      >
+                        {({ closeHandler }) => (
+                          <>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.EST.value)}
+                            >
+                              {TIME_ZONE.EST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.CST.value)}
+                            >
+                              {TIME_ZONE.CST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.MST.value)}
+                            >
+                              {TIME_ZONE.MST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.PST.value)}
+                            >
+                              {TIME_ZONE.PST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.HST.value)}
+                            >
+                              {TIME_ZONE.HST.name}
+                            </li>
+                          </>
+                        )}
+                      </SmartDropDown>
+                    </div>
+                  </MobileFilterModal>
 
-              <MobileFilterModal
-                modalTitle="Instructor"
-                buttonText={
-                  instructorFilter ? instructorFilter.label : "Instructor"
-                }
-                clearEvent={onFilterClearEvent("instructorFilter")}
-              >
-                <SmartInput
-                  containerClassName="smart-input-mobile"
-                  placeholder="Search Instructor"
-                  value={searchKey}
-                  onSearchKeyChange={(value) => setSearchKey(value)}
-                  dataList={instructorList}
-                  closeHandler={onFilterChangeEvent("instructorFilter")}
-                ></SmartInput>
-              </MobileFilterModal>
+                  <MobileFilterModal
+                    modalTitle="Instructor"
+                    buttonText={
+                      instructorFilter ? instructorFilter.label : "Instructor"
+                    }
+                    clearEvent={onFilterClearEvent("instructorFilter")}
+                  >
+                    <SmartInput
+                      containerClassName="smart-input-mobile"
+                      placeholder="Search Instructor"
+                      value={searchKey}
+                      onSearchKeyChange={(value) => setSearchKey(value)}
+                      dataList={instructorList}
+                      closeHandler={onFilterChangeEvent("instructorFilter")}
+                    ></SmartInput>
+                  </MobileFilterModal>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
         <div className="container upcoming_course">
           <div className="row">
             <div className="col-12">
