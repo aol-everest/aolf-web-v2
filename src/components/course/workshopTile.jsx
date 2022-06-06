@@ -49,7 +49,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0 ||
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0 ||
+    COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
 
   const detailAction = (workshopId, productTypeId) => () => {
     if (isKnownWorkshop) {
