@@ -329,25 +329,25 @@ const MembershipThankyou = () => {
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value && (
                       <>
-                        <div class="congratulations__info_bottom">
+                        <div className="congratulations__info_bottom">
                           <button
                             onClick={handleiOSAppClick}
-                            class="app-button congratulations-button"
+                            className="app-button congratulations-button"
                           >
                             <img
                               src="/img/ic-ios.png"
                               alt="Available on the AppStore"
-                              class="app-button__image"
+                              className="app-button__image"
                             />
                           </button>
                           <button
                             onClick={handleAndroidAppClick}
-                            class="app-button congratulations-button"
+                            className="app-button congratulations-button"
                           >
                             <img
                               src="/img/ic-gplay.png"
                               alt="Available on the AppStore"
-                              class="app-button__image"
+                              className="app-button__image"
                             />
                           </button>
                           {meetupId && (
