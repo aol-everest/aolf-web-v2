@@ -1,5 +1,13 @@
+@media screen and (max-width: 991px) {
+  .congratulations {
+    height: calc(100vh - 51px - 66px);
+  }
+}
+
 @media screen and (max-width: 768px) {
   .congratulations {
+    height: calc(100vh - 51px - 83px);
+
     &__title {
       font-size: 24px;
       margin-bottom: 20px;
@@ -12,6 +20,13 @@
         padding: 40px 21px;
       }
     }
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .congratulations {
+    height: auto;
+    padding: 60px 0 120px;
   }
 }
 

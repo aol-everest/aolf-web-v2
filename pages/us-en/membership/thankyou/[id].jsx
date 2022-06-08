@@ -223,6 +223,20 @@ const MembershipThankyou = () => {
     }
   };
 
+  const handleiOSAppClick = () => {
+    window.open(
+      "https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1",
+      "_blank",
+    );
+  };
+
+  const handleAndroidAppClick = () => {
+    window.open(
+      "https://play.google.com/store/apps/details?id=com.aol.app",
+      "_blank",
+    );
+  };
+
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
@@ -283,7 +297,14 @@ const MembershipThankyou = () => {
                       automatically redirected, please click the button below.
                     </p>
                   )}
-                  <div className="journey-confirmation__info_bottom">
+                  <div
+                    className={
+                      subscriptionMasterSfid ===
+                      MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value
+                        ? ""
+                        : "journey-confirmation__info_bottom"
+                    }
+                  >
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.JOURNEY_PLUS.value && (
                       <>
@@ -308,22 +329,44 @@ const MembershipThankyou = () => {
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value && (
                       <>
-                        {meetupId && (
+                        <div class="congratulations__info_bottom">
                           <button
-                            className="btn-secondary v2"
-                            onClick={finishRegistrationAction}
+                            onClick={handleiOSAppClick}
+                            class="app-button congratulations-button"
                           >
-                            Finish Registration
+                            <img
+                              src="/img/ic-ios.png"
+                              alt="Available on the AppStore"
+                              class="app-button__image"
+                            />
                           </button>
-                        )}
-                        {!meetupId && (
+                          <button
+                            onClick={handleAndroidAppClick}
+                            class="app-button congratulations-button"
+                          >
+                            <img
+                              src="/img/ic-gplay.png"
+                              alt="Available on the AppStore"
+                              class="app-button__image"
+                            />
+                          </button>
+                          {meetupId && (
+                            <button
+                              className="btn-secondary v2"
+                              onClick={finishRegistrationAction}
+                            >
+                              Finish Registration
+                            </button>
+                          )}
+                        </div>
+                        {/* {!meetupId && (
                           <button
                             className="btn-secondary v2"
                             onClick={exploreMeditationsAction}
                           >
                             Explore Meditations
                           </button>
-                        )}
+                        )} */}
                       </>
                     )}
                     {subscriptionMasterSfid !==
