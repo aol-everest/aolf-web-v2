@@ -252,13 +252,21 @@ const MembershipThankyou = () => {
     eventEndDate,
   } = courseDetail || {};
 
+  const isDigitalMembership =
+    subscriptionMasterSfid === MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value;
+
   return (
     <main>
       <section
-        className={classNames("journey-confirmation", {
-          "journey-confirmation_v2": courseId === null && meetupId === null,
-          "journey-confirmation_v1": !!courseId || !!meetupId,
-        })}
+        className={
+          isDigitalMembership
+            ? "congratulations"
+            : classNames("journey-confirmation", {
+                "journey-confirmation_v2":
+                  courseId === null && meetupId === null,
+                "journey-confirmation_v1": !!courseId || !!meetupId,
+              })
+        }
       >
         <div className="container">
           <div className="row">
@@ -275,23 +283,51 @@ const MembershipThankyou = () => {
                   dangerouslySetInnerHTML={{ __html: afterBuyMessageHeader }}
                 ></h1>
               )}
-              <div className="journey-confirmation__card mx-auto">
-                <div className="journey-confirmation__info">
+              <div
+                className={
+                  isDigitalMembership
+                    ? "congratulations__card mx-auto"
+                    : "journey-confirmation__card mx-auto"
+                }
+              >
+                <div
+                  className={
+                    isDigitalMembership
+                      ? "congratulations__info"
+                      : "journey-confirmation__info"
+                  }
+                >
                   {!courseId && !meetupId && afterBuyMessageBody && (
                     <p
-                      className="journey-confirmation__info-text"
+                      className={
+                        isDigitalMembership
+                          ? "congratulations__info-text congratulations__info-text_left"
+                          : "journey-confirmation__info-text"
+                      }
                       dangerouslySetInnerHTML={{ __html: afterBuyMessageBody }}
                     ></p>
                   )}
                   {courseId && (
-                    <p className="journey-confirmation__info-text">
+                    <p
+                      className={
+                        isDigitalMembership
+                          ? "congratulations__info-text congratulations__info-text_left"
+                          : "journey-confirmation__info-text"
+                      }
+                    >
                       You’re just one step away from completing your{" "}
                       {workshopDetail.title} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
                   )}
                   {meetupId && (
-                    <p className="journey-confirmation__info-text">
+                    <p
+                      className={
+                        isDigitalMembership
+                          ? "congratulations__info-text congratulations__info-text_left"
+                          : "journey-confirmation__info-text"
+                      }
+                    >
                       You’re just one step away from completing your{" "}
                       {workshopDetail.meetupTitle} registration. If you are not
                       automatically redirected, please click the button below.
@@ -299,9 +335,8 @@ const MembershipThankyou = () => {
                   )}
                   <div
                     className={
-                      subscriptionMasterSfid ===
-                      MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value
-                        ? ""
+                      isDigitalMembership
+                        ? "congratulations__info_bottom"
                         : "journey-confirmation__info_bottom"
                     }
                   >
@@ -329,36 +364,34 @@ const MembershipThankyou = () => {
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value && (
                       <>
-                        <div className="congratulations__info_bottom">
+                        <button
+                          onClick={handleiOSAppClick}
+                          class="app-button congratulations-button"
+                        >
+                          <img
+                            src="/img/ic-ios.png"
+                            alt="Available on the AppStore"
+                            class="app-button__image"
+                          />
+                        </button>
+                        <button
+                          onClick={handleAndroidAppClick}
+                          class="app-button congratulations-button"
+                        >
+                          <img
+                            src="/img/ic-gplay.png"
+                            alt="Available on the AppStore"
+                            class="app-button__image"
+                          />
+                        </button>
+                        {meetupId && (
                           <button
-                            onClick={handleiOSAppClick}
-                            className="app-button congratulations-button"
+                            className="btn-secondary v2"
+                            onClick={finishRegistrationAction}
                           >
-                            <img
-                              src="/img/ic-ios.png"
-                              alt="Available on the AppStore"
-                              className="app-button__image"
-                            />
+                            Finish Registration
                           </button>
-                          <button
-                            onClick={handleAndroidAppClick}
-                            className="app-button congratulations-button"
-                          >
-                            <img
-                              src="/img/ic-gplay.png"
-                              alt="Available on the AppStore"
-                              className="app-button__image"
-                            />
-                          </button>
-                          {meetupId && (
-                            <button
-                              className="btn-secondary v2"
-                              onClick={finishRegistrationAction}
-                            >
-                              Finish Registration
-                            </button>
-                          )}
-                        </div>
+                        )}
                         {/* {!meetupId && (
                           <button
                             className="btn-secondary v2"
