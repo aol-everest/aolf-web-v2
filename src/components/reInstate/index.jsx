@@ -40,15 +40,13 @@ export const ReInstateModal = ({ subscription }) => {
         {!isSuccess && (
           <>
             {!enableEditCC && (
-              <>
-                <span>
-                  Your membership has become delinquent, please{" "}
-                  <a href="#" onClick={enableEditCCAction}>
-                    click here
-                  </a>{" "}
-                  to update you cc information and reinstate your membership.
-                </span>
-              </>
+              <span>
+                Your membership has become delinquent, please{" "}
+                <a href="#" onClick={enableEditCCAction}>
+                  click here
+                </a>{" "}
+                to update you cc information and reinstate your membership.
+              </span>
             )}
             {error && (
               <div className="error-block">
@@ -81,12 +79,10 @@ export const ReInstateModal = ({ subscription }) => {
           </>
         )}
         {isSuccess && (
-          <>
-            <div>
-              You will be charged ${amount} for missing payment and your
-              membership has been reinstated.
-            </div>
-          </>
+          <div>
+            You will be charged ${amount} for missing payment and your
+            membership has been reinstated.
+          </div>
         )}
       </div>
     </>
