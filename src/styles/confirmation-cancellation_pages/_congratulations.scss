@@ -1,7 +1,7 @@
 .congratulations {
   background-image: url("/img/journey-confirmation-bg.png");
   background-size: cover;
-  height: calc(100vh - 72px - 65px);
+  height: calc(100vh - 75px - 66px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,7 +33,7 @@
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
-      line-height: 1.5;
+      line-height: 27px;
       letter-spacing: normal;
       color: #31364e;
       text-align: center;
@@ -41,6 +41,14 @@
 
       span {
         font-weight: 600;
+      }
+
+      p:not(:last-child) {
+        margin-bottom: 27px;
+      }
+
+      &_left {
+        text-align: left;
       }
     }
 
@@ -56,8 +64,11 @@
     }
 
     &_bottom {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 32px;
       padding: 30px 40px;
-      text-align: center;
       background-color: rgba(237, 153, 78, 0.1);
     }
   }

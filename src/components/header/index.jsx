@@ -11,7 +11,61 @@ import { orgConfig } from "@org";
 // import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
-const MENU = [
+const HB_MENU = [
+  {
+    name: "Courses",
+    link: "/us-en/course",
+  },
+  {
+    name: "Services",
+    submenu: [
+      {
+        name: "Institutions",
+        link: "https://healingbreaths.org/institutions/",
+      },
+      {
+        name: "Professionals",
+        link: "https://healingbreaths.org/healthcare-professionals/",
+      },
+    ],
+  },
+  {
+    name: "The Science",
+    link: `https://healingbreaths.org/the-science/`,
+  },
+  {
+    name: "Experiences",
+    link: `https://healingbreaths.org/experiences/`,
+  },
+  {
+    name: "Insights",
+    submenu: [
+      {
+        name: "Stories",
+        link: "https://healingbreaths.org/stories/",
+      },
+      {
+        name: "Infographics and E-books",
+        link: "https://healingbreaths.org/infographics-and-e-books/",
+      },
+    ],
+  },
+  {
+    name: "Who We Are",
+    submenu: [
+      {
+        name: "About Us",
+        link: "https://healingbreaths.org/about-us/",
+      },
+    ],
+  },
+  {
+    name: "News",
+    link: "https://healingbreaths.org/news/",
+  },
+];
+
+const AOL_MENU = [
   {
     name: "Courses",
     submenu: [
@@ -182,6 +236,8 @@ const MENU = [
     ],
   },
 ];
+
+const MENU = orgConfig.name === "AOL" ? AOL_MENU : HB_MENU;
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a

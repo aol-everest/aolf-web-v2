@@ -223,6 +223,20 @@ const MembershipThankyou = () => {
     }
   };
 
+  const handleiOSAppClick = () => {
+    window.open(
+      "https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1",
+      "_blank",
+    );
+  };
+
+  const handleAndroidAppClick = () => {
+    window.open(
+      "https://play.google.com/store/apps/details?id=com.aol.app",
+      "_blank",
+    );
+  };
+
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
@@ -238,13 +252,21 @@ const MembershipThankyou = () => {
     eventEndDate,
   } = courseDetail || {};
 
+  const isDigitalMembership =
+    subscriptionMasterSfid === MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value;
+
   return (
     <main>
       <section
-        className={classNames("journey-confirmation", {
-          "journey-confirmation_v2": courseId === null && meetupId === null,
-          "journey-confirmation_v1": !!courseId || !!meetupId,
-        })}
+        className={
+          isDigitalMembership
+            ? "congratulations"
+            : classNames("journey-confirmation", {
+                "journey-confirmation_v2":
+                  courseId === null && meetupId === null,
+                "journey-confirmation_v1": !!courseId || !!meetupId,
+              })
+        }
       >
         <div className="container">
           <div className="row">
@@ -261,29 +283,63 @@ const MembershipThankyou = () => {
                   dangerouslySetInnerHTML={{ __html: afterBuyMessageHeader }}
                 ></h1>
               )}
-              <div className="journey-confirmation__card mx-auto">
-                <div className="journey-confirmation__info">
+              <div
+                className={
+                  isDigitalMembership
+                    ? "congratulations__card mx-auto"
+                    : "journey-confirmation__card mx-auto"
+                }
+              >
+                <div
+                  className={
+                    isDigitalMembership
+                      ? "congratulations__info"
+                      : "journey-confirmation__info"
+                  }
+                >
                   {!courseId && !meetupId && afterBuyMessageBody && (
                     <p
-                      className="journey-confirmation__info-text"
+                      className={
+                        isDigitalMembership
+                          ? "congratulations__info-text congratulations__info-text_left"
+                          : "journey-confirmation__info-text"
+                      }
                       dangerouslySetInnerHTML={{ __html: afterBuyMessageBody }}
                     ></p>
                   )}
                   {courseId && (
-                    <p className="journey-confirmation__info-text">
+                    <p
+                      className={
+                        isDigitalMembership
+                          ? "congratulations__info-text congratulations__info-text_left"
+                          : "journey-confirmation__info-text"
+                      }
+                    >
                       You’re just one step away from completing your{" "}
                       {workshopDetail.title} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
                   )}
                   {meetupId && (
-                    <p className="journey-confirmation__info-text">
+                    <p
+                      className={
+                        isDigitalMembership
+                          ? "congratulations__info-text congratulations__info-text_left"
+                          : "journey-confirmation__info-text"
+                      }
+                    >
                       You’re just one step away from completing your{" "}
                       {workshopDetail.meetupTitle} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
                   )}
-                  <div className="journey-confirmation__info_bottom">
+                  <div
+                    className={
+                      isDigitalMembership
+                        ? "congratulations__info_bottom"
+                        : "journey-confirmation__info_bottom"
+                    }
+                  >
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.JOURNEY_PLUS.value && (
                       <>
@@ -308,6 +364,26 @@ const MembershipThankyou = () => {
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value && (
                       <>
+                        <button
+                          onClick={handleiOSAppClick}
+                          className="app-button congratulations-button"
+                        >
+                          <img
+                            src="/img/ic-ios.png"
+                            alt="Available on the AppStore"
+                            className="app-button__image"
+                          />
+                        </button>
+                        <button
+                          onClick={handleAndroidAppClick}
+                          className="app-button congratulations-button"
+                        >
+                          <img
+                            src="/img/ic-gplay.png"
+                            alt="Available on the AppStore"
+                            className="app-button__image"
+                          />
+                        </button>
                         {meetupId && (
                           <button
                             className="btn-secondary v2"
@@ -316,14 +392,14 @@ const MembershipThankyou = () => {
                             Finish Registration
                           </button>
                         )}
-                        {!meetupId && (
+                        {/* {!meetupId && (
                           <button
                             className="btn-secondary v2"
                             onClick={exploreMeditationsAction}
                           >
                             Explore Meditations
                           </button>
-                        )}
+                        )} */}
                       </>
                     )}
                     {subscriptionMasterSfid !==

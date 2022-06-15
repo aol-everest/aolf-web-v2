@@ -303,12 +303,10 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
       </div>
       {notes && (
         <div className="course-details__footer">
-          {notes && (
-            <div className="course-details__additional word-wrap">
-              Additional Notes:{" "}
-              <span dangerouslySetInnerHTML={{ __html: notes }}></span>
-            </div>
-          )}
+          <div className="course-details__additional word-wrap">
+            Additional Notes:{" "}
+            <span dangerouslySetInnerHTML={{ __html: notes }}></span>
+          </div>
         </div>
       )}
     </div>
