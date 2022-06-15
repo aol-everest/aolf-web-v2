@@ -97,55 +97,56 @@ export const LoginModal = () => {
         const userInfo = await Auth.reFetchProfile();
         setUser(userInfo);
 
-      if (isStudent) {
-        await api.post({
-          path: "verify-email",
-          body: {
-            email: username,
-          },
-        });
-        setShowSuccessMessage(true);
-        setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
-        setTimeout(() => {
+        if (isStudent) {
+          await api.post({
+            path: "verify-email",
+            body: {
+              email: username,
+            },
+          });
+          setShowSuccessMessage(true);
+          setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
+          setTimeout(() => {
+            setLoading(false);
+            setShowSuccessMessage(false);
+            setSuccessMessage(null);
+            hideModal();
+            if (navigateTo) {
+              return router.push(navigateTo);
+            } else {
+              router.reload(window.location.pathname);
+            }
+          }, 3000);
+        } else {
           setLoading(false);
-          setShowSuccessMessage(false);
-          setSuccessMessage(null);
           hideModal();
           if (navigateTo) {
             return router.push(navigateTo);
           } else {
             router.reload(window.location.pathname);
           }
-        }, 3000);
-      } else {
-        setLoading(false);
-        hideModal();
-        if (navigateTo) {
-          return router.push(navigateTo);
-        } else {
-          router.reload(window.location.pathname);
         }
-      }
-      // const user = await Auth.signIn(username, password);
-      // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-      //   setCurrentUser(user);
-      //   setMode(NEW_PASSWORD_REQUEST);
-      //   setLoading(false);
-      // } else {
-      //   const token = user.signInUserSession.idToken.jwtToken;
-      //   await api.get({
-      //     path: "profile",
-      //     token,
-      //   });
+        // const user = await Auth.signIn(username, password);
+        // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
+        //   setCurrentUser(user);
+        //   setMode(NEW_PASSWORD_REQUEST);
+        //   setLoading(false);
+        // } else {
+        //   const token = user.signInUserSession.idToken.jwtToken;
+        //   await api.get({
+        //     path: "profile",
+        //     token,
+        //   });
 
-      //   setLoading(false);
-      //   hideModal();
-      //   if (navigateTo) {
-      //     return router.push(navigateTo);
-      //   } else {
-      //     router.reload(window.location.pathname);
-      //   }
-      // }
+        //   setLoading(false);
+        //   hideModal();
+        //   if (navigateTo) {
+        //     return router.push(navigateTo);
+        //   } else {
+        //     router.reload(window.location.pathname);
+        //   }
+        // }
+      }
     } catch (ex) {
       // await Auth.signOut();
       const data = ex.response?.data;
