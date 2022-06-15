@@ -22,6 +22,8 @@ const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 const MESSAGE_SIGNUP_SUCCESS = "Sign up completed successfully.";
 const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
   "A verification code has been emailed to you. Please use the verification code and reset your password.";
+const MESSAGE_EMAIL_VERIFICATION_SUCCESS =
+  "A verification link has been emailed to you. Please use the link to verify your student email.";
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -73,7 +75,13 @@ export const LoginModal = () => {
     return message;
   };
 
-  const signIn = async ({ username, password }) => {
+  const validateStudentEmail = (email) => {
+    const regex = new RegExp("[a-z0-9]+@[a-z]+.edu$");
+    const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+    return isStudentEmail;
+  };
+
+  const signIn = async ({ username, password, isStudent = false }) => {
     setLoading(true);
     setShowMessage(false);
     try {
@@ -89,6 +97,27 @@ export const LoginModal = () => {
         const userInfo = await Auth.reFetchProfile();
         setUser(userInfo);
 
+      if (isStudent) {
+        await api.post({
+          path: "verify-email",
+          body: {
+            email: username,
+          },
+        });
+        setShowSuccessMessage(true);
+        setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
+        setTimeout(() => {
+          setLoading(false);
+          setShowSuccessMessage(false);
+          setSuccessMessage(null);
+          hideModal();
+          if (navigateTo) {
+            return router.push(navigateTo);
+          } else {
+            router.reload(window.location.pathname);
+          }
+        }, 3000);
+      } else {
         setLoading(false);
         hideModal();
         if (navigateTo) {
@@ -171,7 +200,8 @@ export const LoginModal = () => {
     setShowMessage(false);
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
-      await signIn({ username, password });
+      const isStudent = validateStudentEmail(username);
+      await signIn({ username, password, isStudent });
     } catch (ex) {
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
