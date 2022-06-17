@@ -14,6 +14,7 @@ import { api, Auth } from "@utils";
 import { Loader } from "@components";
 import { useGlobalAlertContext, useAuth } from "@contexts";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import Link from "next/link";
 
 const createOptions = {
   style: {
@@ -408,10 +409,10 @@ export const MembershipCheckoutStripe = ({
                     <label htmlFor="ppaAgreement"></label>
                     <p className="agreement__text">
                       I agree to the{" "}
-                      <a href="/policy/ppa-course" target="_blank">
+                      <Link href="/policy/ppa-course" target="_blank">
                         Program Participant agreement including privacy and
                         cancellation policy.
-                      </a>
+                      </Link>
                     </p>
                   </div>
                   {formikProps.errors.ppaAgreement &&
@@ -512,10 +513,10 @@ export const MembershipCheckoutStripe = ({
                   <label htmlFor="ppaAgreement"></label>
                   <p className="agreement__text">
                     I agree to the{" "}
-                    <a href="/policy/ppa-course" target="_blank">
+                    <Link href="/policy/ppa-course" target="_blank">
                       Program Participant agreement including privacy and
                       cancellation policy.
-                    </a>
+                    </Link>
                   </p>
                 </div>
                 {formikProps.errors.ppaAgreement &&
