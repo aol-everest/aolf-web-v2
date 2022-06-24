@@ -3,10 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import dayjs from "dayjs";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { isEmpty, Auth } from "@utils";
 import { PayPalButton } from "react-paypal-button-v2";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -529,12 +527,6 @@ export const PaymentForm = ({
     }
   };
 
-  const validateStudentEmail = (email) => {
-    const regex = new RegExp("[a-z0-9]+@[a-z]+.edu$");
-    const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
-    return isStudentEmail;
-  };
-
   const {
     id: productId,
     premiumRate = {},
@@ -581,9 +573,6 @@ export const PaymentForm = ({
     personMailingStreet,
     isRegisteredStripeCustomer,
     cardLast4Digit,
-    isStudentVerified,
-    studentVerificationDate,
-    studentVerificationExpiryDate,
   } = profile;
   const questionnaire = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -633,13 +622,6 @@ export const PaymentForm = ({
       UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
     }
   }
-
-  const showVerifyStudentStatus =
-    validateStudentEmail(email) &&
-    (!isStudentVerified ||
-      (isStudentVerified &&
-        dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
-        dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
   const toggleDetailMobileModal = (isRegularPrice) => () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
@@ -977,17 +959,6 @@ export const PaymentForm = ({
                       showCouponCodeField={showCouponCodeField}
                     />
                   </div>
-                  {showVerifyStudentStatus && (
-                    <p className="tw-text-base tw-mt-8">
-                      <Link
-                        prefetch={false}
-                        href={"/us-en/profile?tab=UPDATE_PROFILE"}
-                      >
-                        <a rel="noreferrer">Verify Student Status</a>
-                      </Link>
-                      {" to get student rates."}
-                    </p>
-                  )}
                   <AgreementForm
                     formikProps={formikProps}
                     complianceQuestionnaire={complianceQuestionnaire}

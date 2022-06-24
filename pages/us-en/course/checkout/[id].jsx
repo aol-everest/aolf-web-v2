@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import dayjs from "dayjs";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { PaymentForm, PaymentFormHB, PaymentFormGeneric } from "@components";
@@ -8,9 +9,13 @@ import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
 import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
-import { useGlobalAlertContext } from "@contexts";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { trackEvent } from "@phntms/react-gtm";
-import { COURSE_TYPES } from "@constants";
+import {
+  COURSE_TYPES,
+  MODAL_TYPES,
+  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
+} from "@constants";
 import { withAuth } from "@hoc";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
@@ -52,6 +57,12 @@ const RetreatPrerequisiteWarning = ({
   );
 };
 
+const validateStudentEmail = (email) => {
+  const regex = new RegExp("[a-z0-9]+@[a-z]+.edu$");
+  const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+  return isStudentEmail;
+};
+
 const Checkout = () => {
   const router = useRouter();
   const { user } = useAuth();
@@ -81,7 +92,9 @@ const Checkout = () => {
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
   const { showAlert, hideAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user || !workshop) return;
@@ -245,9 +258,63 @@ const Checkout = () => {
     );
   };
 
+  const {
+    email,
+    isStudentVerified,
+    studentVerificationDate,
+    studentVerificationExpiryDate,
+  } = user.profile;
+
+  const handleVerifyStudentEmail = async () => {
+    setLoading(true);
+    try {
+      await api.post({
+        path: "verify-email",
+        body: {
+          email: email,
+        },
+      });
+    } catch (ex) {
+      console.log(ex);
+    }
+    setLoading(false);
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      title: "Verification code sent.",
+      children: (handleModalToggle) => (
+        <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
+          <div className=" modal-dialog modal-dialog-centered active">
+            <div className="modal-content">
+              <h2 className="modal-content-title !tw-text-2xl">
+                {MESSAGE_EMAIL_VERIFICATION_SUCCESS}
+              </h2>
+
+              <p className="tw-flex tw-justify-center">
+                <a
+                  href="#"
+                  className="tw-mt-6 btn btn-lg btn-primary"
+                  onClick={handleModalToggle}
+                >
+                  Close
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    });
+  };
+
+  const showVerifyStudentStatus =
+    validateStudentEmail(email) &&
+    (!isStudentVerified ||
+      (isStudentVerified &&
+        dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
+        dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
+
   return (
     <>
       <NextSeo title={workshop.title} />
+      {loading && <div className="cover-spin"></div>}
       <main>
         {showTopMessage && (
           <aside className="tw-relative tw-whitespace-normal tw-text-center">
@@ -256,6 +323,22 @@ const Checkout = () => {
               Register soon. Course fee will go up by $
               {workshop.earlyBirdFeeIncreasing.increasingFee} on{" "}
               {workshop.earlyBirdFeeIncreasing.increasingBy}
+            </span>
+          </aside>
+        )}
+        {showVerifyStudentStatus && (
+          <aside className="tw-relative tw-whitespace-normal tw-text-center">
+            <span>
+              We notice that you might be a student. Please{" "}
+              <a
+                className="tw-text-blue-900"
+                onClick={handleVerifyStudentEmail}
+                rel="noreferrer"
+              >
+                {" "}
+                verify your student status{" "}
+              </a>
+              to get discounted Student rates.
             </span>
           </aside>
         )}

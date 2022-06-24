@@ -7,7 +7,11 @@ import dayjs from "dayjs";
 import { api } from "@utils";
 import { FaRegEdit, FaCheckCircle } from "react-icons/fa";
 import { useGlobalModalContext } from "@contexts";
-import { MODAL_TYPES, US_STATES } from "@constants";
+import {
+  MODAL_TYPES,
+  US_STATES,
+  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
+} from "@constants";
 import { StyledInput, Dropdown } from "@components/checkout";
 import { ChangeEmail } from "@components/profile";
 import Style from "./ChangeProfile.module.scss";
@@ -28,9 +32,6 @@ const phoneNumberMask = [
   /\d/,
   /\d/,
 ];
-
-const MESSAGE_EMAIL_VERIFICATION_SUCCESS =
-  "A verification link has been emailed to you. Please use the link to verify your student email.";
 
 export const ChangeProfile = ({
   isMobile,

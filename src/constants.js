@@ -398,3 +398,6 @@ export const US_STATES = [
     value: "Other",
   },
 ];
+
+export const MESSAGE_EMAIL_VERIFICATION_SUCCESS =
+  "A verification link has been emailed to you. Please use the link to verify your student email.";
