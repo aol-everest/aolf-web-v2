@@ -12,6 +12,7 @@ import {
 } from "./../loginForm";
 import { api, Auth } from "@utils";
 import { useAuth } from "@contexts";
+import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";
@@ -22,8 +23,6 @@ const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 const MESSAGE_SIGNUP_SUCCESS = "Sign up completed successfully.";
 const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
   "A verification code has been emailed to you. Please use the verification code and reset your password.";
-const MESSAGE_EMAIL_VERIFICATION_SUCCESS =
-  "A verification link has been emailed to you. Please use the link to verify your student email.";
 
 const encodeFormData = (data) => {
   return Object.keys(data)
