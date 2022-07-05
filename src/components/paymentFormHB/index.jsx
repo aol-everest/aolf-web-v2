@@ -567,7 +567,9 @@ export const PaymentFormHB = ({
           accommodation: isAccommodationRequired
             ? Yup.object().required("Room & Board is required!")
             : Yup.mixed().notRequired(),
-          paymentMode: Yup.string().required("Payment mode is required!"),
+          paymentMode: isCCNotRequired
+            ? Yup.mixed().notRequired()
+            : Yup.string().required("Payment mode is required!"),
           contactTitle: Yup.string().required("Title is required"),
           contactHealthcareOrganisation: Yup.string().required(
             "Healthcare Organisation is required",
