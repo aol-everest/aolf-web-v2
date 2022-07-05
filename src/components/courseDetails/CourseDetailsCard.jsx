@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
 import NumberFormat from "react-number-format";
-import { ABBRS } from "@constants";
+import { ABBRS, COURSE_MODES } from "@constants";
 import { Popup } from "@components";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import { tConvert } from "@utils";
@@ -273,6 +273,71 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
             <a href={`mailto:${email}`}>{email}</a>
           </li>
         </ul>
+
+        {mode === COURSE_MODES.IN_PERSON.value && (
+          <>
+            {!workshop.isLocationEmpty && (
+              <ul className="course-details__list">
+                <div className="course-details__list__title">
+                  <h6>Location:</h6>
+                </div>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${
+                    workshop.locationStreet || ""
+                  }, ${workshop.locationCity} ${workshop.locationProvince} ${
+                    workshop.locationPostalCode
+                  } ${workshop.locationCountry}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {workshop.locationStreet && (
+                    <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                      {workshop.locationStreet}
+                    </li>
+                  )}
+                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                    {workshop.locationCity || ""}
+                    {", "}
+                    {workshop.locationProvince || ""}{" "}
+                    {workshop.locationPostalCode || ""}
+                  </li>
+                </a>
+              </ul>
+            )}
+            {workshop.isLocationEmpty && (
+              <ul className="course-details__list">
+                <div className="course-details__list__title">
+                  <h6>Location:</h6>
+                </div>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${
+                    workshop.streetAddress1 || ""
+                  },${workshop.streetAddress2 || ""} ${workshop.city} ${
+                    workshop.state
+                  } ${workshop.zip} ${workshop.country}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {workshop.streetAddress1 && (
+                    <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                      {workshop.streetAddress1}
+                    </li>
+                  )}
+                  {workshop.streetAddress2 && (
+                    <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                      {workshop.streetAddress2}
+                    </li>
+                  )}
+                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                    {workshop.city || ""}
+                    {", "}
+                    {workshop.state || ""} {workshop.zip || ""}
+                  </li>
+                </a>
+              </ul>
+            )}
+          </>
+        )}
 
         {productTypeId == 22119 && (
           <ul className="course-details__list">
