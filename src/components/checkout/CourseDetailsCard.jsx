@@ -162,8 +162,8 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
           {mode === COURSE_MODES.IN_PERSON.value && (
             <>
               {!workshop.isLocationEmpty && (
-                <ul className="course-details__list">
-                  <h2 className="course-details__title">Location:</h2>
+                <ul className="info__list mt-3">
+                  <h2 className="info__title">Location:</h2>
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${
                       workshop.locationStreet || ""
@@ -188,8 +188,8 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 </ul>
               )}
               {workshop.isLocationEmpty && (
-                <ul className="course-details__list">
-                  <h2 className="course-details__title">Location:</h2>
+                <ul className="info__list mt-3">
+                  <h2 className="info__title">Location:</h2>
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${
                       workshop.streetAddress1 || ""
