@@ -716,7 +716,9 @@ export const PaymentForm = ({
           accommodation: isAccommodationRequired
             ? Yup.object().required("Room & Board is required!")
             : Yup.mixed().notRequired(),
-          paymentMode: Yup.string().required("Payment mode is required!"),
+          paymentMode: isCCNotRequired
+            ? Yup.mixed().notRequired()
+            : Yup.string().required("Payment mode is required!"),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
