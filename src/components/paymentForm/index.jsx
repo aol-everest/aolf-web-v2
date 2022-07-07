@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { isEmpty, Auth } from "@utils";
-import { PayPalButton } from "react-paypal-button-v2";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
   BillingInfoForm,
@@ -904,7 +904,40 @@ export const PaymentForm = ({
                         data-method="paypal"
                       >
                         <div className="paypal-info__sign-in tw-relative tw-z-0">
-                          <PayPalButton
+                          <PayPalScriptProvider
+                            options={{
+                              "client-id":
+                                process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                            }}
+                          >
+                            <PayPalButtons
+                              style={{
+                                layout: "horizontal",
+                                color: "blue",
+                                shape: "pill",
+                                height: 40,
+                                tagline: false,
+                                label: "pay",
+                              }}
+                              onClick={async (data, actions) => {
+                                await formikProps.validateForm();
+                                formikProps.setTouched({
+                                  ...formikProps.touched,
+                                  ...formikProps.errors,
+                                });
+                                if (!formikProps.isValid) {
+                                  return false;
+                                }
+                              }}
+                              createOrder={async (data, actions) => {
+                                return await createPaypalOrder(
+                                  formikProps.values,
+                                );
+                              }}
+                              onApprove={paypalBuyAcknowledgement}
+                            />
+                          </PayPalScriptProvider>
+                          {/* <PayPalButton
                             options={{
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
@@ -933,7 +966,7 @@ export const PaymentForm = ({
                               );
                             }}
                             onApprove={paypalBuyAcknowledgement}
-                          />
+                          /> */}
                         </div>
                         <div className="paypal-info__sign-out d-none">
                           <button
