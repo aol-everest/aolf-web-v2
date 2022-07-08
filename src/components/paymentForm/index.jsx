@@ -669,6 +669,35 @@ export const PaymentForm = ({
     setShowCouponCodeField((showCouponCodeField) => !showCouponCodeField);
   };
 
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+    contactPhone: Yup.string()
+      .required("Phone is required")
+      .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })
+      .min(10, "Phone is invalid")
+      .max(18, "Phone is invalid"),
+    contactAddress: Yup.string().required("Address is required"),
+    contactState: Yup.string().required("State is required"),
+    contactZip: Yup.string()
+      .required("Zip is required!")
+      //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+      .min(2, "Zip is invalid")
+      .max(10, "Zip is invalid"),
+    ppaAgreement: Yup.boolean()
+      .label("Terms")
+      .test(
+        "is-true",
+        "Please check the box in order to continue.",
+        (value) => value === true,
+      ),
+    accommodation: isAccommodationRequired
+      ? Yup.object().required("Room & Board is required!")
+      : Yup.mixed().notRequired(),
+    paymentMode: isCCNotRequired
+      ? Yup.mixed().notRequired()
+      : Yup.string().required("Payment mode is required!"),
+  });
   return (
     <>
       <Formik
@@ -691,42 +720,13 @@ export const PaymentForm = ({
           accommodation: null,
           priceType: "regular",
         }}
-        validationSchema={Yup.object().shape({
-          firstName: Yup.string().required("First Name is required"),
-          lastName: Yup.string().required("Last Name is required"),
-          contactPhone: Yup.string()
-            .required("Phone is required")
-            .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })
-            .min(10, "Phone is invalid")
-            .max(18, "Phone is invalid"),
-          contactAddress: Yup.string().required("Address is required"),
-          contactState: Yup.string().required("State is required"),
-          contactZip: Yup.string()
-            .required("Zip is required!")
-            //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-            .min(2, "Zip is invalid")
-            .max(10, "Zip is invalid"),
-          ppaAgreement: Yup.boolean()
-            .label("Terms")
-            .test(
-              "is-true",
-              "Please check the box in order to continue.",
-              (value) => value === true,
-            ),
-          accommodation: isAccommodationRequired
-            ? Yup.object().required("Room & Board is required!")
-            : Yup.mixed().notRequired(),
-          paymentMode: isCCNotRequired
-            ? Yup.mixed().notRequired()
-            : Yup.string().required("Payment mode is required!"),
-        })}
+        validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
         }}
       >
         {(formikProps) => {
           const { values, handleSubmit } = formikProps;
-
           const addOnFee = addOnProducts.reduce(
             (
               previousValue,
@@ -908,6 +908,8 @@ export const PaymentForm = ({
                             options={{
                               "client-id":
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                              debug: true,
+                              currency: "USD",
                             }}
                           >
                             <PayPalButtons
@@ -920,12 +922,14 @@ export const PaymentForm = ({
                                 label: "pay",
                               }}
                               onClick={async (data, actions) => {
-                                await formikProps.validateForm();
+                                const formErrors =
+                                  await formikProps.validateForm();
+
                                 formikProps.setTouched({
                                   ...formikProps.touched,
                                   ...formikProps.errors,
                                 });
-                                if (!formikProps.isValid) {
+                                if (JSON.stringify(formErrors) !== "{}") {
                                   return false;
                                 }
                               }}
