@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { isEmpty, Auth } from "@utils";
-import { PayPalButton } from "react-paypal-button-v2";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
   BillingInfoForm,
@@ -135,7 +135,176 @@ export const PaymentFormHB = ({
     setIsChangingCard((isChangingCard) => !isChangingCard);
   };
 
-  const paypalBuyAcknowledgement = async () => {};
+  const paypalBuyAcknowledgement = async (paypalData) => {
+    setLoading(true);
+    const {
+      data,
+      status,
+      error: errorMessage,
+      isError,
+    } = await api.post({
+      path: "paypalBuyAcknowledgement",
+      body: { orderID: paypalData.orderID },
+    });
+
+    setLoading(false);
+    if (status === 400 || isError) {
+      throw new Error(errorMessage);
+    } else if (data) {
+      enrollmentCompletionAction(data);
+    }
+  };
+
+  const createPaypalOrder = async (values) => {
+    if (loading) {
+      return null;
+    }
+    const {
+      id: productId,
+      isCCNotRequired,
+      availableTimings,
+      isGenericWorkshop,
+      addOnProducts,
+    } = workshop;
+
+    const {
+      questionnaire,
+      contactPhone,
+      contactAddress,
+      contactState,
+      contactZip,
+      couponCode,
+      firstName,
+      lastName,
+      paymentOption,
+      paymentMode,
+      accommodation,
+    } = values;
+
+    if (paymentMode !== PAYMENT_MODES.PAYPAL_PAYMENT_MODE) {
+      return null;
+    }
+
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? "Yes" : "No",
+      }),
+      {},
+    );
+
+    try {
+      setLoading(true);
+
+      const selectedAddOn = accommodation?.isExpenseAddOn
+        ? null
+        : accommodation?.productSfid || null;
+
+      let addOnProductsList = addOnProducts
+        ? addOnProducts.map((product) => {
+            if (!product.isAddOnSelectionRequired) {
+              const value = values[product.productName];
+              if (value) {
+                return product.productSfid;
+              } else {
+                return null;
+              }
+            }
+            return product.productSfid;
+          })
+        : [];
+
+      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+
+      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
+
+      const isRegularOrder = values.comboDetailId
+        ? values.comboDetailId === productId
+        : true;
+
+      const products = isRegularOrder
+        ? {
+            productType: "workshop",
+            productSfId: productId,
+            AddOnProductIds: AddOnProductIds,
+          }
+        : {
+            productType: "bundle",
+            productSfId: values.comboDetailId,
+            childProduct: {
+              productType: "workshop",
+              productSfId: productId,
+              AddOnProductIds: AddOnProductIds,
+              complianceQuestionnaire,
+            },
+          };
+
+      let payLoad = {
+        shoppingRequest: {
+          couponCode: showCouponCodeField ? couponCode : "",
+          contactAddress: {
+            contactPhone,
+            contactAddress,
+            contactState,
+            contactZip,
+          },
+          billingAddress: {
+            billingPhone: contactPhone,
+            billingAddress: contactAddress,
+            billingState: contactState,
+            billingZip: contactZip,
+          },
+          products,
+          complianceQuestionnaire,
+          programQuestionnaireResult,
+          isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
+          isPaypalPayment: true,
+        },
+      };
+
+      if (isGenericWorkshop) {
+        const timeSlot =
+          availableTimings &&
+          Object.values(availableTimings)[0] &&
+          Object.values(Object.values(availableTimings)[0])[0][0]
+            .genericWorkshopSlotSfid;
+        payLoad = {
+          ...payLoad,
+          shoppingRequest: {
+            ...payLoad.shoppingRequest,
+            genericWorkshopSlotSfid: timeSlot,
+          },
+        };
+      }
+
+      //token.saveCardForFuture = true;
+      const {
+        paypalObj,
+        status,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: "createAndPayOrder",
+        body: payLoad,
+      });
+      setLoading(false);
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      if (paypalObj) {
+        return paypalObj.id;
+      }
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+    }
+  };
 
   const submitProgramQuestionnaire = async (programQuestionnaireResult) => {
     setProgramQuestionnaireResult(programQuestionnaireResult);
@@ -771,36 +940,43 @@ export const PaymentFormHB = ({
                         data-method="paypal"
                       >
                         <div className="paypal-info__sign-in tw-relative tw-z-0">
-                          <PayPalButton
+                          <PayPalScriptProvider
                             options={{
-                              clientId:
+                              "client-id":
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                              debug: true,
+                              currency: "USD",
                             }}
-                            style={{
-                              layout: "horizontal",
-                              color: "blue",
-                              shape: "pill",
-                              height: 40,
-                              tagline: false,
-                              label: "pay",
-                            }}
-                            onClick={async (data, actions) => {
-                              await formikProps.validateForm();
-                              formikProps.setTouched({
-                                ...formikProps.touched,
-                                ...formikProps.errors,
-                              });
-                              if (!formikProps.isValid) {
-                                return false;
-                              }
-                            }}
-                            createOrder={async (data, actions) => {
-                              return await this.createPaypalOrder(
-                                formikProps.values,
-                              );
-                            }}
-                            onApprove={paypalBuyAcknowledgement}
-                          />
+                          >
+                            <PayPalButtons
+                              style={{
+                                layout: "horizontal",
+                                color: "blue",
+                                shape: "pill",
+                                height: 40,
+                                tagline: false,
+                                label: "pay",
+                              }}
+                              onClick={async (data, actions) => {
+                                const formErrors =
+                                  await formikProps.validateForm();
+
+                                formikProps.setTouched({
+                                  ...formikProps.touched,
+                                  ...formikProps.errors,
+                                });
+                                if (JSON.stringify(formErrors) !== "{}") {
+                                  return false;
+                                }
+                              }}
+                              createOrder={async (data, actions) => {
+                                return await createPaypalOrder(
+                                  formikProps.values,
+                                );
+                              }}
+                              onApprove={paypalBuyAcknowledgement}
+                            />
+                          </PayPalScriptProvider>
                         </div>
                         <div className="paypal-info__sign-out d-none">
                           <button
