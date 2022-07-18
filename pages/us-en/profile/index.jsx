@@ -53,7 +53,8 @@ const CHANGE_PASSWORD = "CHANGE_PASSWORD";
 const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Please contact the help desk
                 at (855) 202-4400 to resolve the issue and cancel your
                 membership.`;
-
+const MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR = `We're sorry, but an error occurred. Please contact the help desk
+                at (855) 202-4400 to resolve the issue and delete your information.`;
 // export async function getServerSideProps({ req, resolvedUrl, query }) {
 //   const { Auth } = withSSRContext({ req });
 //   const { tab } = query || {};
@@ -226,6 +227,38 @@ const Profile = ({ tab }) => {
               <span>
                 <img src="/img/ic-check.svg" alt="check" />
                 Your membership has been cancelled.
+              </span>
+            </div>
+            <img
+              className="profile__close-alert"
+              src="/img/ic-close-white.svg"
+              alt="close"
+              onClick={toggleTopShowMessage}
+            />
+          </aside>
+        )}
+        {request === "3" && (
+          <aside className="profile__alert">
+            <div className="container-xl d-flex justify-content-center align-center">
+              <span>
+                <img src="/img/ic-check.svg" alt="check" />
+                Your case has been registered.
+              </span>
+            </div>
+            <img
+              className="profile__close-alert"
+              src="/img/ic-close-white.svg"
+              alt="close"
+              onClick={toggleTopShowMessage}
+            />
+          </aside>
+        )}
+        {request === "4" && (
+          <aside className="profile__alert">
+            <div className="container-xl d-flex justify-content-center align-center">
+              <span>
+                <img src="/img/ic-error.svg" alt="error" />
+                {MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR}
               </span>
             </div>
             <img
