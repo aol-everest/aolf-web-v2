@@ -15,6 +15,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import Image from "next/image";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import { Talkable } from "@utils";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -79,7 +80,7 @@ const renderVideo = (productTypeId) => {
 };
 
 const Thankyou = () => {
-  const { authenticated, reloadProfile } = useAuth();
+  const { authenticated, reloadProfile, userInfo } = useAuth();
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
@@ -144,6 +145,19 @@ const Thankyou = () => {
         },
       },
     });
+    Talkable.purchase(
+      {
+        order_number: orderExternalId, // Unique order number. Example: '100011'
+        subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
+        coupon_code: couponCode || "", // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
+        shipping_address: "",
+        shipping_zip: "",
+      },
+      {
+        email: userInfo.profile.email,
+        traffic_source: "", // The source of the traffic driven to the campaign. Example: 'facebook'
+      },
+    );
     reloadProfile();
   }, [authenticated, result]);
 
