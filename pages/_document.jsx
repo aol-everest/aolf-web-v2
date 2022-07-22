@@ -60,9 +60,10 @@ class CustomDocument extends Document {
             integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
             crossOrigin="anonymous"
           />
+          {/* Talkable script */}
           <script
             async
-            src="//d2jjzw81hqbuqv.cloudfront.net/integration/clients/art-of-living.min.js"
+            src="//d2jjzw81hqbuqv.cloudfront.net/integration/clients/art-of-living-staging.min.js"
             type="text/javascript"
           ></script>
           {/* <script
