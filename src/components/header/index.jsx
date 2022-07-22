@@ -517,7 +517,7 @@ export const Header = () => {
                         Style.profilePic,
                       )}
                       alt=""
-                      onError={(i) => (i.target.src = "")}
+                      onError={(i) => (i.target.style.display = "none")}
                     />
                   )}
                 </div>

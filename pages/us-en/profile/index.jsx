@@ -248,13 +248,15 @@ const Profile = ({ tab }) => {
                   onChange={handleOnSelectFile}
                 />
                 <div className="profile-header__image wrapper">
+                  <span>{initials}</span>
                   {profilePic && (
                     <img
                       src={profilePic}
                       className="rounded-circle profile-pic"
+                      onError={(i) => (i.target.style.display = "none")}
                     />
                   )}
-                  {!profilePic && <span>{initials}</span>}
+
                   <div className="camera-icon">
                     <i className="fa">
                       <FaCamera />

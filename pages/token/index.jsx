@@ -46,17 +46,13 @@ function Token() {
       const userInfo = await Auth.reFetchProfile();
       setUser(userInfo);
 
-      router.push({
-        pathname: state || "/",
-      });
+      router.push(state || "/");
     } catch (error) {
       console.log(error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: error.message,
         closeModalAction: () => {
-          router.push({
-            pathname: "/",
-          });
+          router.push("/");
         },
       });
     }
