@@ -56,7 +56,7 @@ export const COURSE_MODES = {
     value: "online",
   },
   IN_PERSON: {
-    name: "In person",
+    name: "In Person",
     value: "in person",
   },
   DESTINATION_RETREATS: {
