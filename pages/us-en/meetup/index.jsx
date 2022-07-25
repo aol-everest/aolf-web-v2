@@ -627,7 +627,7 @@ const Meetup = () => {
                   tabIndex="2"
                   value={meetupTypeFilter}
                   buttonText={
-                    meetupTypeFilter
+                    meetupTypeFilter && meetupMasters[meetupTypeFilter]
                       ? meetupMasters[meetupTypeFilter].name
                       : "Meetup Type"
                   }
@@ -881,7 +881,7 @@ const Meetup = () => {
               <MobileFilterModal
                 modalTitle="Meetup Type"
                 buttonText={
-                  meetupTypeFilter
+                  meetupTypeFilter && meetupMasters[meetupTypeFilter]
                     ? meetupMasters[meetupTypeFilter].name
                     : "Meetup Type"
                 }
@@ -891,7 +891,7 @@ const Meetup = () => {
                   <SmartDropDown
                     value={meetupTypeFilter}
                     buttonText={
-                      meetupTypeFilter
+                      meetupTypeFilter && meetupMasters[meetupTypeFilter]
                         ? meetupMasters[meetupTypeFilter].name
                         : "Select Meetup"
                     }
