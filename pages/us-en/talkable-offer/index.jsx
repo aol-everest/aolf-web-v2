@@ -1,3 +1,7 @@
 export default function TalkableOffer() {
-  return <div id="talkable-offer"></div>;
+  return (
+    <main>
+      <div id="talkable-offer"></div>
+    </main>
+  );
 }

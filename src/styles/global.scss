@@ -6,6 +6,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
   font-family: Work Sans, sans-serif;
   color: #31364e;
   scroll-behavior: smooth;
@@ -22,4 +23,8 @@ body::-webkit-scrollbar {
 }
 img {
   display: inline;
+}
+
+main {
+  min-height: calc(100vh - 135px);
 }
