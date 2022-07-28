@@ -443,6 +443,7 @@ const Profile = ({ tab }) => {
               </div>
             </div>
           </div>
+          <div id="talkable-offer"></div>
         </section>
 
         <section className="profile-body_mobile d-block d-md-none">
