@@ -80,7 +80,7 @@ const renderVideo = (productTypeId) => {
 };
 
 const Thankyou = () => {
-  const { authenticated, reloadProfile, userInfo } = useAuth();
+  const { authenticated, reloadProfile, user } = useAuth();
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
@@ -154,7 +154,7 @@ const Thankyou = () => {
         shipping_zip: "",
       },
       {
-        email: userInfo.profile.email,
+        email: user.profile.email,
         traffic_source: "", // The source of the traffic driven to the campaign. Example: 'facebook'
       },
     );
