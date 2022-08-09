@@ -118,6 +118,17 @@ export const COURSE_TYPES = {
   },
 };
 
+export const MEETUP_TYPES = {
+  SKY_MEETUP: {
+    name: "SKY Meetup",
+    value: process.env.NEXT_PUBLIC_SKY_MEETUP_CTYPE || "",
+  },
+  SAHAJ_SAMADHI_MEETUP: {
+    name: "Sahaj Samadhi Meetup",
+    value: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_MEETUP_CTYPE || "",
+  },
+};
+
 export const MEMBERSHIP_TYPES = {
   JOURNEY_PREMIUM: {
     name: "Journey Premium",
