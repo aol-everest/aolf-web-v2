@@ -157,13 +157,12 @@ export const ChangeProfile = ({
     setLoading(true);
     try {
       const payload = {
-        subject: "Delect CC/PII",
         message: description.current,
         origin: "Web",
       };
 
       const { status, error: errorMessage } = await api.post({
-        path: "logCase",
+        path: "accountDeletionRequest",
         body: payload,
       });
 
@@ -184,13 +183,12 @@ export const ChangeProfile = ({
     setLoading(true);
     try {
       const payload = {
-        subject: "Delect CC/PII",
         message: description.current,
         origin: "Web",
       };
 
       const { status, error: errorMessage } = await api.post({
-        path: "logCase",
+        path: "ccDeletionRequest",
         body: payload,
       });
 
