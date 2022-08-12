@@ -14,10 +14,16 @@ import {
   useGlobalModalContext,
 } from "@contexts";
 import { AddToCalendarModal } from "@components";
-import { ALERT_TYPES, ABBRS } from "@constants";
+import { ALERT_TYPES, ABBRS, COURSE_MODES, MEETUP_TYPES } from "@constants";
 import { useQuery } from "react-query";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import {
+  SKYMeetup,
+  SahajSamadhiMeetup,
+  InPersonGenericMeetup,
+  OnlineMeetup,
+} from "@components/meetupthankYouDetails ";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -160,6 +166,8 @@ const Thankyou = () => {
     eventStartDateTimeGMT,
     unitPrice,
     id: courseId,
+    mode,
+    isLocationEmpty,
   } = meetup || {};
   const {
     email: attendeeEmail,
@@ -172,6 +180,11 @@ const Thankyou = () => {
 
   const newTitle = title || meetupTitle;
   const duration = 2;
+
+  const isInPersonSkyMeetup =
+    MEETUP_TYPES.SKY_MEETUP.value.indexOf(productTypeId) >= 0;
+  const isInPersonSahajSamadhiMeetup =
+    MEETUP_TYPES.SAHAJ_SAMADHI_MEETUP.value.indexOf(productTypeId) >= 0;
 
   let startDatetime = null;
   if (eventStartDateTimeGMT) {
@@ -290,6 +303,19 @@ const Thankyou = () => {
     }
   };
 
+  const RenderJourneyContent = () => {
+    if (mode === COURSE_MODES.IN_PERSON.name) {
+      if (isInPersonSkyMeetup) {
+        return <SKYMeetup />;
+      }
+      if (isInPersonSahajSamadhiMeetup) {
+        return <SahajSamadhiMeetup />;
+      }
+      return <InPersonGenericMeetup />;
+    }
+    return <OnlineMeetup />;
+  };
+
   return (
     <>
       <main>
@@ -338,62 +364,86 @@ const Thankyou = () => {
               {!selectedGenericSlot.startDate && (
                 <>
                   <ul className="program-details__list-schedule">
-                    <li className="program-details__schedule">
+                    <li className="program-details__schedule tw-flex">
                       <span className="program-details__schedule-date">
                         {dayjs.utc(meetupStartDate).format("LL")}
                       </span>
-                      <span className="program-details__schedule-time">{`${tConvert(
+                      <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
                         meetupStartTime,
                       )} ${ABBRS[eventTimeZone]}`}</span>
                     </li>
                   </ul>
                 </>
               )}
+              {mode === COURSE_MODES.IN_PERSON.name && (
+                <>
+                  {!isLocationEmpty && (
+                    <ul className="program-details__list-schedule tw-mt-2">
+                      <span className="program-details__schedule-date">
+                        Location
+                      </span>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${
+                          meetup.locationStreet || ""
+                        }, ${meetup.locationCity} ${meetup.locationProvince} ${
+                          meetup.locationPostalCode
+                        } ${meetup.locationCountry}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {meetup.locationStreet && (
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                            {meetup.locationStreet}
+                          </li>
+                        )}
+                        <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                          {meetup.locationCity || ""}
+                          {", "}
+                          {meetup.locationProvince || ""}{" "}
+                          {meetup.locationPostalCode || ""}
+                        </li>
+                      </a>
+                    </ul>
+                  )}
+                  {isLocationEmpty && (
+                    <ul className="program-details__list-schedule tw-mt-2">
+                      <span className="program-details__schedule-date">
+                        Location
+                      </span>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${
+                          meetup.streetAddress1 || ""
+                        },${meetup.streetAddress2 || ""} ${meetup.city} ${
+                          meetup.state
+                        } ${meetup.zip} ${meetup.country}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {meetup.streetAddress1 && (
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                            {meetup.streetAddress1}
+                          </li>
+                        )}
+                        {meetup.streetAddress2 && (
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                            {meetup.streetAddress2}
+                          </li>
+                        )}
+                        <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                          {meetup.city || ""}
+                          {", "}
+                          {meetup.state || ""} {meetup.zip || ""}
+                        </li>
+                      </a>
+                    </ul>
+                  )}
+                </>
+              )}
             </div>
             <h2 className="journey-starts__title section-title">
               Your journey starts here
             </h2>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>1</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">This is you-time</h3>
-                <p className="journey-starts__step-text">
-                  Block your calendar to attend all the sessions via Zoom.
-                  Before the session begins, you will receive your Zoom meeting
-                  ID and password in your welcome email.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>2</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">
-                  Getting your tech ready in advance
-                </h3>
-                <p className="journey-starts__step-text">
-                  Download Zoom - When you clock on the zoom call link, it will
-                  promp you to download the Zoom app.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>3</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">
-                  Get comfy, set up your space
-                </h3>
-                <p className="journey-starts__step-text">
-                  Find a qiet, comfortable space where you can enjoy your course
-                  undisturbed.
-                </p>
-              </div>
-            </div>
+            <RenderJourneyContent />
           </div>
         </section>
       </main>

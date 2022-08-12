@@ -135,9 +135,11 @@ export const RegisterPanel = ({ workshop }) => {
           <h2>
             {title}: ${fee}
           </h2>
-          <p>
-            Regular course fee: <span className="discount"> ${delfee} </span>
-          </p>
+          {delfee && (
+            <p>
+              Regular course fee: <span className="discount"> ${delfee} </span>
+            </p>
+          )}
         </div>
         <div className="bottom-box justify-content-md-center">
           <button className="btn-secondary v2" onClick={handleRegister}>

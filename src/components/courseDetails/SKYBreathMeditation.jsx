@@ -10,7 +10,7 @@ import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
-import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
+import { ABBRS, COURSE_TYPES, ALERT_TYPES, COURSE_MODES } from "@constants";
 import { HideOn } from "@components";
 import { priceCalculation } from "@utils";
 
@@ -42,6 +42,8 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
 
   const { title, workshopTotalHours, mode } = data || {};
   const { fee, delfee, offering } = priceCalculation({ workshop: data });
+
+  const inPersonCourse = mode === COURSE_MODES.IN_PERSON.name;
 
   return (
     <>
@@ -81,7 +83,11 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
             </h2>
             <div className="achivment">
               <div className="row">
-                <div className="col-12 col-lg-3 text-center text-lg-left">
+                <div
+                  className={`col-12 ${
+                    inPersonCourse ? "col-lg-4" : "col-lg-3"
+                  } text-center text-lg-left`}
+                >
                   <div className="logo-achivment">
                     <div className="achivment__logo">
                       <img src="/img/ic-40-years-of-programs.svg" alt="years" />
@@ -96,7 +102,11 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     </p>
                   </div>
                 </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
+                <div
+                  className={`col-12 ${
+                    inPersonCourse ? "col-lg-4" : "col-lg-3"
+                  }  text-center text-lg-left mt-4 mt-lg-0`}
+                >
                   <div className="logo-achivment">
                     <div className="achivment__logo">
                       <img
@@ -116,7 +126,11 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     </p>
                   </div>
                 </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
+                <div
+                  className={`col-12 ${
+                    inPersonCourse ? "col-lg-4" : "col-lg-3"
+                  }  text-center text-lg-left mt-4 mt-lg-0`}
+                >
                   <div className="logo-achivment">
                     <div className="achivment__logo">
                       <img src="/img/ic-3-day-online-course.svg" alt="day" />
@@ -132,22 +146,24 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     </p>
                   </div>
                 </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-limited-time-only.svg" alt="day" />
+                {!inPersonCourse && (
+                  <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
+                    <div className="logo-achivment">
+                      <div className="achivment__logo">
+                        <img src="/img/ic-limited-time-only.svg" alt="day" />
+                      </div>
+                      <h2 className="achivment__title">
+                        Limited time <br />
+                        only
+                      </h2>
+                      <p className="achivment__text">
+                        This program is regularly{" "}
+                        <span className="discount">${delfee}</span> and
+                        currently offered online for <span> ${fee}</span>
+                      </p>
                     </div>
-                    <h2 className="achivment__title">
-                      Limited time <br />
-                      only
-                    </h2>
-                    <p className="achivment__text">
-                      This program is regularly{" "}
-                      <span className="discount">${delfee}</span> and currently
-                      offered online for <span> ${fee}</span>
-                    </p>
                   </div>
-                </div>
+                )}
               </div>
             </div>
             <div className="featured-in">
