@@ -18,6 +18,12 @@ import { ALERT_TYPES, ABBRS, COURSE_MODES, MEETUP_TYPES } from "@constants";
 import { useQuery } from "react-query";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import {
+  SKYMeetup,
+  SahajSamadhiMeetup,
+  InPersonGenericMeetup,
+  OnlineMeetup,
+} from "@components/meetupthankYouDetails ";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -300,172 +306,14 @@ const Thankyou = () => {
   const RenderJourneyContent = () => {
     if (mode === COURSE_MODES.IN_PERSON.name) {
       if (isInPersonSkyMeetup) {
-        return (
-          <>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>1</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">This Is You-Time</h3>
-                <p className="journey-starts__step-text">
-                  Please arrive 5 minutes early to get settled. This is your
-                  time to drop stress, recharge your batteries, and re-align
-                  with your inner truth.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>2</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">Stay Connected</h3>
-                <p className="journey-starts__step-text">
-                  Group practice brings a different dimension to our experience.
-                  Prepare to join with like-minded seekers and unlock the power
-                  of breathing together.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>3</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">
-                  Health And Safety
-                </h3>
-                <p className="journey-starts__step-text">
-                  For the health and safety of all involved, if you’re not
-                  feeling well, we ask you to please stay at home.
-                </p>
-              </div>
-            </div>
-          </>
-        );
+        return <SKYMeetup />;
       }
       if (isInPersonSahajSamadhiMeetup) {
-        return (
-          <>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>1</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">This Is You-Time</h3>
-                <p className="journey-starts__step-text">
-                  Please arrive 5 minutes early to get settled. This is your
-                  time to drop stress, recharge your batteries, and re-align
-                  with your inner truth.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>2</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">Stay Connected</h3>
-                <p className="journey-starts__step-text">
-                  Group practice brings a different dimension to our experience.
-                  Prepare to join with like-minded seekers and unlock the power
-                  of meditating together.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>3</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">
-                  Health And Safety
-                </h3>
-                <p className="journey-starts__step-text">
-                  For the health and safety of all involved, if you’re not
-                  feeling well, we ask you to please stay at home.
-                </p>
-              </div>
-            </div>
-          </>
-        );
+        return <SahajSamadhiMeetup />;
       }
-      return (
-        <>
-          <div className="journey-starts__step">
-            <div className="journey-starts__step-number">
-              <span>1</span>
-            </div>
-            <div className="journey-starts__detail">
-              <h3 className="journey-starts__step-title">This is you-time</h3>
-              <p className="journey-starts__step-text">
-                It’s a great time to clear your calendar for your retreat. Get
-                ready to drop stress, recharge your batteries, and re-align with
-                your inner truth.
-              </p>
-            </div>
-          </div>
-          <div className="journey-starts__step">
-            <div className="journey-starts__step-number">
-              <span>2</span>
-            </div>
-            <div className="journey-starts__detail">
-              <h3 className="journey-starts__step-title">Health And Safety</h3>
-              <p className="journey-starts__step-text">
-                For the health and safety of all involved, if you’re not feeling
-                well, we ask you to please stay at home.
-              </p>
-            </div>
-          </div>
-        </>
-      );
+      return <InPersonGenericMeetup />;
     }
-    return (
-      <>
-        <div className="journey-starts__step">
-          <div className="journey-starts__step-number">
-            <span>1</span>
-          </div>
-          <div className="journey-starts__detail">
-            <h3 className="journey-starts__step-title">This is you-time</h3>
-            <p className="journey-starts__step-text">
-              Block your calendar to attend all the sessions via Zoom. Before
-              the session begins, you will receive your Zoom meeting ID and
-              password in your welcome email.
-            </p>
-          </div>
-        </div>
-        <div className="journey-starts__step">
-          <div className="journey-starts__step-number">
-            <span>2</span>
-          </div>
-          <div className="journey-starts__detail">
-            <h3 className="journey-starts__step-title">
-              Getting your tech ready in advance
-            </h3>
-            <p className="journey-starts__step-text">
-              Download Zoom - When you clock on the zoom call link, it will
-              promp you to download the Zoom app.
-            </p>
-          </div>
-        </div>
-        <div className="journey-starts__step">
-          <div className="journey-starts__step-number">
-            <span>3</span>
-          </div>
-          <div className="journey-starts__detail">
-            <h3 className="journey-starts__step-title">
-              Get comfy, set up your space
-            </h3>
-            <p className="journey-starts__step-text">
-              Find a qiet, comfortable space where you can enjoy your course
-              undisturbed.
-            </p>
-          </div>
-        </div>
-      </>
-    );
+    return <OnlineMeetup />;
   };
 
   return (
