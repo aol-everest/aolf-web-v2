@@ -428,7 +428,7 @@ const Thankyou = () => {
                 </h3>
                 <p className="journey-starts__step-text">
                   Download Zoom - When you clock on the zoom call link, it will
-                  promp you to download the Zoom app.
+                  prompt you to download the Zoom app.
                 </p>
               </div>
             </div>
@@ -441,8 +441,8 @@ const Thankyou = () => {
                   Get comfy, set up your space
                 </h3>
                 <p className="journey-starts__step-text">
-                  Find a qiet, comfortable space where you can enjoy your course
-                  undisturbed.
+                  Find a quiet, comfortable space where you can enjoy your
+                  course undisturbed.
                 </p>
               </div>
             </div>
