@@ -23,7 +23,7 @@ import {
   SahajSamadhiMeetup,
   InPersonGenericMeetup,
   OnlineMeetup,
-} from "@components/meetupthankYouDetails ";
+} from "@components/meetupthankYouDetails";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
