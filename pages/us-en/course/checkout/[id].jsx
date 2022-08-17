@@ -306,6 +306,7 @@ const Checkout = () => {
 
   const showVerifyStudentStatus =
     validateStudentEmail(email) &&
+    workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||
       (isStudentVerified &&
         dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&

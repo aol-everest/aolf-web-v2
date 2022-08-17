@@ -310,7 +310,7 @@ export const ChangeProfile = ({
                 {showVerifyStudentStatus && (
                   <button
                     type="button"
-                    className="btn-primary ml-auto v2"
+                    className="btn-primary ml-auto v2 tw-hidden"
                     onClick={handleVerifyStudentEmail}
                   >
                     Verify Student Status
