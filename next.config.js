@@ -23,6 +23,10 @@ const securityHeaders = [
     value: "camera=(), geolocation=(self), microphone=(self), autoplay=(self)",
   },
   {
+    key: "X-XSS-Protection",
+    value: "1; mode=block",
+  },
+  {
     key: "strict-transport-security",
     value: "max-age=31536000; includeSubDomains",
   },
