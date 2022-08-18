@@ -198,9 +198,11 @@ export const LoginModal = () => {
   const signUp = async ({ username, password, firstName, lastName }) => {
     setLoading(true);
     setShowMessage(false);
+    const isStudentFlowEnabled =
+      process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === "true";
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
-      const isStudent = validateStudentEmail(username);
+      const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
       await signIn({ username, password, isStudent });
     } catch (ex) {
       const data = ex.response?.data;
