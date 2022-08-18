@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
-import { COURSE_TYPES, MEMBERSHIP_TYPES, ABBRS } from "@constants";
+import {
+  COURSE_TYPES,
+  MEMBERSHIP_TYPES,
+  ABBRS,
+  COURSE_MODES,
+} from "@constants";
 import { tConvert } from "@utils";
 
 dayjs.extend(utc);
@@ -168,6 +173,7 @@ export const MobileCourseDetails = ({
     description,
     premiumRate,
     isGenericWorkshop,
+    mode,
   } = workshop || {};
 
   const isSKYType =
@@ -261,10 +267,65 @@ export const MobileCourseDetails = ({
           {coTeacher1Name && <span>{coTeacher1Name}</span>}
           {coTeacher2Name && <span>{coTeacher2Name}</span>}
         </div>
-        <div className="course-detail">
-          Location:
-          <span>Online</span>
-        </div>
+        {mode === COURSE_MODES.IN_PERSON.name ? (
+          <>
+            {!workshop.isLocationEmpty && (
+              <div className="course-detail">
+                Location:
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${
+                    workshop.locationStreet || ""
+                  }, ${workshop.locationCity} ${workshop.locationProvince} ${
+                    workshop.locationPostalCode
+                  } ${workshop.locationCountry}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {workshop.locationStreet && (
+                    <span>{workshop.locationStreet}</span>
+                  )}
+                  <span>
+                    {workshop.locationCity || ""}
+                    {", "}
+                    {workshop.locationProvince || ""}{" "}
+                    {workshop.locationPostalCode || ""}
+                  </span>
+                </a>
+              </div>
+            )}
+            {workshop.isLocationEmpty && (
+              <div className="course-detail">
+                Location:
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${
+                    workshop.streetAddress1 || ""
+                  },${workshop.streetAddress2 || ""} ${workshop.city} ${
+                    workshop.state
+                  } ${workshop.zip} ${workshop.country}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {workshop.streetAddress1 && (
+                    <span>{workshop.streetAddress1}</span>
+                  )}
+                  {workshop.streetAddress2 && (
+                    <span>{workshop.streetAddress2}</span>
+                  )}
+                  <span>
+                    {workshop.city || ""}
+                    {", "}
+                    {workshop.state || ""} {workshop.zip || ""}
+                  </span>
+                </a>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="course-detail">
+            Location:
+            <span>Online</span>
+          </div>
+        )}
         <div className="course-detail">
           Contact details:
           <span>{phone1}</span>
