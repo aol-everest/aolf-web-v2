@@ -168,6 +168,7 @@ const Thankyou = () => {
     id: courseId,
     mode,
     isLocationEmpty,
+    meetupDuration,
   } = meetup || {};
   const {
     email: attendeeEmail,
@@ -202,7 +203,9 @@ const Thankyou = () => {
   } else if (eventEndDate) {
     endDatetime = moment.utc(`${eventEndDate || ""} ${eventEndTime || ""}`);
   } else {
-    endDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`).add(2, "hours");
+    endDatetime = moment
+      .utc(`${meetupStartDateTimeGMT || ""}`)
+      .add(meetupDuration, "minutes");
   }
 
   const getSelectedTimeSlotDetails = (selectedTimeSlot) => {
