@@ -7,6 +7,7 @@ import { Auth } from "@utils";
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
   const { user } = useAuth();
+  console.log(user);
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -14,7 +15,11 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
     const { password: newPassword, oldPassword } = values;
     setLoading(true);
     try {
-      await Auth.changePassword(user, oldPassword, newPassword);
+      await Auth.changePassword({
+        email: user.profile.email,
+        oldPassword,
+        newPassword,
+      });
       updateCompleteAction({});
       setShowSuccessMessage(true);
     } catch (ex) {
