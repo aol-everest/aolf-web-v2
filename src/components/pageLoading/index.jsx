@@ -48,17 +48,19 @@ const messages = [
 export const PageLoading = () => {
   const message = messages[Math.floor(Math.random() * messages.length)];
   return (
-    <Fade opposite>
-      <div className="full-page-loader">
-        <div className="card-loader">
-          <h5>Please Wait !!!</h5>
-          <p>{message}</p>
-          <div className="loader">
-            <div className="spin"></div>
-            <div className="bounce"></div>
+    <main>
+      <Fade opposite>
+        <div className="full-page-loader">
+          <div className="card-loader">
+            <h5>Please Wait !!!</h5>
+            <p>{message}</p>
+            <div className="loader">
+              <div className="spin"></div>
+              <div className="bounce"></div>
+            </div>
           </div>
         </div>
-      </div>
-    </Fade>
+      </Fade>
+    </main>
   );
 };
