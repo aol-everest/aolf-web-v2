@@ -7,7 +7,6 @@ import { Auth } from "@utils";
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
   const { user } = useAuth();
-  console.log(user);
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
