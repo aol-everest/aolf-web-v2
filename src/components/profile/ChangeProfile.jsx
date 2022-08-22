@@ -147,7 +147,11 @@ export const ChangeProfile = ({
     studentVerificationExpiryDate,
   } = profile;
 
+  const isStudentFlowEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === "true";
+
   const showVerifyStudentStatus =
+    isStudentFlowEnabled &&
     validateStudentEmail(email) &&
     (!isStudentVerified ||
       (isStudentVerified &&
@@ -310,7 +314,7 @@ export const ChangeProfile = ({
                 {showVerifyStudentStatus && (
                   <button
                     type="button"
-                    className="btn-primary ml-auto v2 tw-hidden"
+                    className="btn-primary ml-auto v2"
                     onClick={handleVerifyStudentEmail}
                   >
                     Verify Student Status
