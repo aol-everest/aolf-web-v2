@@ -47,6 +47,7 @@ const ChangeCardDetail = dynamic(() =>
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
 const PAST_COURSES = "PAST_COURSES";
 const UPDATE_PROFILE = "UPDATE_PROFILE";
+const REFER_A_FRIEND = "REFER_A_FRIEND";
 const CARD_DETAILS = "CARD_DETAILS";
 const CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
@@ -320,6 +321,16 @@ const Profile = ({ tab }) => {
               <li className="nav-item" role="presentation">
                 <a
                   className={classNames("profile-tab", {
+                    active: activeTab === REFER_A_FRIEND,
+                  })}
+                  onClick={switchTab(REFER_A_FRIEND)}
+                >
+                  Refer a Friend
+                </a>
+              </li>
+              <li className="nav-item" role="presentation">
+                <a
+                  className={classNames("profile-tab", {
                     active: activeTab === CARD_DETAILS,
                   })}
                   onClick={switchTab(CARD_DETAILS)}
@@ -404,6 +415,14 @@ const Profile = ({ tab }) => {
                 ></ChangeProfile>
               </div>
               <div
+                className={classNames("tab-pane profile-update fade", {
+                  active: activeTab === REFER_A_FRIEND,
+                  show: activeTab === REFER_A_FRIEND,
+                })}
+              >
+                <div id="talkable-offer"></div>
+              </div>
+              <div
                 className={classNames("tab-pane fade", {
                   active: activeTab === CARD_DETAILS,
                   show: activeTab === CARD_DETAILS,
@@ -443,7 +462,6 @@ const Profile = ({ tab }) => {
               </div>
             </div>
           </div>
-          <div id="talkable-offer"></div>
         </section>
 
         <section className="profile-body_mobile d-block d-md-none">
