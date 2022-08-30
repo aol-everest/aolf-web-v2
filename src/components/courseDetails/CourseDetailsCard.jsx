@@ -351,7 +351,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               }, ${country || ""}`}
             </li>
           </ul>
-        )} */}
+        )}
         {!corporateName && (
           <div className="course-details__submit">
             <button
