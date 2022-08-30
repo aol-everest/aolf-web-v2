@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { DefaultSeo } from "next-seo";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { api, Compose, Auth } from "@utils";
+import { api, Compose, Auth, Talkable } from "@utils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {
   Layout,
@@ -83,6 +83,11 @@ function App({ Component, pageProps }) {
         setIsReInstateRequired(true);
         setReinstateRequiredSubscription(reinstateRequiredForSubscription);
       }
+      Talkable.authenticate({
+        email: userInfo.profile.email,
+        first_name: userInfo.profile.first_name,
+        last_name: userInfo.profile.last_name,
+      });
     } catch (ex) {
       console.log(ex);
       await Auth.logout();

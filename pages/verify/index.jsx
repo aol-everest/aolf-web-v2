@@ -27,6 +27,8 @@ function Token() {
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const { studentEmail = null } = router.query;
+
   useEffect(() => {
     if (!router.isReady) return;
 
@@ -46,7 +48,28 @@ function Token() {
         );
       }
     }
-    fetchData();
+
+    async function fetchStudentData() {
+      try {
+        await api.get({
+          path: "verify-email-confirm",
+          param: router.query,
+        });
+        setSuccess(true);
+        await Auth.signOut({ global: true });
+      } catch (ex) {
+        const data = ex.response?.data;
+        const { message, statusCode, code } = data || {};
+        setMessage(
+          message ? `Error: ${message} (${statusCode || code})` : ex.message,
+        );
+      }
+    }
+    if (studentEmail) {
+      fetchStudentData();
+    } else {
+      fetchData();
+    }
   }, [router.isReady]);
 
   return (
@@ -70,7 +93,9 @@ function Token() {
                     <FaCheckCircle />
                   </div>
                   <div className="tw-text-sm tw-mt-3">
-                    Your Email has been successfully verified.
+                    {studentEmail
+                      ? "Your Student status has been successfully verified."
+                      : "Your Email has been successfully verified."}
                   </div>
                 </>
               )}

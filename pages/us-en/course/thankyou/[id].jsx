@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { trackEvent } from "@phntms/react-gtm";
 import moment from "moment";
 import { useAuth, useGlobalAlertContext } from "@contexts";
-import { COURSE_TYPES, ALERT_TYPES, ABBRS } from "@constants";
+import { COURSE_TYPES, ALERT_TYPES, ABBRS, COURSE_MODES } from "@constants";
 import { AddToCalendarModal } from "@components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -15,6 +15,14 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import Image from "next/image";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import { Talkable } from "@utils";
+import {
+  SilentRetreat,
+  SKYBreathMeditation,
+  SahajSamadhi,
+  InPersonGenericCourse,
+  OnlineCourse,
+} from "@components/coursethankYouDetails";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -79,7 +87,7 @@ const renderVideo = (productTypeId) => {
 };
 
 const Thankyou = () => {
-  const { authenticated, reloadProfile } = useAuth();
+  const { authenticated, reloadProfile, user } = useAuth();
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
@@ -144,6 +152,19 @@ const Thankyou = () => {
         },
       },
     });
+    Talkable.purchase(
+      {
+        order_number: orderExternalId, // Unique order number. Example: '100011'
+        subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
+        coupon_code: couponCode || "", // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
+        shipping_address: "",
+        shipping_zip: "",
+      },
+      {
+        email: user.profile.email,
+        traffic_source: "", // The source of the traffic driven to the campaign. Example: 'facebook'
+      },
+    );
     reloadProfile();
   }, [authenticated, result]);
 
@@ -180,6 +201,7 @@ const Thankyou = () => {
     eventType,
     eventendDateTimeGMT,
     eventStartDateTimeGMT,
+    mode,
   } = workshop;
 
   const isSKYType =
@@ -300,6 +322,22 @@ const Thankyou = () => {
     return null;
   };
 
+  const RenderJourneyContent = () => {
+    if (mode === COURSE_MODES.IN_PERSON.name) {
+      if (isSilentRetreatType) {
+        return <SilentRetreat />;
+      }
+      if (isSKYType) {
+        return <SKYBreathMeditation />;
+      }
+      if (isSahajSamadhiMeditationType) {
+        return <SahajSamadhi />;
+      }
+      return <InPersonGenericCourse />;
+    }
+    return <OnlineCourse />;
+  };
+
   return (
     <>
       <main>
@@ -386,11 +424,14 @@ const Thankyou = () => {
                     {timings &&
                       timings.map((time, i) => {
                         return (
-                          <li className="program-details__schedule" key={i}>
+                          <li
+                            className="program-details__schedule tw-flex"
+                            key={i}
+                          >
                             <span className="program-details__schedule-date">
                               {dayjs.utc(time.startDate).format("LL")}
                             </span>
-                            <span className="program-details__schedule-time">{`${tConvert(
+                            <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
                               time.startTime,
                             )} - ${tConvert(time.endTime)} ${
                               ABBRS[time.timeZone]
@@ -400,52 +441,78 @@ const Thankyou = () => {
                       })}
                   </ul>
                 )}
+                {mode === COURSE_MODES.IN_PERSON.name && (
+                  <>
+                    {!workshop.isLocationEmpty && (
+                      <ul className="program-details__list-schedule tw-mt-2">
+                        <span className="program-details__schedule-date">
+                          Location
+                        </span>
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${
+                            workshop.locationStreet || ""
+                          }, ${workshop.locationCity} ${
+                            workshop.locationProvince
+                          } ${workshop.locationPostalCode} ${
+                            workshop.locationCountry
+                          }`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {workshop.locationStreet && (
+                            <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                              {workshop.locationStreet}
+                            </li>
+                          )}
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                            {workshop.locationCity || ""}
+                            {", "}
+                            {workshop.locationProvince || ""}{" "}
+                            {workshop.locationPostalCode || ""}
+                          </li>
+                        </a>
+                      </ul>
+                    )}
+                    {workshop.isLocationEmpty && (
+                      <ul className="course-details__list">
+                        <div className="course-details__list__title">
+                          <h6>Location:</h6>
+                        </div>
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${
+                            workshop.streetAddress1 || ""
+                          },${workshop.streetAddress2 || ""} ${workshop.city} ${
+                            workshop.state
+                          } ${workshop.zip} ${workshop.country}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {workshop.streetAddress1 && (
+                            <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                              {workshop.streetAddress1}
+                            </li>
+                          )}
+                          {workshop.streetAddress2 && (
+                            <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                              {workshop.streetAddress2}
+                            </li>
+                          )}
+                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                            {workshop.city || ""}
+                            {", "}
+                            {workshop.state || ""} {workshop.zip || ""}
+                          </li>
+                        </a>
+                      </ul>
+                    )}
+                  </>
+                )}
               </div>
             )}
             <h2 className="journey-starts__title section-title">
               Your journey starts here
             </h2>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>1</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">This is you-time</h3>
-                <p className="journey-starts__step-text">
-                  Block your calendar to attend all the sessions via Zoom.
-                  Before the session begins, you will receive your Zoom meeting
-                  ID and password in your welcome email.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>2</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">
-                  Getting your tech ready in advance
-                </h3>
-                <p className="journey-starts__step-text">
-                  Download Zoom - When you clock on the zoom call link, it will
-                  prompt you to download the Zoom app.
-                </p>
-              </div>
-            </div>
-            <div className="journey-starts__step">
-              <div className="journey-starts__step-number">
-                <span>3</span>
-              </div>
-              <div className="journey-starts__detail">
-                <h3 className="journey-starts__step-title">
-                  Get comfy, set up your space
-                </h3>
-                <p className="journey-starts__step-text">
-                  Find a quiet, comfortable space where you can enjoy your
-                  course undisturbed.
-                </p>
-              </div>
-            </div>
+            <RenderJourneyContent />
           </div>
         </section>
       </main>

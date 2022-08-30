@@ -11,6 +11,10 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta
+            name="description"
+            content="The Art of Living Foundation- a humanitarian organization devoted for the betterment of society, brings smiles by yoga, meditation, Sudarshan Kriya & life skills."
+          />
           <link
             rel="apple-touch-icon"
             sizes="180x180"
@@ -39,7 +43,8 @@ class CustomDocument extends Document {
             href={`/assets/${orgConfig.favicon}`}
           ></link>
           <meta name="msapplication-TileColor" content="#da532c"></meta>
-          <meta name="theme-color" content="#ffffff"></meta>
+          <meta name="theme-color" content="#da532c"></meta>
+          <meta name="referrer" content={"strict-origin"} />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta
             name="apple-mobile-web-app-status-bar-style"
@@ -60,6 +65,12 @@ class CustomDocument extends Document {
             integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
             crossOrigin="anonymous"
           />
+          {/* Talkable script */}
+          <script
+            async
+            src="//d2jjzw81hqbuqv.cloudfront.net/integration/clients/art-of-living-staging.min.js"
+            type="text/javascript"
+          ></script>
           {/* <script
             strategy="lazyOnload"
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&libraries=places`}

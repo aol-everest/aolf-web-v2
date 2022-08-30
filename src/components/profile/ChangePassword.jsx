@@ -14,7 +14,11 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
     const { password: newPassword, oldPassword } = values;
     setLoading(true);
     try {
-      await Auth.changePassword(user, oldPassword, newPassword);
+      await Auth.changePassword({
+        email: user.profile.email,
+        oldPassword,
+        newPassword,
+      });
       updateCompleteAction({});
       setShowSuccessMessage(true);
     } catch (ex) {

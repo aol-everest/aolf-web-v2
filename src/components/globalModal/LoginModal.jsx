@@ -12,6 +12,7 @@ import {
 } from "./../loginForm";
 import { api, Auth } from "@utils";
 import { useAuth } from "@contexts";
+import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";
@@ -73,7 +74,13 @@ export const LoginModal = () => {
     return message;
   };
 
-  const signIn = async ({ username, password }) => {
+  const validateStudentEmail = (email) => {
+    const regex = new RegExp("[a-z0-9]+@[a-z]+.edu$");
+    const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+    return isStudentEmail;
+  };
+
+  const signIn = async ({ username, password, isStudent = false }) => {
     setLoading(true);
     setShowMessage(false);
     try {
@@ -89,34 +96,56 @@ export const LoginModal = () => {
         const userInfo = await Auth.reFetchProfile();
         setUser(userInfo);
 
-        setLoading(false);
-        hideModal();
-        if (navigateTo) {
-          return router.push(navigateTo);
+        if (isStudent) {
+          await api.post({
+            path: "verify-email",
+            body: {
+              email: username,
+            },
+          });
+          setShowSuccessMessage(true);
+          setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
+          setTimeout(() => {
+            setLoading(false);
+            setShowSuccessMessage(false);
+            setSuccessMessage(null);
+            hideModal();
+            if (navigateTo) {
+              return router.push(navigateTo);
+            } else {
+              router.reload(window.location.pathname);
+            }
+          }, 3000);
         } else {
-          router.reload(window.location.pathname);
+          setLoading(false);
+          hideModal();
+          if (navigateTo) {
+            return router.push(navigateTo);
+          } else {
+            router.reload(window.location.pathname);
+          }
         }
-      }
-      // const user = await Auth.signIn(username, password);
-      // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-      //   setCurrentUser(user);
-      //   setMode(NEW_PASSWORD_REQUEST);
-      //   setLoading(false);
-      // } else {
-      //   const token = user.signInUserSession.idToken.jwtToken;
-      //   await api.get({
-      //     path: "profile",
-      //     token,
-      //   });
+        // const user = await Auth.signIn(username, password);
+        // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
+        //   setCurrentUser(user);
+        //   setMode(NEW_PASSWORD_REQUEST);
+        //   setLoading(false);
+        // } else {
+        //   const token = user.signInUserSession.idToken.jwtToken;
+        //   await api.get({
+        //     path: "profile",
+        //     token,
+        //   });
 
-      //   setLoading(false);
-      //   hideModal();
-      //   if (navigateTo) {
-      //     return router.push(navigateTo);
-      //   } else {
-      //     router.reload(window.location.pathname);
-      //   }
-      // }
+        //   setLoading(false);
+        //   hideModal();
+        //   if (navigateTo) {
+        //     return router.push(navigateTo);
+        //   } else {
+        //     router.reload(window.location.pathname);
+        //   }
+        // }
+      }
     } catch (ex) {
       // await Auth.signOut();
       const data = ex.response?.data;
@@ -169,9 +198,12 @@ export const LoginModal = () => {
   const signUp = async ({ username, password, firstName, lastName }) => {
     setLoading(true);
     setShowMessage(false);
+    const isStudentFlowEnabled =
+      process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === "true";
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
-      await signIn({ username, password });
+      const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
+      await signIn({ username, password, isStudent });
     } catch (ex) {
       const data = ex.response?.data;
       const { message, statusCode } = data || {};

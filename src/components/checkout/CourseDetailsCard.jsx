@@ -159,6 +159,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
               <a href={`mailto:${email}`}>{email}</a>
             </li>
           </ul>
+
           {mode === COURSE_MODES.IN_PERSON.name && (
             <>
               {!workshop.isLocationEmpty && (

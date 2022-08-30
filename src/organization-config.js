@@ -25,7 +25,23 @@ const allOrganizationConfig = [
     favicon16: "hb-favicon-32x32.png",
     seo: {
       image:
-        "https://healingbreaths.org/wp-content/uploads/2022/02/stanford-news-1.png",
+        "https://healingbreaths.org/wp-content/uploads/2022/02/cyne-logo.png",
+      url: "https://members.healingbreaths.org",
+      description:
+        "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
+    },
+  },
+  {
+    name: "IAHV",
+    logo: "iahv-logo.png",
+    title: "IAHV",
+    favicon180: "iahv-favicon-96x96.png",
+    favicon: "iahv-favicon.ico",
+    favicon32: "iahv-favicon-32x32.png",
+    favicon16: "iahv-favicon-16x16.png",
+    seo: {
+      image:
+        "https://us.iahv.org/wp-content/uploads/2017/02/imageedit_5_7682410385.png",
       url: "https://members.healingbreaths.org",
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",

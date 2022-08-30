@@ -339,7 +339,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </>
         )}
 
-        {/* {productTypeId == 22119 && (
+        {productTypeId == 22119 && (
           <ul className="course-details__list">
             <div className="course-details__list__title">
               <h6>Location:</h6>

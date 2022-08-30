@@ -47,6 +47,7 @@ const ChangeCardDetail = dynamic(() =>
 const UPCOMING_EVENTS = "UPCOMING_EVENTS";
 const PAST_COURSES = "PAST_COURSES";
 const UPDATE_PROFILE = "UPDATE_PROFILE";
+const REFER_A_FRIEND = "REFER_A_FRIEND";
 const CARD_DETAILS = "CARD_DETAILS";
 const CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
@@ -248,13 +249,15 @@ const Profile = ({ tab }) => {
                   onChange={handleOnSelectFile}
                 />
                 <div className="profile-header__image wrapper">
+                  <span>{initials}</span>
                   {profilePic && (
                     <img
                       src={profilePic}
                       className="rounded-circle profile-pic"
+                      onError={(i) => (i.target.style.display = "none")}
                     />
                   )}
-                  {!profilePic && <span>{initials}</span>}
+
                   <div className="camera-icon">
                     <i className="fa">
                       <FaCamera />
@@ -313,6 +316,16 @@ const Profile = ({ tab }) => {
                   onClick={switchTab(UPDATE_PROFILE)}
                 >
                   Update Profile
+                </a>
+              </li>
+              <li className="nav-item" role="presentation">
+                <a
+                  className={classNames("profile-tab", {
+                    active: activeTab === REFER_A_FRIEND,
+                  })}
+                  onClick={switchTab(REFER_A_FRIEND)}
+                >
+                  Refer a Friend
                 </a>
               </li>
               <li className="nav-item" role="presentation">
@@ -400,6 +413,14 @@ const Profile = ({ tab }) => {
                   updateCompleteAction={updateCompleteAction}
                   profile={user.profile}
                 ></ChangeProfile>
+              </div>
+              <div
+                className={classNames("tab-pane profile-update fade", {
+                  active: activeTab === REFER_A_FRIEND,
+                  show: activeTab === REFER_A_FRIEND,
+                })}
+              >
+                <div id="talkable-offer"></div>
               </div>
               <div
                 className={classNames("tab-pane fade", {
