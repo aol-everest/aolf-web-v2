@@ -157,6 +157,10 @@ const Profile = ({ tab }) => {
     router.push("/us-en");
   };
 
+  const navigateToReferFriendPage = () => {
+    router.push("/us-en/refer");
+  };
+
   const handleOnSelectFile = (e) => {
     if (e.target.files.length) {
       const reader = new FileReader();
@@ -564,6 +568,28 @@ const Profile = ({ tab }) => {
                       profile={user.profile}
                     ></ChangeProfile>
                   </div>
+                </div>
+              </div>
+              <div className="profile-body_mobile__card">
+                <div className="profile-body_mobile__card-header">
+                  <h2 className="mb-0">
+                    <button
+                      className={classNames("btn", {
+                        collapsed: activeTab !== REFER_A_FRIEND,
+                      })}
+                      onClick={navigateToReferFriendPage}
+                      type="button"
+                    >
+                      Refer a Friend
+                    </button>
+                  </h2>
+                </div>
+                <div
+                  className={classNames("collapse", {
+                    show: activeTab === REFER_A_FRIEND,
+                  })}
+                >
+                  <div className="profile-body_mobile__card-body"></div>
                 </div>
               </div>
               <div className="profile-body_mobile__card">
