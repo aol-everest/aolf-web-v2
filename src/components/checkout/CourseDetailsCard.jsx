@@ -160,7 +160,8 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
             </li>
           </ul>
 
-          {mode === COURSE_MODES.IN_PERSON.name && (
+          {(mode === COURSE_MODES.IN_PERSON.name ||
+            mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
             <>
               {!workshop.isLocationEmpty && (
                 <ul className="info__list mt-3">
