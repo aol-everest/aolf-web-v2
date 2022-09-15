@@ -323,11 +323,6 @@ const Thankyou = () => {
     <>
       <main>
         <section className="get-started">
-          <img
-            src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
-            width="1"
-            height="1"
-          ></img>
           <div className="container-md">
             <div className="row align-items-center">
               <div className="col-lg-5 col-md-12 p-md-0">
