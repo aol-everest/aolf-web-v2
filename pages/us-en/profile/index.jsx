@@ -424,6 +424,51 @@ const Profile = ({ tab }) => {
                   show: activeTab === REFER_A_FRIEND,
                 })}
               >
+                <div>
+                  <h6 className="course-details-card__subtitle">
+                    How to Earn Rewards
+                  </h6>
+                  <ol>
+                    <li>
+                      Invite your friends to do the SKY Breath Meditation course
+                    </li>
+                    <li>
+                      Your friends get 20% off their first SKY Breath Meditation
+                      course
+                    </li>
+                    <li>
+                      You get $20 for every friend that completes their course
+                      and upto $200 per year
+                    </li>
+                    <li>
+                      You can use the credit towards Sahaj, Silence or even
+                      repeating SKY Breath Meditation
+                    </li>
+                  </ol>{" "}
+                  <h6 className="course-details-card__subtitle">
+                    How to Claim the Reward
+                  </h6>
+                  <ol>
+                    <li>
+                      You will receive a $20 credit coupon code via email for
+                      every friend that completes their course
+                    </li>
+                    <li>
+                      Enter the coupon code at check out when you register for
+                      Sahaj Samadhi Meditation course or Silent Retreat.
+                    </li>
+                    <li>
+                      If you have multiple coupon codes and would like to use
+                      them towards a single course registration, please send a
+                      request to support@us.artofliving.org and include all
+                      coupon codes in the email.
+                    </li>
+                  </ol>
+                  <p>
+                    If you are not part of the Referral program as yet, you can
+                    sign up here
+                  </p>
+                </div>
                 <div id="talkable-offer"></div>
               </div>
               <div
