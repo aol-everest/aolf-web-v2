@@ -322,16 +322,19 @@ const Profile = ({ tab }) => {
                   Update Profile
                 </a>
               </li>
-              <li className="nav-item" role="presentation">
-                <a
-                  className={classNames("profile-tab", {
-                    active: activeTab === REFER_A_FRIEND,
-                  })}
-                  onClick={switchTab(REFER_A_FRIEND)}
-                >
-                  Refer a Friend
-                </a>
-              </li>
+              {process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL && (
+                <li className="nav-item" role="presentation">
+                  <a
+                    className={classNames("profile-tab", {
+                      active: activeTab === REFER_A_FRIEND,
+                    })}
+                    onClick={switchTab(REFER_A_FRIEND)}
+                  >
+                    Refer a Friend
+                  </a>
+                </li>
+              )}
+
               <li className="nav-item" role="presentation">
                 <a
                   className={classNames("profile-tab", {
@@ -620,28 +623,31 @@ const Profile = ({ tab }) => {
                   </div>
                 </div>
               </div>
-              <div className="profile-body_mobile__card">
-                <div className="profile-body_mobile__card-header">
-                  <h2 className="mb-0">
-                    <button
-                      className={classNames("btn", {
-                        collapsed: activeTab !== REFER_A_FRIEND,
-                      })}
-                      onClick={navigateToReferFriendPage}
-                      type="button"
-                    >
-                      Refer a Friend
-                    </button>
-                  </h2>
+              {process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL && (
+                <div className="profile-body_mobile__card">
+                  <div className="profile-body_mobile__card-header">
+                    <h2 className="mb-0">
+                      <button
+                        className={classNames("btn", {
+                          collapsed: activeTab !== REFER_A_FRIEND,
+                        })}
+                        onClick={navigateToReferFriendPage}
+                        type="button"
+                      >
+                        Refer a Friend
+                      </button>
+                    </h2>
+                  </div>
+                  <div
+                    className={classNames("collapse", {
+                      show: activeTab === REFER_A_FRIEND,
+                    })}
+                  >
+                    <div className="profile-body_mobile__card-body"></div>
+                  </div>
                 </div>
-                <div
-                  className={classNames("collapse", {
-                    show: activeTab === REFER_A_FRIEND,
-                  })}
-                >
-                  <div className="profile-body_mobile__card-body"></div>
-                </div>
-              </div>
+              )}
+
               <div className="profile-body_mobile__card">
                 <div className="profile-body_mobile__card-header">
                   <h2 className="mb-0">
