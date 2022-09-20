@@ -237,7 +237,8 @@ const AOL_MENU = [
   },
 ];
 
-const MENU = orgConfig.name === "AOL" ? AOL_MENU : HB_MENU;
+const MENU =
+  orgConfig.name === "AOL" || orgConfig.name === "IAHV" ? AOL_MENU : HB_MENU;
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
