@@ -466,7 +466,12 @@ const Profile = ({ tab }) => {
                   </ol>
                   <p>
                     If you are not part of the Referral program as yet, you can
-                    sign up here
+                    sign up{" "}
+                    <Link href="/us-en/referral-offer" prefetch={false}>
+                      <a href="#" className="link_orange">
+                        here
+                      </a>
+                    </Link>
                   </p>
                 </div>
                 <div id="talkable-offer"></div>
