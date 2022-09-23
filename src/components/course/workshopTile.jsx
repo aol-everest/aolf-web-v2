@@ -92,18 +92,30 @@ export const WorkshopTile = ({ data, authenticated }) => {
         data-complete={isPurchased}
       >
         {isSilentRetreatType && (
-          <Image src="/img/course-card-4.png" alt="bg" layout="fill" />
+          <Image
+            src="/img/CardsforJourneyWeb/Silent_retreat.png"
+            alt="bg"
+            layout="fill"
+          />
         )}
         {isSKYType && (
-          <Image src="/img/course-card-2.png" alt="bg" layout="fill" />
+          <Image src="/img/CardsforJourneyWeb/SKY.png" alt="bg" layout="fill" />
         )}
         {isSahajSamadhiMeditationType && (
-          <Image src="/img/course-card-5.png" alt="bg" layout="fill" />
+          <Image
+            src="/img/CardsforJourneyWeb/Sahaj.png"
+            alt="bg"
+            layout="fill"
+          />
         )}
         {!isSilentRetreatType &&
           !isSKYType &&
           !isSahajSamadhiMeditationType && (
-            <Image src="/img/course-card-1.png" alt="bg" layout="fill" />
+            <Image
+              src="/img/CardsforJourneyWeb/Misc-1.png"
+              alt="bg"
+              layout="fill"
+            />
           )}
         <div className="parentData">
           {dayjs

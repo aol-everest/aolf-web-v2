@@ -61,13 +61,13 @@ const renderEventMobile = (workshop) => {
     const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");
     switch (meetupType) {
       case "Short SKY Meditation Meetup":
-        imageSrc = "/img/filter-card-1@2x.png";
+        imageSrc = "/img/CardsforJourneyWeb/Meetup_1.png";
         break;
       case "Guided Meditation Meetup":
-        imageSrc = "/img/filter-card-2@2x.png";
+        imageSrc = "/img/CardsforJourneyWeb/Meetup_2.png";
         break;
       default:
-        imageSrc = "/img/filter-card-1@2x.png";
+        imageSrc = "/img/CardsforJourneyWeb/Meetup_3.png";
         break;
     }
     return (
@@ -98,28 +98,28 @@ const renderEventMobile = (workshop) => {
           {isSilentRetreatType && (
             <img
               className="profile-body_mobile__course-img"
-              src="/img/course-card-4.png"
+              src="/img/CardsforJourneyWeb/Silent_retreat.png"
               alt="bg"
             />
           )}
           {isSKYType && (
             <img
               className="profile-body_mobile__course-img"
-              src="/img/course-card-2.png"
+              src="/img/CardsforJourneyWeb/SKY.png"
               alt="bg"
             />
           )}
           {isSahajSamadhiMeditationType && (
             <img
               className="profile-body_mobile__course-img"
-              src="/img/course-card-5.png"
+              src="/img/CardsforJourneyWeb/Sahaj.png"
               alt="bg"
             />
           )}
           {isSilentRetreatType && isSKYType && isSahajSamadhiMeditationType && (
             <img
               className="profile-body_mobile__course-img"
-              src="/img/course-card-1.png"
+              src="/img/CardsforJourneyWeb/Misc-1.png"
               alt="bg"
             />
           )}
@@ -193,13 +193,13 @@ const renderEvent = (workshop) => {
     const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");
     switch (meetupType) {
       case "Short SKY Meditation Meetup":
-        imageSrc = "/img/filter-card-1@2x.png";
+        imageSrc = "/img/CardsforJourneyWeb/Meetup_1.png";
         break;
       case "Guided Meditation Meetup":
-        imageSrc = "/img/filter-card-2@2x.png";
+        imageSrc = "/img/CardsforJourneyWeb/Meetup_2.png";
         break;
       default:
-        imageSrc = "/img/filter-card-1@2x.png";
+        imageSrc = "/img/CardsforJourneyWeb/Meetup_3.png";
         break;
     }
     return (
@@ -221,13 +221,13 @@ const renderEvent = (workshop) => {
     );
   } else {
     if (isSilentRetreatType) {
-      imageSrc = "/img/course-card-4.png";
+      imageSrc = "/img/CardsforJourneyWeb/Silent_retreat.png";
     } else if (isSKYType) {
-      imageSrc = "/img/course-card-2.png";
+      imageSrc = "/img/CardsforJourneyWeb/SKY.png";
     } else if (isSahajSamadhiMeditationType) {
-      imageSrc = "/img/course-card-5.png";
+      imageSrc = "/img/CardsforJourneyWeb/Sahaj.png";
     } else {
-      imageSrc = "/img/course-card-1.png";
+      imageSrc = "/img/CardsforJourneyWeb/Misc-1.png";
     }
     return (
       <div className="col-6 col-lg-3 col-md-4" key={sfid}>

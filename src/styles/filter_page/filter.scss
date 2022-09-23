@@ -128,7 +128,7 @@
 .course_info {
   position: absolute;
   top: 70px;
-  color: $text-color;
+  color: $white;
   left: 20px;
 }
 
@@ -209,7 +209,7 @@
   top: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba($white, 0.6);
+  background-color: rgba($dark, 0.6);
   z-index: 10;
 }
 
