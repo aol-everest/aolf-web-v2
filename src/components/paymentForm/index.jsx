@@ -643,11 +643,13 @@ export const PaymentForm = ({
 
   const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
     formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
-    const { isInstalmentAllowed } = workshop;
-    if (isInstalmentAllowed && showCouponCodeField) {
+    const { isInstalmentAllowed, id } = workshop;
+    if (isInstalmentAllowed && id === comboDetailProductSfid) {
+      setShowCouponCodeField(true);
+    } else {
+      setShowCouponCodeField(false);
       formikProps.setFieldValue("paymentOption", PAYMENT_TYPES.FULL);
     }
-    toggleCouponCodeFieldAction();
   };
 
   const handlePaymentOptionChange = (formikProps, paymentOption) => {
