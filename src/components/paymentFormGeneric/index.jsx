@@ -547,6 +547,7 @@ export const PaymentFormGeneric = ({
     phone1,
     description,
     isCCNotRequired,
+    email: contactEmail,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -1139,7 +1140,9 @@ export const PaymentFormGeneric = ({
                                 <a href={`tel:${phone1}`}>{phone1}</a>
                               </div>
                               <div>
-                                <a href={`mailto:${email}`}>{email}</a>
+                                <a href={`mailto:${contactEmail}`}>
+                                  {contactEmail}
+                                </a>
                               </div>
                             </div>
                           )}
