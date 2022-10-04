@@ -11,11 +11,11 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
   const getMeetupImage = () => {
     switch (data.meetupType) {
       case "Short SKY Meditation Meetup":
-        return <img src="/img/CardsforJourneyWeb/Meetup_1.png" alt="bg" />;
+        return <img src="/img/filter-card-1@2x.png" alt="bg" />;
       case "Guided Meditation Meetup":
-        return <img src="/img/CardsforJourneyWeb/Meetup_2.png" alt="bg" />;
+        return <img src="/img/filter-card-2@2x.png" alt="bg" />;
       default:
-        return <img src="/img/CardsforJourneyWeb/Meetup_3.png" alt="bg" />;
+        return <img src="/img/filter-card-1@2x.png" alt="bg" />;
     }
   };
   const {
