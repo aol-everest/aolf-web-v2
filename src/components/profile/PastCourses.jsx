@@ -12,8 +12,13 @@ export const PastCourses = ({ isMobile }) => {
       const response = await api.get({
         path: "getUserPastCourses",
       });
-      setPastWorkshops(response.pastWorkshops);
-      return response.pastWorkshops;
+      const updatedResponse = response.pastWorkshops.sort((a, b) => {
+        return (
+          new Date(a.eventStartDateTimeGMT) - new Date(b.eventStartDateTimeGMT)
+        );
+      });
+      setPastWorkshops(updatedResponse);
+      return updatedResponse;
     },
     {
       refetchOnWindowFocus: false,

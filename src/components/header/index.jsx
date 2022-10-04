@@ -71,7 +71,7 @@ const AOL_MENU = [
     submenu: [
       {
         name: "Join A Free Intro",
-        link: "/us-en/lp/introtalks",
+        link: "/us-en/lp/introtalks-hq",
       },
       {
         name: "Overview",
@@ -189,7 +189,7 @@ const AOL_MENU = [
       },
       {
         name: "Founder",
-        link: "https://www.artofliving.org/us-en/srisri",
+        link: "/us-en/lp/gurudev",
       },
       {
         name: "Humanitarian Work",
@@ -237,7 +237,8 @@ const AOL_MENU = [
   },
 ];
 
-const MENU = orgConfig.name === "AOL" ? AOL_MENU : HB_MENU;
+const MENU =
+  orgConfig.name === "AOL" || orgConfig.name === "IAHV" ? AOL_MENU : HB_MENU;
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a

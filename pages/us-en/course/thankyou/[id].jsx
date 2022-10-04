@@ -448,7 +448,8 @@ const Thankyou = () => {
                       })}
                   </ul>
                 )}
-                {mode === COURSE_MODES.IN_PERSON.name && (
+                {(mode === COURSE_MODES.IN_PERSON.name ||
+                  mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
                   <>
                     {!workshop.isLocationEmpty && (
                       <ul className="program-details__list-schedule tw-mt-2">
