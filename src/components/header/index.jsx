@@ -477,9 +477,12 @@ export const Header = () => {
                 );
               })}
               <li className="menu-item">
-                <a className="menu-item__link" href="tel:8552024400">
+                <a
+                  className="menu-item__link"
+                  href={`tel:${orgConfig.contactNumberLink}`}
+                >
                   <FiPhone size={20} className="tw-mr-2" />
-                  (855) 202-4400
+                  {orgConfig.contactNumber}
                 </a>
               </li>
             </ul>
