@@ -7,6 +7,7 @@ import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES } from "@constants";
 import { useQuery } from "react-query";
 import { api } from "@utils";
+import { orgConfig } from "@org";
 
 export const ProfileHeader = ({
   subscriptions = [],
@@ -131,7 +132,10 @@ export const ProfileHeader = ({
                     {modalSubscription.subscriptionBuyingChannel === "WEB" && (
                       <div className="tw-max-w-[210px] tw-text-left">
                         Please contact customer service at{" "}
-                        <a href="tel:8552024400">(855) 202-4400</a> or{" "}
+                        <a href={`tel:${orgConfig.contactNumberLink}`}>
+                          {orgConfig.contactNumber}
+                        </a>{" "}
+                        or{" "}
                         <a href="mailto:app.support@us.artofliving.org">
                           app.support@us.artofliving.org
                         </a>{" "}

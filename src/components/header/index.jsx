@@ -371,10 +371,10 @@ export const Header = () => {
             <div className="dropdown">
               <a
                 className={classNames(Style.phone_number)}
-                href="tel:8552024400"
+                href={`tel:${orgConfig.contactNumberLink}`}
               >
                 <FiPhone size={20} className="tw-mr-4" />
-                (855) 202-4400
+                {orgConfig.contactNumber}
               </a>
             </div>
           </nav>
