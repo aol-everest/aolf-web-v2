@@ -93,6 +93,10 @@ const AOL_MENU = [
         // link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
+        name: "Advanced Courses",
+        link: "/us-en/lp/advanced-courses",
+      },
+      {
         name: "Healthcare Providers",
         link: "https://www.healingbreaths.org/",
       },
@@ -234,6 +238,10 @@ const AOL_MENU = [
         link: "/us-en/lp/meet-gurudev2022",
       },
     ],
+  },
+  {
+    name: "DONATE",
+    link: "/us-en/lp/donations",
   },
 ];
 
