@@ -15,6 +15,7 @@ import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { withAuth } from "@hoc";
 import { useAuth } from "@contexts";
+import { orgConfig } from "@org";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -32,7 +33,10 @@ const RetreatPrerequisiteWarning = () => {
       </p>
       <p className="course-join-card__text">
         If our records are not accurate, please contact customer service at{" "}
-        <a href="tel:8552024400">(855) 202-4400</a> or email us at{" "}
+        <a href={`tel:${orgConfig.contactNumberLink}`}>
+          {orgConfig.contactNumber}
+        </a>{" "}
+        or email us at{" "}
         <a href="mailto:app.support@us.artofliving.org">
           app.support@us.artofliving.org
         </a>

@@ -8,6 +8,7 @@ import ErrorPage from "next/error";
 import { withAuth } from "@hoc";
 import { useQuery } from "react-query";
 import { useAuth } from "@contexts";
+import { orgConfig } from "@org";
 
 /* export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { Auth } = withSSRContext({ req });
@@ -193,7 +194,10 @@ const MembershipCancellation = () => {
                 <p className="journey-cancellation__card-text">
                   We are sorry to see you go. Is there anything we could do to
                   support your journey? Please reach out to our team at{" "}
-                  <a href="tel:8552024400">(855) 202-4400</a> or
+                  <a href={`tel:${orgConfig.contactNumberLink}`}>
+                    {orgConfig.contactNumber}
+                  </a>{" "}
+                  or
                 </p>
                 <p className="journey-cancellation__card-text">
                   <a
@@ -303,7 +307,10 @@ const MembershipCancellation = () => {
                 <p className="journey-cancellation_mobile__text">
                   We are sorry to see you go. Is there anything we could do to
                   support your journey? Please reach out to our team at{" "}
-                  <a href="tel:8552024400">(855) 202-4400</a> or
+                  <a href={`tel:${orgConfig.contactNumberLink}`}>
+                    {orgConfig.contactNumber}
+                  </a>{" "}
+                  or
                 </p>
                 <p className="journey-cancellation_mobile__text">
                   <a

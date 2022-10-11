@@ -7,6 +7,8 @@ const allOrganizationConfig = [
     favicon180: "apple-touch-icon.png",
     favicon32: "favicon-32x32.png",
     favicon16: "favicon-16x16.png",
+    contactNumber: "(855) 202-4400",
+    contactNumberLink: "8552024400",
     seo: {
       image:
         "https://www.artofliving.org/sites/www.artofliving.org/files/images/logo/logo-2x-cropped.png",
@@ -23,6 +25,8 @@ const allOrganizationConfig = [
     favicon: "hb-favicon.ico",
     favicon32: "hb-favicon-32x32.png",
     favicon16: "hb-favicon-32x32.png",
+    contactNumber: "(628) 280-6527",
+    contactNumberLink: "6282806527",
     seo: {
       image:
         "https://healingbreaths.org/wp-content/uploads/2022/02/cyne-logo.png",
@@ -39,6 +43,8 @@ const allOrganizationConfig = [
     favicon: "iahv-favicon.ico",
     favicon32: "iahv-favicon-32x32.png",
     favicon16: "iahv-favicon-16x16.png",
+    contactNumber: "(855) 202-4400",
+    contactNumberLink: "8552024400",
     seo: {
       image:
         "https://us.iahv.org/wp-content/uploads/2017/02/imageedit_5_7682410385.png",

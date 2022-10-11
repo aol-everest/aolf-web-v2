@@ -93,6 +93,10 @@ const AOL_MENU = [
         // link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
+        name: "Advanced Courses",
+        link: "/us-en/lp/advanced-courses",
+      },
+      {
         name: "Healthcare Providers",
         link: "https://www.healingbreaths.org/",
       },
@@ -235,6 +239,10 @@ const AOL_MENU = [
       },
     ],
   },
+  {
+    name: "DONATE",
+    link: "/us-en/lp/donations",
+  },
 ];
 
 const MENU =
@@ -363,10 +371,10 @@ export const Header = () => {
             <div className="dropdown">
               <a
                 className={classNames(Style.phone_number)}
-                href="tel:8552024400"
+                href={`tel:${orgConfig.contactNumberLink}`}
               >
                 <FiPhone size={20} className="tw-mr-4" />
-                (855) 202-4400
+                {orgConfig.contactNumber}
               </a>
             </div>
           </nav>
@@ -469,9 +477,12 @@ export const Header = () => {
                 );
               })}
               <li className="menu-item">
-                <a className="menu-item__link" href="tel:8552024400">
+                <a
+                  className="menu-item__link"
+                  href={`tel:${orgConfig.contactNumberLink}`}
+                >
                   <FiPhone size={20} className="tw-mr-2" />
-                  (855) 202-4400
+                  {orgConfig.contactNumber}
                 </a>
               </li>
             </ul>
