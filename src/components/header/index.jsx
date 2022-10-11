@@ -71,7 +71,7 @@ const AOL_MENU = [
     submenu: [
       {
         name: "Join A Free Intro",
-        link: "/us-en/lp/introtalks-hq",
+        link: "/us-en/lp/introtalks-hq?id=a388X000001IOphQAG&utm_source=organic&utm_medium=website&utm_campaign=menu",
       },
       {
         name: "Overview",

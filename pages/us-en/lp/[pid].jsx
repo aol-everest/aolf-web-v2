@@ -44,14 +44,21 @@ const PAGES = {
 
 function LandingPage() {
   const router = useRouter();
-  const { id } = router.query;
-  if (PAGES[id]) {
+  const { pid, ...rest } = router.query;
+  console.log(router.query);
+  const queryString = Object.keys(rest || {})
+    .map((key) => {
+      return encodeURIComponent(key) + "=" + encodeURIComponent(rest[key]);
+    })
+    .join("&");
+  console.log(queryString);
+  if (PAGES[pid]) {
     return (
       <>
-        <NextSeo title={PAGES[id].name} />
+        <NextSeo title={PAGES[pid].name} />
         <iframe
-          src={PAGES[id].url}
-          title={PAGES[id].name}
+          src={`${PAGES[pid].url}?${queryString}`}
+          title={PAGES[pid].name}
           width="100%"
           frameBorder="0"
           seamless="seamless"
@@ -62,7 +69,7 @@ function LandingPage() {
   }
   return (
     <iframe
-      src={`https://event.us.artofliving.org/us-en/${id}`}
+      src={`https://event.us.artofliving.org/us-en/${pid}?${queryString}`}
       width="100%"
       frameBorder="0"
       seamless="seamless"
