@@ -7,11 +7,12 @@ import {
 } from "amazon-cognito-identity-js";
 import { CognitoAuth } from "amazon-cognito-auth-js/dist/amazon-cognito-auth";
 import { api } from "./api";
+import { orgConfig } from "@org";
 
 export const createCognitoAuth = () => {
   const config = {
     UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
-    ClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+    ClientId: orgConfig.ClientId,
     AppWebDomain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
     TokenScopesArray: [
       "email",
@@ -234,14 +235,8 @@ export const signup = ({ email, password, firstName, lastName }) => {
       Value: lastName,
     };
 
-    const signupOrgnization = {
-      Name: "custom:signupOrgnization",
-      Value: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
-    };
-
     attributeList.push(new CognitoUserAttribute(dataFirstName));
     attributeList.push(new CognitoUserAttribute(dataLastName));
-    attributeList.push(new CognitoUserAttribute(signupOrgnization));
     UserPool.signUp(email, password, attributeList, null, (err, data) => {
       if (err) reject(err);
       resolve(data);
