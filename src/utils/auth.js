@@ -234,8 +234,14 @@ export const signup = ({ email, password, firstName, lastName }) => {
       Value: lastName,
     };
 
+    const signupOrgnization = {
+      Name: "custom:signupOrgnization",
+      Value: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
+    };
+
     attributeList.push(new CognitoUserAttribute(dataFirstName));
     attributeList.push(new CognitoUserAttribute(dataLastName));
+    attributeList.push(new CognitoUserAttribute(signupOrgnization));
     UserPool.signUp(email, password, attributeList, null, (err, data) => {
       if (err) reject(err);
       resolve(data);
