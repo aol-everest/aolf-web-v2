@@ -16,7 +16,6 @@ const allOrganizationConfig = [
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
-    ClientId: process.env.NEXT_PUBLIC_AOL_COGNITO_CLIENT_ID,
   },
   {
     name: "HB",
@@ -35,7 +34,6 @@ const allOrganizationConfig = [
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
-    ClientId: process.env.NEXT_PUBLIC_HB_COGNITO_CLIENT_ID,
   },
   {
     name: "IAHV",
@@ -54,7 +52,6 @@ const allOrganizationConfig = [
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
-    ClientId: process.env.NEXT_PUBLIC_IAHV_COGNITO_CLIENT_ID,
   },
 ];
 
