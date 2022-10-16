@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import NumberFormat from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { ABBRS, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { tConvert } from "@utils";
 import Image from "next/image";
@@ -137,21 +137,21 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
             <h2 className="info__title">Contact details:</h2>
             <li className="tw-text-sm tw-truncate tw-tracking-tighter">
               <a href={`tel:${phone1}`}>
-                <NumberFormat
+                <PatternFormat
                   value={phone1}
                   displayType={"text"}
                   format="+1 (###) ###-####"
-                ></NumberFormat>
+                ></PatternFormat>
               </a>
             </li>
             {phone2 && (
               <li className="tw-text-sm tw-truncate tw-tracking-tighter">
                 <a href={`tel:${phone2}`}>
-                  <NumberFormat
+                  <PatternFormat
                     value={phone2}
                     displayType={"text"}
                     format="+1 (###) ###-####"
-                  ></NumberFormat>
+                  ></PatternFormat>
                 </a>
               </li>
             )}

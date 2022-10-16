@@ -138,7 +138,7 @@ export const PreCostDetailsCard = ({
                       ? true
                       : formikProps.values[product.productName];
                     return (
-                      <li>
+                      <li key={product.productSfid}>
                         <span>
                           {!product.isAddOnSelectionRequired && (
                             <input
@@ -223,7 +223,7 @@ export const PreCostDetailsCard = ({
                       : formikProps.values[product.productName];
 
                     return (
-                      <li>
+                      <li key={product.productSfid}>
                         <span>
                           {!product.isAddOnSelectionRequired && (
                             <input
@@ -292,7 +292,7 @@ export const PreCostDetailsCard = ({
                     : formikProps.values[product.productName];
 
                   return (
-                    <li>
+                    <li key={product.productSfid}>
                       <span>
                         {!product.isAddOnSelectionRequired && (
                           <input

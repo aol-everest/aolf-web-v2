@@ -3,7 +3,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, animateScroll as scroll } from "react-scroll";
-import NumberFormat from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { useRouter } from "next/router";
 import { ResearchFindingSource } from "./ResearchFindingSource";
 import { CourseBottomCard } from "./CourseBottomCard";
@@ -202,11 +202,11 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                         {phone1 && (
                           <>
                             <a href={`tel:${phone1}`}>
-                              <NumberFormat
+                              <PatternFormat
                                 value={phone1}
                                 displayType={"text"}
                                 format="+1 (###) ###-####"
-                              ></NumberFormat>
+                              ></PatternFormat>
                             </a>
                             <br />
                           </>
@@ -214,11 +214,11 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                         {phone2 && (
                           <>
                             <a href={`tel:${phone2}`}>
-                              <NumberFormat
+                              <PatternFormat
                                 value={phone2}
                                 displayType={"text"}
                                 format="+1 (###) ###-####"
-                              ></NumberFormat>
+                              ></PatternFormat>
                             </a>
                             <br />
                           </>

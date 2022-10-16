@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import dayjs from "dayjs";
-import NumberFormat from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { Link, Element } from "react-scroll";
 import { useRouter } from "next/router";
 import classNames from "classnames";
@@ -264,11 +264,11 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                         className="course-content__item"
                         href={`tel:${phone1}`}
                       >
-                        <NumberFormat
+                        <PatternFormat
                           value={phone1}
                           displayType={"text"}
                           format="+1 (###) ###-####"
-                        ></NumberFormat>
+                        ></PatternFormat>
                       </a>
 
                       {phone2 && (
@@ -276,11 +276,11 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                           className="course-content__item"
                           href={`tel:${phone2}`}
                         >
-                          <NumberFormat
+                          <PatternFormat
                             value={phone2}
                             displayType={"text"}
                             format="+1 (###) ###-####"
-                          ></NumberFormat>
+                          ></PatternFormat>
                         </a>
                       )}
 

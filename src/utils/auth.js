@@ -7,12 +7,11 @@ import {
 } from "amazon-cognito-identity-js";
 import { CognitoAuth } from "amazon-cognito-auth-js/dist/amazon-cognito-auth";
 import { api } from "./api";
-import { orgConfig } from "@org";
 
 export const createCognitoAuth = () => {
   const config = {
     UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
-    ClientId: orgConfig.ClientId,
+    ClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
     AppWebDomain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
     TokenScopesArray: [
       "email",

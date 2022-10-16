@@ -1200,7 +1200,7 @@ export const BackendPaymentForm = ({
                               : values[product.productName];
 
                             return (
-                              <li>
+                              <li key={product.productSfid}>
                                 <span>
                                   {!product.isAddOnSelectionRequired && (
                                     <input
