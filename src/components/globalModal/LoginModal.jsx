@@ -13,7 +13,6 @@ import {
 import { api, Auth } from "@utils";
 import { useAuth } from "@contexts";
 import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
-import { orgConfig } from "@org";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";
@@ -177,7 +176,7 @@ export const LoginModal = () => {
       state: navigateTo,
       identity_provider: "Facebook",
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
-      client_id: orgConfig.ClientId,
+      client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
       response_type: "CODE",
       scope: "email phone profile aws.cognito.signin.user.admin openid",
     };
@@ -193,7 +192,7 @@ export const LoginModal = () => {
       state: navigateTo,
       identity_provider: "Google",
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
-      client_id: orgConfig.ClientId,
+      client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
       response_type: "CODE",
       scope: "email phone profile aws.cognito.signin.user.admin openid",
     };
