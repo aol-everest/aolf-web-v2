@@ -238,6 +238,7 @@ const Thankyou = () => {
     orderExternalId,
     couponCode,
     selectedGenericSlot = {},
+    pricebookName = "",
   } = attendeeRecord;
 
   const event = {
@@ -338,11 +339,13 @@ const Thankyou = () => {
     return <OnlineCourse />;
   };
 
+  const isRepeater = (pricebookName || "").toLowerCase().includes("repeater");
+
   return (
     <>
       <main>
         <section className="get-started">
-          {["811569", "12371"].indexOf(productTypeId) >= 0 && (
+          {["811569", "12371"].indexOf(productTypeId) >= 0 && !isRepeater && (
             <img
               src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
               width="1"
