@@ -345,13 +345,16 @@ const Thankyou = () => {
     <>
       <main>
         <section className="get-started">
-          {["811569", "12371"].indexOf(productTypeId) >= 0 && !isRepeater && (
-            <img
-              src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
-              width="1"
-              height="1"
-            ></img>
-          )}
+          {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
+            process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
+            ["811569", "12371"].indexOf(productTypeId) >= 0 &&
+            !isRepeater && (
+              <img
+                src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
+                width="1"
+                height="1"
+              ></img>
+            )}
           <div className="container-md">
             <div className="row align-items-center">
               <div className="col-lg-5 col-md-12 p-md-0">
