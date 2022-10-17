@@ -116,6 +116,10 @@ export const COURSE_TYPES = {
     name: "SKY Silent Retreat",
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || "",
   },
+  SKY_HAPPINESS_RETREAT: {
+    name: "SKY Happiness Retreat",
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
+  },
 };
 
 export const MEETUP_TYPES = {
