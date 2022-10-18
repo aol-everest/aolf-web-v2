@@ -16,6 +16,14 @@ export const BillingInfoForm = ({ formikProps }) => {
         formikKey="contactAddress"
         fullWidth
       ></StyledInput>
+      <StyledInput
+        containerClass={classNames(Style.address, "tw-mt-0")}
+        className={classNames(Style.address, "tw-mt-0 !tw-w-full")}
+        placeholder="City"
+        formikProps={formikProps}
+        formikKey="contactCity"
+        fullWidth
+      ></StyledInput>
       <Dropdown
         placeholder="State"
         formikProps={formikProps}

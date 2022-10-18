@@ -18,9 +18,10 @@ import {
   ALERT_TYPES,
   MODAL_TYPES,
   US_STATES,
+  ABBRS,
 } from "@constants";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { api } from "@utils";
+import { api, tConvert } from "@utils";
 import Style from "./BackendPaymentForm.module.scss";
 
 dayjs.extend(isSameOrBefore);
@@ -99,10 +100,12 @@ export const BackendPaymentForm = ({
       password: "",
       contactPhone: "",
       contactAddress: "",
+      contactCity: "",
       contactState: "",
       contactZip: "",
       billingPhone: "",
       billingAddress: "",
+      billingCity: "",
       billingState: "",
       billingZip: "",
       couponCode: couponCode ? couponCode : "",
@@ -129,6 +132,7 @@ export const BackendPaymentForm = ({
         email,
         personMobilePhone,
         personMailingStreet,
+        personMailingCity,
         personMailingState,
         personMailingPostalCode,
       } = user || {};
@@ -140,10 +144,12 @@ export const BackendPaymentForm = ({
         email,
         contactPhone: personMobilePhone || "",
         contactAddress: personMailingStreet || "",
+        contactCity: personMailingCity || "",
         contactState: personMailingState || "",
         contactZip: personMailingPostalCode || "",
         billingPhone: "",
         billingAddress: "",
+        billingCity: "",
         billingState: "",
         billingZip: "",
       });
@@ -238,10 +244,12 @@ export const BackendPaymentForm = ({
       selectedAddOn,
       contactPhone,
       contactAddress,
+      contactCity,
       contactState,
       contactZip,
       billingPhone,
       billingAddress,
+      billingCity,
       billingState,
       billingZip,
       couponCode,
@@ -329,6 +337,7 @@ export const BackendPaymentForm = ({
           contactAddress: {
             contactPhone,
             contactAddress,
+            contactCity,
             contactState,
             contactZip,
           },
@@ -341,6 +350,10 @@ export const BackendPaymentForm = ({
               billingAddress || billingAddress.trim().length > 0
                 ? billingAddress
                 : contactAddress,
+            billingCity:
+              billingCity || billingCity.trim().length > 0
+                ? billingCity
+                : contactCity,
             billingState:
               billingState || billingState.trim().length > 0
                 ? billingState
@@ -639,6 +652,7 @@ export const BackendPaymentForm = ({
     minimumPartialPayment,
     groupedAddOnProducts,
     remainPartialPaymentDateCap,
+    timings,
   } = workshop;
 
   const comboPrice = availableBundles?.find(
@@ -695,13 +709,19 @@ export const BackendPaymentForm = ({
             {!isGenericWorkshop && (
               <div className="row">
                 <div className="col-sm-12 col-12 datetime-box">
-                  <h6>Date:</h6>
-                  <div>
-                    Start: {formattedStartDateOnly} : {eventStartTime}
-                  </div>
-                  <div>
-                    End: {formattedEndDateOnly} : {eventEndTime}
-                  </div>
+                  <h6>Timings:</h6>
+                  {timings &&
+                    timings.map((time) => {
+                      return (
+                        <div key={time.startDate}>
+                          {`${dayjs
+                            .utc(time.startDate)
+                            .format("dd")}: ${tConvert(
+                            time.startTime,
+                          )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
+                        </div>
+                      );
+                    })}
                 </div>
                 {/* <div className="col-sm-6 col-12 datetime-box">
                   <h6>Time:</h6>
@@ -824,6 +844,7 @@ export const BackendPaymentForm = ({
               .oneOf([Yup.ref("email")], "Emails must match"),
             contactPhone: Yup.string().required("Phone is required!"),
             contactAddress: Yup.string().required("Address is required!"),
+            contactCity: Yup.string().required("City is required!"),
             contactState: Yup.string().required("State is required!"),
             contactZip: Yup.string()
               .required("Zip is required!")
@@ -1398,6 +1419,32 @@ export const BackendPaymentForm = ({
                   </div>
 
                   <div className="col-sm-6">
+                    <div
+                      className={classNames("input-group inputLabel_place", {
+                        "text-input-error":
+                          errors.contactCity && touched.contactCity,
+                      })}
+                    >
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="contactCity"
+                        placeholder=" "
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.contactCity}
+                        name="contactCity"
+                        disabled={loading}
+                      />
+                      <label htmlFor="contactCity">
+                        {errors.contactCity && touched.contactCity
+                          ? errors.contactCity
+                          : "City"}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="col-sm-6!">
                     <Field name="contactState">
                       {({ field, form }) => {
                         return (
@@ -1444,7 +1491,7 @@ export const BackendPaymentForm = ({
                       </label>
                     </div>
                   </div>
-                  <div className="col-sm-6 heading_info">
+                  <div className="col-sm-12 heading_info">
                     <p>Billing Information:</p>
                   </div>
 
@@ -1545,6 +1592,35 @@ export const BackendPaymentForm = ({
                       </div>
 
                       <div className="col-sm-6">
+                        <div
+                          className={classNames(
+                            "input-group inputLabel_place",
+                            {
+                              "text-input-error":
+                                errors.billingCity && touched.billingCity,
+                            },
+                          )}
+                        >
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="billingCity"
+                            placeholder=" "
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.billingCity}
+                            name="billingCity"
+                            disabled={loading}
+                          />
+                          <label htmlFor="billingCity">
+                            {errors.billingCity && touched.billingCity
+                              ? errors.billingCity
+                              : "City"}
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6!">
                         <Field name="billingState">
                           {({ field, form }) => {
                             return (

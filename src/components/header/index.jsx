@@ -245,8 +245,167 @@ const AOL_MENU = [
   },
 ];
 
+const IAHV_MENU = [
+  {
+    name: "Courses",
+    submenu: [
+      {
+        name: "Join A Free Intro",
+        link: "/us-en/lp/introtalks-hq?id=a388X000001IOphQAG&utm_source=organic&utm_medium=website&utm_campaign=menu",
+      },
+      {
+        name: "Overview",
+        link: "https://www.artofliving.org/us-en/courses",
+      },
+      {
+        name: "Sahaj Meditation",
+        link: `https://www.artofliving.org/us-en/sahaj-samadhi-meditation`,
+        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
+      },
+      {
+        name: "Silent Retreat",
+        link: "https://www.artofliving.org/us-en/silence-retreat",
+        // link: `/us-en?courseType=SILENT_RETREAT`,
+      },
+      {
+        name: "Advanced Courses",
+        link: "/us-en/lp/advanced-courses",
+      },
+      {
+        name: "Healthcare Providers",
+        link: "https://www.healingbreaths.org/",
+      },
+      {
+        name: "Yoga Course",
+        link: "/us-en/lp/online-foundation-program/",
+      },
+      {
+        name: "College Courses",
+        link: "https://www.skycampushappiness.org/",
+      },
+      {
+        name: "Destination Retreats",
+        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
+      },
+      {
+        name: "All Courses",
+        link: "/us-en/course",
+      },
+    ],
+  },
+  {
+    name: "Meditate",
+    submenu: [
+      {
+        name: "Guided meditations",
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+      },
+      {
+        name: "Live meetups",
+        link: "/us-en/meetup",
+      },
+    ],
+  },
+  {
+    name: "Resources",
+    submenu: [
+      {
+        name: "Journey App",
+        link: "/us-en/lp/journey-app",
+      },
+      {
+        name: "Blog",
+        link: "https://www.artofliving.org/us-en/blog",
+      },
+      {
+        name: "Wisdom Snippets",
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
+      },
+      {
+        name: "Better Sleep",
+        link: "https://www.artofliving.org/us-en/blog/start-sleeping-restfully-all-night-using-this-meditation-sleep-guide",
+      },
+      {
+        name: "Breathwork",
+        link: "https://www.artofliving.org/us-en/yoga/breathing-techniques/yoga-and-pranayama",
+      },
+      {
+        name: "Yoga",
+        link: "https://www.artofliving.org/us-en/yoga",
+      },
+      {
+        name: "Meditation for Beginners",
+        link: "https://www.artofliving.org/us-en/8-tips-get-started-meditation",
+      },
+    ],
+  },
+  {
+    name: "About",
+    submenu: [
+      {
+        name: "Art of Living",
+        link: "https://www.artofliving.org/us-en/about-us",
+      },
+      {
+        name: "Founder",
+        link: "/us-en/lp/gurudev",
+      },
+      {
+        name: "Humanitarian Work",
+        link: "https://www.artofliving.org/us-en/service-projects-overview",
+      },
+      {
+        name: "Experiences & Reviews",
+        link: "https://www.artofliving.org/us-en/testimonials/search",
+      },
+      {
+        name: "Research",
+        link: "https://www.artofliving.org/us-en/research-sudarshan-kriya",
+      },
+      {
+        name: "Press & Media",
+        link: "https://www.artofliving.org/us-en/media-coverage",
+      },
+      {
+        name: "Retreat Center",
+        link: "https://artoflivingretreatcenter.org/",
+      },
+    ],
+  },
+  {
+    name: "Contact",
+    submenu: [
+      {
+        name: "Contact & Support",
+        link: "https://www.artofliving.org/us-en/contact-us",
+      },
+      {
+        name: "Donate",
+        link: "https://aolf.kindful.com/",
+      },
+    ],
+  },
+  {
+    name: "EVENTS",
+    submenu: [
+      {
+        name: "Gurudev 2022 Tour",
+        link: "/us-en/lp/meet-gurudev2022",
+      },
+    ],
+  },
+  {
+    name: "DONATE",
+    link: "/us-en/lp/donations",
+  },
+];
+
 const MENU =
-  orgConfig.name === "AOL" || orgConfig.name === "IAHV" ? AOL_MENU : HB_MENU;
+  orgConfig.name === "AOL"
+    ? AOL_MENU
+    : orgConfig.name === "IAHV"
+    ? IAHV_MENU
+    : HB_MENU;
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
