@@ -7,6 +7,7 @@ import Link from "next/link";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
 import { useAuth } from "@contexts";
+import { withAuth } from "@hoc";
 import { api, Auth } from "@utils";
 import { ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
@@ -741,4 +742,4 @@ const Profile = ({ tab }) => {
   );
 };
 
-export default Profile;
+export default withAuth(Profile);
