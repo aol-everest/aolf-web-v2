@@ -65,6 +65,7 @@ export const PaymentFormHB = ({
   workshop = {},
   profile = {},
   enrollmentCompletionAction = () => {},
+  handleCouseSelection = () => {},
 }) => {
   // const {
   //   loading,
@@ -664,6 +665,7 @@ export const PaymentFormHB = ({
 
   const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
     formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
+    handleCouseSelection(comboDetailProductSfid);
     const { isInstalmentAllowed, id } = workshop;
     if (isInstalmentAllowed && id === comboDetailProductSfid) {
       setShowCouponCodeField(true);
