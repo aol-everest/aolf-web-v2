@@ -208,7 +208,6 @@ const Checkout = () => {
   };
 
   const handleCouseSelection = (selectedId) => {
-    console.log("swdw", selectedId, workshop.id);
     if (selectedId === workshop.id) {
       setComboProductSfid("");
     } else {
