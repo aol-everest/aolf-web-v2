@@ -13,6 +13,7 @@ export const SKYBreathMeditationCombo = ({
   selectedGenericSlot,
   getSelectedTimeSlotDetails,
   showSecondCourseButton,
+  isSKYType,
 }) => {
   const {
     timings,
@@ -55,15 +56,28 @@ export const SKYBreathMeditationCombo = ({
               </p>
             </div>
           </div>
-          <div className="welcome__player player-welcome">
-            <img
-              className="player-welcome__cover"
-              // src="/img/welcome-player-bg.png"
-              src="/img/image@3x.png"
-              alt="welcome-bg"
-            />
-
-            {/* <p
+          {isSKYType ? (
+            <div className="col-lg-6 col-md-12 offset-lg-1 p-0">
+              <div className="get-started__video">
+                <iframe
+                  src="https://player.vimeo.com/video/411549679"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          ) : (
+            <div className="welcome__player player-welcome">
+              <img
+                className="player-welcome__cover"
+                // src="/img/welcome-player-bg.png"
+                src="/img/image@3x.png"
+                alt="welcome-bg"
+              />
+              {/* <p
               className="player-welcome__btn-play"
               role="button"
               aria-label="Play video"
@@ -77,7 +91,8 @@ export const SKYBreathMeditationCombo = ({
                 SKY Breath Meditation
               </p>
             </div> */}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 

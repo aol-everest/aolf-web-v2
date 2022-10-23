@@ -405,6 +405,7 @@ const Thankyou = () => {
             handleSecondCourseRedirection={handleSecondCourseRedirection}
             addToCalendarAction={addToCalendarAction}
             getSelectedTimeSlotDetails={getSelectedTimeSlotDetails}
+            isSKYType={isSKYType}
           />
         ) : isSahajSamadhiMeditationType ? (
           <SahajSamadhiCombo
