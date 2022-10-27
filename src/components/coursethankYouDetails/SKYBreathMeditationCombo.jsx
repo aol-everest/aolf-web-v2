@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { ABBRS, COURSE_MODES } from "@constants";
 import { tConvert } from "@utils";
-import Style from "./coursethankYouDetails.module.scss";
+import Style from "./CoursethankYouDetails.module.scss";
 
 export const SKYBreathMeditationCombo = ({
   handleSecondCourseRedirection,
