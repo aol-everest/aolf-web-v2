@@ -67,6 +67,7 @@ export const PaymentFormGeneric = ({
   workshop = {},
   profile = {},
   enrollmentCompletionAction = () => {},
+  handleCouseSelection = () => {},
 }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
@@ -657,6 +658,7 @@ export const PaymentFormGeneric = ({
   const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
     formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
     const { isInstalmentAllowed, id } = workshop;
+    handleCouseSelection(comboDetailProductSfid);
     if (isInstalmentAllowed && id === comboDetailProductSfid) {
       setShowCouponCodeField(true);
     } else {

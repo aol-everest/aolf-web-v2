@@ -99,6 +99,7 @@ const Checkout = () => {
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [comboProductSfid, setComboProductSfid] = useState("");
 
   useEffect(() => {
     if (!user || !workshop) return;
@@ -197,12 +198,21 @@ const Checkout = () => {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
+        comboId: comboProductSfid,
         page: "ty",
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
         mbsy,
       },
     });
+  };
+
+  const handleCouseSelection = (selectedId) => {
+    if (selectedId === workshop.id) {
+      setComboProductSfid("");
+    } else {
+      setComboProductSfid(selectedId);
+    }
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
@@ -235,6 +245,7 @@ const Checkout = () => {
           workshop={workshop}
           profile={user.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
+          handleCouseSelection={handleCouseSelection}
         />
       );
     }
@@ -250,6 +261,7 @@ const Checkout = () => {
           workshop={workshop}
           profile={user.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
+          handleCouseSelection={handleCouseSelection}
         />
       );
     }
@@ -258,6 +270,7 @@ const Checkout = () => {
         workshop={workshop}
         profile={user.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
+        handleCouseSelection={handleCouseSelection}
       />
     );
   };

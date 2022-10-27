@@ -19,7 +19,9 @@ import { Talkable } from "@utils";
 import {
   SilentRetreat,
   SKYBreathMeditation,
+  SKYBreathMeditationCombo,
   SahajSamadhi,
+  SahajSamadhiCombo,
   InPersonGenericCourse,
   OnlineCourse,
 } from "@components/coursethankYouDetails";
@@ -91,7 +93,7 @@ const Thankyou = () => {
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
-  const { id: attendeeId } = router.query;
+  const { id: attendeeId, comboId } = router.query;
   const {
     data: result,
     isLoading,
@@ -182,6 +184,7 @@ const Thankyou = () => {
     formattedEndDateOnly,
     shortAddress,
     primaryTeacherName,
+    primaryTeacherSfid,
     eventStartDate,
     eventEndDate,
     phone1,
@@ -202,6 +205,7 @@ const Thankyou = () => {
     eventendDateTimeGMT,
     eventStartDateTimeGMT,
     mode,
+    availableBundles,
   } = workshop;
 
   const isSKYType =
@@ -341,194 +345,270 @@ const Thankyou = () => {
 
   const isRepeater = (pricebookName || "").toLowerCase().includes("repeater");
 
+  const comboCourse = comboId
+    ? availableBundles?.find(
+        (availableBundle) => availableBundle.comboProductSfid === comboId,
+      )
+    : false;
+
+  const isBundleContainsSahaj =
+    (comboCourse &&
+      comboCourse.comboDetails?.some(
+        (comboDetail) =>
+          `${COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value}`.indexOf(
+            comboDetail.comboDetailProductAllowedFamilyProduct?.split(",")[0],
+          ) >= 0,
+      )) ||
+    false;
+
+  const isBundleContainsSKY =
+    (comboCourse &&
+      comboCourse.comboDetails?.some(
+        (comboDetail) =>
+          `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(
+            comboDetail.comboDetailProductAllowedFamilyProduct?.split(",")[0],
+          ) >= 0,
+      )) ||
+    false;
+
+  const isSkyPlusSahajFirstCourse =
+    (comboId && isBundleContainsSahaj && isBundleContainsSKY) || false;
+
+  const handleSecondCourseRedirection = () => {
+    const secondCourseType = isSKYType
+      ? "SKY_BREATH_MEDITATION"
+      : "SAHAJ_SAMADHI_MEDITATION";
+
+    router.push({
+      pathname: `/us-en/course`,
+      query: {
+        instructor: JSON.stringify({
+          value: primaryTeacherSfid,
+          label: primaryTeacherName,
+        }),
+        courseType: secondCourseType,
+      },
+    });
+  };
+
+  const showSecondCourseButton =
+    isSkyPlusSahajFirstCourse && comboCourse.showSecondCourseButton;
+
   return (
     <>
       <main>
-        <section className="get-started">
-          {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
-            process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
-            ["811569", "12371"].indexOf(productTypeId) >= 0 &&
-            !isRepeater && (
-              <img
-                src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
-                width="1"
-                height="1"
-              ></img>
-            )}
-          <div className="container-md">
-            <div className="row align-items-center">
-              <div className="col-lg-5 col-md-12 p-md-0">
-                <div className="get-started__info">
-                  <h3 className="get-started__subtitle">You’re going!</h3>
-                  <h1 className="get-started__title section-title">{title}</h1>
-                  <p className="get-started__text">
-                    You're registered for the {title}{" "}
-                    {!isGenericWorkshop && (
+        {isSkyPlusSahajFirstCourse ? (
+          <SKYBreathMeditationCombo
+            workshop={workshop}
+            selectedGenericSlot={selectedGenericSlot}
+            showSecondCourseButton={showSecondCourseButton}
+            handleSecondCourseRedirection={handleSecondCourseRedirection}
+            addToCalendarAction={addToCalendarAction}
+            getSelectedTimeSlotDetails={getSelectedTimeSlotDetails}
+            isSKYType={isSKYType}
+          />
+        ) : isSahajSamadhiMeditationType ? (
+          <SahajSamadhiCombo
+            workshop={workshop}
+            selectedGenericSlot={selectedGenericSlot}
+            handleSahajCourseRedirection={handleSecondCourseRedirection}
+            addToCalendarAction={addToCalendarAction}
+            getSelectedTimeSlotDetails={getSelectedTimeSlotDetails}
+          />
+        ) : (
+          <>
+            <section className="get-started">
+              {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
+                process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
+                ["811569", "12371"].indexOf(productTypeId) >= 0 &&
+                !isRepeater && (
+                  <img
+                    src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
+                    width="1"
+                    height="1"
+                  ></img>
+                )}
+              <div className="container-md">
+                <div className="row align-items-center">
+                  <div className="col-lg-5 col-md-12 p-md-0">
+                    <div className="get-started__info">
+                      <h3 className="get-started__subtitle">You’re going!</h3>
+                      <h1 className="get-started__title section-title">
+                        {title}
+                      </h1>
+                      <p className="get-started__text">
+                        You're registered for the {title}{" "}
+                        {!isGenericWorkshop && (
+                          <>
+                            {" "}
+                            from {formattedStartDateOnly} -{" "}
+                            {formattedEndDateOnly}
+                          </>
+                        )}
+                      </p>
+                      {!isGenericWorkshop && (
+                        <a
+                          className="get-started__link"
+                          href="#"
+                          onClick={addToCalendarAction}
+                        >
+                          Add to Calendar
+                        </a>
+                      )}
+
+                      <p className="get-started__text">
+                        Next step: You will receive an email with details about
+                        your {title}.
+                      </p>
+                    </div>
+                    <p className="get-started__text">
+                      <br />
+                      To get started, download the app.{" "}
+                      {isGenericWorkshop && (
+                        <>
+                          <span>
+                            We will reach out to schedule dates for your course.
+                          </span>
+                        </>
+                      )}
+                    </p>
+                    <div className="btn-wrapper">
+                      <a
+                        className="btn-outline tw-mr-2"
+                        href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img src="/img/ic-apple.svg" alt="apple" />
+                        iOS App
+                      </a>
+                      <a
+                        className="btn-outline"
+                        href="https://play.google.com/store/apps/details?id=com.aol.app"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img src="/img/ic-android.svg" alt="android" />
+                        Android App
+                      </a>
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 offset-lg-1 p-0">
+                    <div className="get-started__video">
+                      {renderVideo(productTypeId)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section className="journey-starts !tw-mb-0">
+              <div className="container">
+                {!isGenericWorkshop && (
+                  <div className="program-details">
+                    <h2 className="program-details__title">Program Details</h2>
+                    {selectedGenericSlot.startDate &&
+                      getSelectedTimeSlotDetails(selectedGenericSlot)}
+                    {!selectedGenericSlot.startDate && (
+                      <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
+                        {timings &&
+                          timings.map((time, i) => {
+                            return (
+                              <li
+                                className="program-details__schedule tw-flex"
+                                key={i}
+                              >
+                                <span className="program-details__schedule-date">
+                                  {dayjs.utc(time.startDate).format("LL")}
+                                </span>
+                                <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
+                                  time.startTime,
+                                )} - ${tConvert(time.endTime)} ${
+                                  ABBRS[time.timeZone]
+                                }`}</span>
+                              </li>
+                            );
+                          })}
+                      </ul>
+                    )}
+                    {(mode === COURSE_MODES.IN_PERSON.name ||
+                      mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
                       <>
-                        {" "}
-                        from {formattedStartDateOnly} - {formattedEndDateOnly}
+                        {!workshop.isLocationEmpty && (
+                          <ul className="program-details__list-schedule tw-mt-2">
+                            <span className="program-details__schedule-date">
+                              Location
+                            </span>
+                            <a
+                              href={`https://www.google.com/maps/search/?api=1&query=${
+                                workshop.locationStreet || ""
+                              }, ${workshop.locationCity} ${
+                                workshop.locationProvince
+                              } ${workshop.locationPostalCode} ${
+                                workshop.locationCountry
+                              }`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {workshop.locationStreet && (
+                                <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  {workshop.locationStreet}
+                                </li>
+                              )}
+                              <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                {workshop.locationCity || ""}
+                                {", "}
+                                {workshop.locationProvince || ""}{" "}
+                                {workshop.locationPostalCode || ""}
+                              </li>
+                            </a>
+                          </ul>
+                        )}
+                        {workshop.isLocationEmpty && (
+                          <ul className="course-details__list">
+                            <div className="course-details__list__title">
+                              <h6>Location:</h6>
+                            </div>
+                            <a
+                              href={`https://www.google.com/maps/search/?api=1&query=${
+                                workshop.streetAddress1 || ""
+                              },${workshop.streetAddress2 || ""} ${
+                                workshop.city
+                              } ${workshop.state} ${workshop.zip} ${
+                                workshop.country
+                              }`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {workshop.streetAddress1 && (
+                                <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  {workshop.streetAddress1}
+                                </li>
+                              )}
+                              {workshop.streetAddress2 && (
+                                <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  {workshop.streetAddress2}
+                                </li>
+                              )}
+                              <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                {workshop.city || ""}
+                                {", "}
+                                {workshop.state || ""} {workshop.zip || ""}
+                              </li>
+                            </a>
+                          </ul>
+                        )}
                       </>
                     )}
-                  </p>
-                  {!isGenericWorkshop && (
-                    <a
-                      className="get-started__link"
-                      href="#"
-                      onClick={addToCalendarAction}
-                    >
-                      Add to Calendar
-                    </a>
-                  )}
-
-                  <p className="get-started__text">
-                    Next step: You will receive an email with details about your{" "}
-                    {title}.
-                  </p>
-                </div>
-                <p className="get-started__text">
-                  <br />
-                  To get started, download the app.{" "}
-                  {isGenericWorkshop && (
-                    <>
-                      <span>
-                        We will reach out to schedule dates for your course.
-                      </span>
-                    </>
-                  )}
-                </p>
-                <div className="btn-wrapper">
-                  <a
-                    className="btn-outline tw-mr-2"
-                    href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img src="/img/ic-apple.svg" alt="apple" />
-                    iOS App
-                  </a>
-                  <a
-                    className="btn-outline"
-                    href="https://play.google.com/store/apps/details?id=com.aol.app"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img src="/img/ic-android.svg" alt="android" />
-                    Android App
-                  </a>
-                </div>
-              </div>
-              <div className="col-lg-6 col-md-12 offset-lg-1 p-0">
-                <div className="get-started__video">
-                  {renderVideo(productTypeId)}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="journey-starts !tw-mb-0">
-          <div className="container">
-            {!isGenericWorkshop && (
-              <div className="program-details">
-                <h2 className="program-details__title">Program Details</h2>
-                {selectedGenericSlot.startDate &&
-                  getSelectedTimeSlotDetails(selectedGenericSlot)}
-                {!selectedGenericSlot.startDate && (
-                  <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
-                    {timings &&
-                      timings.map((time, i) => {
-                        return (
-                          <li
-                            className="program-details__schedule tw-flex"
-                            key={i}
-                          >
-                            <span className="program-details__schedule-date">
-                              {dayjs.utc(time.startDate).format("LL")}
-                            </span>
-                            <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
-                              time.startTime,
-                            )} - ${tConvert(time.endTime)} ${
-                              ABBRS[time.timeZone]
-                            }`}</span>
-                          </li>
-                        );
-                      })}
-                  </ul>
+                  </div>
                 )}
-                {(mode === COURSE_MODES.IN_PERSON.name ||
-                  mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
-                  <>
-                    {!workshop.isLocationEmpty && (
-                      <ul className="program-details__list-schedule tw-mt-2">
-                        <span className="program-details__schedule-date">
-                          Location
-                        </span>
-                        <a
-                          href={`https://www.google.com/maps/search/?api=1&query=${
-                            workshop.locationStreet || ""
-                          }, ${workshop.locationCity} ${
-                            workshop.locationProvince
-                          } ${workshop.locationPostalCode} ${
-                            workshop.locationCountry
-                          }`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {workshop.locationStreet && (
-                            <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                              {workshop.locationStreet}
-                            </li>
-                          )}
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                            {workshop.locationCity || ""}
-                            {", "}
-                            {workshop.locationProvince || ""}{" "}
-                            {workshop.locationPostalCode || ""}
-                          </li>
-                        </a>
-                      </ul>
-                    )}
-                    {workshop.isLocationEmpty && (
-                      <ul className="course-details__list">
-                        <div className="course-details__list__title">
-                          <h6>Location:</h6>
-                        </div>
-                        <a
-                          href={`https://www.google.com/maps/search/?api=1&query=${
-                            workshop.streetAddress1 || ""
-                          },${workshop.streetAddress2 || ""} ${workshop.city} ${
-                            workshop.state
-                          } ${workshop.zip} ${workshop.country}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {workshop.streetAddress1 && (
-                            <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                              {workshop.streetAddress1}
-                            </li>
-                          )}
-                          {workshop.streetAddress2 && (
-                            <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                              {workshop.streetAddress2}
-                            </li>
-                          )}
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                            {workshop.city || ""}
-                            {", "}
-                            {workshop.state || ""} {workshop.zip || ""}
-                          </li>
-                        </a>
-                      </ul>
-                    )}
-                  </>
-                )}
+                <h2 className="journey-starts__title section-title">
+                  Your journey starts here
+                </h2>
+                <RenderJourneyContent />
               </div>
-            )}
-            <h2 className="journey-starts__title section-title">
-              Your journey starts here
-            </h2>
-            <RenderJourneyContent />
-          </div>
-        </section>
+            </section>
+          </>
+        )}
       </main>
       <div className="course-bottom-card show">
         <div className="container">
