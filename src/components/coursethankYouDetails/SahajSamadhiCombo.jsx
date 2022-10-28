@@ -311,7 +311,7 @@ export const SahajSamadhiCombo = ({
               </p>
               <p className="benefit-journey__description">
                 Find a quiet, comfortable space where you can enjoy your course
-                with some privacy
+                with some privacy.
               </p>
             </div>
           </div>
