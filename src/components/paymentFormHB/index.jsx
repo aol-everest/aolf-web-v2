@@ -65,6 +65,7 @@ export const PaymentFormHB = ({
   workshop = {},
   profile = {},
   enrollmentCompletionAction = () => {},
+  handleCouseSelection = () => {},
 }) => {
   // const {
   //   loading,
@@ -171,6 +172,7 @@ export const PaymentFormHB = ({
       questionnaire,
       contactPhone,
       contactAddress,
+      contactCity,
       contactState,
       contactZip,
       couponCode,
@@ -245,12 +247,14 @@ export const PaymentFormHB = ({
           contactAddress: {
             contactPhone,
             contactAddress,
+            contactCity,
             contactState,
             contactZip,
           },
           billingAddress: {
             billingPhone: contactPhone,
             billingAddress: contactAddress,
+            billingCity: contactCity,
             billingState: contactState,
             billingZip: contactZip,
           },
@@ -348,6 +352,7 @@ export const PaymentFormHB = ({
       questionnaire,
       contactPhone,
       contactAddress,
+      contactCity,
       contactState,
       contactZip,
       couponCode,
@@ -448,12 +453,14 @@ export const PaymentFormHB = ({
           contactAddress: {
             contactPhone,
             contactAddress,
+            contactCity,
             contactState,
             contactZip,
           },
           billingAddress: {
             billingPhone: contactPhone,
             billingAddress: contactAddress,
+            billingCity: contactCity,
             billingState: contactState,
             billingZip: contactZip,
           },
@@ -585,6 +592,7 @@ export const PaymentFormHB = ({
     personMailingState,
     personMobilePhone,
     personMailingStreet,
+    personMailingCity,
     isRegisteredStripeCustomer,
     cardLast4Digit,
   } = profile;
@@ -657,6 +665,7 @@ export const PaymentFormHB = ({
 
   const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
     formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
+    handleCouseSelection(comboDetailProductSfid);
     const { isInstalmentAllowed, id } = workshop;
     if (isInstalmentAllowed && id === comboDetailProductSfid) {
       setShowCouponCodeField(true);
@@ -694,6 +703,7 @@ export const PaymentFormHB = ({
           email: email || "",
           contactPhone: personMobilePhone || "",
           contactAddress: personMailingStreet || "",
+          contactCity: personMailingCity || "",
           contactState: personMailingState || "",
           contactZip: personMailingPostalCode || "",
           couponCode: discount ? discount : "",
@@ -722,6 +732,7 @@ export const PaymentFormHB = ({
             .min(10, "Phone is invalid")
             .max(18, "Phone is invalid"),
           contactAddress: Yup.string().required("Address is required"),
+          contactCity: Yup.string().required("City is required"),
           contactState: Yup.string().required("State is required"),
           contactZip: Yup.string()
             .required("Zip is required!")

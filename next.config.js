@@ -33,7 +33,7 @@ const securityHeaders = [
 ];
 
 const moduleExports = {
-  swcMinify: false,
+  swcMinify: true,
   generateEtags: false,
   // basePath: "/us-en",
   // assetPrefix: "/us-en/",

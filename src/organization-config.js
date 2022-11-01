@@ -16,6 +16,14 @@ const allOrganizationConfig = [
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
+    courseModes: ["ONLINE", "IN_PERSON", "DESTINATION_RETREATS"],
+    courseTypes: [
+      "SKY_BREATH_MEDITATION",
+      "SILENT_RETREAT",
+      "SAHAJ_SAMADHI_MEDITATION",
+      "SRI_SRI_YOGA_MEDITATION",
+    ],
+    otherCourseTypes: ["CHAKRA_KRIYA", "VOLUNTEER_TRAINING_PROGRAM"],
   },
   {
     name: "HB",
@@ -34,6 +42,14 @@ const allOrganizationConfig = [
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
+    courseModes: ["ONLINE", "IN_PERSON", "DESTINATION_RETREATS"],
+    courseTypes: [
+      "SKY_BREATH_MEDITATION",
+      "SILENT_RETREAT",
+      "SAHAJ_SAMADHI_MEDITATION",
+      "SRI_SRI_YOGA_MEDITATION",
+    ],
+    otherCourseTypes: ["CHAKRA_KRIYA", "VOLUNTEER_TRAINING_PROGRAM"],
   },
   {
     name: "IAHV",
@@ -52,6 +68,9 @@ const allOrganizationConfig = [
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
+    courseModes: ["ONLINE", "IN_PERSON"],
+    courseTypes: ["SKY_HAPPINESS_RETREAT"],
+    otherCourseTypes: [],
   },
   {
     name: "IAHV",

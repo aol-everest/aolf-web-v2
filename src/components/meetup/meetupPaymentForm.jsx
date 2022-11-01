@@ -18,7 +18,7 @@ import {
 } from "@components/checkout";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import NumberFormat from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { ABBRS } from "@constants";
 import { useAuth } from "@contexts";
 import { tConvert } from "@utils";
@@ -149,6 +149,7 @@ export const MeetupPaymentForm = ({
       questionnaire,
       contactPhone,
       contactAddress,
+      contactCity,
       contactState,
       contactZip,
       couponCode,
@@ -202,6 +203,7 @@ export const MeetupPaymentForm = ({
           contactAddress: {
             contactPhone,
             contactAddress,
+            contactCity,
             contactState,
             contactZip,
           },
@@ -263,6 +265,7 @@ export const MeetupPaymentForm = ({
       questionnaire,
       contactPhone,
       contactAddress,
+      contactCity,
       contactState,
       contactZip,
       couponCode,
@@ -320,6 +323,7 @@ export const MeetupPaymentForm = ({
           contactAddress: {
             contactPhone,
             contactAddress,
+            contactCity,
             contactState,
             contactZip,
           },
@@ -457,6 +461,7 @@ export const MeetupPaymentForm = ({
     personMailingState,
     personMobilePhone,
     personMailingStreet,
+    personMailingCity,
     isRegisteredStripeCustomer,
     cardLast4Digit,
   } = profile;
@@ -496,6 +501,7 @@ export const MeetupPaymentForm = ({
         email: email || "",
         contactPhone: personMobilePhone || "",
         contactAddress: personMailingStreet || "",
+        contactCity: personMailingCity || "",
         contactState: personMailingState || "",
         contactZip: personMailingPostalCode || "",
         couponCode: discount ? discount : "",
@@ -517,6 +523,7 @@ export const MeetupPaymentForm = ({
           .min(10, "Phone is invalid")
           .max(18, "Phone is invalid"),
         contactAddress: Yup.string().required("Address is required"),
+        contactCity: Yup.string().required("City is required"),
         contactState: Yup.string().required("State is required"),
         contactZip: Yup.string()
           .required("Zip is required!")
@@ -916,21 +923,21 @@ export const MeetupPaymentForm = ({
                         <h2 className="info__title">Contact details:</h2>
                         <li className="tw-text-sm tw-truncate tw-tracking-tighter">
                           <a href={`tel:${phone1}`}>
-                            <NumberFormat
+                            <PatternFormat
                               value={phone1}
                               displayType={"text"}
                               format="+1 (###) ###-####"
-                            ></NumberFormat>
+                            ></PatternFormat>
                           </a>
                         </li>
                         {phone2 && (
                           <li className="tw-text-sm tw-truncate tw-tracking-tighter">
                             <a href={`tel:${phone2}`}>
-                              <NumberFormat
+                              <PatternFormat
                                 value={phone2}
                                 displayType={"text"}
                                 format="+1 (###) ###-####"
-                              ></NumberFormat>
+                              ></PatternFormat>
                             </a>
                           </li>
                         )}
@@ -948,21 +955,21 @@ export const MeetupPaymentForm = ({
                         <h2 className="info__title">Contact details:</h2>
                         <li>
                           <a href={`tel:${primaryTeacherMobilePhone}`}>
-                            <NumberFormat
+                            <PatternFormat
                               value={primaryTeacherMobilePhone}
                               displayType={"text"}
                               format="+1 (###) ###-####"
-                            ></NumberFormat>
+                            ></PatternFormat>
                           </a>
                         </li>
                         {primaryTeacherPhone && (
                           <li>
                             <a href={`tel:${primaryTeacherPhone}`}>
-                              <NumberFormat
+                              <PatternFormat
                                 value={primaryTeacherPhone}
                                 displayType={"text"}
                                 format="+1 (###) ###-####"
-                              ></NumberFormat>
+                              ></PatternFormat>
                             </a>
                           </li>
                         )}

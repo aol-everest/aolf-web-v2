@@ -149,13 +149,21 @@ export const LoginModal = () => {
     } catch (ex) {
       // await Auth.signOut();
       const data = ex.response?.data;
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
       const { message, statusCode } = data || {};
       if (statusCode === 500) {
         setMessage(
-          message ? `Error: Unable to login. (${message})` : ex.message,
+          message ? `Error: Unable to login. (${message})` : errorMessage,
         );
       } else {
-        setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+        setMessage(
+          message ? `Error: ${message} (${statusCode})` : errorMessage,
+        );
       }
       console.error(ex);
       setShowMessage(true);
@@ -205,9 +213,15 @@ export const LoginModal = () => {
       const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
       await signIn({ username, password, isStudent });
     } catch (ex) {
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+      setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
       setShowMessage(true);
     }
     setLoading(false);
@@ -229,9 +243,15 @@ export const LoginModal = () => {
         setSuccessMessage(null);
       }, 3000);
     } catch (ex) {
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+      setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
       setShowMessage(true);
     }
     setLoading(false);
@@ -246,9 +266,15 @@ export const LoginModal = () => {
       setMode(LOGIN_MODE);
     } catch (ex) {
       console.log("error signing in", ex);
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+      setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
       setShowMessage(true);
     }
     setLoading(false);
@@ -268,9 +294,15 @@ export const LoginModal = () => {
       // hideModal();
     } catch (ex) {
       console.log(ex);
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
+      setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
       setShowMessage(true);
     }
     setLoading(false);

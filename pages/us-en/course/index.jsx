@@ -492,15 +492,16 @@ const Course = () => {
                     >
                       {({ closeHandler }) => (
                         <>
-                          <li onClick={closeHandler("ONLINE")}>
-                            {COURSE_MODES.ONLINE.name}
-                          </li>
-                          <li onClick={closeHandler("IN_PERSON")}>
-                            {COURSE_MODES.IN_PERSON.name}
-                          </li>
-                          <li onClick={closeHandler("DESTINATION_RETREATS")}>
-                            {COURSE_MODES.DESTINATION_RETREATS.name}
-                          </li>
+                          {orgConfig.courseModes.map((courseMode, index) => {
+                            return (
+                              <li
+                                key={index}
+                                onClick={closeHandler(courseMode)}
+                              >
+                                {COURSE_MODES[courseMode].name}
+                              </li>
+                            );
+                          })}
                         </>
                       )}
                     </Popup>
@@ -538,42 +539,34 @@ const Course = () => {
                         <>
                           {otherCType && (
                             <>
-                              <li onClick={closeHandler("CHAKRA_KRIYA")}>
-                                {COURSE_TYPES.CHAKRA_KRIYA.name}
-                              </li>
-                              <li
-                                onClick={closeHandler(
-                                  "VOLUNTEER_TRAINING_PROGRAM",
-                                )}
-                              >
-                                {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
-                              </li>
+                              {orgConfig.otherCourseTypes.map(
+                                (courseType, index) => {
+                                  return (
+                                    <li
+                                      key={index}
+                                      onClick={closeHandler(courseType)}
+                                    >
+                                      {COURSE_TYPES[courseType].name}
+                                    </li>
+                                  );
+                                },
+                              )}
                             </>
                           )}
                           {!otherCType && (
                             <>
-                              <li
-                                onClick={closeHandler("SKY_BREATH_MEDITATION")}
-                              >
-                                {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                              </li>
-                              <li onClick={closeHandler("SILENT_RETREAT")}>
-                                {COURSE_TYPES.SILENT_RETREAT.name}
-                              </li>
-                              <li
-                                onClick={closeHandler(
-                                  "SAHAJ_SAMADHI_MEDITATION",
-                                )}
-                              >
-                                {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                              </li>
-                              <li
-                                onClick={closeHandler(
-                                  "SRI_SRI_YOGA_MEDITATION",
-                                )}
-                              >
-                                {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
-                              </li>
+                              {orgConfig.courseTypes.map(
+                                (courseType, index) => {
+                                  return (
+                                    <li
+                                      key={index}
+                                      onClick={closeHandler(courseType)}
+                                    >
+                                      {COURSE_TYPES[courseType].name}
+                                    </li>
+                                  );
+                                },
+                              )}
                             </>
                           )}
                         </>
@@ -726,24 +719,17 @@ const Course = () => {
                       >
                         {({ closeHandler }) => (
                           <>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("ONLINE")}
-                            >
-                              {COURSE_MODES.ONLINE.name}
-                            </li>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("IN_PERSON")}
-                            >
-                              {COURSE_MODES.IN_PERSON.name}
-                            </li>
-                            <li
-                              className="dropdown-item"
-                              onClick={closeHandler("DESTINATION_RETREATS")}
-                            >
-                              {COURSE_MODES.DESTINATION_RETREATS.name}
-                            </li>
+                            {orgConfig.courseModes.map((courseMode, index) => {
+                              return (
+                                <li
+                                  key={index}
+                                  className="dropdown-item"
+                                  onClick={closeHandler(courseMode)}
+                                >
+                                  {COURSE_MODES[courseMode].name}
+                                </li>
+                              );
+                            })}
                           </>
                         )}
                       </SmartDropDown>
@@ -773,52 +759,36 @@ const Course = () => {
                           <>
                             {otherCType && (
                               <>
-                                <li
-                                  className="dropdown-item"
-                                  onClick={closeHandler("CHAKRA_KRIYA")}
-                                >
-                                  {COURSE_TYPES.CHAKRA_KRIYA.name}
-                                </li>
-                                <li
-                                  className="dropdown-item"
-                                  onClick={closeHandler(
-                                    "VOLUNTEER_TRAINING_PROGRAM",
-                                  )}
-                                >
-                                  {COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.name}
-                                </li>
+                                {orgConfig.otherCourseTypes.map(
+                                  (courseType, index) => {
+                                    return (
+                                      <li
+                                        key={index}
+                                        className="dropdown-item"
+                                        onClick={closeHandler(courseType)}
+                                      >
+                                        {COURSE_TYPES[courseType].name}
+                                      </li>
+                                    );
+                                  },
+                                )}
                               </>
                             )}
                             {!otherCType && (
                               <>
-                                <li
-                                  className="dropdown-item"
-                                  onClick={closeHandler(
-                                    "SKY_BREATH_MEDITATION",
-                                  )}
-                                >
-                                  {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                                </li>
-                                <li
-                                  className="dropdown-item"
-                                  onClick={closeHandler("SILENT_RETREAT")}
-                                >
-                                  {COURSE_TYPES.SILENT_RETREAT.name}
-                                </li>
-                                <li
-                                  className="dropdown-item"
-                                  onClick={closeHandler(
-                                    "SAHAJ_SAMADHI_MEDITATION",
-                                  )}
-                                >
-                                  {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-                                </li>
-                                <li
-                                  className="dropdown-item"
-                                  onClick={closeHandler("Sri Sri Yoga")}
-                                >
-                                  {COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.name}
-                                </li>
+                                {orgConfig.courseTypes.map(
+                                  (courseType, index) => {
+                                    return (
+                                      <li
+                                        key={index}
+                                        className="dropdown-item"
+                                        onClick={closeHandler(courseType)}
+                                      >
+                                        {COURSE_TYPES[courseType].name}
+                                      </li>
+                                    );
+                                  },
+                                )}
                               </>
                             )}
                           </>

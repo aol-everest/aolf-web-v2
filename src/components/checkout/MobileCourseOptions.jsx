@@ -120,7 +120,7 @@ export const MobileCourseOptions = ({
                             ? true
                             : formikProps.values[product.productName];
                           return (
-                            <li>
+                            <li key={product.productSfid}>
                               <span>
                                 {!product.isAddOnSelectionRequired && (
                                   <input
@@ -197,7 +197,7 @@ export const MobileCourseOptions = ({
                             : formikProps.values[product.productName];
 
                           return (
-                            <li>
+                            <li key={product.productSfid}>
                               <span>
                                 {!product.isAddOnSelectionRequired && (
                                   <input
@@ -256,7 +256,7 @@ export const MobileCourseOptions = ({
                           : formikProps.values[product.productName];
 
                         return (
-                          <li>
+                          <li key={product.productSfid}>
                             <span>
                               {!product.isAddOnSelectionRequired && (
                                 <input
