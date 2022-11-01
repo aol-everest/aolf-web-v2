@@ -340,19 +340,6 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </>
         )}
 
-        {productTypeId == 22119 && (
-          <ul className="course-details__list">
-            <div className="course-details__list__title">
-              <h6>Location:</h6>
-            </div>
-            <li>
-              {" "}
-              {`${streetAddress1 || ""} ${streetAddress2 || ""}, ${
-                city || ""
-              }, ${country || ""}`}
-            </li>
-          </ul>
-        )}
         {!corporateName && (
           <div className="course-details__submit">
             <button
