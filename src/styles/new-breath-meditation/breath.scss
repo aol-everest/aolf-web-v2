@@ -36,6 +36,17 @@
       margin-bottom: 30px;
     }
 
+    &__btn-course {
+      border-radius: 8px;
+      height: 52px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 188px;
+      justify-content: center;
+
+      display: none;
+    }
+
     &__btn-calendar {
       display: inline-flex;
       font-size: 16px;
@@ -45,7 +56,7 @@
       position: relative;
 
       &:before {
-        content: '';
+        content: "";
         position: absolute;
         height: 1px;
         bottom: 1px;
@@ -59,7 +70,6 @@
       flex-basis: 572px;
       flex-shrink: 0;
     }
-
   }
 
   .player-welcome {
@@ -81,7 +91,7 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: linear-gradient(180deg, #96BBEF 0%, #5B86EC 100%);
+      background: linear-gradient(180deg, #96bbef 0%, #5b86ec 100%);
       display: inline-flex;
       justify-content: center;
       align-items: center;
@@ -96,7 +106,7 @@
     }
 
     &__title {
-      font: 28px/38px 'Lora';
+      font: 28px/38px "Lora";
       font-weight: 700;
       margin-bottom: 8px;
     }
@@ -158,12 +168,16 @@
   .sidebar-schedule {
     flex: 0 0 372px;
     width: 372px;
-    box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03), 0 10px 29.2px rgba(7, 14, 61, 0.02), 0 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887), 0px 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113), 0 0.9px 2.75px rgba(7, 14, 61, 0.009);
+    box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03),
+      0 10px 29.2px rgba(7, 14, 61, 0.02),
+      0 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887),
+      0px 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113),
+      0 0.9px 2.75px rgba(7, 14, 61, 0.009);
     border-radius: 12px;
     padding: 32px 40px;
 
     &__title {
-      font: 24px/32px 'Lora';
+      font: 24px/32px "Lora";
       font-weight: 700;
       margin-bottom: 20px;
     }
@@ -192,7 +206,6 @@
       line-height: 22px;
       color: $darkGray;
     }
-
   }
 
   .journey {
@@ -237,7 +250,11 @@
       position: relative;
 
       background: $white;
-      box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03), 0 9.8px 29.2px rgba(7, 14, 61, 0.02), 0 4.7px 14.17px rgba(7, 14, 61, 0.016), 0 2.34px 6.9px rgba(7, 14, 61, 0.013), 0 0.9px 2.74px rgba(7, 14, 61, 0.009);
+      box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03),
+        0 9.8px 29.2px rgba(7, 14, 61, 0.02),
+        0 4.7px 14.17px rgba(7, 14, 61, 0.016),
+        0 2.34px 6.9px rgba(7, 14, 61, 0.013),
+        0 0.9px 2.74px rgba(7, 14, 61, 0.009);
       border-radius: 12px;
       margin-bottom: 32px;
     }
@@ -246,7 +263,7 @@
       position: absolute;
       top: 4px;
       right: 1px;
-      font: 24px/1px 'Lora';
+      font: 24px/1px "Lora";
       font-weight: 700;
     }
 
@@ -277,7 +294,7 @@
     background-repeat: no-repeat !important;
 
     &__title {
-      font: 700 28px/38px 'Lora';
+      font: 700 28px/38px "Lora";
       margin: 0;
     }
 
@@ -298,10 +315,10 @@
 
       font-size: 10px;
       line-height: 10px;
-      color: #FFFFFF;
+      color: #ffffff;
       text-decoration: none;
 
-      font-family: 'Metropolis';
+      font-family: "Metropolis";
       font-weight: 500;
     }
 
@@ -310,11 +327,7 @@
       line-height: 14px;
       font-weight: 700;
     }
-
-
-
   }
-
 }
 
 @media (max-width: 1199px) {
@@ -358,9 +371,7 @@
         display: none;
       }
     }
-
   }
-
 }
 
 @media (max-width: 991px) {
@@ -461,10 +472,10 @@
     }
 
     .journey {
-      padding: 60px 0 155px;
+      padding: 60px 0 230px;
 
       &__title {
-        font: 28px/38px 'Lora';
+        font: 28px/38px "Lora";
         font-weight: 700;
         margin-bottom: 32px;
       }
@@ -485,7 +496,33 @@
         justify-content: center;
       }
     }
+  }
+}
 
+@media (max-width: 560px) {
+  .breath-meditation {
+    .schedule__btn-select {
+      display: none;
+    }
+
+    .welcome {
+      &__navigation {
+        display: flex;
+        flex-wrap: nowrap;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &__btn-course {
+        display: flex;
+        margin-right: 20px;
+      }
+
+      &__btn-calendar {
+        white-space: nowrap;
+      }
+    }
   }
 }
 
@@ -506,3 +543,17 @@
   }
 }
 
+@media (max-width: 360px) {
+  .breath-meditation {
+    .welcome {
+      &__navigation {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      &__btn-course {
+        margin-right: unset;
+      }
+    }
+  }
+}

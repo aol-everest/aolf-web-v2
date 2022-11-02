@@ -42,7 +42,7 @@ export const api = {
   get: async (config) => {
     const param = config.param
       ? { ...config.param, org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME }
-      : null;
+      : { org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME };
     const qs = param ? queryString.stringify(param) : "";
     try {
       const result = await axiosClient.get(
