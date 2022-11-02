@@ -54,10 +54,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
               <div className="col-lg-6 col-xl-7">
                 <div className="about-program__main">
                   <p className="about-program__main-type">{mode}</p>
-                  <h1 className="about-program__main-name">
-                    {title} <br />
-                    Foundation Program
-                  </h1>
+                  <h1 className="about-program__main-name">{title}</h1>
                   <ul className="about-program__main-list">
                     <li>Restore, rebalance, & re-energize your mind-body</li>
                     <li>Begin or deepen your yoga journey </li>
