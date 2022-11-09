@@ -376,8 +376,8 @@ const Thankyou = () => {
 
   const handleSecondCourseRedirection = () => {
     const secondCourseType = isSKYType
-      ? "SKY_BREATH_MEDITATION"
-      : "SAHAJ_SAMADHI_MEDITATION";
+      ? "SAHAJ_SAMADHI_MEDITATION"
+      : "SKY_BREATH_MEDITATION";
 
     router.push({
       pathname: `/us-en/course`,
