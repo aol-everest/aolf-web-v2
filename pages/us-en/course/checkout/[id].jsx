@@ -83,6 +83,7 @@ const Checkout = () => {
         path: "workshopDetail",
         param: {
           id: workshopId,
+          rp: "checkout",
         },
       });
       return response.data;
