@@ -4,6 +4,7 @@ import classNames from "classnames";
 
 import { ABBRS, COURSE_MODES } from "@constants";
 import { tConvert } from "@utils";
+import { orgConfig } from "@org";
 import Style from "./CoursethankYouDetails.module.scss";
 
 export const SKYBreathMeditationCombo = ({
@@ -131,18 +132,20 @@ export const SKYBreathMeditationCombo = ({
                 )}
               </div>
 
-              <div className="schedule__step">
-                <img
-                  className="schedule__icon"
-                  src="/img/ic-sun.svg"
-                  alt="schedule-icon"
-                />
-                <p className="schedule__heading">Download the app</p>
-                <p className="schedule__text">
-                  After that, you can download the app and relax with a
-                  meditation
-                </p>
-              </div>
+              {orgConfig.name !== "HB" && (
+                <div className="schedule__step">
+                  <img
+                    className="schedule__icon"
+                    src="/img/ic-sun.svg"
+                    alt="schedule-icon"
+                  />
+                  <p className="schedule__heading">Download the app</p>
+                  <p className="schedule__text">
+                    After that, you can download the app and relax with a
+                    meditation
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
