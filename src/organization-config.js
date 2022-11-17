@@ -23,7 +23,11 @@ const allOrganizationConfig = [
       "SAHAJ_SAMADHI_MEDITATION",
       "SRI_SRI_YOGA_MEDITATION",
     ],
-    otherCourseTypes: ["CHAKRA_KRIYA", "VOLUNTEER_TRAINING_PROGRAM"],
+    otherCourseTypes: [
+      "CHAKRA_KRIYA",
+      "VOLUNTEER_TRAINING_PROGRAM",
+      "BLESSINGS_COURSE",
+    ],
   },
   {
     name: "HB",
@@ -49,7 +53,11 @@ const allOrganizationConfig = [
       "SAHAJ_SAMADHI_MEDITATION",
       "SRI_SRI_YOGA_MEDITATION",
     ],
-    otherCourseTypes: ["CHAKRA_KRIYA", "VOLUNTEER_TRAINING_PROGRAM"],
+    otherCourseTypes: [
+      "CHAKRA_KRIYA",
+      "VOLUNTEER_TRAINING_PROGRAM",
+      "BLESSINGS_COURSE",
+    ],
   },
   {
     name: "IAHV",

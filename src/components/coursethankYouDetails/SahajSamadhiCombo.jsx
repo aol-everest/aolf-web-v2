@@ -4,6 +4,7 @@ import classNames from "classnames";
 
 import { ABBRS, COURSE_MODES } from "@constants";
 import { tConvert } from "@utils";
+import { orgConfig } from "@org";
 import Style from "./CoursethankYouDetails.module.scss";
 
 export const SahajSamadhiCombo = ({
@@ -79,53 +80,55 @@ export const SahajSamadhiCombo = ({
       </section>
       <section className="schedule">
         <div className="schedule__container container_md">
-          <div
-            className={classNames(
-              "schedule__download download-schedule",
-              Style.scheduleDownload,
-            )}
-          >
-            <h3 className="download-schedule__title">
-              Download the app and relax with a <br />
-              meditation
-            </h3>
+          {orgConfig.name !== "HB" && (
+            <div
+              className={classNames(
+                "schedule__download download-schedule",
+                Style.scheduleDownload,
+              )}
+            >
+              <h3 className="download-schedule__title">
+                Download the app and relax with a <br />
+                meditation
+              </h3>
 
-            <div className="download-schedule__actions">
-              <a
-                className="download-schedule__link"
-                href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  className="download-schedule__logo"
-                  src="/img/ic-appstore.svg"
-                  alt="appstore-link"
-                />
-                <div className="download-schedule__wrapper">
-                  <p className="download-schedule__text">Download on the</p>
-                  <p className="download-schedule__market">App Store</p>
-                </div>
-              </a>
+              <div className="download-schedule__actions">
+                <a
+                  className="download-schedule__link"
+                  href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    className="download-schedule__logo"
+                    src="/img/ic-appstore.svg"
+                    alt="appstore-link"
+                  />
+                  <div className="download-schedule__wrapper">
+                    <p className="download-schedule__text">Download on the</p>
+                    <p className="download-schedule__market">App Store</p>
+                  </div>
+                </a>
 
-              <a
-                className="download-schedule__link"
-                href="https://play.google.com/store/apps/details?id=com.aol.app"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  className="download-schedule__logo"
-                  src="/img/ic-google-play.svg"
-                  alt="google-play-link"
-                />
-                <div className="download-schedule__wrapper">
-                  <p className="download-schedule__text">Get it On</p>
-                  <p className="download-schedule__market">Google Play</p>
-                </div>
-              </a>
+                <a
+                  className="download-schedule__link"
+                  href="https://play.google.com/store/apps/details?id=com.aol.app"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    className="download-schedule__logo"
+                    src="/img/ic-google-play.svg"
+                    alt="google-play-link"
+                  />
+                  <div className="download-schedule__wrapper">
+                    <p className="download-schedule__text">Get it On</p>
+                    <p className="download-schedule__market">Google Play</p>
+                  </div>
+                </a>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="schedule__sidebar sidebar-schedule">
             <p className="sidebar-schedule__title">Program details</p>

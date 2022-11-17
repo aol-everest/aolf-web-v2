@@ -1,0 +1,438 @@
+.about-course {
+  position: relative;
+
+  &__main {
+    padding: 120px 0 200px;
+
+    &-name {
+      font-family: Lora;
+      font-weight: 700;
+      color: rgb(30, 34, 50);
+      margin-bottom: 30px;
+    }
+
+    &-list li {
+      display: flex;
+    }
+
+    &-list li:before {
+      display: inline-block;
+      content: "";
+      max-width: 20px;
+      background-size: contain;
+      width: 100%;
+      height: 20px;
+      margin-right: 15px;
+      align-self: start;
+      background-image: url(/img/checkBlueCircle.png);
+    }
+
+    &-list li:not(:last-child) {
+      margin-bottom: 20px;
+    }
+
+    &-list {
+      max-width: 500px;
+    }
+  }
+  &-button {
+    margin-top: 50px;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 600;
+    font-family: Work Sans;
+  }
+
+  &__image_mobile {
+    display: none;
+  }
+}
+
+.share-section {
+  margin-bottom: 150px;
+  &__title {
+    font-size: 36px;
+    font-weight: bolder;
+    font-family: Lora;
+    max-width: 470px;
+  }
+
+  &__background {
+    position: relative;
+  }
+
+  &__background img {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 100%;
+  }
+
+  &__description {
+    color: rgb(96, 98, 112);
+  }
+
+  & .participants {
+    margin-top: 200px;
+
+    &__title {
+      font-size: 36px;
+      font-family: Lora;
+      text-align: center;
+      font-weight: bolder;
+      margin-bottom: 60px;
+    }
+
+    &__container {
+      padding: 40px 20px 20px;
+      border-radius: 13px;
+      border: 1px solid #ccc;
+      max-height: max-content;
+      height: 100%;
+    }
+
+    &__image {
+      width: 75px;
+      height: 75px;
+      margin-bottom: 20px;
+      margin-inline: auto;
+    }
+
+    &__image img {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &__name {
+      font-size: 14px;
+      color: rgb(56, 56, 56);
+      font-weight: 700;
+    }
+
+    &__job {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgb(216, 216, 216);
+    }
+
+    &__ratings {
+      margin-bottom: 15px;
+    }
+
+    &__comment {
+      line-height: 22px;
+      font-size: 14px;
+      color: rgb(105, 105, 105);
+      font-style: italic;
+      & span {
+        font-weight: bolder;
+      }
+    }
+  }
+}
+
+.instrument-section {
+  margin-bottom: 150px;
+
+  &__background {
+    position: relative;
+  }
+
+  &__background img {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translate(-50%, 25%);
+    max-width: 100%;
+  }
+
+  &__description {
+    color: rgb(96, 98, 112);
+    font-family: "Work Sans";
+  }
+
+  .description {
+    &__item:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.elements-section {
+  padding-bottom: 70px;
+  position: relative;
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    background: rgb(20, 151, 205);
+    background: linear-gradient(
+      0deg,
+      rgba(20, 151, 205, 0.09567577030812324) 0%,
+      rgba(19, 130, 201, 0.13489145658263302) 35%,
+      rgba(255, 255, 255, 1) 100%
+    );
+  }
+
+  &__title {
+    font-weight: bolder;
+    color: rgb(30, 34, 50);
+    font-size: 36px;
+    text-align: center;
+    font-family: Lora;
+    margin-bottom: 60px;
+  }
+
+  &__item {
+    display: flex;
+    column-gap: 40px;
+  }
+
+  &__item:not(:last-child) {
+    margin-bottom: 40px;
+  }
+
+  &__name {
+    font-size: 18px;
+    font-family: "Work Sans";
+    font-weight: bolder;
+  }
+
+  &__text {
+    color: #31364e;
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+  }
+
+  &__background {
+    max-width: 500px;
+
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.upcoming-section {
+  position: relative;
+  padding: 80px 0 120px;
+  text-align: center;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__title {
+    font-family: Lora;
+    color: rgb(91, 134, 236);
+    font-size: 28px;
+    font-weight: bolder;
+    margin-bottom: 20px;
+  }
+
+  &__text {
+    font-family: Lora;
+    font-weight: bolder;
+    color: rgb(30, 34, 50);
+    font-size: 36px;
+    max-width: 800px;
+    margin-bottom: 30px;
+  }
+
+  &__button {
+    font-family: Work Sans;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.art-section {
+  padding: 50px 0 60px;
+
+  &__title {
+    font-family: Lora;
+    font-size: 36px;
+    color: rgb(76, 76, 76);
+    font-weight: bolder;
+    text-align: center;
+    margin-bottom: 70px;
+  }
+
+  &__icon {
+    margin-bottom: 20px;
+  }
+
+  &__name {
+    font-family: "Work Sans";
+    font-size: 20px;
+    color: rgb(43, 43, 43);
+    font-weight: bolder;
+  }
+
+  &__text {
+    font-family: "Work Sans";
+    font-size: 14px;
+    color: rgb(43, 43, 43);
+    max-width: 150px;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 1199px) {
+  .about-course {
+    &__image img {
+      object-position: center;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .elements-section {
+    &__background {
+      max-width: 400px;
+      margin-bottom: 40px;
+      margin-inline: auto;
+    }
+  }
+
+  .share-section {
+    &__description {
+      margin-top: 100px;
+    }
+
+    & .participants {
+      margin-top: 150px;
+    }
+  }
+
+  .about-course {
+    &__main {
+      padding-bottom: 150px;
+    }
+  }
+
+  .instrument-section {
+    margin-bottom: 100px;
+
+    &__description {
+      margin-top: 100px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .share-section {
+    & .participants {
+      margin-top: 100px;
+    }
+  }
+
+  .upcoming-section {
+    padding: 60px 0 60px;
+
+    &__title {
+      font-size: 20px;
+    }
+
+    &__text {
+      font-size: 24px;
+    }
+  }
+
+  .art-section {
+    &__title {
+      margin-bottom: 40px;
+    }
+  }
+
+  .about-course {
+    &__image_desktop {
+      display: none;
+    }
+
+    &__image_mobile {
+      display: block;
+
+      & img {
+        height: auto;
+      }
+    }
+
+    &__main {
+      padding-top: 250px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .share-section {
+    margin-bottom: 100px;
+
+    &__title {
+      font-size: 30px;
+    }
+
+    & .participants {
+      margin-top: 60px;
+
+      &__title {
+        margin-bottom: 20px;
+        font-size: 30px;
+      }
+    }
+
+    &__background img {
+      bottom: 0;
+      left: auto;
+      top: auto;
+      transform: none;
+    }
+  }
+
+  .instrument-section {
+    margin-bottom: 70px;
+
+    &__title {
+      font-size: 30px;
+    }
+
+    &__description {
+      margin-top: 70px;
+    }
+
+    &__background img {
+      bottom: 0;
+      left: auto;
+      top: auto;
+      transform: none;
+    }
+  }
+}
