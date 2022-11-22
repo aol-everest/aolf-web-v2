@@ -25,7 +25,6 @@ import {
   InPersonGenericCourse,
   OnlineCourse,
 } from "@components/coursethankYouDetails";
-import { orgConfig } from "@org";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -421,7 +420,8 @@ const Thankyou = () => {
             <section className="get-started">
               {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
                 process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
-                ["811569", "12371"].indexOf(productTypeId) >= 0 &&
+                ["811569", "12371", "12415", "999649"].indexOf(productTypeId) >=
+                  0 &&
                 !isRepeater && (
                   <img
                     src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
@@ -462,42 +462,37 @@ const Thankyou = () => {
                         your {title}.
                       </p>
                     </div>
-                    {orgConfig.name !== "HB" && (
-                      <>
-                        <p className="get-started__text">
-                          <br />
-                          To get started, download the app.{" "}
-                          {isGenericWorkshop && (
-                            <>
-                              <span>
-                                We will reach out to schedule dates for your
-                                course.
-                              </span>
-                            </>
-                          )}
-                        </p>
-                        <div className="btn-wrapper">
-                          <a
-                            className="btn-outline tw-mr-2"
-                            href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img src="/img/ic-apple.svg" alt="apple" />
-                            iOS App
-                          </a>
-                          <a
-                            className="btn-outline"
-                            href="https://play.google.com/store/apps/details?id=com.aol.app"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img src="/img/ic-android.svg" alt="android" />
-                            Android App
-                          </a>
-                        </div>
-                      </>
-                    )}
+                    <p className="get-started__text">
+                      <br />
+                      To get started, download the app.{" "}
+                      {isGenericWorkshop && (
+                        <>
+                          <span>
+                            We will reach out to schedule dates for your course.
+                          </span>
+                        </>
+                      )}
+                    </p>
+                    <div className="btn-wrapper">
+                      <a
+                        className="btn-outline tw-mr-2"
+                        href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img src="/img/ic-apple.svg" alt="apple" />
+                        iOS App
+                      </a>
+                      <a
+                        className="btn-outline"
+                        href="https://play.google.com/store/apps/details?id=com.aol.app"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img src="/img/ic-android.svg" alt="android" />
+                        Android App
+                      </a>
+                    </div>
                   </div>
                   <div className="col-lg-6 col-md-12 offset-lg-1 p-0">
                     <div className="get-started__video">
