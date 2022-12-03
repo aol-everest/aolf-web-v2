@@ -13,7 +13,9 @@ export const AttendanceForm = ({ formikProps }) => {
   return (
     <Fragment>
       <div className="details mb-4 mt-5">
-        <h2 className="details__title">CME/CNE & Attendance Form</h2>
+        <h2 className="details__title">
+          CME/CNE Certificate of attendance form
+        </h2>
       </div>
       <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
         Please note, to claim CE credits, your name on the Healing Breaths’ SKY
@@ -30,7 +32,7 @@ export const AttendanceForm = ({ formikProps }) => {
         ></StyledInput>
         <StyledInput
           class="mt-lg-0"
-          placeholder="Healthcare Organisation"
+          placeholder="Healthcare Organization"
           formikProps={formikProps}
           formikKey="contactHealthcareOrganisation"
           fullWidth
@@ -71,51 +73,35 @@ export const AttendanceForm = ({ formikProps }) => {
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Nurse NP",
-                      value: "Nurse NP",
+                      name: "Physician Assistant",
+                      value: "Physician Assistant",
                     })}
                   >
-                    Nurse NP
+                    Physician Assistant
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Nurse RN",
-                      value: "Nurse RN",
+                      name: "Physical Therapist",
+                      value: "Physical Therapist",
                     })}
                   >
-                    Nurse RN
+                    Physical Therapist
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Nurse LPN",
-                      value: "Nurse LPN",
+                      name: "Nurse",
+                      value: "Nurse",
                     })}
                   >
-                    Nurse LPN
+                    Nurse
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Nurse CNA",
-                      value: "Nurse CNA",
+                      name: "Dentist",
+                      value: "Dentist",
                     })}
                   >
-                    Nurse CNA
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: "CME - PA",
-                      value: "CME - PA",
-                    })}
-                  >
-                    CME - PA
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: "Dentists",
-                      value: "Dentists",
-                    })}
-                  >
-                    Dentists
+                    Dentist
                   </li>
                   <li
                     onClick={closeHandler({
