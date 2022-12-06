@@ -425,7 +425,7 @@ const Thankyou = () => {
                   0 &&
                 !isRepeater && (
                   <img
-                    src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale`}
+                    src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}`}
                     width="1"
                     height="1"
                   ></img>
