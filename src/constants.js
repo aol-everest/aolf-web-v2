@@ -120,6 +120,10 @@ export const COURSE_TYPES = {
     name: "SKY Happiness Retreat",
     value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
   },
+  BLESSINGS_COURSE: {
+    name: "Blessings Course",
+    value: process.env.NEXT_PUBLIC_BLESSINGS_COURSE_CTYPE || "",
+  },
 };
 
 export const MEETUP_TYPES = {

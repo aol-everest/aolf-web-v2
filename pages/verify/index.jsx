@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { api, Auth } from "@utils";
 import classNames from "classnames";
 import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
+import Style from "./Verify.module.scss";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -72,9 +73,25 @@ function Token() {
     }
   }, [router.isReady]);
 
+  const handleModalToggle = () => {
+    router.push("/us-en/course");
+  };
+
   return (
     <main className="aol_mainbody login-screen profile">
       <div className="profile-modal active show">
+        <div className="modal-window__header">
+          <button
+            className={classNames(
+              "modal-window__close modal-window__close_mobile",
+              Style.mobileClose,
+            )}
+            onClick={handleModalToggle}
+          >
+            <div className="close-line"></div>
+            <div className="close-line"></div>
+          </button>
+        </div>
         <div
           id="retreat-prerequisite"
           className="digital-member-join digital-member-join_journey course-join-card retreat-prerequisite active show"
@@ -116,6 +133,13 @@ function Token() {
               <p className="validation-input text-center">{message}</p>
             )}
           </div>
+          <button
+            className="modal-window__close modal-window__close_desktop"
+            onClick={handleModalToggle}
+          >
+            <div className="close-line"></div>
+            <div className="close-line"></div>
+          </button>
         </div>
       </div>
     </main>

@@ -754,7 +754,7 @@ export const PaymentFormHB = ({
             : Yup.string().required("Payment mode is required!"),
           contactTitle: Yup.string().required("Title is required"),
           contactHealthcareOrganisation: Yup.string().required(
-            "Healthcare Organisation is required",
+            "Healthcare Organization is required",
           ),
           contactDegree: Yup.string().required(
             "Degree/Qualifications is required",

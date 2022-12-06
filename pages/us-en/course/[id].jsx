@@ -49,6 +49,9 @@ const HealingBreath = dynamic(() =>
 const SKYSilentRetreat = dynamic(() =>
   import("@components/courseDetails").then((mod) => mod.SKYSilentRetreat),
 );
+const BlessingsCourse = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.BlessingsCourse),
+);
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -132,7 +135,8 @@ function CourseDetail() {
       !isSriSriYogaMeditationType &&
       !isVolunteerTrainingProgram &&
       !isHealingBreathType &&
-      !isSKYSilentRetreatType
+      !isSKYSilentRetreatType &&
+      !isBlessingsCourse
     ) {
       router.push({
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -210,6 +214,8 @@ function CourseDetail() {
     COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
   const isSKYSilentRetreatType =
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
+  const isBlessingsCourse =
+    COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0;
 
   const props = {
     data,
@@ -237,6 +243,9 @@ function CourseDetail() {
     }
     if (isSKYSilentRetreatType) {
       return <SKYSilentRetreat {...props} />;
+    }
+    if (isBlessingsCourse) {
+      return <BlessingsCourse {...props} />;
     }
     return <ErrorPage statusCode={404} />;
   };
