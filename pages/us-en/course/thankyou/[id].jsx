@@ -398,6 +398,16 @@ const Thankyou = () => {
   return (
     <>
       <main>
+        {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
+          process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
+          ["811569", "12371", "12415", "999649"].indexOf(productTypeId) >= 0 &&
+          !isRepeater && (
+            <img
+              src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}`}
+              width="1"
+              height="1"
+            ></img>
+          )}
         {isSkyPlusSahajFirstCourse ? (
           <SKYBreathMeditationCombo
             workshop={workshop}
@@ -419,17 +429,6 @@ const Thankyou = () => {
         ) : (
           <>
             <section className="get-started">
-              {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
-                process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
-                ["811569", "12371", "12415", "999649"].indexOf(productTypeId) >=
-                  0 &&
-                !isRepeater && (
-                  <img
-                    src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}`}
-                    width="1"
-                    height="1"
-                  ></img>
-                )}
               <div className="container-md">
                 <div className="row align-items-center">
                   <div className="col-lg-5 col-md-12 p-md-0">
