@@ -386,7 +386,12 @@ export const DesignOne = ({
           <section className="browse-category most-popular">
             <p className="title-slider">
               Most Popular{" "}
-              <Link prefetch={false} href={`/us-en/library/search`} passHref>
+              <Link
+                prefetch={false}
+                href={`/us-en/library/search`}
+                passHref
+                legacyBehavior
+              >
                 <span className="popular-all tw-cursor-pointer">All</span>
               </Link>
             </p>

@@ -1,6 +1,7 @@
 import React from "react";
 import dayjs from "dayjs";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 import { MEMBERSHIP_TYPES } from "@constants";
 import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
@@ -128,7 +129,7 @@ export const ProfileHeader = ({
                       Cancel Membership
                     </a>
                   )}
-                  <ReactTooltip id="Popover1">
+                  <Tooltip anchorId="Popover1">
                     {modalSubscription.subscriptionBuyingChannel === "WEB" && (
                       <div className="tw-max-w-[210px] tw-text-left">
                         Please contact customer service at{" "}
@@ -150,7 +151,7 @@ export const ProfileHeader = ({
                         process from the mobile app.
                       </div>
                     )}
-                  </ReactTooltip>
+                  </Tooltip>
                 </div>
               );
             },

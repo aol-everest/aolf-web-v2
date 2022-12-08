@@ -22,7 +22,7 @@ export const ActiveLink = ({
       : childClassName;
 
   return (
-    <Link {...props} href={href} prefetch={false}>
+    <Link {...props} href={href} prefetch={false} legacyBehavior>
       {React.cloneElement(child, {
         className: className || null,
         onClick: () => {

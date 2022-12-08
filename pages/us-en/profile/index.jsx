@@ -418,13 +418,17 @@ const Profile = ({ tab }) => {
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
-                        <Link href="/us-en" prefetch={false}>
+                        <Link href="/us-en" prefetch={false} legacyBehavior>
                           <a href="#" className="link link_orange">
                             course
                           </a>
                         </Link>{" "}
                         or{" "}
-                        <Link href="/us-en/meetup" prefetch={false}>
+                        <Link
+                          href="/us-en/meetup"
+                          prefetch={false}
+                          legacyBehavior
+                        >
                           <a href="#" className="link link_orange">
                             meetup
                           </a>
@@ -504,7 +508,11 @@ const Profile = ({ tab }) => {
                   <p>
                     If you are not part of the Referral program as yet, you can
                     sign up{" "}
-                    <Link href="/us-en/referral-offer" prefetch={false}>
+                    <Link
+                      href="/us-en/referral-offer"
+                      prefetch={false}
+                      legacyBehavior
+                    >
                       <a href="#" className="link_orange">
                         here
                       </a>
@@ -586,13 +594,17 @@ const Profile = ({ tab }) => {
                         <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
                           upcoming{" "}
-                          <Link href="/us-en" prefetch={false}>
+                          <Link href="/us-en" prefetch={false} legacyBehavior>
                             <a href="#" className="link link_orange">
                               course
                             </a>
                           </Link>{" "}
                           or{" "}
-                          <Link href="/us-en/meetup" prefetch={false}>
+                          <Link
+                            href="/us-en/meetup"
+                            prefetch={false}
+                            legacyBehavior
+                          >
                             <a href="#" className="link link_orange">
                               meetup
                             </a>
