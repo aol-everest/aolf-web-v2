@@ -64,16 +64,17 @@ export const AgreementForm = ({
               </Link>
             </p>
           </div>
-          {formikProps.errors.ppaAgreement && formikProps.touched.ppaAgreement && (
-            <div className="agreement__important agreement__important_desktop">
-              <img
-                className="agreement__important-icon"
-                src="/img/warning.svg"
-                alt="warning"
-              />
-              Please check the box in order to continue
-            </div>
-          )}
+          {formikProps.errors.ppaAgreement &&
+            formikProps.touched.ppaAgreement && (
+              <div className="agreement__important agreement__important_desktop">
+                <img
+                  className="agreement__important-icon"
+                  src="/img/warning.svg"
+                  alt="warning"
+                />
+                Please check the box in order to continue
+              </div>
+            )}
         </div>
         {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
           <div className="health-confirmation mt-4 d-none d-lg-block">
@@ -188,16 +189,17 @@ export const AgreementForm = ({
             </Link>
           </p>
         </div>
-        {formikProps.errors.ppaAgreement && formikProps.touched.ppaAgreement && (
-          <div className="agreement__important agreement__important_desktop">
-            <img
-              className="agreement__important-icon"
-              src="/img/warning.svg"
-              alt="warning"
-            />
-            {formikProps.errors.ppaAgreement}
-          </div>
-        )}
+        {formikProps.errors.ppaAgreement &&
+          formikProps.touched.ppaAgreement && (
+            <div className="agreement__important agreement__important_desktop">
+              <img
+                className="agreement__important-icon"
+                src="/img/warning.svg"
+                alt="warning"
+              />
+              {formikProps.errors.ppaAgreement}
+            </div>
+          )}
         {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
           <>
             {complianceQuestionnaire.map((compliance) => (

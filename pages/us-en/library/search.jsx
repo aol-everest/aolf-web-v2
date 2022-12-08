@@ -678,22 +678,24 @@ const LibrarySearch = () => {
               )}
             </div>
           </div>
-          {isSuccess && data.pages[0].data.length === 0 && !isFetchingNextPage && (
-            <section className="about tw-bg-none">
-              <div className="container happines_box">
-                <div className="row">
-                  <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
-                    <h1 className="happines_title">
-                      Sorry, no meditation match your chosen filters.
-                    </h1>
-                    <p className="happines_subtitle">
-                      Please broaden your options and try again.
-                    </p>
+          {isSuccess &&
+            data.pages[0].data.length === 0 &&
+            !isFetchingNextPage && (
+              <section className="about tw-bg-none">
+                <div className="container happines_box">
+                  <div className="row">
+                    <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                      <h1 className="happines_title">
+                        Sorry, no meditation match your chosen filters.
+                      </h1>
+                      <p className="happines_subtitle">
+                        Please broaden your options and try again.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
-          )}
+              </section>
+            )}
         </div>
       </section>
     </main>

@@ -147,18 +147,20 @@ export const MobileCourseOptions = ({
                           );
                         }
                       })}
-                      {!isJourneyPremium && !isBasicMember && !isJourneyPlus && (
-                        <li className="btn-item">
-                          <button
-                            className="btn-outline"
-                            onClick={openSubscriptionPaywallPage(
-                              MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
-                            )}
-                          >
-                            Join Journey+
-                          </button>
-                        </li>
-                      )}
+                      {!isJourneyPremium &&
+                        !isBasicMember &&
+                        !isJourneyPlus && (
+                          <li className="btn-item">
+                            <button
+                              className="btn-outline"
+                              onClick={openSubscriptionPaywallPage(
+                                MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+                              )}
+                            >
+                              Join Journey+
+                            </button>
+                          </li>
+                        )}
                     </ul>
                   )}
                   {(isJourneyPremium || isJourneyPlus) && (
