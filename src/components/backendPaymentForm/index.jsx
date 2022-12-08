@@ -1330,6 +1330,10 @@ export const BackendPaymentForm = ({
                                           residentialAddOn,
                                         )
                                       }
+                                      className={
+                                        residentialAddOn.isFull &&
+                                        "tw-opacity-60 tw-pointer-events-none"
+                                      }
                                     >
                                       <label
                                         htmlFor={residentialAddOn.productSfid}
@@ -1340,6 +1344,11 @@ export const BackendPaymentForm = ({
                                         <span>
                                           {residentialAddOn.productName}
                                         </span>
+                                        {residentialAddOn.isFull && (
+                                          <span class="tw-bg-gray-100 tw-text-gray-800 tw-text-xs tw-px-2.5 tw-py-0.5 tw-rounded tw-dark:bg-gray-700 tw-dark:text-gray-500">
+                                            Full
+                                          </span>
+                                        )}
                                         <span className="price">
                                           $
                                           {residentialAddOn.unitPrice +
