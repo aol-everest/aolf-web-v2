@@ -230,20 +230,19 @@ export const ChangeProfile = ({
       footer: (handleModalToggle) => {
         return (
           <div className="course-details-card__footer">
-            <a
+            <button
+              className="btn-secondary link-modal tw-mr-4 !tw-px-7"
               onClick={handleDeletePersonalInformation}
-              href="#"
-              className="link link_gray tw-mr-4"
             >
-              Delete my personal information
-            </a>
-            <a
+              Delete PII
+            </button>
+
+            <button
+              className="btn-secondary link-modal !tw-px-7"
               onClick={handleDeletePaymentDetails}
-              href="#"
-              className="link link_gray"
             >
-              Delete payment details
-            </a>
+              Delete CC
+            </button>
           </div>
         );
       },
@@ -427,15 +426,15 @@ export const ChangeProfile = ({
                     <p className="validation-input">{errors.contactPhone}</p>
                   )}
                 </div>
-              </div>
-              <div className="tw-flex tw-justify-end tw-mt-4 tw-mb-4">
-                <a
-                  href="#"
-                  className="link link_gray"
-                  onClick={handleRemoveInformation}
-                >
-                  Manage Profile
-                </a>
+                <div className="tw-flex tw-flex-1 tw-justify-end tw-mt-4">
+                  <a
+                    href="#"
+                    className="link link_gray tw-text-xs"
+                    onClick={handleRemoveInformation}
+                  >
+                    Remove Profile
+                  </a>
+                </div>
               </div>
               <div className="tw-flex tw-justify-end tw-mt-6">
                 {showVerifyStudentStatus && (

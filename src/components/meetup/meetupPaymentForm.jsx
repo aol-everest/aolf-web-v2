@@ -1113,7 +1113,24 @@ export const MeetupPaymentForm = ({
                 <div className="course-card__info">
                   <div className="course-card__info-wrapper">
                     <div className="d-flex justify-content-between align-items-center">
-                      <p className="course-card__date">May 5-7, 2020</p>
+                      <p className="course-card__date">
+                        {meetupStartDate && dayjs.utc(meetupStartDate) && (
+                          <li>{`${dayjs
+                            .utc(meetupStartDate)
+                            .format("MMMM DD")}, ${dayjs
+                            .utc(meetupStartDate)
+                            .format("YYYY")}`}</li>
+                        )}
+                        {!dayjs
+                          .utc(eventStartDate)
+                          .isSame(dayjs.utc(eventEndDate), "month") && (
+                          <li>{`${dayjs
+                            .utc(eventStartDate)
+                            .format("MMMM DD")}-${dayjs
+                            .utc(eventEndDate)
+                            .format("MMMM DD, YYYY")}`}</li>
+                        )}
+                      </p>
                       <button
                         id="course-details"
                         className="link"
