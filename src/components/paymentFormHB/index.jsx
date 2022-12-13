@@ -673,6 +673,24 @@ export const PaymentFormHB = ({
       setShowCouponCodeField(false);
       formikProps.setFieldValue("paymentOption", PAYMENT_TYPES.FULL);
     }
+
+    // Added logic to remove paypal option for bundle
+    if (id !== comboDetailProductSfid) {
+      const selectedBundle = availableBundles?.find(
+        (bundle) => bundle.comboProductSfid === comboDetailProductSfid,
+      );
+
+      const isBundlePaypalAvailable = selectedBundle
+        ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
+        : false;
+
+      if (!isBundlePaypalAvailable) {
+        formikProps.setFieldValue(
+          "paymentMode",
+          PAYMENT_MODES.STRIPE_PAYMENT_MODE,
+        );
+      }
+    }
   };
 
   const handlePaymentOptionChange = (formikProps, paymentOption) => {
@@ -834,6 +852,14 @@ export const PaymentFormHB = ({
             isOfflineExpense = true;
           }
 
+          const selectedBundle = availableBundles?.find(
+            (bundle) => bundle.comboProductSfid === values.comboDetailId,
+          );
+
+          const isBundlePaypalAvailable = selectedBundle
+            ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
+            : false;
+
           return (
             <div className="row">
               {loading && <Loader />}
@@ -878,6 +904,8 @@ export const PaymentFormHB = ({
                       <PayWith
                         formikProps={formikProps}
                         otherPaymentOptions={otherPaymentOptions}
+                        isBundlePaypalAvailable={isBundlePaypalAvailable}
+                        isBundleSelected={selectedBundle}
                       />
                     )}
 
