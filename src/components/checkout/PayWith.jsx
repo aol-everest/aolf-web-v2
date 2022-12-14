@@ -4,7 +4,12 @@ import classNames from "classnames";
 
 const PAYPAL_PAYMENT_MODE = "PAYPAL_PAYMENT_MODE";
 const STRIPE_PAYMENT_MODE = "STRIPE_PAYMENT_MODE";
-export const PayWith = ({ formikProps, otherPaymentOptions }) => {
+export const PayWith = ({
+  formikProps,
+  otherPaymentOptions,
+  isBundlePaypalAvailable,
+  isBundleSelected,
+}) => {
   return (
     <div
       className={classNames("input-block order__card__payment", {
@@ -32,25 +37,25 @@ export const PayWith = ({ formikProps, otherPaymentOptions }) => {
               Credit card or debit card
             </span>
           </div>
-          {otherPaymentOptions &&
+          {((!isBundleSelected &&
+            otherPaymentOptions &&
             otherPaymentOptions.indexOf("Paypal") > -1 &&
-            formikProps.values.paymentOption !== "LATER" && (
-              <div className="select-box__value">
-                <Field
-                  className="select-box__input"
-                  type="radio"
-                  id="payment-method-paypal"
-                  name="paymentMode"
-                  checked={
-                    formikProps.values.paymentMode === PAYPAL_PAYMENT_MODE
-                  }
-                  value={PAYPAL_PAYMENT_MODE}
-                />
-                <span className="select-box__input-text paypal-nickname">
-                  PayPal
-                </span>
-              </div>
-            )}
+            formikProps.values.paymentOption !== "LATER") ||
+            (isBundleSelected && isBundlePaypalAvailable)) && (
+            <div className="select-box__value">
+              <Field
+                className="select-box__input"
+                type="radio"
+                id="payment-method-paypal"
+                name="paymentMode"
+                checked={formikProps.values.paymentMode === PAYPAL_PAYMENT_MODE}
+                value={PAYPAL_PAYMENT_MODE}
+              />
+              <span className="select-box__input-text paypal-nickname">
+                PayPal
+              </span>
+            </div>
+          )}
         </div>
         <ul className="select-box__list">
           <li>
@@ -64,21 +69,23 @@ export const PayWith = ({ formikProps, otherPaymentOptions }) => {
               <img src="/img/ic-tick-blue-lg.svg" alt="Option selected" />
             </label>
           </li>
-          {otherPaymentOptions &&
+          {((!isBundleSelected &&
+            otherPaymentOptions &&
             otherPaymentOptions.indexOf("Paypal") > -1 &&
-            formikProps.values.paymentOption !== "LATER" && (
-              <li>
-                <label
-                  htmlFor="payment-method-paypal"
-                  aria-hidden="aria-hidden"
-                  data-value="paypal"
-                  className="select-box__option"
-                >
-                  <span className="paypal-nickname">PayPal</span>
-                  <img src="/img/ic-tick-blue-lg.svg" alt="Option selected" />
-                </label>
-              </li>
-            )}
+            formikProps.values.paymentOption !== "LATER") ||
+            (isBundleSelected && isBundlePaypalAvailable)) && (
+            <li>
+              <label
+                htmlFor="payment-method-paypal"
+                aria-hidden="aria-hidden"
+                data-value="paypal"
+                className="select-box__option"
+              >
+                <span className="paypal-nickname">PayPal</span>
+                <img src="/img/ic-tick-blue-lg.svg" alt="Option selected" />
+              </label>
+            </li>
+          )}
         </ul>
       </div>
       {formikProps.errors.paymentMode && formikProps.touched.paymentMode && (
