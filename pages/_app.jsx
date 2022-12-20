@@ -17,7 +17,6 @@ import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
 import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
-import { TrackingHeadScript } from "@phntms/next-gtm";
 import { orgConfig } from "@org";
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
@@ -116,9 +115,6 @@ function App({ Component, pageProps }) {
   }
   return (
     <>
-      {process.env.NEXT_PUBLIC_GTM_ID && (
-        <TrackingHeadScript id={process.env.NEXT_PUBLIC_GTM_ID} />
-      )}
       <QueryClientProvider client={queryClient}>
         <AuthProvider
           userInfo={user}

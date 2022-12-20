@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { orgConfig } from "@org";
+import Script from "next/script";
 
 class CustomDocument extends Document {
   static async getInitialProps(ctx) {
@@ -11,6 +12,15 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head>
+          <Script id="google-analytics" strategy="beforeInteractive">
+            {`
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+        `}
+          </Script>
           <meta
             name="description"
             content="The Art of Living Foundation- a humanitarian organization devoted for the betterment of society, brings smiles by yoga, meditation, Sudarshan Kriya & life skills."
@@ -65,7 +75,6 @@ class CustomDocument extends Document {
             integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
             crossOrigin="anonymous"
           />
-          {/* Talkable script */}
 
           {/* <script
             strategy="lazyOnload"
@@ -82,6 +91,14 @@ class CustomDocument extends Document {
               type="text/javascript"
             ></script>
           )}
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            ></iframe>
+          </noscript>
         </body>
       </Html>
     );
