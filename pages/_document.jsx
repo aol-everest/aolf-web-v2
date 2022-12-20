@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { orgConfig } from "@org";
 import Script from "next/script";
