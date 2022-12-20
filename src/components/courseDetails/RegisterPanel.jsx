@@ -37,6 +37,10 @@ export const RegisterPanel = ({ workshop }) => {
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
       workshop.productTypeId,
     ) >= 0;
+  const isVolunteerTrainingProgram =
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -152,19 +156,26 @@ export const RegisterPanel = ({ workshop }) => {
   if (authenticated && (isJourneyPremium || isJourneyPlus)) {
     return (
       <div className="powerful__block powerful__block_bottom">
+        {isVolunteerTrainingProgram && (
+          <h6 className="caption caption_sm powerful__block-caption !tw-mx-auto">
+            Make a difference
+          </h6>
+        )}
         <div>
           <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
-          <h5 className="powerful__block-title_5 mb-1">
-            Premium/Journey+ rate:{" "}
-            {premiumRate &&
-              premiumRate.listPrice &&
-              premiumRate.listPrice !== premiumRate.unitPrice && (
-                <span className="discount">
-                  ${delfee || premiumRate.listPrice}
-                </span>
-              )}{" "}
-            ${premiumRate && premiumRate.unitPrice}
-          </h5>
+          {premiumRate && premiumRate.unitPrice && (
+            <h5 className="powerful__block-title_5 mb-1">
+              Premium/Journey+ rate:{" "}
+              {premiumRate &&
+                premiumRate.listPrice &&
+                premiumRate.listPrice !== premiumRate.unitPrice && (
+                  <span className="discount">
+                    ${delfee || premiumRate.listPrice}
+                  </span>
+                )}{" "}
+              ${premiumRate && premiumRate.unitPrice}
+            </h5>
+          )}
           {roomAndBoardRange && (
             <h5 className="powerful__italic-title_6">
               plus room &amp; board: {roomAndBoardRange}
@@ -203,13 +214,18 @@ export const RegisterPanel = ({ workshop }) => {
 
   return (
     <div className="powerful__block powerful__block_bottom">
+      {isVolunteerTrainingProgram && (
+        <h6 className="caption caption_sm powerful__block-caption !tw-mx-auto">
+          Make a difference
+        </h6>
+      )}
       <div>
         <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
         <h5 className="powerful__block-title_5">
           Regular rate: {delfee && <span className="discount">${delfee}</span>}{" "}
           ${fee}
         </h5>
-        {!isUsableCreditAvailable && (
+        {!isUsableCreditAvailable && premiumRate && premiumRate.unitPrice && (
           <h5 className="powerful__block-title_5 mb-1">
             Premium/Journey+ rate:{" "}
             {premiumRate &&
