@@ -66,13 +66,7 @@ class CustomDocument extends Document {
             crossOrigin="anonymous"
           />
           {/* Talkable script */}
-          {process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL && (
-            <script
-              async
-              src={process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL}
-              type="text/javascript"
-            ></script>
-          )}
+
           {/* <script
             strategy="lazyOnload"
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&libraries=places`}
@@ -81,6 +75,13 @@ class CustomDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          {process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL && (
+            <script
+              async
+              src={process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL}
+              type="text/javascript"
+            ></script>
+          )}
         </body>
       </Html>
     );
