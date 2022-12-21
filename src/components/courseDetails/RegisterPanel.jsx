@@ -41,6 +41,8 @@ export const RegisterPanel = ({ workshop }) => {
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
       workshop.productTypeId,
     ) >= 0;
+  const isBlessingsCourse =
+    COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(workshop.productTypeId) >= 0;
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -153,14 +155,63 @@ export const RegisterPanel = ({ workshop }) => {
       </div>
     );
   }
-  if (authenticated && (isJourneyPremium || isJourneyPlus)) {
+
+  if (isVolunteerTrainingProgram || isBlessingsCourse) {
     return (
       <div className="powerful__block powerful__block_bottom">
         {isVolunteerTrainingProgram && (
-          <h6 className="caption caption_sm powerful__block-caption !tw-mx-auto">
-            Make a difference
-          </h6>
+          <div class="powerful__block-titles !tw-py-[20px]">
+            <h6 className="caption caption_sm powerful__block-caption">
+              Make a difference
+            </h6>
+          </div>
         )}
+        <div>
+          <h3>Limited Time Offer</h3>
+          <h2>
+            {title}: ${fee}
+          </h2>
+          {roomAndBoardRange && (
+            <h5 className="powerful__italic-title_6">
+              plus room &amp; board: {roomAndBoardRange}
+            </h5>
+          )}
+          {isUsableCreditAvailable && (
+            <div className="credit-text mb-2">
+              {usableCredit.message} ${UpdatedFeeAfterCredits}.
+            </div>
+          )}
+        </div>
+        <div
+          className={classNames("bottom-box", {
+            "justify-content-md-center": !earlyBirdFeeIncreasing,
+          })}
+        >
+          {earlyBirdFeeIncreasing ? (
+            <>
+              <img src="/img/ic-timer-orange.svg" alt="timer" />
+              <p>
+                Register soon. Course fee will go up by $
+                {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                {dayjs
+                  .utc(earlyBirdFeeIncreasing.increasingByDate)
+                  .format("MMM D, YYYY")}
+              </p>
+            </>
+          ) : (
+            <div />
+          )}
+          <button className="btn-secondary" onClick={handleRegister}>
+            Register Today
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (authenticated && (isJourneyPremium || isJourneyPlus)) {
+    return (
+      <div className="powerful__block powerful__block_bottom">
         <div>
           <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
           {premiumRate && premiumRate.unitPrice && (
@@ -192,7 +243,7 @@ export const RegisterPanel = ({ workshop }) => {
             "justify-content-md-center": !earlyBirdFeeIncreasing,
           })}
         >
-          {earlyBirdFeeIncreasing && (
+          {earlyBirdFeeIncreasing ? (
             <>
               <img src="/img/ic-timer-orange.svg" alt="timer" />
               <p>
@@ -203,6 +254,8 @@ export const RegisterPanel = ({ workshop }) => {
                   .format("MMM D, YYYY")}
               </p>
             </>
+          ) : (
+            <div />
           )}
           <button className="btn-secondary" onClick={handleRegister}>
             Register Today
@@ -214,11 +267,6 @@ export const RegisterPanel = ({ workshop }) => {
 
   return (
     <div className="powerful__block powerful__block_bottom">
-      {isVolunteerTrainingProgram && (
-        <h6 className="caption caption_sm powerful__block-caption !tw-mx-auto">
-          Make a difference
-        </h6>
-      )}
       <div>
         <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
         <h5 className="powerful__block-title_5">
@@ -250,7 +298,7 @@ export const RegisterPanel = ({ workshop }) => {
         )}
       </div>
       <div className="bottom-box">
-        {earlyBirdFeeIncreasing && (
+        {earlyBirdFeeIncreasing ? (
           <>
             <img src="/img/ic-timer-orange.svg" alt="timer" />
             <p className="!tw-text-xs">
@@ -261,6 +309,8 @@ export const RegisterPanel = ({ workshop }) => {
                 .format("MMM D, YYYY")}
             </p>
           </>
+        ) : (
+          <div />
         )}
         <div className="btn-wrapper">
           <button className="btn-outline" onClick={handleRegister}>
