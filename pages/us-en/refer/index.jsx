@@ -41,7 +41,7 @@ export default function TalkableRefer() {
           </ol>
           <p>
             If you are not part of the Referral program as yet, you can sign up{" "}
-            <Link href="/us-en/referral-offer" prefetch={false}>
+            <Link href="/us-en/referral-offer" prefetch={false} legacyBehavior>
               <a href="#" className="link_orange">
                 here
               </a>

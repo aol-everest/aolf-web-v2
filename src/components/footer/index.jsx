@@ -48,7 +48,7 @@ export function Footer() {
           </li>
 
           <li className="footer-navbar--item">
-            <Link prefetch={false} href="/policy/privacy">
+            <Link prefetch={false} href="/policy/privacy" legacyBehavior>
               <a target="_blank">Privacy Policy</a>
             </Link>
           </li>
@@ -56,7 +56,7 @@ export function Footer() {
             <a href="#">Cookie Policy</a>
           </li>
           <li className="footer-navbar--item">
-            <Link prefetch={false} href="/policy/ppa-course">
+            <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
               <a target="_blank">Terms of Use</a>
             </Link>
           </li>

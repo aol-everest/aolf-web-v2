@@ -41,6 +41,9 @@ const moduleExports = {
   images: {
     domains: ["images.ctfassets.net"],
   },
+  sentry: {
+    hideSourceMaps: true,
+  },
 
   async redirects() {
     return [

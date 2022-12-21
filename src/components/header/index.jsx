@@ -569,7 +569,7 @@ export const Header = () => {
                     onMouseOver={onMenuMouseOver(menu.name)}
                   >
                     {menu.link && (
-                      <Link prefetch={false} href={menu.link}>
+                      <Link prefetch={false} href={menu.link} legacyBehavior>
                         <a className="menu-item__link">
                           {menu.icon || ""}
                           {menu.name}
@@ -619,7 +619,11 @@ export const Header = () => {
                                   key={submenu.name}
                                 >
                                   <span>
-                                    <Link prefetch={false} href={submenu.link}>
+                                    <Link
+                                      prefetch={false}
+                                      href={submenu.link}
+                                      legacyBehavior
+                                    >
                                       <a className="sub-menu-item__link">
                                         {submenu.name}
                                       </a>
@@ -656,7 +660,7 @@ export const Header = () => {
             </button>
           )}
           {authenticated && (
-            <Link prefetch={false} href="/us-en/profile">
+            <Link prefetch={false} href="/us-en/profile" legacyBehavior>
               <a
                 className={classNames(
                   Style.header__button,

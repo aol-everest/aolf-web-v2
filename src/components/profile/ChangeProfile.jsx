@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import MaskedInput from "react-text-mask";
 import { Formik } from "formik";
@@ -40,6 +41,8 @@ export const ChangeProfile = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
+  const router = useRouter();
+  const description = useRef("");
 
   const allowEmailEdit = profile.cognito.UserStatus !== "EXTERNAL_PROVIDER";
 
@@ -129,6 +132,120 @@ export const ChangeProfile = ({
           </div>
         </div>
       ),
+    });
+  };
+
+  const handleRequestResult = (requestCreated) => {
+    if (requestCreated) {
+      router.push({
+        pathname: `/us-en/profile`,
+        query: {
+          request: 3,
+        },
+      });
+    } else {
+      router.push({
+        pathname: `/us-en/profile`,
+        query: {
+          request: 4,
+        },
+      });
+    }
+  };
+
+  const handleDeletePersonalInformation = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        message: description.current,
+        origin: "Web",
+      };
+
+      const { status, error: errorMessage } = await api.post({
+        path: "accountDeletionRequest",
+        body: payload,
+      });
+
+      if (status === 400 || errorMessage) {
+        throw new Error(errorMessage);
+      }
+      handleRequestResult(true);
+    } catch (ex) {
+      console.log(ex);
+      handleRequestResult(false);
+    }
+    setLoading(false);
+    description.current = "";
+    hideModal();
+  };
+
+  const handleDeletePaymentDetails = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        message: description.current,
+        origin: "Web",
+      };
+
+      const { status, error: errorMessage } = await api.post({
+        path: "ccDeletionRequest",
+        body: payload,
+      });
+
+      if (status === 400 || errorMessage) {
+        throw new Error(errorMessage);
+      }
+      handleRequestResult(true);
+    } catch (ex) {
+      console.log(ex);
+      handleRequestResult(false);
+    }
+    setLoading(false);
+    description.current = "";
+    hideModal();
+  };
+
+  const handleDescription = (event) => {
+    description.current = event.target.value;
+  };
+
+  const handleRemoveInformation = () => {
+    description.current = "";
+    showModal(MODAL_TYPES.CUSTOM_MODAL, {
+      title: "Delete PII or Remove CC information",
+      className: "course-join-card",
+      children: (
+        <>
+          <div className="course-details-card__list">
+            <textarea
+              type="text"
+              className="form-control tw-min-h-[100px]"
+              id="description"
+              placeholder="Description"
+              onChange={handleDescription}
+            />
+          </div>
+        </>
+      ),
+      footer: (handleModalToggle) => {
+        return (
+          <div className="course-details-card__footer">
+            <button
+              className="btn-secondary link-modal tw-mr-4 !tw-px-7"
+              onClick={handleDeletePersonalInformation}
+            >
+              Delete PII
+            </button>
+
+            <button
+              className="btn-secondary link-modal !tw-px-7"
+              onClick={handleDeletePaymentDetails}
+            >
+              Delete CC
+            </button>
+          </div>
+        );
+      },
     });
   };
 
@@ -308,6 +425,15 @@ export const ChangeProfile = ({
                   {errors.contactPhone && touched.contactPhone && (
                     <p className="validation-input">{errors.contactPhone}</p>
                   )}
+                </div>
+                <div className="tw-flex tw-flex-1 tw-justify-end tw-mt-4">
+                  <a
+                    href="#"
+                    className="link link_gray tw-text-xs"
+                    onClick={handleRemoveInformation}
+                  >
+                    Remove Profile
+                  </a>
                 </div>
               </div>
               <div className="tw-flex tw-justify-end tw-mt-6">

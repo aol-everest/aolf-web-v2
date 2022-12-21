@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, animateScroll as scroll } from "react-scroll";
+import { Link, Element, animateScroll as scroll } from "react-scroll";
 import { PatternFormat } from "react-number-format";
 import { useRouter } from "next/router";
 import { ResearchFindingSource } from "./ResearchFindingSource";
@@ -13,6 +13,7 @@ import { HideOn } from "@components";
 import { priceCalculation, tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { RegisterPanel } from "./RegisterPanel";
 
 dayjs.extend(utc);
 
@@ -441,18 +442,6 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                 </div>
               </div>
             </div>
-            <div className="row">
-              <div className="col-xl-9">
-                <p className="program-meet__hint">
-                  Prerequisite: Completion of{" "}
-                  <a href="#" className="link">
-                    SKY Breath Meditation
-                  </a>
-                  , a Silent Retreat, and a recommendation from a local Art of
-                  Living instructor.
-                </p>
-              </div>
-            </div>
           </div>
         </section>
         <section className="program-transformations">
@@ -570,24 +559,9 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                   Your impact in the world matters. <br />
                   You matter.
                 </h2>
-                <div className="powerful__block powerful__block_bottom">
-                  <div className="powerful__block-titles">
-                    <h6 className="caption caption_sm powerful__block-caption">
-                      Make a difference
-                    </h6>
-                    <h4 className="h4 h4_sb powerful__block-caption">
-                      Volunteer Training Program: $275
-                    </h4>
-                  </div>
-                  <div className="bottom-box justify-content-center">
-                    <button
-                      className="btn-secondary register-button"
-                      onClick={handleRegister}
-                    >
-                      Register Today
-                    </button>
-                  </div>
-                </div>
+                <Element name="registerNowBlock">
+                  <RegisterPanel workshop={data} />
+                </Element>
               </div>
             </div>
           </div>

@@ -55,7 +55,8 @@ const CHANGE_PASSWORD = "CHANGE_PASSWORD";
 const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Please contact the help desk
                 at (855) 202-4400 to resolve the issue and cancel your
                 membership.`;
-
+const MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR = `We're sorry, but an error occurred. Please contact the help desk
+                at (855) 202-4400 to resolve the issue and delete your information.`;
 // export async function getServerSideProps({ req, resolvedUrl, query }) {
 //   const { Auth } = withSSRContext({ req });
 //   const { tab } = query || {};
@@ -242,6 +243,38 @@ const Profile = ({ tab }) => {
             />
           </aside>
         )}
+        {request === "3" && (
+          <aside className="profile__alert">
+            <div className="container-xl d-flex justify-content-center align-center">
+              <span>
+                <img src="/img/ic-check.svg" alt="check" />
+                Your case has been registered.
+              </span>
+            </div>
+            <img
+              className="profile__close-alert"
+              src="/img/ic-close-white.svg"
+              alt="close"
+              onClick={toggleTopShowMessage}
+            />
+          </aside>
+        )}
+        {request === "4" && (
+          <aside className="profile__alert">
+            <div className="container-xl d-flex justify-content-center align-center">
+              <span>
+                <img src="/img/ic-error.svg" alt="error" />
+                {MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR}
+              </span>
+            </div>
+            <img
+              className="profile__close-alert"
+              src="/img/ic-close-white.svg"
+              alt="close"
+              onClick={toggleTopShowMessage}
+            />
+          </aside>
+        )}
         <section className="profile-header">
           <div className="container d-flex flex-md-row flex-column align-items-md-center">
             <div className="profile-header__client profile-pic-section">
@@ -385,13 +418,17 @@ const Profile = ({ tab }) => {
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
                         upcoming{" "}
-                        <Link href="/us-en" prefetch={false}>
+                        <Link href="/us-en" prefetch={false} legacyBehavior>
                           <a href="#" className="link link_orange">
                             course
                           </a>
                         </Link>{" "}
                         or{" "}
-                        <Link href="/us-en/meetup" prefetch={false}>
+                        <Link
+                          href="/us-en/meetup"
+                          prefetch={false}
+                          legacyBehavior
+                        >
                           <a href="#" className="link link_orange">
                             meetup
                           </a>
@@ -471,7 +508,11 @@ const Profile = ({ tab }) => {
                   <p>
                     If you are not part of the Referral program as yet, you can
                     sign up{" "}
-                    <Link href="/us-en/referral-offer" prefetch={false}>
+                    <Link
+                      href="/us-en/referral-offer"
+                      prefetch={false}
+                      legacyBehavior
+                    >
                       <a href="#" className="link_orange">
                         here
                       </a>
@@ -553,13 +594,17 @@ const Profile = ({ tab }) => {
                         <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
                           upcoming{" "}
-                          <Link href="/us-en" prefetch={false}>
+                          <Link href="/us-en" prefetch={false} legacyBehavior>
                             <a href="#" className="link link_orange">
                               course
                             </a>
                           </Link>{" "}
                           or{" "}
-                          <Link href="/us-en/meetup" prefetch={false}>
+                          <Link
+                            href="/us-en/meetup"
+                            prefetch={false}
+                            legacyBehavior
+                          >
                             <a href="#" className="link link_orange">
                               meetup
                             </a>
