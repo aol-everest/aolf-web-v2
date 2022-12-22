@@ -921,7 +921,7 @@ const Course = () => {
               )}
               {institutionalCourses && (
                 <p className="title mb-1 mt-lg-5 mt-3">
-                  Upcoming {COURSE_TYPES.INSTITUTIONAL_COURSE.name}
+                  Upcoming {COURSE_TYPES.INSTITUTIONAL_COURSE.name} courses
                 </p>
               )}
             </div>
