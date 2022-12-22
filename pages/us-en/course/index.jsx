@@ -344,11 +344,10 @@ const Course = () => {
           mode: COURSE_MODES[activeFilterType].value,
         };
       }
-      console.log(institutionalCourses);
       if (institutionalCourses) {
         param = {
           ...param,
-          ctype: "1007138",
+          ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
         };
       } else if (ctypesFilter) {
         param = {
@@ -922,7 +921,7 @@ const Course = () => {
               )}
               {institutionalCourses && (
                 <p className="title mb-1 mt-lg-5 mt-3">
-                  Upcoming Institutional courses
+                  Upcoming {COURSE_TYPES.INSTITUTIONAL_COURSE.name}
                 </p>
               )}
             </div>
