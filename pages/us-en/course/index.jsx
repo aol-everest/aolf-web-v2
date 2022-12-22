@@ -172,6 +172,10 @@ const Course = () => {
     defaultValue: false,
     parse: stringToBoolean,
   });
+  const [institutionalCourses] = useQueryString("ic-type", {
+    defaultValue: false,
+    parse: stringToBoolean,
+  });
   const [privateEvent] = useQueryString("private-event", {
     defaultValue: false,
     parse: stringToBoolean,
@@ -340,7 +344,13 @@ const Course = () => {
           mode: COURSE_MODES[activeFilterType].value,
         };
       }
-      if (ctypesFilter) {
+      console.log(institutionalCourses);
+      if (institutionalCourses) {
+        param = {
+          ...param,
+          ctype: "1007138",
+        };
+      } else if (ctypesFilter) {
         param = {
           ...param,
           ctype: ctypesFilter,
@@ -905,9 +915,16 @@ const Course = () => {
         <div className="container upcoming_course">
           <div className="row">
             <div className="col-12">
-              <p className="title mb-1 mt-lg-5 mt-3">
-                Upcoming {COURSE_MODES[activeFilterType].name} courses
-              </p>
+              {!institutionalCourses && (
+                <p className="title mb-1 mt-lg-5 mt-3">
+                  Upcoming {COURSE_MODES[activeFilterType].name} courses
+                </p>
+              )}
+              {institutionalCourses && (
+                <p className="title mb-1 mt-lg-5 mt-3">
+                  Upcoming Institutional courses
+                </p>
+              )}
             </div>
           </div>
           <div className="row mb-4">
