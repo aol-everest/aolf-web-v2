@@ -5,9 +5,6 @@
   "cacheDirectories": [
     ".next/cache"
   ],
-  "engines": {
-    "node": "14.x"
-  },
   "scripts": {
     "develop": "cross-env NODE_OPTIONS='--inspect' NODE_ENV='development' next dev",
     "develop:qa": "cross-env NODE_OPTIONS='--inspect' NODE_ENV='test' next dev",

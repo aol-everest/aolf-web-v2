@@ -52,6 +52,12 @@ const SKYSilentRetreat = dynamic(() =>
 const BlessingsCourse = dynamic(() =>
   import("@components/courseDetails").then((mod) => mod.BlessingsCourse),
 );
+const SKYHappinessRetreat = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SKYHappinessRetreat),
+);
+const SanyamCourse = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SanyamCourse),
+);
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -136,7 +142,9 @@ function CourseDetail() {
       !isVolunteerTrainingProgram &&
       !isHealingBreathType &&
       !isSKYSilentRetreatType &&
-      !isBlessingsCourse
+      !isBlessingsCourse &&
+      !isSKYCampusHappinessRetreat &&
+      !isSanyamCourse
     ) {
       router.push({
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -216,6 +224,12 @@ function CourseDetail() {
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
   const isBlessingsCourse =
     COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0;
+  const isSKYCampusHappinessRetreat =
+    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
+      data.productTypeId,
+    ) >= 0;
+  const isSanyamCourse =
+    COURSE_TYPES.SANYAM_COURSE.value.indexOf(data.productTypeId) >= 0;
 
   const props = {
     data,
@@ -246,6 +260,12 @@ function CourseDetail() {
     }
     if (isBlessingsCourse) {
       return <BlessingsCourse {...props} />;
+    }
+    if (isSKYCampusHappinessRetreat) {
+      return <SKYHappinessRetreat {...props} />;
+    }
+    if (isSanyamCourse) {
+      return <SanyamCourse {...props} />;
     }
     return <ErrorPage statusCode={404} />;
   };

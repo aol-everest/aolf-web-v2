@@ -128,6 +128,14 @@ export const COURSE_TYPES = {
     name: "Institutional",
     value: process.env.NEXT_PUBLIC_INSTITUTIONAL_CTYPE || "",
   },
+  SKY_CAMPUS_HAPPINESS_RETREAT: {
+    name: "SKY Happiness Retreat",
+    value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || "",
+  },
+  SANYAM_COURSE: {
+    name: "Sanyam Course",
+    value: process.env.NEXT_PUBLIC_SANYAM_COURSE_CTYPE || "",
+  },
 };
 
 export const MEETUP_TYPES = {
