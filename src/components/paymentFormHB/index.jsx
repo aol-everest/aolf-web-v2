@@ -5,6 +5,7 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 import { isEmpty, Auth } from "@utils";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -94,6 +95,23 @@ export const PaymentFormHB = ({
     useState(null);
 
   const router = useRouter();
+
+  const {
+    data: corporates,
+    isLoading,
+    error,
+  } = useQuery(
+    "corporates",
+    async () => {
+      const response = await api.get({
+        path: "getCorporates",
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   useEffect(() => {
     if (programQuestionnaireResult?.length > 0) {
@@ -1045,7 +1063,10 @@ export const PaymentFormHB = ({
                       showCouponCodeField={showCouponCodeField}
                     />
                   </div>
-                  <AttendanceForm formikProps={formikProps} />
+                  <AttendanceForm
+                    formikProps={formikProps}
+                    corporates={corporates}
+                  />
                   <AgreementForm
                     formikProps={formikProps}
                     complianceQuestionnaire={complianceQuestionnaire}

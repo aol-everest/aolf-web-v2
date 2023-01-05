@@ -1,14 +1,22 @@
 import React, { Fragment } from "react";
+import Select from "react-select";
+import { Field } from "formik";
 import { StyledInput } from "./StyledInput";
 import { FieldWrapper } from "./FieldWrapper";
 import { InputDropDown } from "./InputDropDown";
 import classNames from "classnames";
 import Style from "./AttendanceForm.module.scss";
 
-export const AttendanceForm = ({ formikProps }) => {
+export const AttendanceForm = ({ formikProps, corporates }) => {
   const onPopupChangeEvent = (formikProps, field) => (value) => {
     formikProps.setFieldValue(field, value?.name || "");
   };
+
+  const corporateOptions = corporates?.map((corporate) => {
+    return { value: corporate.sfid, label: corporate.corporateName };
+  });
+
+  const { setFieldValue } = formikProps;
 
   return (
     <Fragment>
@@ -30,13 +38,44 @@ export const AttendanceForm = ({ formikProps }) => {
           formikKey="contactTitle"
           fullWidth
         ></StyledInput>
-        <StyledInput
-          class="mt-lg-0"
-          placeholder="Healthcare Organization"
-          formikProps={formikProps}
-          formikKey="contactHealthcareOrganisation"
-          fullWidth
-        ></StyledInput>
+        <Field name="contactHealthcareOrganisation" class="form-control">
+          {({ field }) => (
+            <FieldWrapper
+              formikKey={"contactHealthcareOrganisation"}
+              formikProps={formikProps}
+              fullWidth
+            >
+              <Select
+                options={corporateOptions || []}
+                className="d-flex justify-content-start mt-lg-0"
+                styles={{
+                  control: (styles) => ({
+                    ...styles,
+                    flex: 1,
+                    justifyContent: "start",
+                    width: "250px",
+                  }),
+                }}
+                {...field}
+                value={
+                  corporateOptions
+                    ? corporateOptions.find(
+                        (option) => option.value === field.value,
+                      )
+                    : ""
+                }
+                onChange={(option) => {
+                  if (option) {
+                    setFieldValue(field.name, option.value);
+                  } else {
+                    setFieldValue(field.name, "");
+                  }
+                }}
+                placeholder="Healthcare Organization"
+              />
+            </FieldWrapper>
+          )}
+        </Field>
         <StyledInput
           containerClass={classNames(Style.address, "mt-0")}
           class={classNames(Style.address)}

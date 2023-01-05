@@ -1,0 +1,504 @@
+.sanyam__section {
+  padding: 50px 0;
+  margin: 0;
+}
+
+.about-course--sanyam {
+  & .about-course {
+    &__main {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    &__main-name--font-size {
+      font-size: 56px;
+    }
+    &__main-list {
+      max-width: 550px;
+    }
+  }
+
+  & .about-program__image--height-auto {
+    height: auto;
+  }
+
+  & .about-program__main-type {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+
+    &--small {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.magic-inside--sanyam {
+  & .magic-inside {
+    &__container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &__title {
+      margin-bottom: 80px;
+
+      font-family: "Lora";
+      font-weight: 700;
+      font-style: normal;
+      color: #1e2232;
+
+      font-size: 36px;
+    }
+
+    &__subtitle {
+      font-family: "Work Sans";
+      font-weight: 400;
+      font-style: normal;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    &__list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 500px;
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    &__item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    &__icon {
+      margin-top: 2px;
+    }
+  }
+}
+
+.revitalize--sanyam {
+  & .revitalize {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__title {
+      margin-bottom: 20px;
+
+      font-family: "Lora";
+      font-weight: 700;
+      font-style: normal;
+      font-size: 36px;
+
+      color: #1e2232;
+    }
+
+    &__text {
+      margin-bottom: 20px;
+
+      font-family: "Work Sans";
+      font-weight: 400;
+      font-style: normal;
+      font-size: 20px;
+
+      color: #606270;
+    }
+
+    &__item-image {
+      width: 466px;
+      height: 360px;
+
+      border-radius: 10px;
+    }
+
+    &__subtitle {
+      margin-bottom: 30px;
+
+      font-family: "Lora";
+      font-weight: 700;
+      font-style: normal;
+      font-size: 26px;
+    }
+
+    &__list-image {
+      display: flex;
+      gap: 25px;
+
+      margin-bottom: 20px;
+    }
+
+    &__list {
+      width: 662px;
+      text-align: center;
+
+      color: #606270;
+    }
+
+    &__item {
+      display: block;
+
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.course-elements--sanyam {
+  text-align: center;
+  background: linear-gradient(
+    0deg,
+    rgba(20, 151, 205, 0.0956757703) 0%,
+    rgba(19, 130, 201, 0.1348914566) 35%,
+    rgb(255, 255, 255) 100%
+  );
+
+  & .course-elements {
+    &__title {
+      margin-bottom: 20px;
+
+      font-family: "Lora";
+      font-weight: 700;
+      font-style: normal;
+      font-size: 36px;
+
+      color: #1e2232;
+    }
+
+    &__subtitle {
+      font-family: "Work Sans";
+      font-weight: 700;
+      font-style: normal;
+      font-size: 20px;
+      margin-bottom: 50px;
+
+      color: #606270;
+
+      &--block {
+        display: block;
+      }
+    }
+
+    &__list {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+
+      text-align: start;
+    }
+
+    &__item {
+      width: 200px;
+    }
+
+    &__icon {
+      margin-bottom: 10px;
+    }
+
+    &__name {
+      margin-bottom: 15px;
+
+      font-family: "Lora";
+      font-weight: 700;
+      font-style: normal;
+      font-size: 24px;
+
+      color: #1e2232;
+    }
+    &__text {
+      font-family: "Work Sans";
+      font-weight: 400;
+      font-size: 16px;
+
+      color: #606270;
+    }
+  }
+}
+
+.participants--sanyam {
+  & .participants {
+    &__subtitle {
+      font-family: "Work Sans";
+      font-weight: 500;
+      font-style: normal;
+      font-size: 17px;
+
+      margin-bottom: 10px;
+    }
+
+    &__image--margin-top {
+      margin-top: -80px;
+    }
+  }
+}
+
+.offer--sanyam {
+  & .offer {
+    &__banner--sanyam-bg {
+      padding: 40px 120px;
+      background-image: url(/img/sanyam-offer-bg.jpg);
+    }
+  }
+
+  & .meditation-title_blue {
+    font-family: "Work Sans";
+    font-weight: 600;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 15px;
+
+    &--block {
+      display: block;
+    }
+  }
+}
+
+.upcoming--sanyam {
+  & .upcoming-section__text {
+    max-width: 930px;
+  }
+}
+
+.art-section--sanyam {
+  background: linear-gradient(
+    0deg,
+    rgba(20, 151, 205, 0.0956757703) 0%,
+    rgba(19, 130, 201, 0.1348914566) 35%,
+    rgb(255, 255, 255) 100%
+  );
+}
+
+@media (max-width: 1270px) {
+  .magic-inside--sanyam {
+    & .magic-inside {
+      &__container {
+        gap: 30px;
+      }
+
+      &__img {
+        flex: 0 0 50%;
+
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .sanyam__section {
+    padding: 25px 0;
+  }
+
+  .about-course--sanyam {
+    & .about-course {
+      &__main {
+        padding-top: 250px;
+      }
+    }
+
+    & .about-program__main-type {
+      text-align: start;
+    }
+
+    & .about-course-box-button--center {
+      text-align: center;
+    }
+  }
+
+  .magic-inside--sanyam {
+    padding: 60px 0;
+
+    & .magic-inside {
+      &__container {
+        gap: 30px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      &__img {
+        flex: auto;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      &__title {
+        margin-bottom: 10px;
+        width: 100%;
+      }
+
+      &__subtitle {
+        width: 300px;
+      }
+
+      &__list {
+        font-size: 16px;
+        width: 100%;
+      }
+    }
+  }
+
+  .revitalize--sanyam {
+    text-align: center;
+
+    & .revitalize {
+      &__image--only-desktop {
+        display: none;
+      }
+
+      &__text {
+        font-size: 18px;
+      }
+
+      &__list-image {
+        gap: 0;
+      }
+
+      &__item-image {
+        width: 288px;
+        height: 183px;
+      }
+
+      &__list {
+        width: 100%;
+      }
+
+      &__item {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .course-elements--sanyam {
+    & .course-elements {
+      &__item {
+        width: 125px;
+      }
+    }
+  }
+
+  .participants--sanyam {
+    & .participants {
+      &__subtitle {
+        width: 210px;
+        margin: 0 auto;
+
+        margin-bottom: 10px;
+      }
+      &__item--only-desktop {
+        display: none;
+      }
+    }
+  }
+
+  .offer--sanyam {
+    .banner-offer__title {
+      line-height: 17px;
+      text-align: start;
+    }
+
+    & .offer {
+      &__banner--sanyam-bg {
+        padding: 260px 16px 40px;
+        background-image: url(/img/sanyam-offer-bg-mobile.jpg);
+        background-position-y: 0;
+        background-position-x: 0;
+        background-size: cover;
+      }
+    }
+    & .meditation-title_blue {
+      font-size: 13px;
+
+      &--block {
+        display: inline;
+      }
+    }
+  }
+
+  .upcoming--sanyam {
+    & .upcoming-section__title {
+      width: 300px;
+      font-size: 36px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .magic-inside--sanyam {
+    & .magic-inside {
+      &__img {
+        flex: auto;
+
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .magic-inside--sanyam {
+    & .magic-inside {
+      font-size: 16px;
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .about-course--sanyam {
+    & .about-course {
+      &__main-name--font-size {
+        font-size: 36px;
+      }
+    }
+  }
+
+  .magic-inside--sanyam {
+    & .magic-inside {
+      &__title {
+        font-size: 24px;
+      }
+      &__subtitle {
+        width: 100%;
+      }
+    }
+  }
+
+  .revitalize--sanyam {
+    & .revitalize {
+      &__item-image {
+        width: 100%;
+      }
+    }
+  }
+
+  .participants--sanyam {
+    & .participants {
+      &__subtitle {
+        width: 100%;
+      }
+
+      &__title {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .upcoming--sanyam {
+    & .upcoming-section__title {
+      width: 100%;
+      font-size: 24px;
+    }
+  }
+}
