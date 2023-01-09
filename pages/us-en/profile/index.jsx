@@ -22,6 +22,9 @@ const stripePromise = loadStripe(
 const EventList = dynamic(() =>
   import("@components/profile").then((mod) => mod.EventList),
 );
+const CouponStack = dynamic(() =>
+  import("@components/profile").then((mod) => mod.CouponStack),
+);
 const ChangePassword = dynamic(() =>
   import("@components/profile").then((mod) => mod.ChangePassword),
 );
@@ -519,6 +522,7 @@ const Profile = ({ tab }) => {
                     </Link>
                   </p>
                 </div>
+                <CouponStack></CouponStack>
                 <div id="talkable-offer"></div>
               </div>
               <div
