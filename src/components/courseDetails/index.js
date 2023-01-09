@@ -6,3 +6,5 @@ export { VolunteerTrainingProgram } from "./VolunteerTrainingProgram";
 export { HealingBreath } from "./HealingBreath";
 export { SKYSilentRetreat } from "./SKYSilentRetreat";
 export { BlessingsCourse } from "./BlessingsCourse";
+export { SKYHappinessRetreat } from "./SKYHappinessRetreat";
+export { SanyamCourse } from "./SanyamCourse";

@@ -41,6 +41,12 @@ export const RegisterPanel = ({ workshop }) => {
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
       workshop.productTypeId,
     ) >= 0;
+  const isSKYCampusHappinessRetreat =
+    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
+  const isSanyamCourse =
+    COURSE_TYPES.SANYAM_COURSE.value.indexOf(workshop.productTypeId) >= 0;
   const isBlessingsCourse =
     COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(workshop.productTypeId) >= 0;
 
@@ -133,7 +139,7 @@ export const RegisterPanel = ({ workshop }) => {
       </div>
     );
   }
-  if (isSKYType) {
+  if (isSKYType || isSKYCampusHappinessRetreat) {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
@@ -150,6 +156,35 @@ export const RegisterPanel = ({ workshop }) => {
         <div className="bottom-box justify-content-md-center">
           <button className="btn-secondary v2" onClick={handleRegister}>
             Register Today
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (isSanyamCourse) {
+    return (
+      <div class="offer__container container_md">
+        <div class="offer__banner offer__banner--sanyam-bg banner-offer">
+          <h5 class="banner-offer__title meditation-title_blue">
+            <span class="meditation-title_blue--block">
+              Eligibility: SKY Breath Meditation and four Silent Retreats
+            </span>
+            are prerequisites to enroll in the Sanyam Course.
+          </h5>
+
+          <div class="banner-offer__price block-title">
+            Sanyam Course: ${fee}
+          </div>
+
+          <div class="banner-offer__discount">
+            Regular course cost: <span>${delfee}</span>
+          </div>
+
+          <button
+            class="banner-offer__register sky-button btn-secondary"
+            onClick={handleRegister}
+          >
+            Register Now
           </button>
         </div>
       </div>

@@ -7,3 +7,4 @@ export { ProfilePicCrop } from "./ProfilePicCrop";
 export { PastCourses } from "./PastCourses";
 export { ChangeEmail } from "./ChangeEmail";
 export { ChangeCardDetail } from "./ChangeCardDetail";
+export { CouponStack } from "./CouponStack";

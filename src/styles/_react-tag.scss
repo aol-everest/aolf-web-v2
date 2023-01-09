@@ -1,0 +1,67 @@
+.ReactTags__tags {
+  position: relative;
+  width: 100%;
+}
+
+.ReactTags__clearAll {
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px;
+  background: #f88d8d;
+  color: #fff;
+  border: none;
+}
+
+/* Styles for the input */
+.ReactTags__tagInput {
+  border-radius: 2px;
+
+  .ReactTags__tagInputField {
+    margin-top: 8px !important;
+  }
+}
+
+.ReactTags__editInput {
+  border-radius: 1px;
+}
+
+.ReactTags__editTagInput {
+  display: inline-flex;
+}
+
+/* Styles for selected tags */
+.ReactTags__selected {
+  span.ReactTags__tag {
+    color: white;
+    display: inline-block;
+    margin: 0 5px;
+    background-color: #6c757d;
+    padding: 0.25em 0.4em;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+  }
+  a.ReactTags__remove {
+    color: #aaa;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  span.ReactTags__tag.error {
+    color: #fff;
+    background-color: #dc3545;
+  }
+  span.ReactTags__tag.success {
+    color: #fff;
+    background-color: #28a745;
+  }
+  .ReactTags__remove {
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: white;
+  }
+}

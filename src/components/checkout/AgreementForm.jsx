@@ -56,6 +56,7 @@ export const AgreementForm = ({
                     ? "/policy/ppa-corporate"
                     : "/policy/ppa-course"
                 }
+                legacyBehavior
               >
                 <a target="_blank" rel="noreferrer">
                   Program Participant agreement including privacy and
@@ -181,6 +182,7 @@ export const AgreementForm = ({
                   ? "/policy/ppa-corporate"
                   : "/policy/ppa-course"
               }
+              legacyBehavior
             >
               <a target="_blank" rel="noreferrer">
                 Program Participant agreement including privacy and cancellation

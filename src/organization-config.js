@@ -27,6 +27,7 @@ const allOrganizationConfig = [
       "CHAKRA_KRIYA",
       "VOLUNTEER_TRAINING_PROGRAM",
       "BLESSINGS_COURSE",
+      "SANYAM_COURSE",
     ],
   },
   {
@@ -57,6 +58,7 @@ const allOrganizationConfig = [
       "CHAKRA_KRIYA",
       "VOLUNTEER_TRAINING_PROGRAM",
       "BLESSINGS_COURSE",
+      "SANYAM_COURSE",
     ],
   },
   {

@@ -16,6 +16,7 @@ export function Footer() {
               <Link
                 prefetch={false}
                 href="https://healingbreaths.org/privacy-policy/"
+                legacyBehavior
               >
                 <a target="_blank">Privacy Policy</a>
               </Link>
@@ -29,6 +30,7 @@ export function Footer() {
               <Link
                 prefetch={false}
                 href="https://healingbreaths.org/terms-of-use/"
+                legacyBehavior
               >
                 <a target="_blank">Terms of Use</a>
               </Link>
