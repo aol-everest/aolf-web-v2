@@ -7,7 +7,10 @@ import { object, string } from "yup";
 import { api } from "@utils";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAuth } from "@contexts";
+import { useQuery } from "react-query";
 import { WithContext as ReactTags } from "react-tag-input";
+import ErrorPage from "next/error";
+import { Loader } from "@components";
 
 const KeyCodes = {
   TAB: 9,
@@ -35,6 +38,22 @@ export const CouponStack = ({ closeDetailAction, existingEmail }) => {
   const [showMessage, setShowMessage] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { validCoupons, isLoading, isError, error } = useQuery(
+    "myTalkableCoupons",
+    async () => {
+      const response = await api.get({
+        path: "myTalkableCoupons",
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <Loader />;
+  console.log(validCoupons);
   async function onChangeEmailSubmitted({ username }) {
     setLoading(true);
     try {
@@ -120,36 +139,20 @@ export const CouponStack = ({ closeDetailAction, existingEmail }) => {
     setTags([...tags, tag]);
   };
 
-  const handleDrag = (tag, currPos, newPos) => {
-    const newTags = tags.slice();
-
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-
-    // re-render
-    setTags(newTags);
-  };
-
-  const handleTagClick = (index) => {
-    console.log("The tag at index " + index + " was clicked");
-  };
-
   return (
-    <div class="profile-update__form">
-      <h6 class="profile-update__title">Stack Coupon:</h6>
+    <div className="profile-update__form">
+      <h6 className="profile-update__title">Stack Coupon:</h6>
       <div className="profile-update__card order__card">
         <ReactTags
           tags={tags}
           delimiters={delimiters}
           handleDelete={handleDelete}
           handleAddition={handleAddition}
-          handleDrag={handleDrag}
-          handleTagClick={handleTagClick}
           placeholder="Coupon codes"
         />
       </div>
-      <div class="tw-flex tw-justify-end tw-mt-6">
-        <button type="submit" class="btn-primary d-block ml-4 v2">
+      <div className="tw-flex tw-justify-end tw-mt-6">
+        <button type="submit" className="btn-primary d-block ml-4 v2">
           Verify
         </button>
       </div>
