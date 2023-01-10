@@ -9,7 +9,7 @@ import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { trackEvent } from "@phntms/react-gtm";
+import { useAnalytics } from "use-analytics";
 import { useQuery } from "react-query";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
@@ -138,6 +138,7 @@ function MembershipCheckout() {
       enabled: router.isReady,
     },
   );
+  const { track } = useAnalytics();
   const [couponCode] = useQueryString("coupon");
   const [offeringId] = useQueryString("ofid");
   const [courseId] = useQueryString("cid", {
@@ -169,24 +170,21 @@ function MembershipCheckout() {
       }),
     );
 
-    trackEvent({
-      event: "eec.checkout",
-      data: {
-        page: `Art of Living subscription page`,
-        viewType: "subscription",
-        title: activeSubscription.subscriptionName,
-        ctype: activeSubscription.sfid,
-        amount: activeSubscription.price,
-        requestType: "Detail",
-        hitType: "paymentpage",
-        user: user.profile.id,
-        ecommerce: {
-          checkout: {
-            actionField: {
-              step: 1,
-            },
-            products: products,
+    track("eec.checkout", {
+      page: `Art of Living subscription page`,
+      viewType: "subscription",
+      title: activeSubscription.subscriptionName,
+      ctype: activeSubscription.sfid,
+      amount: activeSubscription.price,
+      requestType: "Detail",
+      hitType: "paymentpage",
+      user: user.profile.id,
+      ecommerce: {
+        checkout: {
+          actionField: {
+            step: 1,
           },
+          products: products,
         },
       },
     });

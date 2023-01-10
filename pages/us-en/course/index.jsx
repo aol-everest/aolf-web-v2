@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
-import { api, stringToBoolean, Segment } from "@utils";
+import { api, stringToBoolean } from "@utils";
+import { useAnalytics } from "use-analytics";
 import { NextSeo } from "next-seo";
 import { useIntersectionObserver } from "@hooks";
 import classNames from "classnames";
@@ -424,6 +425,7 @@ const Course = () => {
   );
 
   const loadMoreRef = React.useRef();
+  const { track } = useAnalytics();
 
   useIntersectionObserver({
     target: loadMoreRef,
@@ -432,7 +434,8 @@ const Course = () => {
   });
 
   useEffect(() => {
-    Segment.event("Product List Viewed", {
+    useAnalytics;
+    track("Product List Viewed", {
       category: "Course",
     });
   }, []);

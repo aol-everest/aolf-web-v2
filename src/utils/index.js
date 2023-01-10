@@ -4,7 +4,6 @@ export { priceCalculation } from "./priceCalculation";
 export { Compose } from "./compose";
 export { buildShareUrl, isInternetExplorer } from "./addToCalendar";
 export { Clevertap } from "./clevertap";
-export { Segment } from "./segment";
 export { Talkable } from "./talkable";
 export { Auth } from "./auth";
 

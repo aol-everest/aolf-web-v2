@@ -76,6 +76,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
             crossOrigin="anonymous"
           />
+          <script
+            async
+            src="https://amazon-cognito-assets.us-east-2.amazoncognito.com/amazon-cognito-advanced-security-data.min.js"
+            type="text/javascript"
+          ></script>
 
           {/* <script
             strategy="lazyOnload"

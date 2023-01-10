@@ -10,7 +10,7 @@ import { NextSeo } from "next-seo";
 import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { trackEvent } from "@phntms/react-gtm";
+import { useAnalytics } from "use-analytics";
 import {
   COURSE_TYPES,
   MODAL_TYPES,
@@ -101,6 +101,7 @@ const Checkout = () => {
   const [showTopMessage, setShowTopMessage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [comboProductSfid, setComboProductSfid] = useState("");
+  const { track } = useAnalytics();
 
   useEffect(() => {
     if (!user || !workshop) return;
@@ -133,25 +134,21 @@ const Checkout = () => {
         price: unitPrice,
       },
     ];
-
-    trackEvent({
-      event: "eec.checkout",
-      data: {
-        page: `Art of Living ${title} workshop registration page`,
-        viewType: "workshop",
-        title: title,
-        ctype: productTypeId,
-        amount: unitPrice,
-        requestType: "Detail",
-        hitType: "paymentpage",
-        user: user.profile.id,
-        ecommerce: {
-          checkout: {
-            actionField: {
-              step: 1,
-            },
-            products: products,
+    track("eec.checkout", {
+      page: `Art of Living ${title} workshop registration page`,
+      viewType: "workshop",
+      title: title,
+      ctype: productTypeId,
+      amount: unitPrice,
+      requestType: "Detail",
+      hitType: "paymentpage",
+      user: user.profile.id,
+      ecommerce: {
+        checkout: {
+          actionField: {
+            step: 1,
           },
+          products: products,
         },
       },
     });
