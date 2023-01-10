@@ -3,22 +3,32 @@ import segmentPlugin from "@analytics/segment";
 import googleTagManager from "@analytics/google-tag-manager";
 import onRouteChange from "@analytics/router-utils";
 
-export const analytics = Analytics({
-  app: "AOLF-Members-App",
-  debug: true,
-  plugins: [
+let plugins = [];
+
+if (process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY) {
+  plugins = [
+    ...plugins,
     segmentPlugin({
       writeKey: process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY,
-      enabled: !!process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY,
     }),
+  ];
+}
+if (process.env.NEXT_PUBLIC_GTM_ID) {
+  plugins = [
+    ...plugins,
     googleTagManager({
       containerId: process.env.NEXT_PUBLIC_GTM_ID,
     }),
-  ],
+  ];
+}
+export const analytics = Analytics({
+  app: "AOLF-Members-App",
+  debug: true,
+  plugins,
 });
 
 onRouteChange((newRoutePath) => {
-  console.log("new route path", newRoutePath);
+  // console.log("new route path", newRoutePath);
   // trigger page view
   analytics.page();
 });
