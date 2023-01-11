@@ -284,19 +284,25 @@ export const CouponStack = () => {
   switch (step) {
     case 1:
       return (
-        <CouponValidateCmp
-          couponCodes={couponCodes}
-          verifyCoupons={verifyCoupons}
-        />
+        <>
+          {loading && <Loader />}
+          <CouponValidateCmp
+            couponCodes={couponCodes}
+            verifyCoupons={verifyCoupons}
+          />
+        </>
       );
     case 2:
       return (
-        <CouponMergeCmp
-          couponCodes={couponCodes}
-          reedemableAmount={reedemableAmount}
-          cancelAction={cancelAction}
-          mergeAction={mergeAction}
-        />
+        <>
+          {loading && <Loader />}
+          <CouponMergeCmp
+            couponCodes={couponCodes}
+            reedemableAmount={reedemableAmount}
+            cancelAction={cancelAction}
+            mergeAction={mergeAction}
+          />
+        </>
       );
     case 3:
       return (
