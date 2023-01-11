@@ -1,15 +1,11 @@
 export const Talkable = {
   authenticate: function (payload) {
-    if (!window._talkableq) {
-      return null;
-    }
+    window._talkableq = window._talkableq || [];
     window._talkableq.push(["authenticate_customer", payload]);
   },
 
   purchase: function (purchase, customer) {
-    if (!window._talkableq) {
-      return null;
-    }
+    window._talkableq = window._talkableq || [];
     const _talkable_data = {
       purchase,
       customer,
