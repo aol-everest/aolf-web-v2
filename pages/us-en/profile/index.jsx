@@ -522,7 +522,7 @@ const Profile = ({ tab }) => {
                     </Link>
                   </p>
                 </div>
-                {/* <CouponStack></CouponStack> */}
+                <CouponStack></CouponStack>
                 <div id="talkable-offer"></div>
               </div>
               <div
