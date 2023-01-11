@@ -67,8 +67,8 @@ const CouponMergeCmp = ({
                   "tw-text-orange-600": !coupon.isValid,
                 })}
               >
-                Coupon <span className="tw-font-semibold">{coupon.id}</span>
-                is invalid.
+                Coupon <span className="tw-font-semibold">{coupon.id}</span> is
+                invalid.
               </li>
             );
           })}
