@@ -18,6 +18,8 @@ import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { orgConfig } from "@org";
+import { analytics } from "@service";
+import { AnalyticsProvider } from "use-analytics";
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
@@ -28,21 +30,6 @@ import "@styles/style.scss";
 import "@styles/old-design/style.scss";
 
 import SEO from "../next-seo.config";
-
-// const renderSnippet = () => {
-//   const opts = {
-//     apiKey: process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY,
-//     // note: the page option only covers SSR tracking.
-//     // Page.js is used to track other events using `window.analytics.page()`
-//     page: true,
-//   };
-
-//   if (process.env.NODE_ENV === "development") {
-//     return snippet.max(opts);
-//   }
-
-//   return snippet.min(opts);
-// };
 
 function App({ Component, pageProps }) {
   const [user, setUser] = useState(null);
@@ -87,6 +74,13 @@ function App({ Component, pageProps }) {
         first_name: userInfo.profile.first_name,
         last_name: userInfo.profile.last_name,
       });
+      analytics.identify(userInfo.profile.email, {
+        id: userInfo.profile.username,
+        sfid: userInfo.profile.id,
+        email: userInfo.profile.email,
+        first_name: userInfo.profile.first_name,
+        last_name: userInfo.profile.last_name,
+      });
     } catch (ex) {
       console.log(ex);
       await Auth.logout();
@@ -114,7 +108,7 @@ function App({ Component, pageProps }) {
     );
   }
   return (
-    <>
+    <AnalyticsProvider instance={analytics}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider
           userInfo={user}
@@ -131,9 +125,6 @@ function App({ Component, pageProps }) {
               GlobalLoading,
             ]}
           >
-            {/* {process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY && (
-              <Script dangerouslySetInnerHTML={{ __html: renderSnippet() }} />
-            )} */}
             <Layout
               hideHeader={Component.hideHeader}
               hideFooter={Component.hideFooter}
@@ -152,7 +143,7 @@ function App({ Component, pageProps }) {
           </Compose>
         </AuthProvider>
       </QueryClientProvider>
-    </>
+    </AnalyticsProvider>
   );
 }
 

@@ -14,7 +14,7 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { COURSE_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { useAuth } from "@contexts";
-import { trackEvent } from "@phntms/react-gtm";
+import { useAnalytics } from "use-analytics";
 import { PageLoading } from "@components";
 import { useQuery } from "react-query";
 
@@ -98,6 +98,7 @@ function CourseDetail() {
   const { user, authenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId } = router.query;
+  const { track } = useAnalytics();
   const { data, isLoading, isError, error } = useQuery(
     "workshopDetail",
     async () => {
@@ -118,17 +119,13 @@ function CourseDetail() {
     if (!authenticated || !data) return;
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
-
-    trackEvent({
-      event: "workshopview",
-      data: {
-        viewType: "workshop",
-        requestType: "Detail",
-        amount: unitPrice,
-        title,
-        ctype: productTypeId,
-        user: user.profile,
-      },
+    track("workshopview", {
+      viewType: "workshop",
+      requestType: "Detail",
+      amount: unitPrice,
+      title,
+      ctype: productTypeId,
+      user: user.profile,
     });
   }, [authenticated, data]);
 

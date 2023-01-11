@@ -3,6 +3,7 @@ import { useGlobalModalContext } from "@contexts";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { FaCheckCircle } from "react-icons/fa";
+import { useAnalytics } from "use-analytics";
 import {
   SignupForm,
   SigninForm,
@@ -33,6 +34,7 @@ const encodeFormData = (data) => {
 export const LoginModal = () => {
   const router = useRouter();
   const { setUser } = useAuth();
+  const { identify } = useAnalytics();
   const { hideModal, store } = useGlobalModalContext();
   const { modalProps } = store || {};
   const {
@@ -95,6 +97,13 @@ export const LoginModal = () => {
       } else {
         const userInfo = await Auth.reFetchProfile();
         setUser(userInfo);
+        identify(userInfo.profile.email, {
+          id: userInfo.profile.username,
+          sfid: userInfo.profile.id,
+          email: userInfo.profile.email,
+          first_name: userInfo.profile.first_name,
+          last_name: userInfo.profile.last_name,
+        });
 
         if (isStudent) {
           await api.post({

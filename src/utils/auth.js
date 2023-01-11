@@ -22,6 +22,7 @@ export const createCognitoAuth = () => {
     ],
     RedirectUriSignIn: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
     RedirectUriSignOut: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT,
+    AdvancedSecurityDataCollectionFlag: true,
   };
 
   return new CognitoAuth(config);
