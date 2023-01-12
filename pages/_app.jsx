@@ -19,6 +19,7 @@ import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { orgConfig } from "@org";
 import { analytics } from "@service";
+import dynamic from "next/dynamic";
 import { AnalyticsProvider } from "use-analytics";
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
@@ -30,6 +31,13 @@ import "@styles/style.scss";
 import "@styles/old-design/style.scss";
 
 import SEO from "../next-seo.config";
+
+const ClevertapAnalytics = dynamic(
+  () => import("@components/clevertapAnalytics"),
+  {
+    ssr: false,
+  },
+);
 
 function App({ Component, pageProps }) {
   const [user, setUser] = useState(null);
@@ -138,6 +146,7 @@ function App({ Component, pageProps }) {
               {isCCUpdateRequired && <CardUpdateRequired />}
               {isPendingAgreement && <PendingAgreement />}
               <Component {...pageProps} />
+              <ClevertapAnalytics></ClevertapAnalytics>
               <ReactQueryDevtools initialIsOpen={false} />
             </Layout>
           </Compose>

@@ -2,6 +2,7 @@ import Analytics from "analytics";
 import segmentPlugin from "@analytics/segment";
 import googleTagManager from "@analytics/google-tag-manager";
 import onRouteChange from "@analytics/router-utils";
+import clevertapPlugin from "./clevertapPlugin";
 
 let plugins = [];
 
@@ -19,6 +20,7 @@ if (process.env.NEXT_PUBLIC_GTM_ID) {
     googleTagManager({
       containerId: process.env.NEXT_PUBLIC_GTM_ID,
     }),
+    clevertapPlugin(),
   ];
 }
 export const analytics = Analytics({
