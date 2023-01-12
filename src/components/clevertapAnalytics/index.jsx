@@ -7,7 +7,7 @@ export default function ClevertapAnalytics() {
         <Script
           strategy="afterInteractive"
           id="clevertap-script"
-          src="https://d2r1yp2w7bby2u.cloudfront.net/js/clevertap.min.js"
+          src="https://d2r1yp2w7bby2u.cloudfront.net/js/a.js?v=0"
         />
         <Script id="clevertap-analytics" strategy="afterInteractive">
           {`var clevertap = {event:[], profile:[], account:[], onUserLogin:[], notifications:[], privacy:[]};
