@@ -20,8 +20,10 @@ if (process.env.NEXT_PUBLIC_GTM_ID) {
     googleTagManager({
       containerId: process.env.NEXT_PUBLIC_GTM_ID,
     }),
-    clevertapPlugin(),
   ];
+}
+if (process.env.NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID) {
+  plugins = [...plugins, clevertapPlugin()];
 }
 export const analytics = Analytics({
   app: "AOLF-Members-App",
