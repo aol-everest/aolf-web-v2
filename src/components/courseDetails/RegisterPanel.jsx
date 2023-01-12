@@ -26,6 +26,7 @@ export const RegisterPanel = ({ workshop }) => {
     roomAndBoardRange,
     usableCredit,
     productTypeId,
+    studentPriceBook,
   } = workshop || {};
 
   const isSKYType =
@@ -76,7 +77,7 @@ export const RegisterPanel = ({ workshop }) => {
     });
   };
 
-  const { subscriptions = [] } = user?.profile || {};
+  const { subscriptions = [], isStudentVerified } = user?.profile || {};
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
       return {
@@ -139,7 +140,7 @@ export const RegisterPanel = ({ workshop }) => {
       </div>
     );
   }
-  if (isSKYType || isSKYCampusHappinessRetreat) {
+  if (isSKYType) {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
@@ -151,6 +152,37 @@ export const RegisterPanel = ({ workshop }) => {
             <p>
               Regular course fee: <span className="discount"> ${delfee} </span>
             </p>
+          )}
+        </div>
+        <div className="bottom-box justify-content-md-center">
+          <button className="btn-secondary v2" onClick={handleRegister}>
+            Register Today
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (isSKYCampusHappinessRetreat) {
+    return (
+      <div className="powerful__block powerful__block_bottom">
+        <div>
+          <h3>Limited Time Offer</h3>
+          {!isStudentVerified ? (
+            <h2>Student fee: ${studentPriceBook?.unitPrice || fee}</h2>
+          ) : (
+            <h2>
+              {title}: ${fee}
+            </h2>
+          )}
+          {delfee && (
+            <p>
+              Regular course fee: <span className="discount"> ${delfee} </span>
+            </p>
+          )}
+          {!isStudentVerified && (
+            <h3 class="!tw-normal-case">
+              *Verify your student status with your .edu email ID
+            </h3>
           )}
         </div>
         <div className="bottom-box justify-content-md-center">
