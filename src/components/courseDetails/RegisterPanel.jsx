@@ -281,7 +281,7 @@ export const RegisterPanel = ({ workshop }) => {
       <div className="powerful__block powerful__block_bottom">
         <div>
           <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
-          {premiumRate && premiumRate.unitPrice && (
+          {premiumRate && premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
               Premium/Journey+ rate:{" "}
               {premiumRate &&
@@ -340,19 +340,21 @@ export const RegisterPanel = ({ workshop }) => {
           Regular rate: {delfee && <span className="discount">${delfee}</span>}{" "}
           ${fee}
         </h5>
-        {!isUsableCreditAvailable && premiumRate && premiumRate.unitPrice && (
-          <h5 className="powerful__block-title_5 mb-1">
-            Premium/Journey+ rate:{" "}
-            {premiumRate &&
-              premiumRate.listPrice &&
-              premiumRate.listPrice !== premiumRate.unitPrice && (
-                <span className="discount">
-                  ${delfee || premiumRate.listPrice}
-                </span>
-              )}{" "}
-            ${premiumRate && premiumRate.unitPrice}
-          </h5>
-        )}
+        {!isUsableCreditAvailable &&
+          premiumRate &&
+          premiumRate.unitPrice != null && (
+            <h5 className="powerful__block-title_5 mb-1">
+              Premium/Journey+ rate:{" "}
+              {premiumRate &&
+                premiumRate.listPrice &&
+                premiumRate.listPrice !== premiumRate.unitPrice && (
+                  <span className="discount">
+                    ${delfee || premiumRate.listPrice}
+                  </span>
+                )}{" "}
+              ${premiumRate && premiumRate.unitPrice}
+            </h5>
+          )}
         {roomAndBoardRange && (
           <h5 className="powerful__italic-title_6">
             plus room &amp; board: {roomAndBoardRange}
