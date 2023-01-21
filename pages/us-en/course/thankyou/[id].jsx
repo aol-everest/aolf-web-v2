@@ -116,9 +116,34 @@ const Thankyou = () => {
       refetchOnWindowFocus: false,
     },
   );
+  const {
+    data: talkableCouponResult,
+    isLoading: isTalkableCouponLoading,
+    isError: isTalkableCouponError,
+    error: talkableCouponError,
+  } = useQuery(
+    "myUsedTalkableCoupons",
+    async () => {
+      const response = await api.get({
+        path: "myUsedTalkableCoupons",
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const talkableCoupons = talkableCouponResult?.validCoupons;
+
+  const usedTalkableCoupons =
+    talkableCoupons &&
+    talkableCoupons.map((talkableCoupon) => {
+      return talkableCoupon.couponCode;
+    });
 
   useEffect(() => {
-    if (!authenticated || !result) return;
+    if (!authenticated || !result || !talkableCouponResult) return;
     track("transactionComplete", {
       viewType: "workshop",
       amount: unitPrice,
@@ -156,7 +181,7 @@ const Thankyou = () => {
       {
         order_number: orderExternalId, // Unique order number. Example: '100011'
         subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
-        coupon_code: couponCode || "", // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
+        coupon_code: usedTalkableCoupons || couponCode || "", // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
         shipping_address: "",
         shipping_zip: "",
       },
@@ -166,10 +191,10 @@ const Thankyou = () => {
       },
     );
     reloadProfile();
-  }, [authenticated, result]);
+  }, [authenticated, result, talkableCouponResult]);
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || isTalkableCouponLoading) return <PageLoading />;
   const { data: workshop, attendeeRecord } = result;
 
   const {
