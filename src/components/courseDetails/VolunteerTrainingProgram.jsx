@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
 import { PatternFormat } from "react-number-format";
 import { useRouter } from "next/router";
+import classNames from "classnames";
 import { ResearchFindingSource } from "./ResearchFindingSource";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { useGlobalAlertContext } from "@contexts";
@@ -14,12 +15,54 @@ import { priceCalculation, tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { RegisterPanel } from "./RegisterPanel";
+import Style from "./CourseDetails.module.scss";
 
 dayjs.extend(utc);
+
+const faqContent = [
+  {
+    label: "What will I learn in the Volunteer Training Program?",
+    content:
+      "You’ll expand your horizons with life-enhancing wisdom, self-development, and transformative practices to access deep inner strength and become a dynamic leader professionally, personally, and spiritually. You’ll also learn how to facilitate a one-hour meditation session, complete with social connection exercises, breathing techniques, mindful awareness, and guided meditations—plus, learn how to lead introductory talks. With these new skills, you’ll empower your life and community.",
+  },
+  {
+    label:
+      "Will I be able to teach SKY Breath Meditation after attending this program?",
+    content:
+      "The Volunteer Training Program (VTP) is the prerequisite to attending the Art of Living Teacher Training Program (TTP). Once you have completed both the VTP and TTP, you will be able to teach SKY Breath Meditation.",
+  },
+  {
+    label: "Will I be ready to lead meditations after this course?",
+    content:
+      "Yes! You’ll emerge as a confident meditation facilitator ready to lead the guided meditation taught in the Volunteer Training Program, complete with social connection exercises, breathing techniques, and mindful awareness.",
+  },
+  {
+    label: "Do I have to attend all sessions?",
+    content:
+      "Yes, it is mandatory to attend all program sessions to complete the training.",
+  },
+  {
+    label: "Do I need to be meditating every day to join the training?",
+    content:
+      "To maximize your experience of the program (and life!), we recommend a daily meditation practice, but it is not a requirement for the Volunteer Training Program.",
+  },
+  {
+    label:
+      "Are there any requirements I need to fulfill post-training or in years to come?",
+    content:
+      "Following the training, it is recommended that you organize or volunteer to lead at least three introductory sessions and three meditations using the skills and support you gained from the Volunteer Training Program. It allows you to fully integrate your newly acquired skill set and continue to develop your newfound confidence.",
+  },
+  {
+    label: "How will the program help with leadership skills?",
+    content:
+      "One of the key skills of a leader is to inspire and connect with people while organizing and leading various projects—you will gain all these skills and be empowered with a wealth of experience and confidence too. The Volunteer Training Program is a course designed to enhance organizational skills while connecting with people at a deeper level. In addition, volunteering is a powerful demonstration of selfless action, which is an inspiring quality to have in any leader.",
+  },
+];
 
 export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
   const router = useRouter();
+  const [selectedFAQ, setSelectedFAQ] = useState(-1);
 
   const showResearchModal = (e) => {
     if (e) e.preventDefault();
@@ -40,6 +83,14 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
         page: "c-o",
       },
     });
+  };
+
+  const handleFAQselection = (index) => {
+    if (selectedFAQ === index) {
+      setSelectedFAQ(-1);
+    } else {
+      setSelectedFAQ(index);
+    }
   };
 
   const autoSwiperOption = {
@@ -539,7 +590,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
             <div className="row">
               <div className="col-xl-10 offset-xl-1">
                 <h6 className="program-founder__author">
-                  Sri Sri Ravi Shankar
+                  Gurudev Sri Sri Ravi Shankar
                 </h6>
                 <h6 className="program-founder__author program-founder__author_title">
                   Founder of the Art of Living
@@ -683,26 +734,42 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
               <div className="col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
                 <div className="program-faqs__card">
                   <h3 className="program-faqs__card-title">FAQs</h3>
-                  <a href="#" className="link program-faqs__card-link">
-                    What will I learn on the Volunteer Training Program?{" "}
-                  </a>
-                  <a href="#" className="link program-faqs__card-link">
-                    Will I be able to teach SKY Breath Meditation after
-                    attending this program?
-                  </a>
-                  <a href="#" className="link program-faqs__card-link">
-                    Will I be ready to lead meditations after this course?
-                  </a>
-                  <a href="#" className="link program-faqs__card-link">
-                    Do I have to attend all sessions?
-                  </a>
-                  <a href="#" className="link program-faqs__card-link">
-                    Do I need to be meditating every day to join the training?
-                  </a>
-                  <a href="#" className="link program-faqs__card-link">
-                    Are there any requirements I need to fulfill post-training
-                    or in years to come?
-                  </a>
+                  {faqContent.map((content, index) => {
+                    const showContent = selectedFAQ === index;
+                    return (
+                      <div key={index} className="card">
+                        <div className="card-header">
+                          <h2 className="mb-0 tw-pr-7">
+                            <button
+                              className="btn btn-block text-left tw-px-0 tw-accordion-button tw-flex"
+                              type="button"
+                              data-toggle="collapse"
+                              data-target="#collapseOne"
+                              aria-expanded={showContent}
+                              aria-controls="collapseOne"
+                              onClick={() => handleFAQselection(index)}
+                            >
+                              {content.label}
+                              <span
+                                class={classNames(Style.accordianIcon, {
+                                  "tw-transform tw-rotate-45": showContent,
+                                })}
+                              />
+                            </button>
+                          </h2>
+                        </div>
+                        <div
+                          className={classNames("collapse", {
+                            show: showContent,
+                          })}
+                          aria-labelledby="headingOne"
+                          data-parent="#accordionExample"
+                        >
+                          <div className="card-body">{content.content}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
