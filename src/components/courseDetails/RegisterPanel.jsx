@@ -27,6 +27,7 @@ export const RegisterPanel = ({ workshop }) => {
     usableCredit,
     productTypeId,
     studentPriceBook,
+    preRequisite,
   } = workshop || {};
 
   const isSKYType =
@@ -111,6 +112,10 @@ export const RegisterPanel = ({ workshop }) => {
   const isJourneyPremium =
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
+
+  const preRequisiteCondition = preRequisite
+    .join(", ")
+    .replace(/,(?=[^,]+$)/, " and");
 
   if (isSahajSamadhiMeditationType) {
     return (
@@ -254,20 +259,29 @@ export const RegisterPanel = ({ workshop }) => {
             "justify-content-md-center": !earlyBirdFeeIncreasing,
           })}
         >
-          {earlyBirdFeeIncreasing ? (
-            <>
-              <img src="/img/ic-timer-orange.svg" alt="timer" />
-              <p>
-                Register soon. Course fee will go up by $
-                {earlyBirdFeeIncreasing.increasingFee} on{" "}
-                {dayjs
-                  .utc(earlyBirdFeeIncreasing.increasingByDate)
-                  .format("MMM D, YYYY")}
-              </p>
-            </>
-          ) : (
-            <div />
-          )}
+          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+            {earlyBirdFeeIncreasing ? (
+              <div class="tw-flex !tw-ml-0">
+                <img src="/img/ic-timer-orange.svg" alt="timer" />
+                <p>
+                  Register soon. Course fee will go up by $
+                  {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                  {dayjs
+                    .utc(earlyBirdFeeIncreasing.increasingByDate)
+                    .format("MMM D, YYYY")}
+                </p>
+              </div>
+            ) : (
+              <div />
+            )}
+            {isVolunteerTrainingProgram &&
+              preRequisiteCondition &&
+              preRequisiteCondition.length > 0 && (
+                <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+                  Eligibility: Completion of {preRequisiteCondition}
+                </p>
+              )}
+          </div>
           <button className="btn-secondary" onClick={handleRegister}>
             Register Today
           </button>
