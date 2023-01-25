@@ -28,6 +28,8 @@ export const RegisterPanel = ({ workshop }) => {
     productTypeId,
     studentPriceBook,
     preRequisite,
+    earlyBirdPriceBook,
+    repeaterPriceBook,
   } = workshop || {};
 
   const isSKYType =
@@ -171,7 +173,7 @@ export const RegisterPanel = ({ workshop }) => {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
-          <h3>Limited Time Offer</h3>
+          <h3 className="tw-pt-[20px]">Limited Time Offer</h3>
           {!isStudentVerified ? (
             <h2>Student fee: ${studentPriceBook?.unitPrice || fee}</h2>
           ) : (
@@ -179,6 +181,16 @@ export const RegisterPanel = ({ workshop }) => {
               {title}: ${fee}
             </h2>
           )}
+          {!isStudentVerified &&
+            repeaterPriceBook &&
+            repeaterPriceBook.unitPrice && (
+              <h2>Repeater fee: ${repeaterPriceBook.unitPrice}</h2>
+            )}
+          {!isStudentVerified &&
+            earlyBirdPriceBook &&
+            earlyBirdPriceBook.unitPrice && (
+              <h2>Early Bird fee: ${earlyBirdPriceBook?.unitPrice}</h2>
+            )}
           {delfee && (
             <p>
               Regular course fee: <span className="discount"> ${delfee} </span>
@@ -257,6 +269,7 @@ export const RegisterPanel = ({ workshop }) => {
         <div
           className={classNames("bottom-box", {
             "justify-content-md-center": !earlyBirdFeeIncreasing,
+            "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
           <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
@@ -282,7 +295,13 @@ export const RegisterPanel = ({ workshop }) => {
                 </p>
               )}
           </div>
-          <button className="btn-secondary" onClick={handleRegister}>
+          <button
+            className={classNames("btn-secondary", {
+              "max-[770px]:tw-mt-[10px]":
+                earlyBirdFeeIncreasing || preRequisiteCondition,
+            })}
+            onClick={handleRegister}
+          >
             Register Today
           </button>
         </div>
