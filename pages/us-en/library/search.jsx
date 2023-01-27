@@ -348,7 +348,7 @@ const LibrarySearch = () => {
           <div className="row">
             <div className="col">
               {folderName && (
-                <p className="title mb-3">Find a {folderName} meditation</p>
+                <p className="title mb-3">Find {folderName}</p>
               )}
               {!folderName && <p className="title mb-3">Find a meditation </p>}
             </div>
