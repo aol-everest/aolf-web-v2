@@ -258,6 +258,7 @@ export default function Library() {
 
   const findMeditation = () => {
     let query = {};
+    query = { ...query, folderName: rootFolder.title };
     if (topic) {
       query = { ...query, topic };
     }
