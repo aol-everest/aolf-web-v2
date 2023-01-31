@@ -18,5 +18,9 @@ export {
   GlobalLoadingContext,
   useGlobalLoadingContext,
 } from "./GlobalLoadingContext";
+export {
+  GlobalBannerContext,
+  useGlobalBannerContext,
+} from "./GlobalBannerContext";
 
 export { AuthProvider, useAuth } from "./auth.context";
