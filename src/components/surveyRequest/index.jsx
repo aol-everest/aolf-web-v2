@@ -14,11 +14,9 @@ export const SurveyRequest = (surveyInvite) => {
     showBanner({
       children: (
         <>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non
-          magna vel turpis euismod ultricies id aliquet felis. Donec vel nisl
-          accumsan ligula lobortis
+          Share Your Feedback about the Journey App{" "}
           <a target="_blank" href={shortLink} rel="noopener noreferrer">
-            Survey link
+            Click here
           </a>
           .
         </>
