@@ -452,7 +452,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                   <div class="art-section__icon">
                     <img src="/img/art-section-first.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">40 years</div>
+                  <div class="art-section__name">42 years</div>
                   <div class="art-section__text">of service to society</div>
                 </div>
               </div>
@@ -461,7 +461,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                   <div class="art-section__icon">
                     <img src="/img/art-section-second.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">3,000+ centers</div>
+                  <div class="art-section__name">10,000+ centers</div>
                   <div class="art-section__text">worldwide</div>
                 </div>
               </div>
@@ -470,7 +470,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                   <div class="art-section__icon">
                     <img src="/img/art-section-third.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">450M+ lives</div>
+                  <div class="art-section__name">800M+ lives</div>
                   <div class="art-section__text">
                     touched through our courses & events
                   </div>
@@ -481,7 +481,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                   <div class="art-section__icon">
                     <img src="/img/art-section-fourth.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">156 countries</div>
+                  <div class="art-section__name">180 countries</div>
                   <div class="art-section__text">
                     where our programs made a difference
                   </div>

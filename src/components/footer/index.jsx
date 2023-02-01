@@ -43,7 +43,7 @@ export function Footer() {
   return (
     <footer className="footer footer_courses">
       <nav className="footer-navbar">
-        <p className="copyright order-2 order-md-1">© 2021 Art of Living</p>
+        <p className="copyright order-2 order-md-1">© 2023 Art of Living</p>
         <ul className="footer-navbar--list order-1 order-md-2 mb-2 mb-md-0">
           <li className="footer-navbar--item">
             <a href="#">SMS Policy</a>
