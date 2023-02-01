@@ -221,6 +221,9 @@ export const CouponStack = () => {
           workshopType: courseType,
         },
       });
+      if (result.isError) {
+        throw new Error(result.error);
+      }
       setCouponCodes(
         result.coupons.map((coupon) => {
           return {
