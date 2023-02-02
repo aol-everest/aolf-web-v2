@@ -30,6 +30,7 @@ export const RegisterPanel = ({ workshop }) => {
     preRequisite,
     earlyBirdPriceBook,
     repeaterPriceBook,
+    standardPriceBook,
   } = workshop || {};
 
   const isSKYType =
@@ -191,9 +192,10 @@ export const RegisterPanel = ({ workshop }) => {
             earlyBirdPriceBook.unitPrice && (
               <h2>Early Bird fee: ${earlyBirdPriceBook?.unitPrice}</h2>
             )}
-          {delfee && (
+          {(delfee || standardPriceBook?.unitPrice) && (
             <p>
-              Regular course fee: <span className="discount"> ${delfee} </span>
+              Regular course fee:{" "}
+              <span> ${standardPriceBook?.unitPrice || delfee} </span>
             </p>
           )}
           {!isStudentVerified && (
