@@ -314,7 +314,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                     </h6>
                     <p className="achivment__text">
                       Learn with the experts—an organization dedicated for over
-                      40 years to transforming lives across the globe
+                      42 years to transforming lives across the globe
                     </p>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                     <div className="achivment__logo">
                       <img src="/img/live-online-program.svg" alt="years" />
                     </div>
-                    <h6 className="achivment__title">LIVE online program</h6>
+                    <h6 className="achivment__title">LIVE {mode} program</h6>
                     <p className="achivment__text">
                       Guided by highly-trained instructors and mentors over two
                       weekends, plus a week of service-learning
@@ -645,7 +645,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                   Your toolkit for inspired action
                 </h2>
                 <p className="p1 program-meet__text">
-                  Online program: two weekends + one week in service
+                  {mode} program: two weekends + one week in service
                 </p>
                 <div className="p1 p1_sb program-meet__quote">
                   You’ll walk away with the skills, experience, and courage to
