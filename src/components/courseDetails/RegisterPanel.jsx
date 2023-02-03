@@ -184,12 +184,12 @@ export const RegisterPanel = ({ workshop }) => {
           )}
           {!isStudentVerified &&
             repeaterPriceBook &&
-            repeaterPriceBook.unitPrice && (
+            repeaterPriceBook.unitPrice != null && (
               <h2>Repeater fee: ${repeaterPriceBook.unitPrice}</h2>
             )}
           {!isStudentVerified &&
             earlyBirdPriceBook &&
-            earlyBirdPriceBook.unitPrice && (
+            earlyBirdPriceBook.unitPrice != null && (
               <h2>Early Bird fee: ${earlyBirdPriceBook?.unitPrice}</h2>
             )}
           {(delfee || standardPriceBook?.unitPrice) && (
