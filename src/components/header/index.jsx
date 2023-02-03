@@ -213,7 +213,7 @@ const AOL_MENU = [
       },
       {
         name: "Retreat Center",
-        link: "https://artoflivingretreatcenter.org/",
+        link: "/us-en/lp/theartoflivingretreatcenter",
       },
     ],
   },
@@ -368,7 +368,7 @@ const IAHV_MENU = [
       },
       {
         name: "Retreat Center",
-        link: "https://artoflivingretreatcenter.org/",
+        link: "/us-en/lp/theartoflivingretreatcenter",
       },
     ],
   },

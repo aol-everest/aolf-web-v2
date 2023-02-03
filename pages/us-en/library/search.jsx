@@ -112,6 +112,7 @@ const LibrarySearch = () => {
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [topic, setTopic] = useQueryString("topic");
+  const [folderName] = useQueryString("folderName");
   const [duration, setDuration] = useQueryString("duration");
   const [instructor, setInstructor] = useQueryString("instructor");
   const { user, authenticated } = useAuth();
@@ -269,6 +270,7 @@ const LibrarySearch = () => {
         topic,
         duration,
         instructor,
+        folderName,
       },
     ],
     async ({ pageParam = 1 }) => {
@@ -277,6 +279,13 @@ const LibrarySearch = () => {
         size: 12,
         deviceType: "Web",
       };
+
+      if (folderName) {
+        param = {
+          ...param,
+          folderName,
+        };
+      }
 
       if (topic) {
         param = {
@@ -298,7 +307,7 @@ const LibrarySearch = () => {
       }
 
       const res = await api.get({
-        path: "meditations",
+        path: "library/search",
         param,
       });
       return res;
@@ -338,7 +347,8 @@ const LibrarySearch = () => {
         <div className="container search_course_form d-lg-block d-none mb-2">
           <div className="row">
             <div className="col">
-              <p className="title mb-3">Find a meditation </p>
+              {folderName && <p className="title mb-3">Find {folderName}</p>}
+              {!folderName && <p className="title mb-3">Find a meditation </p>}
             </div>
           </div>
           <div className="row">

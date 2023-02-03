@@ -2,6 +2,7 @@ import Analytics from "analytics";
 import segmentPlugin from "@analytics/segment";
 import googleTagManager from "@analytics/google-tag-manager";
 import onRouteChange from "@analytics/router-utils";
+import clevertapPlugin from "./clevertapPlugin";
 
 let plugins = [];
 
@@ -20,6 +21,9 @@ if (process.env.NEXT_PUBLIC_GTM_ID) {
       containerId: process.env.NEXT_PUBLIC_GTM_ID,
     }),
   ];
+}
+if (process.env.NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID) {
+  plugins = [...plugins, clevertapPlugin()];
 }
 export const analytics = Analytics({
   app: "AOLF-Members-App",

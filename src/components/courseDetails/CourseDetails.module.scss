@@ -10,3 +10,44 @@
   transform: translate3d(-660px, 0px, 0px);
   transition: all 300ms ease 0s;
 }
+
+.accordianIcon {
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  top: 30px;
+  right: 24px;
+  margin-top: -8px;
+  opacity: 0.3;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  background: transparent;
+  outline: none;
+
+  &:before {
+    width: 16px;
+    height: 2px;
+    top: 7px;
+    content: "";
+    display: block;
+    position: absolute;
+    transition: 0.3s;
+    border-radius: 4px;
+    background: currentColor;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+  }
+
+  &::after {
+    width: 16px;
+    height: 2px;
+    top: 7px;
+    content: "";
+    display: block;
+    position: absolute;
+    transition: 0.3s;
+    border-radius: 4px;
+    background: currentColor;
+  }
+}

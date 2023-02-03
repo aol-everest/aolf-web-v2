@@ -103,7 +103,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                         className="program-benefits__item-image"
                       />
                       <h6 className="program-benefits__item-title">
-                        40 years of authentic yoga education
+                        42 years of authentic yoga education
                       </h6>
                       <p className="program-benefits__item-text">
                         Discover a transformative practice rooted in tradition,

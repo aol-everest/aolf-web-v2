@@ -156,7 +156,7 @@ const Thankyou = () => {
       {
         order_number: orderExternalId, // Unique order number. Example: '100011'
         subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
-        coupon_code: couponCode || "", // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
+        coupon_code: isTalkableCoupon ? couponCode || "" : "", // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
         shipping_address: "",
         shipping_zip: "",
       },
@@ -241,6 +241,7 @@ const Thankyou = () => {
     couponCode,
     selectedGenericSlot = {},
     pricebookName = "",
+    isTalkableCoupon,
   } = attendeeRecord;
 
   const event = {

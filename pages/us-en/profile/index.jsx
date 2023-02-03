@@ -503,9 +503,8 @@ const Profile = ({ tab }) => {
                     </li>
                     <li>
                       If you have multiple coupon codes and would like to use
-                      them towards a single course registration, please send a
-                      request to support@us.artofliving.org and include all
-                      coupon codes in the email.
+                      them towards a single course registration, please use the
+                      'Stack Coupon' feature below.
                     </li>
                   </ol>
                   <p>
@@ -522,7 +521,9 @@ const Profile = ({ tab }) => {
                     </Link>
                   </p>
                 </div>
-                {/* <c></CouponStack> */}
+                <div className="tw-mb-2">
+                  <CouponStack></CouponStack>
+                </div>
                 <div id="talkable-offer"></div>
               </div>
               <div

@@ -12,6 +12,7 @@ import {
   UsePagesViews,
 } from "@components";
 import { GlobalModal } from "@components/globalModal";
+import { GlobalBottomBanner } from "@components/globalBottomBanner";
 import { GlobalAlert } from "@components/globalAlert";
 import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
 import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
@@ -19,7 +20,10 @@ import { GlobalLoading } from "@components/globalLoading";
 import { AuthProvider } from "@contexts";
 import { orgConfig } from "@org";
 import { analytics } from "@service";
+import dynamic from "next/dynamic";
 import { AnalyticsProvider } from "use-analytics";
+import { SurveyRequest } from "@components/surveyRequest";
+
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
@@ -31,10 +35,18 @@ import "@styles/old-design/style.scss";
 
 import SEO from "../next-seo.config";
 
+const ClevertapAnalytics = dynamic(
+  () => import("@components/clevertapAnalytics"),
+  {
+    ssr: false,
+  },
+);
+
 function App({ Component, pageProps }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
+  const [pendingSurveyInvite, setPendingSurveyInvite] = useState(null);
   const [reinstateRequiredSubscription, setReinstateRequiredSubscription] =
     useState(null);
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
@@ -60,6 +72,7 @@ function App({ Component, pageProps }) {
 
       const { subscriptions = [], isCCUpdateRequiredForSubscription } =
         userInfo.profile;
+      setPendingSurveyInvite(userInfo.profile.surveyInvite);
       setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
       const reinstateRequiredForSubscription = subscriptions.find(
         ({ isReinstateRequiredForSubscription }) =>
@@ -123,6 +136,7 @@ function App({ Component, pageProps }) {
               GlobalAudioPlayer,
               GlobalVideoPlayer,
               GlobalLoading,
+              GlobalBottomBanner,
             ]}
           >
             <Layout
@@ -135,9 +149,13 @@ function App({ Component, pageProps }) {
               {isReInstateRequired && (
                 <ReInstate subscription={reinstateRequiredSubscription} />
               )}
+              {pendingSurveyInvite && (
+                <SurveyRequest surveyInvite={pendingSurveyInvite} />
+              )}
               {isCCUpdateRequired && <CardUpdateRequired />}
               {isPendingAgreement && <PendingAgreement />}
               <Component {...pageProps} />
+              <ClevertapAnalytics></ClevertapAnalytics>
               <ReactQueryDevtools initialIsOpen={false} />
             </Layout>
           </Compose>

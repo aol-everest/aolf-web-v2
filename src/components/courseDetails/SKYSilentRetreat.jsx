@@ -1310,7 +1310,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                   src="/img/ic-hearts-blue.svg"
                   alt="about-item-icon"
                 />
-                <h6 className="about-item__title">40 years</h6>
+                <h6 className="about-item__title">42 years</h6>
                 <p className="about-item__info">of service to society</p>
               </div>
 
@@ -1320,7 +1320,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                   src="/img/ic-world-blue.svg"
                   alt="about-item-icon"
                 />
-                <h6 className="about-item__title">3,000+ centers</h6>
+                <h6 className="about-item__title">10,000+ centers</h6>
                 <p className="about-item__info">worldwide</p>
               </div>
 
@@ -1330,7 +1330,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                   src="/img/ic-geo-blue.svg"
                   alt="about-item-icon"
                 />
-                <h6 className="about-item__title">156 countries</h6>
+                <h6 className="about-item__title">180 countries</h6>
                 <p className="about-item__info">
                   where our programs made a difference
                 </p>
@@ -1342,7 +1342,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                   src="/img/ic-social-blue.svg"
                   alt="about-item-icon"
                 />
-                <h6 className="about-item__title">450M+ lives</h6>
+                <h6 className="about-item__title">800M+ lives</h6>
                 <p className="about-item__info">
                   touched through our courses & events
                 </p>
@@ -1483,7 +1483,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
           </nav>
           <div className="program-footer__bottom">
             <p className="program-footer__bottom-copyright">
-              © 2021 Art of Living
+              © 2023 Art of Living
             </p>
             <div className="program-footer__bottom-links">
               <a href="#" className="program-footer__bottom-links__item">

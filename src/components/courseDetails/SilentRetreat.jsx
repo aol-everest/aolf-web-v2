@@ -377,7 +377,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
                   <img src="/img/ic-39-years.svg" alt="years" />
                 </div>
                 <p className="about__text">
-                  <span>40 years</span> of service to society
+                  <span>42 years</span> of service to society
                 </p>
               </div>
               <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
@@ -385,7 +385,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
                   <img src="/img/ic-3000-centers.svg" alt="centers" />
                 </div>
                 <p className="about__text">
-                  <span>3,000+ centers</span> worldwide
+                  <span>10,000+ centers</span> worldwide
                 </p>
               </div>
               <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
@@ -393,7 +393,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
                   <img src="/img/ic-156-countries.svg" alt="countries" />
                 </div>
                 <p className="about__text">
-                  <span>156 countries</span> where our programs made a
+                  <span>180 countries</span> where our programs made a
                   difference
                 </p>
               </div>
@@ -402,7 +402,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
                   <img src="/img/ic-450-m-lives.svg" alt="lives" />
                 </div>
                 <p className="about__text">
-                  <span>450M+ lives</span> touched through our courses & events
+                  <span>800M+ lives</span> touched through our courses & events
                 </p>
               </div>
             </div>

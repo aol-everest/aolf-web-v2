@@ -26,6 +26,11 @@ export const RegisterPanel = ({ workshop }) => {
     roomAndBoardRange,
     usableCredit,
     productTypeId,
+    studentPriceBook,
+    preRequisite,
+    earlyBirdPriceBook,
+    repeaterPriceBook,
+    standardPriceBook,
   } = workshop || {};
 
   const isSKYType =
@@ -76,7 +81,7 @@ export const RegisterPanel = ({ workshop }) => {
     });
   };
 
-  const { subscriptions = [] } = user?.profile || {};
+  const { subscriptions = [], isStudentVerified } = user?.profile || {};
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
       return {
@@ -111,6 +116,10 @@ export const RegisterPanel = ({ workshop }) => {
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
+  const preRequisiteCondition = preRequisite
+    .join(", ")
+    .replace(/,(?=[^,]+$)/, " and");
+
   if (isSahajSamadhiMeditationType) {
     return (
       <div className="powerful__block powerful__block_bottom">
@@ -139,7 +148,7 @@ export const RegisterPanel = ({ workshop }) => {
       </div>
     );
   }
-  if (isSKYType || isSKYCampusHappinessRetreat) {
+  if (isSKYType) {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
@@ -151,6 +160,48 @@ export const RegisterPanel = ({ workshop }) => {
             <p>
               Regular course fee: <span className="discount"> ${delfee} </span>
             </p>
+          )}
+        </div>
+        <div className="bottom-box justify-content-md-center">
+          <button className="btn-secondary v2" onClick={handleRegister}>
+            Register Today
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (isSKYCampusHappinessRetreat) {
+    return (
+      <div className="powerful__block powerful__block_bottom">
+        <div>
+          <h3 className="tw-pt-[20px]">Limited Time Offer</h3>
+          {!isStudentVerified ? (
+            <h2>Student fee: ${studentPriceBook?.unitPrice || fee}</h2>
+          ) : (
+            <h2>
+              {title}: ${fee}
+            </h2>
+          )}
+          {!isStudentVerified &&
+            repeaterPriceBook &&
+            repeaterPriceBook.unitPrice && (
+              <h2>Repeater fee: ${repeaterPriceBook.unitPrice}</h2>
+            )}
+          {!isStudentVerified &&
+            earlyBirdPriceBook &&
+            earlyBirdPriceBook.unitPrice && (
+              <h2>Early Bird fee: ${earlyBirdPriceBook?.unitPrice}</h2>
+            )}
+          {(delfee || standardPriceBook?.unitPrice) && (
+            <p>
+              Regular course fee:{" "}
+              <span> ${standardPriceBook?.unitPrice || delfee} </span>
+            </p>
+          )}
+          {!isStudentVerified && (
+            <h3 class="!tw-normal-case">
+              *Verify your student status with your .edu email ID
+            </h3>
           )}
         </div>
         <div className="bottom-box justify-content-md-center">
@@ -220,23 +271,39 @@ export const RegisterPanel = ({ workshop }) => {
         <div
           className={classNames("bottom-box", {
             "justify-content-md-center": !earlyBirdFeeIncreasing,
+            "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
-          {earlyBirdFeeIncreasing ? (
-            <>
-              <img src="/img/ic-timer-orange.svg" alt="timer" />
-              <p>
-                Register soon. Course fee will go up by $
-                {earlyBirdFeeIncreasing.increasingFee} on{" "}
-                {dayjs
-                  .utc(earlyBirdFeeIncreasing.increasingByDate)
-                  .format("MMM D, YYYY")}
-              </p>
-            </>
-          ) : (
-            <div />
-          )}
-          <button className="btn-secondary" onClick={handleRegister}>
+          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+            {earlyBirdFeeIncreasing ? (
+              <div class="tw-flex !tw-ml-0">
+                <img src="/img/ic-timer-orange.svg" alt="timer" />
+                <p>
+                  Register soon. Course fee will go up by $
+                  {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                  {dayjs
+                    .utc(earlyBirdFeeIncreasing.increasingByDate)
+                    .format("MMM D, YYYY")}
+                </p>
+              </div>
+            ) : (
+              <div />
+            )}
+            {isVolunteerTrainingProgram &&
+              preRequisiteCondition &&
+              preRequisiteCondition.length > 0 && (
+                <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+                  Eligibility: Completion of {preRequisiteCondition}
+                </p>
+              )}
+          </div>
+          <button
+            className={classNames("btn-secondary", {
+              "max-[770px]:tw-mt-[10px]":
+                earlyBirdFeeIncreasing || preRequisiteCondition,
+            })}
+            onClick={handleRegister}
+          >
             Register Today
           </button>
         </div>
@@ -249,7 +316,7 @@ export const RegisterPanel = ({ workshop }) => {
       <div className="powerful__block powerful__block_bottom">
         <div>
           <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
-          {premiumRate && premiumRate.unitPrice && (
+          {premiumRate && premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
               Premium/Journey+ rate:{" "}
               {premiumRate &&
@@ -308,19 +375,21 @@ export const RegisterPanel = ({ workshop }) => {
           Regular rate: {delfee && <span className="discount">${delfee}</span>}{" "}
           ${fee}
         </h5>
-        {!isUsableCreditAvailable && premiumRate && premiumRate.unitPrice && (
-          <h5 className="powerful__block-title_5 mb-1">
-            Premium/Journey+ rate:{" "}
-            {premiumRate &&
-              premiumRate.listPrice &&
-              premiumRate.listPrice !== premiumRate.unitPrice && (
-                <span className="discount">
-                  ${delfee || premiumRate.listPrice}
-                </span>
-              )}{" "}
-            ${premiumRate && premiumRate.unitPrice}
-          </h5>
-        )}
+        {!isUsableCreditAvailable &&
+          premiumRate &&
+          premiumRate.unitPrice != null && (
+            <h5 className="powerful__block-title_5 mb-1">
+              Premium/Journey+ rate:{" "}
+              {premiumRate &&
+                premiumRate.listPrice &&
+                premiumRate.listPrice !== premiumRate.unitPrice && (
+                  <span className="discount">
+                    ${delfee || premiumRate.listPrice}
+                  </span>
+                )}{" "}
+              ${premiumRate && premiumRate.unitPrice}
+            </h5>
+          )}
         {roomAndBoardRange && (
           <h5 className="powerful__italic-title_6">
             plus room &amp; board: {roomAndBoardRange}

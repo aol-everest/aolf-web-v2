@@ -1,4 +1,10 @@
+/* eslint-disable react/no-unescaped-entities */
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const CouponStack = dynamic(() =>
+  import("@components/profile").then((mod) => mod.CouponStack),
+);
 
 export default function TalkableRefer() {
   return (
@@ -34,9 +40,8 @@ export default function TalkableRefer() {
             </li>
             <li>
               If you have multiple coupon codes and would like to use them
-              towards a single course registration, please send a request to
-              support@us.artofliving.org and include all coupon codes in the
-              email.
+              towards a single course registration, please use the 'Stack
+              Coupon' feature below.
             </li>
           </ol>
           <p>
@@ -47,6 +52,9 @@ export default function TalkableRefer() {
               </a>
             </Link>
           </p>
+          <div className="tw-mb-2">
+            <CouponStack></CouponStack>
+          </div>
           <div id="talkable-offer"></div>
         </article>
       </section>

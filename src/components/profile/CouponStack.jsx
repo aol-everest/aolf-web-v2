@@ -3,6 +3,8 @@ import classNames from "classnames";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { api } from "@utils";
+import { useGlobalAlertContext } from "@contexts";
+import { ALERT_TYPES } from "@constants";
 import { useQuery } from "react-query";
 import { WithContext as ReactTags } from "react-tag-input";
 import ErrorPage from "next/error";
@@ -65,8 +67,8 @@ const CouponMergeCmp = ({
                   "tw-text-orange-600": !coupon.isValid,
                 })}
               >
-                Coupon <span className="tw-font-semibold">{coupon.id}</span>
-                is invalid.
+                Coupon <span className="tw-font-semibold">{coupon.id}</span> is
+                invalid.
               </li>
             );
           })}
@@ -82,9 +84,11 @@ const CouponMergeCmp = ({
         >
           Cancel
         </button>
-        <button onClick={mergeAction} className="btn-primary d-block ml-4 v2">
-          Merge
-        </button>
+        {reedemableAmount > 0 && (
+          <button onClick={mergeAction} className="btn-primary d-block ml-4 v2">
+            Merge
+          </button>
+        )}
       </div>
     </div>
   );
@@ -161,13 +165,12 @@ const CouponValidateCmp = ({ couponCodes, verifyCoupons }) => {
 };
 
 export const CouponStack = () => {
+  const { showAlert } = useGlobalAlertContext();
   const [couponCodes, setCouponCodes] = useState([]);
   const [workshopType, setWorkshopType] = useState(null);
   const [reedemableAmount, setReedemableAmount] = useState(0);
   const [newCouponCode, setNewCouponCode] = useState(null);
   const [step, setStep] = useState(1);
-  const [message, setMessage] = useState(null);
-  const [showMessage, setShowMessage] = useState(false);
   const [loading, setLoading] = useState(false);
   const { status, data, isLoading, isError, error } = useQuery(
     "myTalkableCoupons",
@@ -218,6 +221,9 @@ export const CouponStack = () => {
           workshopType: courseType,
         },
       });
+      if (result.isError) {
+        throw new Error(result.error);
+      }
       setCouponCodes(
         result.coupons.map((coupon) => {
           return {
@@ -232,13 +238,12 @@ export const CouponStack = () => {
       setReedemableAmount(result.reedemableAmount);
       setStep(2);
       setWorkshopType(courseType);
-      setMessage("");
-      setShowMessage(false);
     } catch (ex) {
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
-      setShowMessage(true);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
     }
     setLoading(false);
   }
@@ -250,6 +255,9 @@ export const CouponStack = () => {
   const mergeAction = async () => {
     setLoading(true);
     try {
+      if (reedemableAmount <= 0) {
+        throw new Error("Must have at least 1 valid coupon.");
+      }
       const result = await api.post({
         path: "mergeCoupons",
         body: {
@@ -264,17 +272,14 @@ export const CouponStack = () => {
         },
       });
 
-      console.log(result);
-
       setNewCouponCode(result.newCouponCode);
       setStep(3);
-      setMessage("");
-      setShowMessage(false);
     } catch (ex) {
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      setMessage(message ? `Error: ${message} (${statusCode})` : ex.message);
-      setShowMessage(true);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
     }
     setLoading(false);
   };
@@ -282,19 +287,25 @@ export const CouponStack = () => {
   switch (step) {
     case 1:
       return (
-        <CouponValidateCmp
-          couponCodes={couponCodes}
-          verifyCoupons={verifyCoupons}
-        />
+        <>
+          {loading && <Loader />}
+          <CouponValidateCmp
+            couponCodes={couponCodes}
+            verifyCoupons={verifyCoupons}
+          />
+        </>
       );
     case 2:
       return (
-        <CouponMergeCmp
-          couponCodes={couponCodes}
-          reedemableAmount={reedemableAmount}
-          cancelAction={cancelAction}
-          mergeAction={mergeAction}
-        />
+        <>
+          {loading && <Loader />}
+          <CouponMergeCmp
+            couponCodes={couponCodes}
+            reedemableAmount={reedemableAmount}
+            cancelAction={cancelAction}
+            mergeAction={mergeAction}
+          />
+        </>
       );
     case 3:
       return (
