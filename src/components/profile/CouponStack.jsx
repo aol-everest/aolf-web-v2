@@ -284,40 +284,38 @@ export const CouponStack = () => {
     setLoading(false);
   };
 
-  return null;
-
-  // switch (step) {
-  //   case 1:
-  //     return (
-  //       <>
-  //         {loading && <Loader />}
-  //         <CouponValidateCmp
-  //           couponCodes={couponCodes}
-  //           verifyCoupons={verifyCoupons}
-  //         />
-  //       </>
-  //     );
-  //   case 2:
-  //     return (
-  //       <>
-  //         {loading && <Loader />}
-  //         <CouponMergeCmp
-  //           couponCodes={couponCodes}
-  //           reedemableAmount={reedemableAmount}
-  //           cancelAction={cancelAction}
-  //           mergeAction={mergeAction}
-  //         />
-  //       </>
-  //     );
-  //   case 3:
-  //     return (
-  //       <CouponMergeResultCmp
-  //         newCouponCode={newCouponCode}
-  //         reedemableAmount={reedemableAmount}
-  //         workshopType={workshopType}
-  //       />
-  //     );
-  // }
+  switch (step) {
+    case 1:
+      return (
+        <>
+          {loading && <Loader />}
+          <CouponValidateCmp
+            couponCodes={couponCodes}
+            verifyCoupons={verifyCoupons}
+          />
+        </>
+      );
+    case 2:
+      return (
+        <>
+          {loading && <Loader />}
+          <CouponMergeCmp
+            couponCodes={couponCodes}
+            reedemableAmount={reedemableAmount}
+            cancelAction={cancelAction}
+            mergeAction={mergeAction}
+          />
+        </>
+      );
+    case 3:
+      return (
+        <CouponMergeResultCmp
+          newCouponCode={newCouponCode}
+          reedemableAmount={reedemableAmount}
+          workshopType={workshopType}
+        />
+      );
+  }
 };
 export const CouponInput = ({ field, label, form, ...rest }) => {
   const handleDelete = (i) => {
