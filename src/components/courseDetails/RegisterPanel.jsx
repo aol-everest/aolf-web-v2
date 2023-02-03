@@ -192,10 +192,15 @@ export const RegisterPanel = ({ workshop }) => {
             earlyBirdPriceBook.unitPrice != null && (
               <h2>Early Bird fee: ${earlyBirdPriceBook?.unitPrice}</h2>
             )}
-          {(delfee || standardPriceBook?.unitPrice) && (
+          {(delfee || standardPriceBook.unitPrice != null) && (
             <p>
               Regular course fee:{" "}
-              <span> ${standardPriceBook?.unitPrice || delfee} </span>
+              <span>
+                $
+                {standardPriceBook.unitPrice != null
+                  ? standardPriceBook.unitPrice
+                  : delfee}
+              </span>
             </p>
           )}
           {!isStudentVerified && (
