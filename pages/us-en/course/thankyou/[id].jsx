@@ -393,6 +393,8 @@ const Thankyou = () => {
   const showSecondCourseButton =
     isSkyPlusSahajFirstCourse && comboCourse.showSecondCourseButton;
 
+  const autoVoidParam = ammountPaid === 0 ? "&autovoid=1" : "";
+
   return (
     <>
       <main>
@@ -401,7 +403,7 @@ const Thankyou = () => {
           ["811569", "12371", "12415", "999649"].indexOf(productTypeId) >= 0 &&
           !isRepeater && (
             <img
-              src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}`}
+              src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}${autoVoidParam}`}
               width="1"
               height="1"
             ></img>
