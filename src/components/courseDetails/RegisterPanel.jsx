@@ -176,7 +176,12 @@ export const RegisterPanel = ({ workshop }) => {
         <div>
           <h3 className="tw-pt-[20px]">Limited Time Offer</h3>
           {!isStudentVerified ? (
-            <h2>Student fee: ${studentPriceBook?.unitPrice || fee}</h2>
+            <h2>
+              Student fee: $
+              {studentPriceBook?.unitPrice != null
+                ? studentPriceBook?.unitPrice
+                : fee}
+            </h2>
           ) : (
             <h2>
               {title}: ${fee}
