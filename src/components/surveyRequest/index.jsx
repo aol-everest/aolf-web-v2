@@ -15,7 +15,12 @@ export const SurveyRequest = ({ surveyInvite }) => {
       children: (
         <>
           Share Your Feedback about the Journey App{" "}
-          <a target="_blank" href={shortLink} rel="noopener noreferrer">
+          <a
+            target="_blank"
+            href={shortLink}
+            className="tw-underline"
+            rel="noopener noreferrer"
+          >
             Click here
           </a>
           .
