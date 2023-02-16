@@ -18,7 +18,7 @@ export const SurveyRequest = ({ surveyInvite }) => {
           <a
             target="_blank"
             href={shortLink}
-            className="tw-underline"
+            className="tw-text-white tw-font-bold"
             rel="noopener noreferrer"
           >
             Click here
