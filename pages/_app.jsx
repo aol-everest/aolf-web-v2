@@ -93,6 +93,7 @@ function App({ Component, pageProps }) {
         email: userInfo.profile.email,
         first_name: userInfo.profile.first_name,
         last_name: userInfo.profile.last_name,
+        avatar: userInfo.profile.userProfilePic,
       });
     } catch (ex) {
       console.log(ex);
