@@ -12,6 +12,7 @@ export const Dropdown = ({
   options,
   fullWidth,
   placeholder,
+  innerFullWidth = false,
   ...rest
 }) => {
   return (
@@ -22,7 +23,11 @@ export const Dropdown = ({
       containerClass={containerClass}
       fullWidth={fullWidth}
     >
-      <div className="select-box order__card__payment-select">
+      <div
+        className={classNames("select-box", {
+          "order__card__payment-select": !innerFullWidth,
+        })}
+      >
         <div tabIndex="1" className="select-box__current">
           <span className="select-box__placeholder">{placeholder}</span>
           {options.map((option) => {
