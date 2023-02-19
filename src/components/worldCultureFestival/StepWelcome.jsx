@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import Select2 from "@components/select2";
+import Select2 from "react-select2-wrapper";
 import { Field, ErrorMessage } from "formik";
 import { useRef } from "react";
 
@@ -9,7 +9,6 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
     if (selectComp && selectComp.current && selectComp.current.el) {
       const val = selectComp.current.el.val();
       if (field.value !== val) {
-        console.log(val);
         form.setFieldValue(field.name, val);
       }
     }
@@ -19,7 +18,6 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
       ref={selectComp}
       {...field}
       {...props}
-      name="welcome-tickets"
       data={[
         { text: "1 (one)", id: 1 },
         { text: "2 (two)", id: 2 },
@@ -41,7 +39,6 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
     if (selectComp && selectComp.current && selectComp.current.el) {
       const val = selectComp.current.el.val();
       if (field.value !== val) {
-        console.log(val);
         form.setFieldValue(field.name, val);
       }
     }
@@ -83,7 +80,6 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
 };
 
 export function StepWelcome({ errors, handleNext, ...props }) {
-  console.log(props);
   return (
     <main>
       <section className="world-culture-festival">

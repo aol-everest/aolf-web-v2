@@ -1,11 +1,83 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { Field, ErrorMessage } from "formik";
 import Select2 from "react-select2-wrapper";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 
-export function StepContactDetail() {
-  const [value, setValue] = useState();
+const CountryInput = ({ field, form, ...props }) => {
+  const selectComp = useRef(null);
+  const onChangeAction = () => {
+    if (selectComp && selectComp.current && selectComp.current.el) {
+      const val = selectComp.current.el.val();
+      if (field.value !== val) {
+        form.setFieldValue(field.name, val);
+      }
+    }
+  };
+  return (
+    <Select2
+      ref={selectComp}
+      {...field}
+      {...props}
+      data={[
+        { text: "USA", id: "USA" },
+        { text: "Ukraine", id: "Ukraine" },
+        { text: "England", id: "England" },
+      ]}
+      options={{
+        placeholder: "Select your country",
+        dropdownParent: "#wcfSelect",
+      }}
+      onChange={onChangeAction}
+    />
+  );
+};
+
+const PhoneNumberInput = ({ field, form, ...props }) => {
+  return (
+    <PhoneInput
+      {...field}
+      {...props}
+      placeholder="Enter your phone number"
+      defaultCountry="US"
+      class="wcf-input__field"
+      international
+      initialValueFormat="national"
+    />
+  );
+};
+
+const StateInput = ({ field, form, ...props }) => {
+  const selectComp = useRef(null);
+  const onChangeAction = () => {
+    if (selectComp && selectComp.current && selectComp.current.el) {
+      const val = selectComp.current.el.val();
+      if (field.value !== val) {
+        form.setFieldValue(field.name, val);
+      }
+    }
+  };
+  return (
+    <Select2
+      ref={selectComp}
+      {...field}
+      {...props}
+      data={[
+        { text: "California", id: "CA" },
+        { text: "Texas", id: "TX" },
+        { text: "North Carolina", id: "NC" },
+      ]}
+      options={{
+        placeholder: "Select your state",
+        dropdownParent: "#wcfSelect",
+      }}
+      onChange={onChangeAction}
+    />
+  );
+};
+
+export function StepContactDetail({ errors, handleNext, ...props }) {
   return (
     <main>
       <section class="world-culture-festival">
@@ -32,15 +104,7 @@ export function StepContactDetail() {
                   >
                     Phone number
                   </label>
-                  <PhoneInput
-                    placeholder="Enter your phone number"
-                    value={value}
-                    onChange={setValue}
-                    defaultCountry="US"
-                    class="wcf-input__field"
-                    international
-                    initialValueFormat="national"
-                  />
+                  <Field name="phoneNumber" component={PhoneNumberInput} />
                 </div>
 
                 <div class="wcf-select wcf-form__field">
@@ -49,18 +113,7 @@ export function StepContactDetail() {
                   </label>
 
                   <div class="wcf-select__field">
-                    <Select2
-                      name="get-tickets-country"
-                      data={[
-                        { text: "USA", id: "USA" },
-                        { text: "Ukraine", id: "Ukraine" },
-                        { text: "England", id: "England" },
-                      ]}
-                      options={{
-                        placeholder: "Select your country",
-                        dropdownParent: "#wcfSelect",
-                      }}
-                    />
+                    <Field name="country" component={CountryInput} />
                   </div>
                 </div>
 
@@ -70,23 +123,12 @@ export function StepContactDetail() {
                   </label>
 
                   <div class="wcf-select__field">
-                    <Select2
-                      name="get-tickets-state"
-                      data={[
-                        { text: "California", id: "CA" },
-                        { text: "Texas", id: "TX" },
-                        { text: "North Carolina", id: "NC" },
-                      ]}
-                      options={{
-                        placeholder: "Select your state",
-                        dropdownParent: "#wcfSelect",
-                      }}
-                    />
+                    <Field name="state" component={StateInput} />
                   </div>
                 </div>
               </div>
 
-              <button class="wcf-button wcf-form__button" type="submit">
+              <button class="wcf-button wcf-form__button" onClick={handleNext}>
                 Get tickets
               </button>
             </form>
