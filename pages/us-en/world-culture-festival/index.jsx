@@ -10,6 +10,7 @@ import { FormikWizard } from "@components";
 import { useLocalStorage } from "react-use";
 import * as Yup from "yup";
 import { useQueryString } from "@hooks";
+import { useAuth } from "@contexts";
 
 const DATA_STORAGE_KEY = "wcf-data-store-2";
 const INITIAL_VALUES = {
@@ -37,15 +38,25 @@ const useIsSsr = () => {
 
 function WorldCultureFestival() {
   const isSsr = useIsSsr();
+  const { authenticated, user } = useAuth();
   const [localState, setLocalState] = useLocalStorage(
     DATA_STORAGE_KEY,
     INITIAL_VALUES,
   );
+
+  let formInitialValue = { ...localState };
+  if (authenticated) {
+    formInitialValue = {
+      ...formInitialValue,
+      country: user.profile.personMailingCountry,
+      state: user.profile.personMailingState,
+      phoneNumber: user.profile.personMobilePhone,
+    };
+  }
+
   const [activeStep] = useQueryString("s", {
     defaultValue: 0,
   });
-  console.log(activeStep);
-  console.log(localState);
   const handleSubmit = useCallback((values) => {
     console.log("Submitting form!!!!");
   }, []);
@@ -53,6 +64,7 @@ function WorldCultureFestival() {
   if (isSsr) {
     return null;
   }
+
   const onStepChange = (values, formikBag, currentStepIndex) => {
     setLocalState(values);
     // setActiveState(currentStepIndex + 1);
@@ -65,7 +77,7 @@ function WorldCultureFestival() {
       </Head>
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
       <FormikWizard
-        initialValues={localState}
+        initialValues={formInitialValue}
         onSubmit={(values) => console.log(values)}
         validateOnNext
         activeStepIndex={activeStep}
@@ -88,8 +100,6 @@ function WorldCultureFestival() {
           },
           {
             component: StepAuth,
-            beforeNext: onStepChange,
-            beforePrev: onStepChange,
           },
           {
             component: StepContactDetail,
@@ -99,8 +109,6 @@ function WorldCultureFestival() {
                 .required("Country is required"),
               state: Yup.string().label("State").required("State is required"),
             }),
-            beforeNext: onStepChange,
-            beforePrev: onStepChange,
           },
         ]}
       >
