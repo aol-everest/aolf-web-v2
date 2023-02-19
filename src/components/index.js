@@ -24,3 +24,4 @@ export { CardUpdateRequired } from "./cardUpdateRequired";
 export { PendingAgreement } from "./pendingAgreement";
 export { UsePagesViews } from "./usePagesViews";
 export { PageLoading } from "./pageLoading";
+export { FormikWizard } from "./formik-wizard-form";
