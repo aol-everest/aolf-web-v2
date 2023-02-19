@@ -6981,6 +6981,15 @@ react-scroll@^1.8.8:
     lodash.throttle "^4.1.1"
     prop-types "^15.7.2"
 
+react-select2-wrapper@^1.0.4-beta6:
+  version "1.0.4-beta6"
+  resolved "https://registry.yarnpkg.com/react-select2-wrapper/-/react-select2-wrapper-1.0.4-beta6.tgz#f2681d86cc6828fccc078037d51f82019df02434"
+  integrity sha512-YejtCElEf8GUYzbfOEs6cv8YUjul031nNdwkSpkGSQ0NkktPzXAzlcehKb1coC3tmmIxbCFH6flEjMt9dqckDg==
+  dependencies:
+    prop-types "^15.5.8"
+    select2 "^4.0.0"
+    shallow-equal-fuzzy "^0.0.2"
+
 react-select@^5.7.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.7.0.tgz#82921b38f1fcf1471a0b62304da01f2896cd8ce6"
@@ -7381,6 +7390,11 @@ screenfull@^5.1.0:
   resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-5.2.0.tgz#6533d524d30621fc1283b9692146f3f13a93d1ba"
   integrity sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==
 
+select2@^4.0.0:
+  version "4.0.13"
+  resolved "https://registry.yarnpkg.com/select2/-/select2-4.0.13.tgz#0dbe377df3f96167c4c1626033e924372d8ef44d"
+  integrity sha512-1JeB87s6oN/TDxQQYCvS5EFoQyvV6eYMZZ0AeA4tdFDYWN3BAGZ8npr17UBFddU0lgAt3H0yjX3X6/ekOj1yjw==
+
 semver@^5.4.1:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
@@ -7441,6 +7455,11 @@ setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
+
+shallow-equal-fuzzy@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/shallow-equal-fuzzy/-/shallow-equal-fuzzy-0.0.2.tgz#999717c968d36223b1bd7ea95405b697b19fd55c"
+  integrity sha512-HKGvWaQ6fuFhNH2k1krxxmhKYxyPSbPzwCkM94qYVoLKCGCqg0r9bdCoX4A37UJvAfyLje9zHS5F/SsrYgrqgA==
 
 sharp@^0.28.2:
   version "0.28.3"

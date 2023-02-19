@@ -1,5 +1,6 @@
 export { Header } from "./header";
 export { NoHeader } from "./noHeader";
+export { WCFHeader } from "./wcfHeader";
 export { Footer } from "./footer";
 export { Layout } from "./layout";
 export { ActiveLink } from "./activeLink";

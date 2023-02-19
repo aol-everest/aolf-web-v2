@@ -1,0 +1,38 @@
+.wcf-input {
+  font-family: $wcf-font-regular;
+  font-size: 16px;
+  line-height: 24px;
+
+  &__label {
+    margin-bottom: 8px;
+    color: transparentize($wcf-dark, 0.3);
+  }
+ 
+  &__field {
+    width: 100%;
+    padding: 11px;
+    border-radius: 0;
+    border: 1px solid $wcf-light-grey;
+    color: $wcf-dark-grey;
+    background-color: $wcf-light;
+    box-shadow: $wcf-shadow;
+    transition: border-color $wcf-transition-effect, box-shadow $wcf-transition-effect;
+
+    &:focus {
+      border-color: transparentize($wcf-dark, 0.5) !important;
+      box-shadow: $wcf-shadow-active;
+    }
+
+    &::placeholder {
+      color: transparentize($wcf-dark-grey, 0.5);
+    }
+  }
+
+  &__info {
+    font-size: 12px;
+    line-height: 14px;
+    margin-top: 8px;
+    padding: 0 12px;
+    color: transparentize($wcf-dark-blue, 0.5);
+  }
+} 

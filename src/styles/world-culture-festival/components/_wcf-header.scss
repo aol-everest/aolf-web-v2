@@ -1,0 +1,35 @@
+.wcf-header {
+  padding: 40px 0;
+
+  &__container {
+    display: flex;
+
+    .wcf-logo {
+      &__image {
+        height: 50px;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .wcf-header {
+    &__container {
+      max-width: 1320px;
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .wcf-header {
+    &__container {
+      justify-content: center;
+
+      .wcf-logo {
+        &__image {
+          height: 40px;
+        }
+      }
+    }
+  }
+}
