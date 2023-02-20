@@ -17,7 +17,7 @@ const schema = object().shape({
   lastName: string().required("Last Name is required"),
 });
 
-export const SignupForm = ({ signUp, showMessage, message }) => {
+export const SignupForm = ({ signUp, showMessage, message, loading }) => {
   const {
     register,
     control,
@@ -99,9 +99,21 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         </div>
       </div>
       {showMessage && <p className="validation-input">{message}</p>}
-      <button className="wcf-button wcf-form__button" type="submit">
-        Sign up
-      </button>
+      {loading && (
+        <button className="wcf-button wcf-form__button" type="button" disabled>
+          <span
+            className="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span class="sr-only">Loading...</span>
+        </button>
+      )}
+      {!loading && (
+        <button className="wcf-button wcf-form__button" type="submit">
+          Sign up
+        </button>
+      )}
       <DevTool control={control} />
     </form>
   );

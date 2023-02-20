@@ -21,6 +21,10 @@
     box-shadow: $wcf-shadow-active;
   }
 
+  &:disabled {
+    background-color: $wcf-orange-light;
+  }
+
   &:focus {
     outline: none;
   }

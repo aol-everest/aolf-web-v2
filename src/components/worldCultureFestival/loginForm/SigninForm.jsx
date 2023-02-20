@@ -17,6 +17,7 @@ export const SigninForm = ({
   forgotPassword,
   showMessage,
   message,
+  loading,
 }) => {
   const {
     register,
@@ -61,15 +62,33 @@ export const SigninForm = ({
             <p className="validation-input">{errors.password.message}</p>
           )}
         </div>
-        {showMessage && <p className="validation-input">{message}</p>}
-        <a className="link" href="#" onClick={forgotPassword}>
+
+        <a className="wcf-link" href="#" onClick={forgotPassword}>
           Don’t remember your password?
         </a>
       </div>
+      {showMessage && (
+        <div className="validation-input tw-m-2">
+          <span className="icon" />
+          {message}
+        </div>
+      )}
+      {loading && (
+        <button className="wcf-button wcf-form__button" type="button" disabled>
+          <span
+            className="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span class="sr-only">Loading...</span>
+        </button>
+      )}
+      {!loading && (
+        <button className="wcf-button wcf-form__button" type="submit">
+          Log in
+        </button>
+      )}
 
-      <button className="wcf-button wcf-form__button" type="submit">
-        Log in
-      </button>
       <DevTool control={control} />
     </form>
   );

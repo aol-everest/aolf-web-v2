@@ -5,7 +5,13 @@ import { useAuth } from "@contexts";
 import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import { SigninForm, SignupForm } from "./loginForm";
+import {
+  SigninForm,
+  SignupForm,
+  NewPasswordForm,
+  ResetPasswordForm,
+  ChangePasswordForm,
+} from "./loginForm";
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -66,44 +72,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
       } else {
         const userInfo = await Auth.reFetchProfile();
         setUser(userInfo);
-
-        if (isStudent) {
-          await api.post({
-            path: "verify-email",
-            body: {
-              email: username,
-            },
-          });
-          setShowSuccessMessage(true);
-          setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
-          setTimeout(() => {
-            setLoading(false);
-            setShowSuccessMessage(false);
-            setSuccessMessage(null);
-          }, 3000);
-        } else {
-          setLoading(false);
-        }
-        // const user = await Auth.signIn(username, password);
-        // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-        //   setCurrentUser(user);
-        //   setAuthMode(NEW_PASSWORD_REQUEST);
-        //   setLoading(false);
-        // } else {
-        //   const token = user.signInUserSession.idToken.jwtToken;
-        //   await api.get({
-        //     path: "profile",
-        //     token,
-        //   });
-
-        //   setLoading(false);
-        //   hideModal();
-        //   if (navigateTo) {
-        //     return router.push(navigateTo);
-        //   } else {
-        //     router.reload(window.location.pathname);
-        //   }
-        // }
+        handleNext();
       }
     } catch (ex) {
       // await Auth.signOut();
@@ -173,6 +142,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
       await signIn({ username, password });
+      handleNext();
     } catch (ex) {
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {
@@ -284,30 +254,34 @@ export function StepAuth({ errors, handleNext, ...props }) {
               <span>Sign in</span> with your Journey account or log in below:
             </p>
 
-            <div className="wcf-auth-selector world-culture-festival__selector">
-              <button
-                className={classNames("wcf-auth-selector__button", {
-                  "wcf-auth-selector__button_active": authMode === SIGNUP_MODE,
-                })}
-                type="button"
-                data-target="sign-up-form"
-                onClick={switchView(SIGNUP_MODE)}
-              >
-                Sign Up
-              </button>
-              <button
-                className={classNames("wcf-auth-selector__button", {
-                  "wcf-auth-selector__button_active": authMode === LOGIN_MODE,
-                })}
-                type="button"
-                data-target="log-in-form"
-                onClick={switchView(LOGIN_MODE)}
-              >
-                Log in
-              </button>
-            </div>
+            {(authMode === LOGIN_MODE || authMode === SIGNUP_MODE) && (
+              <div className="wcf-auth-selector world-culture-festival__selector">
+                <button
+                  className={classNames("wcf-auth-selector__button", {
+                    "wcf-auth-selector__button_active":
+                      authMode === SIGNUP_MODE,
+                  })}
+                  type="button"
+                  data-target="sign-up-form"
+                  onClick={switchView(SIGNUP_MODE)}
+                >
+                  Sign Up
+                </button>
+                <button
+                  className={classNames("wcf-auth-selector__button", {
+                    "wcf-auth-selector__button_active": authMode === LOGIN_MODE,
+                  })}
+                  type="button"
+                  data-target="log-in-form"
+                  onClick={switchView(LOGIN_MODE)}
+                >
+                  Log in
+                </button>
+              </div>
+            )}
             {authMode === LOGIN_MODE && (
               <SigninForm
+                loading={loading}
                 signIn={signIn}
                 forgotPassword={switchView(RESET_PASSWORD_REQUEST)}
                 showMessage={showMessage}
@@ -317,8 +291,35 @@ export function StepAuth({ errors, handleNext, ...props }) {
 
             {authMode === SIGNUP_MODE && (
               <SignupForm
+                loading={loading}
                 signUp={signUp}
                 showMessage={showMessage}
+                message={getActualMessage(message)}
+              />
+            )}
+
+            {authMode === NEW_PASSWORD_REQUEST && (
+              <NewPasswordForm
+                loading={loading}
+                completeNewPassword={completeNewPassword}
+                showMessage={showMessage}
+                message={getActualMessage(message)}
+              />
+            )}
+            {authMode === RESET_PASSWORD_REQUEST && (
+              <ResetPasswordForm
+                loading={loading}
+                resetPassword={resetPassword}
+                showMessage={showMessage}
+                message={getActualMessage(message)}
+              />
+            )}
+            {authMode === CHANGE_PASSWORD_REQUEST && (
+              <ChangePasswordForm
+                loading={loading}
+                changePassword={changePassword}
+                showMessage={showMessage}
+                username={username}
                 message={getActualMessage(message)}
               />
             )}
@@ -333,26 +334,29 @@ export function StepAuth({ errors, handleNext, ...props }) {
                 Privacy Policy
               </a>
             </p>
+            {(authMode === LOGIN_MODE || authMode === SIGNUP_MODE) && (
+              <>
+                <div className="world-culture-festival__divider">OR</div>
 
-            <div className="world-culture-festival__divider">OR</div>
+                <div className="world-culture-festival__third-party-auth">
+                  <button
+                    className="wcf-icon-button"
+                    type="button"
+                    onClick={googleLogin}
+                  >
+                    <img src="/img/google.png" alt="Sign in with Google" />
+                  </button>
 
-            <div className="world-culture-festival__third-party-auth">
-              <button
-                className="wcf-icon-button"
-                type="button"
-                onClick={googleLogin}
-              >
-                <img src="/img/google.png" alt="Sign in with Google" />
-              </button>
-
-              <button
-                className="wcf-icon-button"
-                type="button"
-                onClick={fbLogin}
-              >
-                <img src="/img/fb-icon.png" alt="Sign in with Facebook" />
-              </button>
-            </div>
+                  <button
+                    className="wcf-icon-button"
+                    type="button"
+                    onClick={fbLogin}
+                  >
+                    <img src="/img/fb-icon.png" alt="Sign in with Facebook" />
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -367,9 +371,6 @@ export function StepAuth({ errors, handleNext, ...props }) {
 
       <div className="container world-culture-festival__container">
         <div className="world-culture-festival__column">
-          <p className="wcf-body world-culture-festival__subtitle">
-            <span>Sign in</span> with your Journey account or log in below:
-          </p>
           <center>
             <img
               src={profile.userProfilePic}
@@ -381,7 +382,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
             />
             <p className="wcf-body world-culture-festival__subtitle">
               Not {profile.name}?{" "}
-              <a className="link-primary signinlink" onClick={signout}>
+              <a className="wcf-link" onClick={signout}>
                 Sign out
               </a>
               :

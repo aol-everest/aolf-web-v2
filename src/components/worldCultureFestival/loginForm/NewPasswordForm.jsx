@@ -19,6 +19,7 @@ export const NewPasswordForm = ({
   completeNewPassword,
   showMessage,
   message,
+  loading,
 }) => {
   const {
     register,
@@ -30,42 +31,72 @@ export const NewPasswordForm = ({
   });
 
   return (
-    <form className="active show" onSubmit={handleSubmit(completeNewPassword)}>
+    <form
+      className="wcf-form"
+      id="log-in-form"
+      onSubmit={handleSubmit(completeNewPassword)}
+    >
       <p className="info">
         You have to change your password. Please enter your new password below.
       </p>
-      <input
-        {...register("password")}
-        type="password"
-        placeholder="Password"
-        className={classNames({ validate: errors.password })}
-        autoComplete="new-password"
-        aria-invalid="false"
-        aria-haspopup="false"
-        spellCheck="false"
-      />
-      {errors.password && (
-        <p className="validation-input">{errors.password.message}</p>
-      )}
-      <input
-        {...register("passwordConfirmation")}
-        type="password"
-        placeholder="Confirm Password"
-        className={classNames({ validate: errors.password })}
-        autoComplete="new-password"
-        aria-invalid="false"
-        aria-haspopup="false"
-        spellCheck="false"
-      />
-      {errors.passwordConfirmation && (
-        <p className="validation-input">
-          {errors.passwordConfirmation.message}
-        </p>
-      )}
+      <div className="wcf-form__fields">
+        <div className="wcf-input wcf-form__field">
+          <label for="log-in-password" className="wcf-input__label">
+            New Password
+          </label>
+          <input
+            type="password"
+            className="wcf-input__field"
+            placeholder="Enter your new password"
+            {...register("password")}
+            autoComplete="new-password"
+            aria-invalid="false"
+            aria-haspopup="false"
+            spellCheck="false"
+          />
+          {errors.password && (
+            <p className="validation-input">{errors.password.message}</p>
+          )}
+        </div>
+        <div className="wcf-input wcf-form__field">
+          <label for="log-in-password" className="wcf-input__label">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            className="wcf-input__field"
+            placeholder="Confirm your Password"
+            {...register("passwordConfirmation")}
+            autoComplete="new-password"
+            aria-invalid="false"
+            aria-haspopup="false"
+            spellCheck="false"
+          />
+          {errors.passwordConfirmation && (
+            <p className="validation-input">
+              {errors.passwordConfirmation.message}
+            </p>
+          )}
+        </div>
+      </div>
+
       {showMessage && <p className="validation-input">{message}</p>}
-      <button type="submit" className="mt-4 modal-window__btn btn-primary">
-        Change Password
-      </button>
+      {loading && (
+        <button className="wcf-button wcf-form__button" type="button" disabled>
+          <span
+            className="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span class="sr-only">Loading...</span>
+        </button>
+      )}
+      {!loading && (
+        <button className="wcf-button wcf-form__button" type="submit">
+          Change Password
+        </button>
+      )}
+
       <DevTool control={control} />
     </form>
   );

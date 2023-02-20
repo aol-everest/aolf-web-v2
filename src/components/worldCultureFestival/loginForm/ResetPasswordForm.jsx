@@ -11,7 +11,12 @@ const schema = object().shape({
     .required("Email is required"),
 });
 
-export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
+export const ResetPasswordForm = ({
+  resetPassword,
+  showMessage,
+  message,
+  loading,
+}) => {
   const {
     register,
     control,
@@ -22,24 +27,50 @@ export const ResetPasswordForm = ({ resetPassword, showMessage, message }) => {
   });
 
   return (
-    <form className="active show" onSubmit={handleSubmit(resetPassword)}>
+    <form
+      className="wcf-form"
+      id="log-in-form"
+      onSubmit={handleSubmit(resetPassword)}
+    >
       <p className="info">
         Please enter your email address. We will send you an email to reset your
         password.
       </p>
-      <input
-        {...register("username")}
-        type="email"
-        className={classNames({ validate: errors.username })}
-        placeholder="Email"
-      />
-      {errors.username && (
-        <p className="validation-input">{errors.username.message}</p>
+      <div className="wcf-form__fields">
+        <div className="wcf-input wcf-form__field">
+          <label for="log-in-email" className="wcf-input__label">
+            Email
+          </label>
+          <input
+            type="email"
+            id="log-in-email"
+            className="wcf-input__field"
+            placeholder="Enter your email"
+            {...register("username")}
+          />
+          {errors.username && (
+            <p className="validation-input">{errors.username.message}</p>
+          )}
+        </div>
+        {showMessage && <p className="validation-input">{message}</p>}
+      </div>
+
+      {loading && (
+        <button className="wcf-button wcf-form__button" type="button" disabled>
+          <span
+            className="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span class="sr-only">Loading...</span>
+        </button>
       )}
-      {showMessage && <p className="validation-input">{message}</p>}
-      <button type="submit" className="mt-4 modal-window__btn btn-primary v2">
-        Send email
-      </button>
+      {!loading && (
+        <button className="wcf-button wcf-form__button" type="submit">
+          Send email
+        </button>
+      )}
+
       <DevTool control={control} />
     </form>
   );
