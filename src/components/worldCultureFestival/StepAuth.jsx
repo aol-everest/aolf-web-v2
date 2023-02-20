@@ -378,7 +378,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
               width="140"
               height="140"
               border="0"
-              class="img-circle"
+              class="avatar"
             />
             <p className="wcf-body world-culture-festival__subtitle">
               Not {profile.name}?{" "}
