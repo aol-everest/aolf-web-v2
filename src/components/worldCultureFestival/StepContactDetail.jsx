@@ -109,7 +109,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
 
         <div class="container world-culture-festival__container">
           <div class="world-culture-festival__column">
-            <form class="wcf-form" id="get-tickets-form">
+            <div class="wcf-form">
               <div class="wcf-form__fields">
                 <div class="wcf-select wcf-form__field">
                   <label for="get-tickets-country" class="wcf-select__label">
@@ -147,7 +147,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
               <button class="wcf-button wcf-form__button" onClick={handleNext}>
                 Get passes
               </button>
-            </form>
+            </div>
 
             <div class="wcf-checkbox world-culture-festival__agreement">
               <input

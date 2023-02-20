@@ -44,8 +44,9 @@ const useIsSsr = () => {
 
 function WorldCultureFestival() {
   const isSsr = useIsSsr();
+  const [loading, setLoading] = useState(false);
   const { authenticated, user } = useAuth();
-  const [localState, setLocalState] = useLocalStorage(
+  const [localState, setLocalState, removeLocalState] = useLocalStorage(
     DATA_STORAGE_KEY,
     INITIAL_VALUES,
   );
@@ -63,9 +64,11 @@ function WorldCultureFestival() {
   const [activeStep] = useQueryString("s", {
     defaultValue: 0,
   });
-  const handleSubmit = useCallback((values) => {
+  const handleSubmit = useCallback(async (values) => {
+    setLoading(true);
     console.log("Submitting form!!!!");
     console.log(values);
+    await removeLocalState();
     const params = encodeFormData(values);
     window.location.href =
       "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
@@ -86,6 +89,7 @@ function WorldCultureFestival() {
         <title>World culture festival</title>
       </Head>
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
+      {loading && <div className="cover-spin"></div>}
       <FormikWizard
         initialValues={formInitialValue}
         onSubmit={handleSubmit}
