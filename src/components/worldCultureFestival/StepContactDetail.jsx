@@ -2,8 +2,7 @@
 import { useState, useRef } from "react";
 import { Field, ErrorMessage } from "formik";
 import Select2 from "react-select2-wrapper";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput from "react-phone-input-2";
 import countryData from "./country.json";
 import { US_STATES } from "@constants";
 
@@ -26,6 +25,7 @@ const CountryInput = ({ field, form, ...props }) => {
         if (field.value !== "US") {
           form.setFieldValue("state", null);
         }
+        form.setFieldValue("phoneNumber", field.value);
       }
     }
   };
@@ -55,15 +55,17 @@ const CountryInput = ({ field, form, ...props }) => {
   );
 };
 
-const PhoneNumberInput = ({ field, form, ...props }) => {
+const PhoneNumberInputField = ({ field, form, ...props }) => {
+  console.log(form.values.country);
   return (
     <PhoneInput
       {...field}
       {...props}
       placeholder="Enter your phone number"
-      country="US"
-      class="wcf-input__field"
-      international={false}
+      country={form.values.country ? form.values.country.toLowerCase() : "us"}
+      containerClass="wcf-select__field"
+      inputClass="wcf-input__field"
+      countryCodeEditable={false}
     />
   );
 };
@@ -140,7 +142,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                   >
                     Phone number
                   </label>
-                  <Field name="phoneNumber" component={PhoneNumberInput} />
+                  <Field name="phoneNumber" component={PhoneNumberInputField} />
                 </div>
               </div>
 
