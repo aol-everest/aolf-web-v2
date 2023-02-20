@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
+import { useState } from "react";
 
 const schema = object().shape({
   username: string()
@@ -19,6 +20,14 @@ export const SigninForm = ({
   message,
   loading,
 }) => {
+  const [passwordType, setPasswordType] = useState("password");
+  const togglePassword = () => {
+    if (passwordType === "password") {
+      setPasswordType("text");
+      return;
+    }
+    setPasswordType("password");
+  };
   const {
     register,
     control,
@@ -52,20 +61,22 @@ export const SigninForm = ({
             Password
           </label>
           <input
-            type="password"
-            id="log-in-password"
+            type={passwordType}
             className="wcf-input__field"
             placeholder="Enter your password"
             {...register("password")}
           />
+          <button
+            type="button"
+            className="wcf-input__button"
+            onClick={togglePassword}
+          >
+            <img src="/img/Eye.png" />
+          </button>
           {errors.password && (
             <p className="validation-input">{errors.password.message}</p>
           )}
         </div>
-
-        <a className="wcf-link" href="#" onClick={forgotPassword}>
-          Don’t remember your password?
-        </a>
       </div>
       {showMessage && (
         <div className="validation-input tw-m-2">
@@ -88,6 +99,12 @@ export const SigninForm = ({
           Log in
         </button>
       )}
+
+      <p class="wcf-body-small wcf-form__note">
+        <a class="wcf-link" href="#" onClick={forgotPassword}>
+          Forgot your password?
+        </a>
+      </p>
 
       <DevTool control={control} />
     </form>

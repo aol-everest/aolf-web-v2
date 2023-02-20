@@ -251,7 +251,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
         <div className="container world-culture-festival__container">
           <div className="world-culture-festival__column">
             <p className="wcf-body world-culture-festival__subtitle">
-              <span>Sign in</span> with your Journey account or log in below:
+              <span>Sign in</span> with your Art of Living Journey account or
+              log in below:
             </p>
 
             {(authMode === LOGIN_MODE || authMode === SIGNUP_MODE) && (

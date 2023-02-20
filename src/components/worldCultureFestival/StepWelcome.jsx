@@ -25,7 +25,7 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
         { text: "4 (four)", id: 4 },
       ]}
       options={{
-        placeholder: "0 (zero)",
+        placeholder: "1 (one)",
         dropdownParent: "#wcfSelect",
       }}
       onChange={onChangeAction}
@@ -51,20 +51,20 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
       multiple
       data={[
         {
-          children: [{ text: "Full 3-day pass", id: "Full" }],
+          children: [{ text: "Full 3-Day pass", id: "Full" }],
         },
         {
           children: [
             {
-              text: "FRI (evening 24 Feb 2023)",
+              text: "Fri. (evening Sep 29 2023)",
               id: "Friday",
             },
             {
-              text: "SAT (evening 25 Feb 2023)",
+              text: "Sat. (evening Sep 30 2023)",
               id: "Saturday",
             },
             {
-              text: "SUN (evening 26 Feb 2023)",
+              text: "Sun. (evening Oct 1 2023)",
               id: "Sunday",
             },
           ],
@@ -103,7 +103,7 @@ export function StepWelcome({ errors, handleNext, ...props }) {
                     htmlFor="welcome-tickets"
                     className="wcf-select__label"
                   >
-                    Choose the number of tickets
+                    Choose the number of passes
                   </label>
 
                   <div className="wcf-select__field">
@@ -114,7 +114,7 @@ export function StepWelcome({ errors, handleNext, ...props }) {
                   </div>
 
                   <label htmlFor="welcome-tickets" className="wcf-select__info">
-                    *4 tickets maximum
+                    *4 passes maximum
                   </label>
                 </div>
 
@@ -156,10 +156,6 @@ export function StepWelcome({ errors, handleNext, ...props }) {
                 event organizer. I understand that I can opt out anytime.
               </label>
             </div>
-
-            <p className="wcf-body text-center">
-              Don't have an account? <span>Sign up here</span>
-            </p>
           </div>
         </div>
       </section>

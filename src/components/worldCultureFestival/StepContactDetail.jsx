@@ -4,6 +4,17 @@ import { Field, ErrorMessage } from "formik";
 import Select2 from "react-select2-wrapper";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import countryData from "./country.json";
+import { US_STATES } from "@constants";
+
+function formatCountryOption(state) {
+  if (!state.id) return state.text;
+
+  return `<span class='wcf-country-option'>
+      <img src='https://hatscripts.github.io/circle-flags/flags/${state.element.value.toLowerCase()}.svg' class='wcf-country-option__image'/>
+      <span class='wcf-country-option__text'>${state.text}</span>
+    </span>`;
+}
 
 const CountryInput = ({ field, form, ...props }) => {
   const selectComp = useRef(null);
@@ -12,22 +23,32 @@ const CountryInput = ({ field, form, ...props }) => {
       const val = selectComp.current.el.val();
       if (field.value !== val) {
         form.setFieldValue(field.name, val);
+        if (field.value !== "US") {
+          form.setFieldValue("state", null);
+        }
       }
     }
   };
+  const data = countryData.map((c) => {
+    return {
+      text: c.Name,
+      id: c.Code,
+    };
+  });
   return (
     <Select2
       ref={selectComp}
       {...field}
       {...props}
-      data={[
-        { text: "USA", id: "USA" },
-        { text: "Ukraine", id: "Ukraine" },
-        { text: "England", id: "England" },
-      ]}
+      data={data}
       options={{
         placeholder: "Select your country",
         dropdownParent: "#wcfSelect",
+        templateResult: formatCountryOption,
+        templateSelection: formatCountryOption,
+        escapeMarkup: function (m) {
+          return m;
+        },
       }}
       onChange={onChangeAction}
     />
@@ -40,10 +61,9 @@ const PhoneNumberInput = ({ field, form, ...props }) => {
       {...field}
       {...props}
       placeholder="Enter your phone number"
-      defaultCountry="US"
+      country="US"
       class="wcf-input__field"
-      international
-      initialValueFormat="national"
+      international={false}
     />
   );
 };
@@ -58,16 +78,18 @@ const StateInput = ({ field, form, ...props }) => {
       }
     }
   };
+  const data = US_STATES.map((s) => {
+    return {
+      text: s.label,
+      id: s.value,
+    };
+  });
   return (
     <Select2
       ref={selectComp}
       {...field}
       {...props}
-      data={[
-        { text: "California", id: "CA" },
-        { text: "Texas", id: "TX" },
-        { text: "North Carolina", id: "NC" },
-      ]}
+      data={data}
       options={{
         placeholder: "Select your state",
         dropdownParent: "#wcfSelect",
@@ -77,7 +99,7 @@ const StateInput = ({ field, form, ...props }) => {
   );
 };
 
-export function StepContactDetail({ errors, handleNext, ...props }) {
+export function StepContactDetail({ errors, handleNext, values, ...props }) {
   return (
     <main>
       <section class="world-culture-festival">
@@ -87,26 +109,8 @@ export function StepContactDetail({ errors, handleNext, ...props }) {
 
         <div class="container world-culture-festival__container">
           <div class="world-culture-festival__column">
-            <h4 class="wcf-h4 world-culture-festival__title d-lg-block d-none">
-              Your "Art of Living Journey" account has been created.
-            </h4>
-
-            <h4 class="wcf-h4 world-culture-festival__title d-lg-none">
-              Your account has been created.
-            </h4>
-
             <form class="wcf-form" id="get-tickets-form">
               <div class="wcf-form__fields">
-                <div class="wcf-combined-input wcf-form__field">
-                  <label
-                    for="get-tickets-phone"
-                    class="wcf-combined-input__label"
-                  >
-                    Phone number
-                  </label>
-                  <Field name="phoneNumber" component={PhoneNumberInput} />
-                </div>
-
                 <div class="wcf-select wcf-form__field">
                   <label for="get-tickets-country" class="wcf-select__label">
                     Country
@@ -117,19 +121,31 @@ export function StepContactDetail({ errors, handleNext, ...props }) {
                   </div>
                 </div>
 
-                <div class="wcf-select wcf-form__field">
-                  <label for="get-tickets-state" class="wcf-select__label">
-                    State
-                  </label>
+                {values.country === "US" && (
+                  <div class="wcf-select wcf-form__field">
+                    <label for="get-tickets-state" class="wcf-select__label">
+                      State
+                    </label>
 
-                  <div class="wcf-select__field">
-                    <Field name="state" component={StateInput} />
+                    <div class="wcf-select__field">
+                      <Field name="state" component={StateInput} />
+                    </div>
                   </div>
+                )}
+
+                <div class="wcf-combined-input wcf-form__field">
+                  <label
+                    for="get-tickets-phone"
+                    class="wcf-combined-input__label"
+                  >
+                    Phone number
+                  </label>
+                  <Field name="phoneNumber" component={PhoneNumberInput} />
                 </div>
               </div>
 
               <button class="wcf-button wcf-form__button" onClick={handleNext}>
-                Get tickets
+                Get passes
               </button>
             </form>
 

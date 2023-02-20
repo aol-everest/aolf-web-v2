@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { string, object } from "yup";
-import Link from "next/link";
+import { useState } from "react";
 
 const schema = object().shape({
   username: string()
@@ -18,6 +18,14 @@ const schema = object().shape({
 });
 
 export const SignupForm = ({ signUp, showMessage, message, loading }) => {
+  const [passwordType, setPasswordType] = useState("password");
+  const togglePassword = () => {
+    if (passwordType === "password") {
+      setPasswordType("text");
+      return;
+    }
+    setPasswordType("password");
+  };
   const {
     register,
     control,
@@ -55,12 +63,18 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
             Password
           </label>
           <input
-            type="password"
-            id="sign-up-password"
+            type={passwordType}
             className="wcf-input__field"
             placeholder="Enter your password"
             {...register("password")}
           />
+          <button
+            type="button"
+            className="wcf-input__button"
+            onClick={togglePassword}
+          >
+            <img src="/img/Eye.png" />
+          </button>
           {errors.password && (
             <p className="validation-input">{errors.password.message}</p>
           )}

@@ -11,7 +11,7 @@
   }
 
   &__title,
-  &__subtitle, 
+  &__subtitle,
   &__selector {
     margin-bottom: 48px;
   }
@@ -23,7 +23,7 @@
   }
 
   &__agreement {
-    margin: 16px 0 80px;
+    margin-top: 16px;
   }
 
   &__divider {
@@ -39,7 +39,7 @@
 
     &:before,
     &:after {
-      content: '';
+      content: "";
       height: 2px;
       flex-grow: 1;
       background-color: rgba(102, 102, 102, 0.25);
@@ -85,6 +85,14 @@
         min-height: 800px;
       }
     }
+    &_people-3 {
+      height: 100%;
+
+      img {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
   }
 }
 
@@ -120,7 +128,7 @@
     &__third-party-auth {
       gap: 16px;
     }
-    
+
     &__background {
       &_people-1,
       &_people-2 {

@@ -12,11 +12,17 @@ import * as Yup from "yup";
 import { useQueryString } from "@hooks";
 import { useAuth } from "@contexts";
 
+const encodeFormData = (data) => {
+  return Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
+};
+
 const DATA_STORAGE_KEY = "wcf-data-store-2";
 const INITIAL_VALUES = {
-  ticketCount: 0,
-  sessionsAttending: [],
-  country: null,
+  ticketCount: 1,
+  sessionsAttending: ["Full"],
+  country: "US",
   state: null,
   phoneNumber: null,
   agreement: true,
@@ -59,6 +65,10 @@ function WorldCultureFestival() {
   });
   const handleSubmit = useCallback((values) => {
     console.log("Submitting form!!!!");
+    console.log(values);
+    const params = encodeFormData(values);
+    window.location.href =
+      "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
   }, []);
 
   if (isSsr) {
@@ -78,7 +88,7 @@ function WorldCultureFestival() {
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
       <FormikWizard
         initialValues={formInitialValue}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit}
         validateOnNext
         activeStepIndex={activeStep}
         steps={[

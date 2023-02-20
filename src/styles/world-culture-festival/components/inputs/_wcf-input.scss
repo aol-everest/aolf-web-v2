@@ -2,12 +2,16 @@
   font-family: $wcf-font-regular;
   font-size: 16px;
   line-height: 24px;
+  position: relative;
 
   &__label {
     margin-bottom: 8px;
     color: transparentize($wcf-dark, 0.3);
+    ~ .wcf-input__button {
+      top: 40px;
+    }
   }
- 
+
   &__field {
     width: 100%;
     padding: 11px;
@@ -16,7 +20,8 @@
     color: $wcf-dark-grey;
     background-color: $wcf-light;
     box-shadow: $wcf-shadow;
-    transition: border-color $wcf-transition-effect, box-shadow $wcf-transition-effect;
+    transition: border-color $wcf-transition-effect,
+      box-shadow $wcf-transition-effect;
 
     &:focus {
       border-color: transparentize($wcf-dark, 0.5) !important;
@@ -28,6 +33,28 @@
     }
   }
 
+  &__button {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    display: block;
+    background-color: $wcf-light;
+    padding: 4px;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    border: none;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
   &__info {
     font-size: 12px;
     line-height: 14px;
@@ -35,4 +62,4 @@
     padding: 0 12px;
     color: transparentize($wcf-dark-blue, 0.5);
   }
-} 
+}

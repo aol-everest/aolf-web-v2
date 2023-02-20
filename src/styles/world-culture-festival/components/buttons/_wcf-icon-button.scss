@@ -16,6 +16,9 @@
 
   &:active {
     box-shadow: $wcf-shadow-active;
+  }
+
+  &:focus {
     outline: none;
   }
 }
