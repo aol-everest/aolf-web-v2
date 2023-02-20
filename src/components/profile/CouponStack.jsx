@@ -28,8 +28,8 @@ const COURSE_TYPES = [
     value: "SAHAJ_SAMADHI_MEDITATION",
   },
   {
-    label: "Sri Sri Yoga",
-    value: "SRI_SRI_YOGA_MEDITATION",
+    label: "SKY Breath Meditation",
+    value: "SKY_BREATH_MEDITATION",
   },
 ];
 
