@@ -9,9 +9,9 @@ import { US_STATES } from "@constants";
 function formatCountryOption(state) {
   if (!state.id) return state.text;
 
-  return `<span className='wcf-country-option'>
-      <img src='https://hatscripts.github.io/circle-flags/flags/${state.element.value.toLowerCase()}.svg' className='wcf-country-option__image'/>
-      <span className='wcf-country-option__text'>${state.text}</span>
+  return `<span class='wcf-country-option'>
+      <img src='https://hatscripts.github.io/circle-flags/flags/${state.element.value.toLowerCase()}.svg' class='wcf-country-option__image'/>
+      <span class='wcf-country-option__text'>${state.text}</span>
     </span>`;
 }
 
@@ -96,8 +96,8 @@ const PhoneNumberInputField = ({ field, form, ...props }) => {
       {...props}
       placeholder="Enter your phone number"
       country={form.values.country ? form.values.country.toLowerCase() : "us"}
-      containerclassName="wcf-select__field"
-      inputclassName="wcf-input__field"
+      containerClass="wcf-select__field"
+      inputClass="wcf-input__field"
       countryCodeEditable={false}
       onChange={onChangeAction}
     />
