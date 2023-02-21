@@ -26,6 +26,7 @@ const CountryInput = ({ field, form, ...props }) => {
           form.setFieldValue("state", "");
         }
         form.setFieldValue("phoneNumber", field.value);
+        form.setFieldValue("phoneCountry", field.value);
       }
     }
   };
@@ -88,6 +89,8 @@ const StateInput = ({ field, form, ...props }) => {
 
 const PhoneNumberInputField = ({ field, form, ...props }) => {
   const onChangeAction = (value, data, event, formattedValue) => {
+    console.log(data.countryCode.toUpperCase());
+    form.setFieldValue("phoneCountry", data.countryCode.toUpperCase());
     form.setFieldValue(field.name, formattedValue);
   };
   return (
@@ -95,7 +98,9 @@ const PhoneNumberInputField = ({ field, form, ...props }) => {
       {...field}
       {...props}
       placeholder="Enter your phone number"
-      country={form.values.country ? form.values.country.toLowerCase() : "us"}
+      country={
+        form.values.phoneCountry ? form.values.phoneCountry.toLowerCase() : "us"
+      }
       containerClass="wcf-select__field"
       inputClass="wcf-input__field"
       countryCodeEditable={false}

@@ -193,7 +193,7 @@ function WorldCultureFestival() {
                 }),
               phoneNumber: Yup.string()
                 .label("Phone number")
-                .when("country", {
+                .when("phoneCountry", {
                   is: (country) => country === "US",
                   then: Yup.string().phone("US", true).nullable(),
                   otherwise: Yup.string().phone().nullable(),
