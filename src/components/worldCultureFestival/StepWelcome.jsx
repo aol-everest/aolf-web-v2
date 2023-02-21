@@ -83,8 +83,8 @@ export function StepWelcome({ errors, handleNext, ...props }) {
   return (
     <main>
       <section className="world-culture-festival">
-        <div className="world-culture-festival__background world-culture-festival__background_people-2">
-          <img src="/img/group-friends-dancing.png" />
+        <div className="world-culture-festival__background world-culture-festival__background_people-3">
+          <img src="/img/wcf-bg-image.png" />
         </div>
 
         <div className="container world-culture-festival__container">

@@ -129,8 +129,8 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
   return (
     <main>
       <section className="world-culture-festival">
-        <div className="world-culture-festival__background world-culture-festival__background_people-1">
-          <img src="/img/joel-reyer-QlYwXbFeymE-unsplash.png" />
+        <div className="world-culture-festival__background world-culture-festival__background_people-3">
+          <img src="/img/wcf-bg-image.png" />
         </div>
 
         <div className="container world-culture-festival__container">
