@@ -382,15 +382,15 @@ export function StepAuth({ errors, handleNext, ...props }) {
         <div className="world-culture-festival__column">
           <center>
             <img
-              src={profile.userProfilePic}
+              src={profile.userProfilePic || "/img/avatar-icon.svg"}
               name="aboutme"
               width="140"
               height="140"
               border="0"
-              class="avatar"
+              className="avatar"
             />
             <p className="wcf-body world-culture-festival__subtitle">
-              Not {profile.name}?{" "}
+              Not {profile.name} ?{" "}
               <a className="wcf-link" onClick={signout}>
                 Sign out
               </a>
