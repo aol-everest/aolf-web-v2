@@ -142,7 +142,7 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
     <Formik
       initialValues={{
         couponCodes,
-        courseType: "",
+        courseType: "SILENT_RETREAT",
       }}
       validationSchema={Yup.object({
         couponCodes: Yup.array().min(1, "Must have at least 1 coupon"),
