@@ -14,6 +14,8 @@ import { useAuth } from "@contexts";
 import { api } from "@utils";
 import "yup-phone";
 import startsWith from "lodash.startswith";
+import { useGlobalAlertContext } from "@contexts";
+import { ALERT_TYPES } from "@constants";
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -50,6 +52,7 @@ function WorldCultureFestival() {
   const isSsr = useIsSsr();
   const [loading, setLoading] = useState(false);
   const { authenticated, user } = useAuth();
+  const { showAlert } = useGlobalAlertContext();
   const [localState, setLocalState, removeLocalState] = useLocalStorage(
     DATA_STORAGE_KEY,
     INITIAL_VALUES,
@@ -89,22 +92,48 @@ function WorldCultureFestival() {
     setLoading(true);
     console.log("Submitting form!!!!");
     console.log(values);
-    const results = await api.post({
-      path: "wcfAttendee",
-      body: {
-        sessionsNames: values.sessionsAttending,
-        ticketQuantity: values.ticketCount,
-        phone: values.phoneNumber,
-        countryIsoCode: values.country,
-        state: values.state,
-        communicationOptIn: true,
-      },
-    });
-    await removeLocalState();
-    const params = encodeFormData(values);
-    // window.location.href =
-    //   "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
-    setLoading(false);
+    try {
+      const {
+        ticketCount,
+        sessionsAttending,
+        phoneNumber,
+        country,
+        state,
+        agreement,
+      } = values;
+      const {
+        data,
+        status,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: "wcfAttendee",
+        body: {
+          sessionsNames: sessionsAttending,
+          ticketQuantity: ticketCount,
+          phone: phoneNumber,
+          countryIsoCode: country,
+          state: state,
+          communicationOptIn: agreement,
+        },
+      });
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      await removeLocalState();
+      const params = encodeFormData({ sessionsAttending, ticketCount });
+      window.location.href =
+        "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
+      setLoading(false);
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+    }
   }, []);
 
   if (isSsr) {

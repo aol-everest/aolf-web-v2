@@ -104,6 +104,25 @@ const PhoneNumberInputField = ({ field, form, ...props }) => {
   );
 };
 
+const AgreementField = ({ field, form, ...props }) => {
+  const onClickAction = () => {
+    form.setFieldValue(field.name, !field.value);
+  };
+  return (
+    <div class="wcf-checkbox world-culture-festival__agreement">
+      <input type="checkbox" {...field} {...props} />
+      <label
+        htmlFor="agreement"
+        class="wcf-checkbox__label"
+        onClick={onClickAction}
+      >
+        I agree to receive event information and communications from the event
+        organizer. I understand that I can opt out anytime.
+      </label>
+    </div>
+  );
+};
+
 export function StepContactDetail({ errors, handleNext, values, ...props }) {
   console.log(errors);
 
@@ -164,25 +183,12 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                 Get passes
               </button>
             </div>
-
-            <div class="wcf-checkbox world-culture-festival__agreement">
-              <Field
-                type="checkbox"
-                name="agreement"
-                className="wcf-checkbox__field"
-              />
-              {/* <input
-                type="checkbox"
-                class="wcf-checkbox__field"
-                id="agreement"
-                name="agreement"
-                checked
-              /> */}
-              <label for="agreement" class="wcf-checkbox__label">
-                I agree to receive event information and communications from the
-                event organizer. I understand that I can opt out anytime.
-              </label>
-            </div>
+            <Field
+              type="checkbox"
+              name="agreement"
+              className="wcf-checkbox__field"
+              component={AgreementField}
+            />
           </div>
         </div>
       </section>
