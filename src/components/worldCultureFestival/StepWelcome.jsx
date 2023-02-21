@@ -38,10 +38,13 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
   const onChangeAction = () => {
     if (selectComp && selectComp.current && selectComp.current.el) {
       const val = selectComp.current.el.val();
-      if (val.length > 1 && val.find((v) => v === "Full")) {
-        selectComp.current.el.val(["Full"]);
-        selectComp.current.el.trigger("change");
-      } else if (JSON.stringify(field.value) !== JSON.stringify(val)) {
+      // if (val.length > 1 && val.find((v) => v === "Full")) {
+      //   selectComp.current.el.val(["Full"]);
+      //   selectComp.current.el.trigger("change");
+      // } else if (JSON.stringify(field.value) !== JSON.stringify(val)) {
+      //   form.setFieldValue(field.name, val);
+      // }
+      if (JSON.stringify(field.value) !== JSON.stringify(val)) {
         form.setFieldValue(field.name, val);
       }
     }
@@ -59,15 +62,15 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
         {
           children: [
             {
-              text: "Fri. (evening Sep 29 2023)",
+              text: "Fri.",
               id: "Friday",
             },
             {
-              text: "Sat. (evening Sep 30 2023)",
+              text: "Sat.",
               id: "Saturday",
             },
             {
-              text: "Sun. (evening Oct 1 2023)",
+              text: "Sun.",
               id: "Sunday",
             },
           ],
