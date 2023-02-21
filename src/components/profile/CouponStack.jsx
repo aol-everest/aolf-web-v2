@@ -28,8 +28,8 @@ const COURSE_TYPES = [
     value: "SAHAJ_SAMADHI_MEDITATION",
   },
   {
-    label: "Sri Sri Yoga",
-    value: "SRI_SRI_YOGA_MEDITATION",
+    label: "SKY Breath Meditation",
+    value: "SKY_BREATH_MEDITATION",
   },
 ];
 
@@ -142,7 +142,7 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
     <Formik
       initialValues={{
         couponCodes,
-        courseType: "",
+        courseType: "SILENT_RETREAT",
       }}
       validationSchema={Yup.object({
         couponCodes: Yup.array().min(1, "Must have at least 1 coupon"),
