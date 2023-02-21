@@ -126,6 +126,7 @@ const AgreementField = ({ field, form, ...props }) => {
 };
 
 export function StepContactDetail({ errors, handleNext, values, ...props }) {
+  console.log(values);
   return (
     <main>
       <section className="world-culture-festival">
@@ -139,7 +140,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
               <div className="wcf-form__fields">
                 <div className="wcf-select wcf-form__field">
                   <label
-                    for="get-tickets-country"
+                    htmlFor="get-tickets-country"
                     className="wcf-select__label"
                   >
                     Country
@@ -156,7 +157,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                 {values.country === "US" && (
                   <div className="wcf-select wcf-form__field">
                     <label
-                      for="get-tickets-state"
+                      htmlFor="get-tickets-state"
                       className="wcf-select__label"
                     >
                       State
@@ -173,7 +174,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
 
                 <div className="wcf-combined-input wcf-form__field">
                   <label
-                    for="get-tickets-phone"
+                    htmlFor="get-tickets-phone"
                     className="wcf-combined-input__label"
                   >
                     Phone number

@@ -1086,7 +1086,7 @@ class PhoneInput extends React.Component {
         >
           <img
             src={`https://hatscripts.github.io/circle-flags/flags/${country.iso2?.toLowerCase()}.svg`}
-            class="wcf-country-option__image"
+            className="wcf-country-option__image"
           />
 
           <span className="country-name">
@@ -1290,7 +1290,7 @@ class PhoneInput extends React.Component {
             >
               <img
                 src={`https://hatscripts.github.io/circle-flags/flags/${selectedCountry.iso2?.toLowerCase()}.svg`}
-                class="wcf-country-option__image"
+                className="wcf-country-option__image"
               />
               <div className={inputFlagClasses}>
                 {!disableDropdown && <div className={arrowClasses}></div>}

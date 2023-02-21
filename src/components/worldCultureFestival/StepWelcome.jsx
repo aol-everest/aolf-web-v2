@@ -125,7 +125,10 @@ export function StepWelcome({ errors, handleNext, ...props }) {
                 </div>
 
                 <div className="wcf-select wcf-form__field">
-                  <label for="welcome-attending" className="wcf-select__label">
+                  <label
+                    htmlFor="welcome-attending"
+                    className="wcf-select__label"
+                  >
                     Sessions attending
                   </label>
 
