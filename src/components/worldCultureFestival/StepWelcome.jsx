@@ -38,7 +38,10 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
   const onChangeAction = () => {
     if (selectComp && selectComp.current && selectComp.current.el) {
       const val = selectComp.current.el.val();
-      if (field.value !== val) {
+      if (val.length > 1 && val.find((v) => v === "Full")) {
+        selectComp.current.el.val(["Full"]);
+        selectComp.current.el.trigger("change");
+      } else if (JSON.stringify(field.value) !== JSON.stringify(val)) {
         form.setFieldValue(field.name, val);
       }
     }
