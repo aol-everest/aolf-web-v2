@@ -144,18 +144,6 @@ export function StepWelcome({ errors, handleNext, ...props }) {
                 Next
               </button>
             </div>
-
-            <div className="wcf-checkbox world-culture-festival__agreement">
-              <Field
-                type="checkbox"
-                name="agreement"
-                className="wcf-checkbox__field"
-              />
-              <label for="agreement" className="wcf-checkbox__label">
-                I agree to receive event information and communications from the
-                event organizer. I understand that I can opt out anytime.
-              </label>
-            </div>
           </div>
         </div>
       </section>

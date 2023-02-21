@@ -1085,7 +1085,7 @@ class PhoneInput extends React.Component {
           {...(highlight ? { "aria-selected": true } : {})}
         >
           <img
-            src={`https://hatscripts.github.io/circle-flags/flags/${country.iso2.toLowerCase()}.svg`}
+            src={`https://hatscripts.github.io/circle-flags/flags/${country.iso2?.toLowerCase()}.svg`}
             class="wcf-country-option__image"
           />
 
@@ -1289,7 +1289,7 @@ class PhoneInput extends React.Component {
               aria-expanded={showDropdown ? true : undefined}
             >
               <img
-                src={`https://hatscripts.github.io/circle-flags/flags/${selectedCountry.iso2.toLowerCase()}.svg`}
+                src={`https://hatscripts.github.io/circle-flags/flags/${selectedCountry.iso2?.toLowerCase()}.svg`}
                 class="wcf-country-option__image"
               />
               <div className={inputFlagClasses}>

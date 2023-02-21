@@ -5,6 +5,7 @@ import { useAuth } from "@contexts";
 import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import {
   SigninForm,
   SignupForm,
@@ -327,11 +328,18 @@ export function StepAuth({ errors, handleNext, ...props }) {
 
             <p className="wcf-body-small world-culture-festival__policy">
               By signing in, I agree to{" "}
-              <a className="wcf-link" href="/">
-                Terms and Service
-              </a>{" "}
+              <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
+                <a target="_blank" className="wcf-link">
+                  Terms of Service
+                </a>
+              </Link>{" "}
               and{" "}
-              <a className="wcf-link" href="/">
+              <a
+                className="wcf-link"
+                href="https://www.artofliving.org/us-en/privacy-policy"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Privacy Policy
               </a>
             </p>

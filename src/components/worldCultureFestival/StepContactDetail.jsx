@@ -23,7 +23,7 @@ const CountryInput = ({ field, form, ...props }) => {
       if (field.value !== val) {
         form.setFieldValue(field.name, val);
         if (field.value !== "US") {
-          form.setFieldValue("state", null);
+          form.setFieldValue("state", "");
         }
         form.setFieldValue("phoneNumber", field.value);
       }
@@ -51,21 +51,6 @@ const CountryInput = ({ field, form, ...props }) => {
         },
       }}
       onChange={onChangeAction}
-    />
-  );
-};
-
-const PhoneNumberInputField = ({ field, form, ...props }) => {
-  console.log(form.values.country);
-  return (
-    <PhoneInput
-      {...field}
-      {...props}
-      placeholder="Enter your phone number"
-      country={form.values.country ? form.values.country.toLowerCase() : "us"}
-      containerClass="wcf-select__field"
-      inputClass="wcf-input__field"
-      countryCodeEditable={false}
     />
   );
 };
@@ -101,7 +86,27 @@ const StateInput = ({ field, form, ...props }) => {
   );
 };
 
+const PhoneNumberInputField = ({ field, form, ...props }) => {
+  const onChangeAction = (value, data, event, formattedValue) => {
+    form.setFieldValue(field.name, formattedValue);
+  };
+  return (
+    <PhoneInput
+      {...field}
+      {...props}
+      placeholder="Enter your phone number"
+      country={form.values.country ? form.values.country.toLowerCase() : "us"}
+      containerClass="wcf-select__field"
+      inputClass="wcf-input__field"
+      countryCodeEditable={false}
+      onChange={onChangeAction}
+    />
+  );
+};
+
 export function StepContactDetail({ errors, handleNext, values, ...props }) {
+  console.log(errors);
+
   return (
     <main>
       <section class="world-culture-festival">
@@ -120,6 +125,9 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
 
                   <div class="wcf-select__field">
                     <Field name="country" component={CountryInput} />
+                    {errors.country && (
+                      <p className="validation-input">{errors.country}</p>
+                    )}
                   </div>
                 </div>
 
@@ -131,6 +139,9 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
 
                     <div class="wcf-select__field">
                       <Field name="state" component={StateInput} />
+                      {errors.state && (
+                        <p className="validation-input">{errors.state}</p>
+                      )}
                     </div>
                   </div>
                 )}
@@ -143,6 +154,9 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                     Phone number
                   </label>
                   <Field name="phoneNumber" component={PhoneNumberInputField} />
+                  {errors.phoneNumber && (
+                    <p className="validation-input">{errors.phoneNumber}</p>
+                  )}
                 </div>
               </div>
 
@@ -152,13 +166,18 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
             </div>
 
             <div class="wcf-checkbox world-culture-festival__agreement">
-              <input
+              <Field
+                type="checkbox"
+                name="agreement"
+                className="wcf-checkbox__field"
+              />
+              {/* <input
                 type="checkbox"
                 class="wcf-checkbox__field"
                 id="agreement"
                 name="agreement"
                 checked
-              />
+              /> */}
               <label for="agreement" class="wcf-checkbox__label">
                 I agree to receive event information and communications from the
                 event organizer. I understand that I can opt out anytime.

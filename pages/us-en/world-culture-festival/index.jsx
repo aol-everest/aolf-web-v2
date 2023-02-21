@@ -11,6 +11,9 @@ import { useLocalStorage } from "react-use";
 import * as Yup from "yup";
 import { useQueryString } from "@hooks";
 import { useAuth } from "@contexts";
+import { api } from "@utils";
+import "yup-phone";
+import startsWith from "lodash.startswith";
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -23,8 +26,9 @@ const INITIAL_VALUES = {
   ticketCount: 1,
   sessionsAttending: ["Full"],
   country: "US",
-  state: null,
-  phoneNumber: null,
+  phoneCountry: "US",
+  state: "",
+  phoneNumber: "",
   agreement: true,
 };
 
@@ -55,10 +59,27 @@ function WorldCultureFestival() {
   if (authenticated) {
     formInitialValue = {
       ...formInitialValue,
-      country: user.profile.personMailingCountry,
+      country: user.profile.personMailingCountry
+        ? user.profile.personMailingCountry.toUpperCase()
+        : "US",
       state: user.profile.personMailingState,
       phoneNumber: user.profile.personMobilePhone,
     };
+  }
+  if (
+    formInitialValue.country === "" ||
+    formInitialValue.country === "USA" ||
+    formInitialValue.country === "UNITED STATES OF AMERICA"
+  ) {
+    formInitialValue.country = "US";
+  }
+
+  if (
+    !startsWith(formInitialValue.phoneNumber, "+") &&
+    formInitialValue.country === "US" &&
+    !startsWith(formInitialValue.phoneNumber, "+1")
+  ) {
+    formInitialValue.phoneNumber = "+1" + formInitialValue.phoneNumber;
   }
 
   const [activeStep] = useQueryString("s", {
@@ -68,10 +89,22 @@ function WorldCultureFestival() {
     setLoading(true);
     console.log("Submitting form!!!!");
     console.log(values);
+    const results = await api.post({
+      path: "wcfAttendee",
+      body: {
+        sessionsNames: values.sessionsAttending,
+        ticketQuantity: values.ticketCount,
+        phone: values.phoneNumber,
+        countryIsoCode: values.country,
+        state: values.state,
+        communicationOptIn: true,
+      },
+    });
     await removeLocalState();
     const params = encodeFormData(values);
-    window.location.href =
-      "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
+    // window.location.href =
+    //   "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
+    setLoading(false);
   }, []);
 
   if (isSsr) {
@@ -120,8 +153,22 @@ function WorldCultureFestival() {
             validationSchema: Yup.object().shape({
               country: Yup.string()
                 .label("Country")
-                .required("Country is required"),
-              state: Yup.string().label("State").required("State is required"),
+                .required("Country is required")
+                .nullable(),
+              state: Yup.string()
+                .label("State")
+                .when("country", {
+                  is: (country) => country === "US",
+                  then: Yup.string().required("State is required").nullable(),
+                  otherwise: Yup.string().nullable(),
+                }),
+              phoneNumber: Yup.string()
+                .label("Phone number")
+                .when("country", {
+                  is: (country) => country === "US",
+                  then: Yup.string().phone("US", true).nullable(),
+                  otherwise: Yup.string().phone().nullable(),
+                }),
             }),
           },
         ]}
