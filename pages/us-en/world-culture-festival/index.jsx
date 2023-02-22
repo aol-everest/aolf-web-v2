@@ -7,6 +7,7 @@ import {
   StepContactDetail,
 } from "@components/worldCultureFestival";
 import { FormikWizard } from "@components";
+import { useAnalytics } from "use-analytics";
 import * as Yup from "yup";
 import { useQueryString } from "@hooks";
 import { useAuth } from "@contexts";
@@ -15,6 +16,7 @@ import "yup-phone";
 import startsWith from "lodash.startswith";
 import { useGlobalAlertContext } from "@contexts";
 import { ALERT_TYPES } from "@constants";
+import { useRouter } from "next/router";
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -48,6 +50,8 @@ const useIsSsr = () => {
 
 function WorldCultureFestival() {
   const isSsr = useIsSsr();
+  const router = useRouter();
+  const { track } = useAnalytics();
   const [loading, setLoading] = useState(false);
   const { authenticated, user } = useAuth();
   const { showAlert } = useGlobalAlertContext();
@@ -128,6 +132,12 @@ function WorldCultureFestival() {
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       }
+      track("purchase_ticket", {
+        screen_name: "wcf_registration_get_tickets_page",
+        sessions_attending_arr: values.sessionsAttending,
+        number_of_tickets: values.ticketCount,
+        utm_parameters: router.query,
+      });
       const params = encodeFormData({ sessionsAttending, ticketCount });
       window.location.href =
         "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api, Auth } from "@utils";
 import { useAuth } from "@contexts";
 import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import startsWith from "lodash.startswith";
+import { useAnalytics } from "use-analytics";
 import {
   SigninForm,
   SignupForm,
@@ -45,10 +46,30 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [username, setUsername] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const { identify, track } = useAnalytics();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    track("view_screen", {
+      screen_name: "wcf_registration_signup_page",
+      utm_parameters: router.query,
+      sessions_attending_arr: props.values.sessionsAttending,
+      number_of_tickets: props.values.ticketCount,
+    });
+  }, [router.isReady]);
 
   const switchView = (view) => (e) => {
     if (e) e.preventDefault();
     setAuthMode(view);
+    if (view === LOGIN_MODE) {
+      track("view_screen", {
+        screen_name: "wcf_registration_login_page",
+        utm_parameters: router.query,
+        sessions_attending_arr: props.values.sessionsAttending,
+        number_of_tickets: props.values.ticketCount,
+      });
+    }
   };
 
   const getActualMessage = (message) => {
@@ -65,6 +86,13 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const signIn = async ({ username, password }) => {
     setLoading(true);
     setShowMessage(false);
+    track("click_button", {
+      screen_name: "wcf_registration_login_page",
+      event_target: "login_button",
+      utm_parameters: router.query,
+      sessions_attending_arr: props.values.sessionsAttending,
+      number_of_tickets: props.values.ticketCount,
+    });
     try {
       const { newPasswordRequired } = await Auth.authenticateUser(
         username,
@@ -76,7 +104,28 @@ export function StepAuth({ errors, handleNext, ...props }) {
         setLoading(false);
       } else {
         const userInfo = await Auth.reFetchProfile();
-        console.log(userInfo);
+        track("login_user", {
+          screen_name: "wcf_registration_login_page",
+          utm_parameters: router.query,
+          sessions_attending_arr: props.values.sessionsAttending,
+          number_of_tickets: props.values.ticketCount,
+        });
+        identify(userInfo.profile.email, {
+          id: userInfo.profile.username,
+          sfid: userInfo.profile.id,
+          email: userInfo.profile.email,
+          name: userInfo.profile.name,
+          first_name: userInfo.profile.first_name,
+          last_name: userInfo.profile.last_name,
+          avatar: userInfo.profile.userProfilePic,
+          state: userInfo.profile.personMailingState, // State
+          country: userInfo.profile.personMailingCountry, // Country
+          subscription_name: null,
+          subscription_description: null,
+          sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
+          sahaj_flag: userInfo.profile.isSahajGraduate,
+          silence_course_count: userInfo.profile.aosCountTotal,
+        });
 
         props.setFieldValue("state", userInfo.profile.personMailingState);
         let userCountry = userInfo.profile.personMailingCountry
@@ -105,6 +154,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
         props.setFieldValue("phoneNumber", userPhoneNumber);
 
         setUser(userInfo);
+
         handleNext();
       }
     } catch (ex) {
@@ -133,6 +183,16 @@ export function StepAuth({ errors, handleNext, ...props }) {
   };
 
   const fbLogin = () => {
+    track("click_button", {
+      screen_name:
+        authMode === SIGNUP_MODE
+          ? "wcf_registration_signup_page"
+          : "wcf_registration_login_page",
+      event_target: "facebook_login_button",
+      utm_parameters: router.query,
+      sessions_attending_arr: props.values.sessionsAttending,
+      number_of_tickets: props.values.ticketCount,
+    });
     const params = {
       state: navigateTo,
       identity_provider: "Facebook",
@@ -149,6 +209,16 @@ export function StepAuth({ errors, handleNext, ...props }) {
   };
 
   const googleLogin = () => {
+    track("click_button", {
+      screen_name:
+        authMode === SIGNUP_MODE
+          ? "wcf_registration_signup_page"
+          : "wcf_registration_login_page",
+      event_target: "google_login_button",
+      utm_parameters: router.query,
+      sessions_attending_arr: props.values.sessionsAttending,
+      number_of_tickets: props.values.ticketCount,
+    });
     const params = {
       state: navigateTo,
       identity_provider: "Google",
@@ -176,9 +246,23 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const signUp = async ({ username, password, firstName, lastName }) => {
     setLoading(true);
     setShowMessage(false);
+    track("click_button", {
+      screen_name: "wcf_registration_signup_page",
+      event_target: "signup_button",
+      utm_parameters: router.query,
+      sessions_attending_arr: props.values.sessionsAttending,
+      number_of_tickets: props.values.ticketCount,
+    });
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
+      track("signup_user", {
+        screen_name: "wcf_registration_login_page",
+        utm_parameters: router.query,
+        sessions_attending_arr: props.values.sessionsAttending,
+        number_of_tickets: props.values.ticketCount,
+      });
       await signIn({ username, password });
+
       handleNext();
     } catch (ex) {
       let errorMessage = ex.message.match(/\[(.*)\]/);

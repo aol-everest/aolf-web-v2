@@ -1,11 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Field, ErrorMessage } from "formik";
 import Select2 from "react-select2-wrapper";
 import PhoneInput from "./phoneInputCmp";
 import countryData from "./country.json";
 import { US_STATES } from "@constants";
 import classNames from "classnames";
+import { useAnalytics } from "use-analytics";
+import { useRouter } from "next/router";
 
 function formatCountryOption(state) {
   if (!state.id) return state.text;
@@ -129,7 +131,29 @@ const AgreementField = ({ field, form, ...props }) => {
 };
 
 export function StepContactDetail({ errors, handleNext, values, ...props }) {
-  console.log(values);
+  const { track } = useAnalytics();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    track("view_screen", {
+      screen_name: "wcf_registration_get_tickets_page",
+      utm_parameters: router.query,
+      sessions_attending_arr: props.values.sessionsAttending,
+      number_of_tickets: props.values.ticketCount,
+    });
+  }, [router.isReady]);
+
+  const onNextAction = () => {
+    track("click_button", {
+      screen_name: "wcf_registration_get_tickets_page",
+      event_target: "get_tickets_button",
+      sessions_attending_arr: values.sessionsAttending,
+      number_of_tickets: values.ticketCount,
+      utm_parameters: router.query,
+    });
+    handleNext();
+  };
   return (
     <main>
       <section className="world-culture-festival">
@@ -214,7 +238,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
 
               <button
                 className="wcf-button wcf-form__button"
-                onClick={handleNext}
+                onClick={onNextAction}
               >
                 Get passes
               </button>
