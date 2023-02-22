@@ -51,8 +51,13 @@ function WorldCultureFestival() {
   const [loading, setLoading] = useState(false);
   const { authenticated, user } = useAuth();
   const { showAlert } = useGlobalAlertContext();
+  const [activeStep] = useQueryString("s", {
+    defaultValue: 0,
+    parse: parseInt,
+  });
   const [ticketCount] = useQueryString("t", {
     defaultValue: 1,
+    parse: parseInt,
   });
   const [sessionsAttending] = useQueryString("sa", {
     defaultValue: ["Full"],
@@ -90,10 +95,6 @@ function WorldCultureFestival() {
   ) {
     formInitialValue.phoneNumber = "+1" + formInitialValue.phoneNumber;
   }
-
-  const [activeStep] = useQueryString("s", {
-    defaultValue: 0,
-  });
 
   const handleSubmit = useCallback(async (values) => {
     setLoading(true);
