@@ -86,9 +86,9 @@ export function StepAuth({ errors, handleNext, ...props }) {
           userCountry === "UNITED STATES OF AMERICA"
         ) {
           userCountry = "US";
-          props.setFieldValue("phoneCountry", userCountry);
         }
         props.setFieldValue("country", userCountry);
+        props.setFieldValue("phoneCountry", userCountry);
 
         if (
           !startsWith(userPhoneNumber, "+") &&
@@ -98,14 +98,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
           userPhoneNumber = "+1" + userPhoneNumber;
           props.setFieldValue("phoneCountry", "US");
         }
-        props.setFieldValue("phoneNumber", userPhoneNumber);
 
-        props.setFieldValue(
-          "phoneCountry",
-          userInfo.profile.personMailingCountry
-            ? userInfo.profile.personMailingCountry.toUpperCase()
-            : "US",
-        );
+        props.setFieldValue("phoneNumber", userPhoneNumber);
 
         setUser(userInfo);
         handleNext();
