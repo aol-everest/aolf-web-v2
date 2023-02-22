@@ -6,6 +6,7 @@ import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import startsWith from "lodash.startswith";
 import {
   SigninForm,
   SignupForm,
@@ -72,6 +73,39 @@ export function StepAuth({ errors, handleNext, ...props }) {
         setLoading(false);
       } else {
         const userInfo = await Auth.reFetchProfile();
+
+        props.setFieldValue("state", userInfo.profile.personMailingState);
+        let userCountry = user.profile.personMailingCountry
+          ? user.profile.personMailingCountry.toUpperCase()
+          : "US";
+        let userPhoneNumber = userInfo.profile.personMobilePhone || "";
+        if (
+          userCountry === "" ||
+          userCountry === "USA" ||
+          userCountry === "UNITED STATES OF AMERICA"
+        ) {
+          userCountry = "US";
+          props.setFieldValue("phoneCountry", userCountry);
+        }
+        props.setFieldValue("country", userCountry);
+
+        if (
+          !startsWith(userPhoneNumber, "+") &&
+          userCountry === "US" &&
+          !startsWith(userPhoneNumber, "+1")
+        ) {
+          userPhoneNumber = "+1" + userPhoneNumber;
+          props.setFieldValue("phoneCountry", "US");
+        }
+        props.setFieldValue("phoneNumber", userPhoneNumber);
+
+        props.setFieldValue(
+          "phoneCountry",
+          user.profile.personMailingCountry
+            ? user.profile.personMailingCountry.toUpperCase()
+            : "US",
+        );
+
         setUser(userInfo);
         handleNext();
       }

@@ -65,6 +65,9 @@ function WorldCultureFestival() {
       country: user.profile.personMailingCountry
         ? user.profile.personMailingCountry.toUpperCase()
         : "US",
+      phoneCountry: user.profile.personMailingCountry
+        ? user.profile.personMailingCountry.toUpperCase()
+        : "US",
       state: user.profile.personMailingState,
       phoneNumber: user.profile.personMobilePhone,
     };
@@ -75,6 +78,7 @@ function WorldCultureFestival() {
     formInitialValue.country === "UNITED STATES OF AMERICA"
   ) {
     formInitialValue.country = "US";
+    formInitialValue.phoneCountry = "US";
   }
 
   if (
@@ -153,6 +157,7 @@ function WorldCultureFestival() {
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
       {loading && <div className="cover-spin"></div>}
       <FormikWizard
+        enableReinitialize
         initialValues={formInitialValue}
         onSubmit={handleSubmit}
         validateOnNext
