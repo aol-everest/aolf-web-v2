@@ -62,7 +62,11 @@ function WorldCultureFestival() {
     INITIAL_VALUES_DATA_STORAGE,
   );
 
-  let formInitialValue = { INITIAL_VALUES, ...localState };
+  console.log(localState);
+  console.log(INITIAL_VALUES);
+
+  let formInitialValue = { ...INITIAL_VALUES, ...localState };
+  console.log(formInitialValue);
   if (authenticated) {
     formInitialValue = {
       ...formInitialValue,
@@ -165,7 +169,6 @@ function WorldCultureFestival() {
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
       {loading && <div className="cover-spin"></div>}
       <FormikWizard
-        enableReinitialize
         initialValues={formInitialValue}
         onSubmit={handleSubmit}
         validateOnNext

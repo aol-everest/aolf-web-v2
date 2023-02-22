@@ -5,6 +5,7 @@ import Select2 from "react-select2-wrapper";
 import PhoneInput from "./phoneInputCmp";
 import countryData from "./country.json";
 import { US_STATES } from "@constants";
+import classNames from "classnames";
 
 function formatCountryOption(state) {
   if (!state.id) return state.text;
@@ -99,7 +100,9 @@ const PhoneNumberInputField = ({ field, form, ...props }) => {
       placeholder="Enter your phone number"
       country={form.values.country ? form.values.country.toLowerCase() : "us"}
       containerClass="wcf-select__field"
-      inputClass="wcf-input__field"
+      inputClass={classNames("wcf-input__field", {
+        error: form.errors.phoneNumber,
+      })}
       countryCodeEditable={false}
       onChange={onChangeAction}
     />
@@ -146,10 +149,19 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                     Country
                   </label>
 
-                  <div className="wcf-select__field">
+                  <div
+                    className={classNames("wcf-select__field", {
+                      error: errors.country,
+                    })}
+                  >
                     <Field name="country" component={CountryInput} />
                     {errors.country && (
-                      <p className="validation-input">{errors.country}</p>
+                      <label
+                        for="welcome-sessions"
+                        class="wcf-select__error-message"
+                      >
+                        {errors.country}
+                      </label>
                     )}
                   </div>
                 </div>
@@ -163,10 +175,19 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                       State
                     </label>
 
-                    <div className="wcf-select__field">
+                    <div
+                      className={classNames("wcf-select__field", {
+                        error: errors.state,
+                      })}
+                    >
                       <Field name="state" component={StateInput} />
                       {errors.state && (
-                        <p className="validation-input">{errors.state}</p>
+                        <label
+                          for="welcome-sessions"
+                          class="wcf-select__error-message"
+                        >
+                          {errors.state}
+                        </label>
                       )}
                     </div>
                   </div>
@@ -181,7 +202,12 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                   </label>
                   <Field name="phoneNumber" component={PhoneNumberInputField} />
                   {errors.phoneNumber && (
-                    <p className="validation-input">{errors.phoneNumber}</p>
+                    <label
+                      for="welcome-sessions"
+                      class="wcf-select__error-message"
+                    >
+                      {errors.phoneNumber}
+                    </label>
                   )}
                 </div>
               </div>

@@ -148,7 +148,11 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
                     Choose the number of passes
                   </label>
 
-                  <div className="wcf-select__field">
+                  <div
+                    className={classNames("wcf-select__field", {
+                      error: errors.ticketCount,
+                    })}
+                  >
                     <Field name="ticketCount" component={NoOfTicketInput} />
                     {errors.ticketCount && (
                       <label
