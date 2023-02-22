@@ -46,15 +46,27 @@ function formatSessionsOption(state) {
 
 const WelcomeSessionsInput = ({ field, form, ...props }) => {
   const selectComp = useRef(null);
-  const onChangeAction = () => {
+
+  const onSelectAction = (e) => {
+    const selectedItem = e.params.data.id;
     if (selectComp && selectComp.current && selectComp.current.el) {
       const val = selectComp.current.el.val();
-      // if (val.length > 1 && val.find((v) => v === "Full")) {
-      //   selectComp.current.el.val(["Full"]);
-      //   selectComp.current.el.trigger("change");
-      // } else if (JSON.stringify(field.value) !== JSON.stringify(val)) {
-      //   form.setFieldValue(field.name, val);
-      // }
+      if (selectedItem === "Full") {
+        form.setFieldValue(field.name, ["Full"]);
+      } else if (val.length > 1 && val.find((v) => v === "Full")) {
+        form.setFieldValue(
+          field.name,
+          val.filter((v) => v !== "Full"),
+        );
+      } else {
+        form.setFieldValue(field.name, val);
+      }
+    }
+  };
+  const onUnSelectAction = (e) => {
+    if (selectComp && selectComp.current && selectComp.current.el) {
+      const val = selectComp.current.el.val();
+
       if (JSON.stringify(field.value) !== JSON.stringify(val)) {
         form.setFieldValue(field.name, val);
       }
@@ -95,7 +107,9 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
           return m;
         },
       }}
-      onChange={onChangeAction}
+      // onChange={onChangeAction}
+      onSelect={onSelectAction}
+      onUnselect={onUnSelectAction}
     />
   );
 };

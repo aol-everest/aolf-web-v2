@@ -7,7 +7,6 @@ import {
   StepContactDetail,
 } from "@components/worldCultureFestival";
 import { FormikWizard } from "@components";
-import { useLocalStorage } from "react-use";
 import * as Yup from "yup";
 import { useQueryString } from "@hooks";
 import { useAuth } from "@contexts";
@@ -23,14 +22,9 @@ const encodeFormData = (data) => {
     .join("&");
 };
 
-const DATA_STORAGE_KEY = "wcf-data-store-2";
-const INITIAL_VALUES_DATA_STORAGE = {
-  ticketCount: 1,
-  sessionsAttending: ["Full"],
-};
 const INITIAL_VALUES = {
   ticketCount: 1,
-  sessionsAttending: ["Full"],
+  sessionsAttending: [],
   country: "US",
   phoneCountry: "US",
   state: "",
@@ -57,15 +51,15 @@ function WorldCultureFestival() {
   const [loading, setLoading] = useState(false);
   const { authenticated, user } = useAuth();
   const { showAlert } = useGlobalAlertContext();
-  const [localState, setLocalState, removeLocalState] = useLocalStorage(
-    DATA_STORAGE_KEY,
-    INITIAL_VALUES_DATA_STORAGE,
-  );
+  const [ticketCount] = useQueryString("t", {
+    defaultValue: 1,
+  });
+  const [sessionsAttending] = useQueryString("sa", {
+    defaultValue: ["Full"],
+    parse: JSON.parse,
+  });
 
-  console.log(localState);
-  console.log(INITIAL_VALUES);
-
-  let formInitialValue = { ...INITIAL_VALUES, ...localState };
+  let formInitialValue = { ...INITIAL_VALUES, ticketCount, sessionsAttending };
   console.log(formInitialValue);
   if (authenticated) {
     formInitialValue = {
@@ -100,6 +94,7 @@ function WorldCultureFestival() {
   const [activeStep] = useQueryString("s", {
     defaultValue: 0,
   });
+
   const handleSubmit = useCallback(async (values) => {
     setLoading(true);
     console.log("Submitting form!!!!");
@@ -132,7 +127,6 @@ function WorldCultureFestival() {
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       }
-      await removeLocalState();
       const params = encodeFormData({ sessionsAttending, ticketCount });
       window.location.href =
         "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
@@ -152,15 +146,6 @@ function WorldCultureFestival() {
     return null;
   }
 
-  const onStepChange = (values, formikBag, currentStepIndex) => {
-    const { ticketCount, sessionsAttending } = values;
-    setLocalState({
-      ticketCount,
-      sessionsAttending,
-    });
-    // setActiveState(currentStepIndex + 1);
-    return Promise.resolve();
-  };
   return (
     <main>
       <Head>
@@ -187,8 +172,6 @@ function WorldCultureFestival() {
                 .label("Sessions Attending")
                 .min(1, "Sessions Attending is required"),
             }),
-            beforeNext: onStepChange,
-            beforePrev: onStepChange,
           },
           {
             component: StepAuth,

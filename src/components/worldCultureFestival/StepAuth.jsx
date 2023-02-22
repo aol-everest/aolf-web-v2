@@ -32,7 +32,10 @@ const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
   "A verification code has been emailed to you. Please use the verification code and reset your password.";
 
 export function StepAuth({ errors, handleNext, ...props }) {
-  const navigateTo = "/us-en/world-culture-festival?s=1";
+  const navigateTo = `/us-en/world-culture-festival?s=1&t=${
+    props.values.ticketCount
+  }&sa=${JSON.stringify(props.values.sessionsAttending)}`;
+  console.log(navigateTo);
   const { authenticated, user, setUser } = useAuth();
   const [authMode, setAuthMode] = useState(SIGNUP_MODE);
   const [loading, setLoading] = useState(false);
@@ -59,7 +62,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
     return message;
   };
 
-  const signIn = async ({ username, password, isStudent = false }) => {
+  const signIn = async ({ username, password }) => {
     setLoading(true);
     setShowMessage(false);
     try {
@@ -164,6 +167,10 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const signout = async () => {
     await Auth.logout();
     setUser(null);
+    props.setFieldValue("state", null);
+    props.setFieldValue("country", "US");
+    props.setFieldValue("phoneCountry", "US");
+    props.setFieldValue("phoneNumber", "");
   };
 
   const signUp = async ({ username, password, firstName, lastName }) => {
