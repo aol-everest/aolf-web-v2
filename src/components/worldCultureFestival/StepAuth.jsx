@@ -104,6 +104,17 @@ export function StepAuth({ errors, handleNext, ...props }) {
         setLoading(false);
       } else {
         const userInfo = await Auth.reFetchProfile();
+        let subscriptions = "";
+        if (userInfo.profile.subscriptions) {
+          subscriptions = JSON.stringify(
+            userInfo.profile.subscriptions.map(({ sfid, name }) => {
+              return {
+                id: sfid,
+                name,
+              };
+            }),
+          );
+        }
         identify(userInfo.profile.email, {
           id: userInfo.profile.username,
           sfid: userInfo.profile.id,
@@ -114,8 +125,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
           avatar: userInfo.profile.userProfilePic,
           state: userInfo.profile.personMailingState, // State
           country: userInfo.profile.personMailingCountry, // Country
-          subscription_name: null,
-          subscription_description: null,
+          subscriptions: subscriptions,
           sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
           sahaj_flag: userInfo.profile.isSahajGraduate,
           silence_course_count: userInfo.profile.aosCountTotal,

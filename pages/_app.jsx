@@ -87,6 +87,17 @@ function App({ Component, pageProps }) {
         first_name: userInfo.profile.first_name,
         last_name: userInfo.profile.last_name,
       });
+      let userSubscriptions = "";
+      if (userInfo.profile.subscriptions) {
+        userSubscriptions = JSON.stringify(
+          userInfo.profile.subscriptions.map(({ sfid, name }) => {
+            return {
+              id: sfid,
+              name,
+            };
+          }),
+        );
+      }
       analytics.identify(userInfo.profile.email, {
         id: userInfo.profile.username,
         sfid: userInfo.profile.id,
@@ -97,8 +108,7 @@ function App({ Component, pageProps }) {
         avatar: userInfo.profile.userProfilePic,
         state: userInfo.profile.personMailingState, // State
         country: userInfo.profile.personMailingCountry, // Country
-        subscription_name: null,
-        subscription_description: null,
+        subscriptions: userSubscriptions,
         sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
         sahaj_flag: userInfo.profile.isSahajGraduate,
         silence_course_count: userInfo.profile.aosCountTotal,
