@@ -69,7 +69,6 @@ function WorldCultureFestival() {
   });
 
   let formInitialValue = { ...INITIAL_VALUES, ticketCount, sessionsAttending };
-  console.log(formInitialValue);
   if (authenticated) {
     formInitialValue = {
       ...formInitialValue,
@@ -103,7 +102,7 @@ function WorldCultureFestival() {
   const handleSubmit = useCallback(async (values) => {
     setLoading(true);
     console.log("Submitting form!!!!");
-    console.log(values);
+    // console.log(values);
     try {
       const {
         ticketCount,
