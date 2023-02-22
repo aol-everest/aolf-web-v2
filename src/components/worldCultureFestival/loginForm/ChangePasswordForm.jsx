@@ -54,7 +54,9 @@ export const ChangePasswordForm = ({
           <input
             type="text"
             {...register("code")}
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.code,
+            })}
             placeholder="Code"
             autoComplete="off"
             aria-invalid="false"
@@ -62,7 +64,9 @@ export const ChangePasswordForm = ({
             spellCheck="false"
           />
           {errors.code && (
-            <p className="validation-input">{errors.code.message}</p>
+            <label for="log-in-email" class="wcf-select__error-message">
+              {errors.code.message}
+            </label>
           )}
         </div>
         <div className="wcf-input wcf-form__field">
@@ -71,7 +75,9 @@ export const ChangePasswordForm = ({
           </label>
           <input
             type="password"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.password,
+            })}
             placeholder="Enter your new password"
             {...register("password")}
             autoComplete="new-password"
@@ -80,7 +86,9 @@ export const ChangePasswordForm = ({
             spellCheck="false"
           />
           {errors.password && (
-            <p className="validation-input">{errors.password.message}</p>
+            <label for="log-in-email" class="wcf-select__error-message">
+              {errors.password.message}
+            </label>
           )}
         </div>
         <div className="wcf-input wcf-form__field">
@@ -89,7 +97,9 @@ export const ChangePasswordForm = ({
           </label>
           <input
             type="password"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.passwordConfirmation,
+            })}
             placeholder="Confirm your Password"
             {...register("passwordConfirmation")}
             autoComplete="new-password"
@@ -98,9 +108,9 @@ export const ChangePasswordForm = ({
             spellCheck="false"
           />
           {errors.passwordConfirmation && (
-            <p className="validation-input">
+            <label for="log-in-email" class="wcf-select__error-message">
               {errors.passwordConfirmation.message}
-            </p>
+            </label>
           )}
         </div>
       </div>

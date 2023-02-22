@@ -31,6 +31,9 @@
     &::placeholder {
       color: transparentize($wcf-dark-grey, 0.5);
     }
+    &.error {
+      border-color: $wcf-orange !important;
+    }
   }
 
   &__button {
@@ -55,11 +58,21 @@
     }
   }
 
-  &__info {
+  &__info,
+  &__error-message {
     font-size: 12px;
     line-height: 14px;
     margin-top: 8px;
     padding: 0 12px;
+  }
+
+  &__info {
     color: transparentize($wcf-dark-blue, 0.5);
+  }
+
+  &__error-message {
+    text-align: right;
+    color: $wcf-orange;
+    display: block;
   }
 }

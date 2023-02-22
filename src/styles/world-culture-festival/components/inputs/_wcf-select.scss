@@ -110,14 +110,29 @@
         }
       }
     }
+    &.error {
+      .select2-container--default .select2-selection {
+        border-color: $wcf-orange !important;
+      }
+    }
   }
 
-  &__info {
+  &__info,
+  &__error-message {
     font-size: 12px;
     line-height: 14px;
     margin-top: 8px;
     padding: 0 12px;
+  }
+
+  &__info {
     color: transparentize($wcf-dark-blue, 0.5);
+  }
+
+  &__error-message {
+    display: block;
+    text-align: right;
+    color: $wcf-orange;
   }
 
   &__dropdown .select2-dropdown {

@@ -44,12 +44,16 @@ export const ResetPasswordForm = ({
           <input
             type="email"
             id="log-in-email"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.username,
+            })}
             placeholder="Enter your email"
             {...register("username")}
           />
           {errors.username && (
-            <p className="validation-input">{errors.username.message}</p>
+            <label for="log-in-email" class="wcf-select__error-message">
+              {errors.username.message}
+            </label>
           )}
         </div>
         {showMessage && <p className="validation-input">{message}</p>}

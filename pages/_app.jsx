@@ -91,9 +91,17 @@ function App({ Component, pageProps }) {
         id: userInfo.profile.username,
         sfid: userInfo.profile.id,
         email: userInfo.profile.email,
+        name: userInfo.profile.name,
         first_name: userInfo.profile.first_name,
         last_name: userInfo.profile.last_name,
         avatar: userInfo.profile.userProfilePic,
+        state: userInfo.profile.personMailingState, // State
+        country: userInfo.profile.personMailingCountry, // Country
+        subscription_name: null,
+        subscription_description: null,
+        sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
+        sahaj_flag: userInfo.profile.isSahajGraduate,
+        silence_course_count: userInfo.profile.aosCountTotal,
       });
     } catch (ex) {
       console.log(ex);

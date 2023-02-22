@@ -1,7 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 import Select2 from "react-select2-wrapper";
 import { Field, ErrorMessage } from "formik";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
+import { useAnalytics } from "use-analytics";
+import classNames from "classnames";
 
 const NoOfTicketInput = ({ field, form, ...props }) => {
   const selectComp = useRef(null);
@@ -9,7 +12,7 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
     if (selectComp && selectComp.current && selectComp.current.el) {
       const val = selectComp.current.el.val();
       if (field.value !== val) {
-        form.setFieldValue(field.name, val);
+        form.setFieldValue(field.name, parseInt(val));
       }
     }
   };
@@ -97,7 +100,28 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
   );
 };
 
-export function StepWelcome({ errors, handleNext, ...props }) {
+export function StepWelcome({ errors, handleNext, values, ...props }) {
+  const router = useRouter();
+  const { track } = useAnalytics();
+  useEffect(() => {
+    if (!router.isReady) return;
+    track("view_screen", {
+      screen_name: "wcf_registration_landing",
+      utm_parameters: router.query,
+    });
+  }, [router.isReady]);
+
+  const onNextAction = () => {
+    track("click_button", {
+      screen_name: "wcf_registration_landing",
+      event_target: "next_button",
+      sessions_attending_arr: values.sessionsAttending,
+      number_of_tickets: values.ticketCount,
+      utm_parameters: router.query,
+    });
+    handleNext();
+  };
+
   return (
     <main>
       <section className="world-culture-festival">
@@ -127,7 +151,12 @@ export function StepWelcome({ errors, handleNext, ...props }) {
                   <div className="wcf-select__field">
                     <Field name="ticketCount" component={NoOfTicketInput} />
                     {errors.ticketCount && (
-                      <p className="validation-input">{errors.ticketCount}</p>
+                      <label
+                        for="welcome-sessions"
+                        class="wcf-select__error-message"
+                      >
+                        {errors.ticketCount}
+                      </label>
                     )}
                   </div>
 
@@ -144,23 +173,30 @@ export function StepWelcome({ errors, handleNext, ...props }) {
                     Sessions attending
                   </label>
 
-                  <div className="wcf-select__field">
+                  <div
+                    className={classNames("wcf-select__field", {
+                      error: errors.sessionsAttending,
+                    })}
+                  >
                     <Field
                       name="sessionsAttending"
                       component={WelcomeSessionsInput}
                     />
-                    {errors.sessionsAttending && (
-                      <p className="validation-input">
-                        {errors.sessionsAttending}
-                      </p>
-                    )}
                   </div>
+                  {errors.sessionsAttending && (
+                    <label
+                      for="welcome-sessions"
+                      class="wcf-select__error-message"
+                    >
+                      {errors.sessionsAttending}
+                    </label>
+                  )}
                 </div>
               </div>
 
               <button
                 className="wcf-button wcf-form__button"
-                onClick={handleNext}
+                onClick={onNextAction}
               >
                 Next
               </button>

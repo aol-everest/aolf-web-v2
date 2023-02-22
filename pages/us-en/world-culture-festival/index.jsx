@@ -24,6 +24,10 @@ const encodeFormData = (data) => {
 };
 
 const DATA_STORAGE_KEY = "wcf-data-store-2";
+const INITIAL_VALUES_DATA_STORAGE = {
+  ticketCount: 1,
+  sessionsAttending: ["Full"],
+};
 const INITIAL_VALUES = {
   ticketCount: 1,
   sessionsAttending: ["Full"],
@@ -55,10 +59,10 @@ function WorldCultureFestival() {
   const { showAlert } = useGlobalAlertContext();
   const [localState, setLocalState, removeLocalState] = useLocalStorage(
     DATA_STORAGE_KEY,
-    INITIAL_VALUES,
+    INITIAL_VALUES_DATA_STORAGE,
   );
 
-  let formInitialValue = { ...localState };
+  let formInitialValue = { INITIAL_VALUES, ...localState };
   if (authenticated) {
     formInitialValue = {
       ...formInitialValue,
@@ -145,7 +149,11 @@ function WorldCultureFestival() {
   }
 
   const onStepChange = (values, formikBag, currentStepIndex) => {
-    setLocalState(values);
+    const { ticketCount, sessionsAttending } = values;
+    setLocalState({
+      ticketCount,
+      sessionsAttending,
+    });
     // setActiveState(currentStepIndex + 1);
     return Promise.resolve();
   };

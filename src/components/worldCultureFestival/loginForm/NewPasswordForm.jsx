@@ -46,7 +46,9 @@ export const NewPasswordForm = ({
           </label>
           <input
             type="password"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.password,
+            })}
             placeholder="Enter your new password"
             {...register("password")}
             autoComplete="new-password"
@@ -55,7 +57,9 @@ export const NewPasswordForm = ({
             spellCheck="false"
           />
           {errors.password && (
-            <p className="validation-input">{errors.password.message}</p>
+            <label for="log-in-email" class="wcf-select__error-message">
+              {errors.password.message}
+            </label>
           )}
         </div>
         <div className="wcf-input wcf-form__field">
@@ -64,7 +68,9 @@ export const NewPasswordForm = ({
           </label>
           <input
             type="password"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.passwordConfirmation,
+            })}
             placeholder="Confirm your Password"
             {...register("passwordConfirmation")}
             autoComplete="new-password"
@@ -73,9 +79,9 @@ export const NewPasswordForm = ({
             spellCheck="false"
           />
           {errors.passwordConfirmation && (
-            <p className="validation-input">
+            <label for="log-in-email" class="wcf-select__error-message">
               {errors.passwordConfirmation.message}
-            </p>
+            </label>
           )}
         </div>
       </div>

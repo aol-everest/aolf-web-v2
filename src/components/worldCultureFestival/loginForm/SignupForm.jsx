@@ -49,12 +49,16 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           <input
             type="email"
             id="sign-up-email"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.username,
+            })}
             placeholder="Enter your email"
             {...register("username")}
           />
           {errors.username && (
-            <p className="validation-input">{errors.username.message}</p>
+            <label for="welcome-sessions" class="wcf-select__error-message">
+              {errors.username.message}
+            </label>
           )}
         </div>
 
@@ -64,7 +68,9 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           </label>
           <input
             type={passwordType}
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.password,
+            })}
             placeholder="Enter your password"
             {...register("password")}
           />
@@ -76,7 +82,9 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
             <img src="/img/Eye.png" />
           </button>
           {errors.password && (
-            <p className="validation-input">{errors.password.message}</p>
+            <label for="welcome-sessions" class="wcf-select__error-message">
+              {errors.password.message}
+            </label>
           )}
         </div>
 
@@ -87,12 +95,16 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           <input
             type="text"
             id="sign-up-first-name"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.firstName,
+            })}
             placeholder="Enter your first name"
             {...register("firstName")}
           />
           {errors.firstName && (
-            <p className="validation-input">{errors.firstName.message}</p>
+            <label for="welcome-sessions" class="wcf-select__error-message">
+              {errors.firstName.message}
+            </label>
           )}
         </div>
 
@@ -103,12 +115,16 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           <input
             type="text"
             id="sign-up-last-name"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.lastName,
+            })}
             placeholder="Enter your last name"
             {...register("lastName")}
           />
           {errors.lastName && (
-            <p className="validation-input">{errors.lastName.message}</p>
+            <label for="welcome-sessions" class="wcf-select__error-message">
+              {errors.lastName.message}
+            </label>
           )}
         </div>
       </div>

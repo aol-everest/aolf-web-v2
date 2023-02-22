@@ -47,12 +47,16 @@ export const SigninForm = ({
           <input
             type="email"
             id="log-in-email"
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.username,
+            })}
             placeholder="Enter your email"
             {...register("username")}
           />
           {errors.username && (
-            <p className="validation-input">{errors.username.message}</p>
+            <label for="log-in-email" class="wcf-select__error-message">
+              {errors.username.message}
+            </label>
           )}
         </div>
 
@@ -62,7 +66,9 @@ export const SigninForm = ({
           </label>
           <input
             type={passwordType}
-            className="wcf-input__field"
+            className={classNames("wcf-input__field", {
+              error: errors.password,
+            })}
             placeholder="Enter your password"
             {...register("password")}
           />
@@ -74,7 +80,9 @@ export const SigninForm = ({
             <img src="/img/Eye.png" />
           </button>
           {errors.password && (
-            <p className="validation-input">{errors.password.message}</p>
+            <label for="welcome-sessions" class="wcf-select__error-message">
+              {errors.password.message}
+            </label>
           )}
         </div>
       </div>

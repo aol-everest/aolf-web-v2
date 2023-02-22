@@ -23,7 +23,7 @@ export default function clevertapPlugin(userConfig) {
         Site: {
           ...payload.traits,
           Identity: payload.traits.sfid,
-          Name: `${payload.traits.first_name} ${payload.traits.last_name}`, // String
+          Name: payload.traits.name, // String
           Email: payload.traits.email,
           Photo: payload.traits.avatar,
         },
