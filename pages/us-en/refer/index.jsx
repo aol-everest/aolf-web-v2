@@ -11,50 +11,56 @@ export default function TalkableRefer() {
     <main className="aol_mainbody">
       <section className="workshops_wraper">
         <article className="container">
-          <h6 className="course-details-card__subtitle">How to Earn Rewards</h6>
+          <h6 className="course-details-card__subtitle">How To Earn Rewards</h6>
           <ol>
-            <li>Invite your friends to do the SKY Breath Meditation course</li>
             <li>
-              Your friends get 20% off their first SKY Breath Meditation course
+              Invite your friends to take the SKY Breath Meditation course
             </li>
             <li>
-              You get $20 for every friend that completes their course and upto
-              $200 per year
+              Your friends will get 20% off their very first SKY Breath
+              Meditation course
             </li>
             <li>
-              You can use the credit towards Sahaj, Silence or even repeating
-              SKY Breath Meditation
+              You’ll get $20 for every friend that completes the course, earning
+              up to $200 per year
+            </li>
+            <li>
+              You can use the credit towards Sahaj Samadhi Meditation™, Silent
+              Retreats, or to repeat your SKY course
             </li>
           </ol>{" "}
           <h6 className="course-details-card__subtitle">
-            How to Claim the Reward
+            How To Claim The Rewards
           </h6>
           <ol>
             <li>
-              You will receive a $20 credit coupon code via email for every
-              friend that completes their course
+              You’ll receive a $20 coupon code for every friend that completes
+              their course via ema
             </li>
             <li>
-              Enter the coupon code at check out when you register for Sahaj
-              Samadhi Meditation course or Silent Retreat.
+              Enter the coupon code and select your course of choice to redeem
+              your reward. A new code will be provided, which can be applied at
+              checkout upon registering for your course.
             </li>
             <li>
-              If you have multiple coupon codes and would like to use them
-              towards a single course registration, please use the 'Stack
-              Coupon' feature below.
+              If you have multiple coupon codes that you’d like to redeem for a
+              single course, you can merge your coupons below. Your dashboard
+              balance will update once your new coupon code has been
+              enjoyed—have a great course :)
             </li>
           </ol>
           <p>
-            If you are not part of the Referral program as yet, you can sign up{" "}
+            If you haven’t joined the Referral Program yet, you can{" "}
             <Link href="/us-en/referral-offer" prefetch={false} legacyBehavior>
               <a href="#" className="link_orange">
-                here
+                sign up here
               </a>
             </Link>
+            .
           </p>
-          {/* <div className="tw-mb-2">
+          <div className="tw-mb-2 tw-mt-4">
             <CouponStack></CouponStack>
-          </div> */}
+          </div>
           <div id="talkable-offer"></div>
         </article>
       </section>
