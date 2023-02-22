@@ -138,9 +138,9 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
     if (!router.isReady) return;
     track("view_screen", {
       screen_name: "wcf_registration_get_tickets_page",
-      utm_parameters: router.query,
-      sessions_attending_arr: props.values.sessionsAttending,
-      number_of_tickets: props.values.ticketCount,
+      utm_parameters: JSON.stringify(router.query),
+      sessions_attending_arr: values.sessionsAttending,
+      number_of_tickets: values.ticketCount,
     });
   }, [router.isReady]);
 
@@ -148,9 +148,9 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
     track("click_button", {
       screen_name: "wcf_registration_get_tickets_page",
       event_target: "get_tickets_button",
-      sessions_attending_arr: values.sessionsAttending,
+      sessions_attending_arr: JSON.stringify(values.sessionsAttending),
       number_of_tickets: values.ticketCount,
-      utm_parameters: router.query,
+      utm_parameters: JSON.stringify(router.query),
     });
     handleNext();
   };

@@ -134,9 +134,9 @@ function WorldCultureFestival() {
       }
       track("purchase_ticket", {
         screen_name: "wcf_registration_get_tickets_page",
-        sessions_attending_arr: values.sessionsAttending,
+        sessions_attending_arr: JSON.stringify(values.sessionsAttending),
         number_of_tickets: values.ticketCount,
-        utm_parameters: router.query,
+        utm_parameters: JSON.stringify(router.query),
       });
       const params = encodeFormData({ sessionsAttending, ticketCount });
       window.location.href =

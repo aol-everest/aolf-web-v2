@@ -121,7 +121,7 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
     if (!router.isReady) return;
     track("view_screen", {
       screen_name: "wcf_registration_landing",
-      utm_parameters: router.query,
+      utm_parameters: JSON.stringify(router.query),
     });
   }, [router.isReady]);
 
@@ -129,9 +129,9 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
     track("click_button", {
       screen_name: "wcf_registration_landing",
       event_target: "next_button",
-      sessions_attending_arr: values.sessionsAttending,
+      sessions_attending_arr: JSON.stringify(values.sessionsAttending),
       number_of_tickets: values.ticketCount,
-      utm_parameters: router.query,
+      utm_parameters: JSON.stringify(router.query),
     });
     handleNext();
   };

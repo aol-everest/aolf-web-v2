@@ -53,8 +53,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
     if (!router.isReady) return;
     track("view_screen", {
       screen_name: "wcf_registration_signup_page",
-      utm_parameters: router.query,
-      sessions_attending_arr: props.values.sessionsAttending,
+      utm_parameters: JSON.stringify(router.query),
+      sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
   }, [router.isReady]);
@@ -65,8 +65,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
     if (view === LOGIN_MODE) {
       track("view_screen", {
         screen_name: "wcf_registration_login_page",
-        utm_parameters: router.query,
-        sessions_attending_arr: props.values.sessionsAttending,
+        utm_parameters: JSON.stringify(router.query),
+        sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
         number_of_tickets: props.values.ticketCount,
       });
     }
@@ -89,8 +89,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
     track("click_button", {
       screen_name: "wcf_registration_login_page",
       event_target: "login_button",
-      utm_parameters: router.query,
-      sessions_attending_arr: props.values.sessionsAttending,
+      utm_parameters: JSON.stringify(router.query),
+      sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
     try {
@@ -106,8 +106,10 @@ export function StepAuth({ errors, handleNext, ...props }) {
         const userInfo = await Auth.reFetchProfile();
         track("login_user", {
           screen_name: "wcf_registration_login_page",
-          utm_parameters: router.query,
-          sessions_attending_arr: props.values.sessionsAttending,
+          utm_parameters: JSON.stringify(router.query),
+          sessions_attending_arr: JSON.stringify(
+            props.values.sessionsAttending,
+          ),
           number_of_tickets: props.values.ticketCount,
         });
         identify(userInfo.profile.email, {
@@ -189,8 +191,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
           ? "wcf_registration_signup_page"
           : "wcf_registration_login_page",
       event_target: "facebook_login_button",
-      utm_parameters: router.query,
-      sessions_attending_arr: props.values.sessionsAttending,
+      utm_parameters: JSON.stringify(router.query),
+      sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
     const params = {
@@ -215,8 +217,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
           ? "wcf_registration_signup_page"
           : "wcf_registration_login_page",
       event_target: "google_login_button",
-      utm_parameters: router.query,
-      sessions_attending_arr: props.values.sessionsAttending,
+      utm_parameters: JSON.stringify(router.query),
+      sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
     const params = {
@@ -249,16 +251,16 @@ export function StepAuth({ errors, handleNext, ...props }) {
     track("click_button", {
       screen_name: "wcf_registration_signup_page",
       event_target: "signup_button",
-      utm_parameters: router.query,
-      sessions_attending_arr: props.values.sessionsAttending,
+      utm_parameters: JSON.stringify(router.query),
+      sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
       track("signup_user", {
         screen_name: "wcf_registration_login_page",
-        utm_parameters: router.query,
-        sessions_attending_arr: props.values.sessionsAttending,
+        utm_parameters: JSON.stringify(router.query),
+        sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
         number_of_tickets: props.values.ticketCount,
       });
       await signIn({ username, password });
