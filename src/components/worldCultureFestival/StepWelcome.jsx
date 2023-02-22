@@ -33,6 +33,14 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
   );
 };
 
+function formatSessionsOption(state) {
+  if (!state.id || state.id === "Full") return state.text;
+
+  const txt = state.text.slice(0, 4);
+
+  return `<span class="select2-selection__choice__display">${txt}</span>`;
+}
+
 const WelcomeSessionsInput = ({ field, form, ...props }) => {
   const selectComp = useRef(null);
   const onChangeAction = () => {
@@ -62,15 +70,15 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
         {
           children: [
             {
-              text: "Fri.",
+              text: "Fri. (evening Sep 29 2023)",
               id: "Friday",
             },
             {
-              text: "Sat.",
+              text: "Sat. (evening Sep 30 2023)",
               id: "Saturday",
             },
             {
-              text: "Sun.",
+              text: "Sun. (evening Oct 1 2023)",
               id: "Sunday",
             },
           ],
@@ -79,6 +87,10 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
       options={{
         placeholder: "Choose the session",
         dropdownParent: "#wcfSelect",
+        templateSelection: formatSessionsOption,
+        escapeMarkup: function (m) {
+          return m;
+        },
       }}
       onChange={onChangeAction}
     />

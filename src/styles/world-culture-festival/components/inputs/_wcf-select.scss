@@ -141,6 +141,7 @@
       }
 
       &__option {
+        position: relative;
         &:not([role="group"]) {
           padding: 6.5px 16px;
         }
@@ -154,7 +155,7 @@
           background-color: $wcf-light-grey;
         }
 
-        &--selected {
+        &[aria-selected="true"] {
           color: $wcf-dark;
           background-color: $wcf-light;
 
