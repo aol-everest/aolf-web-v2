@@ -73,10 +73,11 @@ export function StepAuth({ errors, handleNext, ...props }) {
         setLoading(false);
       } else {
         const userInfo = await Auth.reFetchProfile();
+        console.log(userInfo);
 
         props.setFieldValue("state", userInfo.profile.personMailingState);
-        let userCountry = user.profile.personMailingCountry
-          ? user.profile.personMailingCountry.toUpperCase()
+        let userCountry = userInfo.profile.personMailingCountry
+          ? userInfo.profile.personMailingCountry.toUpperCase()
           : "US";
         let userPhoneNumber = userInfo.profile.personMobilePhone || "";
         if (
@@ -101,8 +102,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
 
         props.setFieldValue(
           "phoneCountry",
-          user.profile.personMailingCountry
-            ? user.profile.personMailingCountry.toUpperCase()
+          userInfo.profile.personMailingCountry
+            ? userInfo.profile.personMailingCountry.toUpperCase()
             : "US",
         );
 
