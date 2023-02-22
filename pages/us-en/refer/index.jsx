@@ -40,8 +40,9 @@ export default function TalkableRefer() {
             </li>
             <li>
               If you have multiple coupon codes and would like to use them
-              towards a single course registration, please use the 'Stack
-              Coupon' feature below.
+              towards a single course registration, please send a request to
+              support@us.artofliving.org and include all coupon codes in the
+              email.
             </li>
           </ol>
           <p>
