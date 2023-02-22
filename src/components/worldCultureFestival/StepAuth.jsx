@@ -104,14 +104,6 @@ export function StepAuth({ errors, handleNext, ...props }) {
         setLoading(false);
       } else {
         const userInfo = await Auth.reFetchProfile();
-        track("login_user", {
-          screen_name: "wcf_registration_login_page",
-          utm_parameters: JSON.stringify(router.query),
-          sessions_attending_arr: JSON.stringify(
-            props.values.sessionsAttending,
-          ),
-          number_of_tickets: props.values.ticketCount,
-        });
         identify(userInfo.profile.email, {
           id: userInfo.profile.username,
           sfid: userInfo.profile.id,
@@ -127,6 +119,14 @@ export function StepAuth({ errors, handleNext, ...props }) {
           sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
           sahaj_flag: userInfo.profile.isSahajGraduate,
           silence_course_count: userInfo.profile.aosCountTotal,
+        });
+        track("login_user", {
+          screen_name: "wcf_registration_login_page",
+          utm_parameters: JSON.stringify(router.query),
+          sessions_attending_arr: JSON.stringify(
+            props.values.sessionsAttending,
+          ),
+          number_of_tickets: props.values.ticketCount,
         });
 
         props.setFieldValue("state", userInfo.profile.personMailingState);
