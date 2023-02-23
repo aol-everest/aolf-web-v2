@@ -176,7 +176,7 @@ function WorldCultureFestival() {
                 .label("No of Tickets")
                 .integer()
                 .min(1)
-                .max(4)
+                .max(6)
                 .required(),
               sessionsAttending: Yup.array()
                 .label("Sessions Attending")
