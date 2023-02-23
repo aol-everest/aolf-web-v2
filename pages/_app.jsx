@@ -72,7 +72,7 @@ function App({ Component, pageProps }) {
 
       const { subscriptions = [], isCCUpdateRequiredForSubscription } =
         userInfo.profile;
-      // setPendingSurveyInvite(userInfo.profile.surveyInvite);
+      setPendingSurveyInvite(userInfo.profile.surveyInvite);
       setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
       const reinstateRequiredForSubscription = subscriptions.find(
         ({ isReinstateRequiredForSubscription }) =>
