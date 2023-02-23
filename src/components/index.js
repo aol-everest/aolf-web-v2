@@ -1,5 +1,6 @@
 export { Header } from "./header";
 export { NoHeader } from "./noHeader";
+export { WCFHeader } from "./wcfHeader";
 export { Footer } from "./footer";
 export { Layout } from "./layout";
 export { ActiveLink } from "./activeLink";
@@ -23,3 +24,4 @@ export { CardUpdateRequired } from "./cardUpdateRequired";
 export { PendingAgreement } from "./pendingAgreement";
 export { UsePagesViews } from "./usePagesViews";
 export { PageLoading } from "./pageLoading";
+export { FormikWizard } from "./formik-wizard-form";

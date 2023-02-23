@@ -1,0 +1,31 @@
+.wcf-button {
+  display: block;
+  font-family: $wcf-font-medium;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  white-space: nowrap;
+  background-color: $wcf-orange;
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: $wcf-light;
+  border: none;
+  box-shadow: $wcf-shadow;
+  transition: box-shadow $wcf-transition-effect;
+
+  &:hover {
+    box-shadow: $wcf-shadow-hover;
+  }
+
+  &:active {
+    box-shadow: $wcf-shadow-active;
+  }
+
+  &:disabled {
+    background-color: $wcf-orange-light;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

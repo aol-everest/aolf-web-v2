@@ -45,13 +45,11 @@ const PAGES = {
 function LandingPage() {
   const router = useRouter();
   const { pid, ...rest } = router.query;
-  console.log(router.query);
   const queryString = Object.keys(rest || {})
     .map((key) => {
       return encodeURIComponent(key) + "=" + encodeURIComponent(rest[key]);
     })
     .join("&");
-  console.log(queryString);
   if (PAGES[pid]) {
     return (
       <>

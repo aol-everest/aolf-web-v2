@@ -1,0 +1,24 @@
+.wcf-icon-button {
+  display: block;
+  background-color: $wcf-light;
+  border-radius: 8px;
+  padding: 10px;
+  width: 48px;
+  height: 48px;
+  text-align: center;
+  border: none;
+  box-shadow: $wcf-shadow;
+  transition: box-shadow $wcf-transition-effect;
+
+  &:hover {
+    box-shadow: $wcf-shadow-hover;
+  }
+
+  &:active {
+    box-shadow: $wcf-shadow-active;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

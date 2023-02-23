@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useGlobalBannerContext } from "@contexts";
 
-export const SurveyRequest = (surveyInvite) => {
+export const SurveyRequest = ({ surveyInvite }) => {
   const router = useRouter();
   const { showBanner } = useGlobalBannerContext();
 
@@ -15,7 +15,12 @@ export const SurveyRequest = (surveyInvite) => {
       children: (
         <>
           Share Your Feedback about the Journey App{" "}
-          <a target="_blank" href={shortLink} rel="noopener noreferrer">
+          <a
+            target="_blank"
+            href={shortLink}
+            className="tw-text-white tw-font-bold"
+            rel="noopener noreferrer"
+          >
             Click here
           </a>
           .

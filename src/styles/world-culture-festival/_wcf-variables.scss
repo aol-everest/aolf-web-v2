@@ -1,0 +1,31 @@
+/*
+ * Colors
+ */
+$wcf-dark: #000000;
+$wcf-dark-grey: #2B2B2B;
+$wcf-grey: #F0F0F0;
+$wcf-light-grey: #D7D7D7;
+$wcf-light: #FFFFFF;
+
+$wcf-orange: #EF4930;
+$wcf-orange-light: #ef493091;
+$wcf-yellow: #E7C22C;
+$wcf-dark-blue: #26294D;
+
+/*
+ * Fonts
+ */
+$wcf-font-regular: 'PoppinsRegular', sans-serif;
+$wcf-font-medium: 'PoppinsMedium', sans-serif;
+
+ /*
+  * Shadows
+  */
+$wcf-shadow: 0px 1px 2px transparentize($wcf-dark, 0.92);
+$wcf-shadow-hover: 0px 1px 2px transparentize($wcf-dark, 0.85);
+$wcf-shadow-active: 0px 1px 2px transparentize($wcf-dark, 0.7);
+
+ /*
+  * Animations
+  */
+$wcf-transition-effect: 0.3s ease-in-out;

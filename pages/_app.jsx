@@ -87,12 +87,31 @@ function App({ Component, pageProps }) {
         first_name: userInfo.profile.first_name,
         last_name: userInfo.profile.last_name,
       });
+      let userSubscriptions = "";
+      if (userInfo.profile.subscriptions) {
+        userSubscriptions = JSON.stringify(
+          userInfo.profile.subscriptions.map(({ sfid, name }) => {
+            return {
+              id: sfid,
+              name,
+            };
+          }),
+        );
+      }
       analytics.identify(userInfo.profile.email, {
         id: userInfo.profile.username,
         sfid: userInfo.profile.id,
         email: userInfo.profile.email,
+        name: userInfo.profile.name,
         first_name: userInfo.profile.first_name,
         last_name: userInfo.profile.last_name,
+        avatar: userInfo.profile.userProfilePic,
+        state: userInfo.profile.personMailingState, // State
+        country: userInfo.profile.personMailingCountry, // Country
+        subscriptions: userSubscriptions,
+        sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
+        sahaj_flag: userInfo.profile.isSahajGraduate,
+        silence_course_count: userInfo.profile.aosCountTotal,
       });
     } catch (ex) {
       console.log(ex);
@@ -142,6 +161,7 @@ function App({ Component, pageProps }) {
             <Layout
               hideHeader={Component.hideHeader}
               hideFooter={Component.hideFooter}
+              wcfHeader={Component.wcfHeader}
             >
               <DefaultSeo {...SEO} />
               <UsePagesViews />

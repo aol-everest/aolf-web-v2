@@ -1,0 +1,217 @@
+@import "react-select2-wrapper/css/select2.css";
+.wcf-select {
+  font-family: $wcf-font-regular;
+  font-size: 16px;
+  line-height: 24px;
+
+  &__label {
+    margin-bottom: 8px;
+    color: transparentize($wcf-dark, 0.3);
+  }
+
+  &__field {
+    width: 100%;
+
+    .select2 {
+      width: 100% !important;
+
+      &-container {
+        &--default {
+          .select2-selection {
+            overflow: hidden;
+            height: unset;
+            padding: 11px 39px 11px 11px;
+            border-radius: 0;
+            border: 1px solid $wcf-light-grey;
+            color: $wcf-dark-grey;
+            background-color: $wcf-light;
+            box-shadow: $wcf-shadow;
+            transition: border-color $wcf-transition-effect,
+              box-shadow $wcf-transition-effect;
+
+            &__rendered {
+              display: flex;
+              gap: 8px;
+              padding: 0;
+              line-height: 24px !important;
+            }
+
+            &--single {
+              .select2-selection {
+                &__placeholder {
+                  color: transparentize($wcf-dark-grey, 0.5);
+                }
+
+                &__arrow {
+                  height: 48px;
+                  width: 16px;
+                  right: 12px;
+
+                  b {
+                    margin-left: -8px;
+                    margin-top: -5px;
+                    border-color: $wcf-dark transparent transparent transparent;
+                    border-width: 10px 8px 0 8px;
+                  }
+                }
+              }
+            }
+
+            &--multiple {
+              display: flex;
+
+              .select2-selection__rendered {
+                .select2-selection__choice {
+                  display: flex;
+                  flex-direction: row-reverse;
+                  margin: 0;
+                  padding: 4px 6px 4px 12px;
+                  background: #f0f0f0;
+                  border: 1px solid #79747e;
+                  border-radius: 8px;
+
+                  &__remove {
+                    position: static;
+                    border: none;
+                    font-size: 24px;
+                    line-height: 24px;
+                    font-weight: normal;
+                    color: $wcf-orange;
+                  }
+                }
+              }
+            }
+          }
+
+          .select2-search--inline .select2-search__field {
+            display: block;
+            font-family: $wcf-font-regular;
+            font-size: 16px;
+            line-height: 24px;
+            color: transparentize($wcf-dark-grey, 0.5);
+            margin: 1px 0 5px;
+          }
+        }
+
+        &--open {
+          .select2-selection--single .select2-selection__arrow {
+            b {
+              border-color: transparent transparent $wcf-dark transparent;
+              border-width: 0 8px 10px 8px;
+            }
+          }
+        }
+
+        &--focus {
+          .select2-selection {
+            border-color: transparentize($wcf-dark, 0.5) !important;
+            box-shadow: $wcf-shadow-active;
+          }
+        }
+      }
+    }
+    &.error {
+      .select2-container--default .select2-selection {
+        border-color: $wcf-orange !important;
+      }
+    }
+  }
+
+  &__info,
+  &__error-message {
+    font-size: 12px;
+    line-height: 14px;
+    margin-top: 8px;
+    padding: 0 12px;
+  }
+
+  &__info {
+    color: transparentize($wcf-dark-blue, 0.5);
+  }
+
+  &__error-message {
+    display: block;
+    text-align: right;
+    color: $wcf-orange;
+  }
+
+  &__dropdown .select2-dropdown {
+    font-family: $wcf-font-regular;
+    font-size: 16px;
+    line-height: 24px;
+    color: $wcf-dark;
+    border-radius: 0;
+    border: none;
+    box-shadow: $wcf-shadow-active;
+    padding: 8px 0 0;
+    background-color: $wcf-light;
+
+    &--above {
+      padding: 0 0 8px;
+    }
+
+    .select2-results {
+      &__group {
+        display: none;
+      }
+
+      &__option {
+        position: relative;
+        &:not([role="group"]) {
+          padding: 6.5px 16px;
+        }
+
+        &--selectable {
+          position: relative;
+        }
+
+        &--highlighted {
+          color: $wcf-dark;
+          background-color: $wcf-light-grey;
+        }
+
+        &[aria-selected="true"] {
+          color: $wcf-dark;
+          background-color: $wcf-light;
+
+          &::after {
+            content: url("/img/select-checkmark.png");
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+
+        &--group {
+          padding: 0;
+
+          &:not(:last-child) {
+            border-bottom: 1px solid $wcf-dark-grey;
+          }
+        }
+      }
+    }
+  }
+}
+
+.select2-container--default
+  .select2-results__option[role="group"]:not(:last-child) {
+  border-bottom: 1px solid $wcf-dark-grey;
+}
+.select2-container--default .select2-results__group {
+  padding: 0px;
+}
+
+.wcf-country-option {
+  &__image {
+    width: 18px;
+    height: 18px;
+
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+}

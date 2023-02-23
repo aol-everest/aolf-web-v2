@@ -1,0 +1,36 @@
+.wcf-h2,
+.wcf-h4 {
+  font-family: $wcf-font-regular;
+  color: $wcf-dark;
+  text-align: center;
+}
+
+.wcf-h2 {
+  font-size: 48px;
+  line-height: 58px;
+}
+
+.wcf-h4 {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.wcf-body,
+.wcf-body-small {
+  font-family: $wcf-font-regular;
+  color: $wcf-dark;
+
+  span {
+    color: $wcf-orange;
+  }
+}
+
+.wcf-body {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.wcf-body-small {
+  font-size: 12px;
+  line-height: 14px;
+}

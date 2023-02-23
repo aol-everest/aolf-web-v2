@@ -139,7 +139,7 @@ export const SahajSamadhiCombo = ({
               <div className="sidebar-schedule__list">
                 {timings &&
                   timings.map((time, i) => {
-                    console.log(time);
+                    // console.log(time);
                     return (
                       <div className="sidebar-schedule__item" key={i}>
                         <img

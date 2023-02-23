@@ -1,0 +1,36 @@
+.wcf-combined-input {
+  font-family: $wcf-font-regular;
+  font-size: 16px;
+  line-height: 24px;
+
+  &__label {
+    margin-bottom: 8px;
+    color: transparentize($wcf-dark, 0.3);
+  }
+ 
+  &__fields {
+    width: 100%;
+    display: flex;
+
+    .wcf-input {
+      flex-grow: 1;
+
+      &__field {
+        border-left-color: transparent;
+      }
+    }
+
+    .wcf-select .wcf-select__field .select2-container--default .select2-selection {
+      border-right-color: transparent;
+      background-color: $wcf-grey;
+    }
+  }
+
+  &__info {
+    font-size: 12px;
+    line-height: 14px;
+    margin-top: 8px;
+    padding: 0 12px;
+    color: transparentize($wcf-dark-blue, 0.5);
+  }
+} 

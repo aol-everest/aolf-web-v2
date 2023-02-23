@@ -1,0 +1,11 @@
+.wcf-link {
+  color: $wcf-orange;
+
+  &:hover {
+    color: transparentize($wcf-orange, 0.1);
+  }
+
+  &:active {
+    color: transparentize($wcf-orange, 0.2);
+  }
+}

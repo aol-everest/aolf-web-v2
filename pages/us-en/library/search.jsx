@@ -422,7 +422,8 @@ const LibrarySearch = () => {
         <div className="search_course_form_mobile d-lg-none d-block">
           <div className="container">
             <div className="row m-0 justify-content-between align-items-center">
-              <p className="title mb-0">Find a meditation</p>
+              {folderName && <p className="title mb-0">Find {folderName}</p>}
+              {!folderName && <p className="title mb-0">Find a meditation</p>}
               <div className="filter">
                 <div className="filter--button d-flex" onClick={toggleFilter}>
                   <img src="/img/ic-filter.svg" alt="filter" />
@@ -695,9 +696,16 @@ const LibrarySearch = () => {
                 <div className="container happines_box">
                   <div className="row">
                     <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
-                      <h1 className="happines_title">
-                        Sorry, no meditation match your chosen filters.
-                      </h1>
+                      {folderName && (
+                        <h1 className="happines_title">
+                          Sorry, no {folderName} match your chosen filters.
+                        </h1>
+                      )}
+                      {!folderName && (
+                        <h1 className="happines_title">
+                          Sorry, no meditation match your chosen filters.
+                        </h1>
+                      )}
                       <p className="happines_subtitle">
                         Please broaden your options and try again.
                       </p>

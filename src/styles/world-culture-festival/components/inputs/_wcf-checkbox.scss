@@ -1,0 +1,61 @@
+.wcf-checkbox {
+  font-family: $wcf-font-regular;
+  font-size: 12px;
+  line-height: 18px;
+
+  &__field {
+    display: none;
+
+    &:checked + .wcf-checkbox__label:after {
+      opacity: 1;
+    }
+
+    &:disabled + .wcf-checkbox__label {
+      color: $wcf-grey;
+
+      &:before {
+        border-color: $wcf-grey;
+        background-color: $wcf-light-grey;
+      }
+    }
+
+    &:checked:disabled + .checkbox__span:before {
+      background-color: $wcf-grey;
+    }
+
+    &:not(:disabled) + .wcf-checkbox__label {
+      cursor: pointer;
+    }
+  }
+
+  &__label {
+    display: block;
+    position: relative;
+    color: $wcf-dark;
+    padding-left: 24px;
+
+    &:after,
+    &:before {
+      content: "";
+      position: absolute;
+      border-radius: 3px;
+      width: 16px;
+      height: 16px;
+      top: 0px;
+      left: 0px;
+    }
+
+    &:before {
+      display: inline-block;
+      background-color: $wcf-light;
+      border: 1px solid $wcf-light-grey;
+    }
+
+    &:after {
+      background: url("/img/ic-tick-blue.svg");
+      background-size: contain;
+      transition: opacity $wcf-transition-effect;
+      opacity: 0;
+    }
+  }
+}

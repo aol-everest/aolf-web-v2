@@ -53,9 +53,9 @@ export default function TalkableRefer() {
               </a>
             </Link>
           </p>
-          <div className="tw-mb-2">
+          {/* <div className="tw-mb-2">
             <CouponStack></CouponStack>
-          </div>
+          </div> */}
           <div id="talkable-offer"></div>
         </article>
       </section>

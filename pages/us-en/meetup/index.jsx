@@ -1245,7 +1245,7 @@ const Meetup = () => {
                 <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
                   <h1 className="happines_title">
                     Currently there are no {COURSE_MODES[activeFilterType].name}{" "}
-                    courses available.
+                    meetups available.
                   </h1>
                   <p className="happines_subtitle">
                     Please check out our{" "}

@@ -1,0 +1,140 @@
+.world-culture-festival {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 0;
+  min-height: calc(100vh - 130px);
+
+  &__column {
+    width: 380px;
+  }
+
+  &__title,
+  &__subtitle,
+  &__selector {
+    margin-bottom: 48px;
+  }
+
+  &__policy {
+    margin: 16px 0;
+    color: transparentize($wcf-dark-blue, 0.5);
+    text-align: right;
+  }
+
+  &__agreement {
+    margin-top: 16px;
+  }
+
+  &__divider {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 23px;
+    padding: 4px 0;
+    font-family: $wcf-font-regular;
+    font-size: 18px;
+    line-height: 27px;
+    color: #666666;
+
+    &:before,
+    &:after {
+      content: "";
+      height: 2px;
+      flex-grow: 1;
+      background-color: rgba(102, 102, 102, 0.25);
+    }
+  }
+
+  &__third-party-auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+    gap: 32px;
+  }
+
+  &__background {
+    position: absolute;
+    overflow: hidden;
+    z-index: -1;
+    right: 0;
+    width: 50%;
+
+    img {
+      position: absolute;
+      min-width: 100%;
+    }
+
+    &_people-1 {
+      height: 100%;
+      top: 0;
+
+      img {
+        bottom: 0;
+      }
+    }
+
+    &_people-2 {
+      height: 700px;
+
+      img {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-height: 800px;
+      }
+    }
+    &_people-3 {
+      height: 100%;
+
+      img {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .world-culture-festival {
+    &__container {
+      max-width: 1040px;
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .world-culture-festival {
+    padding: 40px 0 20px;
+
+    &__column {
+      width: 100%;
+    }
+
+    &__subtitle {
+      margin-bottom: 16px;
+    }
+
+    &__selector {
+      margin-bottom: 32px;
+    }
+
+    &__policy {
+      margin: 24px 0 28px;
+      text-align: left;
+    }
+
+    &__third-party-auth {
+      gap: 16px;
+    }
+
+    &__background {
+      &_people-1,
+      &_people-2,
+      &_people-3 {
+        display: none;
+      }
+    }
+  }
+}

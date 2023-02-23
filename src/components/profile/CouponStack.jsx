@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { api } from "@utils";
-import { useGlobalAlertContext } from "@contexts";
+import { useGlobalAlertContext, useAuth } from "@contexts";
 import { ALERT_TYPES } from "@constants";
 import { useQuery } from "react-query";
 import { WithContext as ReactTags } from "react-tag-input";
@@ -28,8 +28,8 @@ const COURSE_TYPES = [
     value: "SAHAJ_SAMADHI_MEDITATION",
   },
   {
-    label: "Sri Sri Yoga",
-    value: "SRI_SRI_YOGA_MEDITATION",
+    label: "SKY Breath Meditation",
+    value: "SKY_BREATH_MEDITATION",
   },
 ];
 
@@ -48,7 +48,7 @@ const CouponMergeCmp = ({
 }) => {
   return (
     <div className="profile-update__form">
-      <h6 className="profile-update__title">Stack Coupon:</h6>
+      <h6 className="profile-update__title">Redeem Advocate Coupons</h6>
       <div className="profile-update__card order__card">
         <ol>
           {couponCodes.map((coupon) => {
@@ -99,22 +99,45 @@ const CouponMergeResultCmp = ({
   reedemableAmount,
   workshopType,
 }) => {
+  const { user } = useAuth();
+
+  const handleCopyCoupon = () => {
+    navigator.clipboard.writeText(newCouponCode);
+  };
+
   return (
     <div className="profile-update__form">
-      <h6 className="profile-update__title">Stack Coupon:</h6>
-      <div className="profile-update__card order__card">
-        <div className="!tw-block tw-w-full tw-font-medium">
-          A new coupon{" "}
-          <span className="tw-font-extrabold">{newCouponCode}</span> with a
-          value of ${reedemableAmount} has been generated for{" "}
-          {COURSE_TYPES.find((c) => c.value === workshopType).label} workshop.
+      <h6 className="profile-update__title">Redeem Advocate Coupons</h6>
+
+      <div class="advocate-reward mt-4 mb-4">
+        <div class="text-center">
+          <p class="advocate-reward__text mb-4">
+            Your rewards code with a value of ${reedemableAmount} has been
+            created for{" "}
+            {COURSE_TYPES.find((c) => c.value === workshopType).label}. A
+            confirmation email with your rewards code has been sent to
+            <span class="d-block">{user.profile.email}.</span>
+          </p>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+          <p class="advocate-reward__label mb-4 mb-sm-0 !tw-w-fit">
+            {newCouponCode} ({reedemableAmount}$)
+          </p>
+
+          <button
+            class="advocate-reward__button align-self-end"
+            onClick={handleCopyCoupon}
+          >
+            Copy Code
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-const CouponValidateCmp = ({ couponCodes, verifyCoupons }) => {
+const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
   return (
     <Formik
       initialValues={{
@@ -129,33 +152,105 @@ const CouponValidateCmp = ({ couponCodes, verifyCoupons }) => {
         values,
         { setSubmitting, isValid, errors, resetForm },
       ) => {
-        console.log(values);
-        await verifyCoupons(values, resetForm);
+        await mergeAction(values, resetForm);
       }}
     >
       {(formikProps) => {
+        const { values, resetForm } = formikProps;
+        const handleCouponSelection = (e, field, form, couponCode) => {
+          if (e.target.checked) {
+            form.setFieldValue("couponCodes", [...field.value, couponCode]);
+          } else {
+            const updatedCoupons = field.value.filter(
+              (tag, index) => tag.id !== couponCode.id,
+            );
+            form.setFieldValue("couponCodes", [...updatedCoupons]);
+          }
+        };
+
+        const { couponCodes: addedCoupons, courseType } = values;
+        const isSubmit = addedCoupons.length > 0 && courseType;
+        const totalReward =
+          isSubmit && addedCoupons.reduce((a, b) => a + (b["amount"] || 0), 0);
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          await mergeAction(values, resetForm);
+        };
+
         return (
           <form onSubmit={formikProps.handleSubmit}>
             <div className="profile-update__form">
-              <h6 className="profile-update__title">Stack Coupon:</h6>
-              <div className="profile-update__card order__card">
-                <Field
-                  name="couponCodes"
-                  component={CouponInput}
-                  placeholder="Coupon codes"
-                />
-                <Dropdown
-                  placeholder="Course Type"
-                  formikProps={formikProps}
-                  formikKey="courseType"
-                  options={COURSE_TYPES}
-                ></Dropdown>
-              </div>
-              <div className="tw-flex tw-justify-end tw-mt-6">
-                <button type="submit" className="btn-primary d-block ml-4 v2">
-                  Verify
-                </button>
-              </div>
+              <h6 className="profile-update__title">Redeem Advocate Coupons</h6>
+
+              <form action="#" className="advocate-reward mt-4 mb-4">
+                <div className="text-center">
+                  <h4 className=" advocate-reward__title mb-4">
+                    Select Rewards Codes to Redeem:
+                  </h4>
+
+                  <Field name="couponCodes">
+                    {({ field, form }) => (
+                      <ul className="advocate-reward__list">
+                        {couponCodes.map((couponCode, key) => {
+                          return (
+                            <li key={key}>
+                              <label className=" d-flex align-items-center">
+                                <input
+                                  type="checkbox"
+                                  defaultChecked
+                                  className="advocate-reward__checkbox mr-2"
+                                  onClick={(e) =>
+                                    handleCouponSelection(
+                                      e,
+                                      field,
+                                      form,
+                                      couponCode,
+                                    )
+                                  }
+                                />
+
+                                <p className="advocate-reward__label">
+                                  {couponCode.text}
+                                </p>
+                              </label>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </Field>
+                </div>
+
+                <div class="volonteer-content__item_multiselect_body item-volonteer advocate-reward__select mt-4 mb-4">
+                  <Dropdown
+                    placeholder="Choose Course Type"
+                    formikProps={formikProps}
+                    formikKey="courseType"
+                    options={COURSE_TYPES}
+                    containerClass="tw-w-full"
+                    innerFullWidth={true}
+                  ></Dropdown>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+                  <p class="d-none d-sm-block advocate-reward__total">
+                    {isSubmit && `Rewards Selected Total: [$${totalReward}]`}
+                  </p>
+                  <button
+                    className={classNames(
+                      "advocate-reward__button align-self-end",
+                      {
+                        "advocate-reward__button--disabled": !isSubmit,
+                      },
+                    )}
+                    disabled={!isSubmit}
+                    onClick={handleSubmit}
+                  >
+                    Redeem
+                  </button>
+                </div>
+              </form>
             </div>
           </form>
         );
@@ -252,7 +347,12 @@ export const CouponStack = () => {
     setStep(1);
   };
 
-  const mergeAction = async () => {
+  const mergeAction = async (values, resetForm) => {
+    const { couponCodes, courseType } = values;
+    const reedemableAmount = couponCodes.reduce(
+      (a, b) => a + (b["amount"] || 0),
+      0,
+    );
     setLoading(true);
     try {
       if (reedemableAmount <= 0) {
@@ -262,16 +362,17 @@ export const CouponStack = () => {
         path: "mergeCoupons",
         body: {
           couponCodes: couponCodes
-            .filter((currentValue) => currentValue.isValid)
             .map((currentValue) => {
               return currentValue.id;
             })
             .join(","), //"VYAB-4I4F,O4UC-FUWV-8O4W,YAH9-4QNR,YAH9-4QNR",
-          workshopType,
+          workshopType: courseType,
           reedemableAmount,
         },
       });
-
+      setStep(2);
+      setReedemableAmount(reedemableAmount);
+      setWorkshopType(courseType);
       setNewCouponCode(result.newCouponCode);
       setStep(3);
     } catch (ex) {
@@ -284,40 +385,38 @@ export const CouponStack = () => {
     setLoading(false);
   };
 
-  return null;
-
-  // switch (step) {
-  //   case 1:
-  //     return (
-  //       <>
-  //         {loading && <Loader />}
-  //         <CouponValidateCmp
-  //           couponCodes={couponCodes}
-  //           verifyCoupons={verifyCoupons}
-  //         />
-  //       </>
-  //     );
-  //   case 2:
-  //     return (
-  //       <>
-  //         {loading && <Loader />}
-  //         <CouponMergeCmp
-  //           couponCodes={couponCodes}
-  //           reedemableAmount={reedemableAmount}
-  //           cancelAction={cancelAction}
-  //           mergeAction={mergeAction}
-  //         />
-  //       </>
-  //     );
-  //   case 3:
-  //     return (
-  //       <CouponMergeResultCmp
-  //         newCouponCode={newCouponCode}
-  //         reedemableAmount={reedemableAmount}
-  //         workshopType={workshopType}
-  //       />
-  //     );
-  // }
+  switch (step) {
+    case 1:
+      return (
+        <>
+          {loading && <Loader />}
+          <CouponValidateCmp
+            couponCodes={couponCodes}
+            mergeAction={mergeAction}
+          />
+        </>
+      );
+    case 2:
+      return (
+        <>
+          {loading && <Loader />}
+          <CouponMergeCmp
+            couponCodes={couponCodes}
+            reedemableAmount={reedemableAmount}
+            cancelAction={cancelAction}
+            mergeAction={mergeAction}
+          />
+        </>
+      );
+    case 3:
+      return (
+        <CouponMergeResultCmp
+          newCouponCode={newCouponCode}
+          reedemableAmount={reedemableAmount}
+          workshopType={workshopType}
+        />
+      );
+  }
 };
 export const CouponInput = ({ field, label, form, ...rest }) => {
   const handleDelete = (i) => {

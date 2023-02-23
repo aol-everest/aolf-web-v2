@@ -434,7 +434,6 @@ const Course = () => {
   });
 
   useEffect(() => {
-    useAnalytics;
     track("Product List Viewed", {
       category: "Course",
     });

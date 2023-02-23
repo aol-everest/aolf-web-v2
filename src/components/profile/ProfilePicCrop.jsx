@@ -173,7 +173,7 @@ export const ProfilePicCrop = ({ src, closeDetailAction }) => {
     setLoading(true);
     try {
       await makeClientCrop(crop);
-      console.log(blobData);
+      // console.log(blobData);
       const file = new File([blobData], "newFile.jpeg", {
         lastModified: new Date(),
       });
