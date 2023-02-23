@@ -139,7 +139,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
     track("view_screen", {
       screen_name: "wcf_registration_get_tickets_page",
       utm_parameters: JSON.stringify(router.query),
-      sessions_attending_arr: values.sessionsAttending,
+      sessions_attending_arr: JSON.stringify(values.sessionsAttending),
       number_of_tickets: values.ticketCount,
     });
   }, [router.isReady]);

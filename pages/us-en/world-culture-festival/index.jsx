@@ -104,6 +104,12 @@ function WorldCultureFestival() {
     console.log("Submitting form!!!!");
     // console.log(values);
     try {
+      track("attempted_purchase_ticket", {
+        screen_name: "wcf_registration_get_tickets_page",
+        sessions_attending_arr: JSON.stringify(values.sessionsAttending),
+        number_of_tickets: values.ticketCount,
+        utm_parameters: JSON.stringify(router.query),
+      });
       const {
         ticketCount,
         sessionsAttending,
@@ -131,12 +137,7 @@ function WorldCultureFestival() {
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       }
-      track("purchase_ticket", {
-        screen_name: "wcf_registration_get_tickets_page",
-        sessions_attending_arr: JSON.stringify(values.sessionsAttending),
-        number_of_tickets: values.ticketCount,
-        utm_parameters: JSON.stringify(router.query),
-      });
+
       const params = encodeFormData({ sessionsAttending, ticketCount });
       window.location.href =
         "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
@@ -145,6 +146,15 @@ function WorldCultureFestival() {
       console.error(ex);
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
+      track("failed_purchase_ticket", {
+        screen_name: "wcf_registration_get_tickets_page",
+        sessions_attending_arr: JSON.stringify(values.sessionsAttending),
+        number_of_tickets: values.ticketCount,
+        utm_parameters: JSON.stringify(router.query),
+        error_message: message
+          ? `Error: ${message} (${statusCode})`
+          : ex.message,
+      });
       setLoading(false);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: message ? `Error: ${message} (${statusCode})` : ex.message,
