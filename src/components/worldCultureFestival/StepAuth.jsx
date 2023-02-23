@@ -213,7 +213,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
       response_type: "CODE",
       scope: "email phone profile aws.cognito.signin.user.admin openid",
     };
-    window.location.replace(
+    window.location.assign(
       `https://${
         process.env.NEXT_PUBLIC_COGNITO_DOMAIN
       }/oauth2/authorize?${encodeFormData(params)}`,
@@ -239,7 +239,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
       response_type: "CODE",
       scope: "email phone profile aws.cognito.signin.user.admin openid",
     };
-    window.location.replace(
+    window.location.assign(
       `https://${
         process.env.NEXT_PUBLIC_COGNITO_DOMAIN
       }/oauth2/authorize?${encodeFormData(params)}`,

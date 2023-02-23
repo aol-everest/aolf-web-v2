@@ -74,7 +74,7 @@ const StateInput = ({ field, form, ...props }) => {
       text: s.label,
       id: s.value,
     };
-  });
+  }).filter((s) => s.id !== "Other");
   return (
     <Select2
       ref={selectComp}

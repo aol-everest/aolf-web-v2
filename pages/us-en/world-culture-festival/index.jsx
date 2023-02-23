@@ -204,8 +204,12 @@ function WorldCultureFestival() {
                 .label("Phone number")
                 .when("phoneCountry", {
                   is: (country) => country === "US",
-                  then: Yup.string().phone("US", true).nullable(),
-                  otherwise: Yup.string().phone().nullable(),
+                  then: Yup.string()
+                    .phone("US", true, "Please enter a valid phone number")
+                    .nullable(),
+                  otherwise: Yup.string()
+                    .phone(null, false, "Please enter a valid phone number")
+                    .nullable(),
                 }),
             }),
           },
@@ -213,9 +217,6 @@ function WorldCultureFestival() {
       >
         {({ renderComponent }) => <>{renderComponent()}</>}
       </FormikWizard>
-      {/* <StepWelcome></StepWelcome> */}
-      {/* <StepAuth></StepAuth> */}
-      {/* <StepContactDetail></StepContactDetail> */}
     </main>
   );
 }
