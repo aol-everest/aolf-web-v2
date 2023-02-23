@@ -132,6 +132,7 @@ function WorldCultureFestival() {
           countryIsoCode: country,
           state: state,
           communicationOptIn: agreement,
+          utm: router.query,
         },
       });
       if (status === 400 || isError) {
