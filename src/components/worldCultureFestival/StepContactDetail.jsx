@@ -25,9 +25,7 @@ const CountryInput = ({ field, form, ...props }) => {
       const val = selectComp.current.el.val();
       if (field.value !== val) {
         form.setFieldValue(field.name, val);
-        if (field.value !== "US") {
-          form.setFieldValue("state", "");
-        }
+        form.setFieldValue("state", null);
         // form.setFieldValue("phoneNumber", field.value);
         form.setFieldValue("phoneCountry", field.value);
       }
