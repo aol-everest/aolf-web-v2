@@ -91,7 +91,7 @@ export const ChangeProfile = ({
   };
 
   const validateStudentEmail = (email) => {
-    const regex = new RegExp("[a-z0-9]+@[a-z]+.edu$");
+    const regex = new RegExp("[a-z0-9]+@[a-zA-Z0-9.+-]+.edu$");
     const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
     return isStudentEmail;
   };
