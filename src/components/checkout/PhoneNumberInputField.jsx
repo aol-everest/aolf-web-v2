@@ -32,7 +32,7 @@ export const PhoneNumberInputField = ({
         country="us"
         inputClass={form.errors[field.name] ? "text-input error" : "text-input"}
         containerClass="input-block"
-        countryCodeEditable={false}
+        countryCodeEditable={true}
         onChange={onChangeAction}
         onFocus={onFocusAction}
       />

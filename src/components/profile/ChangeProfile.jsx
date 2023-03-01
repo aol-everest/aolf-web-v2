@@ -33,7 +33,7 @@ const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
         validate: form.errors.contactPhone,
         "w-100": isMobile,
       })}
-      countryCodeEditable={false}
+      countryCodeEditable={true}
       onChange={onChangeAction}
     />
   );

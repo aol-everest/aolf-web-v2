@@ -2,29 +2,6 @@ import React, { Fragment } from "react";
 import { StyledInput } from "./StyledInput";
 import { PhoneNumberInputField } from "./PhoneNumberInputField";
 import { Field } from "formik";
-import classNames from "classnames";
-
-// const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
-//   console.log(field);
-//   const onChangeAction = (value, data, event, formattedValue) => {
-//     form.setFieldValue(field.name, formattedValue);
-//   };
-//   return (
-//     <PhoneInput
-//       {...field}
-//       {...props}
-//       placeholder="Phone No"
-//       country="us"
-//       inputClass={classNames({
-//         validate: form.errors.contactPhone,
-//         "w-100": isMobile,
-//       })}
-//       containerClass="input-block"
-//       countryCodeEditable={false}
-//       onChange={onChangeAction}
-//     />
-//   );
-// };
 
 export const UserInfoForm = ({ formikProps, isHBCheckout = false }) => {
   return (
