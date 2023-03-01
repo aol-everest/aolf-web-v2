@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { isEmpty } from "@utils";
+import "yup-phone";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
@@ -518,10 +519,10 @@ export const MeetupPaymentForm = ({
         firstName: Yup.string().required("First Name is required"),
         lastName: Yup.string().required("Last Name is required"),
         contactPhone: Yup.string()
+          .label("Phone")
           .required("Phone is required")
-          .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })
-          .min(10, "Phone is invalid")
-          .max(18, "Phone is invalid"),
+          .phone(null, false, "Phone is invalid")
+          .nullable(),
         contactAddress: Yup.string().required("Address is required"),
         contactCity: Yup.string().required("City is required"),
         contactState: Yup.string().required("State is required"),

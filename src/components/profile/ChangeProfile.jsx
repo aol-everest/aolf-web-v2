@@ -2,12 +2,14 @@ import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import MaskedInput from "react-text-mask";
-import { Formik } from "formik";
+import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import dayjs from "dayjs";
 import { api } from "@utils";
 import { FaRegEdit, FaCheckCircle } from "react-icons/fa";
 import { useGlobalModalContext } from "@contexts";
+import "yup-phone";
+import PhoneInput from "./../phoneInputCmp";
 import {
   MODAL_TYPES,
   US_STATES,
@@ -17,22 +19,25 @@ import { StyledInput, Dropdown } from "@components/checkout";
 import { ChangeEmail } from "@components/profile";
 import Style from "./ChangeProfile.module.scss";
 
-const phoneNumberMask = [
-  "(",
-  /[1-9]/,
-  /\d/,
-  /\d/,
-  ")",
-  " ",
-  /\d/,
-  /\d/,
-  /\d/,
-  "-",
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/,
-];
+const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
+  const onChangeAction = (value, data, event, formattedValue) => {
+    form.setFieldValue(field.name, formattedValue);
+  };
+  return (
+    <PhoneInput
+      {...field}
+      {...props}
+      placeholder="Phone Number"
+      country="us"
+      inputClass={classNames({
+        validate: form.errors.contactPhone,
+        "w-100": isMobile,
+      })}
+      countryCodeEditable={false}
+      onChange={onChangeAction}
+    />
+  );
+};
 
 export const ChangeProfile = ({
   isMobile,
@@ -290,10 +295,10 @@ export const ChangeProfile = ({
         }}
         validationSchema={Yup.object().shape({
           contactPhone: Yup.string()
+            .label("Phone")
             .required("Phone is required")
-            .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })
-            .min(10, "Phone is invalid")
-            .max(18, "Phone is invalid"),
+            .phone(null, false, "Phone is invalid")
+            .nullable(),
           contactAddress: Yup.string().required("Address is required"),
           contactState: Yup.string().required("State is required"),
           contactZip: Yup.string()
@@ -408,7 +413,12 @@ export const ChangeProfile = ({
                     "w-100": isMobile,
                   })}
                 >
-                  <MaskedInput
+                  <Field
+                    name="contactPhone"
+                    component={PhoneNumberInputField}
+                    isMobile={isMobile}
+                  />
+                  {/* <MaskedInput
                     placeholder="Phone Number"
                     mask={phoneNumberMask}
                     type="tel"
@@ -420,9 +430,9 @@ export const ChangeProfile = ({
                       validate: errors.contactPhone && touched.contactPhone,
                       "w-100": isMobile,
                     })}
-                  />
+                  /> */}
 
-                  {errors.contactPhone && touched.contactPhone && (
+                  {errors.contactPhone && (
                     <p className="validation-input">{errors.contactPhone}</p>
                   )}
                 </div>

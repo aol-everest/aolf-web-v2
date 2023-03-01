@@ -4,6 +4,7 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import "yup-phone";
 import {
   BillingInfoForm,
   UserInfoForm,
@@ -292,10 +293,10 @@ export const MembershipCheckoutStripe = ({
         firstName: Yup.string().required("First Name is required"),
         lastName: Yup.string().required("Last Name is required"),
         contactPhone: Yup.string()
+          .label("Phone")
           .required("Phone is required")
-          .matches(/^[0-9-()\s+]+$/, { message: "Phone is invalid" })
-          .min(10, "Phone is invalid")
-          .max(18, "Phone is invalid"),
+          .phone(null, false, "Phone is invalid")
+          .nullable(),
         contactAddress: Yup.string().required("Address is required"),
         contactState: Yup.string().required("State is required"),
         contactZip: Yup.string()

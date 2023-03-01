@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Field, ErrorMessage } from "formik";
 import Select2 from "react-select2-wrapper";
-import PhoneInput from "./phoneInputCmp";
+import PhoneInput from "./../phoneInputCmp";
 import countryData from "./country.json";
 import { US_STATES } from "@constants";
 import classNames from "classnames";
