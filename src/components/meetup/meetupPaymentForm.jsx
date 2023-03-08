@@ -19,7 +19,6 @@ import {
 } from "@components/checkout";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { PatternFormat } from "react-number-format";
 import { ABBRS } from "@constants";
 import { useAuth } from "@contexts";
 import { tConvert } from "@utils";
@@ -923,23 +922,11 @@ export const MeetupPaymentForm = ({
                       <ul className="info__list mt-3">
                         <h2 className="info__title">Contact details:</h2>
                         <li className="tw-text-sm tw-truncate tw-tracking-tighter">
-                          <a href={`tel:${phone1}`}>
-                            <PatternFormat
-                              value={phone1}
-                              displayType={"text"}
-                              format="+1 (###) ###-####"
-                            ></PatternFormat>
-                          </a>
+                          <a href={`tel:${phone1}`}>{phone1}</a>
                         </li>
                         {phone2 && (
                           <li className="tw-text-sm tw-truncate tw-tracking-tighter">
-                            <a href={`tel:${phone2}`}>
-                              <PatternFormat
-                                value={phone2}
-                                displayType={"text"}
-                                format="+1 (###) ###-####"
-                              ></PatternFormat>
-                            </a>
+                            <a href={`tel:${phone2}`}>{phone2}</a>
                           </li>
                         )}
                         <li className="tw-text-sm tw-truncate tw-tracking-tighter">
@@ -956,21 +943,13 @@ export const MeetupPaymentForm = ({
                         <h2 className="info__title">Contact details:</h2>
                         <li>
                           <a href={`tel:${primaryTeacherMobilePhone}`}>
-                            <PatternFormat
-                              value={primaryTeacherMobilePhone}
-                              displayType={"text"}
-                              format="+1 (###) ###-####"
-                            ></PatternFormat>
+                            {primaryTeacherMobilePhone}
                           </a>
                         </li>
                         {primaryTeacherPhone && (
                           <li>
                             <a href={`tel:${primaryTeacherPhone}`}>
-                              <PatternFormat
-                                value={primaryTeacherPhone}
-                                displayType={"text"}
-                                format="+1 (###) ###-####"
-                              ></PatternFormat>
+                              {primaryTeacherPhone}
                             </a>
                           </li>
                         )}

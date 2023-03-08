@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
-import { PatternFormat } from "react-number-format";
 import { ABBRS, COURSE_MODES } from "@constants";
 import { Popup } from "@components";
 import { LinkedCalendar } from "@components/dateRangePicker";
@@ -250,23 +249,11 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
             <h6>Contact details:</h6>
           </div>
           <li>
-            <a href={`tel:${phone1}`}>
-              <PatternFormat
-                value={phone1}
-                displayType={"text"}
-                format="+1 (###) ###-####"
-              ></PatternFormat>
-            </a>
+            <a href={`tel:${phone1}`}>{phone1}</a>
           </li>
           {phone2 && (
             <li>
-              <a href={`tel:${phone2}`}>
-                <PatternFormat
-                  value={phone2}
-                  displayType={"text"}
-                  format="+1 (###) ###-####"
-                ></PatternFormat>
-              </a>
+              <a href={`tel:${phone2}`}>{phone2}</a>
             </li>
           )}
           <li>

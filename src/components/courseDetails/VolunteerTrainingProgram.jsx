@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Element, animateScroll as scroll } from "react-scroll";
-import { PatternFormat } from "react-number-format";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { ResearchFindingSource } from "./ResearchFindingSource";
@@ -253,25 +252,13 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                       <div className="details-info__text">
                         {phone1 && (
                           <>
-                            <a href={`tel:${phone1}`}>
-                              <PatternFormat
-                                value={phone1}
-                                displayType={"text"}
-                                format="+1 (###) ###-####"
-                              ></PatternFormat>
-                            </a>
+                            <a href={`tel:${phone1}`}>{phone1}</a>
                             <br />
                           </>
                         )}
                         {phone2 && (
                           <>
-                            <a href={`tel:${phone2}`}>
-                              <PatternFormat
-                                value={phone2}
-                                displayType={"text"}
-                                format="+1 (###) ###-####"
-                              ></PatternFormat>
-                            </a>
+                            <a href={`tel:${phone2}`}>{phone2}</a>
                             <br />
                           </>
                         )}
