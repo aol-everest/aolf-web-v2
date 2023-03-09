@@ -122,7 +122,7 @@ const CouponMergeResultCmp = ({
 
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
           <p class="advocate-reward__label mb-4 mb-sm-0 !tw-w-fit">
-            {newCouponCode} ({reedemableAmount}$)
+            {newCouponCode} (${reedemableAmount})
           </p>
 
           <button

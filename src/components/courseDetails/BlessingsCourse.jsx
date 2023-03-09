@@ -345,7 +345,7 @@ export const BlessingsCourse = ({ data }) => {
                   <div className="art-section__icon">
                     <img src="/img/art-section-third.png" alt="participants" />
                   </div>
-                  <div className="art-section__name">800M+ lives</div>
+                  <div className="art-section__name">500M+ lives</div>
                   <div className="art-section__text">
                     touched through our courses & events
                   </div>

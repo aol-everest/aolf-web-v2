@@ -1333,7 +1333,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                   src="/img/ic-social-blue.svg"
                   alt="about-item-icon"
                 />
-                <h6 className="about-item__title">800M+ lives</h6>
+                <h6 className="about-item__title">500M+ lives</h6>
                 <p className="about-item__info">
                   touched through our courses & events
                 </p>

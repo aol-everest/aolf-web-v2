@@ -768,7 +768,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                   <img src="/img/ic-450-m-lives.svg" alt="lives" />
                 </div>
                 <p className="about__text">
-                  <span>800M+ lives</span> touched through our courses & events
+                  <span>500M+ lives</span> touched through our courses & events
                 </p>
               </div>
             </div>
