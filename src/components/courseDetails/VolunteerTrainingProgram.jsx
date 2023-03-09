@@ -569,7 +569,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
         <section className="program-founder">
           <div className="program-founder__image">
             <img
-              src="/img/sri-sri-ravi-shankar.png"
+              src="/img/sri-sri-ravi-shankar.jpg"
               alt="Founder of the Art of Living"
             />
           </div>
