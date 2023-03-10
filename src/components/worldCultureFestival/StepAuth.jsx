@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import startsWith from "lodash.startswith";
+import { FaCheckCircle } from "react-icons/fa";
 import { useAnalytics } from "use-analytics";
 import {
   SigninForm,
@@ -383,6 +384,18 @@ export function StepAuth({ errors, handleNext, ...props }) {
 
         <div className="container world-culture-festival__container">
           <div className="world-culture-festival__column">
+            <div
+              className={classNames("success-message-container", {
+                "d-none": !showSuccessMessage,
+              })}
+            >
+              <div className="success-message">
+                <div className="icon-container">
+                  <FaCheckCircle />
+                </div>
+                {successMessage}
+              </div>
+            </div>
             <p className="wcf-body world-culture-festival__subtitle">
               Log In with your Art of Living Journey account or Sign Up below:
             </p>

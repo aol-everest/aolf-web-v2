@@ -16,8 +16,14 @@ const schema = object().shape({
   code: number()
     .positive("Verification code is invalid")
     .integer("Verification code is invalid")
-    .min(6)
-    .required("Verification code is required"),
+    .typeError("Verification code is invalid")
+    .test(
+      "len",
+      "Must be exactly 6 characters",
+      (val) => val.toString().length === 6,
+    )
+    .required("Verification code is required")
+    .nullable(),
 });
 
 export const ChangePasswordForm = ({

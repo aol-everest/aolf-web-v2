@@ -34,7 +34,8 @@
     }
   }
 }
-.auth {
+.auth,
+.world-culture-festival__container {
   .success-message-container {
     position: absolute;
     width: 100%;
@@ -54,6 +55,8 @@
       .icon-container {
         color: green;
         font-size: 45px;
+        margin: 0 auto;
+        width: 46px;
       }
     }
   }
