@@ -153,103 +153,101 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
     handleNext();
   };
   return (
-    <main>
-      <section className="world-culture-festival">
-        <div className="world-culture-festival__background world-culture-festival__background_people-3">
-          <img src="/img/wcf-bg-image.png" />
-        </div>
+    <section className="world-culture-festival">
+      <div className="world-culture-festival__background world-culture-festival__background_people-3">
+        <img src="/img/wcf-bg-image.png" />
+      </div>
 
-        <div className="container world-culture-festival__container">
-          <div className="world-culture-festival__column">
-            <div className="wcf-form">
-              <div className="wcf-form__fields">
-                <div className="wcf-select wcf-form__field">
-                  <label
-                    htmlFor="get-tickets-country"
-                    className="wcf-select__label"
-                  >
-                    Country
-                  </label>
+      <div className="container world-culture-festival__container">
+        <div className="world-culture-festival__column">
+          <div className="wcf-form">
+            <div className="wcf-form__fields">
+              <div className="wcf-select wcf-form__field">
+                <label
+                  htmlFor="get-tickets-country"
+                  className="wcf-select__label"
+                >
+                  Country
+                </label>
 
-                  <div
-                    className={classNames("wcf-select__field", {
-                      error: errors.country,
-                    })}
-                  >
-                    <Field name="country" component={CountryInput} />
-                    {errors.country && (
-                      <label
-                        for="welcome-sessions"
-                        class="wcf-select__error-message"
-                      >
-                        {errors.country}
-                      </label>
-                    )}
-                  </div>
-                </div>
-
-                {values.country === "US" && (
-                  <div className="wcf-select wcf-form__field">
-                    <label
-                      htmlFor="get-tickets-state"
-                      className="wcf-select__label"
-                    >
-                      State
-                    </label>
-
-                    <div
-                      className={classNames("wcf-select__field", {
-                        error: errors.state,
-                      })}
-                    >
-                      <Field name="state" component={StateInput} />
-                      {errors.state && (
-                        <label
-                          for="welcome-sessions"
-                          class="wcf-select__error-message"
-                        >
-                          {errors.state}
-                        </label>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                <div className="wcf-combined-input wcf-form__field">
-                  <label
-                    htmlFor="get-tickets-phone"
-                    className="wcf-combined-input__label"
-                  >
-                    Phone number
-                  </label>
-                  <Field name="phoneNumber" component={PhoneNumberInputField} />
-                  {errors.phoneNumber && (
+                <div
+                  className={classNames("wcf-select__field", {
+                    error: errors.country,
+                  })}
+                >
+                  <Field name="country" component={CountryInput} />
+                  {errors.country && (
                     <label
                       for="welcome-sessions"
                       class="wcf-select__error-message"
                     >
-                      {errors.phoneNumber}
+                      {errors.country}
                     </label>
                   )}
                 </div>
               </div>
 
-              <button
-                className="wcf-button wcf-form__button"
-                onClick={onNextAction}
-              >
-                Get passes
-              </button>
+              {values.country === "US" && (
+                <div className="wcf-select wcf-form__field">
+                  <label
+                    htmlFor="get-tickets-state"
+                    className="wcf-select__label"
+                  >
+                    State
+                  </label>
+
+                  <div
+                    className={classNames("wcf-select__field", {
+                      error: errors.state,
+                    })}
+                  >
+                    <Field name="state" component={StateInput} />
+                    {errors.state && (
+                      <label
+                        for="welcome-sessions"
+                        class="wcf-select__error-message"
+                      >
+                        {errors.state}
+                      </label>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="wcf-combined-input wcf-form__field">
+                <label
+                  htmlFor="get-tickets-phone"
+                  className="wcf-combined-input__label"
+                >
+                  Phone number
+                </label>
+                <Field name="phoneNumber" component={PhoneNumberInputField} />
+                {errors.phoneNumber && (
+                  <label
+                    for="welcome-sessions"
+                    class="wcf-select__error-message"
+                  >
+                    {errors.phoneNumber}
+                  </label>
+                )}
+              </div>
             </div>
-            <Field
-              type="checkbox"
-              name="agreement"
-              className="wcf-checkbox__field"
-              component={AgreementField}
-            />
+
+            <button
+              className="wcf-button wcf-form__button"
+              onClick={onNextAction}
+            >
+              Get passes
+            </button>
           </div>
+          <Field
+            type="checkbox"
+            name="agreement"
+            className="wcf-checkbox__field"
+            component={AgreementField}
+          />
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }

@@ -139,91 +139,84 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
   };
 
   return (
-    <main>
-      <section className="world-culture-festival">
-        <div className="world-culture-festival__background world-culture-festival__background_people-3">
-          <img src="/img/wcf-bg-image.png" />
-        </div>
+    <section className="world-culture-festival">
+      <div className="world-culture-festival__background world-culture-festival__background_people-3">
+        <img src="/img/wcf-bg-image.png" />
+      </div>
 
-        <div className="container world-culture-festival__container">
-          <div className="world-culture-festival__column">
-            <h2 className="wcf-h2 world-culture-festival__title mb-0">
-              Welcome
-            </h2>
-            <p className="wcf-body world-culture-festival__subtitle text-center">
-              General Admission Festival Passes (FREE)
-            </p>
+      <div className="container world-culture-festival__container">
+        <div className="world-culture-festival__column">
+          <h2 className="wcf-h2 world-culture-festival__title mb-0">Welcome</h2>
+          <p className="wcf-body world-culture-festival__subtitle text-center">
+            General Admission Festival Passes (FREE)
+          </p>
 
-            <div className="wcf-form">
-              <div className="wcf-form__fields">
-                <div className="wcf-select wcf-form__field">
-                  <label
-                    htmlFor="welcome-tickets"
-                    className="wcf-select__label"
-                  >
-                    Choose the number of passes
-                  </label>
+          <div className="wcf-form">
+            <div className="wcf-form__fields">
+              <div className="wcf-select wcf-form__field">
+                <label htmlFor="welcome-tickets" className="wcf-select__label">
+                  Choose the number of passes
+                </label>
 
-                  <div
-                    className={classNames("wcf-select__field", {
-                      error: errors.ticketCount,
-                    })}
-                  >
-                    <Field name="ticketCount" component={NoOfTicketInput} />
-                    {errors.ticketCount && (
-                      <label
-                        for="welcome-sessions"
-                        class="wcf-select__error-message"
-                      >
-                        {errors.ticketCount}
-                      </label>
-                    )}
-                  </div>
-
-                  <label htmlFor="welcome-tickets" className="wcf-select__info">
-                    *6 passes maximum
-                  </label>
-                </div>
-
-                <div className="wcf-select wcf-form__field">
-                  <label
-                    htmlFor="welcome-attending"
-                    className="wcf-select__label"
-                  >
-                    Sessions attending
-                  </label>
-
-                  <div
-                    className={classNames("wcf-select__field", {
-                      error: errors.sessionsAttending,
-                    })}
-                  >
-                    <Field
-                      name="sessionsAttending"
-                      component={WelcomeSessionsInput}
-                    />
-                  </div>
-                  {errors.sessionsAttending && (
+                <div
+                  className={classNames("wcf-select__field", {
+                    error: errors.ticketCount,
+                  })}
+                >
+                  <Field name="ticketCount" component={NoOfTicketInput} />
+                  {errors.ticketCount && (
                     <label
                       for="welcome-sessions"
                       class="wcf-select__error-message"
                     >
-                      {errors.sessionsAttending}
+                      {errors.ticketCount}
                     </label>
                   )}
                 </div>
+
+                <label htmlFor="welcome-tickets" className="wcf-select__info">
+                  *6 passes maximum
+                </label>
               </div>
 
-              <button
-                className="wcf-button wcf-form__button"
-                onClick={onNextAction}
-              >
-                Next
-              </button>
+              <div className="wcf-select wcf-form__field">
+                <label
+                  htmlFor="welcome-attending"
+                  className="wcf-select__label"
+                >
+                  Sessions attending
+                </label>
+
+                <div
+                  className={classNames("wcf-select__field", {
+                    error: errors.sessionsAttending,
+                  })}
+                >
+                  <Field
+                    name="sessionsAttending"
+                    component={WelcomeSessionsInput}
+                  />
+                </div>
+                {errors.sessionsAttending && (
+                  <label
+                    for="welcome-sessions"
+                    class="wcf-select__error-message"
+                  >
+                    {errors.sessionsAttending}
+                  </label>
+                )}
+              </div>
             </div>
+
+            <button
+              className="wcf-button wcf-form__button"
+              onClick={onNextAction}
+            >
+              Next
+            </button>
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }
