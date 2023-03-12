@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { api, isSSR } from "@utils";
 import { useQuery } from "react-query";
 // import { DesignOne, DesignTwo } from "@components/content";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Navigation, Scrollbar, A11y } from "swiper";
 import { useQueryString } from "@hooks";
 import { PurchaseMembershipModal, Loader } from "@components";
 import {
@@ -21,7 +21,6 @@ import ErrorPage from "next/error";
 
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 import "swiper/css/a11y";
 import "swiper/css/scrollbar";
 
@@ -289,7 +288,7 @@ export default function Library() {
   }
 
   let swiperOption = {
-    modules: [Navigation, Pagination, Scrollbar, A11y],
+    modules: [Navigation, Scrollbar, A11y],
     allowTouchMove: true,
     slidesPerView: slidesPerView,
     spaceBetween: 30,
@@ -313,6 +312,15 @@ export default function Library() {
       },
     },
   };
+
+  if (typeof window !== "undefined") {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      swiperOption = {
+        ...swiperOption,
+        navigation: false,
+      };
+    }
+  }
 
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);

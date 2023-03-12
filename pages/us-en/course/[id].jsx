@@ -10,7 +10,7 @@ import ErrorPage from "next/error";
 //   SriSriYoga,
 //   VolunteerTrainingProgram,
 // } from "@components/courseDetails";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Navigation, Scrollbar, A11y } from "swiper";
 import { COURSE_TYPES } from "@constants";
 import { NextSeo } from "next-seo";
 import { useAuth } from "@contexts";
@@ -20,7 +20,6 @@ import { useQuery } from "react-query";
 
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 import "swiper/css/a11y";
 import "swiper/css/scrollbar";
 
@@ -154,48 +153,50 @@ function CourseDetail() {
   }, [router.isReady, data]);
 
   let swiperOption = {
-    modules: [Navigation, Pagination, Scrollbar, A11y],
+    modules: [Navigation, Scrollbar, A11y],
     allowTouchMove: false,
     slidesPerView: 4,
     spaceBetween: 30,
     slidesOffsetBefore: 300,
     preventInteractionOnTransition: true,
     navigation: true,
+    centeredSlides: false,
   };
   if (typeof window !== "undefined") {
     if (window.matchMedia("(max-width: 768px)").matches) {
+      console.log("(max-width: 768px)");
       swiperOption = {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        centeredSlides: true,
+        modules: [Navigation, Scrollbar, A11y],
+        slidesPerView: 1.1,
+        spaceBetween: 10,
+        centeredSlides: false,
         navigation: false,
+        allowTouchMove: true,
+        preventInteractionOnTransition: false,
       };
     } else if (window.matchMedia("(max-width: 1024px)").matches) {
+      console.log("(max-width: 1024px)");
       swiperOption = {
-        allowTouchMove: false,
+        ...swiperOption,
         slidesPerView: 2,
         spaceBetween: 30,
         centeredSlides: true,
-        preventInteractionOnTransition: true,
-        navigation: true,
       };
     } else if (window.matchMedia("(max-width: 1440px)").matches) {
+      console.log("(max-width: 1440px)");
       swiperOption = {
-        allowTouchMove: false,
+        ...swiperOption,
         slidesPerView: 3,
         spaceBetween: 30,
         slidesOffsetBefore: 150,
-        preventInteractionOnTransition: true,
-        navigation: true,
       };
     } else {
+      console.log("(max-width: else)");
       swiperOption = {
-        allowTouchMove: false,
+        ...swiperOption,
         slidesPerView: 4,
         spaceBetween: 30,
         slidesOffsetBefore: 300,
-        preventInteractionOnTransition: true,
-        navigation: true,
       };
     }
   }

@@ -282,6 +282,15 @@ export default function WisdomSnippets() {
     },
   };
 
+  if (typeof window !== "undefined") {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      swiperOption = {
+        ...swiperOption,
+        navigation: false,
+      };
+    }
+  }
+
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
