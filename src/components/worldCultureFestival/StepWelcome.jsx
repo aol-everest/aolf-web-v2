@@ -26,8 +26,6 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
         { text: "2 (two)", id: 2 },
         { text: "3 (three)", id: 3 },
         { text: "4 (four)", id: 4 },
-        { text: "5 (five)", id: 5 },
-        { text: "6 (six)", id: 6 },
       ]}
       options={{
         placeholder: "1 (one)",

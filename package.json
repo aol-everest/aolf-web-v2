@@ -88,7 +88,7 @@
     "reactstrap": "^8.10.1",
     "remove-markdown": "^0.5.0",
     "sass": "^1.56.1",
-    "swiper": "^7.4.1",
+    "swiper": "7.4.1",
     "use-analytics": "^0.0.5",
     "video-react": "^0.16.0",
     "yup": "^0.32.11",
