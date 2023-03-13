@@ -6,6 +6,7 @@ import classNames from "classnames";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { Loader } from "@components";
+import "yup-phone";
 import { isEmpty } from "@utils";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { DiscountCodeInput, Dropdown } from "@components/checkout";

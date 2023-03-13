@@ -1,6 +1,12 @@
+.wcf-form,
+.profile {
+  .react-tel-input {
+    width: 100%;
+  }
+}
 .react-tel-input {
   position: relative;
-  width: 100%;
+
   :disabled {
     cursor: not-allowed;
   }

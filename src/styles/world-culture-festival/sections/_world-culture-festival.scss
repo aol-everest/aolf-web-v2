@@ -8,6 +8,7 @@
 
   &__column {
     width: 380px;
+    position: relative;
   }
 
   &__title,
@@ -93,6 +94,12 @@
         transform: translateY(-50%);
       }
     }
+  }
+}
+
+#wcfSelect {
+  .select2-search--dropdown {
+    // display: none !important;
   }
 }
 

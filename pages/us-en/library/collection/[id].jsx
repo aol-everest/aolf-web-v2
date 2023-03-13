@@ -131,6 +131,7 @@ function Tile({
 function Collection() {
   const router = useRouter();
   const { user, authenticated } = useAuth();
+  const [folderName] = useQueryString("folderName");
   const { id: folderId } = router.query;
   const {
     data: rootFolder,
@@ -239,12 +240,22 @@ function Collection() {
       <div className="sleep-collection">
         <section className="top-column">
           <div className="container">
-            <p className="type-course">Guided Meditations</p>
+            {folderName && <p className="type-course">{folderName}</p>}
+            {!folderName && <p className="type-course">Guided Meditations</p>}
             <h1 className="course-name">{rootFolder.title}</h1>
-            <p className="type-guide">
-              Guided Meditations for {rootFolder.title}
-              <br />
-            </p>
+
+            {folderName && (
+              <p className="type-guide">
+                {folderName} for {rootFolder.title}
+                <br />
+              </p>
+            )}
+            {!folderName && (
+              <p className="type-guide">
+                Guided Meditations for {rootFolder.title}
+                <br />
+              </p>
+            )}
           </div>
         </section>
         <section className="courses">

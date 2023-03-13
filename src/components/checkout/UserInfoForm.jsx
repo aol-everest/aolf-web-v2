@@ -1,5 +1,7 @@
 import React, { Fragment } from "react";
 import { StyledInput } from "./StyledInput";
+import { PhoneNumberInputField } from "./PhoneNumberInputField";
+import { Field } from "formik";
 
 export const UserInfoForm = ({ formikProps, isHBCheckout = false }) => {
   return (
@@ -33,19 +35,16 @@ export const UserInfoForm = ({ formikProps, isHBCheckout = false }) => {
           event.preventDefault();
         }}
       ></StyledInput>
-      <StyledInput
-        isPhoneNumberMask
-        placeholder="Phone No"
-        maxLength="16"
+      <Field
+        name="contactPhone"
         type="tel"
-        formikProps={formikProps}
-        formikKey="contactPhone"
+        component={PhoneNumberInputField}
         tip={
           isHBCheckout
             ? "This number will be used to send reminder texts"
             : null
         }
-      ></StyledInput>
+      />
     </Fragment>
   );
 };

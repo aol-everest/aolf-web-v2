@@ -360,7 +360,7 @@ export const DesignOne = ({
               <SwiperSlide key={folder.id} className="category-slide-item">
                 <Link
                   prefetch={false}
-                  href={`/us-en/library/collection/${folder.id}`}
+                  href={`/us-en/library/collection/${folder.id}?folderName=${data.title}`}
                   passHref
                 >
                   <div

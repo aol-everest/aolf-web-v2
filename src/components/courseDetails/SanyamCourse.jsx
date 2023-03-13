@@ -470,7 +470,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                   <div class="art-section__icon">
                     <img src="/img/art-section-third.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">800M+ lives</div>
+                  <div class="art-section__name">500M+ lives</div>
                   <div class="art-section__text">
                     touched through our courses & events
                   </div>

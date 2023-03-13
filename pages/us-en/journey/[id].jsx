@@ -1,4 +1,4 @@
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Navigation, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { api, isSSR } from "@utils";
 import { PageLoading } from "@components";
@@ -8,7 +8,6 @@ import ErrorPage from "next/error";
 
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 import "swiper/css/a11y";
 import "swiper/css/scrollbar";
 
@@ -83,7 +82,7 @@ function Journey() {
   }
 
   let swiperOption = {
-    modules: [Navigation, Pagination, Scrollbar, A11y],
+    modules: [Navigation, Scrollbar, A11y],
     allowTouchMove: true,
     slidesPerView: slidesPerView,
     spaceBetween: 30,
@@ -107,6 +106,14 @@ function Journey() {
       },
     },
   };
+  if (typeof window !== "undefined") {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      swiperOption = {
+        ...swiperOption,
+        navigation: false,
+      };
+    }
+  }
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <PageLoading />;

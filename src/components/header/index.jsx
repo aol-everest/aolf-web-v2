@@ -127,7 +127,7 @@ const AOL_MENU = [
     submenu: [
       {
         name: "Guided meditations",
-        link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+        link: `/us-en/library/guided-meditations`,
       },
       {
         name: "Live meetups",
@@ -156,7 +156,7 @@ const AOL_MENU = [
       },
       {
         name: "Wisdom Snippets",
-        link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
+        link: `/us-en/library/wisdom-snippets`,
       },
       // {
       //   name: "Meditation",

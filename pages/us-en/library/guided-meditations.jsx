@@ -15,7 +15,12 @@ import {
 } from "@contexts";
 import { useAuth } from "@contexts";
 import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import {
+  MODAL_TYPES,
+  ALERT_TYPES,
+  MEMBERSHIP_TYPES,
+  CONTENT_FOLDER_IDS,
+} from "@constants";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 
@@ -38,48 +43,11 @@ const CATEGORY_IMAGES = [
   "/img/card-4a.png",
 ];
 
-/* export const getServerSideProps = async (context) => {
-  const { query, req, res } = context;
-  const { id } = query;
-  let props = {};
-  let token = "";
-  try {
-    const { Auth } = await withSSRContext({ req });
-    const user = await Auth.currentAuthenticatedUser();
-    const currentSession = await Auth.currentSession();
-    token = currentSession.idToken.jwtToken;
-    props = {
-      authenticated: true,
-      username: user.username,
-      token,
-    };
-  } catch (err) {
-    props = {
-      authenticated: false,
-    };
-  }
-  const { data } = await api.get({
-    path: "library",
-    token,
-    param: {
-      folderId: id,
-    },
-  });
-  if (data.folder.length === 0) {
-    throw new Error("Invalid Folder Id");
-  }
-  props = {
-    ...props,
-    data,
-  };
-  // Pass data to the page via props
-  return { props };
-}; */
-
-export default function Library() {
+export default function GuidedMeditations() {
   const { authenticated } = useAuth();
   const router = useRouter();
-  const { id: folderId } = router.query;
+  const folderId = CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID;
+  // const { id: folderId } = router.query;
   const {
     data: rootFolder,
     isLoading,
