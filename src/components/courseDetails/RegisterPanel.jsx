@@ -140,8 +140,24 @@ export const RegisterPanel = ({ workshop }) => {
             )}
           </div>
         </div>
-        <div className="bottom-box justify-content-md-center">
-          <button className="btn-secondary v2" onClick={handleRegister}>
+        <div
+          className={classNames("bottom-box justify-content-md-center", {
+            "!tw-ml-0": !preRequisiteCondition,
+          })}
+        >
+          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+            {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+                Eligibility: Completion of {preRequisiteCondition}
+              </p>
+            )}
+          </div>
+          <button
+            className={classNames("btn-secondary v2", {
+              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
+            })}
+            onClick={handleRegister}
+          >
             Register Today
           </button>
         </div>
@@ -162,8 +178,24 @@ export const RegisterPanel = ({ workshop }) => {
             </p>
           )}
         </div>
-        <div className="bottom-box justify-content-md-center">
-          <button className="btn-secondary v2" onClick={handleRegister}>
+        <div
+          className={classNames("bottom-box justify-content-md-center", {
+            "!tw-ml-0": !preRequisiteCondition,
+          })}
+        >
+          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+            {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+                Eligibility: Completion of {preRequisiteCondition}
+              </p>
+            )}
+          </div>
+          <button
+            className={classNames("btn-secondary v2", {
+              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
+            })}
+            onClick={handleRegister}
+          >
             Register Today
           </button>
         </div>
@@ -215,8 +247,24 @@ export const RegisterPanel = ({ workshop }) => {
             </h3>
           )}
         </div>
-        <div className="bottom-box justify-content-md-center">
-          <button className="btn-secondary v2" onClick={handleRegister}>
+        <div
+          className={classNames("bottom-box justify-content-md-center", {
+            "!tw-ml-0": !preRequisiteCondition,
+          })}
+        >
+          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+            {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+                Eligibility: Completion of {preRequisiteCondition}
+              </p>
+            )}
+          </div>
+          <button
+            className={classNames("btn-secondary v2", {
+              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
+            })}
+            onClick={handleRegister}
+          >
             Register Today
           </button>
         </div>
@@ -300,18 +348,15 @@ export const RegisterPanel = ({ workshop }) => {
             ) : (
               <div />
             )}
-            {isVolunteerTrainingProgram &&
-              preRequisiteCondition &&
-              preRequisiteCondition.length > 0 && (
-                <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                  Eligibility: Completion of {preRequisiteCondition}
-                </p>
-              )}
+            {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+                Eligibility: Completion of {preRequisiteCondition}
+              </p>
+            )}
           </div>
           <button
             className={classNames("btn-secondary", {
-              "max-[770px]:tw-mt-[10px]":
-                earlyBirdFeeIncreasing || preRequisiteCondition,
+              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
             })}
             onClick={handleRegister}
           >
@@ -354,23 +399,37 @@ export const RegisterPanel = ({ workshop }) => {
         <div
           className={classNames("bottom-box", {
             "justify-content-md-center": !earlyBirdFeeIncreasing,
+            "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
-          {earlyBirdFeeIncreasing ? (
-            <>
-              <img src="/img/ic-timer-orange.svg" alt="timer" />
-              <p>
-                Register soon. Course fee will go up by $
-                {earlyBirdFeeIncreasing.increasingFee} on{" "}
-                {dayjs
-                  .utc(earlyBirdFeeIncreasing.increasingByDate)
-                  .format("MMM D, YYYY")}
+          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+            {earlyBirdFeeIncreasing ? (
+              <div class="tw-flex !tw-ml-0">
+                <img src="/img/ic-timer-orange.svg" alt="timer" />
+                <p>
+                  Register soon. Course fee will go up by $
+                  {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                  {dayjs
+                    .utc(earlyBirdFeeIncreasing.increasingByDate)
+                    .format("MMM D, YYYY")}
+                </p>
+              </div>
+            ) : (
+              <div />
+            )}
+            {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+                Eligibility: Completion of {preRequisiteCondition}
               </p>
-            </>
-          ) : (
-            <div />
-          )}
-          <button className="btn-secondary" onClick={handleRegister}>
+            )}
+          </div>
+          <button
+            className={classNames("btn-secondary", {
+              "max-[770px]:tw-mt-[10px]":
+                earlyBirdFeeIncreasing || preRequisiteCondition,
+            })}
+            onClick={handleRegister}
+          >
             Register Today
           </button>
         </div>
@@ -412,21 +471,33 @@ export const RegisterPanel = ({ workshop }) => {
           </div>
         )}
       </div>
-      <div className="bottom-box">
-        {earlyBirdFeeIncreasing ? (
-          <>
-            <img src="/img/ic-timer-orange.svg" alt="timer" />
-            <p className="!tw-text-xs">
-              Register soon. Course fee will go up by $
-              {earlyBirdFeeIncreasing.increasingFee} on{" "}
-              {dayjs
-                .utc(earlyBirdFeeIncreasing.increasingByDate)
-                .format("MMM D, YYYY")}
+      <div
+        className={classNames("bottom-box", {
+          "justify-content-md-center": !earlyBirdFeeIncreasing,
+          "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
+        })}
+      >
+        <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+          {earlyBirdFeeIncreasing ? (
+            <div class="tw-flex !tw-ml-0">
+              <img src="/img/ic-timer-orange.svg" alt="timer" />
+              <p class="!tw-mt-1 !tw-text-sm">
+                Register soon. Course fee will go up by $
+                {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                {dayjs
+                  .utc(earlyBirdFeeIncreasing.increasingByDate)
+                  .format("MMM D, YYYY")}
+              </p>
+            </div>
+          ) : (
+            <div />
+          )}
+          {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+            <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+              Eligibility: Completion of {preRequisiteCondition}
             </p>
-          </>
-        ) : (
-          <div />
-        )}
+          )}
+        </div>
         <div className="btn-wrapper">
           <button className="btn-outline" onClick={handleRegister}>
             Join at the full rate
