@@ -582,7 +582,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                 <h6 className="program-founder__author program-founder__author_title">
                   Founder of the Art of Living
                 </h6>
-                <h3 className="program-founder__text">
+                <h3 className="program-founder__text max-[770px]:tw-w-[200px]">
                   The ultimate purpose of life is to be of service.
                 </h3>
               </div>
