@@ -170,7 +170,7 @@ function WorldCultureFestival() {
   return (
     <main>
       <Head>
-        <title>World culture festival</title>
+        <title>World Culture Festival</title>
       </Head>
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
       {loading && <div className="cover-spin"></div>}
