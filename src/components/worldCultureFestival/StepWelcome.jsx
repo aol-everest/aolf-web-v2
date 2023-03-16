@@ -173,7 +173,7 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
                 </div>
 
                 <label htmlFor="welcome-tickets" className="wcf-select__info">
-                  *6 passes maximum
+                  *4 passes maximum
                 </label>
               </div>
 

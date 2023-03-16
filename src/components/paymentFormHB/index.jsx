@@ -582,6 +582,7 @@ export const PaymentFormHB = ({
     programQuestionnaire,
     title,
     isCCNotRequired,
+    paymentMethod = {},
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -612,9 +613,10 @@ export const PaymentFormHB = ({
     personMobilePhone,
     personMailingStreet,
     personMailingCity,
-    isRegisteredStripeCustomer,
-    cardLast4Digit,
   } = profile;
+
+  const { cardLast4Digit = null } = paymentMethod;
+
   const questionnaire = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
         key: current.questionSfid,
@@ -935,7 +937,7 @@ export const PaymentFormHB = ({
                         data-method="card"
                       >
                         <>
-                          {!isRegisteredStripeCustomer &&
+                          {!cardLast4Digit &&
                             !isCCNotRequired &&
                             isCreditCardRequired !== false && (
                               <div className="card-element">
@@ -943,7 +945,7 @@ export const PaymentFormHB = ({
                               </div>
                             )}
 
-                          {isRegisteredStripeCustomer &&
+                          {cardLast4Digit &&
                             !isChangingCard &&
                             !isCCNotRequired &&
                             isCreditCardRequired !== false && (
@@ -978,7 +980,7 @@ export const PaymentFormHB = ({
                               </>
                             )}
 
-                          {isRegisteredStripeCustomer && isChangingCard && (
+                          {cardLast4Digit && isChangingCard && (
                             <>
                               <div className="card-element">
                                 <CardElement options={createOptions} />

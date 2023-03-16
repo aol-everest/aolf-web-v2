@@ -22,10 +22,6 @@ import ErrorPage from "next/error";
 import { useQuery } from "react-query";
 import { orgConfig } from "@org";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-);
-
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
   title,
@@ -215,6 +211,8 @@ const Checkout = () => {
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <PageLoading />;
+
+  const stripePromise = loadStripe(workshop.publishableKey);
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
