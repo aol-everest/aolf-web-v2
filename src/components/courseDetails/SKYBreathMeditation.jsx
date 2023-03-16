@@ -506,7 +506,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
           <div className="container">
             <div className="offset-lg-6">
               <p className="quote-section__name">
-                Sri Sri Ravi Shankar
+                Gurudev Sri Sri Ravi Shankar
                 <span>Founder of The Art of Living</span>
               </p>
               <p className="quote-section__quote">
