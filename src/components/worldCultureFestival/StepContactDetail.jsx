@@ -8,6 +8,7 @@ import { US_STATES } from "@constants";
 import classNames from "classnames";
 import { useAnalytics } from "use-analytics";
 import { useRouter } from "next/router";
+import { trim, extend, forEach } from "lodash";
 
 function formatCountryOption(state) {
   if (!state.id) return state.text;
@@ -16,6 +17,27 @@ function formatCountryOption(state) {
       <img src='https://hatscripts.github.io/circle-flags/flags/${state.element.value.toLowerCase()}.svg' class='wcf-country-option__image'/>
       <span class='wcf-country-option__text'>${state.text}</span>
     </span>`;
+}
+
+function matchStart(params, data) {
+  // If there are no search terms, return all of the data
+  if (trim(params.term) === "") {
+    return data;
+  }
+
+  // Do not display the item if there is no 'text' property
+  if (typeof data.text === "undefined") {
+    return null;
+  }
+
+  // `params.term` should be the term that is used for searching
+  // `data.text` is the text that is displayed for the data object
+  if (data.text.toUpperCase().startsWith(params.term.toUpperCase())) {
+    return data;
+  }
+
+  // Return `null` if the term should not be displayed
+  return null;
 }
 
 const CountryInput = ({ field, form, ...props }) => {
@@ -51,6 +73,7 @@ const CountryInput = ({ field, form, ...props }) => {
         escapeMarkup: function (m) {
           return m;
         },
+        matcher: matchStart,
       }}
       onChange={onChangeAction}
     />
@@ -82,6 +105,7 @@ const StateInput = ({ field, form, ...props }) => {
       options={{
         placeholder: "Select your state",
         dropdownParent: "#wcfSelect",
+        matcher: matchStart,
       }}
       onChange={onChangeAction}
     />
