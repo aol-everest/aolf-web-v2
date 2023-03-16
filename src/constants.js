@@ -118,7 +118,7 @@ export const COURSE_TYPES = {
   },
   SKY_HAPPINESS_RETREAT: {
     name: "SKY Happiness Retreat",
-    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
+    value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || "",
   },
   BLESSINGS_COURSE: {
     name: "Blessings Course",
