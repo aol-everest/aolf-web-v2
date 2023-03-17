@@ -306,7 +306,7 @@ export const SilentRetreat = ({ data, swiperOption }) => {
           <div className="container">
             <div className="offset-lg-6">
               <p className="quote-section__name">
-                Sri Sri Ravi Shankar
+                Gurudev Sri Sri Ravi Shankar
                 <span>Founder of The Art of Living</span>
               </p>
               <p className="quote-section__quote">
@@ -329,10 +329,10 @@ export const SilentRetreat = ({ data, swiperOption }) => {
                 <h3>Release deep layers of stress</h3>
                 <p className="life-time__text">
                   Experience a set of unique guided meditations, designed by
-                  meditation master, Sri Sri Ravi Shankar, geared towards
-                  drawing out the deepest layers of stress and tension from the
-                  nervous system, leaving you with a feeling of lightness,
-                  freedom, energy, and joy.
+                  meditation master, Gurudev Sri Sri Ravi Shankar, geared
+                  towards drawing out the deepest layers of stress and tension
+                  from the nervous system, leaving you with a feeling of
+                  lightness, freedom, energy, and joy.
                 </p>
               </div>
               <div className="life-time__block">
