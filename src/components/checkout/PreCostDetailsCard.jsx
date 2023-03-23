@@ -47,6 +47,10 @@ export const PreCostDetailsCard = ({
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const isMeditationDeluxe =
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(productTypeId) >= 0;
+  const gatewayToInfinity =
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(productTypeId) >= 0;
   const isJourneyPremium =
     !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus =
@@ -59,6 +63,112 @@ export const PreCostDetailsCard = ({
     !isComboDetailAvailable &&
     !isCourseOptionRequired
   ) {
+    if (isMeditationDeluxe) {
+      return (
+        <div class="reciept reciept--box d-none d-lg-block">
+          <div class="reciept__header">
+            <p class="reciept__item reciept__item_main font-weight-normal">
+              <span>
+                <img src="/img/ic-timer.svg" alt="timer" />
+                Limited Time Offer
+              </span>
+            </p>
+            <ul class="reciept__item_list ">
+              <li>
+                <p class="font-weight-normal">Gateways to Infinity</p>
+                <p class="font-weight-bold">
+                  <span class="discount font-weight-bold">[$590] [$90]</span> $0
+                </p>
+              </li>
+              <li>
+                <p class="font-weight-normal">{title}</p>
+                <p class="font-weight-bold">
+                  {delfee && (
+                    <span className="discount font-weight-bold">
+                      [${delfee}]
+                    </span>
+                  )}{" "}
+                  ${fee}
+                </p>
+              </li>
+            </ul>
+          </div>
+
+          <div class="reciept__details text-center">
+            <a href="">
+              <img
+                src="/img/trustpilot-logo-mobile.png"
+                width="129"
+                height="61"
+                alt="logo"
+              />
+            </a>
+
+            <p class="comments__quote comments__quote--max-width mt-4">
+              “I used to suffer from anxiety and my health was greatly affected
+              by it. I feel so free and light now.”
+              <span class="d-block mt-3 font-normal">- Millie I.</span>
+            </p>
+          </div>
+
+          <div class="reciept__more">
+            Additional Notes: Housing will be offsite. Please contact the course
+            coordinator for details, and to make arrangements.
+            <a href="#">See more</a>
+          </div>
+        </div>
+      );
+    }
+    if (gatewayToInfinity) {
+      return (
+        <div class="reciept reciept--box d-none d-lg-block">
+          <div class="reciept__header">
+            <p class="reciept__item reciept__item_main font-weight-normal">
+              <span>
+                <img src="/img/ic-timer.svg" alt="timer" />
+                Limited Time Offer
+              </span>
+            </p>
+            <ul class="reciept__item_list ">
+              <li>
+                <p class="font-weight-normal">Regular rate</p>
+                <p class="font-weight-bold">
+                  {delfee && (
+                    <span className="discount font-weight-bold">
+                      [${delfee}]
+                    </span>
+                  )}{" "}
+                  ${fee}
+                </p>
+              </li>
+            </ul>
+          </div>
+
+          <div class="reciept__details text-center">
+            <a href="">
+              <img
+                src="/img/trustpilot-logo-mobile.png"
+                width="129"
+                height="61"
+                alt="logo"
+              />
+            </a>
+
+            <p class="comments__quote comments__quote--max-width mt-4">
+              “I used to suffer from anxiety and my health was greatly affected
+              by it. I feel so free and light now.”
+              <span class="d-block mt-3 font-normal">- Millie I.</span>
+            </p>
+          </div>
+
+          <div class="reciept__more">
+            Additional Notes: Housing will be offsite. Please contact the course
+            coordinator for details, and to make arrangements.
+            <a href="#">See more</a>
+          </div>
+        </div>
+      );
+    }
     if (isSilentRetreatType) {
       return (
         <>

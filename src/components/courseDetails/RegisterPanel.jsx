@@ -31,6 +31,7 @@ export const RegisterPanel = ({ workshop }) => {
     earlyBirdPriceBook,
     repeaterPriceBook,
     standardPriceBook,
+    aosCountRequisite,
   } = workshop || {};
 
   const isSKYType =
@@ -116,9 +117,13 @@ export const RegisterPanel = ({ workshop }) => {
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
+  const aosCount =
+    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : "";
+
   const preRequisiteCondition = preRequisite
     .join(", ")
-    .replace(/,(?=[^,]+$)/, " and");
+    .replace(/,(?=[^,]+$)/, " and")
+    .replace("Silent Retreat", `${aosCount} Silent Retreat`);
 
   if (isSahajSamadhiMeditationType) {
     return (
@@ -277,7 +282,7 @@ export const RegisterPanel = ({ workshop }) => {
         <div class="offer__banner offer__banner--sanyam-bg banner-offer">
           <h5 class="banner-offer__title meditation-title_blue">
             <span class="meditation-title_blue--block">
-              Eligibility: SKY Breath Meditation and four Silent Retreats
+              Eligibility: {preRequisiteCondition}{" "}
             </span>
             are prerequisites to enroll in the Sanyam Course.
           </h5>
