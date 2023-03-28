@@ -81,7 +81,7 @@ export const PreCostDetailsCard = ({
                 </p>
               </li>
               <li>
-                <p class="font-weight-normal">{title}</p>
+                <p class="font-weight-normal">SKY Breath Meditation</p>
                 <p class="font-weight-bold">
                   {delfee && (
                     <span className="discount font-weight-bold">
