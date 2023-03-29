@@ -136,6 +136,14 @@ export const COURSE_TYPES = {
     name: "Sanyam Course",
     value: process.env.NEXT_PUBLIC_SANYAM_COURSE_CTYPE || "",
   },
+  MEDITATION_DELUXE_COURSE: {
+    name: "MEDITATION_DELUXE_COURSE",
+    value: process.env.NEXT_PUBLIC_MEDITATION_DELUXE_CTYPE || "",
+  },
+  GATEWAY_TO_INFINITY_COURSE: {
+    name: "GATEWAY_TO_INFINITY_COURSE",
+    value: process.env.NEXT_PUBLIC_GATEWAY_TO_INFINITY_CTYPE || "",
+  },
 };
 
 export const MEETUP_TYPES = {

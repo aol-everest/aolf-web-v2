@@ -80,6 +80,11 @@
     color: #31364e;
     margin-top: 20px;
     margin-bottom: 15px;
+
+    &--max-width {
+      max-width: 250px;
+      margin: auto;
+    }
   }
 
   &__text {
