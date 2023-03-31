@@ -22,6 +22,7 @@ const allOrganizationConfig = [
       "SILENT_RETREAT",
       "SAHAJ_SAMADHI_MEDITATION",
       "SRI_SRI_YOGA_MEDITATION",
+      "SKY_SILENT_RETREAT",
     ],
     otherCourseTypes: [
       "CHAKRA_KRIYA",
