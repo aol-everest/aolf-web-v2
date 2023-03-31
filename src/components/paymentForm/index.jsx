@@ -344,6 +344,7 @@ export const PaymentForm = ({
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
+      paymentMethod = {},
     } = workshop;
 
     const { isCreditCardRequired } = discountResponse || {};
@@ -374,15 +375,13 @@ export const PaymentForm = ({
       {},
     );
 
-    const { isRegisteredStripeCustomer } = profile || {};
-
     try {
       setLoading(true);
 
       let tokenizeCC = null;
       if (
         !isCCNotRequired &&
-        (!isRegisteredStripeCustomer || isChangingCard) &&
+        (paymentMethod.type !== "card" || isChangingCard) &&
         isCreditCardRequired !== false
       ) {
         const cardElement = elements.getElement(CardElement);
