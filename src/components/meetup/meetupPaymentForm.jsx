@@ -414,6 +414,7 @@ export const MeetupPaymentForm = ({
     primaryTeacherPhone,
     primaryTeacherEmail,
     mode,
+    freeWithSubscription,
   } = meetup;
 
   const { subscriptions = [] } = profile;
@@ -429,6 +430,8 @@ export const MeetupPaymentForm = ({
 
   const isDigitalMember =
     !!userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value];
+  const isJourneyPlusMember =
+    !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
   const { fee, delfee, offering } = priceCalculation({
     meetup,
@@ -804,7 +807,7 @@ export const MeetupPaymentForm = ({
                       RSVP:
                     </span>
                   </p>
-                  {!isDigitalMember && (
+                  {!isDigitalMember && !isJourneyPlusMember && (
                     <ul className="reciept__item_list">
                       <li>
                         <span>Regular rate:</span>
@@ -816,21 +819,29 @@ export const MeetupPaymentForm = ({
                         )}
                         {unitPrice === listPrice && <span>${unitPrice}</span>}
                       </li>
-                      {mode !== "In Person" && (
-                        <>
+                      {freeWithSubscription &&
+                        freeWithSubscription.subscriptionName && (
                           <li>
-                            <span>Digital Member rate:</span>
-                            {memberPrice !== listPrice && (
+                            <span>
+                              {freeWithSubscription.subscriptionName} rate:
+                            </span>
+                            {freeWithSubscription.subscriptionPrice !==
+                              listPrice && (
                               <span>
                                 <span className="discount">${listPrice}</span> $
-                                {memberPrice}
+                                {freeWithSubscription.subscriptionPrice}
                               </span>
                             )}
-                            {memberPrice === listPrice && (
-                              <span>${memberPrice}</span>
+                            {freeWithSubscription.subscriptionPrice ===
+                              listPrice && (
+                              <span>
+                                ${freeWithSubscription.subscriptionPrice}
+                              </span>
                             )}
                           </li>
-
+                        )}
+                      {mode !== "In Person" && (
+                        <>
                           <li className="btn-item">
                             <button
                               className="btn-outline"
@@ -843,23 +854,20 @@ export const MeetupPaymentForm = ({
                           </li>
                         </>
                       )}
-                    </ul>
-                  )}
-
-                  {isDigitalMember && (
-                    <ul className="reciept__item_list">
-                      <li>
-                        <span>Digital Member rate:</span>
-                        {memberPrice !== listPrice && (
-                          <span>
-                            <span className="discount">${listPrice}</span> $
-                            {memberPrice}
-                          </span>
-                        )}
-                        {memberPrice === listPrice && (
-                          <span>${memberPrice}</span>
-                        )}
-                      </li>
+                      {mode === "In Person" && (
+                        <>
+                          <li className="btn-item">
+                            <button
+                              className="btn-outline"
+                              onClick={openSubscriptionPaywallPage(
+                                MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+                              )}
+                            >
+                              Join Journey Plus Membership
+                            </button>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   )}
                 </div>
