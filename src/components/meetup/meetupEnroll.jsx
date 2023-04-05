@@ -46,6 +46,7 @@ export const MeetupEnroll = ({
     description,
     mode,
     subscriptionPlanRequired,
+    freeWithSubscription,
   } = selectedMeetup;
 
   // const isMandatoryWorkshopRequired = meetupMandatoryWorkshopId && isLoggedIn;
@@ -119,7 +120,7 @@ export const MeetupEnroll = ({
                 <div className={classNames("card full card-preffered")}>
                   <div className="card-body">
                     <p className="card-title">
-                      For non-members / Digital members
+                      {unitPrice === 0 ? "For members" : "For non-members"}
                     </p>
                     <p className="card-text">
                       {loading && <Loader />}
@@ -167,7 +168,7 @@ export const MeetupEnroll = ({
                         {!loading && (
                           <>
                             <span className="prev-price">${listPrice}</span> $
-                            {memberPrice}
+                            {0}
                           </>
                         )}
                       </p>
@@ -236,7 +237,7 @@ export const MeetupEnroll = ({
                           {!loading && (
                             <>
                               <span className="prev-price">${listPrice}</span> $
-                              {memberPrice}
+                              {0}
                             </>
                           )}
                         </p>
