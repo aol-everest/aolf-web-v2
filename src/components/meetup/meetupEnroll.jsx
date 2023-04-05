@@ -65,7 +65,7 @@ export const MeetupEnroll = ({
     inPersonMeetup &&
     subscriptions.filter((item) =>
       subscriptionPlanRequired.includes(item.subscriptionType),
-    ).length === 0;
+    )?.length === 0;
 
   const isDigitalMember =
     userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value];
