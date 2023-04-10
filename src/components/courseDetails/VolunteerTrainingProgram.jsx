@@ -270,6 +270,52 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                         )}
                       </div>
                     </div>
+
+                    <div className="details-info__item">
+                      <div className="details-info__text details-info__text_bold">
+                        Location:
+                      </div>
+                      <div className="details-info__text">
+                        {!data.isLocationEmpty && (
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${
+                              data?.locationStreet || ""
+                            }, ${data?.locationCity} ${
+                              data?.locationProvince
+                            } ${data?.locationPostalCode} ${
+                              data?.locationCountry
+                            }`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {data?.locationStreet || ""}
+                            <br />
+                            {data?.locationCity || ""}
+                            {", "}
+                            {data?.locationProvince || ""}{" "}
+                            {data?.locationPostalCode || ""}
+                          </a>
+                        )}
+                        {data.isLocationEmpty && (
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${
+                              data?.streetAddress1 || ""
+                            },${data?.streetAddress2 || ""} ${data?.city} ${
+                              data?.state
+                            } ${data?.zip} ${data?.country}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {data?.streetAddress1 || ""}
+                            {data?.streetAddress2 || ""}
+                            <br />
+                            {data?.city || ""}
+                            {", "}
+                            {data?.state || ""} {data?.zip || ""}
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
