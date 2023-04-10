@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Loader } from "@components";
 import { tConvert } from "@utils";
-import { ABBRS, MEMBERSHIP_TYPES } from "@constants";
+import { ABBRS, COURSE_MODES, MEMBERSHIP_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useRouter } from "next/router";
 
@@ -17,7 +17,7 @@ export const MeetupEnroll = ({
   loading,
   checkoutLoading,
 }) => {
-  const { authenticated = false, user } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const goToCheckout = (e) => {
@@ -44,10 +44,14 @@ export const MeetupEnroll = ({
     listPrice,
     memberPrice,
     description,
+    mode,
+    subscriptionPlanRequired,
+    freeWithSubscription,
   } = selectedMeetup;
 
   // const isMandatoryWorkshopRequired = meetupMandatoryWorkshopId && isLoggedIn;
   const { subscriptions = [] } = user.profile;
+  const inPersonMeetup = mode === COURSE_MODES.IN_PERSON.name;
 
   const userSubscriptions =
     subscriptions &&
@@ -57,6 +61,12 @@ export const MeetupEnroll = ({
         [currentValue.subscriptionMasterSfid]: currentValue,
       };
     }, {});
+
+  const noUpsellSubscriptions =
+    inPersonMeetup &&
+    subscriptions.filter((item) =>
+      subscriptionPlanRequired.includes(item.subscriptionType),
+    )?.length === 0;
 
   const isDigitalMember =
     userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value];
@@ -106,20 +116,23 @@ export const MeetupEnroll = ({
             </div>
 
             <div className="card-wrapper">
-              {(isDigitalMember || isPremiumMember || isBasicMember) && (
+              {noUpsellSubscriptions && (
                 <div className={classNames("card full card-preffered")}>
                   <div className="card-body">
                     <p className="card-title">
-                      For {isDigitalMember && "Digital"}
-                      {isPremiumMember && "Premium"}
-                      {isBasicMember && "Basic"} members
+                      {unitPrice === 0 ? "For members" : "For non-members"}
                     </p>
                     <p className="card-text">
                       {loading && <Loader />}
                       {!loading && (
                         <>
-                          <span className="prev-price">${listPrice}</span> $
-                          {memberPrice}
+                          {listPrice !== unitPrice && (
+                            <>
+                              <span className="prev-price">${listPrice}</span> $
+                              {unitPrice}
+                            </>
+                          )}
+                          {listPrice === unitPrice && <>${unitPrice}</>}
                         </>
                       )}
                     </p>
@@ -141,27 +154,28 @@ export const MeetupEnroll = ({
                   </div>
                 </div>
               )}
-
-              {!isDigitalMember && !isPremiumMember && !isBasicMember && (
-                <>
-                  <div className={classNames("card")}>
+              {(isDigitalMember || isPremiumMember || isBasicMember) &&
+                !noUpsellSubscriptions && (
+                  <div className={classNames("card full card-preffered")}>
                     <div className="card-body">
-                      <p className="card-title">For non-members</p>
+                      <p className="card-title">
+                        For {isDigitalMember && "Digital"}
+                        {isPremiumMember && "Premium"}
+                        {isBasicMember && "Basic"} members
+                      </p>
                       <p className="card-text">
                         {loading && <Loader />}
                         {!loading && (
                           <>
-                            {listPrice !== unitPrice && (
-                              <>
-                                <span className="prev-price">${listPrice}</span>{" "}
-                                ${unitPrice}
-                              </>
-                            )}
-                            {listPrice === unitPrice && <>${unitPrice}</>}
+                            <span className="prev-price">${listPrice}</span> $
+                            {0}
                           </>
                         )}
                       </p>
-                      <button className="btn" onClick={checkoutMeetup}>
+                      <button
+                        className="btn btn-preffered"
+                        onClick={checkoutMeetup}
+                      >
                         {checkoutLoading && (
                           <div className="loaded tw-py-0 tw-px-7">
                             <div className="loader">
@@ -175,28 +189,68 @@ export const MeetupEnroll = ({
                       </button>
                     </div>
                   </div>
-                  <div className="card card-preffered">
-                    <div className="card-body">
-                      <p className="card-title">For Digital members</p>
-                      <p className="card-text">
-                        {/* {loading && <Spinner />} */}
-                        {!loading && (
-                          <>
-                            <span className="prev-price">${listPrice}</span> $
-                            {memberPrice}
-                          </>
-                        )}
-                      </p>
-                      <button
-                        className="btn btn-preffered"
-                        onClick={goToCheckout}
-                      >
-                        Join Digital and RSVP
-                      </button>
+                )}
+
+              {!isDigitalMember &&
+                !isPremiumMember &&
+                !isBasicMember &&
+                !noUpsellSubscriptions && (
+                  <>
+                    <div className={classNames("card")}>
+                      <div className="card-body">
+                        <p className="card-title">For non-members</p>
+                        <p className="card-text">
+                          {loading && <Loader />}
+                          {!loading && (
+                            <>
+                              {listPrice !== unitPrice && (
+                                <>
+                                  <span className="prev-price">
+                                    ${listPrice}
+                                  </span>{" "}
+                                  ${unitPrice}
+                                </>
+                              )}
+                              {listPrice === unitPrice && <>${unitPrice}</>}
+                            </>
+                          )}
+                        </p>
+                        <button className="btn" onClick={checkoutMeetup}>
+                          {checkoutLoading && (
+                            <div className="loaded tw-py-0 tw-px-7">
+                              <div className="loader">
+                                <div className="loader-inner ball-clip-rotate">
+                                  <div />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          {!checkoutLoading && `RSVP`}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                    <div className="card card-preffered">
+                      <div className="card-body">
+                        <p className="card-title">For Digital members</p>
+                        <p className="card-text">
+                          {/* {loading && <Spinner />} */}
+                          {!loading && (
+                            <>
+                              <span className="prev-price">${listPrice}</span> $
+                              {0}
+                            </>
+                          )}
+                        </p>
+                        <button
+                          className="btn btn-preffered"
+                          onClick={goToCheckout}
+                        >
+                          Join Digital and RSVP
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
             </div>
           </div>
           <div
