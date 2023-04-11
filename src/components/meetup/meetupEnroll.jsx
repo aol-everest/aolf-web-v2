@@ -20,18 +20,6 @@ export const MeetupEnroll = ({
   const { user } = useAuth();
   const router = useRouter();
 
-  const goToCheckout = (e) => {
-    if (e) e.preventDefault();
-    closeDetailAction();
-    router.push({
-      pathname: `/us-en/membership/${MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value}`,
-      query: {
-        mid: selectedMeetup.sfid,
-        page: "checkout",
-      },
-    });
-  };
-
   const {
     meetupTitle,
     meetupDuration,
@@ -45,7 +33,23 @@ export const MeetupEnroll = ({
     description,
     mode,
     subscriptionPlanRequired,
+    freeWithSubscription,
+    isSubscriptionOfferingUsed,
   } = selectedMeetup;
+
+  const goToCheckout = (e) => {
+    if (e) e.preventDefault();
+    closeDetailAction();
+    router.push({
+      pathname: `/us-en/membership/${freeWithSubscription?.subscriptionMasterId}`,
+      query: {
+        mid: selectedMeetup.sfid,
+        page: "checkout",
+      },
+    });
+  };
+
+  console.log("selectedMeetup", selectedMeetup);
 
   // const isMandatoryWorkshopRequired = meetupMandatoryWorkshopId && isLoggedIn;
   const { subscriptions = [] } = user.profile;
@@ -62,9 +66,8 @@ export const MeetupEnroll = ({
 
   const noUpsellSubscriptions =
     inPersonMeetup &&
-    subscriptionPlanRequired &&
     subscriptions.filter((item) =>
-      subscriptionPlanRequired.includes(item.subscriptionType),
+      subscriptionPlanRequired?.includes(item.subscriptionType),
     )?.length === 0;
 
   const isDigitalMember =
@@ -115,59 +118,22 @@ export const MeetupEnroll = ({
             </div>
 
             <div className="card-wrapper">
-              {noUpsellSubscriptions && (
-                <div className={classNames("card full card-preffered")}>
-                  <div className="card-body">
-                    <p className="card-title">
-                      {unitPrice === 0 ? "For members" : "For non-members"}
-                    </p>
-                    <p className="card-text">
-                      {loading && <Loader />}
-                      {!loading && (
-                        <>
-                          {listPrice !== unitPrice && (
-                            <>
-                              <span className="prev-price">${listPrice}</span> $
-                              {unitPrice}
-                            </>
-                          )}
-                          {listPrice === unitPrice && <>${unitPrice}</>}
-                        </>
-                      )}
-                    </p>
-                    <button
-                      className="btn btn-preffered"
-                      onClick={checkoutMeetup}
-                    >
-                      {checkoutLoading && (
-                        <div className="loaded tw-py-0 tw-px-7">
-                          <div className="loader">
-                            <div className="loader-inner ball-clip-rotate">
-                              <div />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {!checkoutLoading && `RSVP`}
-                    </button>
-                  </div>
-                </div>
-              )}
-              {(isDigitalMember || isPremiumMember || isBasicMember) &&
-                !noUpsellSubscriptions && (
+              <>
+                {isSubscriptionOfferingUsed && (
                   <div className={classNames("card full card-preffered")}>
                     <div className="card-body">
-                      <p className="card-title">
-                        For {isDigitalMember && "Digital"}
-                        {isPremiumMember && "Premium"}
-                        {isBasicMember && "Basic"} members
-                      </p>
+                      <p className="card-title">For members</p>
                       <p className="card-text">
                         {loading && <Loader />}
                         {!loading && (
                           <>
-                            <span className="prev-price">${listPrice}</span> $
-                            {0}
+                            {listPrice !== unitPrice && (
+                              <>
+                                <span className="prev-price">${listPrice}</span>{" "}
+                                ${unitPrice}
+                              </>
+                            )}
+                            {listPrice === unitPrice && <>${unitPrice}</>}
                           </>
                         )}
                       </p>
@@ -190,47 +156,57 @@ export const MeetupEnroll = ({
                   </div>
                 )}
 
-              {!isDigitalMember &&
-                !isPremiumMember &&
-                !isBasicMember &&
-                !noUpsellSubscriptions && (
-                  <>
-                    <div className={classNames("card")}>
-                      <div className="card-body">
-                        <p className="card-title">For non-members</p>
-                        <p className="card-text">
-                          {loading && <Loader />}
-                          {!loading && (
-                            <>
-                              {listPrice !== unitPrice && (
-                                <>
-                                  <span className="prev-price">
-                                    ${listPrice}
-                                  </span>{" "}
-                                  ${unitPrice}
-                                </>
-                              )}
-                              {listPrice === unitPrice && <>${unitPrice}</>}
-                            </>
-                          )}
-                        </p>
-                        <button className="btn" onClick={checkoutMeetup}>
-                          {checkoutLoading && (
-                            <div className="loaded tw-py-0 tw-px-7">
-                              <div className="loader">
-                                <div className="loader-inner ball-clip-rotate">
-                                  <div />
-                                </div>
+                {!isSubscriptionOfferingUsed && (
+                  <div
+                    className={classNames(
+                      freeWithSubscription?.subscriptionName
+                        ? "card"
+                        : "card full",
+                    )}
+                  >
+                    <div className="card-body">
+                      <p className="card-title">For non-members</p>
+                      <p className="card-text">
+                        {loading && <Loader />}
+                        {!loading && (
+                          <>
+                            {listPrice !== unitPrice && (
+                              <>
+                                <span className="prev-price">${listPrice}</span>{" "}
+                                ${unitPrice}
+                              </>
+                            )}
+                            {listPrice === unitPrice && <>${unitPrice}</>}
+                          </>
+                        )}
+                      </p>
+                      <button
+                        className={
+                          !freeWithSubscription ? "btn btn-preffered" : "btn"
+                        }
+                        onClick={checkoutMeetup}
+                      >
+                        {checkoutLoading && (
+                          <div className="loaded tw-py-0 tw-px-7">
+                            <div className="loader">
+                              <div className="loader-inner ball-clip-rotate">
+                                <div />
                               </div>
                             </div>
-                          )}
-                          {!checkoutLoading && `RSVP`}
-                        </button>
-                      </div>
+                          </div>
+                        )}
+                        {!checkoutLoading && `RSVP`}
+                      </button>
                     </div>
+                  </div>
+                )}
+                {!isSubscriptionOfferingUsed &&
+                  freeWithSubscription?.subscriptionName && (
                     <div className="card card-preffered">
                       <div className="card-body">
-                        <p className="card-title">For Digital members</p>
+                        <p className="card-title">
+                          {`For ${freeWithSubscription?.subscriptionName} members`}
+                        </p>
                         <p className="card-text">
                           {/* {loading && <Spinner />} */}
                           {!loading && (
@@ -244,12 +220,12 @@ export const MeetupEnroll = ({
                           className="btn btn-preffered"
                           onClick={goToCheckout}
                         >
-                          Join Digital and RSVP
+                          {`Join and RSVP`}
                         </button>
                       </div>
                     </div>
-                  </>
-                )}
+                  )}
+              </>
             </div>
           </div>
           <div
