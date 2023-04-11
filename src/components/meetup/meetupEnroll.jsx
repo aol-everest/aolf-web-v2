@@ -42,11 +42,9 @@ export const MeetupEnroll = ({
     eventTimeZone,
     unitPrice,
     listPrice,
-    memberPrice,
     description,
     mode,
     subscriptionPlanRequired,
-    freeWithSubscription,
   } = selectedMeetup;
 
   // const isMandatoryWorkshopRequired = meetupMandatoryWorkshopId && isLoggedIn;
@@ -64,6 +62,7 @@ export const MeetupEnroll = ({
 
   const noUpsellSubscriptions =
     inPersonMeetup &&
+    subscriptionPlanRequired &&
     subscriptions.filter((item) =>
       subscriptionPlanRequired.includes(item.subscriptionType),
     )?.length === 0;
