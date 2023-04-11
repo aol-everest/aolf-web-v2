@@ -49,8 +49,6 @@ export const MeetupEnroll = ({
     });
   };
 
-  console.log("selectedMeetup", selectedMeetup);
-
   // const isMandatoryWorkshopRequired = meetupMandatoryWorkshopId && isLoggedIn;
   const { subscriptions = [] } = user.profile;
   const inPersonMeetup = mode === COURSE_MODES.IN_PERSON.name;
