@@ -4,8 +4,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Loader } from "@components";
 import { tConvert } from "@utils";
-import { ABBRS, COURSE_MODES, MEMBERSHIP_TYPES } from "@constants";
-import { useAuth } from "@contexts";
+import { ABBRS } from "@constants";
 import { useRouter } from "next/router";
 
 dayjs.extend(utc);
@@ -17,7 +16,6 @@ export const MeetupEnroll = ({
   loading,
   checkoutLoading,
 }) => {
-  const { user } = useAuth();
   const router = useRouter();
 
   const {
@@ -31,8 +29,6 @@ export const MeetupEnroll = ({
     unitPrice,
     listPrice,
     description,
-    mode,
-    subscriptionPlanRequired,
     freeWithSubscription,
     isSubscriptionOfferingUsed,
   } = selectedMeetup;
@@ -48,33 +44,6 @@ export const MeetupEnroll = ({
       },
     });
   };
-
-  // const isMandatoryWorkshopRequired = meetupMandatoryWorkshopId && isLoggedIn;
-  const { subscriptions = [] } = user.profile;
-  const inPersonMeetup = mode === COURSE_MODES.IN_PERSON.name;
-
-  const userSubscriptions =
-    subscriptions &&
-    subscriptions.reduce((accumulator, currentValue) => {
-      return {
-        ...accumulator,
-        [currentValue.subscriptionMasterSfid]: currentValue,
-      };
-    }, {});
-
-  const noUpsellSubscriptions =
-    inPersonMeetup &&
-    subscriptions.filter((item) =>
-      subscriptionPlanRequired?.includes(item.subscriptionType),
-    )?.length === 0;
-
-  const isDigitalMember =
-    userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value];
-
-  const isPremiumMember =
-    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
-  const isBasicMember =
-    userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
 
   return (
     <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">

@@ -280,10 +280,27 @@ const Meetup = () => {
   };
 
   const checkoutMeetup = (selectedMeetup) => async () => {
-    const { unitPrice, memberPrice, sfid, productTypeId } = selectedMeetup;
+    const {
+      unitPrice,
+      memberPrice,
+      sfid,
+      productTypeId,
+      complianceQuestionnaire,
+    } = selectedMeetup;
     const { subscriptions = [] } = user.profile;
     hideAlert();
     hideModal();
+
+    if (complianceQuestionnaire) {
+      router.push({
+        pathname: `/us-en/meetup/checkout/${sfid}`,
+        query: {
+          ctype: productTypeId,
+          page: "c-o",
+        },
+      });
+      return;
+    }
 
     const userSubscriptions =
       subscriptions &&
