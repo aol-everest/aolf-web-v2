@@ -291,7 +291,7 @@ const Meetup = () => {
     hideAlert();
     hideModal();
 
-    if (complianceQuestionnaire) {
+    if (complianceQuestionnaire?.length > 0) {
       router.push({
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
