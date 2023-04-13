@@ -289,7 +289,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                             rel="noreferrer"
                           >
                             {data?.locationStreet || ""}
-                            <br />
+                            {data?.locationStreet && <br />}
                             {data?.locationCity || ""}
                             {", "}
                             {data?.locationProvince || ""}{" "}
