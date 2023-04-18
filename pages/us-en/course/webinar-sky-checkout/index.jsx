@@ -151,11 +151,11 @@ const WebinarSkyCheckout = () => {
   }, [user, workshop]);
 
   useEffect(() => {
+    if (!user && !workshop.id) return;
     const { preRequisiteFailedReason = [], isPreRequisiteCompleted } = workshop;
 
     const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
     if (!isPreRequisiteCompleted && isPreRequisiteCompleted !== undefined) {
-      console.log("isPreRequisiteCompleted-->", isPreRequisiteCompleted);
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big",
         title: "Retreat Prerequisite",
@@ -194,7 +194,6 @@ const WebinarSkyCheckout = () => {
       if (response?.data) {
         setSelectedWorkshop(response?.data);
       }
-      console.log("response", response);
     };
     if (selectedWorkshopId) {
       getWorshopDetails();

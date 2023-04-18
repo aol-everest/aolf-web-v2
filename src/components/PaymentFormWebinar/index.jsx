@@ -1039,7 +1039,13 @@ export const PaymentFormWebinar = ({
                     </div>
                   </div>
                   {workshops.length === 0 ? (
-                    <li>No webinars found</li>
+                    <div class="reciept__details ">
+                      <div class="course pb-3">
+                        <div class="course__info course__info--width info">
+                          <h2 class="info__title">No Webinars Found</h2>
+                        </div>
+                      </div>
+                    </div>
                   ) : (
                     <div class="reciept__details ">
                       <div class="course pb-3">
