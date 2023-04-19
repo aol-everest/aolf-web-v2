@@ -33,6 +33,7 @@ import {
   ALERT_TYPES,
   MODAL_TYPES,
   ABBRS,
+  COURSE_TYPES,
 } from "@constants";
 import {
   useGlobalAlertContext,
@@ -543,7 +544,6 @@ export const PaymentFormGeneric = ({
     formattedStartDateOnly,
     formattedEndDateOnly,
     timings,
-    shortAddress,
     primaryTeacherName,
     primaryTeacherPic,
     coTeacher1Name,
@@ -556,6 +556,7 @@ export const PaymentFormGeneric = ({
     isCCNotRequired,
     email: contactEmail,
     paymentMethod = {},
+    productTypeId,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -638,6 +639,11 @@ export const PaymentFormGeneric = ({
       UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
     }
   }
+
+  const isMeditationDeluxe =
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(productTypeId) >= 0;
+  const gatewayToInfinity =
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(productTypeId) >= 0;
 
   const toggleDetailMobileModal = (isRegularPrice) => () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
@@ -1083,115 +1089,126 @@ export const PaymentFormGeneric = ({
                     discount={discountResponse}
                   />
                 </div>
-                <div className={classNames(Style.aol_allModal)}>
-                  <div className={classNames(Style.modal_content)}>
-                    <div
-                      className={classNames(Style.modal_body)}
-                      id="workshopsDetailsModal"
-                    >
+                {!isMeditationDeluxe && !gatewayToInfinity && (
+                  <div className={classNames(Style.aol_allModal)}>
+                    <div className={classNames(Style.modal_content)}>
                       <div
-                        className={classNames(
-                          Style.sessionDetails_ModalBody,
-                          Style.workshop,
-                        )}
+                        className={classNames(Style.modal_body)}
+                        id="workshopsDetailsModal"
                       >
-                        {/* <h2 className={classNames(Style.title)}>{title}</h2> */}
-                        <div className="row tw-pl-3 tw-pr-3">
+                        <div
+                          className={classNames(
+                            Style.sessionDetails_ModalBody,
+                            Style.workshop,
+                          )}
+                        >
+                          {/* <h2 className={classNames(Style.title)}>{title}</h2> */}
+                          <div className="row tw-pl-3 tw-pr-3">
+                            <div
+                              className={classNames(
+                                "col-12",
+                                Style.datetime_box,
+                              )}
+                            >
+                              <h6>Date:</h6>
+                              <div>Start: {formattedStartDateOnly}</div>
+                              <div>End: {formattedEndDateOnly}</div>
+                            </div>
+                            <div
+                              className={classNames(
+                                "col-12",
+                                Style.datetime_box,
+                              )}
+                            >
+                              <h6>Time:</h6>
+                              {timings &&
+                                timings.map((time, index) => {
+                                  return (
+                                    <div key={index}>
+                                      {`${dayjs
+                                        .utc(time.startDate)
+                                        .format("dd")}: ${tConvert(
+                                        time.startTime,
+                                      )}-${tConvert(time.endTime)} ${
+                                        ABBRS[time.timeZone]
+                                      }`}
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          </div>
+
                           <div
                             className={classNames("col-12", Style.datetime_box)}
                           >
-                            <h6>Date:</h6>
-                            <div>Start: {formattedStartDateOnly}</div>
-                            <div>End: {formattedEndDateOnly}</div>
+                            <h6>Teacher:</h6>
+                            {primaryTeacherName && (
+                              <div>
+                                <img
+                                  className={classNames(
+                                    Style.img,
+                                    "rounded-circle",
+                                  )}
+                                  src={
+                                    primaryTeacherPic ||
+                                    "/assets/images/user.png"
+                                  }
+                                />
+                                {primaryTeacherName}
+                              </div>
+                            )}
+                            {coTeacher1Name && (
+                              <div>
+                                <img
+                                  className={classNames(
+                                    Style.img,
+                                    "rounded-circle",
+                                  )}
+                                  src={
+                                    coTeacher1Pic || "/assets/images/user.png"
+                                  }
+                                />
+                                {coTeacher1Name}
+                              </div>
+                            )}
+                            {coTeacher2Name && (
+                              <div>
+                                <img
+                                  className={classNames(
+                                    Style.img,
+                                    "rounded-circle",
+                                  )}
+                                  src={
+                                    coTeacher2Pic || "/assets/images/user.png"
+                                  }
+                                />
+                                {coTeacher2Name}
+                              </div>
+                            )}
                           </div>
                           <div
                             className={classNames("col-12", Style.datetime_box)}
                           >
-                            <h6>Time:</h6>
-                            {timings &&
-                              timings.map((time, index) => {
-                                return (
-                                  <div key={index}>
-                                    {`${dayjs
-                                      .utc(time.startDate)
-                                      .format("dd")}: ${tConvert(
-                                      time.startTime,
-                                    )}-${tConvert(time.endTime)} ${
-                                      ABBRS[time.timeZone]
-                                    }`}
-                                  </div>
-                                );
-                              })}
+                            <h6>Contact:</h6>
+                            {contactName && (
+                              <div>
+                                {contactName},{" "}
+                                <div>
+                                  <a href={`tel:${phone1}`}>{phone1}</a>
+                                </div>
+                                <div>
+                                  <a href={`mailto:${contactEmail}`}>
+                                    {contactEmail}
+                                  </a>
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
-
-                        {/* <p>Venue: {shortAddress}</p> */}
-
-                        <div
-                          className={classNames("col-12", Style.datetime_box)}
-                        >
-                          <h6>Teacher:</h6>
-                          {primaryTeacherName && (
-                            <div>
-                              <img
-                                className={classNames(
-                                  Style.img,
-                                  "rounded-circle",
-                                )}
-                                src={
-                                  primaryTeacherPic || "/assets/images/user.png"
-                                }
-                              />
-                              {primaryTeacherName}
-                            </div>
-                          )}
-                          {coTeacher1Name && (
-                            <div>
-                              <img
-                                className={classNames(
-                                  Style.img,
-                                  "rounded-circle",
-                                )}
-                                src={coTeacher1Pic || "/assets/images/user.png"}
-                              />
-                              {coTeacher1Name}
-                            </div>
-                          )}
-                          {coTeacher2Name && (
-                            <div>
-                              <img
-                                className={classNames(
-                                  Style.img,
-                                  "rounded-circle",
-                                )}
-                                src={coTeacher2Pic || "/assets/images/user.png"}
-                              />
-                              {coTeacher2Name}
-                            </div>
-                          )}
-                        </div>
-                        <div
-                          className={classNames("col-12", Style.datetime_box)}
-                        >
-                          <h6>Contact:</h6>
-                          {contactName && (
-                            <div>
-                              {contactName},{" "}
-                              <div>
-                                <a href={`tel:${phone1}`}>{phone1}</a>
-                              </div>
-                              <div>
-                                <a href={`mailto:${contactEmail}`}>
-                                  {contactEmail}
-                                </a>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
               {(description || notes) && (
                 <div className="fullBlk tw-mt-10">
