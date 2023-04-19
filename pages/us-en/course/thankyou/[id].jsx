@@ -213,6 +213,11 @@ const Thankyou = () => {
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
+  const isMeditationDeluxe =
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(productTypeId) >= 0;
+  const gatewayToInfinity =
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(productTypeId) >= 0;
+
   const newTitle = title || meetupTitle;
   const duration = 2;
 
@@ -607,10 +612,14 @@ const Thankyou = () => {
                     )}
                   </div>
                 )}
-                <h2 className="journey-starts__title section-title">
-                  Your journey starts here
-                </h2>
-                <RenderJourneyContent />
+                {!isMeditationDeluxe && !gatewayToInfinity && (
+                  <>
+                    <h2 className="journey-starts__title section-title">
+                      Your journey starts here
+                    </h2>
+                    <RenderJourneyContent />
+                  </>
+                )}
               </div>
             </section>
           </>
@@ -667,13 +676,15 @@ const Thankyou = () => {
                 </div>
               </div>
             </div>
-            <button
-              id="register-button-2"
-              className="btn-secondary"
-              onClick={addToCalendarAction}
-            >
-              Add to Calendar
-            </button>
+            {!isMeditationDeluxe && !gatewayToInfinity && (
+              <button
+                id="register-button-2"
+                className="btn-secondary"
+                onClick={addToCalendarAction}
+              >
+                Add to Calendar
+              </button>
+            )}
           </div>
         </div>
       </div>
