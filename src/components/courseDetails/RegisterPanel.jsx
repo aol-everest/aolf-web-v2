@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useGlobalModalContext } from "@contexts";
 import { MEMBERSHIP_TYPES, COURSE_TYPES, MODAL_TYPES } from "@constants";
+import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 
@@ -59,7 +60,7 @@ export const RegisterPanel = ({ workshop }) => {
   const handleRegister = (e) => {
     e.preventDefault();
     if (authenticated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
@@ -76,7 +77,7 @@ export const RegisterPanel = ({ workshop }) => {
 
   const purchaseMembershipAction = (id) => (e) => {
     if (e) e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
       query: { cid: sfid, page: "detail" },
     });

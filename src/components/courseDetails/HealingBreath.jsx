@@ -18,6 +18,7 @@ import {
 import { ABBRS, COURSE_TYPES, ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { HideOn } from "@components";
 import { priceCalculation } from "@utils";
+import { pushRouteWithUTMQuery } from "@service";
 
 export const HealingBreath = ({ data, swiperOption }) => {
   const { authenticated = false, user } = useAuth();
@@ -40,7 +41,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
   const handleRegister = (e) => {
     e.preventDefault();
     if (authenticated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,

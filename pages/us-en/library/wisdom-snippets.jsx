@@ -23,6 +23,7 @@ import {
 } from "@constants";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import { pushRouteWithUTMQuery } from "@service";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -200,7 +201,7 @@ export default function WisdomSnippets() {
   const purchaseMembershipAction = (id) => (e) => {
     hideModal();
     hideAlert();
-    router.push(`/us-en/membership/${id}`);
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {
@@ -208,7 +209,7 @@ export default function WisdomSnippets() {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else if (meditate.accessible && meditate.type === "Course") {
-      router.push(`/us-en/learn/${meditate.sfid}`);
+      pushRouteWithUTMQuery(router, `/us-en/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
       await meditatePlayEvent({
@@ -236,7 +237,7 @@ export default function WisdomSnippets() {
     if (instructor) {
       query = { ...query, instructor };
     }
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en/library/search",
       query,
     });

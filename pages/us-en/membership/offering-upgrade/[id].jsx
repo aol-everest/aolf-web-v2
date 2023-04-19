@@ -14,6 +14,7 @@ import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { useQuery } from "react-query";
 import { useAuth } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -216,7 +217,7 @@ function OfferingUpgradeCheckout() {
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
     hideAlert();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
@@ -229,7 +230,7 @@ function OfferingUpgradeCheckout() {
     if (courseId) {
       query = { cid: courseId, page: returnPage };
     }
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/thankyou/${orderId}`,
       query,
     });

@@ -42,6 +42,7 @@ import {
 import { Loader } from "@components";
 import { api, tConvert } from "@utils";
 import Style from "./PaymentFormGeneric.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 const createOptions = {
   style: {
@@ -104,7 +105,8 @@ export const PaymentFormGeneric = ({
   const logout = async (event) => {
     await Auth.logout();
     setUser(null);
-    router.push(
+    pushRouteWithUTMQuery(
+      router,
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
@@ -115,7 +117,7 @@ export const PaymentFormGeneric = ({
 
   const openSubscriptionPaywallPage = (id) => (e) => {
     if (e) e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
       query: {
         cid: workshop.id,

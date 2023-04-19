@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
 import { useAuth } from "@contexts";
@@ -14,6 +14,7 @@ import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { pushRouteWithUTMQuery } from "@service";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -159,11 +160,11 @@ const Profile = ({ tab }) => {
     await Auth.logout();
     setLoading(false);
     setUser(null);
-    router.push("/us-en");
+    pushRouteWithUTMQuery(router, "/us-en");
   };
 
   const navigateToReferFriendPage = () => {
-    router.push("/us-en/refer");
+    pushRouteWithUTMQuery(router, "/us-en/refer");
   };
 
   const handleOnSelectFile = (e) => {

@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { RegisterPanel } from "./RegisterPanel";
 import Style from "./CourseDetails.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 
@@ -75,7 +76,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/checkout/${data.sfid}`,
       query: {
         ctype: data.productTypeId,

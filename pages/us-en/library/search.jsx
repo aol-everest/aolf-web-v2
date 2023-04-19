@@ -34,6 +34,7 @@ import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { useAuth } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -192,7 +193,7 @@ const LibrarySearch = () => {
   const purchaseMembershipAction = (id) => (e) => {
     hideModal();
     hideAlert();
-    router.push(`/us-en/membership/${id}`);
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {

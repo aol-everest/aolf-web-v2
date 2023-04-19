@@ -33,6 +33,7 @@ import {
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { orgConfig } from "@org";
 import Style from "./Meetup.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 const DATE_PICKER_CONFIG = {
   opens: "center",
@@ -271,7 +272,7 @@ const Meetup = () => {
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
     hideAlert();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
@@ -292,7 +293,7 @@ const Meetup = () => {
     hideModal();
 
     if (complianceQuestionnaire?.length > 0) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
@@ -396,7 +397,7 @@ const Meetup = () => {
         });
       }
     } else {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
@@ -409,7 +410,7 @@ const Meetup = () => {
   const showEnrollmentCompletionAction = (selectedMeetup, data) => {
     const { attendeeId } = data;
 
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/meetup/thankyou/${attendeeId}`,
       query: {
         cid: selectedMeetup.sfid,

@@ -11,6 +11,7 @@ import { ABBRS, MODAL_TYPES } from "@constants";
 import { HideOn } from "@components";
 import { priceCalculation, tConvert } from "@utils";
 import Style from "./CourseDetails.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 export const SKYSilentRetreat = ({ data, swiperOption }) => {
   const { authenticated = false } = useAuth();
@@ -61,7 +62,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
   const handleRegister = (e) => {
     e.preventDefault();
     if (authenticated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,

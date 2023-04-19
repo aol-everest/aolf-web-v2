@@ -15,8 +15,9 @@ import { api, Auth } from "@utils";
 import { Loader } from "@components";
 import { useGlobalAlertContext, useAuth } from "@contexts";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery } from "@service";
 
 const createOptions = {
   style: {
@@ -262,7 +263,8 @@ export const MembershipCheckoutStripe = ({
   const logout = async (event) => {
     await Auth.logout();
     setUser(null);
-    router.push(
+    pushRouteWithUTMQuery(
+      router,
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };

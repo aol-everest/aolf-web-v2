@@ -5,7 +5,7 @@ import { useAuth } from "@contexts";
 import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import startsWith from "lodash.startswith";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAnalytics } from "use-analytics";

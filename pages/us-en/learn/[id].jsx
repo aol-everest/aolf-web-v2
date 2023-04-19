@@ -36,6 +36,7 @@ import { PageLoading } from "@components";
 import { useQuery } from "react-query";
 import ErrorPage from "next/error";
 import { useAuth } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -147,7 +148,7 @@ export default function Learn() {
   };
 
   const purchaseMembershipAction = (id) => (e) => {
-    router.push(`/us-en/membership/${id}`);
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
   };
 
   const onPlayPauseAction = () => {

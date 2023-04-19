@@ -21,6 +21,7 @@ import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { useQuery } from "react-query";
 import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery } from "@service";
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -179,7 +180,7 @@ const Checkout = () => {
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
     hideAlert();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",

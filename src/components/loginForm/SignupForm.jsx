@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { string, object } from "yup";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 
 const schema = object().shape({
   username: string()
