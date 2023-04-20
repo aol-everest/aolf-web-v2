@@ -2,7 +2,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import appendQuery from "append-query";
-import { filterAllowedParams } from "@service";
+import { filterAllowedParams } from "@utils/utmParam";
 
 export default function Link({ children, href, ...rest }) {
   const router = useRouter();

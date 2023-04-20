@@ -42,6 +42,7 @@ import {
 import { Loader } from "@components";
 import { api } from "@utils";
 import { pushRouteWithUTMQuery } from "@service";
+import { filterAllowedParams } from "@utils/utmParam";
 
 const createOptions = {
   style: {
@@ -285,6 +286,7 @@ export const PaymentFormHB = ({
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
           isPaypalPayment: true,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isGenericWorkshop) {
@@ -497,6 +499,7 @@ export const PaymentFormHB = ({
             contactClaimingTypeOther,
           },
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isChangingCard) {

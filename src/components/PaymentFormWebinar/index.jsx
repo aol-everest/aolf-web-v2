@@ -38,6 +38,7 @@ import { Loader } from "@components";
 import { api, tConvert } from "@utils";
 import Image from "next/image";
 import { pushRouteWithUTMQuery } from "@service";
+import { filterAllowedParams } from "@utils/utmParam";
 
 const createOptions = {
   style: {
@@ -256,6 +257,7 @@ export const PaymentFormWebinar = ({
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
           isPaypalPayment: true,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isGenericWorkshop) {
@@ -454,6 +456,7 @@ export const PaymentFormWebinar = ({
           programQuestionnaireResult,
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isChangingCard) {

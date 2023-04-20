@@ -18,6 +18,7 @@ import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import Link from "@components/linkWithUTM";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
+import { filterAllowedParams } from "@utils/utmParam";
 
 const createOptions = {
   style: {
@@ -217,6 +218,7 @@ export const MembershipCheckoutStripe = ({
           },
           products,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (!authenticated) {

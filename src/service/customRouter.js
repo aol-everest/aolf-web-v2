@@ -1,5 +1,6 @@
 import queryString from "query-string";
 import { isObject, isString, isNil } from "lodash";
+import { filterAllowedParams } from "@utils/utmParam";
 
 export function pushRouteWithUTMQuery(router, params) {
   if (isNil(params)) {
@@ -29,34 +30,4 @@ export function pushRouteWithUTMQuery(router, params) {
       query: allParams,
     });
   }
-}
-
-function getAllowedParams() {
-  const allowedParams = [
-    "utm_source",
-    "utm_medium",
-    "utm_campaign",
-    "utm_term",
-    "utm_content",
-    "mid",
-    "gclid",
-    "source",
-  ];
-
-  return allowedParams;
-}
-
-export function filterAllowedParams(params) {
-  if (Object.keys(params).length) {
-    const filteredParams = Object.keys(params)
-      .filter((key) => getAllowedParams().includes(key.toLowerCase()))
-      .reduce((obj, key) => {
-        obj[key] = params[key];
-        return obj;
-      }, {});
-
-    return filteredParams;
-  }
-
-  return params;
 }

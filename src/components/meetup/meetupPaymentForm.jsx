@@ -37,6 +37,7 @@ import {
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";
+import { filterAllowedParams } from "@utils/utmParam";
 
 dayjs.extend(utc);
 
@@ -218,6 +219,7 @@ export const MeetupPaymentForm = ({
           isInstalmentOpted: false,
           isPaypalPayment: true,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       //token.saveCardForFuture = true;
@@ -337,6 +339,7 @@ export const MeetupPaymentForm = ({
           complianceQuestionnaire,
           isInstalmentOpted: false,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isChangingCard) {

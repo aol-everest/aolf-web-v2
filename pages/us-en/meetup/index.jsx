@@ -34,6 +34,7 @@ import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { orgConfig } from "@org";
 import Style from "./Meetup.module.scss";
 import { pushRouteWithUTMQuery } from "@service";
+import { filterAllowedParams } from "@utils/utmParam";
 
 const DATE_PICKER_CONFIG = {
   opens: "center",
@@ -358,6 +359,7 @@ const Meetup = () => {
             },
             isInstalmentOpted: false,
           },
+          utm: filterAllowedParams(router.query),
         };
 
         if (!authenticated) {
