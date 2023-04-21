@@ -6,7 +6,16 @@ import { RegisterPanel } from "./RegisterPanel";
 import { HideOn } from "@components";
 
 export const BlessingsCourse = ({ data }) => {
-  const { title, mode } = data || {};
+  const { title, mode, aosCountRequisite, preRequisite } = data || {};
+
+  const aosCount =
+    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : "";
+
+  const preRequisiteCondition = preRequisite
+    .join(", ")
+    .replace(/,(?=[^,]+$)/, " and")
+    .replace("Silent Retreat", `${aosCount} Silent Retreat`);
+
   return (
     <>
       <main>
@@ -283,9 +292,8 @@ export const BlessingsCourse = ({ data }) => {
                         through you and around you.
                       </div>
                       <div className="elements-section__text">
-                        Eligibility: Completion of the SKY Breath Meditation
-                        course and two Silent Retreats are required to enroll in
-                        The Blessings Course.
+                        Eligibility: Completion of the {preRequisiteCondition}{" "}
+                        are required to enroll in The Blessings Course.
                       </div>
                     </div>
                   </div>

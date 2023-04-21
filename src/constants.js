@@ -118,7 +118,7 @@ export const COURSE_TYPES = {
   },
   SKY_HAPPINESS_RETREAT: {
     name: "SKY Happiness Retreat",
-    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
+    value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || "",
   },
   BLESSINGS_COURSE: {
     name: "Blessings Course",
@@ -135,6 +135,14 @@ export const COURSE_TYPES = {
   SANYAM_COURSE: {
     name: "Sanyam Course",
     value: process.env.NEXT_PUBLIC_SANYAM_COURSE_CTYPE || "",
+  },
+  MEDITATION_DELUXE_COURSE: {
+    name: "MEDITATION_DELUXE_COURSE",
+    value: process.env.NEXT_PUBLIC_MEDITATION_DELUXE_CTYPE || "",
+  },
+  GATEWAY_TO_INFINITY_COURSE: {
+    name: "GATEWAY_TO_INFINITY_COURSE",
+    value: process.env.NEXT_PUBLIC_GATEWAY_TO_INFINITY_CTYPE || "",
   },
 };
 

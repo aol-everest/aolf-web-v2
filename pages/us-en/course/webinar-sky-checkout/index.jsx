@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { PaymentForm, PaymentFormHB, PaymentFormGeneric } from "@components";
 import { api } from "@utils";
 import { useRouter } from "next/router";
 import { useQueryString } from "@hooks";
@@ -11,16 +10,13 @@ import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useAnalytics } from "use-analytics";
-import {
-  COURSE_TYPES,
-  MODAL_TYPES,
-  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
-} from "@constants";
+import { MODAL_TYPES, MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
 import { withAuth } from "@hoc";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { useQuery } from "react-query";
 import { orgConfig } from "@org";
+import { PaymentFormWebinar } from "@components/PaymentFormWebinar";
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -63,23 +59,23 @@ const validateStudentEmail = (email) => {
   return isStudentEmail;
 };
 
-const Checkout = () => {
+const WebinarSkyCheckout = () => {
   const router = useRouter();
   const { user } = useAuth();
-  const { id: workshopId, coupon } = router.query;
+
   const {
-    data: workshop,
+    data: workshops,
     isLoading,
     isError,
     error,
   } = useQuery(
-    "workshopDetail",
+    "workshops",
     async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: "workshops",
         param: {
-          id: workshopId,
-          rp: "checkout",
+          ctype: process.env.NEXT_PUBLIC_WEBINAR_SKY_CTYPE,
+          org: "AOL",
         },
       });
       return response.data;
@@ -96,25 +92,29 @@ const Checkout = () => {
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [comboProductSfid, setComboProductSfid] = useState("");
+  const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
+  const [workshop, setSelectedWorkshop] = useState({});
   const { track } = useAnalytics();
 
   useEffect(() => {
-    if (!user || !workshop) return;
+    if (workshops?.length > 0) {
+      setSelectedWorkshop(workshops[0]);
+      setSelectedWorkshopId(workshops[0]?.sfid);
+    }
+  }, [workshops]);
 
+  useEffect(() => {
+    if (!user && !workshop.id) return;
     const {
       title,
       name,
       productTypeId,
       unitPrice,
       id: courseId,
-      preRequisiteFailedReason = [],
       isPreRequisiteCompleted,
       earlyBirdFeeIncreasing,
     } = workshop;
     setShowTopMessage(!!earlyBirdFeeIncreasing);
-
-    const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
 
     const products = [
       {
@@ -148,8 +148,14 @@ const Checkout = () => {
         },
       },
     });
+  }, [user, workshop]);
 
-    if (!isPreRequisiteCompleted) {
+  useEffect(() => {
+    if (!user && !workshop.id) return;
+    const { preRequisiteFailedReason = [], isPreRequisiteCompleted } = workshop;
+
+    const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
+    if (!isPreRequisiteCompleted && isPreRequisiteCompleted !== undefined) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big",
         title: "Retreat Prerequisite",
@@ -174,7 +180,25 @@ const Checkout = () => {
         ),
       });
     }
-  }, [user, workshop]);
+  }, [workshop.sfid]);
+
+  useEffect(() => {
+    const getWorshopDetails = async () => {
+      const response = await api.get({
+        path: "workshopDetail",
+        param: {
+          id: selectedWorkshopId,
+          rp: "checkout",
+        },
+      });
+      if (response?.data) {
+        setSelectedWorkshop(response?.data);
+      }
+    };
+    if (selectedWorkshopId) {
+      getWorshopDetails();
+    }
+  }, [selectedWorkshopId]);
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
@@ -192,7 +216,7 @@ const Checkout = () => {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
-        comboId: comboProductSfid,
+        comboId: "",
         page: "ty",
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
@@ -201,72 +225,24 @@ const Checkout = () => {
     });
   };
 
-  const handleCouseSelection = (selectedId) => {
-    if (selectedId === workshop.id) {
-      setComboProductSfid("");
-    } else {
-      setComboProductSfid(selectedId);
-    }
-  };
-
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <PageLoading />;
 
   const stripePromise = loadStripe(workshop.publishableKey);
 
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
-    0;
-  const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
-  const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const isSriSriYogaMeditationType =
-    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const isHealingBreathProgram =
-    COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
+  const handleWorkshopSelectionChange = (workshopId) => {
+    setSelectedWorkshopId(workshopId);
+  };
 
   const renderPaymentForm = () => {
-    if (isHealingBreathProgram) {
-      return (
-        <PaymentFormHB
-          workshop={workshop}
-          profile={user.profile}
-          enrollmentCompletionAction={enrollmentCompletionAction}
-          handleCouseSelection={handleCouseSelection}
-        />
-      );
-    }
-    if (
-      isSKYType ||
-      isSilentRetreatType ||
-      isSahajSamadhiMeditationType ||
-      isSriSriYogaMeditationType ||
-      isVolunteerTrainingProgram
-    ) {
-      return (
-        <PaymentForm
-          workshop={workshop}
-          profile={user.profile}
-          enrollmentCompletionAction={enrollmentCompletionAction}
-          handleCouseSelection={handleCouseSelection}
-        />
-      );
-    }
     return (
-      <PaymentFormGeneric
+      <PaymentFormWebinar
         workshop={workshop}
+        selectedWorkshopId={selectedWorkshopId}
+        handleWorkshopSelectionChange={handleWorkshopSelectionChange}
+        workshops={workshops}
         profile={user.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
-        handleCouseSelection={handleCouseSelection}
       />
     );
   };
@@ -358,7 +334,9 @@ const Checkout = () => {
         )}
         <section className="order">
           <div className="container">
-            <h1 className="title">{workshop.title}</h1>
+            <h1 className="title">
+              {workshop.title || "SKY Breath Meditation"}
+            </h1>
             {workshop.isGenericWorkshop ? (
               <p className="order__detail">
                 Once you register, you will be contacted to schedule your course
@@ -369,7 +347,9 @@ const Checkout = () => {
                 </span>
               </p>
             ) : (
-              <p className="order__detail">{workshop?.description || ""}</p>
+              <p className="order__detail">
+                The Most Effective Way to Feel Calm & Clear, Day After Day
+              </p>
             )}
 
             {workshop.isCorporateEvent && (
@@ -460,6 +440,6 @@ const Checkout = () => {
   );
 };
 
-Checkout.hideHeader = true;
+WebinarSkyCheckout.hideHeader = true;
 
-export default withAuth(Checkout);
+export default withAuth(WebinarSkyCheckout);

@@ -1,9 +1,8 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import { Formik, Field } from "formik";
+import { Formik, Field, useFormikContext } from "formik";
 import * as Yup from "yup";
-import classNames from "classnames";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import { isEmpty, Auth } from "@utils";
@@ -14,13 +13,9 @@ import {
   BillingInfoForm,
   PayWith,
   UserInfoForm,
-  MobileCourseOptions,
   AgreementForm,
   MobileCourseDetails,
   DiscountCodeInput,
-  CourseDetailsCard,
-  PreCostDetailsCard,
-  PostCostDetailsCard,
   ProgramQuestionnaire,
   MobileBottomBar,
 } from "@components/checkout";
@@ -33,7 +28,6 @@ import {
   ALERT_TYPES,
   MODAL_TYPES,
   ABBRS,
-  COURSE_TYPES,
 } from "@constants";
 import {
   useGlobalAlertContext,
@@ -42,7 +36,7 @@ import {
 } from "@contexts";
 import { Loader } from "@components";
 import { api, tConvert } from "@utils";
-import Style from "./PaymentFormGeneric.module.scss";
+import Image from "next/image";
 
 const createOptions = {
   style: {
@@ -65,11 +59,13 @@ const createOptions = {
   },
 };
 
-export const PaymentFormGeneric = ({
+export const PaymentFormWebinar = ({
   workshop = {},
+  selectedWorkshopId = "",
+  handleWorkshopSelectionChange = () => {},
+  workshops = [],
   profile = {},
   enrollmentCompletionAction = () => {},
-  handleCouseSelection = () => {},
 }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
@@ -541,22 +537,10 @@ export const PaymentFormGeneric = ({
     usableCredit,
     programQuestionnaire,
     title,
-    formattedStartDateOnly,
-    formattedEndDateOnly,
-    timings,
-    primaryTeacherName,
-    primaryTeacherPic,
-    coTeacher1Name,
-    coTeacher1Pic,
-    coTeacher2Name,
-    coTeacher2Pic,
-    contactName,
-    phone1,
-    description,
     isCCNotRequired,
     email: contactEmail,
     paymentMethod = {},
-    productTypeId,
+    coverImage,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -615,11 +599,6 @@ export const PaymentFormGeneric = ({
   const isAccommodationRequired =
     hasGroupedAddOnProducts && residentialAddOnRequired;
 
-  const isCourseOptionRequired =
-    hasGroupedAddOnProducts || addOnProducts.length > 0;
-
-  const isComboDetailAvailable = availableBundles?.length > 0;
-
   const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
 
   let UpdatedFeeAfterCredits;
@@ -640,11 +619,6 @@ export const PaymentFormGeneric = ({
     }
   }
 
-  const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(productTypeId) >= 0;
-  const gatewayToInfinity =
-    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(productTypeId) >= 0;
-
   const toggleDetailMobileModal = (isRegularPrice) => () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
       children: (handleModalToggle) => {
@@ -661,55 +635,6 @@ export const PaymentFormGeneric = ({
         );
       },
     });
-  };
-
-  const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
-    formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
-    const { isInstalmentAllowed, id } = workshop;
-    handleCouseSelection(comboDetailProductSfid);
-    if (isInstalmentAllowed && id === comboDetailProductSfid) {
-      setShowCouponCodeField(true);
-    } else {
-      setShowCouponCodeField(false);
-      formikProps.setFieldValue("paymentOption", PAYMENT_TYPES.FULL);
-    }
-
-    // Added logic to remove paypal option for bundle
-    if (id !== comboDetailProductSfid) {
-      const selectedBundle = availableBundles?.find(
-        (bundle) => bundle.comboProductSfid === comboDetailProductSfid,
-      );
-
-      const isBundlePaypalAvailable = selectedBundle
-        ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
-        : false;
-
-      if (!isBundlePaypalAvailable) {
-        formikProps.setFieldValue(
-          "paymentMode",
-          PAYMENT_MODES.STRIPE_PAYMENT_MODE,
-        );
-      }
-    }
-  };
-
-  const handlePaymentOptionChange = (formikProps, paymentOption) => {
-    formikProps.setFieldValue("paymentOption", paymentOption);
-    if (paymentOption === PAYMENT_TYPES.LATER) {
-      formikProps.setFieldValue(
-        "paymentMode",
-        PAYMENT_MODES.STRIPE_PAYMENT_MODE,
-      );
-    }
-  };
-
-  const handleAccommodationChange = (formikProps, value) => {
-    formikProps.setFieldValue("accommodation", value);
-  };
-
-  const toggleCouponCodeFieldAction = (e) => {
-    if (e) e.preventDefault();
-    setShowCouponCodeField((showCouponCodeField) => !showCouponCodeField);
   };
 
   return (
@@ -843,7 +768,11 @@ export const PaymentFormGeneric = ({
             <div className="row">
               {loading && <Loader />}
               <div className="col-lg-7 col-12">
-                <form className="order__form" onSubmit={handleSubmit}>
+                <form
+                  id="checkout-form"
+                  className="order__form"
+                  onSubmit={handleSubmit}
+                >
                   <div className="details">
                     <h2 className="details__title">Account Details:</h2>
                     <p className="details__content">
@@ -1008,37 +937,9 @@ export const PaymentFormGeneric = ({
                         </div>
                       </div>
                     )}
+                  </div>
 
-                    <MobileCourseOptions
-                      expenseAddOn={expenseAddOn}
-                      isOfflineExpense={isOfflineExpense}
-                      workshop={workshop}
-                      fee={fee}
-                      delfee={delfee}
-                      formikProps={formikProps}
-                      userSubscriptions={userSubscriptions}
-                      openSubscriptionPaywallPage={openSubscriptionPaywallPage}
-                      hasGroupedAddOnProducts={hasGroupedAddOnProducts}
-                      totalFee={totalFee}
-                      paymentOptionChange={handlePaymentOptionChange}
-                      showCouponCodeField={showCouponCodeField}
-                    />
-                  </div>
-                  <AgreementForm
-                    formikProps={formikProps}
-                    complianceQuestionnaire={complianceQuestionnaire}
-                    isCorporateEvent={isCorporateEvent}
-                    screen="MOBILE"
-                  />
-                  <div className="reciept__agreement">
-                    <AgreementForm
-                      formikProps={formikProps}
-                      complianceQuestionnaire={complianceQuestionnaire}
-                      isCorporateEvent={isCorporateEvent}
-                      screen="DESKTOP"
-                    />
-                  </div>
-                  <div className="order__complete">
+                  <div class="order__complete d-none d-lg-flex">
                     <div className="order__security security">
                       <img src="/img/ic-lock.svg" alt="lock" />
                       <p className="security__info">
@@ -1050,181 +951,175 @@ export const PaymentFormGeneric = ({
                   </div>
                 </form>
               </div>
-              <div className="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-0 offset-xl-1 tw-mb-2">
-                <div className="reciept d-none d-lg-block">
-                  <PreCostDetailsCard
-                    workshop={workshop}
-                    userSubscriptions={userSubscriptions}
-                    formikProps={formikProps}
-                    fee={fee}
-                    delfee={delfee}
-                    offering={offering}
-                    showCouponCodeField={showCouponCodeField}
-                    hasGroupedAddOnProducts={hasGroupedAddOnProducts}
-                    openSubscriptionPaywallPage={openSubscriptionPaywallPage}
-                    isComboDetailAvailable={isComboDetailAvailable}
-                    isCourseOptionRequired={isCourseOptionRequired}
-                    isUsableCreditAvailable={isUsableCreditAvailable}
-                    UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
-                    values={values}
-                    onComboDetailChange={handleComboDetailChange}
-                    discount={discountResponse}
-                  />
-                  <PostCostDetailsCard
-                    workshop={workshop}
-                    userSubscriptions={userSubscriptions}
-                    formikProps={formikProps}
-                    fee={fee}
-                    delfee={delfee}
-                    offering={offering}
-                    showCouponCodeField={true}
-                    hasGroupedAddOnProducts={hasGroupedAddOnProducts}
-                    openSubscriptionPaywallPage={openSubscriptionPaywallPage}
-                    isComboDetailAvailable={isComboDetailAvailable}
-                    isCourseOptionRequired={isCourseOptionRequired}
-                    isUsableCreditAvailable={isUsableCreditAvailable}
-                    UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
-                    totalFee={totalFee}
-                    onAccommodationChange={handleAccommodationChange}
-                    discount={discountResponse}
-                  />
-                </div>
-                {!isMeditationDeluxe && !gatewayToInfinity && (
-                  <div className={classNames(Style.aol_allModal)}>
-                    <div className={classNames(Style.modal_content)}>
-                      <div
-                        className={classNames(Style.modal_body)}
-                        id="workshopsDetailsModal"
-                      >
-                        <div
-                          className={classNames(
-                            Style.sessionDetails_ModalBody,
-                            Style.workshop,
-                          )}
-                        >
-                          {/* <h2 className={classNames(Style.title)}>{title}</h2> */}
-                          <div className="row tw-pl-3 tw-pr-3">
-                            <div
-                              className={classNames(
-                                "col-12",
-                                Style.datetime_box,
-                              )}
-                            >
-                              <h6>Date:</h6>
-                              <div>Start: {formattedStartDateOnly}</div>
-                              <div>End: {formattedEndDateOnly}</div>
-                            </div>
-                            <div
-                              className={classNames(
-                                "col-12",
-                                Style.datetime_box,
-                              )}
-                            >
-                              <h6>Time:</h6>
-                              {timings &&
-                                timings.map((time, index) => {
-                                  return (
-                                    <div key={index}>
-                                      {`${dayjs
-                                        .utc(time.startDate)
-                                        .format("dd")}: ${tConvert(
-                                        time.startTime,
-                                      )}-${tConvert(time.endTime)} ${
-                                        ABBRS[time.timeZone]
-                                      }`}
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          </div>
-
-                          <div
-                            className={classNames("col-12", Style.datetime_box)}
-                          >
-                            <h6>Teacher:</h6>
-                            {primaryTeacherName && (
-                              <div>
-                                <img
-                                  className={classNames(
-                                    Style.img,
-                                    "rounded-circle",
-                                  )}
-                                  src={
-                                    primaryTeacherPic ||
-                                    "/assets/images/user.png"
-                                  }
+              <div class="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-lg-0 offset-lg-1">
+                <div className="reciept reciept--box  d-lg-block">
+                  <div class="reciept__header reciept__header_v1 full-padding ">
+                    <div class="row justify-content-between no-gutters pt-3">
+                      <div class="col-12 col-lg-12 select-box mb-3 mb-lg-0">
+                        <div tabIndex="1" className="select-box__current">
+                          <span className="select-box__placeholder">
+                            Choose Dates
+                          </span>
+                          {workshops.map((option) => {
+                            const dateValue =
+                              dayjs
+                                .utc(option.eventStartDate)
+                                ?.format("MMM DD") +
+                              "-" +
+                              dayjs.utc(option.eventEndDate)?.format("DD") +
+                              " " +
+                              tConvert(option.eventStartTime) +
+                              "-" +
+                              tConvert(option.eventEndTime) +
+                              " " +
+                              ABBRS[option.eventTimeZone];
+                            return (
+                              <div
+                                className="select-box__value"
+                                key={option.value}
+                              >
+                                <input
+                                  type="radio"
+                                  id="option1"
+                                  value={selectedWorkshopId}
+                                  name="choose-date"
+                                  class="select-box__input"
+                                  checked={selectedWorkshopId === option.sfid}
                                 />
-                                {primaryTeacherName}
+                                <span className="select-box__input-text">
+                                  {dateValue}
+                                </span>
                               </div>
-                            )}
-                            {coTeacher1Name && (
-                              <div>
-                                <img
-                                  className={classNames(
-                                    Style.img,
-                                    "rounded-circle",
-                                  )}
-                                  src={
-                                    coTeacher1Pic || "/assets/images/user.png"
-                                  }
-                                />
-                                {coTeacher1Name}
-                              </div>
-                            )}
-                            {coTeacher2Name && (
-                              <div>
-                                <img
-                                  className={classNames(
-                                    Style.img,
-                                    "rounded-circle",
-                                  )}
-                                  src={
-                                    coTeacher2Pic || "/assets/images/user.png"
-                                  }
-                                />
-                                {coTeacher2Name}
-                              </div>
-                            )}
-                          </div>
-                          <div
-                            className={classNames("col-12", Style.datetime_box)}
-                          >
-                            <h6>Contact:</h6>
-                            {contactName && (
-                              <div>
-                                {contactName},{" "}
-                                <div>
-                                  <a href={`tel:${phone1}`}>{phone1}</a>
-                                </div>
-                                <div>
-                                  <a href={`mailto:${contactEmail}`}>
-                                    {contactEmail}
-                                  </a>
-                                </div>
-                              </div>
-                            )}
-                          </div>
+                            );
+                          })}
                         </div>
+                        <ul class="select-box__list">
+                          {workshops.map((option) => {
+                            const dateValue =
+                              dayjs
+                                .utc(option.eventStartDate)
+                                ?.format("MMM DD") +
+                              "-" +
+                              dayjs.utc(option.eventEndDate)?.format("DD") +
+                              " " +
+                              tConvert(option.eventStartTime) +
+                              "-" +
+                              tConvert(option.eventEndTime) +
+                              " " +
+                              ABBRS[option.eventTimeZone];
+                            return (
+                              <li
+                                key={option.value}
+                                onClick={() =>
+                                  handleWorkshopSelectionChange(option.sfid)
+                                }
+                              >
+                                <label
+                                  aria-hidden="aria-hidden"
+                                  data-value="card"
+                                  className="select-box__option"
+                                >
+                                  <span>{dateValue}</span>
+                                  <img
+                                    src="/img/ic-tick-blue-lg.svg"
+                                    alt="Option selected"
+                                    style={{
+                                      display:
+                                        selectedWorkshopId === option.sfid
+                                          ? "block"
+                                          : "none",
+                                    }}
+                                  />
+                                </label>
+                              </li>
+                            );
+                          })}
+                        </ul>
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-              {(description || notes) && (
-                <div className="fullBlk tw-mt-10">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: description,
-                    }}
-                  />
-                  <div
-                    className="tw-mt-2"
-                    dangerouslySetInnerHTML={{
-                      __html: notes,
-                    }}
-                  />
+                  {workshops.length === 0 ? (
+                    <div class="reciept__details ">
+                      <div class="course pb-3">
+                        <div class="course__info course__info--width info">
+                          <h2 class="info__title">No Webinars Found</h2>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div class="reciept__details ">
+                      <div class="course pb-3">
+                        <div class="d-none d-lg-block course__photo course__photo--min-width tw-min-w-[98px] tw-h-[98px] tw-relative">
+                          <Image
+                            src={"/img/card-2.png"}
+                            alt="course-photo"
+                            layout="fill"
+                          />
+                        </div>
+                        <div class="course__info course__info--width info">
+                          <h2 class="info__title">Your course:</h2>
+                          <ul class="info__list info__list--classic">
+                            <li>Total: {premiumRate?.unitPrice || 0}$</li>
+                          </ul>
+                          <h2 class="info__title mt-3">You get:</h2>
+                          <ul class="info__list info__list--classic">
+                            <li>
+                              SKY Breath Meditation On-Demand Video Access
+                            </li>
+                            <li>Plus 2 LIVE online sessions</li>
+                          </ul>
+
+                          <h2 class="info__title mt-3">BONUSES</h2>
+                          <ul class="info__list info__list--classic ">
+                            <li>3 LIVE follow-up-sessions</li>
+                            <li>
+                              3 months free access to the online yoga studio
+                            </li>
+                            <li>
+                              3 months free access to the online yoga studio
+                            </li>
+                            <li>3 guided meditations</li>
+                            <li>1 Ebook of quotes for daily inspiration</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+                <AgreementForm
+                  formikProps={formikProps}
+                  complianceQuestionnaire={complianceQuestionnaire}
+                  isCorporateEvent={isCorporateEvent}
+                  screen="MOBILE"
+                />
+
+                <AgreementForm
+                  formikProps={formikProps}
+                  complianceQuestionnaire={complianceQuestionnaire}
+                  isCorporateEvent={isCorporateEvent}
+                  screen="DESKTOP"
+                />
+
+                <div class="order__complete d-block d-lg-none">
+                  <div className="order__security security">
+                    <img src="/img/ic-lock.svg" alt="lock" />
+                    <p className="security__info">
+                      AES 256-B&T
+                      <span>SSL Secured</span>
+                    </p>
+                  </div>
+
+                  <button
+                    form="checkout-form"
+                    type="submit"
+                    disabled={!selectedWorkshopId}
+                    className="btn-primary"
+                  >
+                    Complete Checkout
+                  </button>
+                </div>
+              </div>
+
               <MobileBottomBar
                 workshop={workshop}
                 toggleDetailMobileModal={toggleDetailMobileModal(
