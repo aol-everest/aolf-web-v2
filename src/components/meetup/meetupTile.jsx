@@ -29,10 +29,8 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
     eventTimeZone,
     meetupDuration,
     isOnlineMeetup,
-    locationStreet,
     locationProvince,
     locationCity,
-    locationPostalCode,
   } = data || {};
   const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, "")} Min`;
   return (
@@ -60,7 +58,7 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
                     {" "}
                     {locationCity || ""}
                     {locationProvince && ", "}
-                    {locationProvince || ""} {locationPostalCode || ""}
+                    {locationProvince || ""}
                   </span>
                 ) : (
                   centerName
