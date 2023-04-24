@@ -55,13 +55,16 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
               "Live Streaming from" + " " + centerName
             ) : (
               <>
-                {locationStreet ? <span>{locationStreet}</span> : centerName}
-                <span>
-                  {" "}
-                  {locationCity || ""}
-                  {locationProvince && ", "}
-                  {locationProvince || ""} {locationPostalCode || ""}
-                </span>
+                {locationCity ? (
+                  <span>
+                    {" "}
+                    {locationCity || ""}
+                    {locationProvince && ", "}
+                    {locationProvince || ""} {locationPostalCode || ""}
+                  </span>
+                ) : (
+                  centerName
+                )}
               </>
             )}
           </div>
