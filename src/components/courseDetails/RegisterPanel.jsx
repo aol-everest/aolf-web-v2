@@ -9,6 +9,7 @@ import utc from "dayjs/plugin/utc";
 import { useGlobalModalContext } from "@contexts";
 import { MEMBERSHIP_TYPES, COURSE_TYPES, MODAL_TYPES } from "@constants";
 import { pushRouteWithUTMQuery } from "@service";
+import queryString from "query-string";
 
 dayjs.extend(utc);
 
@@ -69,7 +70,9 @@ export const RegisterPanel = ({ workshop }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
         defaultView: "SIGNUP_MODE",
       });
     }

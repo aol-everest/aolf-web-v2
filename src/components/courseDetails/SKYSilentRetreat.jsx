@@ -12,6 +12,7 @@ import { HideOn } from "@components";
 import { priceCalculation, tConvert } from "@utils";
 import Style from "./CourseDetails.module.scss";
 import { pushRouteWithUTMQuery } from "@service";
+import queryString from "query-string";
 
 export const SKYSilentRetreat = ({ data, swiperOption }) => {
   const { authenticated = false } = useAuth();
@@ -71,7 +72,9 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
         defaultView: "SIGNUP_MODE",
       });
     }

@@ -10,6 +10,7 @@ import { Comment } from "./Comment";
 import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
+import queryString from "query-string";
 import {
   useAuth,
   useGlobalAlertContext,
@@ -50,7 +51,9 @@ export const HealingBreath = ({ data, swiperOption }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
         defaultView: "SIGNUP_MODE",
       });
     }

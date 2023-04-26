@@ -8,6 +8,7 @@ import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES, ABBRS, COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 import { pushRouteWithUTMQuery } from "@service";
+import queryString from "query-string";
 
 dayjs.extend(utc);
 
@@ -38,7 +39,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
       });
     }
 
@@ -76,7 +79,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
       });
     }
   };

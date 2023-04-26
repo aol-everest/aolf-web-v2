@@ -9,6 +9,7 @@ import { useAuth, useGlobalModalContext } from "@contexts";
 import Style from "./Header.module.scss";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
+import queryString from "query-string";
 // import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
@@ -468,7 +469,9 @@ export const Header = () => {
   const toggleSidebar = () => setShowSidebar(!showSidebar);
 
   const loginAction = () => {
-    showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/us-en/profile" });
+    showModal(MODAL_TYPES.LOGIN_MODAL, {
+      navigateTo: "/us-en/profile?" + queryString.stringify(router.query),
+    });
   };
 
   const onMenuSelection = (submenu) => () => {
