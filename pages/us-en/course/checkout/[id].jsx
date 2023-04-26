@@ -22,6 +22,7 @@ import ErrorPage from "next/error";
 import { useQuery } from "react-query";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
+import { replaceRouteWithUTMQuery } from "@service";
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -189,7 +190,7 @@ const Checkout = () => {
   };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
-    router.replace({
+    replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,

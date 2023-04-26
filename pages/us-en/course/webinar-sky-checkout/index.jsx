@@ -18,6 +18,7 @@ import { useQuery } from "react-query";
 import { orgConfig } from "@org";
 import { PaymentFormWebinar } from "@components/PaymentFormWebinar";
 import { pushRouteWithUTMQuery } from "@service";
+import { replaceRouteWithUTMQuery } from "@service";
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -213,7 +214,7 @@ const WebinarSkyCheckout = () => {
   };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
-    router.replace({
+    replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
