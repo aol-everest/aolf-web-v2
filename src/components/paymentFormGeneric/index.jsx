@@ -43,6 +43,8 @@ import {
 import { Loader } from "@components";
 import { api, tConvert } from "@utils";
 import Style from "./PaymentFormGeneric.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
+import { filterAllowedParams } from "@utils/utmParam";
 
 const createOptions = {
   style: {
@@ -105,7 +107,8 @@ export const PaymentFormGeneric = ({
   const logout = async (event) => {
     await Auth.logout();
     setUser(null);
-    router.push(
+    pushRouteWithUTMQuery(
+      router,
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
@@ -116,7 +119,7 @@ export const PaymentFormGeneric = ({
 
   const openSubscriptionPaywallPage = (id) => (e) => {
     if (e) e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
       query: {
         cid: workshop.id,
@@ -258,6 +261,7 @@ export const PaymentFormGeneric = ({
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
           isPaypalPayment: true,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isGenericWorkshop) {
@@ -456,6 +460,7 @@ export const PaymentFormGeneric = ({
           programQuestionnaireResult,
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isChangingCard) {

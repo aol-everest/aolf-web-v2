@@ -11,6 +11,7 @@ import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { useAuth } from "@contexts";
 import { withAuth } from "@hoc";
+import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 
@@ -147,7 +148,7 @@ const MembershipThankyou = () => {
   const courseDetail = courseId ? workshopDetail : meetupDetail;
 
   const searchSilentRetreatsAction = () => {
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en",
       query: {
         courseType: "SILENT_RETREAT",
@@ -158,11 +159,11 @@ const MembershipThankyou = () => {
   const finishRegistrationAction = () => {
     if (courseId) {
       if (page === "detail") {
-        router.push({
+        pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/${courseId}`,
         });
       } else {
-        router.push({
+        pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/checkout/${courseId}`,
           query: {
             page: "c-o",
@@ -170,7 +171,7 @@ const MembershipThankyou = () => {
         });
       }
     } else if (meetupId) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${meetupId}`,
         query: {
           page: "c-o",
@@ -180,7 +181,7 @@ const MembershipThankyou = () => {
   };
 
   const exploreMeditationsAction = () => {
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
     });
   };

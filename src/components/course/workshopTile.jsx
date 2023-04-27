@@ -2,11 +2,13 @@ import React from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES, ABBRS, COURSE_TYPES } from "@constants";
 import classNames from "classnames";
+import { pushRouteWithUTMQuery } from "@service";
+import queryString from "query-string";
 
 dayjs.extend(utc);
 
@@ -28,7 +30,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
 
   const enrollAction = (workshopId, productTypeId) => () => {
     if (authenticated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
@@ -37,7 +39,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
       });
     }
 
@@ -59,14 +63,14 @@ export const WorkshopTile = ({ data, authenticated }) => {
 
   const detailAction = (workshopId, productTypeId) => () => {
     if (isKnownWorkshop) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/${workshopId}`,
         query: {
           ctype: productTypeId,
         },
       });
     } else if (authenticated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
@@ -75,7 +79,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
       });
     }
   };

@@ -9,6 +9,7 @@ import { withAuth } from "@hoc";
 import { useQuery } from "react-query";
 import { useAuth } from "@contexts";
 import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery } from "@service";
 
 /* export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { Auth } = withSSRContext({ req });
@@ -129,7 +130,7 @@ const MembershipCancellation = () => {
 
   const backToProfileAction = (e) => {
     if (e) e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/profile`,
     });
   };
@@ -158,7 +159,7 @@ const MembershipCancellation = () => {
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       }
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/profile`,
         query: {
           request: 2,
@@ -167,7 +168,7 @@ const MembershipCancellation = () => {
     } catch (error) {
       console.log(error);
 
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/profile`,
         query: {
           request: 1,

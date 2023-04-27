@@ -26,6 +26,7 @@ import {
   OnlineCourse,
 } from "@components/coursethankYouDetails";
 import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -383,7 +384,7 @@ const Thankyou = () => {
       ? "SAHAJ_SAMADHI_MEDITATION"
       : "SKY_BREATH_MEDITATION";
 
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course`,
       query: {
         instructor: JSON.stringify({

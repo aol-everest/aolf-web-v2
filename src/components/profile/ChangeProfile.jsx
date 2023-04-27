@@ -18,6 +18,7 @@ import {
 import { StyledInput, Dropdown } from "@components/checkout";
 import { ChangeEmail } from "@components/profile";
 import Style from "./ChangeProfile.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
   const onChangeAction = (value, data, event, formattedValue) => {
@@ -142,14 +143,14 @@ export const ChangeProfile = ({
 
   const handleRequestResult = (requestCreated) => {
     if (requestCreated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/profile`,
         query: {
           request: 3,
         },
       });
     } else {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/profile`,
         query: {
           request: 4,

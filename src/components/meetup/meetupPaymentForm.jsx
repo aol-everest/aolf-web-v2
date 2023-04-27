@@ -23,6 +23,7 @@ import { ABBRS } from "@constants";
 import { useAuth } from "@contexts";
 import { tConvert } from "@utils";
 import Image from "next/image";
+import { pushRouteWithUTMQuery } from "@service";
 
 import { priceCalculation, Auth } from "@utils";
 import { useQueryString } from "@hooks";
@@ -36,6 +37,7 @@ import {
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { Loader } from "@components";
 import { api } from "@utils";
+import { filterAllowedParams } from "@utils/utmParam";
 
 dayjs.extend(utc);
 
@@ -94,7 +96,8 @@ export const MeetupPaymentForm = ({
   const logout = async (event) => {
     await Auth.logout();
     setUser(null);
-    router.push(
+    pushRouteWithUTMQuery(
+      router,
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
@@ -105,7 +108,7 @@ export const MeetupPaymentForm = ({
 
   const openSubscriptionPaywallPage = (id) => (e) => {
     if (e) e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
       query: {
         cid: meetup.sfid,
@@ -216,6 +219,7 @@ export const MeetupPaymentForm = ({
           isInstalmentOpted: false,
           isPaypalPayment: true,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       //token.saveCardForFuture = true;
@@ -335,6 +339,7 @@ export const MeetupPaymentForm = ({
           complianceQuestionnaire,
           isInstalmentOpted: false,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isChangingCard) {

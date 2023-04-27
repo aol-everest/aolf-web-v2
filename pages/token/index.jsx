@@ -5,6 +5,7 @@ import { useAuth } from "@contexts";
 import { ALERT_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
 import { PageLoading } from "@components";
+import { pushRouteWithUTMQuery } from "@service";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -46,13 +47,13 @@ function Token() {
       const userInfo = await Auth.reFetchProfile();
       setUser(userInfo);
 
-      router.push(state || "/");
+      pushRouteWithUTMQuery(router, state || "/");
     } catch (error) {
       console.log(error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: error.message,
         closeModalAction: () => {
-          router.push("/");
+          pushRouteWithUTMQuery(router, "/");
         },
       });
     }

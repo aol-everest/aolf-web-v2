@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { orgConfig } from "@org";
 
 export function Footer() {

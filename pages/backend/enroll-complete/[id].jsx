@@ -7,6 +7,7 @@ import { ALERT_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
 import { Radiobox } from "@components/backendPaymentForm/Radiobox";
 import { BackendRegisterationDetail } from "@components/backendRegisterationDetail";
+import { replaceRouteWithUTMQuery } from "@service";
 
 import Style from "./Complete.module.scss";
 
@@ -73,7 +74,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
         }
         setInlineLoading(false);
 
-        router.replace({
+        replaceRouteWithUTMQuery(router, {
           pathname: `/us-en/course/thankyou/${attendeeRecord.sfid}`,
           query: {
             ctype: productTypeId,

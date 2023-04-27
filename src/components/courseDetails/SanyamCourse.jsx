@@ -14,6 +14,7 @@ import { useGlobalAlertContext } from "@contexts";
 import { ABBRS, COURSE_TYPES, ALERT_TYPES, COURSE_MODES } from "@constants";
 import { HideOn } from "@components";
 import { priceCalculation } from "@utils";
+import { pushRouteWithUTMQuery } from "@service";
 
 export const SanyamCourse = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -43,7 +44,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
   };
 
   const handleUpcomingSanyamCourse = () => {
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course`,
       query: {
         "other-ctype": "true",

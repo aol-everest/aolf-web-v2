@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "@contexts";
 import { useRouter } from "next/router";
+import { pushRouteWithUTMQuery } from "@service";
 
 export const withAuth = (Component = null, options = {}) => {
   const AuthenticatedRoute = (props) => {
@@ -11,14 +12,14 @@ export const withAuth = (Component = null, options = {}) => {
         if (options.role.includes(user.profile.userType)) {
           return <Component {...props} />;
         } else {
-          router.push({
+          pushRouteWithUTMQuery(router, {
             pathname: "/unauthorized",
           });
         }
       }
       return <Component {...props} />;
     }
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: options.pathAfterFailure || "/login",
       query: {
         next: router.asPath,

@@ -11,6 +11,7 @@ import { PageLoading } from "@components";
 import { useQuery } from "react-query";
 import { useAuth } from "@contexts";
 import ErrorPage from "next/error";
+import { replaceRouteWithUTMQuery } from "@service";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -92,7 +93,7 @@ const Checkout = () => {
   const [mbsy] = useQueryString("mbsy");
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
-    router.replace({
+    replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/meetup/thankyou/${attendeeId}`,
       query: {
         ctype: meetup.productTypeId,

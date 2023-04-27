@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { Popup, MobileFilterModal, SmartDropDown } from "@components";
 import { DURATION } from "@constants";
 import { NextSeo } from "next-seo";
@@ -9,6 +9,7 @@ import { api } from "@utils";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { uniqBy } from "lodash";
+import { pushRouteWithUTMQuery } from "@service";
 
 const timeConvert = (data) => {
   const minutes = data % 60;
@@ -123,7 +124,7 @@ export const DesignOne = ({
   }
 
   const findACourseAction = () => {
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en",
       query: {
         courseType: "SKY_BREATH_MEDITATION",

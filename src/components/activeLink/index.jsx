@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import React, { Children } from "react";
 
 export const ActiveLink = ({

@@ -16,6 +16,7 @@ import ErrorPage from "next/error";
 import { withAuth } from "@hoc";
 import { useAuth } from "@contexts";
 import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery } from "@service";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -221,7 +222,7 @@ function MembershipCheckout() {
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
     hideAlert();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
@@ -237,7 +238,7 @@ function MembershipCheckout() {
     if (meetingId) {
       query = { mid: meetingId, page: returnPage };
     }
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/thankyou/${orderId}`,
       query,
     });

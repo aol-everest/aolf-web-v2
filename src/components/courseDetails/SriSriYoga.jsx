@@ -9,6 +9,7 @@ import { COURSE_TYPES } from "@constants";
 import { priceCalculation } from "@utils";
 import { useRouter } from "next/router";
 import Style from "./CourseDetails.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 export const SriSriYoga = ({ data, swiperOption }) => {
   const [activeSlider, setActiveSlider] = useState(0);
@@ -16,7 +17,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/checkout/${data.sfid}`,
       query: {
         ctype: data.productTypeId,

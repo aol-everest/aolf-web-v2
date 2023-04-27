@@ -18,6 +18,7 @@ import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import { pushRouteWithUTMQuery } from "@service";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -206,7 +207,7 @@ function Collection() {
   const purchaseMembershipAction = (id) => (e) => {
     hideModal();
     hideAlert();
-    router.push(`/us-en/membership/${id}`);
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {
