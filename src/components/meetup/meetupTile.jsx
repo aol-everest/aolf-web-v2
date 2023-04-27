@@ -29,6 +29,8 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
     eventTimeZone,
     meetupDuration,
     isOnlineMeetup,
+    locationProvince,
+    locationCity,
   } = data || {};
   const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, "")} Min`;
   return (
@@ -47,9 +49,22 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
         <div className="course_complete">Meetup Full</div>
         <div className="course_info">
           <div className="course_status">
-            {isOnlineMeetup
-              ? "Live Streaming from" + " " + centerName
-              : "" + centerName}
+            {isOnlineMeetup ? (
+              "Live Streaming from" + " " + centerName
+            ) : (
+              <>
+                {locationCity ? (
+                  <span>
+                    {" "}
+                    {locationCity || ""}
+                    {locationProvince && ", "}
+                    {locationProvince || ""}
+                  </span>
+                ) : (
+                  centerName
+                )}
+              </>
+            )}
           </div>
           <div className="course_name">{meetupTitle}</div>
           <div className="course_place">{primaryTeacherName}</div>
