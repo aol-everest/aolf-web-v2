@@ -13,39 +13,22 @@ import { priceCalculation, tConvert } from "@utils";
 import Style from "./CourseDetails.module.scss";
 import { pushRouteWithUTMQuery } from "@service";
 import queryString from "query-string";
+import { Comment } from "./Comment";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 export const SKYSilentRetreat = ({ data, swiperOption }) => {
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
 
-  const [activeSlider, setActiveSlider] = useState(0);
   const [pastCommentsActiveSlider, setPastCommentsActiveSlider] = useState(0);
-
-  const handleSliderBulletClick = (index) => {
-    setActiveSlider(index);
-  };
 
   const handlePastCommentsSliderBulletClick = (index) => {
     setPastCommentsActiveSlider(index);
   };
 
-  const autoSwiperOption = {
-    slidesPerView: 1,
-    spaceBetween: 30,
-    centeredSlides: true,
-    autoplay: {
-      delay: 2000,
-    },
-    pagination: {
-      el: ".research__list-pagination",
-      clickable: true,
-    },
-  };
-
   const {
     title,
-    workshopTotalHours,
     mode,
     eventStartDate,
     eventEndDate,
@@ -80,14 +63,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
     }
   };
 
-  const { fee, delfee, offering } = priceCalculation({ workshop: data });
-
-  const activeSliderClass =
-    activeSlider === 0
-      ? Style.sliderTransformFirst
-      : activeSlider === 1
-      ? Style.sliderTransformSecond
-      : Style.sliderTransformThird;
+  const { fee, delfee } = priceCalculation({ workshop: data });
 
   const activePastCommentsSliderClass =
     pastCommentsActiveSlider === 0
@@ -477,225 +453,253 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                 </a>
               </div>
             </div>
+
+            <div className="studies__result">
+              <h3 className="studies__result-title section-title">
+                Research result key findings
+              </h3>
+              <div className="studies__list">
+                <div className="container col-12 col-lg-10">
+                  <div className="row">
+                    <div className="col-12 col-md-3 studies__item studies__item_violet">
+                      <h3>Deep Sleep Increases</h3>
+
+                      <div className="studies__item-img">
+                        218%
+                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
+                      </div>
+
+                      <div className="studies__item-text">
+                        <h3>Deep Sleep Increases</h3>
+                        <p>
+                          <span>INCREASE</span>
+                          in deep sleep
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-3 studies__item studies__item_violet">
+                      <h3>Well-Being Hormones Increase</h3>
+
+                      <div className="studies__item-img">
+                        50%
+                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
+                      </div>
+
+                      <div className="studies__item-text">
+                        <h3>Well-Being Hormones Increase</h3>
+                        <p>
+                          <span>INCREASE</span>
+                          serum prolactin
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-3 studies__item studies__item_blue">
+                      <h3>Depression Decreases</h3>
+
+                      <div className="studies__item-img">
+                        70%
+                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
+                      </div>
+
+                      <div className="studies__item-text">
+                        <h3>Depression Decreases</h3>
+                        <p>
+                          <span>REMISSION RATE</span> in depression in 1 month
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-3 studies__item studies__item_blue">
+                      <h3>Stress Hormones Decrease</h3>
+
+                      <div className="studies__item-img">
+                        56%
+                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
+                      </div>
+
+                      <div className="studies__item-text">
+                        <h3>Stress Hormones Decrease</h3>
+                        <p>
+                          <span>REDUCTION</span>
+                          serum cortisol
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="reviews">
-          <div className="reviews__container container_md">
-            <h4 className="reviews__title block-title">
-              The data is impressive, but what are real people saying about SKY?
-            </h4>
-
-            <div className="reviews__video">
-              <iframe
-                className="reviews__player"
-                src="https://player.vimeo.com/video/428103610"
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                allow="autoplay; fullscreen"
-                allowFullScreen
-              ></iframe>
-            </div>
-
-            <div className="swiper reviews__slider">
-              <div
-                className={classNames(
-                  "swiper-wrapper reviews__wrapper",
-                  activeSliderClass,
-                )}
-              >
-                <div className="swiper-slide reviews__slide review-card">
-                  <img
-                    src="/img/review-author-1.png"
-                    className="review-card__logo"
-                    alt="review-logo"
-                  />
-
-                  <h6 className="review-card__title">Karen</h6>
-                  <div className="review-card__description">
-                    Long Island, NY
-                  </div>
-
-                  <div className="review-card__rating">
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                  </div>
-
-                  <p className="review-card__text">
-                    I was able to sleep better and noticed that I was more
-                    productive and alert during the day. The workshop gave me a
-                    better understanding of what yoga is all about — not just
-                    asana (yoga poses).
-                  </p>
-
-                  <div className="review-card__quotes">
-                    <img src="/img/ic-quote.svg" alt="review-quotes-icon" />
-                    <img src="/img/ic-quote.svg" alt="review-quotes-icon" />
-                  </div>
-                </div>
-
-                <div className="swiper-slide reviews__slide review-card">
-                  <img
-                    src="/img/review-author-2.png"
-                    className="review-card__logo"
-                    alt="review-logo"
-                  />
-
-                  <h6 className="review-card__title">Pooja</h6>
-                  <div className="review-card__description">
-                    Santa Clara, CA
-                  </div>
-
-                  <div className="review-card__rating">
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                  </div>
-
-                  <p className="review-card__text">
-                    The combination of yoga and meditation made my mind and body
-                    feel more relaxed with sense of completion. The knowledge
-                    given on yoga and how to deal with mind through body was
-                    amazing to learn.
-                  </p>
-
-                  <div className="review-card__quotes">
-                    <img src="/img/ic-quote.svg" alt="review-quotes-icon" />
-                    <img src="/img/ic-quote.svg" alt="review-quotes-icon" />
-                  </div>
-                </div>
-
-                <div className="swiper-slide reviews__slide review-card">
-                  <img
-                    src="/img/review-author-3.png"
-                    className="review-card__logo"
-                    alt="review-logo"
-                  />
-
-                  <h6 className="review-card__title">Emmet</h6>
-                  <div className="review-card__description">Atlanta, GA</div>
-
-                  <div className="review-card__rating">
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                    <img
-                      className="review-card__star"
-                      src="/img/ic-star.svg"
-                      alt="rating-icon"
-                    />
-                  </div>
-
-                  <p className="review-card__text">
-                    I have knee problems, but after the workshop, my knee felt
-                    better and less stiff. The instruction were great both in
-                    knowledge and style. I love that I could incorporate these
-                    sequences of postures in my home practice.
-                  </p>
-
-                  <div className="review-card__quotes">
-                    <img src="/img/ic-quote.svg" alt="review-quotes-icon" />
-                    <img src="/img/ic-quote.svg" alt="review-quotes-icon" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="swiper-pagination reviews__pagination"></div>
-
-              <div className="program-reviews__slider-pagination swiper-pagination-clickable swiper-pagination-bullets">
-                <span
-                  className={classNames("swiper-pagination-bullet", {
-                    "swiper-pagination-bullet-active": activeSlider === 0,
-                  })}
-                  tabIndex="0"
-                  role="button"
-                  aria-label="Go to slide 1"
-                  onClick={() => handleSliderBulletClick(0)}
-                ></span>
-                <span
-                  className={classNames("swiper-pagination-bullet", {
-                    "swiper-pagination-bullet-active": activeSlider === 1,
-                  })}
-                  tabIndex="1"
-                  role="button"
-                  aria-label="Go to slide 2"
-                  onClick={() => handleSliderBulletClick(1)}
-                ></span>
-                <span
-                  className={classNames("swiper-pagination-bullet", {
-                    "swiper-pagination-bullet-active": activeSlider === 2,
-                  })}
-                  tabIndex="2"
-                  role="button"
-                  aria-label="Go to slide 3"
-                  onClick={() => handleSliderBulletClick(2)}
-                ></span>
-              </div>
-            </div>
+        <section className="comments">
+          <div className="container">
+            <h2 className="comments__title section-title text-center">
+              The data is impressive, but what are real people saying about SKY
+            </h2>
           </div>
+
+          <div className="comments__video">
+            <iframe
+              src="https://player.vimeo.com/video/428103610"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+            ></iframe>
+          </div>
+          <Swiper className="px-3 px-lg-0" {...swiperOption}>
+            <SwiperSlide className="swiper-slide comments__item">
+              <Comment
+                shortText="When I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before."
+                fullText="When I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before."
+              >
+                <>
+                  <div className="comments__person">
+                    <div className="comments__person-img">
+                      <img
+                        className="rounded-circle tw-w-full tw-h-full"
+                        src="/img/Dan-Joy.jpg"
+                        alt="comments"
+                      />
+                      <span>“</span>
+                    </div>
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Dan J. </h3>
+                      <p className="comments__person-about">
+                        Chef
+                        <br />
+                        Asheville, NC
+                      </p>
+                    </div>
+                  </div>
+                  <p className="comments__quote">
+                    “Come to Work in a Better Mindset”
+                  </p>
+                </>
+              </Comment>
+            </SwiperSlide>
+            <SwiperSlide className="swiper-slide comments__item">
+              <Comment
+                shortText="I joined the Happiness program after an introductory meet up
+                    at the Art of Living Center. It felt like it could be a
+                    great program for me, and before I could change my mind, I
+                    signed up for it. If I had waited until later to join, I
+                    would have missed out on a truly life transforming
+                    experience. The program gave me great insights and practical
+                    too…"
+                fullText="I joined the Happiness program after an introductory meet up
+                    at the Art of Living Center. It felt like it could be a
+                    great program for me, and before I could change my mind, I
+                    signed up for it. If I had waited until later to join, I
+                    would have missed out on a truly life transforming
+                    experience. The program gave me great insights and practical
+                    tools to dealing with life's stressful situations. I met
+                    some really good friends that I still stay in contact with."
+              >
+                <>
+                  <div className="comments__person">
+                    <div className="comments__person-img">
+                      <img src="/img/2-comments.png" alt="comments" />
+                      <span>“</span>
+                    </div>
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Tiffany Guynes</h3>
+                      <p className="comments__person-about">
+                        Chef & private caterer,
+                        <br />
+                        Austin, TX
+                      </p>
+                    </div>
+                  </div>
+                  <p className="comments__quote">
+                    “Great insights and practical tools”
+                  </p>
+                </>
+              </Comment>
+            </SwiperSlide>
+            <SwiperSlide className="swiper-slide comments__item">
+              <Comment
+                shortText="Before the Happiness Program, I was on medication for panic
+                    and anxiety attacks. After the first day of the Happiness
+                    Program, I experienced a full night’s sleep, which was rare
+                    for me. The next morning was one of the happiest I had ever
+                    felt. I’ve been constant with my SKY meditation practice for
+                    the..."
+                fullText="Before the Happiness Program, I was on medication for panic
+                    and anxiety attacks. After the first day of the Happiness
+                    Program, I experienced a full night’s sleep, which was rare
+                    for me. The next morning was one of the happiest I had ever
+                    felt. I’ve been constant with my SKY meditation practice for
+                    the last two years - it makes me feel so alive. My friends
+                    and family tell me that I am much more confident and
+                    happier. Despite the struggles last year - my grandfather
+                    passed away, I lost my job and I went through a divorce - I
+                    still did not have a panic or anxiety attack. I feel
+                    grateful for this inner strength because I don’t know where
+                    I would be without it."
+              >
+                <>
+                  <div className="comments__person">
+                    <div className="comments__person-img">
+                      <img src="/img/3-comments.png" alt="comments" />
+                      <span>“</span>
+                    </div>
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Robert Delmont</h3>
+                      <p className="comments__person-about">
+                        Elementary music teacher,
+                        <br />
+                        Boston, MA
+                      </p>
+                    </div>
+                  </div>
+                  <p className="comments__quote">
+                    “Much more confident and happier, despite the struggles”
+                  </p>
+                </>
+              </Comment>
+            </SwiperSlide>
+            <SwiperSlide className="swiper-slide comments__item">
+              <Comment
+                shortText="I was at the height of my career, with a high profile job
+                    and a wonderful family. But stress was taking a toll on my
+                    physical and mental health – and I was relying on
+                    antibiotics and pain medicine regularly. Practicing SKY
+                    Meditation has reduced my stress levels and improved my
+                    immune system…"
+                fullText="I was at the height of my career, with a high profile job
+                    and a wonderful family. But stress was taking a toll on my
+                    physical and mental health – and I was relying on
+                    antibiotics and pain medicine regularly. Practicing SKY
+                    Meditation has reduced my stress levels and improved my
+                    immune system dramatically. I haven’t needed medication for
+                    4 years now! This course is the best financial investment I
+                    have made in myself"
+              >
+                <>
+                  <div className="comments__person">
+                    <div className="comments__person-img">
+                      <img src="/img/4-comments.png" alt="comments" />
+                      <span>“</span>
+                    </div>
+                    <div className="comments__person-info">
+                      <h3 className="comments__name">Uma Vishwanath</h3>
+                      <p className="comments__person-about">
+                        Team lead in a high-tech company,
+                        <br />
+                        Lexington, MA
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="comments__quote">
+                    “The best financial investment I have made in myself”
+                  </p>
+                </>
+              </Comment>
+            </SwiperSlide>
+          </Swiper>
         </section>
 
         <section className="silence">
@@ -722,20 +726,16 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
         <section className="occupation">
           <div className="container_md occupation__container">
             <div className="occupation__player player-occupation">
-              <img
-                className="player-occupation__overlay"
-                src="/img/occupation-player-overlay.png"
-                alt="occupation-player"
-              />
-              <img
-                className="player-occupation__icon"
-                src="/img/ic-play.svg"
-                alt="play-icon"
-              />
-
-              <video className="player-occupation d-none" controls>
-                <source src="" type="video/mp4" />
-              </video>
+              <div className="comments__video">
+                <iframe
+                  src="https://player.vimeo.com/video/432237531?wmode=opaque"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
             <div className="occupation__body">
               <h6 className="occupation__title paragraph-title">
@@ -750,8 +750,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                     alt="occupation-icon"
                   />
                   <div className="occupation__text">
-                    Experience the rejuvenation that silence offers from the
-                    comfort of your home
+                    Experience the rejuvenating effects of silence
                   </div>
                 </li>
 

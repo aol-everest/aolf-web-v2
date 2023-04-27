@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Loader } from "@components";
 import { tConvert } from "@utils";
-import { ABBRS } from "@constants";
+import { ABBRS, COURSE_MODES } from "@constants";
 import { useRouter } from "next/router";
 import { pushRouteWithUTMQuery } from "@service";
 
@@ -32,6 +32,12 @@ export const MeetupEnroll = ({
     description,
     freeWithSubscription,
     isSubscriptionOfferingUsed,
+    mode,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
   } = selectedMeetup;
 
   const goToCheckout = (e) => {
@@ -71,17 +77,41 @@ export const MeetupEnroll = ({
               <span className="modal-title">RSVP for {meetupTitle}</span>
             </div>
             <div className="modal-body">
-              {/* <p className="description">Refresh your {meetupType} practice live with the original recording and a
-              certified teacher.</p> */}
-              <p className="description">{description}</p>
+              {description && (
+                <div
+                  className="description"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                ></div>
+              )}
+
               <p className="date">
                 {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
                 {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
               </p>
               <ul>
-                <li>Session Length: {meetupDuration}</li>
+                <li>Session Length: {meetupDuration} minutes</li>
                 <li>Instructor: {primaryTeacherName}</li>
-                <li>Livestreaming from {centerName} </li>
+                {mode === COURSE_MODES.IN_PERSON.name ? (
+                  <li>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${
+                        locationStreet || ""
+                      }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {locationStreet && <span>{locationStreet}</span>}
+                      <span>
+                        {" "}
+                        {locationCity || ""}
+                        {", "}
+                        {locationProvince || ""} {locationPostalCode || ""}
+                      </span>
+                    </a>{" "}
+                  </li>
+                ) : (
+                  <li>Livestreaming from {centerName} </li>
+                )}
               </ul>
             </div>
 

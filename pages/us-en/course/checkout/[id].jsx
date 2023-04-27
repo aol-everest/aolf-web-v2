@@ -235,14 +235,6 @@ const Checkout = () => {
     ) >= 0;
   const isHealingBreathProgram =
     COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
-  const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const gatewayToInfinity =
-    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
 
   const renderPaymentForm = () => {
     if (isHealingBreathProgram) {
@@ -379,13 +371,7 @@ const Checkout = () => {
                 </span>
               </p>
             ) : (
-              <p className="order__detail">
-                {isMeditationDeluxe
-                  ? "Discover the Gateways to Meditation, Powerful Breathwork, Clarity, & Peace"
-                  : gatewayToInfinity
-                  ? "Discover the Gateways to Meditation, Clarity, & Peace"
-                  : "The Most Effective Way to Feel Calm & Clear, Day After Day"}
-              </p>
+              <p className="order__detail">{workshop?.description || ""}</p>
             )}
 
             {workshop.isCorporateEvent && (
