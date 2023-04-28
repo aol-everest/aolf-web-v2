@@ -373,29 +373,6 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
               </div>
             </div>
           </div>
-
-          <div className="swiper highlights__slider">
-            <div className="swiper-wrapper">
-              <div className="swiper-slide highlights__slide">
-                <img src="/img/research-yoga-gray.png" alt="highlights-img" />
-              </div>
-
-              <div className="swiper-slide highlights__slide">
-                <img src="/img/research-cnn.png" alt="highlights-img" />
-              </div>
-
-              <div className="swiper-slide highlights__slide">
-                <img
-                  src="/img/research-washington-post.png"
-                  alt="highlights-img"
-                />
-              </div>
-
-              <div className="swiper-slide highlights__slide">
-                <img src="/img/research-harvard.png" alt="highlights-img" />
-              </div>
-            </div>
-          </div>
         </section>
 
         <section className="practices">
@@ -701,7 +678,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
         <section className="silence">
           <div className="container_md silence__container">
             <div className="silence__preview meditation-preview">
-              <div className="meditation-preview__title">Phase One</div>
+              <div className="meditation-preview__title">Phase Two</div>
               <h2 className="meditation-preview__description">
                 Go deep with the art of silence
               </h2>
