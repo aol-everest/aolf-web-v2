@@ -510,19 +510,6 @@ const Profile = ({ tab }) => {
                       coupon code has been enjoyed—have a great course :)
                     </li>
                   </ol>
-                  <p>
-                    If you haven’t joined the Referral Program yet, you can{" "}
-                    <Link
-                      href="/us-en/referral-offer"
-                      prefetch={false}
-                      legacyBehavior
-                    >
-                      <a href="#" className="link_orange">
-                        sign up here
-                      </a>
-                    </Link>
-                    .
-                  </p>
                 </div>
                 <div className="tw-mb-2">
                   <CouponStack></CouponStack>
