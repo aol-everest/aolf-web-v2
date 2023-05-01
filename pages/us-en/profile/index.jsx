@@ -60,6 +60,7 @@ const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Ple
                 membership.`;
 const MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR = `We're sorry, but an error occurred. Please contact the help desk
                 at (855) 202-4400 to resolve the issue and delete your information.`;
+const MESSAGE_ALREADY_CASE_REGISTERED_ERROR = `Your case has already been registered`;
 // export async function getServerSideProps({ req, resolvedUrl, query }) {
 //   const { Auth } = withSSRContext({ req });
 //   const { tab } = query || {};
@@ -268,6 +269,23 @@ const Profile = ({ tab }) => {
               <span>
                 <img src="/img/ic-error.svg" alt="error" />
                 {MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR}
+              </span>
+            </div>
+            <img
+              className="profile__close-alert"
+              src="/img/ic-close-white.svg"
+              alt="close"
+              onClick={toggleTopShowMessage}
+            />
+          </aside>
+        )}
+
+        {request === "5" && (
+          <aside className="profile__alert">
+            <div className="container-xl d-flex justify-content-center align-center">
+              <span>
+                <img src="/img/ic-error.svg" alt="error" />
+                {MESSAGE_ALREADY_CASE_REGISTERED_ERROR}
               </span>
             </div>
             <img

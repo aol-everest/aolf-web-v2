@@ -140,12 +140,22 @@ export const ChangeProfile = ({
     });
   };
 
-  const handleRequestResult = (requestCreated) => {
+  const handleRequestResult = (
+    requestCreated,
+    caseAlreadyRegistered = false,
+  ) => {
     if (requestCreated) {
       router.push({
         pathname: `/us-en/profile`,
         query: {
           request: 3,
+        },
+      });
+    } else if (caseAlreadyRegistered) {
+      router.push({
+        pathname: `/us-en/profile`,
+        query: {
+          request: 5,
         },
       });
     } else {
@@ -177,7 +187,7 @@ export const ChangeProfile = ({
       handleRequestResult(true);
     } catch (ex) {
       console.log(ex);
-      handleRequestResult(false);
+      handleRequestResult(false, true);
     }
     setLoading(false);
     description.current = "";
