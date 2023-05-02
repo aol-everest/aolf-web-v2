@@ -249,14 +249,14 @@ export const ChangeProfile = ({
               className="btn-secondary link-modal tw-mr-4 !tw-px-7"
               onClick={handleDeletePersonalInformation}
             >
-              Delete PII
+              Delete Personal information
             </button>
 
             <button
               className="btn-secondary link-modal !tw-px-7"
               onClick={handleDeletePaymentDetails}
             >
-              Delete CC
+              Delete Credit Card information
             </button>
           </div>
         );
