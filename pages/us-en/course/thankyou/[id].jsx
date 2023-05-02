@@ -445,23 +445,27 @@ const Thankyou = () => {
                       </h1>
                       <p className="get-started__text">
                         You're registered for the {title}{" "}
-                        {!isGenericWorkshop && (
-                          <>
-                            {" "}
-                            from {formattedStartDateOnly} -{" "}
-                            {formattedEndDateOnly}
-                          </>
-                        )}
+                        {!isGenericWorkshop &&
+                          !isMeditationDeluxe &&
+                          !gatewayToInfinity && (
+                            <>
+                              {" "}
+                              from {formattedStartDateOnly} -{" "}
+                              {formattedEndDateOnly}
+                            </>
+                          )}
                       </p>
-                      {!isGenericWorkshop && (
-                        <a
-                          className="get-started__link"
-                          href="#"
-                          onClick={addToCalendarAction}
-                        >
-                          Add to Calendar
-                        </a>
-                      )}
+                      {!isGenericWorkshop &&
+                        !isMeditationDeluxe &&
+                        !gatewayToInfinity && (
+                          <a
+                            className="get-started__link"
+                            href="#"
+                            onClick={addToCalendarAction}
+                          >
+                            Add to Calendar
+                          </a>
+                        )}
 
                       <p className="get-started__text">
                         Next step: You will receive an email with details about
