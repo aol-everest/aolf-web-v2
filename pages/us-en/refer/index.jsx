@@ -49,15 +49,6 @@ export default function TalkableRefer() {
               enjoyed—have a great course :)
             </li>
           </ol>
-          <p>
-            If you haven’t joined the Referral Program yet, you can{" "}
-            <Link href="/us-en/referral-offer" prefetch={false} legacyBehavior>
-              <a href="#" className="link_orange">
-                sign up here
-              </a>
-            </Link>
-            .
-          </p>
           <div className="tw-mb-2 tw-mt-4">
             <CouponStack></CouponStack>
           </div>
