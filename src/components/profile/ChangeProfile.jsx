@@ -141,12 +141,22 @@ export const ChangeProfile = ({
     });
   };
 
-  const handleRequestResult = (requestCreated) => {
+  const handleRequestResult = (
+    requestCreated,
+    caseAlreadyRegistered = false,
+  ) => {
     if (requestCreated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/profile`,
         query: {
           request: 3,
+        },
+      });
+    } else if (caseAlreadyRegistered) {
+      router.push({
+        pathname: `/us-en/profile`,
+        query: {
+          request: 5,
         },
       });
     } else {
@@ -178,7 +188,7 @@ export const ChangeProfile = ({
       handleRequestResult(true);
     } catch (ex) {
       console.log(ex);
-      handleRequestResult(false);
+      handleRequestResult(false, true);
     }
     setLoading(false);
     description.current = "";
@@ -240,14 +250,14 @@ export const ChangeProfile = ({
               className="btn-secondary link-modal tw-mr-4 !tw-px-7"
               onClick={handleDeletePersonalInformation}
             >
-              Delete PII
+              Delete Personal information
             </button>
 
             <button
               className="btn-secondary link-modal !tw-px-7"
               onClick={handleDeletePaymentDetails}
             >
-              Delete CC
+              Delete Credit Card information
             </button>
           </div>
         );
