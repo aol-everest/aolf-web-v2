@@ -116,7 +116,7 @@ function Token() {
                   </div>
                 </>
               )}
-              {message && (
+              {message && !success && (
                 <>
                   <div className="icon-container-error tw-w-[45px] tw-inline-block">
                     <FaMinusCircle />
@@ -129,7 +129,7 @@ function Token() {
             {!message && !success && (
               <>Please wait while we verify your email...</>
             )}
-            {message && (
+            {message && !success && (
               <p className="validation-input text-center">{message}</p>
             )}
           </div>
