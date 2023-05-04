@@ -519,104 +519,108 @@ const Thankyou = () => {
             </section>
             <section className="journey-starts !tw-mb-0">
               <div className="container">
-                {!isGenericWorkshop && (
-                  <div className="program-details">
-                    <h2 className="program-details__title">Program Details</h2>
-                    {selectedGenericSlot.startDate &&
-                      getSelectedTimeSlotDetails(selectedGenericSlot)}
-                    {!selectedGenericSlot.startDate && (
-                      <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
-                        {timings &&
-                          timings.map((time, i) => {
-                            return (
-                              <li
-                                className="program-details__schedule tw-flex"
-                                key={i}
+                {!isGenericWorkshop &&
+                  !isMeditationDeluxe &&
+                  !gatewayToInfinity && (
+                    <div className="program-details">
+                      <h2 className="program-details__title">
+                        Program Details
+                      </h2>
+                      {selectedGenericSlot.startDate &&
+                        getSelectedTimeSlotDetails(selectedGenericSlot)}
+                      {!selectedGenericSlot.startDate && (
+                        <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
+                          {timings &&
+                            timings.map((time, i) => {
+                              return (
+                                <li
+                                  className="program-details__schedule tw-flex"
+                                  key={i}
+                                >
+                                  <span className="program-details__schedule-date">
+                                    {dayjs.utc(time.startDate).format("LL")}
+                                  </span>
+                                  <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
+                                    time.startTime,
+                                  )} - ${tConvert(time.endTime)} ${
+                                    ABBRS[time.timeZone]
+                                  }`}</span>
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      )}
+                      {(mode === COURSE_MODES.IN_PERSON.name ||
+                        mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
+                        <>
+                          {!workshop.isLocationEmpty && (
+                            <ul className="program-details__list-schedule tw-mt-2">
+                              <span className="program-details__schedule-date">
+                                Location
+                              </span>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  workshop.locationStreet || ""
+                                }, ${workshop.locationCity} ${
+                                  workshop.locationProvince
+                                } ${workshop.locationPostalCode} ${
+                                  workshop.locationCountry
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
                               >
-                                <span className="program-details__schedule-date">
-                                  {dayjs.utc(time.startDate).format("LL")}
-                                </span>
-                                <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
-                                  time.startTime,
-                                )} - ${tConvert(time.endTime)} ${
-                                  ABBRS[time.timeZone]
-                                }`}</span>
-                              </li>
-                            );
-                          })}
-                      </ul>
-                    )}
-                    {(mode === COURSE_MODES.IN_PERSON.name ||
-                      mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
-                      <>
-                        {!workshop.isLocationEmpty && (
-                          <ul className="program-details__list-schedule tw-mt-2">
-                            <span className="program-details__schedule-date">
-                              Location
-                            </span>
-                            <a
-                              href={`https://www.google.com/maps/search/?api=1&query=${
-                                workshop.locationStreet || ""
-                              }, ${workshop.locationCity} ${
-                                workshop.locationProvince
-                              } ${workshop.locationPostalCode} ${
-                                workshop.locationCountry
-                              }`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              {workshop.locationStreet && (
+                                {workshop.locationStreet && (
+                                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                    {workshop.locationStreet}
+                                  </li>
+                                )}
                                 <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                                  {workshop.locationStreet}
+                                  {workshop.locationCity || ""}
+                                  {", "}
+                                  {workshop.locationProvince || ""}{" "}
+                                  {workshop.locationPostalCode || ""}
                                 </li>
-                              )}
-                              <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                                {workshop.locationCity || ""}
-                                {", "}
-                                {workshop.locationProvince || ""}{" "}
-                                {workshop.locationPostalCode || ""}
-                              </li>
-                            </a>
-                          </ul>
-                        )}
-                        {workshop.isLocationEmpty && (
-                          <ul className="course-details__list">
-                            <div className="course-details__list__title">
-                              <h6>Location:</h6>
-                            </div>
-                            <a
-                              href={`https://www.google.com/maps/search/?api=1&query=${
-                                workshop.streetAddress1 || ""
-                              },${workshop.streetAddress2 || ""} ${
-                                workshop.city
-                              } ${workshop.state} ${workshop.zip} ${
-                                workshop.country
-                              }`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              {workshop.streetAddress1 && (
+                              </a>
+                            </ul>
+                          )}
+                          {workshop.isLocationEmpty && (
+                            <ul className="course-details__list">
+                              <div className="course-details__list__title">
+                                <h6>Location:</h6>
+                              </div>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  workshop.streetAddress1 || ""
+                                },${workshop.streetAddress2 || ""} ${
+                                  workshop.city
+                                } ${workshop.state} ${workshop.zip} ${
+                                  workshop.country
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {workshop.streetAddress1 && (
+                                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                    {workshop.streetAddress1}
+                                  </li>
+                                )}
+                                {workshop.streetAddress2 && (
+                                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                    {workshop.streetAddress2}
+                                  </li>
+                                )}
                                 <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                                  {workshop.streetAddress1}
+                                  {workshop.city || ""}
+                                  {", "}
+                                  {workshop.state || ""} {workshop.zip || ""}
                                 </li>
-                              )}
-                              {workshop.streetAddress2 && (
-                                <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                                  {workshop.streetAddress2}
-                                </li>
-                              )}
-                              <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
-                                {workshop.city || ""}
-                                {", "}
-                                {workshop.state || ""} {workshop.zip || ""}
-                              </li>
-                            </a>
-                          </ul>
-                        )}
-                      </>
-                    )}
-                  </div>
-                )}
+                              </a>
+                            </ul>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
                 {!isMeditationDeluxe && !gatewayToInfinity && (
                   <>
                     <h2 className="journey-starts__title section-title">
@@ -667,15 +671,17 @@ const Thankyou = () => {
                   )}
               </div>
               <div className="course-bottom-card__info">
-                {!isGenericWorkshop && (
-                  <p>
-                    {dayjs.utc(eventStartDate).format("MMMM D") +
-                      " - " +
-                      dayjs.utc(eventEndDate).format("MMMM D") +
-                      ", " +
-                      dayjs.utc(eventEndDate).format("YYYY")}
-                  </p>
-                )}
+                {!isGenericWorkshop &&
+                  !isMeditationDeluxe &&
+                  !gatewayToInfinity && (
+                    <p>
+                      {dayjs.utc(eventStartDate).format("MMMM D") +
+                        " - " +
+                        dayjs.utc(eventEndDate).format("MMMM D") +
+                        ", " +
+                        dayjs.utc(eventEndDate).format("YYYY")}
+                    </p>
+                  )}
                 <div>
                   <h3>{title}</h3>
                 </div>
