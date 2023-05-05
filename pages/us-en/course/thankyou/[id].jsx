@@ -153,7 +153,7 @@ const Thankyou = () => {
         },
       },
     });
-    Talkable.purchase(
+    /* Talkable.purchase(
       {
         order_number: orderExternalId, // Unique order number. Example: '100011'
         subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
@@ -165,7 +165,7 @@ const Thankyou = () => {
         email: user.profile.email,
         traffic_source: "", // The source of the traffic driven to the campaign. Example: 'facebook'
       },
-    );
+    ); */
     reloadProfile();
   }, [authenticated, result]);
 
