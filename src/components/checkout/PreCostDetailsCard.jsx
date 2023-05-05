@@ -8,7 +8,6 @@ export const PreCostDetailsCard = ({
   formikProps,
   fee,
   delfee,
-  offering,
   showCouponCodeField,
   userSubscriptions,
   hasGroupedAddOnProducts,
@@ -26,9 +25,6 @@ export const PreCostDetailsCard = ({
     id,
     title,
     productTypeId,
-    mode,
-    corporateName,
-    isCorporateEvent,
     isInstalmentAllowed,
     instalmentTenure,
     instalmentGapUnit,
@@ -41,16 +37,12 @@ export const PreCostDetailsCard = ({
     availableBundles,
   } = workshop || {};
 
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
   const isSilentRetreatType =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
-  const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
   const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value === productTypeId;
   const gatewayToInfinity =
-    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value === productTypeId;
   const isJourneyPremium =
     !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus =
