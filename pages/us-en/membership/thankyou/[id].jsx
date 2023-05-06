@@ -241,6 +241,9 @@ const MembershipThankyou = () => {
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(courseDetail.productTypeId) >= 0;
+
   const {
     title,
     meetupTitle,
@@ -330,7 +333,7 @@ const MembershipThankyou = () => {
                       }
                     >
                       You’re just one step away from completing your{" "}
-                      {workshopDetail.meetupTitle} registration. If you are not
+                      {courseDetail.meetupTitle} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
                   )}
@@ -344,7 +347,7 @@ const MembershipThankyou = () => {
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.JOURNEY_PLUS.value && (
                       <>
-                        {!courseId && (
+                        {courseId && isSilentRetreatType && (
                           <button
                             className="btn-secondary"
                             onClick={searchSilentRetreatsAction}
@@ -352,7 +355,7 @@ const MembershipThankyou = () => {
                             Search Silent Retreats
                           </button>
                         )}
-                        {courseId && (
+                        {(courseId || meetupId) && !isSilentRetreatType && (
                           <button
                             className="btn-secondary"
                             onClick={finishRegistrationAction}
@@ -540,7 +543,7 @@ const MembershipThankyou = () => {
                 {mode}
               </h4>
               <h2 className="journey-confirmation_mobile__course-name !tw-text-slate-700">
-                {title}
+                {title || meetupTitle}
               </h2>
               <h3 className="journey-confirmation_mobile__course-trainer !tw-text-slate-700">
                 {primaryTeacherName}
