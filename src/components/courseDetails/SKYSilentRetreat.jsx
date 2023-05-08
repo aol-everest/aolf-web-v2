@@ -377,6 +377,29 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
               </div>
             </div>
           </div>
+
+          <div className="swiper highlights__slider">
+            <div className="swiper-wrapper mobile-swiper-wrapper">
+              <div className="swiper-slide highlights__slide">
+                <img src="/img/research-yoga-gray.png" alt="highlights-img" />
+              </div>
+
+              <div className="swiper-slide highlights__slide">
+                <img src="/img/research-cnn.png" alt="highlights-img" />
+              </div>
+
+              <div className="swiper-slide highlights__slide">
+                <img
+                  src="/img/research-washington-post.png"
+                  alt="highlights-img"
+                />
+              </div>
+
+              <div className="swiper-slide highlights__slide">
+                <img src="/img/research-harvard.png" alt="highlights-img" />
+              </div>
+            </div>
+          </div>
         </section>
 
         <section className="practices">
