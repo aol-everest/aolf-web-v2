@@ -215,9 +215,9 @@ const Thankyou = () => {
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
   const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value === productTypeId;
   const gatewayToInfinity =
-    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value === productTypeId;
 
   const newTitle = title || meetupTitle;
   const duration = 2;

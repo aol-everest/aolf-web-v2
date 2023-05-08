@@ -646,9 +646,9 @@ export const PaymentFormGeneric = ({
   }
 
   const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value === productTypeId;
   const gatewayToInfinity =
-    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value === productTypeId;
 
   const toggleDetailMobileModal = (isRegularPrice) => () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
