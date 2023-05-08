@@ -357,7 +357,7 @@
     gap: 61px;
   }
 
-  .swiper-wrapper {
+  .mobile-swiper-wrapper {
     @media (max-width: 768px) {
       flex-wrap: wrap;
       justify-content: center;
