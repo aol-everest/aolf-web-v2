@@ -153,8 +153,10 @@ const PPACourse = () => {
               broadcast and online promotions to advance the purposes of the
               Organization around the world. If I wish to withhold or withdraw
               this grant of rights, I may do so by{" "}
-              <span onClick={handleClick}>clicking here</span> or writing to the
-              Organization at support@us.artofliving.org.
+              <span onClick={handleClick}>
+                <a href="#">clicking here</a>
+              </span>{" "}
+              or writing to the Organization at support@us.artofliving.org.
             </p>
             <p>
               This Agreement is governed by the laws of Commonwealth of Virginia
