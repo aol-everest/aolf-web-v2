@@ -1,7 +1,7 @@
 import { ALERT_TYPES, MODAL_TYPES, US_STATES } from "@constants";
 import { useRouter } from "next/router";
 import { api, Auth } from "@utils";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AgreementForm, Dropdown, StyledInput } from "@components/checkout";
@@ -19,26 +19,47 @@ import {
   useGlobalModalContext,
 } from "@contexts";
 
-const SchedulingPaymentModal = ({ workshop = {} }) => {
+const SchedulingPaymentModal = () => {
   const router = useRouter();
   const { user, setUser } = useAuth();
   const { showAlert } = useGlobalAlertContext();
-  const { showModal, hideModal } = useGlobalModalContext();
+  const { showModal, hideModal, store } = useGlobalModalContext();
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
 
   const [isChangingCard, setIsChangingCard] = useState(false);
+  const [workshop, setSelectedWorkshop] = useState({});
   const [loading, setLoading] = useState(false);
   const [tokenizeCCFromPayment, setTokenizeCCFromPayment] = useState(null);
 
+  const { modalProps } = store || {};
+  console.log("modalProps", modalProps);
+  const { workshopId = "" } = modalProps || {};
+
+  useEffect(() => {
+    const getWorshopDetails = async () => {
+      const response = await api.get({
+        path: "workshopDetail",
+        param: {
+          id: workshopId,
+        },
+      });
+      if (response?.data) {
+        setSelectedWorkshop(response?.data);
+      }
+    };
+    if (workshopId) {
+      getWorshopDetails();
+    }
+  }, [workshopId]);
+
   const {
     paymentMethod = {},
-    publishableKey = "pk_test_DgstL7pH9HuVK0WRsdRKzW1q",
+    publishableKey,
     complianceQuestionnaire,
-    id: workshopId,
     productTypeId,
-  } = workshop;
+  } = workshop || {};
 
   const {
     first_name,
@@ -49,7 +70,7 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
     personMobilePhone,
     personMailingStreet,
     personMailingCity,
-  } = user.profile;
+  } = user?.profile || {};
 
   console.log("user", user);
 
@@ -239,10 +260,6 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
   const logout = async (event) => {
     await Auth.logout();
     setUser(null);
-    pushRouteWithUTMQuery(
-      router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
-    );
   };
 
   const login = async (event) => {
@@ -285,6 +302,7 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
             contactState: personMailingState || "",
             contactZip: personMailingPostalCode || "",
             questionnaire: questionnaire,
+            ppaAgreement: false,
           }}
           validationSchema={Yup.object().shape({
             firstName: Yup.string().required("First Name is required"),
@@ -296,9 +314,16 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
               //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
               .min(2, "Zip is invalid")
               .max(10, "Zip is invalid"),
+            ppaAgreement: Yup.boolean()
+              .label("Terms")
+              .test(
+                "is-true",
+                "Please check the box in order to continue.",
+                (value) => value === true,
+              ),
           })}
           onSubmit={async (values, { setSubmitting, isValid, errors }) => {
-            await completeEnrollmentAction(values);
+            // await completeEnrollmentAction(values);
             console.log("values", values);
           }}
         >
@@ -346,7 +371,7 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
                             </p>
                           )}
 
-                          <form className="scheduling__auth mt-2">
+                          <div className=" mt-2">
                             <div className="scheduling__wrapper">
                               <StyledInput
                                 className={`scheduling__input mb-2`}
@@ -393,7 +418,8 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
                                 Click here to reset
                               </button>
                             </p> */}
-                          </form>
+                          </div>
+
                           <h2 className="scheduling__title mt-2">
                             Payment Information
                           </h2>
@@ -716,6 +742,14 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
                                 }
                                 isCorporateEvent={false}
                                 screen="DESKTOP"
+                              />
+                              <AgreementForm
+                                formikProps={formikProps}
+                                complianceQuestionnaire={
+                                  complianceQuestionnaire
+                                }
+                                isCorporateEvent={false}
+                                screen="MOBILE"
                               />
                             </div>
                           </div>

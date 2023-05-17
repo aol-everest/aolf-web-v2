@@ -88,6 +88,12 @@ const SchedulingModal = () => {
     setSelectedWorkshopId(workshop?.id);
   };
 
+  const goToPaymentModal = () => {
+    showModal(MODAL_TYPES.SCHEDULING_PAYMENT_MODAL, {
+      workshop: selectedWorkshopId,
+    });
+  };
+
   return (
     <div
       id="widget-modal"
@@ -255,6 +261,7 @@ const SchedulingModal = () => {
                         type="button"
                         className="scheduling__button"
                         disabled={!selectedWorkshopId}
+                        onClick={goToPaymentModal}
                       >
                         Continue
                       </button>
