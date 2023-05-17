@@ -339,13 +339,14 @@ const SchedulingPaymentModal = ({ workshop = {} }) => {
                               <button
                                 className="scheduling__btn-aslink scheduling__login"
                                 type="button"
+                                onClick={login}
                               >
                                 Login in here
                               </button>
                             </p>
                           )}
 
-                          <form className="scheduling__auth">
+                          <form className="scheduling__auth mt-2">
                             <div className="scheduling__wrapper">
                               <StyledInput
                                 className={`scheduling__input mb-2`}
