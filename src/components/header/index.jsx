@@ -4,10 +4,12 @@ import { useRouter } from "next/router";
 import Dropdown from "react-bootstrap/Dropdown";
 import { FiPhone } from "react-icons/fi";
 import classNames from "classnames";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import Style from "./Header.module.scss";
 import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery } from "@service";
+import queryString from "query-string";
 // import { FaUserCircle } from "react-icons/fa";
 import { MODAL_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 
@@ -467,12 +469,14 @@ export const Header = () => {
   const toggleSidebar = () => setShowSidebar(!showSidebar);
 
   const loginAction = () => {
-    showModal(MODAL_TYPES.LOGIN_MODAL, { navigateTo: "/us-en/profile" });
+    showModal(MODAL_TYPES.LOGIN_MODAL, {
+      navigateTo: "/us-en/profile?" + queryString.stringify(router.query),
+    });
   };
 
   const onMenuSelection = (submenu) => () => {
     setShowSidebar(false);
-    router.push(submenu.link);
+    pushRouteWithUTMQuery(router, submenu.link);
   };
 
   const onMenuMouseOver = (menuName) => () => {

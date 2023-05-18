@@ -18,6 +18,7 @@ import {
 import { StyledInput, Dropdown } from "@components/checkout";
 import { ChangeEmail } from "@components/profile";
 import Style from "./ChangeProfile.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
   const onChangeAction = (value, data, event, formattedValue) => {
@@ -96,7 +97,7 @@ export const ChangeProfile = ({
   };
 
   const validateStudentEmail = (email) => {
-    const regex = new RegExp("[a-z0-9]+@[a-zA-Z0-9.+-]+.edu$");
+    const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
     const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
     return isStudentEmail;
   };
@@ -140,16 +141,27 @@ export const ChangeProfile = ({
     });
   };
 
-  const handleRequestResult = (requestCreated) => {
+  const handleRequestResult = (
+    requestCreated,
+    caseAlreadyRegistered = false,
+    ccInfoAlreadyDeleted = false,
+  ) => {
     if (requestCreated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/profile`,
         query: {
           request: 3,
         },
       });
-    } else {
+    } else if (caseAlreadyRegistered || ccInfoAlreadyDeleted) {
       router.push({
+        pathname: `/us-en/profile`,
+        query: {
+          request: 5,
+        },
+      });
+    } else {
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/profile`,
         query: {
           request: 4,
@@ -177,7 +189,7 @@ export const ChangeProfile = ({
       handleRequestResult(true);
     } catch (ex) {
       console.log(ex);
-      handleRequestResult(false);
+      handleRequestResult(false, true);
     }
     setLoading(false);
     description.current = "";
@@ -203,7 +215,7 @@ export const ChangeProfile = ({
       handleRequestResult(true);
     } catch (ex) {
       console.log(ex);
-      handleRequestResult(false);
+      handleRequestResult(false, false, true);
     }
     setLoading(false);
     description.current = "";
@@ -239,14 +251,14 @@ export const ChangeProfile = ({
               className="btn-secondary link-modal tw-mr-4 !tw-px-7"
               onClick={handleDeletePersonalInformation}
             >
-              Delete PII
+              Delete Personal info
             </button>
 
             <button
               className="btn-secondary link-modal !tw-px-7"
               onClick={handleDeletePaymentDetails}
             >
-              Delete CC
+              Delete Credit Card info
             </button>
           </div>
         );

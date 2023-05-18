@@ -17,6 +17,8 @@ import ErrorPage from "next/error";
 import { useQuery } from "react-query";
 import { orgConfig } from "@org";
 import { PaymentFormWebinar } from "@components/PaymentFormWebinar";
+import { pushRouteWithUTMQuery } from "@service";
+import { replaceRouteWithUTMQuery } from "@service";
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -54,7 +56,7 @@ const RetreatPrerequisiteWarning = ({
 };
 
 const validateStudentEmail = (email) => {
-  const regex = new RegExp("[a-z0-9]+@[a-zA-Z0-9.+-]+.edu$");
+  const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
   const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
   return isStudentEmail;
 };
@@ -203,7 +205,7 @@ const WebinarSkyCheckout = () => {
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
     hideAlert();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en/course",
       query: {
         courseType: "SKY_BREATH_MEDITATION",
@@ -212,7 +214,7 @@ const WebinarSkyCheckout = () => {
   };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
-    router.replace({
+    replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,

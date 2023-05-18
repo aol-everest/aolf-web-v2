@@ -17,6 +17,7 @@ import { useAuth } from "@contexts";
 import { useAnalytics } from "use-analytics";
 import { PageLoading } from "@components";
 import { useQuery } from "react-query";
+import { pushRouteWithUTMQuery } from "@service";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -142,7 +143,7 @@ function CourseDetail() {
       !isSKYCampusHappinessRetreat &&
       !isSanyamCourse
     ) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
         query: {
           ctype: data.productTypeId,

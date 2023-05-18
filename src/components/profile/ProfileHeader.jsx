@@ -9,6 +9,7 @@ import { MODAL_TYPES } from "@constants";
 import { useQuery } from "react-query";
 import { api } from "@utils";
 import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery } from "@service";
 
 export const ProfileHeader = ({
   subscriptions = [],
@@ -32,7 +33,7 @@ export const ProfileHeader = ({
   const cancelMembershipAction = (modalSubscriptionId) => (e) => {
     if (e) e.preventDefault();
     hideModal();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/cancellation/${modalSubscriptionId}`,
     });
   };
@@ -40,7 +41,7 @@ export const ProfileHeader = ({
   const purchaseMembershipAction = (id) => (e) => {
     if (e) e.preventDefault();
     hideModal();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
     });
   };

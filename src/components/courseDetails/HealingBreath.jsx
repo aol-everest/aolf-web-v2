@@ -10,6 +10,7 @@ import { Comment } from "./Comment";
 import { ResearchFindingSource } from "./ResearchFindingSource";
 import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
+import queryString from "query-string";
 import {
   useAuth,
   useGlobalAlertContext,
@@ -18,6 +19,7 @@ import {
 import { ABBRS, COURSE_TYPES, ALERT_TYPES, MODAL_TYPES } from "@constants";
 import { HideOn } from "@components";
 import { priceCalculation } from "@utils";
+import { pushRouteWithUTMQuery } from "@service";
 
 export const HealingBreath = ({ data, swiperOption }) => {
   const { authenticated = false, user } = useAuth();
@@ -40,7 +42,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
   const handleRegister = (e) => {
     e.preventDefault();
     if (authenticated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
@@ -49,7 +51,9 @@ export const HealingBreath = ({ data, swiperOption }) => {
       });
     } else {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o`,
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
         defaultView: "SIGNUP_MODE",
       });
     }

@@ -7,6 +7,7 @@ import { Popup } from "@components";
 import { LinkedCalendar } from "@components/dateRangePicker";
 import { tConvert } from "@utils";
 import { useRouter } from "next/router";
+import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 
@@ -38,7 +39,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
       if (timeZoneFilter) {
         query = { ...query, timeZone: timeZoneFilter.value };
       }
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: "/us-en",
         query,
       });

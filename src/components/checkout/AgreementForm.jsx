@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "formik";
 import classNames from "classnames";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 
 export const AgreementForm = ({
   formikProps,

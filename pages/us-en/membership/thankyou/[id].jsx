@@ -11,6 +11,7 @@ import { PageLoading } from "@components";
 import ErrorPage from "next/error";
 import { useAuth } from "@contexts";
 import { withAuth } from "@hoc";
+import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 
@@ -147,7 +148,7 @@ const MembershipThankyou = () => {
   const courseDetail = courseId ? workshopDetail : meetupDetail;
 
   const searchSilentRetreatsAction = () => {
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en",
       query: {
         courseType: "SILENT_RETREAT",
@@ -158,11 +159,11 @@ const MembershipThankyou = () => {
   const finishRegistrationAction = () => {
     if (courseId) {
       if (page === "detail") {
-        router.push({
+        pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/${courseId}`,
         });
       } else {
-        router.push({
+        pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/checkout/${courseId}`,
           query: {
             page: "c-o",
@@ -170,7 +171,7 @@ const MembershipThankyou = () => {
         });
       }
     } else if (meetupId) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${meetupId}`,
         query: {
           page: "c-o",
@@ -180,7 +181,7 @@ const MembershipThankyou = () => {
   };
 
   const exploreMeditationsAction = () => {
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
     });
   };
@@ -239,6 +240,9 @@ const MembershipThankyou = () => {
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
+
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(courseDetail.productTypeId) >= 0;
 
   const {
     title,
@@ -329,7 +333,7 @@ const MembershipThankyou = () => {
                       }
                     >
                       You’re just one step away from completing your{" "}
-                      {workshopDetail.meetupTitle} registration. If you are not
+                      {courseDetail.meetupTitle} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
                   )}
@@ -343,7 +347,7 @@ const MembershipThankyou = () => {
                     {subscriptionMasterSfid ===
                       MEMBERSHIP_TYPES.JOURNEY_PLUS.value && (
                       <>
-                        {!courseId && (
+                        {courseId && isSilentRetreatType && (
                           <button
                             className="btn-secondary"
                             onClick={searchSilentRetreatsAction}
@@ -351,7 +355,7 @@ const MembershipThankyou = () => {
                             Search Silent Retreats
                           </button>
                         )}
-                        {courseId && (
+                        {(courseId || meetupId) && !isSilentRetreatType && (
                           <button
                             className="btn-secondary"
                             onClick={finishRegistrationAction}
@@ -539,7 +543,7 @@ const MembershipThankyou = () => {
                 {mode}
               </h4>
               <h2 className="journey-confirmation_mobile__course-name !tw-text-slate-700">
-                {title}
+                {title || meetupTitle}
               </h2>
               <h3 className="journey-confirmation_mobile__course-trainer !tw-text-slate-700">
                 {primaryTeacherName}

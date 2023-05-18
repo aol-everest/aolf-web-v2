@@ -5,6 +5,7 @@ import { MODAL_TYPES } from "@constants";
 import { api, Auth } from "@utils";
 import { useAuth } from "@contexts";
 import { PageLoading } from "@components";
+import { pushRouteWithUTMQuery } from "@service";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -41,7 +42,7 @@ function Login() {
     if (!router.isReady && authenticated) return;
     const navigateTo = router.query.next || "/";
     if (authenticated) {
-      router.push({
+      pushRouteWithUTMQuery(router, {
         pathname: navigateTo,
       });
     } else {
@@ -49,7 +50,7 @@ function Login() {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
         navigateTo,
         closeModalAction: () => {
-          router.push("/us-en/course");
+          pushRouteWithUTMQuery(router, "/us-en/course");
         },
       });
     }
@@ -59,7 +60,7 @@ function Login() {
     try {
       await Auth.authenticateUser(username, password);
 
-      router.push("/us-en/course");
+      pushRouteWithUTMQuery(router,"/us-en/course");
     } catch (error) {
       console.log("error signing in", error);
     }

@@ -4,6 +4,7 @@ import { api, Auth } from "@utils";
 import classNames from "classnames";
 import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
 import Style from "./Verify.module.scss";
+import { pushRouteWithUTMQuery } from "@service";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -74,7 +75,7 @@ function Token() {
   }, [router.isReady]);
 
   const handleModalToggle = () => {
-    router.push("/us-en/course");
+    pushRouteWithUTMQuery(router, "/us-en/course");
   };
 
   return (
@@ -116,7 +117,7 @@ function Token() {
                   </div>
                 </>
               )}
-              {message && (
+              {message && !success && (
                 <>
                   <div className="icon-container-error tw-w-[45px] tw-inline-block">
                     <FaMinusCircle />
@@ -129,7 +130,7 @@ function Token() {
             {!message && !success && (
               <>Please wait while we verify your email...</>
             )}
-            {message && (
+            {message && !success && (
               <p className="validation-input text-center">{message}</p>
             )}
           </div>

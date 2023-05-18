@@ -18,6 +18,7 @@ import { meditatePlayEvent, markFavoriteEvent } from "@service";
 import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import { pushRouteWithUTMQuery } from "@service";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -231,7 +232,7 @@ export default function Library() {
   const purchaseMembershipAction = (id) => (e) => {
     hideModal();
     hideAlert();
-    router.push(`/us-en/membership/${id}`);
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
   };
 
   const meditateClickHandle = (meditate) => async (e) => {
@@ -239,7 +240,7 @@ export default function Library() {
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else if (meditate.accessible && meditate.type === "Course") {
-      router.push(`/us-en/learn/${meditate.sfid}`);
+      pushRouteWithUTMQuery(router, `/us-en/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
       await meditatePlayEvent({
@@ -267,7 +268,7 @@ export default function Library() {
     if (instructor) {
       query = { ...query, instructor };
     }
-    router.push({
+    pushRouteWithUTMQuery({
       pathname: "/us-en/library/search",
       query,
     });

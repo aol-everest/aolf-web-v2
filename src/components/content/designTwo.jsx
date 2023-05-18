@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { Popup, MobileFilterModal, SmartDropDown } from "@components";
 import { DURATION } from "@constants";
+import { pushRouteWithUTMQuery } from "@service";
 
 const timeConvert = (data) => {
   const minutes = data % 60;
@@ -107,7 +108,7 @@ export const DesignTwo = ({
   // );
 
   const openExpedition = (expedition) => () => {
-    router.push(`/us-en/journey/${expedition.challengeSfid}`);
+    pushRouteWithUTMQuery(router, `/us-en/journey/${expedition.challengeSfid}`);
   };
 
   // console.log("expeditions", expeditions);

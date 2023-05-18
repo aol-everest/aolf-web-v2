@@ -357,8 +357,18 @@
     gap: 61px;
   }
 
+  .mobile-swiper-wrapper {
+    @media (max-width: 768px) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
   &__slider {
-    display: none;
+    @media (min-width: 768px) {
+      display: none !important
+    }
+   
   }
 }
 
@@ -1598,6 +1608,7 @@
 
       & .swiper-slide {
         width: max-content;
+        padding: 10px;
       }
     }
   }

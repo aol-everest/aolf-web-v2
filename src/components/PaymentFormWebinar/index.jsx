@@ -37,6 +37,8 @@ import {
 import { Loader } from "@components";
 import { api, tConvert } from "@utils";
 import Image from "next/image";
+import { pushRouteWithUTMQuery } from "@service";
+import { filterAllowedParams } from "@utils/utmParam";
 
 const createOptions = {
   style: {
@@ -101,7 +103,8 @@ export const PaymentFormWebinar = ({
   const logout = async (event) => {
     await Auth.logout();
     setUser(null);
-    router.push(
+    pushRouteWithUTMQuery(
+      router,
       `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
@@ -112,7 +115,7 @@ export const PaymentFormWebinar = ({
 
   const openSubscriptionPaywallPage = (id) => (e) => {
     if (e) e.preventDefault();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
       query: {
         cid: workshop.id,
@@ -254,6 +257,7 @@ export const PaymentFormWebinar = ({
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
           isPaypalPayment: true,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isGenericWorkshop) {
@@ -452,6 +456,7 @@ export const PaymentFormWebinar = ({
           programQuestionnaireResult,
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
         },
+        utm: filterAllowedParams(router.query),
       };
 
       if (isChangingCard) {

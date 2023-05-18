@@ -14,6 +14,7 @@ import {
 import { api, Auth } from "@utils";
 import { useAuth } from "@contexts";
 import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
+import { pushRouteWithUTMQuery } from "@service";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";
@@ -77,7 +78,7 @@ export const LoginModal = () => {
   };
 
   const validateStudentEmail = (email) => {
-    const regex = new RegExp("[a-z0-9]+@[a-zA-Z0-9.+-]+.edu$");
+    const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
     const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
     return isStudentEmail;
   };
@@ -120,7 +121,7 @@ export const LoginModal = () => {
             setSuccessMessage(null);
             hideModal();
             if (navigateTo) {
-              return router.push(navigateTo);
+              return pushRouteWithUTMQuery(router, navigateTo);
             } else {
               router.reload(window.location.pathname);
             }
@@ -129,7 +130,7 @@ export const LoginModal = () => {
           setLoading(false);
           hideModal();
           if (navigateTo) {
-            return router.push(navigateTo);
+            return pushRouteWithUTMQuery(router, navigateTo);
           } else {
             router.reload(window.location.pathname);
           }
@@ -149,7 +150,7 @@ export const LoginModal = () => {
         //   setLoading(false);
         //   hideModal();
         //   if (navigateTo) {
-        //     return router.push(navigateTo);
+        //     return pushRouteWithUTMQuery(router,navigateTo);
         //   } else {
         //     router.reload(window.location.pathname);
         //   }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import Link from "next/link";
+import Link from "@components/linkWithUTM";
 import { FaCamera } from "react-icons/fa";
 import { Loader } from "@components";
 import { useAuth } from "@contexts";
@@ -14,6 +14,7 @@ import { useQueryString } from "@hooks";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { pushRouteWithUTMQuery } from "@service";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -60,6 +61,7 @@ const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Ple
                 membership.`;
 const MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR = `We're sorry, but an error occurred. Please contact the help desk
                 at (855) 202-4400 to resolve the issue and delete your information.`;
+const MESSAGE_ALREADY_CASE_REGISTERED_ERROR = `We have already received your request to delete PII/CC. The support team is working on it and will get in touch with you shortly`;
 // export async function getServerSideProps({ req, resolvedUrl, query }) {
 //   const { Auth } = withSSRContext({ req });
 //   const { tab } = query || {};
@@ -159,11 +161,11 @@ const Profile = ({ tab }) => {
     await Auth.logout();
     setLoading(false);
     setUser(null);
-    router.push("/us-en");
+    pushRouteWithUTMQuery(router, "/us-en");
   };
 
   const navigateToReferFriendPage = () => {
-    router.push("/us-en/refer");
+    pushRouteWithUTMQuery(router, "/us-en/refer");
   };
 
   const handleOnSelectFile = (e) => {
@@ -268,6 +270,23 @@ const Profile = ({ tab }) => {
               <span>
                 <img src="/img/ic-error.svg" alt="error" />
                 {MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR}
+              </span>
+            </div>
+            <img
+              className="profile__close-alert"
+              src="/img/ic-close-white.svg"
+              alt="close"
+              onClick={toggleTopShowMessage}
+            />
+          </aside>
+        )}
+
+        {request === "5" && (
+          <aside className="profile__alert">
+            <div className="container-xl d-flex justify-content-center align-center">
+              <span>
+                <img src="/img/ic-error.svg" alt="error" />
+                {MESSAGE_ALREADY_CASE_REGISTERED_ERROR}
               </span>
             </div>
             <img
@@ -510,19 +529,6 @@ const Profile = ({ tab }) => {
                       coupon code has been enjoyed—have a great course :)
                     </li>
                   </ol>
-                  <p>
-                    If you haven’t joined the Referral Program yet, you can{" "}
-                    <Link
-                      href="/us-en/referral-offer"
-                      prefetch={false}
-                      legacyBehavior
-                    >
-                      <a href="#" className="link_orange">
-                        sign up here
-                      </a>
-                    </Link>
-                    .
-                  </p>
                 </div>
                 <div className="tw-mb-2">
                   <CouponStack></CouponStack>

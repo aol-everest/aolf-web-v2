@@ -6,6 +6,7 @@ import { Loader } from "@components";
 import { tConvert } from "@utils";
 import { ABBRS, COURSE_MODES } from "@constants";
 import { useRouter } from "next/router";
+import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 
@@ -42,7 +43,7 @@ export const MeetupEnroll = ({
   const goToCheckout = (e) => {
     if (e) e.preventDefault();
     closeDetailAction();
-    router.push({
+    pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${freeWithSubscription?.subscriptionMasterId}`,
       query: {
         mid: selectedMeetup.sfid,
