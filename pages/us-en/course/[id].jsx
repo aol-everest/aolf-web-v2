@@ -165,7 +165,6 @@ function CourseDetail() {
   };
   if (typeof window !== "undefined") {
     if (window.matchMedia("(max-width: 768px)").matches) {
-      console.log("(max-width: 768px)");
       swiperOption = {
         modules: [Navigation, Scrollbar, A11y],
         slidesPerView: 1.1,
@@ -176,7 +175,6 @@ function CourseDetail() {
         preventInteractionOnTransition: false,
       };
     } else if (window.matchMedia("(max-width: 1024px)").matches) {
-      console.log("(max-width: 1024px)");
       swiperOption = {
         ...swiperOption,
         slidesPerView: 2,
@@ -184,7 +182,6 @@ function CourseDetail() {
         centeredSlides: true,
       };
     } else if (window.matchMedia("(max-width: 1440px)").matches) {
-      console.log("(max-width: 1440px)");
       swiperOption = {
         ...swiperOption,
         slidesPerView: 3,
@@ -192,7 +189,6 @@ function CourseDetail() {
         slidesOffsetBefore: 150,
       };
     } else {
-      console.log("(max-width: else)");
       swiperOption = {
         ...swiperOption,
         slidesPerView: 4,

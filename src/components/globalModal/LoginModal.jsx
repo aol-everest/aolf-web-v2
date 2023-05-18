@@ -43,6 +43,7 @@ export const LoginModal = () => {
     hideCloseBtn = false,
     closeModalAction,
     defaultView = LOGIN_MODE,
+    showSchedulingPaymentModal,
   } = modalProps || {};
 
   const [loading, setLoading] = useState(false);
@@ -129,6 +130,9 @@ export const LoginModal = () => {
         } else {
           setLoading(false);
           hideModal();
+          if (showSchedulingPaymentModal) {
+            showSchedulingPaymentModal();
+          }
           if (navigateTo) {
             return pushRouteWithUTMQuery(router, navigateTo);
           } else {

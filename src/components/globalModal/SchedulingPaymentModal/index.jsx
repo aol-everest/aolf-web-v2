@@ -35,7 +35,6 @@ const SchedulingPaymentModal = () => {
   const [tokenizeCCFromPayment, setTokenizeCCFromPayment] = useState(null);
 
   const { modalProps } = store || {};
-  console.log("modalProps", modalProps);
   const { workshopId = "" } = modalProps || {};
 
   useEffect(() => {
@@ -76,9 +75,6 @@ const SchedulingPaymentModal = () => {
     personMailingStreet,
     personMailingCity,
   } = user?.profile || {};
-
-  console.log("user", user);
-  console.log("workshop", workshop);
 
   const stripePromise = loadStripe(publishableKey);
 
@@ -268,11 +264,20 @@ const SchedulingPaymentModal = () => {
   };
 
   const login = async (event) => {
+    hideModal();
     showModal(MODAL_TYPES.LOGIN_MODAL, {
-      navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-        router.query,
-      )}`,
+      showSchedulingPaymentModal: () => {
+        showModal(MODAL_TYPES.SCHEDULING_PAYMENT_MODAL, {
+          workshopId: workshopId,
+        });
+      },
     });
+
+    // showModal(MODAL_TYPES.LOGIN_MODAL, {
+    //   navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+    //     router.query,
+    //   )}`,
+    // });
   };
 
   return (
@@ -330,8 +335,8 @@ const SchedulingPaymentModal = () => {
               ),
           })}
           onSubmit={async (values, { setSubmitting, isValid, errors }) => {
-            // await completeEnrollmentAction(values);
-            console.log("values", values);
+            await completeEnrollmentAction(values);
+            // console.log("values", values);
           }}
         >
           {(formikProps) => {

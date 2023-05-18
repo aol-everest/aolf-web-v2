@@ -92,7 +92,7 @@ export const changePassword = ({ email, oldPassword, newPassword }) => {
       await new Promise((resolve, reject) => {
         cognitoUser.authenticateUser(authDetails, {
           onSuccess: (data) => {
-            console.log("onSuccess:", data);
+            // console.log("onSuccess:", data);
             resolve({ data });
           },
 
@@ -102,7 +102,7 @@ export const changePassword = ({ email, oldPassword, newPassword }) => {
           },
 
           newPasswordRequired: (data) => {
-            console.log("newPasswordRequired:", data);
+            // console.log("newPasswordRequired:", data);
             resolve({ data });
           },
         });
@@ -115,7 +115,7 @@ export const changePassword = ({ email, oldPassword, newPassword }) => {
         console.error("onFailure:", err);
         reject(new Error(err));
       } else {
-        console.log("onSuccess:", data);
+        // console.log("onSuccess:", data);
         resolve(data);
       }
     });
@@ -135,7 +135,7 @@ export const changeNewPassword = ({ email, password, newPassword }) => {
       await new Promise((resolve, reject) => {
         user.authenticateUser(authDetails, {
           onSuccess: (data) => {
-            console.log("onSuccess:", data);
+            // console.log("onSuccess:", data);
             reject(new Error(`Something is wrong. Try again.`));
           },
           onFailure: (err) => {
@@ -144,7 +144,7 @@ export const changeNewPassword = ({ email, password, newPassword }) => {
           },
 
           newPasswordRequired: (data) => {
-            console.log("newPasswordRequired:", data);
+            // console.log("newPasswordRequired:", data);
             resolve({ data });
           },
         });
@@ -154,7 +154,7 @@ export const changeNewPassword = ({ email, password, newPassword }) => {
     }
     user.completeNewPasswordChallenge(newPassword, null, {
       onSuccess: (data) => {
-        console.log("onSuccess:", data);
+        // console.log("onSuccess:", data);
         resolve(data);
       },
       onFailure: (err) => {
@@ -267,7 +267,7 @@ export const sendCode = ({ email }) => {
     } catch (ex) {
       getUser(email).forgotPassword({
         onSuccess: (data) => {
-          console.log("onSuccess:", data);
+          // console.log("onSuccess:", data);
           resolve(data);
         },
         onFailure: (err) => {
@@ -275,7 +275,7 @@ export const sendCode = ({ email }) => {
           reject(err);
         },
         inputVerificationCode: (data) => {
-          console.log("Input code:", data);
+          // console.log("Input code:", data);
           resolve({ resendTemporaryPassword: false, data });
         },
       });
@@ -287,7 +287,7 @@ export const resetPassword = ({ email, code, password }) => {
   return new Promise((resolve, reject) => {
     getUser(email).confirmPassword(code, password, {
       onSuccess: (data) => {
-        console.log("onSuccess:", data);
+        // console.log("onSuccess:", data);
         resolve(data);
       },
       onFailure: (err) => {
@@ -316,7 +316,7 @@ export const renewToken = ({ refreshToken, email }) => {
           id_token: session.idToken.jwtToken,
           refresh_token: session.refreshToken.token,
         };
-        console.log("onSuccess:", retObj);
+        // console.log("onSuccess:", retObj);
         resolve(session);
       }
     });
