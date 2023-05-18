@@ -15,6 +15,7 @@ const SchedulingModal = () => {
   const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
   const [workshops, setWorkshops] = useState([]);
+  const [selectedWorkshop, setSelectedWorkshop] = useState({});
 
   const timezones = [
     {
@@ -85,6 +86,7 @@ const SchedulingModal = () => {
   };
 
   const handleWorkshopSelect = (workshop) => {
+    setSelectedWorkshop(workshop);
     setSelectedWorkshopId(workshop?.id);
   };
 
@@ -117,18 +119,24 @@ const SchedulingModal = () => {
               <div className="col-12 col-md-4 col-lg-3  scheduling-second--border">
                 <div className="scheduling-second__course d-flex flex-column justify-content-center d-lg-block ">
                   <img
-                    src="/img/skybreath-meditation_large.jpg"
+                    src={
+                      selectedWorkshop?.coverImage
+                        ? selectedWorkshop.coverImage.url
+                        : "/img/skybreath-meditation_large.jpg"
+                    }
                     alt="skybreath meditation photo"
                   />
-
-                  <div className="text-center text-lg-left">
-                    <h2 className="scheduling-second__title scheduling-second__title--large mt-2">
-                      Skybreath Meditation
-                    </h2>
-                    <p className="scheduling-second__text mt-2">
-                      6 Hour Meditation Course
-                    </p>
-                  </div>
+                  {selectedWorkshop.title && (
+                    <div className="text-center text-lg-left">
+                      <h2 className="scheduling-second__title scheduling-second__title--large mt-2">
+                        {selectedWorkshop.title}
+                      </h2>
+                      <p className="scheduling-second__text mt-2">
+                        {selectedWorkshop.workshopTotalHours} Hour Meditation
+                        Course
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="col-12 col-md-8 col-lg-9 ">
