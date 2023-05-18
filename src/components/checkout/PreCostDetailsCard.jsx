@@ -357,7 +357,7 @@ export const PreCostDetailsCard = ({
                 })}
               </ul>
             )}
-          </div>{" "}
+          </div>
         </>
       );
     } else {

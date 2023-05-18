@@ -649,6 +649,7 @@ export const PaymentForm = ({
             openSubscriptionPaywallPage={openSubscriptionPaywallPage}
             isUsableCreditAvailable={isUsableCreditAvailable}
             discount={discountResponse}
+            isComboDetailAvailable={isComboDetailAvailable}
           />
         );
       },
@@ -1043,6 +1044,12 @@ export const PaymentForm = ({
                       totalFee={totalFee}
                       paymentOptionChange={handlePaymentOptionChange}
                       showCouponCodeField={showCouponCodeField}
+                      isUsableCreditAvailable={isUsableCreditAvailable}
+                      UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
+                      isComboDetailAvailable={isComboDetailAvailable}
+                      values={values}
+                      onComboDetailChange={handleComboDetailChange}
+                      isCourseOptionRequired={isCourseOptionRequired}
                     />
                   </div>
                   <AgreementForm
