@@ -12,6 +12,7 @@ import { replaceRouteWithUTMQuery, pushRouteWithUTMQuery } from "@service";
 import { useQueryString } from "@hooks";
 import { filterAllowedParams } from "@utils/utmParam";
 import queryString from "query-string";
+import Image from "next/image";
 
 import {
   useAuth,
@@ -59,6 +60,10 @@ const SchedulingPaymentModal = () => {
     publishableKey,
     complianceQuestionnaire,
     productTypeId,
+    coverImage,
+    title,
+    workshopTotalHours,
+    showPrice,
   } = workshop || {};
 
   const {
@@ -73,6 +78,7 @@ const SchedulingPaymentModal = () => {
   } = user?.profile || {};
 
   console.log("user", user);
+  console.log("workshop", workshop);
 
   const stripePromise = loadStripe(publishableKey);
 
@@ -111,7 +117,6 @@ const SchedulingPaymentModal = () => {
 
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
@@ -296,7 +301,6 @@ const SchedulingPaymentModal = () => {
             firstName: first_name || "",
             lastName: last_name || "",
             email: email || "",
-            contactPhone: personMobilePhone || "",
             contactAddress: personMailingStreet || "",
             contactCity: personMailingCity || "",
             contactState: personMailingState || "",
@@ -307,6 +311,9 @@ const SchedulingPaymentModal = () => {
           validationSchema={Yup.object().shape({
             firstName: Yup.string().required("First Name is required"),
             lastName: Yup.string().required("Last Name is required"),
+            email: Yup.string()
+              .email("Email is invalid!")
+              .required("Email is required!"),
             contactAddress: Yup.string().required("Address is required"),
             contactCity: Yup.string(),
             contactState: Yup.string(),
@@ -763,16 +770,18 @@ const SchedulingPaymentModal = () => {
                             <div className="row no-gutters">
                               <img
                                 className="mr-2"
-                                src="/img/skybreath-meditation.jpg"
+                                src={
+                                  coverImage
+                                    ? coverImage.url
+                                    : "/img/skybreath-meditation.jpg"
+                                }
                                 alt="skybreath meditation photo"
                               />
 
                               <div>
-                                <h2 className="scheduling__title">
-                                  Skybreath Meditation
-                                </h2>
+                                <h2 className="scheduling__title">{title}</h2>
                                 <p className="scheduling__text">
-                                  6 Hour Meditation Course
+                                  {workshopTotalHours} Hour Meditation Course
                                 </p>
                               </div>
                             </div>
@@ -788,7 +797,7 @@ const SchedulingPaymentModal = () => {
                               </div>
                               <div className="col-4 text-right">
                                 <p className="scheduling__text-black">
-                                  <strong>$295</strong> <i>plus tax</i>
+                                  <strong>${showPrice}</strong> <i>plus tax</i>
                                 </p>
                               </div>
                             </div>

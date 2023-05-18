@@ -90,7 +90,7 @@ const SchedulingModal = () => {
 
   const goToPaymentModal = () => {
     showModal(MODAL_TYPES.SCHEDULING_PAYMENT_MODAL, {
-      workshop: selectedWorkshopId,
+      workshopId: selectedWorkshopId,
     });
   };
 
