@@ -4,15 +4,11 @@ import { CustomModal } from "./CustomModal";
 import { MODAL_TYPES } from "@constants";
 import { GlobalModalContext } from "@contexts";
 import { EmptyModal } from "./EmptyModal";
-import SchedulingModal from "./SchedulingModal";
-import SchedulingPaymentModal from "./SchedulingPaymentModal";
 
 const MODAL_COMPONENTS = {
   [MODAL_TYPES.LOGIN_MODAL]: LoginModal,
   [MODAL_TYPES.CUSTOM_MODAL]: CustomModal,
   [MODAL_TYPES.EMPTY_MODAL]: EmptyModal,
-  [MODAL_TYPES.SCHEDULING_MODAL]: SchedulingModal,
-  [MODAL_TYPES.SCHEDULING_PAYMENT_MODAL]: SchedulingPaymentModal,
 };
 
 export const GlobalModal = ({ children }) => {

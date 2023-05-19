@@ -7,8 +7,9 @@ import { useGlobalModalContext } from "@contexts";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
+import { pushRouteWithUTMQuery } from "@service";
 
-const SchedulingModal = () => {
+const SchedulingRange = () => {
   const { showModal, hideModal } = useGlobalModalContext();
   const router = useRouter();
   const [timezoneFilter, setTimezoneFilter] = useState("EST");
@@ -91,23 +92,16 @@ const SchedulingModal = () => {
   };
 
   const goToPaymentModal = () => {
-    showModal(MODAL_TYPES.SCHEDULING_PAYMENT_MODAL, {
-      workshopId: selectedWorkshopId,
+    pushRouteWithUTMQuery(router, {
+      pathname: "/us-en/course/scheduling-payment",
+      query: {
+        workshopId: selectedWorkshopId,
+      },
     });
   };
 
   return (
-    <div
-      id="widget-modal"
-      className="overlaying-popup overlaying-popup_active"
-      role="dialog"
-    >
-      <div
-        className="overlaying-popup__overlay"
-        role="button"
-        tabIndex="0"
-      ></div>
-
+    <div id="widget-modal" className="overlaying-popup_active" role="dialog">
       <div className="scheduling-modal">
         <div
           role="button"
@@ -289,6 +283,6 @@ const SchedulingModal = () => {
   );
 };
 
-SchedulingModal.hideHeader = true;
+SchedulingRange.hideHeader = true;
 
-export default SchedulingModal;
+export default SchedulingRange;

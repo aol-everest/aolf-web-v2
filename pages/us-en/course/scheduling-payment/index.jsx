@@ -18,7 +18,7 @@ import {
   useGlobalModalContext,
 } from "@contexts";
 
-const SchedulingPaymentModal = () => {
+const SchedulingPayment = () => {
   const router = useRouter();
   const { user, setUser } = useAuth();
   const { showAlert } = useGlobalAlertContext();
@@ -30,9 +30,7 @@ const SchedulingPaymentModal = () => {
   const [workshop, setSelectedWorkshop] = useState({});
   const [loading, setLoading] = useState(false);
   const [tokenizeCCFromPayment, setTokenizeCCFromPayment] = useState(null);
-
-  const { modalProps } = store || {};
-  const { workshopId = "" } = modalProps || {};
+  const { workshopId } = router.query;
 
   useEffect(() => {
     const getWorshopDetails = async () => {
@@ -227,7 +225,9 @@ const SchedulingPaymentModal = () => {
       setLoading(false);
 
       if (status === 400 || isError) {
-        throw new Error(errorMessage);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: errorMessage,
+        });
       } else if (data) {
         hideModal();
         enrollmentCompletionAction(data);
@@ -241,10 +241,6 @@ const SchedulingPaymentModal = () => {
         showAlert(ALERT_TYPES.ERROR_ALERT, {
           children: message ? `Error: ${message} (${statusCode})` : ex.message,
         });
-      } else {
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: ex,
-        });
       }
     }
   };
@@ -255,14 +251,7 @@ const SchedulingPaymentModal = () => {
   };
 
   const login = async (event) => {
-    hideModal();
-    showModal(MODAL_TYPES.LOGIN_MODAL, {
-      showSchedulingPaymentModal: () => {
-        showModal(MODAL_TYPES.SCHEDULING_PAYMENT_MODAL, {
-          workshopId: workshopId,
-        });
-      },
-    });
+    showModal(MODAL_TYPES.LOGIN_MODAL);
 
     // showModal(MODAL_TYPES.LOGIN_MODAL, {
     //   navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
@@ -271,18 +260,12 @@ const SchedulingPaymentModal = () => {
     // });
   };
 
-  return (
-    <div
-      id="widget-modal"
-      className="overlaying-popup overlaying-popup_active"
-      role="dialog"
-    >
-      <div
-        className="overlaying-popup__overlay"
-        role="button"
-        tabIndex="0"
-      ></div>
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  );
 
+  return (
+    <div id="widget-modal" className="overlaying-popup_active" role="dialog">
       <div className="scheduling-modal">
         <div
           role="button"
@@ -330,7 +313,6 @@ const SchedulingPaymentModal = () => {
           }}
         >
           {(formikProps) => {
-            const stripePromise = loadStripe(publishableKey);
             const { values, handleSubmit } = formikProps;
             return (
               <div id="scheduling-step-1" className="scheduling-modal__body">
@@ -853,6 +835,6 @@ const SchedulingPaymentModal = () => {
   );
 };
 
-SchedulingPaymentModal.hideHeader = true;
+SchedulingPayment.hideHeader = true;
 
-export default SchedulingPaymentModal;
+export default SchedulingPayment;

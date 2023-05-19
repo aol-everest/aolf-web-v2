@@ -34,7 +34,6 @@ export default function PaymentFormScheduling({
 
   useEffect(() => {
     const getTokenizeValue = async () => {
-      console.log("elements", elements);
       if (elements && stripe) {
         const cardElement = elements?.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
