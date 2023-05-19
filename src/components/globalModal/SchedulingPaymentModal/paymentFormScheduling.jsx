@@ -24,9 +24,6 @@ const createOptions = {
 };
 
 export default function PaymentFormScheduling({
-  cardLast4Digit,
-  toggleCardChangeDetail,
-  isChangingCard,
   formikValues,
   setTokenizeCCFromPayment,
 }) {
@@ -37,6 +34,7 @@ export default function PaymentFormScheduling({
 
   useEffect(() => {
     const getTokenizeValue = async () => {
+      console.log("elements", elements);
       if (elements && stripe) {
         const cardElement = elements?.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
@@ -48,6 +46,7 @@ export default function PaymentFormScheduling({
         if (error) {
           throw error;
         }
+        console.log("token", token);
         if (token) {
           setTokenizeCCFromPayment(token);
         }
@@ -55,73 +54,7 @@ export default function PaymentFormScheduling({
     };
 
     getTokenizeValue();
-  }, [isChangingCard && !cardLast4Digit && elements]);
+  }, [formikValues]);
 
-  if (cardLast4Digit && !isChangingCard) {
-    return (
-      <>
-        <div>
-          <label class="scheduling__label" for="card-number">
-            Card Number
-          </label>
-          <input
-            class="scheduling__input mb-2"
-            id="card-number"
-            type="text"
-            value={`**** **** **** ${cardLast4Digit}`}
-            placeholder="Card Number"
-          />
-
-          <div class="row no-gutters justify-content-between">
-            <div class="col-5">
-              <label class="scheduling__label" for="mm-yy">
-                Expiration Date
-              </label>
-              <input
-                class="scheduling__input"
-                id="mm-yy"
-                type="text"
-                placeholder="MM/YY"
-                value={`**/**`}
-              />
-            </div>
-
-            <div class="col-5">
-              <label class="scheduling__label" for="cvc">
-                CVC Code
-              </label>
-              <input
-                class="scheduling__input"
-                id="cvc"
-                type="text"
-                placeholder="CVC"
-                value={`****`}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="change-cc-detail-link">
-          <a href="#" onClick={toggleCardChangeDetail}>
-            Would you like to use a different credit card?
-          </a>
-        </div>
-      </>
-    );
-  }
-  if (cardLast4Digit && isChangingCard) {
-    return (
-      <>
-        <div className="card-element">
-          <CardElement options={createOptions} />
-        </div>
-        <div className="change-cc-detail-link">
-          <a href="#" onClick={toggleCardChangeDetail}>
-            Cancel
-          </a>
-        </div>
-      </>
-    );
-  } else {
-    return <CardElement options={createOptions} />;
-  }
+  return <CardElement options={createOptions} />;
 }

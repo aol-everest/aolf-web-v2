@@ -132,8 +132,7 @@ export const LoginModal = () => {
           hideModal();
           if (showSchedulingPaymentModal) {
             showSchedulingPaymentModal();
-          }
-          if (navigateTo) {
+          } else if (navigateTo) {
             return pushRouteWithUTMQuery(router, navigateTo);
           } else {
             router.reload(window.location.pathname);

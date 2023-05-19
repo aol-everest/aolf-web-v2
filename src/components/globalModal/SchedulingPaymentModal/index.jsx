@@ -8,11 +8,9 @@ import { AgreementForm, Dropdown, StyledInput } from "@components/checkout";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PaymentFormScheduling from "./paymentFormScheduling";
-import { replaceRouteWithUTMQuery, pushRouteWithUTMQuery } from "@service";
+import { replaceRouteWithUTMQuery } from "@service";
 import { useQueryString } from "@hooks";
 import { filterAllowedParams } from "@utils/utmParam";
-import queryString from "query-string";
-import Image from "next/image";
 
 import {
   useAuth,
@@ -29,7 +27,6 @@ const SchedulingPaymentModal = () => {
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
 
-  const [isChangingCard, setIsChangingCard] = useState(false);
   const [workshop, setSelectedWorkshop] = useState({});
   const [loading, setLoading] = useState(false);
   const [tokenizeCCFromPayment, setTokenizeCCFromPayment] = useState(null);
@@ -55,10 +52,8 @@ const SchedulingPaymentModal = () => {
   }, [workshopId]);
 
   const {
-    paymentMethod = {},
     publishableKey,
     complianceQuestionnaire,
-    productTypeId,
     coverImage,
     title,
     workshopTotalHours,
@@ -71,16 +66,11 @@ const SchedulingPaymentModal = () => {
     email,
     personMailingPostalCode,
     personMailingState,
-    personMobilePhone,
     personMailingStreet,
     personMailingCity,
   } = user?.profile || {};
 
-  const stripePromise = loadStripe(publishableKey);
-
-  const { cardLast4Digit = null } = paymentMethod;
-
-  const questionnaire = complianceQuestionnaire
+  const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
         key: current.questionSfid,
         value: false,
@@ -101,11 +91,6 @@ const SchedulingPaymentModal = () => {
     });
   };
 
-  const toggleCardChangeDetail = (e) => {
-    if (e) e.preventDefault();
-    setIsChangingCard((isChangingCard) => !isChangingCard);
-  };
-
   const completeEnrollmentAction = async (values) => {
     if (loading) {
       return null;
@@ -124,6 +109,9 @@ const SchedulingPaymentModal = () => {
       contactCity,
       contactState,
       contactZip,
+      firstName,
+      lastName,
+      email,
     } = values;
 
     const complianceQuestionnaire = questionnaire.reduce(
@@ -182,6 +170,7 @@ const SchedulingPaymentModal = () => {
 
       let payLoad = {
         shoppingRequest: {
+          doNotStoreCC: true,
           tokenizeCC,
           couponCode: "",
           contactAddress: {
@@ -203,17 +192,12 @@ const SchedulingPaymentModal = () => {
           isInstalmentOpted: false,
         },
         utm: filterAllowedParams(router.query),
+        user: {
+          firstName,
+          lastName,
+          email,
+        },
       };
-
-      if (isChangingCard) {
-        payLoad = {
-          ...payLoad,
-          shoppingRequest: {
-            ...payLoad.shoppingRequest,
-            doNotStoreCC: true,
-          },
-        };
-      }
 
       if (isGenericWorkshop) {
         const timeSlot =
@@ -245,16 +229,23 @@ const SchedulingPaymentModal = () => {
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       } else if (data) {
+        hideModal();
         enrollmentCompletionAction(data);
       }
     } catch (ex) {
       console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
+      if (ex?.response) {
+        const data = ex.response?.data;
+        const { message, statusCode } = data || {};
+        setLoading(false);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: message ? `Error: ${message} (${statusCode})` : ex.message,
+        });
+      } else {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: ex,
+        });
+      }
     }
   };
 
@@ -289,7 +280,7 @@ const SchedulingPaymentModal = () => {
       <div
         className="overlaying-popup__overlay"
         role="button"
-        tabindex="0"
+        tabIndex="0"
       ></div>
 
       <div className="scheduling-modal">
@@ -310,7 +301,7 @@ const SchedulingPaymentModal = () => {
             contactCity: personMailingCity || "",
             contactState: personMailingState || "",
             contactZip: personMailingPostalCode || "",
-            questionnaire: questionnaire,
+            questionnaire: questionnaireArray,
             ppaAgreement: false,
           }}
           validationSchema={Yup.object().shape({
@@ -336,10 +327,10 @@ const SchedulingPaymentModal = () => {
           })}
           onSubmit={async (values, { setSubmitting, isValid, errors }) => {
             await completeEnrollmentAction(values);
-            // console.log("values", values);
           }}
         >
           {(formikProps) => {
+            const stripePromise = loadStripe(publishableKey);
             const { values, handleSubmit } = formikProps;
             return (
               <div id="scheduling-step-1" className="scheduling-modal__body">
@@ -509,11 +500,6 @@ const SchedulingPaymentModal = () => {
                             >
                               <div className="scheduling__card">
                                 <PaymentFormScheduling
-                                  cardLast4Digit={cardLast4Digit}
-                                  toggleCardChangeDetail={
-                                    toggleCardChangeDetail
-                                  }
-                                  isChangingCard={isChangingCard}
                                   formikValues={values}
                                   setTokenizeCCFromPayment={
                                     setTokenizeCCFromPayment
@@ -753,6 +739,7 @@ const SchedulingPaymentModal = () => {
                                   complianceQuestionnaire
                                 }
                                 isCorporateEvent={false}
+                                questionnaireArray={questionnaireArray}
                                 screen="DESKTOP"
                               />
                               <AgreementForm
@@ -760,6 +747,7 @@ const SchedulingPaymentModal = () => {
                                 complianceQuestionnaire={
                                   complianceQuestionnaire
                                 }
+                                questionnaireArray={questionnaireArray}
                                 isCorporateEvent={false}
                                 screen="MOBILE"
                               />
@@ -824,6 +812,7 @@ const SchedulingPaymentModal = () => {
                             type="submit"
                             id="buy-now"
                             className="scheduling__button mt-3"
+                            disabled={loading}
                           >
                             buy now
                           </button>

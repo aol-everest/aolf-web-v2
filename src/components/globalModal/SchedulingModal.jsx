@@ -99,16 +99,20 @@ const SchedulingModal = () => {
   return (
     <div
       id="widget-modal"
-      class="overlaying-popup overlaying-popup_active"
+      className="overlaying-popup overlaying-popup_active"
       role="dialog"
     >
-      <div class="overlaying-popup__overlay" role="button" tabindex="0"></div>
+      <div
+        className="overlaying-popup__overlay"
+        role="button"
+        tabIndex="0"
+      ></div>
 
-      <div class="scheduling-modal">
+      <div className="scheduling-modal">
         <div
           role="button"
           aria-label="Close modal"
-          class="scheduling-modal__btn-close"
+          className="scheduling-modal__btn-close"
           onClick={hideModal}
         >
           <img src="/img/ic-close-talk.svg" alt="close icon" />
@@ -177,7 +181,7 @@ const SchedulingModal = () => {
                         </select>
                       </div>
 
-                      <label class="d-flex flex-column justify-content-center align-items-center">
+                      <label className="d-flex flex-column justify-content-center align-items-center">
                         <Flatpickr
                           data-enable-time
                           onChange={(selectedDates) => {
