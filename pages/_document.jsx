@@ -86,6 +86,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             type="text/javascript"
           ></script>
 
+          {/* Share a sale script*/}
+          <script
+            src="https://www.dwin1.com/51621.js"
+            type="text/javascript"
+            defer="defer"
+          ></script>
+
           {/* <script
             strategy="lazyOnload"
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&libraries=places`}
