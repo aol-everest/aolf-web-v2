@@ -10,6 +10,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { replaceRouteWithUTMQuery } from "@service";
 import { useQueryString } from "@hooks";
 import { filterAllowedParams } from "@utils/utmParam";
+import { pushRouteWithUTMQuery } from "@service";
 
 import {
   useAuth,
@@ -251,13 +252,10 @@ const SchedulingPayment = () => {
   };
 
   const login = async (event) => {
-    showModal(MODAL_TYPES.LOGIN_MODAL);
-
-    // showModal(MODAL_TYPES.LOGIN_MODAL, {
-    //   navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-    //     router.query,
-    //   )}`,
-    // });
+    pushRouteWithUTMQuery(
+      router,
+      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+    );
   };
 
   const stripePromise = loadStripe(

@@ -130,9 +130,7 @@ export const LoginModal = () => {
         } else {
           setLoading(false);
           hideModal();
-          if (showSchedulingPaymentModal) {
-            showSchedulingPaymentModal();
-          } else if (navigateTo) {
+          if (navigateTo) {
             return pushRouteWithUTMQuery(router, navigateTo);
           } else {
             router.reload(window.location.pathname);
