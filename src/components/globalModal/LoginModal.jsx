@@ -43,7 +43,6 @@ export const LoginModal = () => {
     hideCloseBtn = false,
     closeModalAction,
     defaultView = LOGIN_MODE,
-    showSchedulingPaymentModal,
   } = modalProps || {};
 
   const [loading, setLoading] = useState(false);
