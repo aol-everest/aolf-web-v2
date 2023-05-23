@@ -408,11 +408,18 @@ const Thankyou = () => {
           process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
           ["811569", "12371", "12415", "999649"].indexOf(productTypeId) >= 0 &&
           !isRepeater && (
-            <img
-              src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}${autoVoidParam}`}
-              width="1"
-              height="1"
-            ></img>
+            <>
+              <img
+                src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}${autoVoidParam}`}
+                width="1"
+                height="1"
+              ></img>
+              <script
+                src="https://www.dwin1.com/51621.js"
+                type="text/javascript"
+                defer="defer"
+              ></script>
+            </>
           )}
         {isSkyPlusSahajFirstCourse ? (
           <SKYBreathMeditationCombo
