@@ -7,7 +7,6 @@ import * as Yup from "yup";
 import { AgreementForm, Dropdown, StyledInput } from "@components/checkout";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import PaymentFormScheduling from "./paymentFormScheduling";
 import { replaceRouteWithUTMQuery } from "@service";
 import { useQueryString } from "@hooks";
 import { filterAllowedParams } from "@utils/utmParam";
@@ -17,6 +16,7 @@ import {
   useGlobalAlertContext,
   useGlobalModalContext,
 } from "@contexts";
+import PaymentFormScheduling from "@components/PaymentFormScheduling";
 
 const SchedulingPayment = () => {
   const router = useRouter();

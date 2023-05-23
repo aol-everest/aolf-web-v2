@@ -93,10 +93,7 @@ const SchedulingRange = () => {
 
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en/course/scheduling-payment",
-      query: {
-        workshopId: selectedWorkshopId,
-      },
+      pathname: `/us-en/course/scheduling-payment/${selectedWorkshopId}`,
     });
   };
 
