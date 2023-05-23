@@ -31,7 +31,7 @@ const SchedulingPayment = () => {
   const [workshop, setSelectedWorkshop] = useState({});
   const [loading, setLoading] = useState(false);
   const [tokenizeCCFromPayment, setTokenizeCCFromPayment] = useState(null);
-  const { workshopId } = router.query;
+  const { id: workshopId } = router.query;
 
   useEffect(() => {
     const getWorshopDetails = async () => {
