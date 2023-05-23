@@ -284,5 +284,6 @@ const SchedulingRange = () => {
 };
 
 SchedulingRange.hideHeader = true;
+SchedulingRange.hideFooter = true;
 
 export default SchedulingRange;

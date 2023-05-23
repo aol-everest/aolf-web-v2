@@ -836,5 +836,6 @@ const SchedulingPayment = () => {
 };
 
 SchedulingPayment.hideHeader = true;
+SchedulingPayment.hideFooter = true;
 
 export default SchedulingPayment;
