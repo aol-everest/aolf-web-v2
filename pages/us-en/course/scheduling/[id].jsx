@@ -1,7 +1,7 @@
-import { ALERT_TYPES, MODAL_TYPES, US_STATES } from "@constants";
+import { US_STATES } from "@constants";
 import { useRouter } from "next/router";
 import { api, Auth } from "@utils";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AgreementForm, Dropdown, StyledInput } from "@components/checkout";
@@ -9,28 +9,23 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { replaceRouteWithUTMQuery } from "@service";
 import { useQueryString } from "@hooks";
-import { filterAllowedParams } from "@utils/utmParam";
 import { pushRouteWithUTMQuery } from "@service";
 
-import {
-  useAuth,
-  useGlobalAlertContext,
-  useGlobalModalContext,
-} from "@contexts";
+import { useAuth, useGlobalModalContext } from "@contexts";
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
 
 const SchedulingPayment = () => {
   const router = useRouter();
   const { user, setUser } = useAuth();
-  const { showAlert } = useGlobalAlertContext();
-  const { showModal, hideModal, store } = useGlobalModalContext();
+  const { hideModal } = useGlobalModalContext();
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
   const [mbsy] = useQueryString("mbsy");
 
+  const childRef = useRef();
+
   const [workshop, setSelectedWorkshop] = useState({});
   const [loading, setLoading] = useState(false);
-  const [tokenizeCCFromPayment, setTokenizeCCFromPayment] = useState(null);
   const { id: workshopId } = router.query;
 
   useEffect(() => {
@@ -51,7 +46,6 @@ const SchedulingPayment = () => {
   }, [workshopId]);
 
   const {
-    publishableKey,
     complianceQuestionnaire,
     coverImage,
     title,
@@ -88,162 +82,6 @@ const SchedulingPayment = () => {
         mbsy,
       },
     });
-  };
-
-  const completeEnrollmentAction = async (values) => {
-    if (loading) {
-      return null;
-    }
-
-    const {
-      id: productId,
-      availableTimings,
-      isGenericWorkshop,
-      addOnProducts,
-    } = workshop;
-
-    const {
-      questionnaire,
-      contactAddress,
-      contactCity,
-      contactState,
-      contactZip,
-      firstName,
-      lastName,
-      email,
-    } = values;
-
-    const complianceQuestionnaire = questionnaire.reduce(
-      (res, current) => ({
-        ...res,
-        [current.key]: current.value ? "Yes" : "No",
-      }),
-      {},
-    );
-
-    try {
-      setLoading(true);
-
-      let tokenizeCC = tokenizeCCFromPayment;
-
-      const selectedAddOn = null;
-
-      let addOnProductsList = addOnProducts
-        ? addOnProducts.map((product) => {
-            if (!product.isAddOnSelectionRequired) {
-              const value = values[product.productName];
-              if (value) {
-                return product.productSfid;
-              } else {
-                return null;
-              }
-            }
-            return product.productSfid;
-          })
-        : [];
-
-      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
-
-      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
-
-      const isRegularOrder = values.comboDetailId
-        ? values.comboDetailId === productId
-        : true;
-
-      const products = isRegularOrder
-        ? {
-            productType: "workshop",
-            productSfId: productId,
-            AddOnProductIds: AddOnProductIds,
-          }
-        : {
-            productType: "bundle",
-            productSfId: values.comboDetailId,
-            childProduct: {
-              productType: "workshop",
-              productSfId: productId,
-              AddOnProductIds: AddOnProductIds,
-              complianceQuestionnaire,
-            },
-          };
-
-      let payLoad = {
-        shoppingRequest: {
-          doNotStoreCC: true,
-          tokenizeCC,
-          couponCode: "",
-          contactAddress: {
-            contactPhone: "",
-            contactAddress,
-            contactCity,
-            contactState,
-            contactZip,
-          },
-          billingAddress: {
-            billingPhone: "",
-            billingAddress: contactAddress,
-            billingCity: contactCity,
-            billingState: contactState,
-            billingZip: contactZip,
-          },
-          products,
-          complianceQuestionnaire,
-          isInstalmentOpted: false,
-        },
-        utm: filterAllowedParams(router.query),
-        user: {
-          firstName,
-          lastName,
-          email,
-        },
-      };
-
-      if (isGenericWorkshop) {
-        const timeSlot =
-          availableTimings &&
-          Object.values(availableTimings)[0] &&
-          Object.values(Object.values(availableTimings)[0])[0][0]
-            .genericWorkshopSlotSfid;
-        payLoad = {
-          ...payLoad,
-          shoppingRequest: {
-            ...payLoad.shoppingRequest,
-            genericWorkshopSlotSfid: timeSlot,
-          },
-        };
-      }
-
-      const {
-        data,
-        status,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        path: "createAndPayOrder",
-        body: payLoad,
-      });
-
-      setLoading(false);
-
-      if (status === 400 || isError) {
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: errorMessage,
-        });
-      } else if (data) {
-        hideModal();
-        enrollmentCompletionAction(data);
-      }
-    } catch (ex) {
-      console.error(ex);
-      if (ex?.response) {
-        const data = ex.response?.data;
-        const { message, statusCode } = data || {};
-        setLoading(false);
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: message ? `Error: ${message} (${statusCode})` : ex.message,
-        });
-      }
-    }
   };
 
   const logout = async (event) => {
@@ -306,8 +144,8 @@ const SchedulingPayment = () => {
                 (value) => value === true,
               ),
           })}
-          onSubmit={async (values, { setSubmitting, isValid, errors }) => {
-            await completeEnrollmentAction(values);
+          onSubmit={async (values) => {
+            await childRef.current.completeEnrollmentAction(values);
           }}
         >
           {(formikProps) => {
@@ -481,8 +319,12 @@ const SchedulingPayment = () => {
                               <div className="scheduling__card">
                                 <PaymentFormScheduling
                                   formikValues={values}
-                                  setTokenizeCCFromPayment={
-                                    setTokenizeCCFromPayment
+                                  ref={childRef}
+                                  workshop={workshop}
+                                  setLoading={setLoading}
+                                  loading={loading}
+                                  enrollmentCompletionAction={
+                                    enrollmentCompletionAction
                                   }
                                 />
                               </div>

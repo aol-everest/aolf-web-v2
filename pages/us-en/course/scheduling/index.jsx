@@ -163,9 +163,6 @@ const SchedulingRange = () => {
                                 value={item.filterValue}
                               >
                                 {item.text}
-                                {" ("}
-                                {changeTimeZone(new Date(), item.timezone)}
-                                {") "}
                               </option>
                             );
                           })}
