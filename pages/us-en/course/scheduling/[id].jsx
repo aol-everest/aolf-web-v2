@@ -63,8 +63,6 @@ const SchedulingPayment = () => {
     personMailingCity,
   } = user?.profile || {};
 
-  console.log("user", user);
-
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
         key: current.questionSfid,
