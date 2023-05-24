@@ -1,16 +1,13 @@
 /* eslint-disable react/display-name */
-import React, { forwardRef, useEffect, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import {
-  useAuth,
-  useGlobalAlertContext,
-  useGlobalModalContext,
-} from "@contexts";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 
 import { filterAllowedParams } from "@utils/utmParam";
-import { api, Auth } from "@utils";
 import { useRouter } from "next/router";
 import { ALERT_TYPES } from "@constants";
+import Axios from "axios";
+import queryString from "query-string";
 
 const createOptions = {
   style: {
@@ -34,19 +31,24 @@ const createOptions = {
 };
 
 const PaymentFormScheduling = forwardRef((props, ref) => {
-  const {
-    formikValues,
-    enrollmentCompletionAction,
-    workshop,
-    setLoading,
-    loading,
-  } = props;
+  const { enrollmentCompletionAction, workshop, setLoading, loading } = props;
   const stripe = useStripe();
   const elements = useElements();
-  const { user } = useAuth();
   const router = useRouter();
   const { showAlert } = useGlobalAlertContext();
   const { hideModal } = useGlobalModalContext();
+
+  const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
+    ? process.env.NEXT_PUBLIC_SERVER_URL
+    : "http://localhost:3000";
+
+  const axiosClient = Axios.create({
+    baseURL: SERVER_URL,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
 
   useImperativeHandle(ref, () => ({
     async completeEnrollmentAction(values) {
@@ -54,12 +56,7 @@ const PaymentFormScheduling = forwardRef((props, ref) => {
         return null;
       }
 
-      const {
-        id: productId,
-        availableTimings,
-        isGenericWorkshop,
-        addOnProducts,
-      } = workshop;
+      const { id: productId, addOnProducts } = workshop;
 
       const {
         questionnaire,
@@ -85,9 +82,7 @@ const PaymentFormScheduling = forwardRef((props, ref) => {
         let tokenizeCC = null;
         const cardElement = elements?.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
-          name: user?.profile.name
-            ? user?.profile.name
-            : firstName + " " + lastName,
+          name: firstName + " " + lastName,
         });
         let { error, token } = createTokenRespone;
         if (error) {
@@ -167,43 +162,35 @@ const PaymentFormScheduling = forwardRef((props, ref) => {
           },
         };
 
-        if (isGenericWorkshop) {
-          const timeSlot =
-            availableTimings &&
-            Object.values(availableTimings)[0] &&
-            Object.values(Object.values(availableTimings)[0])[0][0]
-              .genericWorkshopSlotSfid;
-          payLoad = {
-            ...payLoad,
-            shoppingRequest: {
-              ...payLoad.shoppingRequest,
-              genericWorkshopSlotSfid: timeSlot,
-            },
-          };
-        }
-
-        const {
-          data,
-          status,
-          error: errorMessage,
-          isError,
-        } = await api.post({
-          path: "createAndPayOrder",
-          body: payLoad,
+        const qs = queryString.stringify({
+          org: process.env.NEXT_PUBLIC_ORGANIZATION_NAME,
         });
 
-        setLoading(false);
-
-        if (status === 400 || isError) {
-          showAlert(ALERT_TYPES.ERROR_ALERT, {
-            children: errorMessage,
-          });
-        } else if (data) {
-          hideModal();
-          enrollmentCompletionAction(data);
+        try {
+          const result = await axiosClient.post(
+            SERVER_URL + "createAndPayOrder?" + qs,
+            payLoad,
+          );
+          const { data, isError, status, error } = result?.data || {};
+          if (isError && status === 400) {
+            showAlert(ALERT_TYPES.ERROR_ALERT, {
+              children: error,
+            });
+          } else if (data) {
+            hideModal();
+            enrollmentCompletionAction(data);
+          }
+        } catch (orderError) {
+          const { isError, error = "" } = orderError?.response?.data || {};
+          if (isError) {
+            showAlert(ALERT_TYPES.ERROR_ALERT, {
+              children: error,
+            });
+          }
         }
+        setLoading(false);
       } catch (ex) {
-        console.error(ex);
+        console.error("ex--->", ex);
         if (ex?.response) {
           const data = ex.response?.data;
           const { message, statusCode } = data || {};
@@ -212,6 +199,11 @@ const PaymentFormScheduling = forwardRef((props, ref) => {
             children: message
               ? `Error: ${message} (${statusCode})`
               : ex.message,
+          });
+        } else if (ex?.message) {
+          setLoading(false);
+          showAlert(ALERT_TYPES.ERROR_ALERT, {
+            children: ex.message,
           });
         }
       }
