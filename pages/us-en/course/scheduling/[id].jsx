@@ -100,6 +100,19 @@ const SchedulingPayment = () => {
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   );
 
+  const resetProfileValues = (setValues, values) => {
+    setValues({
+      ...values,
+      firstName: "",
+      lastName: "",
+      email: "",
+      contactAddress: "",
+      contactCity: "",
+      contactState: "",
+      contactZip: "",
+    });
+  };
+
   return (
     <div id="widget-modal" className="overlaying-popup_active" role="dialog">
       <div className="scheduling-modal">
@@ -149,7 +162,7 @@ const SchedulingPayment = () => {
           }}
         >
           {(formikProps) => {
-            const { values, handleSubmit } = formikProps;
+            const { values, handleSubmit, setValues } = formikProps;
             return (
               <div id="scheduling-step-1" className="scheduling-modal__body">
                 <div>
@@ -173,7 +186,14 @@ const SchedulingPayment = () => {
                           {user?.profile ? (
                             <p className="details__content">
                               This is not your account?{" "}
-                              <a href="#" className="link" onClick={logout}>
+                              <a
+                                href="#"
+                                className="link"
+                                onClick={() => {
+                                  logout();
+                                  resetProfileValues(setValues, values);
+                                }}
+                              >
                                 Logout
                               </a>
                             </p>
@@ -215,7 +235,7 @@ const SchedulingPayment = () => {
                               placeholder="Email"
                               formikProps={formikProps}
                               formikKey="email"
-                              isReadOnly={true}
+                              isReadOnly={user?.profile}
                               onCut={(event) => {
                                 event.preventDefault();
                               }}
@@ -261,12 +281,12 @@ const SchedulingPayment = () => {
                               className="scheduling__radio custom-radio"
                               type="radio"
                               name="payment"
-                              checked
+                              defaultChecked={true}
                               id="payment-card"
                             />
                             <label
                               className="d-flex justify-content-between"
-                              for="payment-card"
+                              htmlFor="payment-card"
                             >
                               <span>Credit or Debit Card</span>
                               <ul className="scheduling__cards-list">
@@ -338,7 +358,7 @@ const SchedulingPayment = () => {
                                 <li>
                                   <div className="scheduling__wcf-select wcf-select wcf-form__field mb-2">
                                     <label
-                                      for="get-tickets-country"
+                                      htmlFor="get-tickets-country"
                                       className="wcf-select__label"
                                     >
                                       Country
@@ -489,7 +509,7 @@ const SchedulingPayment = () => {
                                 <div className="col-4">
                                   <label
                                     className="scheduling__label"
-                                    for="city"
+                                    htmlFor="contactCity"
                                   >
                                     City
                                   </label>
@@ -504,7 +524,7 @@ const SchedulingPayment = () => {
                                 <div className="col-4">
                                   <label
                                     className="scheduling__label"
-                                    for="state"
+                                    htmlFor="contactState"
                                   >
                                     State
                                   </label>
@@ -521,7 +541,7 @@ const SchedulingPayment = () => {
                                 <div className="col-4">
                                   <label
                                     className="scheduling__label"
-                                    for="zip"
+                                    htmlFor="contactZip"
                                   >
                                     ZIP Code
                                   </label>
