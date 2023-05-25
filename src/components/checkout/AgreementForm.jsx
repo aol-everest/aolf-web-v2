@@ -216,7 +216,7 @@ export const AgreementForm = ({
         {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
           <>
             {complianceQuestionnaire.map((compliance) => (
-              <>
+              <React.Fragment key={compliance.questionSfid}>
                 <div className="agreement__group mt-3">
                   <Field
                     name="questionnaire"
@@ -272,7 +272,7 @@ export const AgreementForm = ({
                       {formikProps.errors.questionnaire}
                     </div>
                   )}
-              </>
+              </React.Fragment>
             ))}
             <div className="agreement__group tw-mt-3 tw-pl-3">
               <p className="agreement__text">

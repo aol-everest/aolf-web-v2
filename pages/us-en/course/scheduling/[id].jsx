@@ -1,6 +1,6 @@
 import { US_STATES } from "@constants";
 import { useRouter } from "next/router";
-import { api, Auth } from "@utils";
+import { api } from "@utils";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -9,14 +9,12 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { replaceRouteWithUTMQuery } from "@service";
 import { useQueryString } from "@hooks";
-import { pushRouteWithUTMQuery } from "@service";
 
 import { useAuth, useGlobalModalContext } from "@contexts";
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
 
 const SchedulingPayment = () => {
   const router = useRouter();
-  const { user, setUser } = useAuth();
   const { hideModal } = useGlobalModalContext();
   const [mbsy_source] = useQueryString("mbsy_source");
   const [campaignid] = useQueryString("campaignid");
@@ -45,23 +43,7 @@ const SchedulingPayment = () => {
     }
   }, [workshopId]);
 
-  const {
-    complianceQuestionnaire,
-    coverImage,
-    title,
-    workshopTotalHours,
-    showPrice,
-  } = workshop || {};
-
-  const {
-    first_name,
-    last_name,
-    email,
-    personMailingPostalCode,
-    personMailingState,
-    personMailingStreet,
-    personMailingCity,
-  } = user?.profile || {};
+  const { complianceQuestionnaire, title, showPrice } = workshop || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -84,34 +66,9 @@ const SchedulingPayment = () => {
     });
   };
 
-  const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
-  };
-
-  const login = async (event) => {
-    pushRouteWithUTMQuery(
-      router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
-    );
-  };
-
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   );
-
-  const resetProfileValues = (setValues, values) => {
-    setValues({
-      ...values,
-      firstName: "",
-      lastName: "",
-      email: "",
-      contactAddress: "",
-      contactCity: "",
-      contactState: "",
-      contactZip: "",
-    });
-  };
 
   return (
     <div id="widget-modal" className="overlaying-popup_active" role="dialog">
@@ -126,13 +83,13 @@ const SchedulingPayment = () => {
         </div>
         <Formik
           initialValues={{
-            firstName: first_name || "",
-            lastName: last_name || "",
-            email: email || "",
-            contactAddress: personMailingStreet || "",
-            contactCity: personMailingCity || "",
-            contactState: personMailingState || "",
-            contactZip: personMailingPostalCode || "",
+            firstName: "",
+            lastName: "",
+            email: "",
+            contactAddress: "",
+            contactCity: "",
+            contactState: "",
+            contactZip: "",
             questionnaire: questionnaireArray,
             ppaAgreement: false,
           }}
@@ -162,7 +119,7 @@ const SchedulingPayment = () => {
           }}
         >
           {(formikProps) => {
-            const { values, handleSubmit, setValues } = formikProps;
+            const { handleSubmit } = formikProps;
             return (
               <div id="scheduling-step-1" className="scheduling-modal__body">
                 <div>
@@ -180,38 +137,6 @@ const SchedulingPayment = () => {
                     <div className="row no-gutters ">
                       <div className="col-12 col-md-6">
                         <div className="scheduling__payment">
-                          <h1 className="scheduling__title scheduling__title--large mb-2">
-                            Get Started
-                          </h1>
-                          {user?.profile ? (
-                            <p className="details__content">
-                              This is not your account?{" "}
-                              <a
-                                href="#"
-                                className="link"
-                                onClick={() => {
-                                  logout();
-                                  resetProfileValues(setValues, values);
-                                }}
-                              >
-                                Logout
-                              </a>
-                            </p>
-                          ) : (
-                            <p className="mb-2">
-                              <span className="scheduling__auth-title">
-                                Already have an account?
-                              </span>
-                              <button
-                                className="scheduling__btn-aslink scheduling__login"
-                                type="button"
-                                onClick={login}
-                              >
-                                Login in here
-                              </button>
-                            </p>
-                          )}
-
                           <div className=" mt-2">
                             <div className="scheduling__wrapper">
                               <StyledInput
@@ -235,7 +160,6 @@ const SchedulingPayment = () => {
                               placeholder="Email"
                               formikProps={formikProps}
                               formikKey="email"
-                              isReadOnly={user?.profile}
                               onCut={(event) => {
                                 event.preventDefault();
                               }}
@@ -326,7 +250,7 @@ const SchedulingPayment = () => {
                             </label>
                           </div>
 
-                          <form className="scheduling__form-card">
+                          <div className="scheduling__form-card">
                             <Elements
                               stripe={stripePromise}
                               fonts={[
@@ -338,7 +262,6 @@ const SchedulingPayment = () => {
                             >
                               <div className="scheduling__card">
                                 <PaymentFormScheduling
-                                  formikValues={values}
                                   ref={childRef}
                                   workshop={workshop}
                                   setLoading={setLoading}
@@ -571,7 +494,7 @@ const SchedulingPayment = () => {
                                 </button>
                               </div> */}
                             </div>
-                          </form>
+                          </div>
 
                           <div className="reciept">
                             <div className="mt-3 scheduling__wrap-checkbox">
@@ -605,18 +528,14 @@ const SchedulingPayment = () => {
                             <div className="row no-gutters">
                               <img
                                 className="mr-2"
-                                src={
-                                  coverImage
-                                    ? coverImage.url
-                                    : "/img/skybreath-meditation.jpg"
-                                }
+                                src={"/img/skybreath-meditation.jpg"}
                                 alt="skybreath meditation photo"
                               />
 
                               <div>
                                 <h2 className="scheduling__title">{title}</h2>
                                 <p className="scheduling__text">
-                                  {workshopTotalHours} Hour Meditation Course
+                                  6 Hour Meditation Course
                                 </p>
                               </div>
                             </div>

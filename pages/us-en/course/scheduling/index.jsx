@@ -114,11 +114,7 @@ const SchedulingRange = () => {
               <div className="col-12 col-md-4 col-lg-3  scheduling-second--border">
                 <div className="scheduling-second__course d-flex flex-column justify-content-center d-lg-block ">
                   <img
-                    src={
-                      selectedWorkshop?.coverImage
-                        ? selectedWorkshop.coverImage.url
-                        : "/img/skybreath-meditation_large.jpg"
-                    }
+                    src={"/img/skybreath-meditation_large.jpg"}
                     alt="skybreath meditation photo"
                   />
                   {selectedWorkshop.title && (
@@ -127,8 +123,7 @@ const SchedulingRange = () => {
                         {selectedWorkshop.title}
                       </h2>
                       <p className="scheduling-second__text mt-2">
-                        {selectedWorkshop.workshopTotalHours} Hour Meditation
-                        Course
+                        6 Hour Meditation Course
                       </p>
                     </div>
                   )}

@@ -21,6 +21,24 @@
   @media (max-width: 560px) {
     padding: 10px;
   }
+  .validation-mobile-message {
+    display: none;
+    font-size: 12px;
+    line-height: 1.33;
+    color: #fa4141;
+  }
+  .input-block {
+    width: 100%;
+    &.validate-error {
+      input {
+        border-color: #fa4141;
+      }
+
+      .validation-message {
+        display: block;
+      }
+    }
+  }
 }
 
 .scheduling__title {
