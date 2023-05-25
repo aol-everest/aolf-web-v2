@@ -413,6 +413,7 @@ const Thankyou = () => {
                 src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}${autoVoidParam}`}
                 width="1"
                 height="1"
+                id="_SHRSL_img_1"
               ></img>
               <script
                 src="https://www.dwin1.com/51621.js"
