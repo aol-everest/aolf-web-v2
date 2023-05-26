@@ -241,9 +241,9 @@ const SchedulingRange = () => {
                                             </span>
                                             <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
                                               time.startTime,
-                                            )} - ${tConvert(time.endTime)} ${
-                                              ABBRS[time.timeZone]
-                                            }`}</span>
+                                            )} - ${tConvert(
+                                              time.endTime,
+                                            )} `}</span>
                                           </li>
                                         );
                                       })}
