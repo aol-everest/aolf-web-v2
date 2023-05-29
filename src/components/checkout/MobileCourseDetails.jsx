@@ -20,21 +20,15 @@ const CourseFeeRender = ({
   isUsableCreditAvailable,
   premiumRate,
   discount,
+  isComboDetailAvailable,
 }) => {
-  const { fee, delfee, offering, isRegularPrice } = price;
+  const { fee, delfee } = price;
   const isJourneyPremium =
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
   const isSilentRetreatType =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
-  const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
-  const isSriSriYogaMeditationType =
-    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0;
-  const isHealingBreathProgram =
-    COURSE_TYPES.HEALING_BREATH.value.indexOf(productTypeId) >= 0;
+
   if (isSilentRetreatType) {
     if (!isJourneyPremium && !isJourneyPlus) {
       return (
@@ -93,7 +87,7 @@ const CourseFeeRender = ({
   }
   return (
     <>
-      {delfee && (
+      {delfee && !isComboDetailAvailable && (
         <>
           <h2 className="new-price">Limited Time Offer: ${fee}</h2>
           <h3 className="common-price">
@@ -156,6 +150,7 @@ export const MobileCourseDetails = ({
   openSubscriptionPaywallPage,
   isUsableCreditAvailable,
   discount,
+  isComboDetailAvailable,
 }) => {
   const {
     title,
@@ -184,7 +179,6 @@ export const MobileCourseDetails = ({
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
   let modalStyle = {
-    backgroundImage: "url(/img/course-card-1.png)",
     backgroundPositionY: "-12px",
     color: "#000000",
   };
@@ -221,6 +215,7 @@ export const MobileCourseDetails = ({
           isUsableCreditAvailable={isUsableCreditAvailable}
           premiumRate={premiumRate}
           discount={discount}
+          isComboDetailAvailable={isComboDetailAvailable}
         />
       </div>
       <div className="mobile-modal__body">
