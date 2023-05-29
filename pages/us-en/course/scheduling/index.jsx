@@ -1,4 +1,4 @@
-import { MODAL_TYPES } from "@constants";
+import { ABBRS, MODAL_TYPES } from "@constants";
 import { api, tConvert } from "@utils";
 import { groupBy } from "lodash";
 import dayjs from "dayjs";
@@ -49,6 +49,7 @@ const SchedulingRange = () => {
           timeZone: timezoneFilter,
           sdate: selectedDates?.[0],
           org: "AOL",
+          timingsRequired: true,
         },
       });
       if (response?.data) {
@@ -200,22 +201,6 @@ const SchedulingRange = () => {
                           {Object.keys(workshops)?.map((workshop, index) => {
                             const items = workshops[workshop];
                             const firstItem = items?.[0];
-                            const startDateValue =
-                              dayjs
-                                .utc(firstItem.eventStartDate)
-                                ?.format("ddd DD") +
-                              " " +
-                              tConvert(firstItem.eventStartTime) +
-                              " - " +
-                              tConvert(firstItem.eventEndTime);
-                            const endDateValue =
-                              dayjs
-                                .utc(firstItem.eventEndDate)
-                                ?.format("ddd DD") +
-                              " " +
-                              tConvert(firstItem.eventStartTime) +
-                              " - " +
-                              tConvert(firstItem.eventEndTime);
                             const randomWorkshop = Math.floor(
                               Math.random() * items.length,
                             );
@@ -242,8 +227,26 @@ const SchedulingRange = () => {
                                     {`Option ${index + 1}`}
                                   </h4>
                                   <ul className={`list-option${index + 1}`}>
-                                    <li>{startDateValue}</li>
-                                    <li>{endDateValue}</li>
+                                    {firstItem?.timings &&
+                                      firstItem.timings.map((time, i) => {
+                                        return (
+                                          <li
+                                            className="program-details__schedule tw-flex"
+                                            key={i}
+                                          >
+                                            <span className="program-details__schedule-date">
+                                              {dayjs
+                                                .utc(time.startDate)
+                                                .format("MMM DD")}
+                                            </span>
+                                            <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
+                                              time.startTime,
+                                            )} - ${tConvert(
+                                              time.endTime,
+                                            )} `}</span>
+                                          </li>
+                                        );
+                                      })}
                                   </ul>
                                 </label>
                               </li>
