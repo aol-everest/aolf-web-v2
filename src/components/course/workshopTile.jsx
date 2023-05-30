@@ -123,6 +123,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
               {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("DD, YYYY")}`}
+              {" " + ABBRS[eventTimeZone]}
             </div>
           )}
           {!dayjs
@@ -132,9 +133,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
               {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
                 .utc(eventEndDate)
                 .format("MMMM DD, YYYY")}`}
+              {" " + ABBRS[eventTimeZone]}
             </div>
           )}
-          <div className="course_timezone">{ABBRS[eventTimeZone]}</div>
         </div>
         <div className="course_info">
           <div className="course_status">{mode}</div>
