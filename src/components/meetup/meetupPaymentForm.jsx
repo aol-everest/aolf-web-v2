@@ -419,6 +419,7 @@ export const MeetupPaymentForm = ({
     primaryTeacherPhone,
     primaryTeacherEmail,
     mode,
+    isSubscriptionOfferingUsed,
   } = meetup;
 
   const { subscriptions = [] } = profile;
@@ -851,19 +852,17 @@ export const MeetupPaymentForm = ({
                     </ul>
                   )}
 
-                  {isDigitalMember && (
+                  {isDigitalMember && !isSubscriptionOfferingUsed && (
                     <ul className="reciept__item_list">
                       <li>
                         <span>Digital Member rate:</span>
-                        {memberPrice !== listPrice && (
+                        {unitPrice !== listPrice && (
                           <span>
                             <span className="discount">${listPrice}</span> $
-                            {memberPrice}
+                            {unitPrice}
                           </span>
                         )}
-                        {memberPrice === listPrice && (
-                          <span>${memberPrice}</span>
-                        )}
+                        {unitPrice === listPrice && <span>${unitPrice}</span>}
                       </li>
                     </ul>
                   )}
