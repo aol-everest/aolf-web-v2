@@ -920,7 +920,7 @@ const Course = () => {
                 <p className="title mb-1 mt-lg-5 mt-3">
                   {COURSE_MODES[activeFilterType]
                     ? `Upcoming ${COURSE_MODES[activeFilterType].name} courses`
-                    : `Upcoming All courses`}
+                    : `Upcoming courses`}
                 </p>
               )}
               {institutionalCourses && (
