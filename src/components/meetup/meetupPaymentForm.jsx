@@ -852,6 +852,23 @@ export const MeetupPaymentForm = ({
                     </ul>
                   )}
 
+                  {isDigitalMember && isSubscriptionOfferingUsed && (
+                    <ul className="reciept__item_list">
+                      <li>
+                        <span>Digital Member rate:</span>
+                        {memberPrice !== listPrice && (
+                          <span>
+                            <span className="discount">${listPrice}</span> $
+                            {memberPrice}
+                          </span>
+                        )}
+                        {memberPrice === listPrice && (
+                          <span>${memberPrice}</span>
+                        )}
+                      </li>
+                    </ul>
+                  )}
+
                   {isDigitalMember && !isSubscriptionOfferingUsed && (
                     <ul className="reciept__item_list">
                       <li>
