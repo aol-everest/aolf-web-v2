@@ -918,7 +918,9 @@ const Course = () => {
             <div className="col-12">
               {!institutionalCourses && (
                 <p className="title mb-1 mt-lg-5 mt-3">
-                  Upcoming {COURSE_MODES[activeFilterType].name} courses
+                  {COURSE_MODES[activeFilterType]
+                    ? `Upcoming ${COURSE_MODES[activeFilterType].name} courses`
+                    : `Upcoming courses`}
                 </p>
               )}
               {institutionalCourses && (
