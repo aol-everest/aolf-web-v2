@@ -49,10 +49,9 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
           password: Yup.string()
             .required("Password is required")
             .min(8, "Must Contain 8 Characters"),
-          passwordConfirmation: Yup.string().oneOf(
-            [Yup.ref("password"), null],
-            "Passwords must match",
-          ),
+          passwordConfirmation: Yup.string()
+            .required("Password is required")
+            .oneOf([Yup.ref("password"), null], "Passwords must match"),
         })}
         onSubmit={async (values, { resetForm, setStatus }) => {
           await submitAction(values);
