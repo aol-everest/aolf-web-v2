@@ -493,7 +493,7 @@ const Course = () => {
                   <div className="switch-flter-container">
                     <Popup
                       tabIndex="1"
-                      value={activeFilterType}
+                      value={COURSE_MODES[activeFilterType] && activeFilterType}
                       buttonText={
                         activeFilterType && COURSE_MODES[activeFilterType]
                           ? COURSE_MODES[activeFilterType].name
