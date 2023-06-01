@@ -825,7 +825,7 @@ export const MeetupPaymentForm = ({
                       {mode !== "In Person" && (
                         <>
                           <li>
-                            <span>Digital Member rate:</span>
+                            <span>Member rate:</span>
                             {memberPrice !== listPrice && (
                               <span>
                                 <span className="discount">${listPrice}</span> $
@@ -855,7 +855,7 @@ export const MeetupPaymentForm = ({
                   {isDigitalMember && isSubscriptionOfferingUsed && (
                     <ul className="reciept__item_list">
                       <li>
-                        <span>Digital Member rate:</span>
+                        <span>Member rate:</span>
                         {memberPrice !== listPrice && (
                           <span>
                             <span className="discount">${listPrice}</span> $
@@ -872,7 +872,7 @@ export const MeetupPaymentForm = ({
                   {isDigitalMember && !isSubscriptionOfferingUsed && (
                     <ul className="reciept__item_list">
                       <li>
-                        <span>Digital Member rate:</span>
+                        <span>Member rate:</span>
                         {unitPrice !== listPrice && (
                           <span>
                             <span className="discount">${listPrice}</span> $
