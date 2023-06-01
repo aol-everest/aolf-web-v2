@@ -26,6 +26,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
     eventEndDate,
     eventTimeZone,
     sfid,
+    locationCity,
+    locationProvince,
+    centerName,
   } = data || {};
 
   const enrollAction = (workshopId, productTypeId) => () => {
@@ -137,7 +140,22 @@ export const WorkshopTile = ({ data, authenticated }) => {
           <div className="course_timezone">{ABBRS[eventTimeZone]}</div>
         </div>
         <div className="course_info">
-          <div className="course_status">{mode}</div>
+          {mode === "In Person" ? (
+            <div className="course_status">
+              {locationCity ? (
+                <span>
+                  {" "}
+                  {locationCity || ""}
+                  {locationProvince && ", "}
+                  {locationProvince || ""}
+                </span>
+              ) : (
+                centerName
+              )}
+            </div>
+          ) : (
+            <div className="course_status">{mode}</div>
+          )}
           <div className="course_name">{title}</div>
           <div className="course_place">{primaryTeacherName}</div>
         </div>
