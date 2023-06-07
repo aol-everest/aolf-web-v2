@@ -1,0 +1,96 @@
+.talk-final {
+  .container {
+    padding: 0 20px;
+  }
+
+  &__wrapper {
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+  }
+
+  &__content {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    max-width: 515px;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 72px;
+    margin-bottom: 20px;
+  }
+
+  &__text {
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 40px;
+  }
+
+  &__btn-calendar {
+    max-width: 272px;
+    height: 52px;
+    justify-content: center;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 1190px) {
+  .talk-final {
+    &__wrapper {
+      background-position: center center;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .talk-final {
+    &__title {
+      font-size: 32px;
+      line-height: 38px;
+      margin-bottom: 28px;
+    }
+
+    &__text {
+      margin-bottom: 32px;
+    }
+
+    &__btn-calendar {
+      font-size: 16px;
+      line-height: 20px;
+    }
+  }
+}
+
+@media (max-width: 460px) {
+  .talk-final__header {
+    min-height: 72px;
+  }
+}
+
+@media (max-width: 390px) {
+  .talk-final {
+    &__btn-calendar {
+      min-width: 100%;
+    }
+  }
+}

@@ -493,7 +493,7 @@ const Course = () => {
                   <div className="switch-flter-container">
                     <Popup
                       tabIndex="1"
-                      value={activeFilterType}
+                      value={COURSE_MODES[activeFilterType] && activeFilterType}
                       buttonText={
                         activeFilterType && COURSE_MODES[activeFilterType]
                           ? COURSE_MODES[activeFilterType].name
@@ -918,7 +918,9 @@ const Course = () => {
             <div className="col-12">
               {!institutionalCourses && (
                 <p className="title mb-1 mt-lg-5 mt-3">
-                  Upcoming {COURSE_MODES[activeFilterType].name} courses
+                  {COURSE_MODES[activeFilterType]
+                    ? `Upcoming ${COURSE_MODES[activeFilterType].name} courses`
+                    : `Upcoming courses`}
                 </p>
               )}
               {institutionalCourses && (

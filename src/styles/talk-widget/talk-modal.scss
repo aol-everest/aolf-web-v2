@@ -1,0 +1,829 @@
+@keyframes spin {
+  0% {
+    transform: rotate(0deg)
+  }
+  50% {
+    transform: rotate(180deg)
+  }
+  100% {
+    transform: rotate(360deg)
+  }
+}
+
+@keyframes popup-slide-from-top {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+//flex-gap property polyfill
+@mixin flex-gap($x-gap, $y-gap) {
+  display: flex;
+
+  & > *:not(:first-child) {
+    margin-left: $x-gap;
+    margin-top: $y-gap;
+  }
+}
+
+.overlaying-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  z-index: 10;
+  display: none;
+
+  &_active {
+    display: flex;
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(19, 29, 68, 0.6);
+    cursor: default;
+  }
+}
+
+.talk-modal {
+  margin: auto;
+  background-color: $white;
+  min-width: 550px;
+  max-width: 550px;
+  z-index: 1;
+  border-radius: 16px;
+  transition: all .15s ease-in;
+  max-height: calc(var(--vh, 1vh) * 90);
+  overflow-y: scroll;
+
+  animation: popup-slide-from-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__subtitle {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    font-family: Lora;
+  }
+
+  &_expanded {
+    min-width: 600px;
+    max-width: 600px;
+  }
+
+  &__body {
+    position: relative;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &_loader {
+      padding: 54px 40px 48px;
+    }
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    text-align: center;
+    position: relative;
+    padding: 0 15px;
+    margin-bottom: 28px;
+    max-width: 470px;
+  }
+
+  &__description {
+    font-size: 18px;
+    line-height: 24px;
+    color: $grey;
+    text-align: center;
+    max-width: 470px;
+  }
+
+  &__preloader {
+    margin-bottom: 38px;
+    animation: spin 2.5s linear infinite;
+    transition: all 0.3s ease;
+  }
+
+  &__btn {
+    &-close {
+      position: absolute;
+      right: 24px;
+      top: 24px;
+      line-height: 0;
+    }
+
+    &-back {
+      position: absolute;
+      top: 53px;
+      left: 40px;
+      line-height: 0;
+    }
+  }
+
+  &__icon {
+    &-done {
+      margin-bottom: 32px;
+    }
+  }
+
+  &__events {
+    width: 100%;
+    margin-bottom: 28px;
+
+    &-title {
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
+    }
+
+    &-back {
+      display: none;
+    }
+  }
+
+  &__participant {
+    width: 100%;
+  }
+
+}
+
+.progress-talk {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+  @include flex-gap(16px, 0);
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    & img {
+      height: 28px;
+      width: 28px;
+      margin-bottom: 3px;
+    }
+  }
+
+  &__divider {
+    align-self: center;
+  }
+
+  &__counter {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(49, 54, 78, 0.4);
+
+    &_current {
+      color: $text-color
+    }
+  }
+}
+
+.talk-datepicker {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 40px;
+
+  &_with-schedule {
+    .talk-datepicker__title {
+      text-align: left;
+    }
+  }
+
+  &__title {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  &__cell {
+    &_active {
+      span {
+        background: linear-gradient(77.59deg, #4D285C 0%, #7F324B 33.98%, #EE7830 66.43%, #F6DE9F 100%);
+        border-radius: 2px !important;
+        color: $white;
+      }
+    }
+
+    &_empty-slots {
+      pointer-events: none;
+      appearance: none;
+
+      span {
+        background: rgba(250, 90, 103, 0.08);
+        border-radius: 2px !important;
+        color: #FA5A67;
+      }
+    }
+  }
+
+  &__main {
+    .slds-datepicker__filter {
+      padding: 0;
+    }
+
+    .slds-datepicker {
+      position: unset;
+      border: none;
+      box-shadow: none;
+
+      & td {
+        padding: 0;
+        font-weight: 500;
+
+        &.slds-is-today {
+          position: relative;
+
+          span {
+            background-color: unset;
+          }
+
+          &:before {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: $text-color;
+          }
+        }
+
+        &.slds-day_adjacent-month {
+          color: rgba(49, 54, 78, 0.4);
+        }
+      }
+    }
+  }
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+    padding-right: 7px;
+    @include flex-gap(26px, 0)
+  }
+
+  &__month {
+    font-family: 'Work Sans';
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  &__timezone {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+
+    &-earth {
+      margin-right: 7px
+    }
+
+    &-text {
+      margin-right: 4px;
+      font-size: 10px;
+      line-height: 14px;
+    }
+
+    &-arrow {
+      cursor: pointer;
+    }
+  }
+}
+
+.talk-schedule {
+  padding-top: 44px;
+  flex: 1 1 100%;
+  display: none;
+
+  &_active {
+    display: block;
+  }
+
+  &__date {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    display: none;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    max-height: 208px;
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-right: -4px;
+
+    @include flex-gap(0, 8px);
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      display: block;
+      background-color: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background: #C4C5CC;
+      border-radius: 2px;
+    }
+  }
+}
+
+.schedule-item {
+  &_selected {
+    .schedule-item__confirm {
+      display: flex;
+    }
+
+    .schedule-item__btn-date {
+      display: none;
+    }
+  }
+
+  &_disabled {
+    pointer-events: none;
+    user-select: none;
+
+    .schedule-item__btn-date {
+      background: $border-color;
+      color: $light-grey-2;
+      border: none;
+    }
+  }
+
+  &__btn {
+    &-date {
+      border: 1px solid $grey;
+      background-color: $white;
+      border-radius: 8px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 16px;
+    }
+  }
+
+  &__time,
+  &__btn-confirm {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    height: 44px;
+    border-radius: 8px;
+    color: $white;
+    justify-content: center;
+    flex: 1 1 100%;
+    padding: 0;
+  }
+
+  &__time {
+    background-color: $text-color;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__confirm {
+    @include flex-gap(8px, 0);
+    display: none;
+  }
+}
+
+.talk-event {
+  display: flex;
+  align-items: center;
+
+  &__date {
+    width: 60px;
+    height: 60px;
+    background: #F5F8FE;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    margin-right: 16px;
+    flex-shrink: 0;
+
+    &-month {
+      font-size: 12px;
+      line-height: 14px;
+      margin-bottom: 2px;
+    }
+
+    &-number {
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 24px;
+      font-family: Lora, sans-serif;
+    }
+  }
+
+  &__time {
+    flex: 0 1 340px;
+
+    &-text {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 16px;
+      margin-bottom: 4px;
+    }
+
+    &-description {
+      font-size: 12px;
+      line-height: 14px;
+      color: $grey;
+    }
+  }
+
+  &__price {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+}
+
+.participant-form {
+  &__main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    margin-bottom: 16px;
+  }
+
+  &__row {
+    display: flex;
+    margin-bottom: 16px;
+    gap: 16px;
+  }
+
+  &__input {
+    flex: 1 1 100%;
+    font-size: 14px;
+    line-height: 22px;
+    padding: 8px 12px;
+
+    &_error {
+      border: $error-border;
+    }
+  }
+
+  &__confirm {
+    margin-top: 0;
+    display: flex;
+    @include flex-gap(12px, 0)
+  }
+
+  &__checkbox {
+    &-input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 99;
+      width: 16px;
+      height: 16px;
+      transition: all 0.3s ease-in-out;
+
+      & + label {
+        position: relative;
+        padding: 0;
+        width: 16px;
+        height: 16px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      & + label:before {
+        content: "";
+        margin-right: 10px;
+        display: inline-block;
+        vertical-align: text-top;
+        width: 16px;
+        height: 16px;
+        border-radius: 2px;
+        background: $white;
+        border: $grey-border;
+        transition: all 0.3s ease-in-out;
+      }
+
+      &:hover + label:before {
+        border-color: $text-color;
+      }
+
+      &:checked + label:before {
+        border-color: $text-color;
+        background: $text-color;
+      }
+
+      &:checked:hover + label:before {
+        border-color: $text-color;
+        background: $text-color;
+      }
+
+      &:disabled + label {
+        color: #b8b8b8;
+        cursor: auto;
+      }
+
+      &:disabled + label:before {
+        border-color: $border-color !important;
+        background: #f7f5f4 !important;
+      }
+
+      &:checked:disabled + label::after {
+        content: url("/img/ic-tick-disabled.svg");
+      }
+
+      &:checked + label:after {
+        content: url("/img/ic-tick-dark.svg");
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    &-text {
+      font-size: 12px;
+      line-height: 14px;
+      color: $grey;
+    }
+  }
+
+  &__submit {
+    margin-top: 28px;
+    align-self: center;
+    min-width: 230px;
+    justify-content: center;
+    border-radius: 8px;
+  }
+}
+
+.date-info-m {
+  display: none;
+  max-width: 260px;
+  width: 100%;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+
+  &__btn-cancel {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  &__day {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 4px;
+  }
+
+  &__date {
+    font-size: 14px;
+    line-height: 22px;
+    margin-bottom: 17px;
+  }
+
+  &__timezone {
+    display: flex;
+    align-items: center;
+
+    &-earth {
+      margin-right: 6px;
+    }
+
+    &-text {
+      margin-right: 4px;
+      font-size: 10px;
+      line-height: 14px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .overlaying-popup {
+    padding: 24px 20px;
+  }
+
+  .talk-modal {
+    min-width: 90%;
+    max-width: 90%;
+
+    &_without-close-btn {
+      .talk-modal__body {
+        padding: 46px 24px 40px;
+      }
+    }
+
+    &__events {
+      max-width: 520px;
+
+      &-title {
+        text-align: center;
+        position: relative;
+      }
+
+      &-back {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+    }
+
+    &__participant {
+      max-width: 520px;
+    }
+
+    &__btn-back {
+      display: none;
+    }
+
+    &__body {
+      padding: 56px 24px 40px;
+    }
+
+    &__title {
+      font-size: 22px;
+      line-height: 28px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .talk-datepicker {
+    padding: 0 13.5px;
+    flex-direction: column;
+    gap: 0;
+    @include flex-gap(32px, 0);
+    align-items: center;
+
+    &__title {
+      span {
+        display: none;
+      }
+    }
+
+    &_with-schedule {
+      .talk-datepicker__calendar {
+        display: none;
+      }
+    }
+  }
+
+  .talk-schedule {
+    min-width: 260px;
+    padding-top: 0;
+
+    &__date {
+      display: none;
+    }
+
+    &__title {
+      display: block;
+    }
+  }
+
+  .date-info-m {
+    &_active {
+      display: flex;
+    }
+  }
+
+  .participant-form__submit {
+    font-size: 16px;
+    height: 52px;
+  }
+
+}
+
+@media (max-width: 460px) {
+  .talk-modal {
+    width: 335px;
+    max-width: 335px;
+    min-width: 335px;
+
+    &__title {
+      font-size: 18px;
+      line-height: 24px;
+      padding: 0;
+
+      &_mb-12 {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 12px;
+      }
+    }
+  }
+
+  .talk-event {
+    &__time {
+      flex: 1 1 100%;
+      margin-right: 24px;
+    }
+  }
+
+  .participant-form {
+    &__row {
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 12px;
+    }
+
+    &__input {
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .talk-modal__description {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+}
+
+@media (max-width: 390px) {
+  .talk-event {
+    &__time {
+      flex: 0 0 140px;
+    }
+  }
+
+  .participant-form__submit {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .overlaying-popup {
+    padding: 10px;
+  }
+
+  .talk-modal {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .talk-modal__body {
+    padding: 56px 10px 35px;
+  }
+
+  .talk-datepicker__main {
+    & .slds-datepicker th {
+      padding: 0;
+    }
+  }
+
+  .talk-event {
+    &__time {
+      flex: 0 1 140px;
+      margin-right: 10px;
+    }
+  }
+}

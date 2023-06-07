@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Field } from "formik";
 import classNames from "classnames";
 import Link from "@components/linkWithUTM";
 
 export const AgreementForm = ({
   formikProps,
-  complianceQuestionnaire,
+  complianceQuestionnaire = [],
   isCorporateEvent,
   screen = "MOBILE",
+  questionnaireArray,
 }) => {
   const validateQuestionnaire = (complianceQuestionnaire) => (value) => {
     let error;
@@ -28,6 +29,16 @@ export const AgreementForm = ({
     }
     return error;
   };
+
+  useEffect(() => {
+    if (
+      formikProps?.values?.questionnaire?.length === 0 &&
+      complianceQuestionnaire?.length > 0
+    ) {
+      formikProps.setFieldValue("questionnaire", questionnaireArray);
+    }
+  }, [questionnaireArray]);
+
   if (screen !== "MOBILE") {
     return (
       <>
@@ -205,7 +216,7 @@ export const AgreementForm = ({
         {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
           <>
             {complianceQuestionnaire.map((compliance) => (
-              <>
+              <React.Fragment key={compliance.questionSfid}>
                 <div className="agreement__group mt-3">
                   <Field
                     name="questionnaire"
@@ -261,7 +272,7 @@ export const AgreementForm = ({
                       {formikProps.errors.questionnaire}
                     </div>
                   )}
-              </>
+              </React.Fragment>
             ))}
             <div className="agreement__group tw-mt-3 tw-pl-3">
               <p className="agreement__text">

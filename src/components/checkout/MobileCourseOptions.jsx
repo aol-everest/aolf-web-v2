@@ -17,6 +17,12 @@ export const MobileCourseOptions = ({
   discount,
   showCouponCodeField,
   paymentOptionChange,
+  isUsableCreditAvailable,
+  UpdatedFeeAfterCredits,
+  isComboDetailAvailable,
+  values,
+  onComboDetailChange,
+  isCourseOptionRequired,
 }) => {
   const {
     premiumRate,
@@ -28,268 +34,408 @@ export const MobileCourseOptions = ({
     instalmentGap,
     instalmentAmount,
     groupedAddOnProducts,
+    usableCredit,
     addOnProducts = [],
+    id,
+    title,
+    availableBundles,
   } = workshop;
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+
   const isSilentRetreatType =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
-  const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+  const gatewayToInfinity =
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value === productTypeId;
+  const isMeditationDeluxe =
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value === productTypeId;
   const isJourneyPremium =
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
+
   return (
     <>
       <>
         <div className="order__card__payment d-block d-lg-none">
-          <h6 className="order__card__payment-title">Course options</h6>
-
-          {!isInstalmentAllowed && (
-            <>
-              {isSilentRetreatType && (
-                <div>
-                  {!isEarlyBirdAllowed && (
-                    <h1 className="title reciept__item reciept__item_main">
-                      <span>Register</span>
-                    </h1>
-                  )}
-                  {isEarlyBirdAllowed && (
-                    <p className="reciept__item reciept__item_main">
-                      <span>
-                        <img src="/img/ic-timer.svg" alt="timer" />
-                        Limited Time Offer:
-                      </span>
-                    </p>
-                  )}
-                  {!isJourneyPremium && !isJourneyPlus && (
-                    <ul className="reciept__payment_list">
-                      <div className="reciept__payment-option">
-                        <input
-                          className="custom-radio"
-                          type="radio"
-                          name="priceType"
-                          id="payment-lg-regular-card"
-                          value="regular"
-                          checked={formikProps.values.priceType === "regular"}
-                          onChange={formikProps.handleChange("priceType")}
-                        />
-                        <label htmlFor="payment-lg-regular-card">
-                          <span>Regular rate</span>
-                          <span>
+          {!isInstalmentAllowed &&
+            !isComboDetailAvailable &&
+            !isCourseOptionRequired && (
+              <>
+                {isMeditationDeluxe && (
+                  <div class="reciept reciept--box d-none d-lg-block">
+                    <div class="reciept__header">
+                      <p class="reciept__item reciept__item_main font-weight-normal">
+                        <span>
+                          <img src="/img/ic-timer.svg" alt="timer" />
+                          Limited Time Offer
+                        </span>
+                      </p>
+                      <ul class="reciept__item_list ">
+                        <li>
+                          <p class="font-weight-normal">Gateways to Infinity</p>
+                          <p class="font-weight-bold">
+                            <span class="discount font-weight-bold">
+                              [$590] [$90]
+                            </span>{" "}
+                            $0
+                          </p>
+                        </li>
+                        <li>
+                          <p class="font-weight-normal">
+                            SKY Breath Meditation
+                          </p>
+                          <p class="font-weight-bold">
                             {delfee && (
-                              <span className="discount">${delfee}</span>
+                              <span className="discount font-weight-bold">
+                                [${delfee}]
+                              </span>
                             )}{" "}
                             ${fee}
-                          </span>
-                        </label>
-                      </div>
-                      <div className="reciept__payment-option">
-                        <input
-                          className="custom-radio"
-                          type="radio"
-                          name="priceType"
-                          id="payment-lg-premium-card"
-                          checked={formikProps.values.priceType === "premium"}
-                          value="premium"
-                          onChange={formikProps.handleChange("priceType")}
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="reciept__details text-center">
+                      <a href="">
+                        <img
+                          src="/img/trustpilot-logo-mobile.png"
+                          width="129"
+                          height="61"
+                          alt="logo"
                         />
-                        <label htmlFor="payment-lg-premium-card">
-                          <span>Premium/Journey+ rate:</span>
-                          <span>
-                            {premiumRate &&
-                              premiumRate.listPrice &&
-                              premiumRate.listPrice !==
-                                premiumRate.unitPrice && (
-                                <span className="discount">
-                                  ${delfee || premiumRate.listPrice}
-                                </span>
-                              )}{" "}
-                            ${premiumRate.unitPrice}
-                          </span>
-                        </label>
-                      </div>
-                      {addOnProducts.map((product) => {
-                        if (
-                          !product.isExpenseAddOn ||
-                          (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                        ) {
-                          const isChecked = product.isAddOnSelectionRequired
-                            ? true
-                            : formikProps.values[product.productName];
-                          return (
-                            <li key={product.productSfid}>
-                              <span>
-                                {!product.isAddOnSelectionRequired && (
-                                  <input
-                                    type="checkbox"
-                                    className="custom-checkbox tw-w-auto"
-                                    placeholder=" "
-                                    checked={isChecked}
-                                    onChange={formikProps.handleChange(
-                                      product.productName,
-                                    )}
-                                    value={product.productName}
-                                    name={product.productName}
-                                    id={product.productSfid}
-                                    disabled={product.isAddOnSelectionRequired}
-                                  />
-                                )}
-                                <label htmlFor={product.productSfid}></label>
-                                <span className="ml-2">
-                                  {product.productName} Required:
-                                </span>
-                              </span>
-                              <span className="ml-2">${product.unitPrice}</span>
-                            </li>
-                          );
-                        }
-                      })}
-                      {!isJourneyPremium &&
-                        !isBasicMember &&
-                        !isJourneyPlus && (
-                          <li className="btn-item">
-                            <button
-                              className="btn-outline"
-                              onClick={openSubscriptionPaywallPage(
-                                MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
-                              )}
-                            >
-                              Join Journey+
-                            </button>
-                          </li>
-                        )}
-                    </ul>
-                  )}
-                  {(isJourneyPremium || isJourneyPlus) && (
-                    <ul className="reciept__payment_list">
-                      <li>
-                        <span>Premium/Journey+ rate:</span>
-                        {discount && discount.newPrice && (
-                          <span>
-                            <span className="discount">
-                              ${discount.oldPrice}
-                            </span>{" "}
-                            ${discount.newPrice}
-                          </span>
-                        )}
-                        {discount === null && premiumRate && (
-                          <span>
-                            {premiumRate &&
-                              premiumRate.listPrice &&
-                              premiumRate.listPrice !==
-                                premiumRate.unitPrice && (
-                                <span className="discount">
-                                  ${delfee || premiumRate.listPrice}
-                                </span>
-                              )}{" "}
-                            ${premiumRate.unitPrice}
-                          </span>
-                        )}
-                      </li>
-                      {addOnProducts.map((product) => {
-                        if (
-                          !product.isExpenseAddOn ||
-                          (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                        ) {
-                          const isChecked = product.isAddOnSelectionRequired
-                            ? true
-                            : formikProps.values[product.productName];
+                      </a>
 
-                          return (
-                            <li key={product.productSfid}>
-                              <span>
-                                {!product.isAddOnSelectionRequired && (
-                                  <input
-                                    type="checkbox"
-                                    className="custom-checkbox tw-w-auto"
-                                    placeholder=" "
-                                    checked={isChecked}
-                                    onChange={formikProps.handleChange(
-                                      product.productName,
-                                    )}
-                                    value={product.productName}
-                                    name={product.productName}
-                                    id={product.productSfid}
-                                    disabled={product.isAddOnSelectionRequired}
-                                  />
-                                )}
-                                <label htmlFor={product.productSfid}></label>
-                                <span className="ml-2">
-                                  {product.productName} Required:
-                                </span>
-                              </span>
-                              <span className="ml-2">${product.unitPrice}</span>
-                            </li>
-                          );
-                        }
-                      })}
-                    </ul>
-                  )}
-                </div>
-              )}
+                      <p class="comments__quote comments__quote--max-width mt-4">
+                        “I used to suffer from anxiety and my health was greatly
+                        affected by it. I feel so free and light now.”
+                        <span class="d-block mt-3 font-normal">
+                          - Millie I.
+                        </span>
+                      </p>
+                    </div>
 
-              {!isSilentRetreatType && (
-                <>
-                  <div className="reciept__header_v1 full-padding">
-                    {delfee && (
-                      <>
-                        <h1 className="title reciept__title_v1">
-                          Limited Time Offer: ${fee}
-                        </h1>
-                        <p className="price">
-                          Regular Course Fee:{" "}
-                          <span className="discount">${delfee}</span>
-                        </p>
-                      </>
-                    )}
-                    {!delfee && <p className="price">Course Fee: ${fee}</p>}
+                    <div class="reciept__more">
+                      Additional Notes: Housing will be offsite. Please contact
+                      the course coordinator for details, and to make
+                      arrangements.
+                      <a href="#">See more</a>
+                    </div>
                   </div>
-                  <ul className="reciept__payment_list">
-                    {addOnProducts.map((product) => {
-                      if (
-                        !product.isExpenseAddOn ||
-                        (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                      ) {
-                        const isChecked = product.isAddOnSelectionRequired
-                          ? true
-                          : formikProps.values[product.productName];
-
-                        return (
-                          <li key={product.productSfid}>
-                            <span>
-                              {!product.isAddOnSelectionRequired && (
-                                <input
-                                  type="checkbox"
-                                  className="custom-checkbox tw-w-auto"
-                                  placeholder=" "
-                                  checked={isChecked}
-                                  onChange={formikProps.handleChange(
-                                    product.productName,
-                                  )}
-                                  value={product.productName}
-                                  name={product.productName}
-                                  id={product.productSfid}
-                                  disabled={product.isAddOnSelectionRequired}
-                                />
-                              )}
-                              <label htmlFor={product.productSfid}></label>
-                              <span className="ml-2">
-                                {product.productName} Required:
+                )}
+                {gatewayToInfinity && (
+                  <div class="reciept reciept--box d-none d-lg-block">
+                    <div class="reciept__header">
+                      <p class="reciept__item reciept__item_main font-weight-normal">
+                        <span>
+                          <img src="/img/ic-timer.svg" alt="timer" />
+                          Limited Time Offer
+                        </span>
+                      </p>
+                      <ul class="reciept__item_list ">
+                        <li>
+                          <p class="font-weight-normal">Regular rate</p>
+                          <p class="font-weight-bold">
+                            {delfee && (
+                              <span className="discount font-weight-bold">
+                                [${delfee}]
                               </span>
+                            )}{" "}
+                            ${fee}
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="reciept__details text-center">
+                      <a href="">
+                        <img
+                          src="/img/trustpilot-logo-mobile.png"
+                          width="129"
+                          height="61"
+                          alt="logo"
+                        />
+                      </a>
+
+                      <p class="comments__quote comments__quote--max-width mt-4">
+                        “I used to suffer from anxiety and my health was greatly
+                        affected by it. I feel so free and light now.”
+                        <span class="d-block mt-3 font-normal">
+                          - Millie I.
+                        </span>
+                      </p>
+                    </div>
+
+                    <div class="reciept__more">
+                      Additional Notes: Housing will be offsite. Please contact
+                      the course coordinator for details, and to make
+                      arrangements.
+                      <a href="#">See more</a>
+                    </div>
+                  </div>
+                )}
+                {isSilentRetreatType ? (
+                  <div>
+                    {!isEarlyBirdAllowed && (
+                      <h1 className="title reciept__item reciept__item_main">
+                        <span>Register</span>
+                      </h1>
+                    )}
+                    {isEarlyBirdAllowed && (
+                      <p className="reciept__item reciept__item_main">
+                        <span>
+                          <img src="/img/ic-timer.svg" alt="timer" />
+                          Limited Time Offer:
+                        </span>
+                      </p>
+                    )}
+                    {!isJourneyPremium && !isJourneyPlus && (
+                      <ul className="reciept__payment_list">
+                        <div className="reciept__payment-option">
+                          <input
+                            className="custom-radio"
+                            type="radio"
+                            name="priceType"
+                            id="payment-lg-regular-card"
+                            value="regular"
+                            checked={formikProps.values.priceType === "regular"}
+                            onChange={formikProps.handleChange("priceType")}
+                          />
+                          <label htmlFor="payment-lg-regular-card">
+                            <span>Regular rate</span>
+                            <span>
+                              {delfee && (
+                                <span className="discount">${delfee}</span>
+                              )}{" "}
+                              ${fee}
                             </span>
-                            <span className="ml-2">${product.unitPrice}</span>
-                          </li>
-                        );
-                      }
-                    })}
-                  </ul>
-                </>
-              )}
-            </>
-          )}
+                          </label>
+                        </div>
+                        {!isUsableCreditAvailable && (
+                          <div className="reciept__payment-option">
+                            <input
+                              className="custom-radio"
+                              type="radio"
+                              name="priceType"
+                              id="payment-lg-premium-card"
+                              checked={
+                                formikProps.values.priceType === "premium"
+                              }
+                              value="premium"
+                              onChange={formikProps.handleChange("priceType")}
+                            />
+                            <label htmlFor="payment-lg-premium-card">
+                              <span>Premium/Journey+ rate:</span>
+                              <span>
+                                {premiumRate &&
+                                  premiumRate.listPrice &&
+                                  premiumRate.listPrice !==
+                                    premiumRate.unitPrice && (
+                                    <span className="discount">
+                                      ${delfee || premiumRate.listPrice}
+                                    </span>
+                                  )}{" "}
+                                ${premiumRate.unitPrice}
+                              </span>
+                            </label>
+                          </div>
+                        )}
+                        {isUsableCreditAvailable && (
+                          <div className="credit-text">
+                            {usableCredit.message} ${UpdatedFeeAfterCredits}.
+                          </div>
+                        )}
+                        {addOnProducts.map((product) => {
+                          if (
+                            !product.isExpenseAddOn ||
+                            (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                          ) {
+                            const isChecked = product.isAddOnSelectionRequired
+                              ? true
+                              : formikProps.values[product.productName];
+                            return (
+                              <li key={product.productSfid}>
+                                <span>
+                                  {!product.isAddOnSelectionRequired && (
+                                    <input
+                                      type="checkbox"
+                                      className="custom-checkbox tw-w-auto"
+                                      placeholder=" "
+                                      checked={isChecked}
+                                      onChange={formikProps.handleChange(
+                                        product.productName,
+                                      )}
+                                      value={product.productName}
+                                      name={product.productName}
+                                      id={product.productSfid}
+                                      disabled={
+                                        product.isAddOnSelectionRequired
+                                      }
+                                    />
+                                  )}
+                                  <label htmlFor={product.productSfid}></label>
+                                  <span className="ml-2">
+                                    {product.productName} Required:
+                                  </span>
+                                </span>
+                                <span className="ml-2">
+                                  ${product.unitPrice}
+                                </span>
+                              </li>
+                            );
+                          }
+                        })}
+                        {!isJourneyPremium &&
+                          !isBasicMember &&
+                          !isJourneyPlus &&
+                          !isUsableCreditAvailable && (
+                            <li className="btn-item">
+                              <button
+                                className="btn-outline"
+                                onClick={openSubscriptionPaywallPage(
+                                  MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+                                )}
+                              >
+                                Join Journey+
+                              </button>
+                            </li>
+                          )}
+                      </ul>
+                    )}
+                    {(isJourneyPremium || isJourneyPlus) && (
+                      <ul className="reciept__payment_list">
+                        <li>
+                          <span>Premium/Journey+ rate:</span>
+                          {discount && discount.newPrice && (
+                            <span>
+                              <span className="discount">
+                                ${discount.oldPrice}
+                              </span>{" "}
+                              ${discount.newPrice}
+                            </span>
+                          )}
+                          {!discount && premiumRate && (
+                            <span>
+                              {premiumRate &&
+                                premiumRate.listPrice &&
+                                premiumRate.listPrice !==
+                                  premiumRate.unitPrice && (
+                                  <span className="discount">
+                                    ${delfee || premiumRate.listPrice}
+                                  </span>
+                                )}{" "}
+                              ${premiumRate.unitPrice}
+                            </span>
+                          )}
+                        </li>
+                        {isUsableCreditAvailable && (
+                          <div className="credit-text">
+                            {usableCredit.message} ${UpdatedFeeAfterCredits}.
+                          </div>
+                        )}
+                        {addOnProducts.map((product) => {
+                          if (
+                            !product.isExpenseAddOn ||
+                            (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                          ) {
+                            const isChecked = product.isAddOnSelectionRequired
+                              ? true
+                              : formikProps.values[product.productName];
+
+                            return (
+                              <li key={product.productSfid}>
+                                <span>
+                                  {!product.isAddOnSelectionRequired && (
+                                    <input
+                                      type="checkbox"
+                                      className="custom-checkbox tw-w-auto"
+                                      placeholder=" "
+                                      checked={isChecked}
+                                      onChange={formikProps.handleChange(
+                                        product.productName,
+                                      )}
+                                      value={product.productName}
+                                      name={product.productName}
+                                      id={product.productSfid}
+                                      disabled={
+                                        product.isAddOnSelectionRequired
+                                      }
+                                    />
+                                  )}
+                                  <label htmlFor={product.productSfid}></label>
+                                  <span className="ml-2">
+                                    {product.productName} Required:
+                                  </span>
+                                </span>
+                                <span className="ml-2">
+                                  ${product.unitPrice}
+                                </span>
+                              </li>
+                            );
+                          }
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <div className="reciept__header_v1 full-padding">
+                      {delfee && (
+                        <>
+                          <h1 className="title reciept__title_v1">
+                            Limited Time Offer: ${fee}
+                          </h1>
+                          <p className="price">
+                            Regular Course Fee:{" "}
+                            <span className="discount">${delfee}</span>
+                          </p>
+                        </>
+                      )}
+                      {!delfee && <p className="price">Course Fee: ${fee}</p>}
+                    </div>
+                    <ul className="reciept__payment_list">
+                      {addOnProducts.map((product) => {
+                        if (
+                          !product.isExpenseAddOn ||
+                          (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                        ) {
+                          const isChecked = product.isAddOnSelectionRequired
+                            ? true
+                            : formikProps.values[product.productName];
+
+                          return (
+                            <li key={product.productSfid}>
+                              <span>
+                                {!product.isAddOnSelectionRequired && (
+                                  <input
+                                    type="checkbox"
+                                    className="custom-checkbox tw-w-auto"
+                                    placeholder=" "
+                                    checked={isChecked}
+                                    onChange={formikProps.handleChange(
+                                      product.productName,
+                                    )}
+                                    value={product.productName}
+                                    name={product.productName}
+                                    id={product.productSfid}
+                                    disabled={product.isAddOnSelectionRequired}
+                                  />
+                                )}
+                                <label htmlFor={product.productSfid}></label>
+                                <span className="ml-2">
+                                  {product.productName} Required:
+                                </span>
+                              </span>
+                              <span className="ml-2">${product.unitPrice}</span>
+                            </li>
+                          );
+                        }
+                      })}
+                    </ul>
+                  </>
+                )}
+              </>
+            )}
         </div>
 
         {hasGroupedAddOnProducts && (
@@ -383,10 +529,6 @@ export const MobileCourseOptions = ({
             )}
           </div>
         )}
-        <div className="order__card__total d-lg-none">
-          <span>Total</span>
-          <span>${totalFee}</span>
-        </div>
       </>
       {isInstalmentAllowed && (
         <div className="order__card__payment d-block d-lg-none">
@@ -441,6 +583,68 @@ export const MobileCourseOptions = ({
             </div>
           )}
         </div>
+      )}
+      {isComboDetailAvailable && (
+        <>
+          <div className="reciept__payment reciept__header d-block d-lg-none">
+            <div className="reciept__payment-option">
+              <input
+                className="custom-radio"
+                type="radio"
+                name="payment"
+                id={id}
+                checked={
+                  values.comboDetailId ? values.comboDetailId === id : true
+                }
+                onChange={() => onComboDetailChange(formikProps, id)}
+              />
+              <label htmlFor="payment-lg-meditation">
+                <span>{title}:</span>
+                <span>
+                  {delfee && <span className="discount">${delfee}</span>} ${fee}
+                </span>
+              </label>
+            </div>
+            {availableBundles.map((availableBundle) => {
+              const isChecked =
+                values.comboDetailId === availableBundle.comboProductSfid;
+              return (
+                <>
+                  <div className="reciept__payment-option reciept__payment-option_special-offer">
+                    <span className="special-offer">Special Offer</span>
+                    <input
+                      className="custom-radio"
+                      type="radio"
+                      name="payment"
+                      id={availableBundle.comboProductSfid}
+                      checked={isChecked}
+                      onChange={() =>
+                        onComboDetailChange(
+                          formikProps,
+                          availableBundle.comboProductSfid,
+                        )
+                      }
+                    />
+                    <label htmlFor="payment-lg-retreat">
+                      <span>{availableBundle.comboName}:</span>
+                      <span className="d-flex">
+                        {availableBundle.comboListPrice && (
+                          <span className="discount">
+                            ${availableBundle.comboListPrice}
+                          </span>
+                        )}{" "}
+                        ${availableBundle.comboUnitPrice}
+                      </span>
+                    </label>
+                  </div>
+                  <div className="reciept__payment-tooltip">
+                    {availableBundle.comboDescription || ""}
+                  </div>
+                </>
+              );
+            })}
+          </div>
+        </>
       )}
     </>
   );

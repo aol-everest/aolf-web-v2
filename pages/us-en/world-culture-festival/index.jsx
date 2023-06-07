@@ -101,8 +101,6 @@ function WorldCultureFestival() {
 
   const handleSubmit = useCallback(async (values) => {
     setLoading(true);
-    console.log("Submitting form!!!!");
-    // console.log(values);
     try {
       track("attempted_purchase_ticket", {
         screen_name: "wcf_registration_get_tickets_page",
