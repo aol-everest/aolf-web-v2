@@ -822,33 +822,30 @@ export const MeetupPaymentForm = ({
                         )}
                         {unitPrice === listPrice && <span>${unitPrice}</span>}
                       </li>
-                      {mode !== "In Person" && (
-                        <>
-                          <li>
-                            <span>Member rate:</span>
-                            {memberPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {memberPrice}
-                              </span>
-                            )}
-                            {memberPrice === listPrice && (
-                              <span>${memberPrice}</span>
-                            )}
-                          </li>
 
-                          <li className="btn-item">
-                            <button
-                              className="btn-outline"
-                              onClick={openSubscriptionPaywallPage(
-                                MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                              )}
-                            >
-                              Join Digital Membership
-                            </button>
-                          </li>
-                        </>
-                      )}
+                      <li>
+                        <span>Member rate:</span>
+                        {memberPrice !== listPrice && (
+                          <span>
+                            <span className="discount">${listPrice}</span> $
+                            {memberPrice}
+                          </span>
+                        )}
+                        {memberPrice === listPrice && (
+                          <span>${memberPrice}</span>
+                        )}
+                      </li>
+
+                      <li className="btn-item">
+                        <button
+                          className="btn-outline"
+                          onClick={openSubscriptionPaywallPage(
+                            MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                          )}
+                        >
+                          Join Digital Membership
+                        </button>
+                      </li>
                     </ul>
                   )}
 
