@@ -10,7 +10,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { replaceRouteWithUTMQuery } from "@service";
 import { useQueryString } from "@hooks";
 
-import { useAuth, useGlobalModalContext } from "@contexts";
+import { useGlobalModalContext } from "@contexts";
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
 
 const SchedulingPayment = () => {
@@ -101,8 +101,8 @@ const SchedulingPayment = () => {
               .email("Email is invalid!")
               .required("Email is required!"),
             contactAddress: Yup.string().required("Address is required"),
-            contactCity: Yup.string(),
-            contactState: Yup.string(),
+            contactCity: Yup.string().required("City is required!"),
+            contactState: Yup.string().required("State is required!"),
             contactZip: Yup.string()
               //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
               .min(2, "Zip is invalid")

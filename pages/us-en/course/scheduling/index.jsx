@@ -38,11 +38,6 @@ const SchedulingRange = () => {
       text: "Pacific Time - US & Canada",
       filterValue: "PST",
     },
-    {
-      timezone: "US/Hawaii",
-      text: "Hawaii Time - US",
-      filterValue: "HST",
-    },
   ];
 
   useEffect(() => {
@@ -55,6 +50,7 @@ const SchedulingRange = () => {
           org: "AOL",
           timingsRequired: true,
           mode: "online",
+          ctype: 811569,
         },
       });
       if (response?.data) {
