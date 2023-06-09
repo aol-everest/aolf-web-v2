@@ -43,7 +43,8 @@ const SchedulingPayment = () => {
     }
   }, [workshopId]);
 
-  const { complianceQuestionnaire, title, showPrice } = workshop || {};
+  const { complianceQuestionnaire, title, unitPrice, showPrice } =
+    workshop || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -551,7 +552,8 @@ const SchedulingPayment = () => {
                               </div>
                               <div className="col-4 text-right">
                                 <p className="scheduling__text-black">
-                                  <strong>${showPrice}</strong> <i>plus tax</i>
+                                  <strong>${unitPrice || showPrice}</strong>{" "}
+                                  <i>plus tax</i>
                                 </p>
                               </div>
                             </div>
