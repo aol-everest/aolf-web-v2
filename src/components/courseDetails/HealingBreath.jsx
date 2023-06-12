@@ -2,42 +2,23 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
+import { Link } from "react-scroll";
 import { useRouter } from "next/router";
 import CourseDetailsCard from "./CourseDetailsCard";
 import { ResearchPaginationHB } from "./ResearchPaginationHB";
-import { Comment } from "./Comment";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { RegisterPanel } from "./RegisterPanel";
 import { CourseBottomCard } from "./CourseBottomCard";
 import queryString from "query-string";
-import {
-  useAuth,
-  useGlobalAlertContext,
-  useGlobalModalContext,
-} from "@contexts";
-import { ABBRS, COURSE_TYPES, ALERT_TYPES, MODAL_TYPES } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import { COURSE_TYPES, MODAL_TYPES } from "@constants";
 import { HideOn } from "@components";
-import { priceCalculation } from "@utils";
 import { pushRouteWithUTMQuery } from "@service";
 
 export const HealingBreath = ({ data, swiperOption }) => {
-  const { authenticated = false, user } = useAuth();
-  const { showAlert } = useGlobalAlertContext();
+  const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
 
   const { title, workshopTotalHours, mode, sfid, productTypeId } = data || {};
-
-  const showResearchModal = (e) => {
-    if (e) e.preventDefault();
-    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Success",
-      children: <ResearchFindingSource />,
-      className: "research-detail-modal",
-      hideConfirm: true,
-    });
-  };
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -71,8 +52,6 @@ export const HealingBreath = ({ data, swiperOption }) => {
       clickable: true,
     },
   };
-
-  const { fee, delfee, offering } = priceCalculation({ workshop: data });
 
   return (
     <>
