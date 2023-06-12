@@ -252,7 +252,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
           </div>
           <div className="comments__video">
             <iframe
-              src="https://www.dropbox.com/s/ebiy5vaba9z228c/testimonials-childrensNatnl-%28short%29_v4.1.mp4?raw=1"
+              src="https://player.vimeo.com/video/555823694"
               width="100%"
               height="100%"
               frameBorder="0"
@@ -266,7 +266,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
             </h2>
           </div>
           <Swiper className="px-3 px-lg-0 comments__item_new" {...swiperOption}>
-            <SwiperSlide class="swiper-slide">
+            <SwiperSlide className="swiper-slide">
               <div className="comments__text">
                 <p>
                   I feel humane. I have all the clinical skills to teach me not
@@ -281,7 +281,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               </p>
             </SwiperSlide>
 
-            <SwiperSlide class="swiper-slide">
+            <SwiperSlide className="swiper-slide">
               <div className="comments__text">
                 <p>
                   The providers thoroughly enjoyed the class and found the
@@ -298,7 +298,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               </p>
             </SwiperSlide>
 
-            <SwiperSlide class="swiper-slide">
+            <SwiperSlide className="swiper-slide">
               <div className="comments__text">
                 <p>
                   Fabulous! Excellent! Very Positive! I will recomment it to
@@ -313,7 +313,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               </p>
             </SwiperSlide>
 
-            <SwiperSlide class="swiper-slide">
+            <SwiperSlide className="swiper-slide">
               <div className="comments__text">
                 <p>
                   This course was an eye opener for me. I have never experienced
@@ -328,7 +328,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               </p>
             </SwiperSlide>
 
-            <SwiperSlide class="swiper-slide">
+            <SwiperSlide className="swiper-slide">
               <div className="comments__text">
                 <p>
                   A lot of us deal with very sick patients, with very needy
@@ -344,7 +344,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               </p>
             </SwiperSlide>
 
-            <SwiperSlide class="swiper-slide">
+            <SwiperSlide className="swiper-slide">
               <div className="comments__text">
                 <p>
                   I am now committed to myself and to make this program work for
@@ -484,7 +484,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
               className="d-lg-none research__list-container swiper-container"
               {...autoSwiperOption}
             >
-              <SwiperSlide class="research__list-item swiper-slide">
+              <SwiperSlide className="research__list-item swiper-slide">
                 <p
                   className="research__quote"
                   onClick={() =>
@@ -499,7 +499,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   <img src="/img/yale-news-color.png" alt="ljoy" />
                 </div>
               </SwiperSlide>
-              <SwiperSlide class="research__list-item swiper-slide">
+              <SwiperSlide className="research__list-item swiper-slide">
                 <p
                   className="research__quote"
                   onClick={() =>
@@ -514,7 +514,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   <img src="/img/stanford-news-color.png" alt="sabr" />
                 </div>
               </SwiperSlide>
-              <SwiperSlide class="research__list-item swiper-slide">
+              <SwiperSlide className="research__list-item swiper-slide">
                 <p
                   className="research__quote"
                   onClick={() =>
