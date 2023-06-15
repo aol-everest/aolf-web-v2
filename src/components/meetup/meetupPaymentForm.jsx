@@ -111,7 +111,7 @@ export const MeetupPaymentForm = ({
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
       query: {
-        cid: meetup.sfid,
+        mid: meetup.sfid,
         page: "checkout",
       },
     });
