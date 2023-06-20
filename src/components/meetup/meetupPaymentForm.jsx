@@ -111,7 +111,7 @@ export const MeetupPaymentForm = ({
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
       query: {
-        cid: meetup.sfid,
+        mid: meetup.sfid,
         page: "checkout",
       },
     });
@@ -156,9 +156,6 @@ export const MeetupPaymentForm = ({
       contactState,
       contactZip,
       couponCode,
-      firstName,
-      lastName,
-      paymentOption,
       paymentMode,
       accommodation,
     } = values;
@@ -256,13 +253,7 @@ export const MeetupPaymentForm = ({
       return null;
     }
 
-    const {
-      sfid: productId,
-      isCCNotRequired,
-      availableTimings,
-      isGenericWorkshop,
-      addOnProducts,
-    } = meetup;
+    const { sfid: productId, isCCNotRequired, addOnProducts } = meetup;
 
     const { isCreditCardRequired } = discountResponse || {};
     const {
@@ -275,9 +266,7 @@ export const MeetupPaymentForm = ({
       couponCode,
       firstName,
       lastName,
-      paymentOption,
       paymentMode,
-      accommodation,
     } = values;
 
     if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
@@ -389,7 +378,6 @@ export const MeetupPaymentForm = ({
   const {
     id: productId,
     premiumRate = {},
-    notes,
     isCorporateEvent,
     otherPaymentOptions,
     groupedAddOnProducts,
@@ -399,17 +387,12 @@ export const MeetupPaymentForm = ({
     eventEndDate,
     meetupStartDateTime,
     meetupStartTime,
-    email: contactEmail,
     phone1,
     phone2,
     primaryTeacherName,
     coTeacher1Name,
     coTeacher2Name,
     meetupTitle,
-    productTypeId,
-    description,
-    isCCNotRequired,
-    contactPersonName1,
     listPrice,
     unitPrice,
     eventTimeZone,
@@ -435,6 +418,9 @@ export const MeetupPaymentForm = ({
 
   const isDigitalMember =
     !!userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value];
+
+  const isJourneyPlus =
+    !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
   const { fee, delfee, offering } = priceCalculation({
     meetup,
@@ -810,20 +796,98 @@ export const MeetupPaymentForm = ({
                       RSVP:
                     </span>
                   </p>
-                  {!isDigitalMember && (
-                    <ul className="reciept__item_list">
-                      <li>
-                        <span>Regular rate:</span>
-                        {unitPrice !== listPrice && (
-                          <span>
-                            <span className="discount">${listPrice}</span> $
-                            {unitPrice}
-                          </span>
-                        )}
-                        {unitPrice === listPrice && <span>${unitPrice}</span>}
-                      </li>
-                      {mode !== "In Person" && (
-                        <>
+                  {mode === "In Person" ? (
+                    <>
+                      {!isJourneyPlus && (
+                        <ul className="reciept__item_list">
+                          <li>
+                            <span>Regular rate:</span>
+                            {unitPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {unitPrice}
+                              </span>
+                            )}
+                            {unitPrice === listPrice && (
+                              <span>${unitPrice}</span>
+                            )}
+                          </li>
+
+                          <li>
+                            <span>Member rate:</span>
+                            {memberPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {memberPrice}
+                              </span>
+                            )}
+                            {memberPrice === listPrice && (
+                              <span>${memberPrice}</span>
+                            )}
+                          </li>
+
+                          <li className="btn-item">
+                            <button
+                              className="btn-outline"
+                              onClick={openSubscriptionPaywallPage(
+                                MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+                              )}
+                            >
+                              Join Journey +
+                            </button>
+                          </li>
+                        </ul>
+                      )}
+                      {isJourneyPlus && isSubscriptionOfferingUsed && (
+                        <ul className="reciept__item_list">
+                          <li>
+                            <span>Member rate:</span>
+                            {memberPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {memberPrice}
+                              </span>
+                            )}
+                            {memberPrice === listPrice && (
+                              <span>${memberPrice}</span>
+                            )}
+                          </li>
+                        </ul>
+                      )}
+                      {isJourneyPlus && !isSubscriptionOfferingUsed && (
+                        <ul className="reciept__item_list">
+                          <li>
+                            <span>Member rate:</span>
+                            {unitPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {unitPrice}
+                              </span>
+                            )}
+                            {unitPrice === listPrice && (
+                              <span>${unitPrice}</span>
+                            )}
+                          </li>
+                        </ul>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {!isDigitalMember && (
+                        <ul className="reciept__item_list">
+                          <li>
+                            <span>Regular rate:</span>
+                            {unitPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {unitPrice}
+                              </span>
+                            )}
+                            {unitPrice === listPrice && (
+                              <span>${unitPrice}</span>
+                            )}
+                          </li>
+
                           <li>
                             <span>Member rate:</span>
                             {memberPrice !== listPrice && (
@@ -847,41 +911,41 @@ export const MeetupPaymentForm = ({
                               Join Digital Membership
                             </button>
                           </li>
-                        </>
+                        </ul>
                       )}
-                    </ul>
-                  )}
-
-                  {isDigitalMember && isSubscriptionOfferingUsed && (
-                    <ul className="reciept__item_list">
-                      <li>
-                        <span>Member rate:</span>
-                        {memberPrice !== listPrice && (
-                          <span>
-                            <span className="discount">${listPrice}</span> $
-                            {memberPrice}
-                          </span>
-                        )}
-                        {memberPrice === listPrice && (
-                          <span>${memberPrice}</span>
-                        )}
-                      </li>
-                    </ul>
-                  )}
-
-                  {isDigitalMember && !isSubscriptionOfferingUsed && (
-                    <ul className="reciept__item_list">
-                      <li>
-                        <span>Member rate:</span>
-                        {unitPrice !== listPrice && (
-                          <span>
-                            <span className="discount">${listPrice}</span> $
-                            {unitPrice}
-                          </span>
-                        )}
-                        {unitPrice === listPrice && <span>${unitPrice}</span>}
-                      </li>
-                    </ul>
+                      {isDigitalMember && isSubscriptionOfferingUsed && (
+                        <ul className="reciept__item_list">
+                          <li>
+                            <span>Member rate:</span>
+                            {memberPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {memberPrice}
+                              </span>
+                            )}
+                            {memberPrice === listPrice && (
+                              <span>${memberPrice}</span>
+                            )}
+                          </li>
+                        </ul>
+                      )}
+                      {isDigitalMember && !isSubscriptionOfferingUsed && (
+                        <ul className="reciept__item_list">
+                          <li>
+                            <span>Member rate:</span>
+                            {unitPrice !== listPrice && (
+                              <span>
+                                <span className="discount">${listPrice}</span> $
+                                {unitPrice}
+                              </span>
+                            )}
+                            {unitPrice === listPrice && (
+                              <span>${unitPrice}</span>
+                            )}
+                          </li>
+                        </ul>
+                      )}
+                    </>
                   )}
                 </div>
                 <div className="reciept__details">

@@ -1,4 +1,3 @@
-import { ABBRS, MODAL_TYPES } from "@constants";
 import { api, tConvert } from "@utils";
 import { groupBy } from "lodash";
 import dayjs from "dayjs";
@@ -10,7 +9,7 @@ import Flatpickr from "react-flatpickr";
 import { pushRouteWithUTMQuery } from "@service";
 
 const SchedulingRange = () => {
-  const { showModal, hideModal } = useGlobalModalContext();
+  const { hideModal } = useGlobalModalContext();
   const router = useRouter();
   const [timezoneFilter, setTimezoneFilter] = useState("EST");
   const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
@@ -50,6 +49,8 @@ const SchedulingRange = () => {
           sdate: selectedDates?.[0],
           org: "AOL",
           timingsRequired: true,
+          mode: "online",
+          ctype: 811569,
         },
       });
       if (response?.data) {
@@ -61,22 +62,6 @@ const SchedulingRange = () => {
       getWorshops();
     }
   }, [selectedDates, timezoneFilter]);
-
-  function changeTimeZone(date, timeZone) {
-    if (typeof date === "string") {
-      return new Date(
-        new Date(date).toLocaleString("en-US", {
-          timeZone,
-        }),
-      );
-    }
-    const finalDate = date.toLocaleString("en-US", {
-      timeZone,
-      timeStyle: "short",
-    });
-
-    return finalDate;
-  }
 
   const handleDateChange = (date) => {
     const selectedDate = moment(date).format("YYYY-MM-DD");
