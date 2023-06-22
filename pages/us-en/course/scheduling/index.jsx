@@ -223,8 +223,8 @@ const SchedulingRange = () => {
                                                 .utc(time.startDate)
                                                 .format("ddd Do")}
                                             </strong>{" "}
-                                            {tConvert(time.startTime)} -{" "}
-                                            {tConvert(time.endTime)}
+                                            {tConvert(time.startTime, true)} -{" "}
+                                            {tConvert(time.endTime, true)}
                                           </li>
                                         );
                                       })}
