@@ -7,7 +7,12 @@ import { useAuth } from "@contexts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useGlobalModalContext } from "@contexts";
-import { MEMBERSHIP_TYPES, COURSE_TYPES, MODAL_TYPES } from "@constants";
+import {
+  MEMBERSHIP_TYPES,
+  COURSE_TYPES,
+  MODAL_TYPES,
+  ALLOW_GUEST_LOGIN_CTYPE,
+} from "@constants";
 import { pushRouteWithUTMQuery } from "@service";
 import queryString from "query-string";
 
@@ -60,7 +65,7 @@ export const RegisterPanel = ({ workshop }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated) {
+    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.indexOf(productTypeId) >= 0) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
