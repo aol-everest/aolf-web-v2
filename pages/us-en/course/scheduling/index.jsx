@@ -1,6 +1,5 @@
 import { api, tConvert } from "@utils";
 import { groupBy } from "lodash";
-
 import dayjs from "dayjs";
 import moment from "moment";
 import { useGlobalModalContext } from "@contexts";
@@ -9,9 +8,10 @@ import React, { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 import { pushRouteWithUTMQuery } from "@service";
 
+var advancedFormat = require("dayjs/plugin/advancedFormat");
+dayjs.extend(advancedFormat);
+
 const SchedulingRange = () => {
-  var advancedFormat = require("dayjs/plugin/advancedFormat");
-  dayjs.extend(advancedFormat);
   const { hideModal } = useGlobalModalContext();
   const router = useRouter();
   const [timezoneFilter, setTimezoneFilter] = useState("EST");
