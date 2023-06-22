@@ -5,7 +5,12 @@ import Image from "next/image";
 import Link from "@components/linkWithUTM";
 import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
-import { MODAL_TYPES, ABBRS, COURSE_TYPES } from "@constants";
+import {
+  MODAL_TYPES,
+  ABBRS,
+  COURSE_TYPES,
+  ALLOW_GUEST_LOGIN_CTYPE,
+} from "@constants";
 import classNames from "classnames";
 import { pushRouteWithUTMQuery } from "@service";
 import queryString from "query-string";
@@ -32,7 +37,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
   } = data || {};
 
   const enrollAction = (workshopId, productTypeId) => () => {
-    if (authenticated) {
+    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {

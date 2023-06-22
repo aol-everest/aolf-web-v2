@@ -11,10 +11,12 @@ import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useAnalytics } from "use-analytics";
+import queryString from "query-string";
 import {
   COURSE_TYPES,
   MODAL_TYPES,
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
+  ALLOW_GUEST_LOGIN_CTYPE,
 } from "@constants";
 import { withAuth } from "@hoc";
 import { PageLoading } from "@components";
@@ -67,8 +69,18 @@ const validateStudentEmail = (email) => {
 
 const Checkout = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, authenticated } = useAuth();
   const { id: workshopId, coupon } = router.query;
+  const [mbsy_source] = useQueryString("mbsy_source");
+  const [campaignid] = useQueryString("campaignid");
+  const [mbsy] = useQueryString("mbsy");
+  const { showAlert, hideAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
+  const [showTopMessage, setShowTopMessage] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [comboProductSfid, setComboProductSfid] = useState("");
+  const { track } = useAnalytics();
+
   const {
     data: workshop,
     isLoading,
@@ -88,20 +100,26 @@ const Checkout = () => {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: !!workshopId,
     },
   );
 
-  const [mbsy_source] = useQueryString("mbsy_source");
-  const [campaignid] = useQueryString("campaignid");
-  const [mbsy] = useQueryString("mbsy");
-  const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { showModal } = useGlobalModalContext();
-  const [showTopMessage, setShowTopMessage] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [comboProductSfid, setComboProductSfid] = useState("");
-  const { track } = useAnalytics();
-
   useEffect(() => {
+    if (
+      workshop &&
+      !authenticated &&
+      !ALLOW_GUEST_LOGIN_CTYPE.includes(workshop.productTypeId)
+    ) {
+      pushRouteWithUTMQuery(router, {
+        pathname: "/login",
+        query: {
+          next: router.asPath,
+        },
+      });
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
     if (!user || !workshop) return;
 
     const {
@@ -151,7 +169,7 @@ const Checkout = () => {
       },
     });
 
-    if (!isPreRequisiteCompleted) {
+    if (isPreRequisiteCompleted === false) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big",
         title: "Retreat Prerequisite",
@@ -203,6 +221,10 @@ const Checkout = () => {
     });
   };
 
+  const login = () => {
+    showModal(MODAL_TYPES.LOGIN_MODAL);
+  };
+
   const handleCouseSelection = (selectedId) => {
     if (selectedId === workshop.id) {
       setComboProductSfid("");
@@ -212,7 +234,7 @@ const Checkout = () => {
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !workshopId) return <PageLoading />;
 
   const stripePromise = loadStripe(workshop.publishableKey);
 
@@ -241,9 +263,11 @@ const Checkout = () => {
       return (
         <PaymentFormHB
           workshop={workshop}
-          profile={user.profile}
+          profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
           handleCouseSelection={handleCouseSelection}
+          login={login}
+          isLoggedUser={authenticated}
         />
       );
     }
@@ -257,18 +281,22 @@ const Checkout = () => {
       return (
         <PaymentForm
           workshop={workshop}
-          profile={user.profile}
+          profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
           handleCouseSelection={handleCouseSelection}
+          login={login}
+          isLoggedUser={authenticated}
         />
       );
     }
     return (
       <PaymentFormGeneric
         workshop={workshop}
-        profile={user.profile}
+        profile={user?.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
         handleCouseSelection={handleCouseSelection}
+        login={login}
+        isLoggedUser={authenticated}
       />
     );
   };
@@ -278,7 +306,7 @@ const Checkout = () => {
     isStudentVerified,
     studentVerificationDate,
     studentVerificationExpiryDate,
-  } = user.profile;
+  } = user?.profile || {};
 
   const handleVerifyStudentEmail = async () => {
     setLoading(true);
@@ -320,6 +348,7 @@ const Checkout = () => {
   };
 
   const showVerifyStudentStatus =
+    user?.profile &&
     validateStudentEmail(email) &&
     workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||
@@ -464,4 +493,4 @@ const Checkout = () => {
 
 Checkout.hideHeader = true;
 
-export default withAuth(Checkout);
+export default Checkout;

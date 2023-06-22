@@ -75,10 +75,6 @@
   }
 }
 
-.flatpickr-current-month {
-  display: flex !important;
-}
-
 .flatpickr-prev-month {
   left: 78% !important;
   max-width: min-content !important;
@@ -131,6 +127,6 @@
 .arrowDown {
   display: none !important;
 }
-.flatpickr-input{
+.flatpickr-input {
   display: none;
 }

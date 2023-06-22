@@ -56,7 +56,7 @@
 }
 
 .scheduling-modal {
-  margin: auto;
+  margin: 0;
   background-color: $white;
 
   min-width: 550px;
@@ -93,7 +93,7 @@
       }
     }
   }
-  
+
   .agreement,
   .health-confirmation {
     &__group {
@@ -192,5 +192,3 @@
     padding: 0;
   }
 }
-
-
