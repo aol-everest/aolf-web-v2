@@ -70,6 +70,16 @@ const Checkout = () => {
   const router = useRouter();
   const { user, authenticated } = useAuth();
   const { id: workshopId, coupon } = router.query;
+  const [mbsy_source] = useQueryString("mbsy_source");
+  const [campaignid] = useQueryString("campaignid");
+  const [mbsy] = useQueryString("mbsy");
+  const { showAlert, hideAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
+  const [showTopMessage, setShowTopMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [comboProductSfid, setComboProductSfid] = useState("");
+  const { track } = useAnalytics();
+
   const {
     data: workshop,
     isLoading,
@@ -89,18 +99,9 @@ const Checkout = () => {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: !!workshopId,
     },
   );
-
-  const [mbsy_source] = useQueryString("mbsy_source");
-  const [campaignid] = useQueryString("campaignid");
-  const [mbsy] = useQueryString("mbsy");
-  const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { showModal } = useGlobalModalContext();
-  const [showTopMessage, setShowTopMessage] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [comboProductSfid, setComboProductSfid] = useState("");
-  const { track } = useAnalytics();
 
   useEffect(() => {
     if (!user || !workshop) return;
@@ -152,7 +153,7 @@ const Checkout = () => {
       },
     });
 
-    if (!isPreRequisiteCompleted) {
+    if (isPreRequisiteCompleted === false) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: "retreat-prerequisite-big",
         title: "Retreat Prerequisite",
@@ -217,7 +218,7 @@ const Checkout = () => {
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !workshopId) return <PageLoading />;
 
   const stripePromise = loadStripe(workshop.publishableKey);
 
