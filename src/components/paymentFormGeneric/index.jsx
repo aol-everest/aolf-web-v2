@@ -362,6 +362,7 @@ export const PaymentFormGeneric = ({
       paymentOption,
       paymentMode,
       accommodation,
+      email,
     } = values;
 
     if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
