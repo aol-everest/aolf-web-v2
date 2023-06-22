@@ -37,7 +37,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
   } = data || {};
 
   const enrollAction = (workshopId, productTypeId) => () => {
-    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.indexOf(productTypeId) >= 0) {
+    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {

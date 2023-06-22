@@ -16,6 +16,7 @@ import {
   COURSE_TYPES,
   MODAL_TYPES,
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
+  ALLOW_GUEST_LOGIN_CTYPE,
 } from "@constants";
 import { withAuth } from "@hoc";
 import { PageLoading } from "@components";
@@ -76,7 +77,7 @@ const Checkout = () => {
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [comboProductSfid, setComboProductSfid] = useState("");
   const { track } = useAnalytics();
 
@@ -104,6 +105,21 @@ const Checkout = () => {
   );
 
   useEffect(() => {
+    if (
+      workshop &&
+      !authenticated &&
+      !ALLOW_GUEST_LOGIN_CTYPE.includes(workshop.productTypeId)
+    ) {
+      pushRouteWithUTMQuery(router, {
+        pathname: "/login",
+        query: {
+          next: router.asPath,
+        },
+      });
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
     if (!user || !workshop) return;
 
     const {
