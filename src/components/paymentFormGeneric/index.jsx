@@ -72,6 +72,8 @@ export const PaymentFormGeneric = ({
   profile = {},
   enrollmentCompletionAction = () => {},
   handleCouseSelection = () => {},
+  login = () => {},
+  isLoggedUser = false,
 }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
@@ -380,12 +382,12 @@ export const PaymentFormGeneric = ({
       let tokenizeCC = null;
       if (
         !isCCNotRequired &&
-        (paymentMethod.type !== "card" || isChangingCard) &&
+        (paymentMethod.type !== "card" || isChangingCard || !isLoggedUser) &&
         isCreditCardRequired !== false
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile.name ? profile.name : firstName + " " + lastName,
+          name: profile?.name ? profile.name : firstName + " " + lastName,
         });
         let { error, token } = createTokenRespone;
         if (error) {
@@ -469,6 +471,17 @@ export const PaymentFormGeneric = ({
           shoppingRequest: {
             ...payLoad.shoppingRequest,
             doNotStoreCC: true,
+          },
+        };
+      }
+
+      if (!isLoggedUser) {
+        payLoad = {
+          ...payLoad,
+          user: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
           },
         };
       }
@@ -744,6 +757,7 @@ export const PaymentFormGeneric = ({
         validationSchema={Yup.object().shape({
           firstName: Yup.string().required("First Name is required"),
           lastName: Yup.string().required("Last Name is required"),
+          email: Yup.string().required("Email is required").email(),
           contactPhone: Yup.string()
             .label("Phone")
             .required("Phone is required")
@@ -852,12 +866,22 @@ export const PaymentFormGeneric = ({
                 <form className="order__form" onSubmit={handleSubmit}>
                   <div className="details">
                     <h2 className="details__title">Account Details:</h2>
-                    <p className="details__content">
-                      This is not your account?{" "}
-                      <a href="#" className="link" onClick={logout}>
-                        Logout
-                      </a>
-                    </p>
+                    {isLoggedUser && (
+                      <p className="details__content">
+                        This is not your account?{" "}
+                        <a href="#" className="link" onClick={logout}>
+                          Logout
+                        </a>
+                      </p>
+                    )}
+                    {!isLoggedUser && (
+                      <p className="details__content">
+                        Already have an Account?{" "}
+                        <a href="#" className="link" onClick={login}>
+                          Login
+                        </a>
+                      </p>
+                    )}
                   </div>
                   <div className="order__card">
                     <UserInfoForm formikProps={formikProps} />

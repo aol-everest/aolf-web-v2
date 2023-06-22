@@ -11,6 +11,7 @@ import { ALERT_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
 import { useAnalytics } from "use-analytics";
+import queryString from "query-string";
 import {
   COURSE_TYPES,
   MODAL_TYPES,
@@ -67,7 +68,7 @@ const validateStudentEmail = (email) => {
 
 const Checkout = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, authenticated } = useAuth();
   const { id: workshopId, coupon } = router.query;
   const {
     data: workshop,
@@ -203,6 +204,10 @@ const Checkout = () => {
     });
   };
 
+  const login = () => {
+    showModal(MODAL_TYPES.LOGIN_MODAL);
+  };
+
   const handleCouseSelection = (selectedId) => {
     if (selectedId === workshop.id) {
       setComboProductSfid("");
@@ -241,9 +246,11 @@ const Checkout = () => {
       return (
         <PaymentFormHB
           workshop={workshop}
-          profile={user.profile}
+          profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
           handleCouseSelection={handleCouseSelection}
+          login={login}
+          isLoggedUser={authenticated}
         />
       );
     }
@@ -257,18 +264,22 @@ const Checkout = () => {
       return (
         <PaymentForm
           workshop={workshop}
-          profile={user.profile}
+          profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
           handleCouseSelection={handleCouseSelection}
+          login={login}
+          isLoggedUser={authenticated}
         />
       );
     }
     return (
       <PaymentFormGeneric
         workshop={workshop}
-        profile={user.profile}
+        profile={user?.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
         handleCouseSelection={handleCouseSelection}
+        login={login}
+        isLoggedUser={authenticated}
       />
     );
   };
@@ -278,7 +289,7 @@ const Checkout = () => {
     isStudentVerified,
     studentVerificationDate,
     studentVerificationExpiryDate,
-  } = user.profile;
+  } = user?.profile || {};
 
   const handleVerifyStudentEmail = async () => {
     setLoading(true);
@@ -320,6 +331,7 @@ const Checkout = () => {
   };
 
   const showVerifyStudentStatus =
+    user?.profile &&
     validateStudentEmail(email) &&
     workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||
@@ -464,4 +476,4 @@ const Checkout = () => {
 
 Checkout.hideHeader = true;
 
-export default withAuth(Checkout);
+export default Checkout;
