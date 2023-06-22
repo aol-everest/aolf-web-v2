@@ -8,6 +8,9 @@ import React, { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 import { pushRouteWithUTMQuery } from "@service";
 
+var advancedFormat = require("dayjs/plugin/advancedFormat");
+dayjs.extend(advancedFormat);
+
 const SchedulingRange = () => {
   const { hideModal } = useGlobalModalContext();
   const router = useRouter();
@@ -100,19 +103,15 @@ const SchedulingRange = () => {
               <div className="col-12 col-md-4 col-lg-3  scheduling-second--border">
                 <div className="scheduling-second__course d-flex flex-column justify-content-center d-lg-block ">
                   <img
-                    src={"/img/skybreath-meditation_large.jpg"}
+                    src={"/img/scheduling.png"}
                     alt="skybreath meditation photo"
                   />
-                  {selectedWorkshop.title && (
-                    <div className="text-center text-lg-left">
-                      <h2 className="scheduling-second__title scheduling-second__title--large mt-2">
-                        {selectedWorkshop.title}
-                      </h2>
-                      <p className="scheduling-second__text mt-2">
-                        6 Hour Meditation Course
-                      </p>
-                    </div>
-                  )}
+
+                  <div className="text-center text-lg-left">
+                    <h2 className="scheduling-second__title scheduling-second__title--large mt-2">
+                      {selectedWorkshop.title || "SKY Breath Meditation"}
+                    </h2>
+                  </div>
                 </div>
               </div>
               <div className="col-12 col-md-8 col-lg-9 ">
@@ -215,20 +214,14 @@ const SchedulingRange = () => {
                                     {firstItem?.timings &&
                                       firstItem.timings.map((time, i) => {
                                         return (
-                                          <li
-                                            className="program-details__schedule tw-flex"
-                                            key={i}
-                                          >
-                                            <span className="program-details__schedule-date">
+                                          <li key={i}>
+                                            <strong className="program-details__schedule-date">
                                               {dayjs
                                                 .utc(time.startDate)
-                                                .format("MMM DD")}
-                                            </span>
-                                            <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
-                                              time.startTime,
-                                            )} - ${tConvert(
-                                              time.endTime,
-                                            )} `}</span>
+                                                .format("ddd Do")}
+                                            </strong>{" "}
+                                            {tConvert(time.startTime, true)} -{" "}
+                                            {tConvert(time.endTime, true)}
                                           </li>
                                         );
                                       })}
