@@ -14,7 +14,7 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head>
-          <Script id="google-analytics" strategy="beforeInteractive">
+          {/* <Script id="google-analytics" strategy="beforeInteractive">
             {`
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -22,7 +22,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
         `}
-          </Script>
+          </Script> */}
           <meta
             name="description"
             content="The Art of Living Foundation- a humanitarian organization devoted for the betterment of society, brings smiles by yoga, meditation, Sudarshan Kriya & life skills."

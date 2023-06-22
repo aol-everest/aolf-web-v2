@@ -27,6 +27,7 @@ import {
 } from "@components/coursethankYouDetails";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
+import { setCookie, hasCookie } from "cookies-next";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -119,40 +120,58 @@ const Thankyou = () => {
   );
 
   useEffect(() => {
-    if (!authenticated || !result) return;
-    track("transactionComplete", {
-      viewType: "workshop",
-      amount: unitPrice,
-      title: title,
-      ctype: productTypeId,
-      requestType: "Thankyou",
-      // user,
-      ecommerce: {
-        currencyCode: "USD",
-        purchase: {
-          actionField: {
-            id: orderExternalId,
-            affiliation: "Website",
-            revenue: ammountPaid,
-            tax: "0.00",
-            shipping: "0.00",
-            coupon: couponCode || "",
+    if (!authenticated || !result || hasCookie(orderExternalId)) return;
+    track(
+      "'aol_purchase'",
+      {
+        event_id: orderExternalId,
+        user_properties: [
+          {
+            customer_id: user.profile.id,
+            customer_email: user.profile.email,
+            customer_first_name: user.profile.first_name,
+            customer_phone: user.profile.personMobilePhone,
+            customer_last_name: user.profile.last_name,
+            customer_city: user.profile.personMailingCity,
+            customer_zip: user.profile.personMailingPostalCode,
+            customer_address_1: user.profile.personMailingStreet,
+            customer_address_2: "",
+            customer_country: user.profile.personMailingCountry,
+            customer_state: user.profile.personMailingState,
           },
-          products: [
-            {
-              id: courseId,
-              courseId: courseId,
-              name: title,
-              category: "workshop",
-              variant: "N/A",
-              brand: "Art of Living Foundation",
-              quantity: 1,
-              // price: totalOrderAmount,
+        ],
+        ecommerce: [
+          {
+            currencyCode: "USD",
+            purchase: {
+              revenue: ammountPaid,
+              discount_amount: "",
+              tax: "0.00",
+              shipping: "0.00",
+              sub_total: ammountPaid,
+              coupon: couponCode || "",
             },
-          ],
+            products: [
+              {
+                name: title,
+                product_id: productTypeId,
+                id: courseId,
+                price: ammountPaid,
+                category: "workshop",
+                brand: "Art of Living Foundation",
+                quantity: 1,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        plugins: {
+          // disable this specific track call for all plugins except customerio
+          "clevertap-plugin": false,
         },
       },
-    });
+    );
     Talkable.purchase(
       {
         order_number: orderExternalId, // Unique order number. Example: '100011'
@@ -166,6 +185,7 @@ const Thankyou = () => {
         traffic_source: "", // The source of the traffic driven to the campaign. Example: 'facebook'
       },
     );
+    setCookie(orderExternalId, "DONE");
     reloadProfile();
   }, [authenticated, result]);
 

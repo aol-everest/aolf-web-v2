@@ -236,8 +236,12 @@ const AOL_MENU = [
     name: "EVENTS",
     submenu: [
       {
-        name: "Gurudev 2022 Tour",
-        link: "/us-en/lp/meet-gurudev2022",
+        name: "World Culture Festival",
+        link: "https://wcf.artofliving.org/",
+      },
+      {
+        name: "Summer Tour 2023",
+        link: "/us-en/lp/sixthsensetour",
       },
     ],
   },
@@ -391,8 +395,12 @@ const IAHV_MENU = [
     name: "EVENTS",
     submenu: [
       {
-        name: "Gurudev 2022 Tour",
-        link: "/us-en/lp/meet-gurudev2022",
+        name: "World Culture Festival",
+        link: "https://wcf.artofliving.org/",
+      },
+      {
+        name: "Summer Tour 2023",
+        link: "/us-en/lp/sixthsensetour",
       },
     ],
   },
