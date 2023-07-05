@@ -435,6 +435,7 @@ const Thankyou = () => {
                 height="1"
                 id="_SHRSL_img_1"
               ></img>
+              <script>alert('Hello');</script>
               <script
                 src="https://www.dwin1.com/51621.js"
                 type="text/javascript"
