@@ -7,6 +7,7 @@ function getAllowedParams() {
     "utm_content",
     "gclid",
     "source",
+    "sscid",
   ];
 
   return allowedParams;
