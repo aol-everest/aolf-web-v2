@@ -746,7 +746,22 @@ const Course = () => {
                       </SmartDropDown>
                     </div>
                   </MobileFilterModal>
-
+                  {activeFilterType === "IN_PERSON" && (
+                    <MobileFilterModal
+                      modalTitle="Location"
+                      buttonText={
+                        locationFilter
+                          ? `${locationFilter.loactionName}`
+                          : "Location"
+                      }
+                      clearEvent={onFilterClearEvent("locationFilter")}
+                    >
+                      <AddressSearch
+                        closeHandler={onFilterChange("locationFilter")}
+                        placeholder="Search for Location"
+                      />
+                    </MobileFilterModal>
+                  )}
                   <MobileFilterModal
                     modalTitle="Course Type"
                     buttonText={
