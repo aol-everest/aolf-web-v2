@@ -5,10 +5,14 @@
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
+const ContentSecurityPolicy = `
+  frame-src 'self' artofliving.org;
+  frame-ancestors 'self' artofliving.org;
+`;
 const securityHeaders = [
   {
-    key: "x-frame-options",
-    value: "SAMEORIGIN",
+    key: "Content-Security-Policy",
+    value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
   },
   {
     key: "x-content-type-options",
