@@ -172,7 +172,7 @@ const SchedulingRange = () => {
                         />
                       </label>
 
-                      <div>
+                      <div className="tw-p-[25px] tw-text-sm">
                         Choose your preferred start date and time zone below.
                         Courses are three days and start every Friday, as well
                         as other days throughout the week.
