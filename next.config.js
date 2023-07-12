@@ -6,8 +6,8 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const ContentSecurityPolicy = `
-  default-src 'self' data: gap: https://ssl.gstatic.com *.us-east-2.amazonaws.com 'unsafe-eval';; 
-  script-src 'self' 'unsafe-inline'; 
+  default-src 'self' data: gap: https://ssl.gstatic.com *.us-east-2.amazonaws.com *.trusted.com *.googletagmanager.com d2r1yp2w7bby2u.cloudfront.net *.stripe.com 'unsafe-eval';; 
+  script-src 'self' 'unsafe-inline' *.trusted.com; 
   img-src https://*;
   font-src 'self' fonts.googleapis.com data:; 
   frame-ancestors 'self' artofliving.org *.artofliving.org *.unbounce.com *.unbouncepreview.com;
