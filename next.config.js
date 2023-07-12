@@ -9,10 +9,10 @@ const ContentSecurityPolicy = `
   frame-ancestors 'self' artofliving.org *.artofliving.org *.unbounce.com;
 `;
 const securityHeaders = [
-  {
-    key: "Content-Security-Policy",
-    value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
-  },
+  // {
+  //   key: "Content-Security-Policy",
+  //   value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+  // },
   {
     key: "x-content-type-options",
     value: "nosniff",
