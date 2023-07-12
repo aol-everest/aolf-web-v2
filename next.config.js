@@ -6,12 +6,13 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const ContentSecurityPolicy = `
-  default-src 'self'; 
+  default-src 'self' data: gap: https://ssl.gstatic.com *.us-east-2.amazonaws.com 'unsafe-eval';; 
   script-src 'self' 'unsafe-inline'; 
   img-src https://*;
   font-src 'self' fonts.googleapis.com data:; 
-  frame-ancestors 'self' artofliving.org *.artofliving.org *.unbounce.com;
+  frame-ancestors 'self' artofliving.org *.artofliving.org *.unbounce.com *.unbouncepreview.com;
 `;
+
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
