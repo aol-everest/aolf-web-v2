@@ -171,6 +171,12 @@ const SchedulingRange = () => {
                           }}
                         />
                       </label>
+
+                      <div className="tw-p-[25px] tw-text-sm">
+                        Choose your preferred start date and time zone below.
+                        Courses are three days and start every Friday, as well
+                        as other days throughout the week.
+                      </div>
                     </div>
                     <div className="col-12 col-lg-5 text-center text-lg-left mt-2 mt-lg-0">
                       <h3 className="scheduling-second__text scheduling-second__text--black">
