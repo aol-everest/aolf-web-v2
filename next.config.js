@@ -7,8 +7,9 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 const ContentSecurityPolicy = `
   default-src *; 
-  image-src *; 
-  script-src *; 
+  image-src * 'unsafe-inline';
+  script-src * 'unsafe-inline'; 
+  img-src www.googletagmanager.com;
   font-src 'self' 'https://fonts.googleapis.com'; 
   frame-ancestors 'self' artofliving.org *.artofliving.org *.unbounce.com;
 `;
