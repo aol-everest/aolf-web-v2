@@ -6,10 +6,10 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const ContentSecurityPolicy = `
-  default-src *; 
+  default-src 'self'; 
   script-src 'self' 'unsafe-inline'; 
-  img-src 'self' *.googletagmanager.com data:;
-  font-src 'self' 'https://fonts.googleapis.com' data:; 
+  img-src https://*;
+  font-src 'self' fonts.googleapis.com data:; 
   frame-ancestors 'self' artofliving.org *.artofliving.org *.unbounce.com;
 `;
 const securityHeaders = [
