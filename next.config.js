@@ -6,8 +6,8 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const ContentSecurityPolicy = `
-  frame-src 'self' artofliving.org;
-  frame-ancestors 'self' artofliving.org;
+  frame-src 'self' artofliving.org *.artofliving.org;
+  frame-ancestors 'self' artofliving.org *.artofliving.org;
 `;
 const securityHeaders = [
   {
