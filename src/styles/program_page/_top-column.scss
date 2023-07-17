@@ -410,4 +410,18 @@
       }
     }
   }
+
+  &.sky-breath-meditation {
+    background-image: url("/img/gurudev_sky.png");
+    background-position-y: 100%;
+    box-shadow: none;
+
+    .type-course,
+    .course-name {
+      color: white;
+    }
+    .course-details-list li {
+      color: white;
+    }
+  }
 }
