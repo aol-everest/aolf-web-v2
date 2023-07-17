@@ -993,7 +993,7 @@ export const PaymentFormGeneric = ({
                         <div className="paypal-info__sign-in tw-relative tw-z-0">
                           <PayPalScriptProvider
                             options={{
-                              "client-id":
+                              clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                               debug: true,
                               currency: "USD",
