@@ -6,7 +6,7 @@
     ".next/cache"
   ],
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "scripts": {
     "develop": "cross-env NODE_OPTIONS='--inspect' NODE_ENV='development' next dev",
