@@ -48,7 +48,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
   return (
     <>
       <main>
-        <section className="top-column">
+        <section className="top-column sky-breath-meditation">
           <div className="container">
             <p className="type-course">{mode}</p>
             <h1 className="course-name">{title}</h1>
