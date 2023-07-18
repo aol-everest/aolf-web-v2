@@ -26,8 +26,6 @@
     "@analytics/router-utils": "^0.1.1",
     "@analytics/segment": "^1.1.4",
     "@aws-amplify/analytics": "^6.0.9",
-    "@builder.io/react": "^2.0.11",
-    "@builder.io/widgets": "^1.2.23",
     "@contentful/rich-text-react-renderer": "^15.16.2",
     "@googlemaps/js-api-loader": "^1.15.1",
     "@hookform/devtools": "^4.3.0",
