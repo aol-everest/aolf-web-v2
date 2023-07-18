@@ -1,13 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 import { api } from "@utils";
 
-export async function useUser({
-  redirectTo = false,
-  redirectIfFound = false,
-} = {}) {
-  const { data: user, mutate: mutateUser } = await api("/profile");
-
+export function useUser({ redirectTo = false, redirectIfFound = false } = {}) {
+  const [user, setUser] = useState(false);
+  const [mutateUser, setMutateUser] = useState(false);
+  api("/profile").then(({ data: user, mutate: mutateUser }) => {
+    setUser(user);
+    setMutateUser(mutateUser);
+  });
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet

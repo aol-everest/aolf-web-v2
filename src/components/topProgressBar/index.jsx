@@ -75,10 +75,3 @@ NProgress.configure({
 //     }
 //   }
 // };
-
-export default function _() {
-  const { showLoader, hideLoader } = useGlobalLoadingContext();
-  loader = { showLoader, hideLoader };
-
-  return null;
-}
