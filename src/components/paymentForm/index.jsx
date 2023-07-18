@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import classNames from "classnames";
+import { PayPalButton } from "react-paypal-button-v2";
 import { useRouter } from "next/router";
 import { isEmpty, Auth } from "@utils";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -992,12 +993,13 @@ export const PaymentForm = ({
                         data-method="paypal"
                       >
                         <div className="paypal-info__sign-in tw-relative tw-z-0">
-                          <PayPalScriptProvider
+                          {/* <PayPalScriptProvider
                             options={{
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                               debug: true,
                               currency: "USD",
+                              intent: "capture",
                             }}
                           >
                             <PayPalButtons
@@ -1028,11 +1030,14 @@ export const PaymentForm = ({
                               }}
                               onApprove={paypalBuyAcknowledgement}
                             />
-                          </PayPalScriptProvider>
-                          {/* <PayPalButton
+                          </PayPalScriptProvider> */}
+
+                          <PayPalButton
                             options={{
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                              debug: true,
+                              currency: "USD",
                             }}
                             style={{
                               layout: "horizontal",
@@ -1042,23 +1047,13 @@ export const PaymentForm = ({
                               tagline: false,
                               label: "pay",
                             }}
-                            onClick={async (data, actions) => {
-                              await formikProps.validateForm();
-                              formikProps.setTouched({
-                                ...formikProps.touched,
-                                ...formikProps.errors,
-                              });
-                              if (!formikProps.isValid) {
-                                return false;
-                              }
-                            }}
                             createOrder={async (data, actions) => {
                               return await createPaypalOrder(
                                 formikProps.values,
                               );
                             }}
                             onApprove={paypalBuyAcknowledgement}
-                          /> */}
+                          />
                         </div>
                         <div className="paypal-info__sign-out d-none">
                           <button
