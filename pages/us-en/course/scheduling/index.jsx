@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 import { pushRouteWithUTMQuery } from "@service";
+import { Loader } from "@components/loader";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -14,6 +15,7 @@ dayjs.extend(advancedFormat);
 const SchedulingRange = () => {
   const { hideModal } = useGlobalModalContext();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [timezoneFilter, setTimezoneFilter] = useState("EST");
   const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
@@ -58,10 +60,12 @@ const SchedulingRange = () => {
       });
       if (response?.data) {
         const newData = groupBy(response?.data, "eventStartDateTimeGMT");
+        setLoading(false);
         setWorkshops(newData);
       }
     };
     if (selectedDates?.length > 0) {
+      setLoading(true);
       getWorkshops();
     }
   }, [selectedDates, timezoneFilter]);
@@ -187,54 +191,68 @@ const SchedulingRange = () => {
 
                       <div className="scheduling-second__available mt-3">
                         <ul className="scheduling-second__options">
-                          {Object.keys(workshops)?.map((workshop, index) => {
-                            const items = workshops[workshop];
-                            const firstItem = items?.[0];
-                            const randomWorkshop = Math.floor(
-                              Math.random() * items.length,
-                            );
-                            return (
-                              <li
-                                className="scheduling-second__item"
-                                key={firstItem.id}
-                              >
-                                <input
-                                  className="custom-radio"
-                                  type="radio"
-                                  id={`option-${index + 1}`}
-                                  value={selectedWorkshopId}
-                                  name="scheduling-options"
-                                  onChange={() =>
-                                    handleWorkshopSelect(items[randomWorkshop])
-                                  }
-                                />
-                                <label
-                                  className="scheduling-second__option"
-                                  htmlFor={`option-${index + 1}`}
+                          {!loading && Object.keys(workshops).length ? (
+                            Object.keys(workshops)?.map((workshop, index) => {
+                              const items = workshops[workshop];
+                              const firstItem = items?.[0];
+                              const randomWorkshop = Math.floor(
+                                Math.random() * items.length,
+                              );
+                              return (
+                                <li
+                                  className="scheduling-second__item"
+                                  key={firstItem.id}
                                 >
-                                  <h4 className="scheduling-second__title scheduling-second__title--small">
-                                    {`Option ${index + 1}`}
-                                  </h4>
-                                  <ul className={`list-option${index + 1}`}>
-                                    {firstItem?.timings &&
-                                      firstItem.timings.map((time, i) => {
-                                        return (
-                                          <li key={i}>
-                                            <strong className="program-details__schedule-date">
-                                              {dayjs
-                                                .utc(time.startDate)
-                                                .format("ddd Do")}
-                                            </strong>{" "}
-                                            {tConvert(time.startTime, true)} -{" "}
-                                            {tConvert(time.endTime, true)}
-                                          </li>
-                                        );
-                                      })}
-                                  </ul>
-                                </label>
+                                  <input
+                                    className="custom-radio"
+                                    type="radio"
+                                    id={`option-${index + 1}`}
+                                    value={selectedWorkshopId}
+                                    name="scheduling-options"
+                                    onChange={() =>
+                                      handleWorkshopSelect(
+                                        items[randomWorkshop],
+                                      )
+                                    }
+                                  />
+                                  <label
+                                    className="scheduling-second__option"
+                                    htmlFor={`option-${index + 1}`}
+                                  >
+                                    <h4 className="scheduling-second__title scheduling-second__title--small">
+                                      {`Option ${index + 1}`}
+                                    </h4>
+                                    <ul className={`list-option${index + 1}`}>
+                                      {firstItem?.timings &&
+                                        firstItem.timings.map((time, i) => {
+                                          return (
+                                            <li key={i}>
+                                              <strong className="program-details__schedule-date">
+                                                {dayjs
+                                                  .utc(time.startDate)
+                                                  .format("ddd Do")}
+                                              </strong>{" "}
+                                              {tConvert(time.startTime, true)} -{" "}
+                                              {tConvert(time.endTime, true)}
+                                            </li>
+                                          );
+                                        })}
+                                    </ul>
+                                  </label>
+                                </li>
+                              );
+                            })
+                          ) : loading ? (
+                            <li>
+                              <div className="cover-spin scheduling-spin"></div>
+                            </li>
+                          ) : (
+                            Object.keys(workshops).length === 0 && (
+                              <li className="scheduling-second__text scheduling-no-data">
+                                No Workshop Found
                               </li>
-                            );
-                          })}
+                            )
+                          )}
                         </ul>
                       </div>
 
