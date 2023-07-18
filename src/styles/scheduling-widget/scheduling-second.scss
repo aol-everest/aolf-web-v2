@@ -45,7 +45,7 @@
 
 .scheduling-second__course {
   padding: 24px 10px;
-  img{
+  img {
     max-width: 100%;
   }
 }
@@ -159,4 +159,8 @@
 
 .scheduling-second__available {
   min-height: 430px;
+}
+
+.scheduling-no-data {
+  font-size: small;
 }
