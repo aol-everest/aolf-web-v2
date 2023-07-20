@@ -258,8 +258,12 @@ const Checkout = () => {
   const isHealingBreathProgram =
     COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
 
+  const isInstitutionalProgram =
+    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(workshop.productTypeId) >=
+    0;
+
   const renderPaymentForm = () => {
-    if (isHealingBreathProgram) {
+    if (isHealingBreathProgram || isInstitutionalProgram) {
       return (
         <PaymentFormHB
           workshop={workshop}
