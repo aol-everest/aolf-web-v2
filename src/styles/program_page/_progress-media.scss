@@ -47,14 +47,6 @@
   }
 }
 
-@media screen and (max-width: 480px) {
-  .progress-section {
-    &.sky-breath-meditation {
-      padding-top: 470px;
-    }
-  }
-}
-
 @media screen and (max-width: 768px) {
   .progress-section {
     padding-top: 340px;
@@ -76,6 +68,14 @@
           margin-right: 45px;
         }
       }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .progress-section {
+    &.sky-breath-meditation {
+      padding-top: 470px;
     }
   }
 }
