@@ -142,6 +142,16 @@
   }
 }
 
+@media screen and (max-width: 375px) {
+  .top-column {
+    &.sky-breath-meditation {
+      .course-details {
+        bottom: -440px;
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 600px) {
   .top-column {
     background-position-x: 20%;
