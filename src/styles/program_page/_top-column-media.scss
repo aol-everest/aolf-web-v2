@@ -97,6 +97,16 @@
   }
 }
 
+@media screen and (max-width: 480px) {
+  .top-column {
+    &.sky-breath-meditation {
+      .course-details {
+        bottom: -430px;
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
   .top-column {
     padding: 60px 0 250px 0;
