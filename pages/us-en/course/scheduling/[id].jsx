@@ -124,16 +124,6 @@ const SchedulingPayment = () => {
             return (
               <div id="scheduling-step-1" className="scheduling-modal__body">
                 <div>
-                  <div className="scheduling__header">
-                    <a href="/" className="logo">
-                      <img
-                        src="/img/ic-logo.svg"
-                        alt="logo"
-                        className="logo__image"
-                      />
-                    </a>
-                  </div>
-
                   <form className="scheduling__auth" onSubmit={handleSubmit}>
                     <div className="row no-gutters ">
                       <div className="col-12 col-md-6">
@@ -536,7 +526,7 @@ const SchedulingPayment = () => {
                               <div>
                                 <h2 className="scheduling__title">{title}</h2>
                                 <p className="scheduling__text">
-                                  6 Hour Meditation Course
+                                  9 Hour Meditation Course
                                 </p>
                               </div>
                             </div>
@@ -552,7 +542,7 @@ const SchedulingPayment = () => {
                               </div>
                               <div className="col-4 text-right">
                                 <p className="scheduling__text-black">
-                                  <strong>${unitPrice || showPrice}</strong>{" "}
+                                  <strong>${unitPrice || 0}</strong>{" "}
                                   <i>plus tax</i>
                                 </p>
                               </div>
@@ -579,29 +569,6 @@ const SchedulingPayment = () => {
                           >
                             buy now
                           </button>
-
-                          <p className="scheduling__text scheduling__text--small  mt-3">
-                            By completing this purchase. I agree to YogaRenew`s
-                            <a className="scheduling__link" href="#">
-                              Terms of Use
-                            </a>
-                            &
-                            <a className="scheduling__link" href="#">
-                              Privacy policy
-                            </a>
-                            .
-                            <span className="d-block">
-                              and the
-                              <a className="scheduling__link" href="#">
-                                Terms of Use
-                              </a>
-                              &
-                              <a className="scheduling__link" href="#">
-                                Privacy policy
-                              </a>
-                              of the course platform.
-                            </span>
-                          </p>
                         </div>
                       </div>
                     </div>
