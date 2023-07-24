@@ -536,7 +536,7 @@ const SchedulingPayment = () => {
                               <div>
                                 <h2 className="scheduling__title">{title}</h2>
                                 <p className="scheduling__text">
-                                  6 Hour Meditation Course
+                                  9 Hour Meditation Course
                                 </p>
                               </div>
                             </div>
@@ -579,29 +579,6 @@ const SchedulingPayment = () => {
                           >
                             buy now
                           </button>
-
-                          <p className="scheduling__text scheduling__text--small  mt-3">
-                            By completing this purchase. I agree to YogaRenew`s
-                            <a className="scheduling__link" href="#">
-                              Terms of Use
-                            </a>
-                            &
-                            <a className="scheduling__link" href="#">
-                              Privacy policy
-                            </a>
-                            .
-                            <span className="d-block">
-                              and the
-                              <a className="scheduling__link" href="#">
-                                Terms of Use
-                              </a>
-                              &
-                              <a className="scheduling__link" href="#">
-                                Privacy policy
-                              </a>
-                              of the course platform.
-                            </span>
-                          </p>
                         </div>
                       </div>
                     </div>
