@@ -157,7 +157,7 @@
     background-position-x: 20%;
 
     .course-details-list {
-      max-width: 265px;
+      max-width: 50%;
     }
 
     &.silent-retreat {
@@ -178,6 +178,7 @@
     // background-position-x: 100%;
     .course-details-list {
       max-width: 265px;
+      max-width: 50%;
     }
   }
 }
@@ -185,8 +186,6 @@
 @media screen and (max-width: 375px) {
   .course-details {
     &-list {
-      // padding: 0 37px 0 40px !important;
-      max-width: 100% !important;
       padding-right: 40px !important;
 
       li {
