@@ -552,7 +552,7 @@ const SchedulingPayment = () => {
                               </div>
                               <div className="col-4 text-right">
                                 <p className="scheduling__text-black">
-                                  <strong>${unitPrice || showPrice}</strong>{" "}
+                                  <strong>${unitPrice || 0}</strong>{" "}
                                   <i>plus tax</i>
                                 </p>
                               </div>
