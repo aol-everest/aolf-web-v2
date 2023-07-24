@@ -12,9 +12,6 @@ import { Loader } from "@components/loader";
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
 
-var advancedFormat = require("dayjs/plugin/advancedFormat");
-dayjs.extend(advancedFormat);
-
 const SchedulingRange = () => {
   const { hideModal } = useGlobalModalContext();
   const router = useRouter();
