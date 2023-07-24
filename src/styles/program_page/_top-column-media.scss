@@ -85,7 +85,7 @@
       padding-bottom: 80px;
 
       .course-details {
-        bottom: -415px;
+        bottom: -520px;
       }
 
       .course-name {
@@ -120,8 +120,12 @@
 
     .course-details {
       bottom: -300px;
-      //bottom: -280px;
-      //bottom: -385px;
+    }
+
+    &.sky-breath-meditation {
+      .course-details {
+        bottom: -393px;
+      }
     }
 
     &.silent-retreat {
@@ -133,6 +137,16 @@
         .course-details__footer {
           padding: 20px;
         }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .top-column {
+    &.sky-breath-meditation {
+      .course-details {
+        bottom: -440px;
       }
     }
   }

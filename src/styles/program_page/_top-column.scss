@@ -430,5 +430,18 @@
     .course-name {
       max-width: 66%;
     }
+
+    .in-person {
+      bottom: -393px;
+    }
+
+    @media screen and (min-width: 720px) {
+      .course-details {
+        bottom: -400px;
+      }
+      .in-person {
+        bottom: -450px;
+      }
+    }
   }
 }

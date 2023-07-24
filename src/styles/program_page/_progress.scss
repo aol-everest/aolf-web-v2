@@ -1,6 +1,15 @@
 .progress-section {
   padding: 140px 0 80px 0;
 
+  @media screen and (min-width: 720px) {
+    &.sky-breath-meditation {
+      padding: 270px 0 80px 0;
+    }
+    &.in-person {
+      padding: 370px 0 80px 0;
+    }
+  }
+
   &__title {
     font-size: 26px;
     font-weight: 400;

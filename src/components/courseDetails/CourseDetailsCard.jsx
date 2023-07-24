@@ -96,8 +96,10 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
   const isSearchDatesDisabled = !filterStartDate;
 
+  const inPersonCourse = mode === COURSE_MODES.IN_PERSON.name;
+
   return (
-    <div className="course-details">
+    <div className={[`course-details ${inPersonCourse ? "in-person" : ""}`]}>
       <div className="course-details__body">
         <h2>{mode} course details</h2>
         <ul className="course-details__list">
