@@ -537,7 +537,7 @@ const SchedulingPayment = () => {
                             <div className="row no-gutters justify-content-between">
                               <div className="col-4 text-nowrap">
                                 <h4 className="scheduling__title">
-                                  Build Today (USD)
+                                  Billed Today (USD)
                                 </h4>
                               </div>
                               <div className="col-4 text-right">
