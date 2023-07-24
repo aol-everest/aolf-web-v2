@@ -563,7 +563,6 @@ p {
 
       & + .select-box__list {
         opacity: 1;
-        display: inline-block;
         visibility: visible;
       }
     }
@@ -604,7 +603,7 @@ p {
     padding: 8px 0;
     list-style: none;
     opacity: 0;
-    display: none;
+    visibility: hidden;
     transition: 0.25s;
     background-color: white;
     margin-top: 5px;
