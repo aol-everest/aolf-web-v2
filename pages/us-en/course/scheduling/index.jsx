@@ -129,7 +129,7 @@ const SchedulingRange = () => {
                     other days throughout the week.
                   </div>
 
-                  <div className="row mt-3">
+                  <div className="row no-gutters mt-3">
                     <div className="col-12 col-lg-7 ">
                       <div className="justify-content-center  justify-content-lg-start scheduling__padding scheduling__timezone talk-datepicker__timezone">
                         <img
