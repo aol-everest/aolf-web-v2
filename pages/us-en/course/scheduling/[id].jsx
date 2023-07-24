@@ -124,16 +124,6 @@ const SchedulingPayment = () => {
             return (
               <div id="scheduling-step-1" className="scheduling-modal__body">
                 <div>
-                  <div className="scheduling__header">
-                    <a href="/" className="logo">
-                      <img
-                        src="/img/ic-logo.svg"
-                        alt="logo"
-                        className="logo__image"
-                      />
-                    </a>
-                  </div>
-
                   <form className="scheduling__auth" onSubmit={handleSubmit}>
                     <div className="row no-gutters ">
                       <div className="col-12 col-md-6">
