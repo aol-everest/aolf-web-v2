@@ -215,6 +215,8 @@ function CourseDetail() {
     0;
   const isHealingBreathType =
     COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
+  const isInstitutionalProgram =
+    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(data.productTypeId) >= 0;
   const isSKYSilentRetreatType =
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
   const isBlessingsCourse =
@@ -247,7 +249,7 @@ function CourseDetail() {
     if (isSahajSamadhiMeditationType) {
       return <SahajSamadhi {...props} />;
     }
-    if (isHealingBreathType) {
+    if (isHealingBreathType || isInstitutionalProgram) {
       return <HealingBreath {...props} />;
     }
     if (isSKYSilentRetreatType) {

@@ -7,6 +7,10 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 import { pushRouteWithUTMQuery } from "@service";
+import { Loader } from "@components/loader";
+
+var advancedFormat = require("dayjs/plugin/advancedFormat");
+dayjs.extend(advancedFormat);
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -14,6 +18,7 @@ dayjs.extend(advancedFormat);
 const SchedulingRange = () => {
   const { hideModal } = useGlobalModalContext();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [timezoneFilter, setTimezoneFilter] = useState("EST");
   const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
@@ -44,7 +49,7 @@ const SchedulingRange = () => {
   ];
 
   useEffect(() => {
-    const getWorshops = async () => {
+    const getWorkshops = async () => {
       const response = await api.get({
         path: "workshops",
         param: {
@@ -58,11 +63,13 @@ const SchedulingRange = () => {
       });
       if (response?.data) {
         const newData = groupBy(response?.data, "eventStartDateTimeGMT");
+        setLoading(false);
         setWorkshops(newData);
       }
     };
     if (selectedDates?.length > 0) {
-      getWorshops();
+      setLoading(true);
+      getWorkshops();
     }
   }, [selectedDates, timezoneFilter]);
 
@@ -119,8 +126,13 @@ const SchedulingRange = () => {
                   <h2 className="text-center text-lg-left scheduling__padding scheduling-second__title">
                     Select a Date Range & Times
                   </h2>
+                  <div className="tw-p-[25px] tw-text-xs">
+                    Choose your preferred start date and time zone below.
+                    Courses are three days and start every Friday, as well as
+                    other days throughout the week.
+                  </div>
 
-                  <div className="row mt-3">
+                  <div className="row no-gutters mt-3">
                     <div className="col-12 col-lg-7 ">
                       <div className="justify-content-center  justify-content-lg-start scheduling__padding scheduling__timezone talk-datepicker__timezone">
                         <img
@@ -182,54 +194,68 @@ const SchedulingRange = () => {
 
                       <div className="scheduling-second__available mt-3">
                         <ul className="scheduling-second__options">
-                          {Object.keys(workshops)?.map((workshop, index) => {
-                            const items = workshops[workshop];
-                            const firstItem = items?.[0];
-                            const randomWorkshop = Math.floor(
-                              Math.random() * items.length,
-                            );
-                            return (
-                              <li
-                                className="scheduling-second__item"
-                                key={firstItem.id}
-                              >
-                                <input
-                                  className="custom-radio"
-                                  type="radio"
-                                  id={`option-${index + 1}`}
-                                  value={selectedWorkshopId}
-                                  name="scheduling-options"
-                                  onChange={() =>
-                                    handleWorkshopSelect(items[randomWorkshop])
-                                  }
-                                />
-                                <label
-                                  className="scheduling-second__option"
-                                  htmlFor={`option-${index + 1}`}
+                          {!loading && Object.keys(workshops).length ? (
+                            Object.keys(workshops)?.map((workshop, index) => {
+                              const items = workshops[workshop];
+                              const firstItem = items?.[0];
+                              const randomWorkshop = Math.floor(
+                                Math.random() * items.length,
+                              );
+                              return (
+                                <li
+                                  className="scheduling-second__item"
+                                  key={firstItem.id}
                                 >
-                                  <h4 className="scheduling-second__title scheduling-second__title--small">
-                                    {`Option ${index + 1}`}
-                                  </h4>
-                                  <ul className={`list-option${index + 1}`}>
-                                    {firstItem?.timings &&
-                                      firstItem.timings.map((time, i) => {
-                                        return (
-                                          <li key={i}>
-                                            <strong className="program-details__schedule-date">
-                                              {dayjs
-                                                .utc(time.startDate)
-                                                .format("ddd Do")}
-                                            </strong>{" "}
-                                            {tConvert(time.startTime, true)} -{" "}
-                                            {tConvert(time.endTime, true)}
-                                          </li>
-                                        );
-                                      })}
-                                  </ul>
-                                </label>
+                                  <input
+                                    className="custom-radio"
+                                    type="radio"
+                                    id={`option-${index + 1}`}
+                                    value={selectedWorkshopId}
+                                    name="scheduling-options"
+                                    onChange={() =>
+                                      handleWorkshopSelect(
+                                        items[randomWorkshop],
+                                      )
+                                    }
+                                  />
+                                  <label
+                                    className="scheduling-second__option"
+                                    htmlFor={`option-${index + 1}`}
+                                  >
+                                    <h4 className="scheduling-second__title scheduling-second__title--small">
+                                      {`Option ${index + 1}`}
+                                    </h4>
+                                    <ul className={`list-option${index + 1}`}>
+                                      {firstItem?.timings &&
+                                        firstItem.timings.map((time, i) => {
+                                          return (
+                                            <li key={i}>
+                                              <strong className="program-details__schedule-date">
+                                                {dayjs
+                                                  .utc(time.startDate)
+                                                  .format("ddd Do")}
+                                              </strong>{" "}
+                                              {tConvert(time.startTime, true)} -{" "}
+                                              {tConvert(time.endTime, true)}
+                                            </li>
+                                          );
+                                        })}
+                                    </ul>
+                                  </label>
+                                </li>
+                              );
+                            })
+                          ) : loading ? (
+                            <li>
+                              <div className="cover-spin scheduling-spin"></div>
+                            </li>
+                          ) : (
+                            Object.keys(workshops).length === 0 && (
+                              <li className="scheduling-second__text scheduling-no-data">
+                                No Workshop Found
                               </li>
-                            );
-                          })}
+                            )
+                          )}
                         </ul>
                       </div>
 

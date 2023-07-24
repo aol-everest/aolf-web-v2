@@ -3,7 +3,11 @@ import { StyledInput } from "./StyledInput";
 import { PhoneNumberInputField } from "./PhoneNumberInputField";
 import { Field } from "formik";
 
-export const UserInfoForm = ({ formikProps, isHBCheckout = false }) => {
+export const UserInfoForm = ({
+  formikProps,
+  isHBCheckout = false,
+  isLoggedUser = false,
+}) => {
   return (
     <Fragment>
       <StyledInput
@@ -24,7 +28,7 @@ export const UserInfoForm = ({ formikProps, isHBCheckout = false }) => {
         placeholder="Email"
         formikProps={formikProps}
         formikKey="email"
-        isReadOnly={true}
+        isReadOnly={isLoggedUser}
         onCut={(event) => {
           event.preventDefault();
         }}

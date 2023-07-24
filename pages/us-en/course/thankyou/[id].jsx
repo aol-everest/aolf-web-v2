@@ -92,7 +92,6 @@ const renderVideo = (productTypeId) => {
 };
 
 const Thankyou = () => {
-  const { authenticated, reloadProfile, user } = useAuth();
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track } = useAnalytics();
@@ -116,28 +115,29 @@ const Thankyou = () => {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: !!attendeeId,
     },
   );
 
   useEffect(() => {
-    if (!authenticated || !result || hasCookie(orderExternalId)) return;
+    if (!result || hasCookie(orderExternalId)) return;
     track(
       "'aol_purchase'",
       {
         event_id: orderExternalId,
         user_properties: [
           {
-            customer_id: user.profile.id,
-            customer_email: user.profile.email,
-            customer_first_name: user.profile.first_name,
-            customer_phone: user.profile.personMobilePhone,
-            customer_last_name: user.profile.last_name,
-            customer_city: user.profile.personMailingCity,
-            customer_zip: user.profile.personMailingPostalCode,
-            customer_address_1: user.profile.personMailingStreet,
+            customer_id: userExternalId,
+            customer_email: userEmail,
+            customer_first_name: first_name,
+            customer_phone: personMobilePhone,
+            customer_last_name: last_name,
+            customer_city: personMailingCity,
+            customer_zip: personMailingPostalCode,
+            customer_address_1: personMailingStreet,
             customer_address_2: "",
-            customer_country: user.profile.personMailingCountry,
-            customer_state: user.profile.personMailingState,
+            customer_country: personMailingCountry,
+            customer_state: personMailingState,
           },
         ],
         ecommerce: [
@@ -181,16 +181,15 @@ const Thankyou = () => {
         shipping_zip: "",
       },
       {
-        email: user.profile.email,
+        email: userEmail,
         traffic_source: "", // The source of the traffic driven to the campaign. Example: 'facebook'
       },
     );
     setCookie(orderExternalId, "DONE");
-    reloadProfile();
-  }, [authenticated, result]);
+  }, [result]);
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !attendeeId) return <PageLoading />;
   const { data: workshop, attendeeRecord } = result;
 
   const {
@@ -268,6 +267,16 @@ const Thankyou = () => {
     selectedGenericSlot = {},
     pricebookName = "",
     isTalkableCoupon,
+    first_name,
+    last_name,
+    userExternalId,
+    email: userEmail,
+    personMobilePhone,
+    personMailingCity,
+    personMailingStreet,
+    personMailingCountry,
+    personMailingState,
+    personMailingPostalCode,
   } = attendeeRecord;
 
   const event = {

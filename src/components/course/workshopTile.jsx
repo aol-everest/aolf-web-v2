@@ -5,7 +5,12 @@ import Image from "next/image";
 import Link from "@components/linkWithUTM";
 import { useRouter } from "next/router";
 import { useGlobalModalContext } from "@contexts";
-import { MODAL_TYPES, ABBRS, COURSE_TYPES } from "@constants";
+import {
+  MODAL_TYPES,
+  ABBRS,
+  COURSE_TYPES,
+  ALLOW_GUEST_LOGIN_CTYPE,
+} from "@constants";
 import classNames from "classnames";
 import { pushRouteWithUTMQuery } from "@service";
 import queryString from "query-string";
@@ -32,7 +37,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
   } = data || {};
 
   const enrollAction = (workshopId, productTypeId) => () => {
-    if (authenticated) {
+    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
@@ -58,6 +63,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
     COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0 ||
+    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(data.productTypeId) >= 0 ||
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0 ||
     COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0 ||
     COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(productTypeId) >=

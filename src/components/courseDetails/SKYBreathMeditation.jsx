@@ -48,7 +48,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
   return (
     <>
       <main>
-        <section className="top-column">
+        <section className="top-column sky-breath-meditation">
           <div className="container">
             <p className="type-course">{mode}</p>
             <h1 className="course-name">{title}</h1>
@@ -74,7 +74,13 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
             courseType={COURSE_TYPES.SKY_BREATH_MEDITATION}
           ></CourseDetailsCard>
         </section>
-        <section className="progress-section">
+        <section
+          className={[
+            `progress-section sky-breath-meditation ${
+              inPersonCourse ? "in-person" : ""
+            }`,
+          ]}
+        >
           <div className="container">
             <h2 className="progress-section__title">
               Discover the transformation that millions
