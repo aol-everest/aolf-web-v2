@@ -1,0 +1,13 @@
+{
+  "directory": [
+    "./src/components",
+    "./src/contexts",
+    "./src/hoc",
+    "./src/hooks",
+    "./src/service",
+    "./src/utils"
+  ],
+  "exclude": [],
+  "delete": true,
+  "singleQuotes": true
+}
