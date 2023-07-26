@@ -163,7 +163,10 @@ export const WorkshopTile = ({ data, authenticated }) => {
           ) : (
             <div className="course_status">{mode}</div>
           )}
-          <div className="course_name">{title}</div>
+          <div
+            className="course_name"
+            dangerouslySetInnerHTML={{ __html: title }}
+          ></div>
           <div className="course_place">{primaryTeacherName}</div>
         </div>
         <div className="course_complete">Course full</div>
