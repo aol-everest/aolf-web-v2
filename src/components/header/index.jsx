@@ -243,6 +243,10 @@ const AOL_MENU = [
         name: "Summer Tour 2023",
         link: "/us-en/lp/sixthsensetour",
       },
+      {
+        name: "Wisdom Series with Gurudev",
+        link: "https://www.artofliving.org/us-en/program/196004",
+      },
     ],
   },
   {
