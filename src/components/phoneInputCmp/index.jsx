@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/role-has-required-aria-props */
 import React from "react";
 import PropTypes from "prop-types";
 import debounce from "lodash.debounce";

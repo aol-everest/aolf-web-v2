@@ -1247,7 +1247,7 @@ export const BackendPaymentForm = ({
                                   )}
                                   <label htmlFor={product.productSfid}></label>
                                   <span className="ml-2">
-                                    {product.productName} Required:
+                                    {product.productName}:
                                   </span>
                                 </span>
                                 <span className="ml-2">
