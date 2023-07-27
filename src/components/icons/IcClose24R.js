@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIcClose24R(props) {
   return (
     <svg

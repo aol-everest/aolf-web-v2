@@ -1,7 +1,7 @@
 import isBetween from "./isBetween";
+import isBetweenExclusive from "./isBetweenExclusive";
 import isNotBetween from "./isNotBetween";
 import isWeekend from "./isWeekend";
-import isBetweenExclusive from "./isBetweenExclusive";
 import isoWeek from "./isoWeek";
 
-export { isBetween, isNotBetween, isWeekend, isBetweenExclusive, isoWeek };
+export { isBetween, isBetweenExclusive, isNotBetween, isWeekend, isoWeek };

@@ -1,10 +1,9 @@
-import React from "react";
-import dayjs from "dayjs";
 import classNames from "classnames";
+import dayjs from "dayjs";
 
 import { ABBRS, COURSE_MODES } from "@constants";
-import { tConvert } from "@utils";
 import { orgConfig } from "@org";
+import { tConvert } from "@utils";
 import Style from "./CoursethankYouDetails.module.scss";
 
 export const SahajSamadhiCombo = ({
@@ -186,11 +185,11 @@ export const SahajSamadhiCombo = ({
                       rel="noreferrer"
                     >
                       {workshop.locationStreet && (
-                        <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                        <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                           {workshop.locationStreet}
                         </li>
                       )}
-                      <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                      <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                         {workshop.locationCity || ""}
                         {", "}
                         {workshop.locationProvince || ""}{" "}
@@ -214,16 +213,16 @@ export const SahajSamadhiCombo = ({
                       rel="noreferrer"
                     >
                       {workshop.streetAddress1 && (
-                        <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                        <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                           {workshop.streetAddress1}
                         </li>
                       )}
                       {workshop.streetAddress2 && (
-                        <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                        <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                           {workshop.streetAddress2}
                         </li>
                       )}
-                      <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                      <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                         {workshop.city || ""}
                         {", "}
                         {workshop.state || ""} {workshop.zip || ""}

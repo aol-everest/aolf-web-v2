@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { usePopper } from "react-popper";
 import classNames from "classnames";
+import { useEffect, useRef, useState } from "react";
+import { usePopper } from "react-popper";
 
 export const InputDropDown = (props) => {
   const [visible, setVisibility] = useState(false);

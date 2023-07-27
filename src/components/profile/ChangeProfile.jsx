@@ -1,24 +1,23 @@
-import React, { useState, useRef } from "react";
-import { useRouter } from "next/router";
-import classNames from "classnames";
-import MaskedInput from "react-text-mask";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
-import dayjs from "dayjs";
-import { api } from "@utils";
-import { FaRegEdit, FaCheckCircle } from "react-icons/fa";
-import { useGlobalModalContext } from "@contexts";
-import "yup-phone";
-import PhoneInput from "./../phoneInputCmp";
+import { Dropdown, StyledInput } from "@components/checkout";
+import { ChangeEmail } from "@components/profile";
 import {
+  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
   US_STATES,
-  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
 } from "@constants";
-import { StyledInput, Dropdown } from "@components/checkout";
-import { ChangeEmail } from "@components/profile";
-import Style from "./ChangeProfile.module.scss";
+import { useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
+import { api } from "@utils";
+import classNames from "classnames";
+import dayjs from "dayjs";
+import { Field, Formik } from "formik";
+import { useRouter } from "next/router";
+import { useRef, useState } from "react";
+import { FaRegEdit } from "react-icons/fa";
+import * as Yup from "yup";
+import "yup-phone";
+import PhoneInput from "./../phoneInputCmp";
+import Style from "./ChangeProfile.module.scss";
 
 const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
   const onChangeAction = (value, data, event, formattedValue) => {
@@ -128,7 +127,7 @@ export const ChangeProfile = ({
               <p className="tw-flex tw-justify-center">
                 <a
                   href="#"
-                  className="tw-mt-6 btn btn-lg btn-primary"
+                  className="btn btn-lg btn-primary tw-mt-6"
                   onClick={handleModalToggle}
                 >
                   Close
@@ -448,7 +447,7 @@ export const ChangeProfile = ({
                     <p className="validation-input">{errors.contactPhone}</p>
                   )}
                 </div>
-                <div className="tw-flex tw-flex-1 tw-justify-end tw-mt-4">
+                <div className="tw-mt-4 tw-flex tw-flex-1 tw-justify-end">
                   <a
                     href="#"
                     className="link link_gray tw-text-xs"
@@ -458,7 +457,7 @@ export const ChangeProfile = ({
                   </a>
                 </div>
               </div>
-              <div className="tw-flex tw-justify-end tw-mt-6">
+              <div className="tw-mt-6 tw-flex tw-justify-end">
                 {showVerifyStudentStatus && (
                   <button
                     type="button"

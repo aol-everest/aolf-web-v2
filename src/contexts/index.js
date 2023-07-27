@@ -1,8 +1,4 @@
 export {
-  GlobalModalContext,
-  useGlobalModalContext,
-} from "./GlobalModalContext";
-export {
   GlobalAlertContext,
   useGlobalAlertContext,
 } from "./GlobalAlertContext";
@@ -11,16 +7,20 @@ export {
   useGlobalAudioPlayerContext,
 } from "./GlobalAudioPlayerContext";
 export {
-  GlobalVideoPlayerContext,
-  useGlobalVideoPlayerContext,
-} from "./GlobalVideoPlayerContext";
+  GlobalBannerContext,
+  useGlobalBannerContext,
+} from "./GlobalBannerContext";
 export {
   GlobalLoadingContext,
   useGlobalLoadingContext,
 } from "./GlobalLoadingContext";
 export {
-  GlobalBannerContext,
-  useGlobalBannerContext,
-} from "./GlobalBannerContext";
+  GlobalModalContext,
+  useGlobalModalContext,
+} from "./GlobalModalContext";
+export {
+  GlobalVideoPlayerContext,
+  useGlobalVideoPlayerContext,
+} from "./GlobalVideoPlayerContext";
 
 export { AuthProvider, useAuth } from "./auth.context";

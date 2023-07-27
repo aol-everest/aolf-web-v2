@@ -1,12 +1,11 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
-import { useGlobalAlertContext } from "@contexts";
 import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext, useGlobalLoadingContext } from "@contexts";
 import { api } from "@utils";
 import classNames from "classnames";
-import { useGlobalLoadingContext } from "@contexts";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
 
 export const PendingAgreementModal = React.forwardRef((props, ref) => {
   const [isPPAgreementError, setIsPPAgreementError] = useState(false);

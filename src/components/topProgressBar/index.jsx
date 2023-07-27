@@ -1,6 +1,5 @@
 import Router from "next/router";
 import NProgress from "nprogress";
-import { useGlobalLoadingContext } from "@contexts";
 import "nprogress/nprogress.css";
 
 let timer;

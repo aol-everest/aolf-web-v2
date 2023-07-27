@@ -1,9 +1,8 @@
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
-import { api } from "@utils";
-import { useGlobalAlertContext } from "@contexts";
 import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
+import { api } from "@utils";
 import { NextSeo } from "next-seo";
 
 const successMessage = () => {

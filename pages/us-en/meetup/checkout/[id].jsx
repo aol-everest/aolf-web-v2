@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import { PageLoading } from "@components";
+import { MeetupPaymentForm } from "@components/meetup/meetupPaymentForm";
+import { useAuth } from "@contexts";
+import { withAuth } from "@hoc";
+import { useQueryString } from "@hooks";
+import { replaceRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { MeetupPaymentForm } from "@components/meetup/meetupPaymentForm";
 import { api } from "@utils";
-import { useRouter } from "next/router";
-import { useQueryString } from "@hooks";
 import { NextSeo } from "next-seo";
-import { withAuth } from "@hoc";
-import { PageLoading } from "@components";
-import { useQuery } from "react-query";
-import { useAuth } from "@contexts";
 import ErrorPage from "next/error";
-import { replaceRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,

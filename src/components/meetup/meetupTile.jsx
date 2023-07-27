@@ -1,9 +1,8 @@
-import React from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { ABBRS } from "@constants";
 import { tConvert } from "@utils";
 import classNames from "classnames";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 

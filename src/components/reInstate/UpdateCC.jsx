@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { api } from "@utils";
-import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useAuth } from "@contexts";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { api } from "@utils";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const createOptions = {
   style: {

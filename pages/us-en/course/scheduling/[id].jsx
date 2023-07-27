@@ -1,17 +1,17 @@
-import { US_STATES } from "@constants";
-import { useRouter } from "next/router";
-import { api } from "@utils";
-import React, { useState, useEffect, useRef } from "react";
-import { Formik } from "formik";
-import * as Yup from "yup";
 import { AgreementForm, Dropdown, StyledInput } from "@components/checkout";
+import { US_STATES } from "@constants";
+import { useQueryString } from "@hooks";
+import { replaceRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { replaceRouteWithUTMQuery } from "@service";
-import { useQueryString } from "@hooks";
+import { api } from "@utils";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import * as Yup from "yup";
 
-import { useGlobalModalContext } from "@contexts";
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
+import { useGlobalModalContext } from "@contexts";
 
 const SchedulingPayment = () => {
   const router = useRouter();

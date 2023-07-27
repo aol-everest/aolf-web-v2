@@ -1,28 +1,30 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 import { api, isSSR } from "@utils";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { useQuery } from "react-query";
 // import { DesignOne, DesignTwo } from "@components/content";
-import { Navigation, Scrollbar, A11y } from "swiper";
-import { useQueryString } from "@hooks";
-import { PurchaseMembershipModal, Loader } from "@components";
+import { Loader, PageLoading } from "@components";
+import { MODAL_TYPES } from "@constants";
 import {
-  useGlobalAudioPlayerContext,
+  useAuth,
   useGlobalAlertContext,
-  useGlobalVideoPlayerContext,
+  useGlobalAudioPlayerContext,
   useGlobalModalContext,
+  useGlobalVideoPlayerContext,
 } from "@contexts";
-import { useAuth } from "@contexts";
-import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { PageLoading } from "@components";
+import { useQueryString } from "@hooks";
+import {
+  markFavoriteEvent,
+  meditatePlayEvent,
+  pushRouteWithUTMQuery,
+} from "@service";
 import ErrorPage from "next/error";
-import { pushRouteWithUTMQuery } from "@service";
+import { A11y, Navigation, Scrollbar } from "swiper";
 
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/a11y";
+import "swiper/css/navigation";
 import "swiper/css/scrollbar";
 
 const DesignOne = dynamic(() =>

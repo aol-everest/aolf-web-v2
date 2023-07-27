@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import React, { useState } from "react";
 import classNames from "classnames";
-import { TabContent, TabPane, Nav, NavItem, NavLink } from "reactstrap";
+import { useState } from "react";
+import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 
 export const ResearchFindingSource = () => {
   const [selectedTab, setSelectedTab] = useState("detail");

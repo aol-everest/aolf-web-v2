@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import classNames from "classnames";
+import { useState } from "react";
 export const SmartDropDown = (props) => {
   const { buttonText, children, value, containerClass = "" } = props;
   const [visible, setVisibility] = useState(false);

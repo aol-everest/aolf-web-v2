@@ -1,6 +1,5 @@
-import React from "react";
-import { Field } from "formik";
 import classNames from "classnames";
+import { Field } from "formik";
 
 const PAYPAL_PAYMENT_MODE = "PAYPAL_PAYMENT_MODE";
 const STRIPE_PAYMENT_MODE = "STRIPE_PAYMENT_MODE";

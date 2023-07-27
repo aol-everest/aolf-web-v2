@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Link } from "react-scroll";
-import { COURSE_TYPES } from "@constants";
 import Image from "next/image";
+import { Link } from "react-scroll";
 
 dayjs.extend(utc);
 
@@ -22,7 +21,7 @@ export const CourseBottomCard = ({ workshop, onRegister = null }) => {
       <div className="container">
         <div className="course-bottom-card__container">
           <div className="course-bottom-card__info-block">
-            <div className="course-bottom-card__img d-none d-lg-block tw-max-w-[60px] tw-h-[60px] tw-relative">
+            <div className="course-bottom-card__img d-none d-lg-block tw-relative tw-h-[60px] tw-max-w-[60px]">
               {isSilentRetreatType && (
                 <Image
                   src="/img/course-card-4.png"

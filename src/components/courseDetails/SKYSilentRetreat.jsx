@@ -1,20 +1,20 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import { Link, Element } from "react-scroll";
-import { useRouter } from "next/router";
-import classNames from "classnames";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { useGlobalModalContext, useAuth } from "@contexts";
-import { ABBRS, MODAL_TYPES } from "@constants";
 import { HideOn } from "@components";
-import { priceCalculation, tConvert } from "@utils";
-import Style from "./CourseDetails.module.scss";
+import { ABBRS, MODAL_TYPES } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
+import { priceCalculation, tConvert } from "@utils";
+import classNames from "classnames";
+import dayjs from "dayjs";
+import { useRouter } from "next/router";
 import queryString from "query-string";
-import { Comment } from "./Comment";
+import { useState } from "react";
+import { Element, Link } from "react-scroll";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Comment } from "./Comment";
+import { CourseBottomCard } from "./CourseBottomCard";
+import Style from "./CourseDetails.module.scss";
 
 export const SKYSilentRetreat = ({ data, swiperOption }) => {
   const { authenticated = false } = useAuth();
@@ -558,7 +558,7 @@ export const SKYSilentRetreat = ({ data, swiperOption }) => {
                   <div className="comments__person">
                     <div className="comments__person-img">
                       <img
-                        className="rounded-circle tw-w-full tw-h-full"
+                        className="rounded-circle tw-h-full tw-w-full"
                         src="/img/Dan-Joy.jpg"
                         alt="comments"
                       />

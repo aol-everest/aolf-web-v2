@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import classNames from "classnames";
-import { Formik } from "formik";
-import * as Yup from "yup";
 import { useAuth } from "@contexts";
 import { Auth } from "@utils";
+import classNames from "classnames";
+import { Formik } from "formik";
+import { useState } from "react";
+import * as Yup from "yup";
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
   const { user } = useAuth();

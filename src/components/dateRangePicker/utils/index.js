@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import * as dates from "./dates";
 import cx from "./cx";
+import * as dates from "./dates";
 
 dayjs.extend(weekOfYear);
 
@@ -137,4 +137,4 @@ export const getDefaultState = () => {
   };
 };
 
-export { dates, cx, dayjs, unitType, interval, positions };
+export { cx, dates, dayjs, interval, positions, unitType };

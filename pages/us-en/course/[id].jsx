@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
 import { api } from "@utils";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 // import {
 //   SKYBreathMeditation,
 //   SahajSamadhi,
@@ -10,18 +10,18 @@ import ErrorPage from "next/error";
 //   SriSriYoga,
 //   VolunteerTrainingProgram,
 // } from "@components/courseDetails";
-import { Navigation, Scrollbar, A11y } from "swiper";
-import { COURSE_TYPES } from "@constants";
-import { NextSeo } from "next-seo";
-import { useAuth } from "@contexts";
-import { useAnalytics } from "use-analytics";
 import { PageLoading } from "@components";
-import { useQuery } from "react-query";
+import { COURSE_TYPES } from "@constants";
+import { useAuth } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
+import { NextSeo } from "next-seo";
+import { useQuery } from "react-query";
+import { A11y, Navigation, Scrollbar } from "swiper";
+import { useAnalytics } from "use-analytics";
 
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/a11y";
+import "swiper/css/navigation";
 import "swiper/css/scrollbar";
 
 import "bootstrap-daterangepicker/daterangepicker.css";

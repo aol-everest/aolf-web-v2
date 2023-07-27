@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useGlobalModalContext } from "@contexts";
 import { MODAL_TYPES } from "@constants";
-import { api, Auth } from "@utils";
-import { useAuth } from "@contexts";
-import { PageLoading } from "@components";
+import { useAuth, useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;

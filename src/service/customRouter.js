@@ -1,6 +1,6 @@
-import queryString from "query-string";
-import { isObject, isString, isNil } from "lodash";
 import { filterAllowedParams } from "@utils/utmParam";
+import { isNil, isObject, isString } from "lodash";
+import queryString from "query-string";
 
 export function pushRouteWithUTMQuery(router, params) {
   if (isNil(params)) {

@@ -1,20 +1,19 @@
-import React, { useState } from "react";
-import { useGlobalModalContext } from "@contexts";
+import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
+import { Auth, api } from "@utils";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAnalytics } from "use-analytics";
 import {
-  SignupForm,
-  SigninForm,
-  ResetPasswordForm,
   ChangePasswordForm,
   NewPasswordForm,
+  ResetPasswordForm,
+  SigninForm,
+  SignupForm,
 } from "./../loginForm";
-import { api, Auth } from "@utils";
-import { useAuth } from "@contexts";
-import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
-import { pushRouteWithUTMQuery } from "@service";
 
 const LOGIN_MODE = "LOGIN_MODE";
 const SIGNUP_MODE = "SIGNUP_MODE";

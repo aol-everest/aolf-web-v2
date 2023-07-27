@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useQuery } from "react-query";
 import { api } from "@utils";
+import { useState } from "react";
+import { useQuery } from "react-query";
 
 export const PastCourses = ({ isMobile }) => {
   const [pastWorkshops, setPastWorkshops] = useState([]);
@@ -88,7 +88,7 @@ export const PastCourses = ({ isMobile }) => {
                 <th>
                   <button
                     type="button"
-                    className="tw-flex table__sort-button"
+                    className="table__sort-button tw-flex"
                     data-order={workshopOrderAsc ? "asc" : "desc"}
                     onClick={handleOrderChange}
                   >

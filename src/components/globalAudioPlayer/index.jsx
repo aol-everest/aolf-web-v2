@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import AudioPlayer from "@components/audioPlayer";
 import { GlobalAudioPlayerContext } from "@contexts";
+import { useState } from "react";
 
 export const GlobalAudioPlayer = ({ children }) => {
   const [store, setStore] = useState();

@@ -1,34 +1,34 @@
 /* eslint-disable @next/next/inline-script-id */
-import React, { useEffect, useState } from "react";
-import { DefaultSeo } from "next-seo";
-import { ReactQueryDevtools } from "react-query/devtools";
-import { api, Compose, Auth, Talkable } from "@utils";
-import { QueryClient, QueryClientProvider } from "react-query";
 import {
-  Layout,
-  ReInstate,
   CardUpdateRequired,
+  Layout,
   PendingAgreement,
+  ReInstate,
   UsePagesViews,
 } from "@components";
-import { GlobalModal } from "@components/globalModal";
-import { GlobalBottomBanner } from "@components/globalBottomBanner";
 import { GlobalAlert } from "@components/globalAlert";
 import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
-import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
+import { GlobalBottomBanner } from "@components/globalBottomBanner";
 import { GlobalLoading } from "@components/globalLoading";
+import { GlobalModal } from "@components/globalModal";
+import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
 import { AuthProvider } from "@contexts";
 import { orgConfig } from "@org";
 import { analytics } from "@service";
+import { Auth, Compose, Talkable, api } from "@utils";
+import { DefaultSeo } from "next-seo";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { AnalyticsProvider } from "use-analytics";
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
 // import * as snippet from "@segment/snippet";
-import "@styles/global.scss";
 import "@styles/global-customize/style.scss";
+import "@styles/global.scss";
 import "@styles/style.scss";
 
 import "@styles/old-design/style.scss";

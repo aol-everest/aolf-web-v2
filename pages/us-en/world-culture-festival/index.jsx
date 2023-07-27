@@ -1,22 +1,21 @@
 /* eslint-disable react/no-unescaped-entities */
-import Head from "next/head";
-import { useState, useEffect, useCallback } from "react";
+import { FormikWizard } from "@components";
 import {
-  StepWelcome,
   StepAuth,
   StepContactDetail,
+  StepWelcome,
 } from "@components/worldCultureFestival";
-import { FormikWizard } from "@components";
+import { ALERT_TYPES } from "@constants";
+import { useAuth, useGlobalAlertContext } from "@contexts";
+import { useQueryString } from "@hooks";
+import { api } from "@utils";
+import startsWith from "lodash.startswith";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import { useAnalytics } from "use-analytics";
 import * as Yup from "yup";
-import { useQueryString } from "@hooks";
-import { useAuth } from "@contexts";
-import { api } from "@utils";
 import "yup-phone";
-import startsWith from "lodash.startswith";
-import { useGlobalAlertContext } from "@contexts";
-import { ALERT_TYPES } from "@constants";
-import { useRouter } from "next/router";
 
 const encodeFormData = (data) => {
   return Object.keys(data)

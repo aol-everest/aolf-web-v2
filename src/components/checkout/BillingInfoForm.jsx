@@ -1,9 +1,9 @@
-import React, { Fragment } from "react";
-import classNames from "classnames";
-import { StyledInput } from "./StyledInput";
-import { Dropdown } from "./Dropdown";
 import { US_STATES } from "@constants";
+import classNames from "classnames";
+import { Fragment } from "react";
 import Style from "./BillingInfoForm.module.scss";
+import { Dropdown } from "./Dropdown";
+import { StyledInput } from "./StyledInput";
 
 export const BillingInfoForm = ({ formikProps }) => {
   return (

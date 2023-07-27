@@ -1,14 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useState, useRef, useEffect } from "react";
-import { Field, ErrorMessage } from "formik";
-import Select2 from "react-select2-wrapper";
-import PhoneInput from "./../phoneInputCmp";
-import countryData from "./country.json";
 import { US_STATES } from "@constants";
 import classNames from "classnames";
-import { useAnalytics } from "use-analytics";
+import { Field } from "formik";
+import { trim } from "lodash";
 import { useRouter } from "next/router";
-import { trim, extend, forEach } from "lodash";
+import { useEffect, useRef } from "react";
+import Select2 from "react-select2-wrapper";
+import { useAnalytics } from "use-analytics";
+import PhoneInput from "./../phoneInputCmp";
+import countryData from "./country.json";
 
 function formatCountryOption(state) {
   if (!state.id) return state.text;

@@ -1,19 +1,16 @@
-import React, { useState } from "react";
+import {
+  ALLOW_GUEST_LOGIN_CTYPE,
+  COURSE_TYPES,
+  MEMBERSHIP_TYPES,
+  MODAL_TYPES,
+} from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
+import { isEmpty, priceCalculation } from "@utils";
 import classNames from "classnames";
-import { priceCalculation } from "@utils";
-import { useRouter } from "next/router";
-import { isEmpty } from "@utils";
-import { useAuth } from "@contexts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { useGlobalModalContext } from "@contexts";
-import {
-  MEMBERSHIP_TYPES,
-  COURSE_TYPES,
-  MODAL_TYPES,
-  ALLOW_GUEST_LOGIN_CTYPE,
-} from "@constants";
-import { pushRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
 import queryString from "query-string";
 
 dayjs.extend(utc);
@@ -159,7 +156,7 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !preRequisiteCondition,
           })}
         >
-          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
@@ -197,7 +194,7 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !preRequisiteCondition,
           })}
         >
-          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
@@ -266,7 +263,7 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !preRequisiteCondition,
           })}
         >
-          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
@@ -347,9 +344,9 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
-          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {earlyBirdFeeIncreasing ? (
-              <div class="tw-flex !tw-ml-0">
+              <div class="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
                   Register soon. Course fee will go up by $
@@ -416,9 +413,9 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
-          <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {earlyBirdFeeIncreasing ? (
-              <div class="tw-flex !tw-ml-0">
+              <div class="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
                   Register soon. Course fee will go up by $
@@ -491,9 +488,9 @@ export const RegisterPanel = ({ workshop }) => {
           "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
         })}
       >
-        <div class="tw-flex tw-flex-col tw-justify-start !tw-ml-0">
+        <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
           {earlyBirdFeeIncreasing ? (
-            <div class="tw-flex !tw-ml-0">
+            <div class="!tw-ml-0 tw-flex">
               <img src="/img/ic-timer-orange.svg" alt="timer" />
               <p class="!tw-mt-1 !tw-text-sm">
                 Register soon. Course fee will go up by $

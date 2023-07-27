@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { dayjs } from "./utils";
-import { Table } from "./Table";
+import PropTypes from "prop-types";
+import React from "react";
 import CalendarBody from "./CalendarBody";
 import CalendarHead from "./CalendarHead";
 import PickerUI from "./PickerUI";
+import { Table } from "./Table";
+import { dayjs } from "./utils";
 
 class Calendar extends React.Component {
   static propTypes = {

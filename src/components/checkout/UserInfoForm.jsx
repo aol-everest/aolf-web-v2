@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
-import { StyledInput } from "./StyledInput";
-import { PhoneNumberInputField } from "./PhoneNumberInputField";
 import { Field } from "formik";
+import { Fragment } from "react";
+import { PhoneNumberInputField } from "./PhoneNumberInputField";
+import { StyledInput } from "./StyledInput";
 
 export const UserInfoForm = ({
   formikProps,

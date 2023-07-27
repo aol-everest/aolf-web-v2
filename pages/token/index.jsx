@@ -1,11 +1,10 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { Auth } from "@utils";
-import { useAuth } from "@contexts";
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
 import { PageLoading } from "@components";
+import { ALERT_TYPES } from "@constants";
+import { useAuth, useGlobalAlertContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
+import { Auth } from "@utils";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;

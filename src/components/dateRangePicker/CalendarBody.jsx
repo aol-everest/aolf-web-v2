@@ -1,7 +1,7 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { Tr, TBody } from "./Table";
+import React from "react";
 import { cellMapper } from "./Cell";
+import { TBody, Tr } from "./Table";
 import { dates, unitType } from "./utils";
 
 export default class CalendarBody extends React.Component {

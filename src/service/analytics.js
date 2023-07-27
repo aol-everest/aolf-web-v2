@@ -1,7 +1,7 @@
-import Analytics from "analytics";
-import segmentPlugin from "@analytics/segment";
 import googleTagManager from "@analytics/google-tag-manager";
 import onRouteChange from "@analytics/router-utils";
+import segmentPlugin from "@analytics/segment";
+import Analytics from "analytics";
 import clevertapPlugin from "./clevertapPlugin";
 
 let plugins = [];

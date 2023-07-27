@@ -1,22 +1,22 @@
-import React, { useState, useRef } from "react";
 import { useGlobalVideoPlayerContext } from "@contexts";
 import classNames from "classnames";
+import "node_modules/video-react/dist/video-react.css";
+import { useRef, useState } from "react";
 import HTMLEllipsis from "react-lines-ellipsis/lib/html";
 import * as RemoveMarkdown from "remove-markdown";
-import "node_modules/video-react/dist/video-react.css";
 import {
-  Player,
-  ControlBar,
-  ReplayControl,
-  ForwardControl,
-  CurrentTimeDisplay,
-  TimeDivider,
-  PlaybackRateMenuButton,
-  VolumeMenuButton,
-  LoadingSpinner,
   BigPlayButton,
-  PlayToggle,
+  ControlBar,
+  CurrentTimeDisplay,
+  ForwardControl,
   FullscreenToggle,
+  LoadingSpinner,
+  PlayToggle,
+  PlaybackRateMenuButton,
+  Player,
+  ReplayControl,
+  TimeDivider,
+  VolumeMenuButton,
 } from "video-react";
 
 const VideoPlayer = () => {
