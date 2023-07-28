@@ -6,7 +6,6 @@ import {
 } from "@components";
 import {
   ALERT_TYPES,
-  ALLOW_GUEST_LOGIN_CTYPE,
   COURSE_TYPES,
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
@@ -109,11 +108,7 @@ const Checkout = () => {
   );
 
   useEffect(() => {
-    if (
-      workshop &&
-      !authenticated &&
-      !ALLOW_GUEST_LOGIN_CTYPE.includes(workshop.productTypeId)
-    ) {
+    if (workshop && !authenticated && !workshop.isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: "/login",
         query: {
