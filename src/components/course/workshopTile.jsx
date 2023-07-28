@@ -32,10 +32,17 @@ export const WorkshopTile = ({ data, authenticated }) => {
     locationCity,
     locationProvince,
     centerName,
+    isGuestCheckoutEnabled = false,
   } = data || {};
 
+  console.log("daa", data);
+
   const enrollAction = (workshopId, productTypeId) => () => {
-    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)) {
+    if (
+      isGuestCheckoutEnabled ||
+      authenticated ||
+      ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)
+    ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
