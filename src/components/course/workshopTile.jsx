@@ -34,6 +34,8 @@ export const WorkshopTile = ({ data, authenticated }) => {
     centerName,
   } = data || {};
 
+  console.log("data", data);
+
   const enrollAction = (workshopId, productTypeId) => () => {
     if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)) {
       pushRouteWithUTMQuery(router, {
