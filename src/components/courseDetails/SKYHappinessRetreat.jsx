@@ -1,18 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { ResearchPagination } from "./ResearchPagination";
-import { Comment } from "./Comment";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { RegisterPanel } from "./RegisterPanel";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { useGlobalAlertContext } from "@contexts";
-import { ABBRS, COURSE_TYPES, ALERT_TYPES, COURSE_MODES } from "@constants";
 import { HideOn } from "@components";
+import { ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { priceCalculation } from "@utils";
+import { Element, Link } from "react-scroll";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { CourseBottomCard } from "./CourseBottomCard";
+import CourseDetailsCard from "./CourseDetailsCard";
+import { RegisterPanel } from "./RegisterPanel";
+import { ResearchFindingSource } from "./ResearchFindingSource";
+import { ResearchPagination } from "./ResearchPagination";
 
 export const SKYHappinessRetreat = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -76,7 +74,7 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
         </section>
         <section className="progress-section">
           <div className="container">
-            <div className="featured-in max-[770px]:tw-mt-[60px] tw-mt-[120px]">
+            <div className="featured-in tw-mt-[120px] max-[770px]:tw-mt-[60px]">
               <h2 className="featured-in__title">Featured in</h2>
               <div className="featured-in__box d-none d-lg-flex">
                 <img src="/img/featured-in-cnn.png" alt="cnn" />

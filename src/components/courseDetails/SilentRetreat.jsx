@@ -1,12 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { ABBRS, COURSE_TYPES } from "@constants";
-import { RegisterPanel } from "./RegisterPanel";
 import { HideOn } from "@components";
+import { COURSE_TYPES } from "@constants";
+import { Element, Link } from "react-scroll";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { CourseBottomCard } from "./CourseBottomCard";
+import CourseDetailsCard from "./CourseDetailsCard";
+import { RegisterPanel } from "./RegisterPanel";
 
 export const SilentRetreat = ({ data, swiperOption }) => {
   const { title, mode } = data || {};

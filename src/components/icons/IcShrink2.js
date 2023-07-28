@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIcShrink2(props) {
   return (
     <svg

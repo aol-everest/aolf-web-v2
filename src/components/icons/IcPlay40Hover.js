@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIcPlay40Hover(props) {
   return (
     <svg

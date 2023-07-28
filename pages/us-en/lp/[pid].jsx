@@ -1,6 +1,5 @@
-import { useRouter } from "next/router";
-import ErrorPage from "next/error";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import Style from "./LandingPage.module.scss";
 
 const PAGES = {

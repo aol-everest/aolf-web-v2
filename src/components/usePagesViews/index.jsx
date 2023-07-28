@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 export const missingGtagMsg =
   "Gtag is missing. Add the `GoogleAnalytics` component to the `Head` component inside `_document.js`.";
 

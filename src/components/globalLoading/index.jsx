@@ -1,6 +1,5 @@
-import React, { useState } from "react";
 import { GlobalLoadingContext } from "@contexts";
-import { FadeInAnimation } from "@components";
+import { useState } from "react";
 
 export const GlobalLoading = ({ children }) => {
   const [store, setStore] = useState();
@@ -27,7 +26,7 @@ export const GlobalLoading = ({ children }) => {
       return null;
     }
     return (
-      <div className="tw-top-0 tw-w-full tw-h-full tw-fixed tw-z-[99999]">
+      <div className="tw-fixed tw-top-0 tw-z-[99999] tw-h-full tw-w-full">
         <div className="cover-spin"></div>
       </div>
     );

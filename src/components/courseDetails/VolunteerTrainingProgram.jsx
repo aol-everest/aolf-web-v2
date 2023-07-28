@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import { useRouter } from "next/router";
-import classNames from "classnames";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { useGlobalAlertContext } from "@contexts";
-import { ABBRS, COURSE_TYPES, ALERT_TYPES } from "@constants";
 import { HideOn } from "@components";
+import { ABBRS, ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
 import { priceCalculation, tConvert } from "@utils";
+import classNames from "classnames";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { RegisterPanel } from "./RegisterPanel";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { Element, Link } from "react-scroll";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { CourseBottomCard } from "./CourseBottomCard";
 import Style from "./CourseDetails.module.scss";
-import { pushRouteWithUTMQuery } from "@service";
+import { RegisterPanel } from "./RegisterPanel";
+import { ResearchFindingSource } from "./ResearchFindingSource";
 
 dayjs.extend(utc);
 
@@ -775,7 +775,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                         <div className="card-header">
                           <h2 className="mb-0 tw-pr-7">
                             <button
-                              className="btn btn-block text-left tw-px-0 tw-accordion-button tw-flex"
+                              className="btn btn-block text-left tw-accordion-button tw-flex tw-px-0"
                               type="button"
                               data-toggle="collapse"
                               data-target="#collapseOne"
@@ -786,7 +786,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                               {content.label}
                               <span
                                 class={classNames(Style.accordianIcon, {
-                                  "tw-transform tw-rotate-45": showContent,
+                                  "tw-rotate-45 tw-transform": showContent,
                                 })}
                               />
                             </button>

@@ -1,29 +1,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
+import { Loader } from "@components";
+import { DiscountCodeInput, Dropdown } from "@components/checkout";
+import { ABBRS, ALERT_TYPES, MODAL_TYPES, US_STATES } from "@constants";
+import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { api, isEmpty, tConvert } from "@utils";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { Loader } from "@components";
+import { Field, Formik } from "formik";
+import { useState } from "react";
+import * as Yup from "yup";
 import "yup-phone";
-import { isEmpty } from "@utils";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { DiscountCodeInput, Dropdown } from "@components/checkout";
-import { EmailField } from "./EmailField";
-import { Radiobox } from "./Radiobox";
-import { PriceCalculationComponent } from "./PriceCalculationComponent";
-import {
-  PAYMENT_MODES,
-  PAYMENT_TYPES,
-  ALERT_TYPES,
-  MODAL_TYPES,
-  US_STATES,
-  ABBRS,
-} from "@constants";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { api, tConvert } from "@utils";
 import Style from "./BackendPaymentForm.module.scss";
+import { EmailField } from "./EmailField";
+import { PriceCalculationComponent } from "./PriceCalculationComponent";
+import { Radiobox } from "./Radiobox";
 
 dayjs.extend(isSameOrBefore);
 
@@ -200,7 +192,7 @@ export const BackendPaymentForm = ({
               <div className="modal-content-text tw-text-left">
                 An email notification will be sent to the participant with the
                 following actions required:
-                <ol className="pl-5 tw-space-y-3 tw-list-decimal">
+                <ol className="pl-5 tw-list-decimal tw-space-y-3">
                   <li>
                     Participant will need to consent to the Program Participant
                     Agreement (PPA).
@@ -220,7 +212,7 @@ export const BackendPaymentForm = ({
             <p className="tw-flex tw-justify-center">
               <a
                 href="#"
-                className="tw-mt-6 btn btn-lg btn-primary"
+                className="btn btn-lg btn-primary tw-mt-6"
                 onClick={handleModalToggle}
               >
                 Close
@@ -1333,7 +1325,7 @@ export const BackendPaymentForm = ({
                                       }
                                       className={
                                         residentialAddOn.isFull &&
-                                        "tw-opacity-60 tw-pointer-events-none"
+                                        "tw-pointer-events-none tw-opacity-60"
                                       }
                                     >
                                       <label
@@ -1346,7 +1338,7 @@ export const BackendPaymentForm = ({
                                           {residentialAddOn.productName}
                                         </span>
                                         {residentialAddOn.isFull && (
-                                          <span class="tw-bg-gray-100 tw-text-gray-800 tw-text-xs tw-px-2.5 tw-py-0.5 tw-rounded tw-dark:bg-gray-700 tw-dark:text-gray-500">
+                                          <span class="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
                                             Full
                                           </span>
                                         )}

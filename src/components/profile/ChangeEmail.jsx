@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
+import { useAuth } from "@contexts";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { object, string } from "yup";
 import { api } from "@utils";
+import classNames from "classnames";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
-import { useAuth } from "@contexts";
+import { object, string } from "yup";
 
 const ChangeEmailStep = ({
   onSubmit,
@@ -66,13 +66,13 @@ const ChangeEmailStep = ({
               placeholder="Enter new email"
             />
             {errors.username && (
-              <p className="tw-text-red-700 tw-text-sm">
+              <p className="tw-text-sm tw-text-red-700">
                 {errors.username.message}
               </p>
             )}
 
             {showMessage && (
-              <p className="tw-text-red-700 tw-text-sm">{message}</p>
+              <p className="tw-text-sm tw-text-red-700">{message}</p>
             )}
           </div>
         </div>

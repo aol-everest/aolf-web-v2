@@ -1,24 +1,24 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import "yup-phone";
+import { Loader } from "@components";
 import {
   BillingInfoForm,
-  UserInfoForm,
   DiscountCodeInput,
+  UserInfoForm,
 } from "@components/checkout";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { api, Auth } from "@utils";
-import { Loader } from "@components";
-import { useGlobalAlertContext, useAuth } from "@contexts";
-import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import Link from "@components/linkWithUTM";
+import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { useAuth, useGlobalAlertContext } from "@contexts";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { Auth, api } from "@utils";
 import { filterAllowedParams } from "@utils/utmParam";
+import classNames from "classnames";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import * as Yup from "yup";
+import "yup-phone";
 
 const createOptions = {
   style: {

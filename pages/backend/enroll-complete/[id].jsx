@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import classNames from "classnames";
-import { api } from "@utils";
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
 import { Radiobox } from "@components/backendPaymentForm/Radiobox";
 import { BackendRegisterationDetail } from "@components/backendRegisterationDetail";
+import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { replaceRouteWithUTMQuery } from "@service";
+import { api } from "@utils";
+import classNames from "classnames";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 import Style from "./Complete.module.scss";
 

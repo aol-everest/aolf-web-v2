@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from "@constants";
 import classNames from "classnames";
 import { Field } from "formik";
-import { PAYMENT_TYPES, COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 export const PreCostDetailsCard = ({
   workshop,

@@ -1,33 +1,31 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import React, { useEffect } from "react";
-import { api, tConvert, calculateBusinessDays } from "@utils";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { useAnalytics } from "use-analytics";
-import moment from "moment";
-import { useAuth, useGlobalAlertContext } from "@contexts";
-import { COURSE_TYPES, ALERT_TYPES, ABBRS, COURSE_MODES } from "@constants";
-import { AddToCalendarModal } from "@components";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import Image from "next/image";
-import { PageLoading } from "@components";
-import ErrorPage from "next/error";
-import { Talkable } from "@utils";
+import { AddToCalendarModal, PageLoading } from "@components";
 import {
-  SilentRetreat,
+  InPersonGenericCourse,
+  OnlineCourse,
   SKYBreathMeditation,
   SKYBreathMeditationCombo,
   SahajSamadhi,
   SahajSamadhiCombo,
-  InPersonGenericCourse,
-  OnlineCourse,
+  SilentRetreat,
 } from "@components/coursethankYouDetails";
+import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
-import { setCookie, hasCookie } from "cookies-next";
+import { Talkable, api, calculateBusinessDays, tConvert } from "@utils";
+import { hasCookie, setCookie } from "cookies-next";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+import moment from "moment";
+import ErrorPage from "next/error";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
+import { useAnalytics } from "use-analytics";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -566,7 +564,7 @@ const Thankyou = () => {
                       {selectedGenericSlot.startDate &&
                         getSelectedTimeSlotDetails(selectedGenericSlot)}
                       {!selectedGenericSlot.startDate && (
-                        <ul className="program-details__list-schedule tw-overflow-y-auto tw-max-h-[400px]">
+                        <ul className="program-details__list-schedule tw-max-h-[400px] tw-overflow-y-auto">
                           {timings &&
                             timings.map((time, i) => {
                               return (
@@ -607,11 +605,11 @@ const Thankyou = () => {
                                 rel="noreferrer"
                               >
                                 {workshop.locationStreet && (
-                                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                                     {workshop.locationStreet}
                                   </li>
                                 )}
-                                <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                                   {workshop.locationCity || ""}
                                   {", "}
                                   {workshop.locationProvince || ""}{" "}
@@ -637,16 +635,16 @@ const Thankyou = () => {
                                 rel="noreferrer"
                               >
                                 {workshop.streetAddress1 && (
-                                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                                     {workshop.streetAddress1}
                                   </li>
                                 )}
                                 {workshop.streetAddress2 && (
-                                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                                     {workshop.streetAddress2}
                                   </li>
                                 )}
-                                <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                                <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                                   {workshop.city || ""}
                                   {", "}
                                   {workshop.state || ""} {workshop.zip || ""}
@@ -675,7 +673,7 @@ const Thankyou = () => {
         <div className="container">
           <div className="course-bottom-card__container">
             <div className="course-bottom-card__info-block">
-              <div className="course-bottom-card__img d-none d-lg-block tw-max-w-[60px] tw-h-[60px] tw-relative">
+              <div className="course-bottom-card__img d-none d-lg-block tw-relative tw-h-[60px] tw-max-w-[60px]">
                 {isSilentRetreatType && (
                   <Image
                     src="/img/course-card-4.png"

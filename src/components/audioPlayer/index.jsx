@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useEffect, useRef } from "react";
 import { useGlobalAudioPlayerContext } from "@contexts";
+import { useEffect, useRef, useState } from "react";
 // import AudioControls from "./AudioControls";
 // import Backdrop from "./Backdrop";
 // import "./styles.css";
@@ -230,7 +230,7 @@ const AudioPlayer = () => {
                   <span>Alan Watts</span>
                   <div className="audioplayer">
                     <div
-                      className="audioplayer-playpause tw-w-[40px] tw-h-[40px]"
+                      className="audioplayer-playpause tw-h-[40px] tw-w-[40px]"
                       title=""
                       onClick={onPlayPauseClick}
                     >

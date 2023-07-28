@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
-import Select2 from "react-select2-wrapper";
-import { Field, ErrorMessage } from "formik";
-import { useEffect, useRef } from "react";
-import { useRouter } from "next/router";
-import { useAnalytics } from "use-analytics";
 import classNames from "classnames";
+import { Field } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useRef } from "react";
+import Select2 from "react-select2-wrapper";
+import { useAnalytics } from "use-analytics";
 
 const NoOfTicketInput = ({ field, form, ...props }) => {
   const selectComp = useRef(null);

@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { api, stringToBoolean } from "@utils";
-import { useAnalytics } from "use-analytics";
-import { NextSeo } from "next-seo";
-import { useIntersectionObserver } from "@hooks";
-import classNames from "classnames";
-import { useUIDSeed } from "react-uid";
-import dynamic from "next/dynamic";
-import { useAuth } from "@contexts";
 import {
-  Popup,
-  SmartInput,
-  MobileFilterModal,
-  SmartDropDown,
   DateRangeInput,
+  MobileFilterModal,
+  Popup,
+  SmartDropDown,
+  SmartInput,
 } from "@components";
-import { useQueryString } from "@hooks";
-import { COURSE_TYPES, TIME_ZONE, COURSE_MODES } from "@constants";
-import ContentLoader from "react-content-loader";
+import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from "@constants";
+import { useAuth } from "@contexts";
+import { useIntersectionObserver, useQueryString } from "@hooks";
 import { orgConfig } from "@org";
+import { api, stringToBoolean } from "@utils";
+import classNames from "classnames";
+import { NextSeo } from "next-seo";
+import dynamic from "next/dynamic";
+import React, { useEffect, useState } from "react";
+import ContentLoader from "react-content-loader";
+import { useInfiniteQuery, useQuery } from "react-query";
+import { useUIDSeed } from "react-uid";
+import { useAnalytics } from "use-analytics";
 
-import Style from "./Course.module.scss";
 import "bootstrap-daterangepicker/daterangepicker.css";
+import Style from "./Course.module.scss";
 
 const WorkshopTile = dynamic(() =>
   import("@components/course/workshopTile").then((mod) => mod.WorkshopTile),

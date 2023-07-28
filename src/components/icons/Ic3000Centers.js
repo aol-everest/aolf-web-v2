@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIc3000Centers(props) {
   return (
     <svg

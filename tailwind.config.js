@@ -7,6 +7,8 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  theme: {},
+  theme: {
+    extend: {},
+  },
   plugins: [],
 };

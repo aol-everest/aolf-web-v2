@@ -1,7 +1,7 @@
-import { FieldWrapper } from "./FieldWrapper";
-import React, { useState, useEffect } from "react";
-import classNames from "classnames";
 import { api } from "@utils";
+import classNames from "classnames";
+import { useEffect, useState } from "react";
+import { FieldWrapper } from "./FieldWrapper";
 
 export const DiscountCodeInput = ({
   label,

@@ -1,20 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import { useRouter } from "next/router";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { ResearchPagination } from "./ResearchPagination";
-import { Comment } from "./Comment";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { RegisterPanel } from "./RegisterPanel";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { useGlobalAlertContext } from "@contexts";
-import { ABBRS, COURSE_TYPES, ALERT_TYPES, COURSE_MODES } from "@constants";
 import { HideOn } from "@components";
-import { priceCalculation } from "@utils";
+import { ALERT_TYPES, COURSE_MODES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
+import { priceCalculation } from "@utils";
+import { useRouter } from "next/router";
+import { Element } from "react-scroll";
+import { CourseBottomCard } from "./CourseBottomCard";
+import { RegisterPanel } from "./RegisterPanel";
+import { ResearchFindingSource } from "./ResearchFindingSource";
 
 export const SanyamCourse = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();

@@ -1,12 +1,12 @@
-import UserPool from "./userPool";
-import {
-  CognitoUser,
-  AuthenticationDetails,
-  CognitoUserAttribute,
-  CognitoRefreshToken,
-} from "amazon-cognito-identity-js";
 import { CognitoAuth } from "amazon-cognito-auth-js/dist/amazon-cognito-auth";
+import {
+  AuthenticationDetails,
+  CognitoRefreshToken,
+  CognitoUser,
+  CognitoUserAttribute,
+} from "amazon-cognito-identity-js";
 import { api } from "./api";
+import UserPool from "./userPool";
 
 export const createCognitoAuth = () => {
   const config = {

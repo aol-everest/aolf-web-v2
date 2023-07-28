@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { api } from "@utils";
-import { useRouter } from "next/router";
-import classNames from "classnames";
-import Style from "./MembershipCancellation.module.scss";
 import { PageLoading } from "@components";
-import ErrorPage from "next/error";
-import { withAuth } from "@hoc";
-import { useQuery } from "react-query";
 import { useAuth } from "@contexts";
+import { withAuth } from "@hoc";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
+import { api } from "@utils";
+import classNames from "classnames";
+import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import Style from "./MembershipCancellation.module.scss";
 
 /* export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { Auth } = withSSRContext({ req });
@@ -181,7 +181,7 @@ const MembershipCancellation = () => {
     <main>
       <section
         className={classNames(
-          "journey-cancellation !tw-pt-[108px] !tw-pb-[117px] !tw-px-0",
+          "journey-cancellation !tw-px-0 !tw-pb-[117px] !tw-pt-[108px]",
           Style.journeyCancellation,
         )}
       >

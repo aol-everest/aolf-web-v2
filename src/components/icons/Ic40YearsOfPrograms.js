@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIc40YearsOfPrograms(props) {
   return (
     <svg

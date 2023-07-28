@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import { api, tConvert } from "@utils";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import { useQueryString } from "@hooks";
-import { useQuery } from "react-query";
-import { MEMBERSHIP_TYPES, COURSE_TYPES, CONTENT_FOLDER_IDS } from "@constants";
 import { PageLoading } from "@components";
-import ErrorPage from "next/error";
+import { CONTENT_FOLDER_IDS, COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { useAuth } from "@contexts";
 import { withAuth } from "@hoc";
+import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
+import { api, tConvert } from "@utils";
+import classNames from "classnames";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
 
 dayjs.extend(utc);
 

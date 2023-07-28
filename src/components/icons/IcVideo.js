@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIcVideo(props) {
   return (
     <svg

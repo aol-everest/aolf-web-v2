@@ -1,6 +1,5 @@
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
 // import { api } from "@utils";
 // import { useGlobalAlertContext } from "@contexts";
 // import { ALERT_TYPES } from "@constants";

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Field } from "formik";
-import classNames from "classnames";
 import Link from "@components/linkWithUTM";
+import classNames from "classnames";
+import { Field } from "formik";
+import React, { useEffect } from "react";
 
 export const AgreementForm = ({
   formikProps,

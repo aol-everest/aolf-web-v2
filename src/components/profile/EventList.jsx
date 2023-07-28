@@ -1,10 +1,8 @@
-import React from "react";
+import { ABBRS, COURSE_TYPES } from "@constants";
+import { tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useEmblaCarousel } from "embla-carousel/react";
-import { ABBRS } from "@constants";
-import { tConvert } from "@utils";
-import { COURSE_TYPES } from "@constants";
 
 dayjs.extend(utc);
 

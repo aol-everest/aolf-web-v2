@@ -1,7 +1,7 @@
 import { useAuth } from "@contexts";
-import React, { useEffect, useState } from "react";
-import { api, Auth } from "@utils";
 import { withAuth } from "@hoc";
+import { Auth } from "@utils";
+import { useEffect } from "react";
 
 function DevOnly() {
   const { user, setUser } = useAuth();
@@ -21,11 +21,11 @@ function DevOnly() {
   };
 
   return (
-    <div className="tw-bg-gray-200 tw-text-white tw-text-sm">
+    <div className="tw-bg-gray-200 tw-text-sm tw-text-white">
       <div className="tw-bg-gray-500 tw-px-4 tw-py-3 tw-text-yellow-300">
         <strong>Debug</strong>
       </div>
-      <pre className="tw-block tw-px-4 tw-py-3 tw-m-0 tw-overflow-scroll">
+      <pre className="tw-m-0 tw-block tw-overflow-scroll tw-px-4 tw-py-3">
         {JSON.stringify(user, null, 2)}
       </pre>
     </div>

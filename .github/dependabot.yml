@@ -6,8 +6,9 @@ updates:
       interval: 'weekly'
       day: 'friday'
     commit-message:
-      prefix: 'npm'
+      prefix: 'yarn'
       include: 'scope'
+    target-branch: 'qa'
     labels:
-      - 'npm'
+      - 'yarn'
       - 'dependencies'

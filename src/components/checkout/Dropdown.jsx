@@ -1,8 +1,7 @@
-import React from "react";
 import classNames from "classnames";
 import { Field } from "formik";
-import { FieldWrapper } from "./FieldWrapper";
 import Style from "./Dropdown.module.scss";
+import { FieldWrapper } from "./FieldWrapper";
 
 export const Dropdown = ({
   label,

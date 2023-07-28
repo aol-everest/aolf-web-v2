@@ -1,46 +1,42 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
-import classNames from "classnames";
-import { PayPalButton } from "react-paypal-button-v2";
-import { useRouter } from "next/router";
-import { isEmpty, Auth } from "@utils";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Loader } from "@components";
 import {
-  BillingInfoForm,
-  PayWith,
-  UserInfoForm,
-  MobileCourseOptions,
   AgreementForm,
-  MobileCourseDetails,
-  DiscountCodeInput,
+  BillingInfoForm,
   CourseDetailsCard,
-  PreCostDetailsCard,
-  PostCostDetailsCard,
-  ProgramQuestionnaire,
+  DiscountCodeInput,
   MobileBottomBar,
+  MobileCourseDetails,
+  MobileCourseOptions,
+  PayWith,
+  PostCostDetailsCard,
+  PreCostDetailsCard,
+  ProgramQuestionnaire,
+  UserInfoForm,
 } from "@components/checkout";
-import "yup-phone";
-import { priceCalculation } from "@utils";
-import { useQueryString } from "@hooks";
 import {
-  PAYMENT_MODES,
-  PAYMENT_TYPES,
   ALERT_TYPES,
   MODAL_TYPES,
+  PAYMENT_MODES,
+  PAYMENT_TYPES,
 } from "@constants";
 import {
+  useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-  useAuth,
 } from "@contexts";
-import { Loader } from "@components";
-import { api } from "@utils";
+import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { Auth, api, isEmpty, priceCalculation } from "@utils";
 import { filterAllowedParams } from "@utils/utmParam";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { PayPalButton } from "react-paypal-button-v2";
+import * as Yup from "yup";
+import "yup-phone";
 
 const createOptions = {
   style: {

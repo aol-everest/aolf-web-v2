@@ -1,5 +1,3 @@
-import React from "react";
-
 export const WCFHeader = () => {
   return (
     <header className="wcf-header">

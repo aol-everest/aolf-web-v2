@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
+import PropTypes from "prop-types";
+import React from "react";
 
-import { dayjs } from "./utils";
 import { Table } from "./Table";
+import { dayjs } from "./utils";
 
 import CalendarBody from "./CalendarBody";
 import CalendarHead from "./CalendarHead";

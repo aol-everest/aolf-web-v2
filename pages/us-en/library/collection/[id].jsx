@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { useQuery } from "react-query";
-import { api } from "@utils";
-import classNames from "classnames";
-import { NextSeo } from "next-seo";
-import { useAuth } from "@contexts";
-import { useRouter } from "next/router";
-import "bootstrap-daterangepicker/daterangepicker.css";
-import Image from "next/image";
+import { PageLoading } from "@components";
+import { MODAL_TYPES } from "@constants";
 import {
+  useAuth,
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
-  useGlobalVideoPlayerContext,
   useGlobalModalContext,
+  useGlobalVideoPlayerContext,
 } from "@contexts";
 import { useQueryString } from "@hooks";
-import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES, ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { PageLoading } from "@components";
+import {
+  markFavoriteEvent,
+  meditatePlayEvent,
+  pushRouteWithUTMQuery,
+} from "@service";
+import { api } from "@utils";
+import "bootstrap-daterangepicker/daterangepicker.css";
+import classNames from "classnames";
+import { NextSeo } from "next-seo";
 import ErrorPage from "next/error";
-import { pushRouteWithUTMQuery } from "@service";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;

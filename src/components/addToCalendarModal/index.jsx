@@ -1,6 +1,6 @@
-import Style from "./AddToCalendarModal.module.scss";
-import { buildShareUrl, isInternetExplorer } from "@utils";
 import { SHARE_SITES } from "@constants";
+import { buildShareUrl, isInternetExplorer } from "@utils";
+import Style from "./AddToCalendarModal.module.scss";
 
 export const AddToCalendarModal = ({ event }) => {
   const handleCalendarButtonClick = (e) => {

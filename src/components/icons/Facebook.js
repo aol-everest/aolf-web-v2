@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgFacebook(props) {
   return (
     <svg

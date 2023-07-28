@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { secondsToHms } from "@utils";
+import { useState } from "react";
 import HTMLEllipsis from "react-lines-ellipsis/lib/html";
 import * as RemoveMarkdown from "remove-markdown";
-import { secondsToHms } from "@utils";
 
 export const ChapterItem = ({ chapter, playChapterAction }) => {
   const [showFull, setShowFull] = useState(false);

@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link } from "react-scroll";
+import { HideOn } from "@components";
+import { COURSE_TYPES, MODAL_TYPES } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
 import { useRouter } from "next/router";
+import queryString from "query-string";
+import { Link } from "react-scroll";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { CourseBottomCard } from "./CourseBottomCard";
 import CourseDetailsCard from "./CourseDetailsCard";
 import { ResearchPaginationHB } from "./ResearchPaginationHB";
-import { CourseBottomCard } from "./CourseBottomCard";
-import queryString from "query-string";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { COURSE_TYPES, MODAL_TYPES } from "@constants";
-import { HideOn } from "@components";
-import { pushRouteWithUTMQuery } from "@service";
 
 export const HealingBreath = ({ data, swiperOption }) => {
   const { authenticated = false } = useAuth();

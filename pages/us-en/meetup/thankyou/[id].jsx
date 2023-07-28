@@ -1,29 +1,24 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import React, { useEffect } from "react";
-import moment from "moment";
-import { api, calculateBusinessDays, tConvert } from "@utils";
-import { useAnalytics } from "use-analytics";
-import { useRouter } from "next/router";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import localizedFormat from "dayjs/plugin/localizedFormat";
+import { AddToCalendarModal, PageLoading } from "@components";
 import {
-  useAuth,
-  useGlobalAlertContext,
-  useGlobalModalContext,
-} from "@contexts";
-import { AddToCalendarModal } from "@components";
-import { ALERT_TYPES, ABBRS, COURSE_MODES, MEETUP_TYPES } from "@constants";
-import { useQuery } from "react-query";
-import { PageLoading } from "@components";
-import ErrorPage from "next/error";
-import {
-  SKYMeetup,
-  SahajSamadhiMeetup,
   InPersonGenericMeetup,
   OnlineMeetup,
+  SKYMeetup,
+  SahajSamadhiMeetup,
 } from "@components/meetupthankYouDetails";
+import { ABBRS, ALERT_TYPES, COURSE_MODES, MEETUP_TYPES } from "@constants";
+import { useAuth, useGlobalAlertContext } from "@contexts";
+import { api, calculateBusinessDays, tConvert } from "@utils";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+import moment from "moment";
+import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
+import { useAnalytics } from "use-analytics";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -388,11 +383,11 @@ const Thankyou = () => {
                         rel="noreferrer"
                       >
                         {meetup.locationStreet && (
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                          <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                             {meetup.locationStreet}
                           </li>
                         )}
-                        <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                        <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                           {meetup.locationCity || ""}
                           {", "}
                           {meetup.locationProvince || ""}{" "}
@@ -416,16 +411,16 @@ const Thankyou = () => {
                         rel="noreferrer"
                       >
                         {meetup.streetAddress1 && (
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                          <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                             {meetup.streetAddress1}
                           </li>
                         )}
                         {meetup.streetAddress2 && (
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                          <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                             {meetup.streetAddress2}
                           </li>
                         )}
-                        <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                        <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                           {meetup.city || ""}
                           {", "}
                           {meetup.state || ""} {meetup.zip || ""}
