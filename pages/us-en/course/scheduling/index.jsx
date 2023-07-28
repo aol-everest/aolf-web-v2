@@ -114,6 +114,9 @@ const SchedulingRange = () => {
                     <h2 className="scheduling-second__title scheduling-second__title--large mt-2">
                       {selectedWorkshop.title || "SKY Breath Meditation"}
                     </h2>
+                    <p className="scheduling-second__text mt-2">
+                      9 Hours Meditation Course
+                    </p>
                   </div>
                 </div>
               </div>
