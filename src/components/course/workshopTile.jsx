@@ -35,8 +35,6 @@ export const WorkshopTile = ({ data, authenticated }) => {
     isGuestCheckoutEnabled = false,
   } = data || {};
 
-  console.log("daa", data);
-
   const enrollAction = (workshopId, productTypeId) => () => {
     if (
       isGuestCheckoutEnabled ||
