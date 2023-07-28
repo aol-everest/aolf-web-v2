@@ -35,11 +35,6 @@ export const TIME_ZONE = {
   },
 };
 
-export const ALLOW_GUEST_LOGIN_CTYPE = process.env
-  .NEXT_PUBLIC_ALLOW_GUEST_LOGIN_CTYPE
-  ? process.env.NEXT_PUBLIC_ALLOW_GUEST_LOGIN_CTYPE.split(";")
-  : [];
-
 export const CONTENT_FOLDER_IDS = {
   MEDITATE_FOLDER_ID: process.env.NEXT_PUBLIC_MEDITATE_FOLDER_ID,
   WISDOM_FOLDER_ID: process.env.NEXT_PUBLIC_WISDOM_FOLDER_ID,
