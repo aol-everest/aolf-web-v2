@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { api } from "@utils";
 import classNames from "classnames";
+import { useState } from "react";
 
 export function EmailField({
   applyDiscount,
@@ -112,7 +112,7 @@ export function EmailField({
             </label>
           )}
           {loading && (
-            <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
+            <span className="loader-inline tw-absolute tw-right-0 tw-top-4"></span>
           )}
         </>
       )}
@@ -140,7 +140,7 @@ export function EmailField({
               </a>
             </span>
             {loading && (
-              <span className="loader-inline tw-right-0 tw-top-4 tw-absolute"></span>
+              <span className="loader-inline tw-absolute tw-right-0 tw-top-4"></span>
             )}
           </div>
         </>

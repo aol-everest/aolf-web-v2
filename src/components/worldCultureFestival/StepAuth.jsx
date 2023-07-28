@@ -1,20 +1,19 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useState, useEffect } from "react";
-import { api, Auth } from "@utils";
-import { useAuth } from "@contexts";
-import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
-import classNames from "classnames";
-import { useRouter } from "next/router";
 import Link from "@components/linkWithUTM";
+import { useAuth } from "@contexts";
+import { Auth } from "@utils";
+import classNames from "classnames";
 import startsWith from "lodash.startswith";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAnalytics } from "use-analytics";
 import {
-  SigninForm,
-  SignupForm,
+  ChangePasswordForm,
   NewPasswordForm,
   ResetPasswordForm,
-  ChangePasswordForm,
+  SigninForm,
+  SignupForm,
 } from "./loginForm";
 
 const encodeFormData = (data) => {

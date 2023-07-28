@@ -1,18 +1,16 @@
-import React from "react";
+import {
+  ABBRS,
+  ALLOW_GUEST_LOGIN_CTYPE,
+  COURSE_TYPES,
+  MODAL_TYPES,
+} from "@constants";
+import { useGlobalModalContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
+import classNames from "classnames";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
-import Link from "@components/linkWithUTM";
 import { useRouter } from "next/router";
-import { useGlobalModalContext } from "@contexts";
-import {
-  MODAL_TYPES,
-  ABBRS,
-  COURSE_TYPES,
-  ALLOW_GUEST_LOGIN_CTYPE,
-} from "@constants";
-import classNames from "classnames";
-import { pushRouteWithUTMQuery } from "@service";
 import queryString from "query-string";
 
 dayjs.extend(utc);

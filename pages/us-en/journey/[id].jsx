@@ -1,14 +1,14 @@
-import { Navigation, Scrollbar, A11y } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { api, isSSR } from "@utils";
 import { PageLoading } from "@components";
-import { useQuery } from "react-query";
-import { useRouter } from "next/router";
+import { api, isSSR } from "@utils";
 import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import { A11y, Navigation, Scrollbar } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/a11y";
+import "swiper/css/navigation";
 import "swiper/css/scrollbar";
 
 /* export const getServerSideProps = async (context) => {

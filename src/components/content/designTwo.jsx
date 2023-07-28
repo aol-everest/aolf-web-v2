@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { MobileFilterModal, Popup, SmartDropDown } from "@components";
+import Link from "@components/linkWithUTM";
+import { DURATION } from "@constants";
+import { pushRouteWithUTMQuery } from "@service";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Link from "@components/linkWithUTM";
-import { Popup, MobileFilterModal, SmartDropDown } from "@components";
-import { DURATION } from "@constants";
-import { pushRouteWithUTMQuery } from "@service";
 
 const timeConvert = (data) => {
   const minutes = data % 60;

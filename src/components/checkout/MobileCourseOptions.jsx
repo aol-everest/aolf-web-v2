@@ -1,7 +1,6 @@
-import React, { Fragment } from "react";
+import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from "@constants";
 import classNames from "classnames";
 import { Field } from "formik";
-import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from "@constants";
 
 export const MobileCourseOptions = ({
   expenseAddOn,
@@ -275,7 +274,7 @@ export const MobileCourseOptions = ({
                                   )}
                                   <label htmlFor={product.productSfid}></label>
                                   <span className="ml-2">
-                                    {product.productName} Required:
+                                    {product.productName}:
                                   </span>
                                 </span>
                                 <span className="ml-2">
@@ -364,7 +363,7 @@ export const MobileCourseOptions = ({
                                   )}
                                   <label htmlFor={product.productSfid}></label>
                                   <span className="ml-2">
-                                    {product.productName} Required:
+                                    {product.productName}:
                                   </span>
                                 </span>
                                 <span className="ml-2">
@@ -423,7 +422,7 @@ export const MobileCourseOptions = ({
                                 )}
                                 <label htmlFor={product.productSfid}></label>
                                 <span className="ml-2">
-                                  {product.productName} Required:
+                                  {product.productName}:
                                 </span>
                               </span>
                               <span className="ml-2">${product.unitPrice}</span>
@@ -495,7 +494,7 @@ export const MobileCourseOptions = ({
                         }
                         className={
                           residentialAddOn.isFull &&
-                          "tw-opacity-60 tw-pointer-events-none"
+                          "tw-pointer-events-none tw-opacity-60"
                         }
                       >
                         <label
@@ -506,7 +505,7 @@ export const MobileCourseOptions = ({
                         >
                           <span>{residentialAddOn.productName}</span>
                           {residentialAddOn.isFull && (
-                            <span class="tw-bg-gray-100 tw-text-gray-800 tw-text-xs tw-px-2.5 tw-py-0.5 tw-rounded tw-dark:bg-gray-700 tw-dark:text-gray-500">
+                            <span class="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
                               Full
                             </span>
                           )}

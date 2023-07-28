@@ -1,20 +1,23 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useEffect } from "react";
+import { Loader } from "@components";
+import Link from "@components/linkWithUTM";
+import { ALERT_TYPES, MODAL_TYPES } from "@constants";
+import {
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalModalContext,
+} from "@contexts";
+import { withAuth } from "@hoc";
+import { useQueryString } from "@hooks";
+import { pushRouteWithUTMQuery } from "@service";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Auth } from "@utils";
+import classNames from "classnames";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import classNames from "classnames";
-import Link from "@components/linkWithUTM";
+import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
-import { Loader } from "@components";
-import { useAuth } from "@contexts";
-import { withAuth } from "@hoc";
-import { api, Auth } from "@utils";
-import { ALERT_TYPES, MODAL_TYPES } from "@constants";
-import { useQueryString } from "@hooks";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import { pushRouteWithUTMQuery } from "@service";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,

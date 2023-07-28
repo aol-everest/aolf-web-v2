@@ -1,5 +1,3 @@
-import React from "react";
-
 export const MeetupType = ({
   closeHandler,
   meetupMasters,

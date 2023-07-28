@@ -1,44 +1,43 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
-import { Formik, Field, useFormikContext } from "formik";
-import * as Yup from "yup";
-import { useRouter } from "next/router";
-import dayjs from "dayjs";
-import { isEmpty, Auth } from "@utils";
-import "yup-phone";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
-  BillingInfoForm,
-  PayWith,
-  UserInfoForm,
   AgreementForm,
-  MobileCourseDetails,
+  BillingInfoForm,
   DiscountCodeInput,
-  ProgramQuestionnaire,
   MobileBottomBar,
+  MobileCourseDetails,
+  PayWith,
+  ProgramQuestionnaire,
+  UserInfoForm,
 } from "@components/checkout";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { Auth, isEmpty } from "@utils";
+import dayjs from "dayjs";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import * as Yup from "yup";
+import "yup-phone";
 
-import { priceCalculation } from "@utils";
-import { useQueryString } from "@hooks";
+import { Loader } from "@components";
 import {
-  PAYMENT_MODES,
-  PAYMENT_TYPES,
+  ABBRS,
   ALERT_TYPES,
   MODAL_TYPES,
-  ABBRS,
+  PAYMENT_MODES,
+  PAYMENT_TYPES,
 } from "@constants";
 import {
+  useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-  useAuth,
 } from "@contexts";
-import { Loader } from "@components";
-import { api, tConvert } from "@utils";
-import Image from "next/image";
+import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
+import { api, priceCalculation, tConvert } from "@utils";
 import { filterAllowedParams } from "@utils/utmParam";
+import Image from "next/image";
 
 const createOptions = {
   style: {
@@ -1054,7 +1053,7 @@ export const PaymentFormWebinar = ({
                   ) : (
                     <div class="reciept__details ">
                       <div class="course pb-3">
-                        <div class="d-none d-lg-block course__photo course__photo--min-width tw-min-w-[98px] tw-h-[98px] tw-relative">
+                        <div class="d-none d-lg-block course__photo course__photo--min-width tw-relative tw-h-[98px] tw-min-w-[98px]">
                           <Image
                             src={"/img/card-2.png"}
                             alt="course-photo"

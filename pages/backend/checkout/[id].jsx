@@ -1,15 +1,14 @@
-import React, { useState } from "react";
-import { api } from "@utils";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { PageLoading } from "@components";
+import { BackendPaymentForm } from "@components/backendPaymentForm";
+import { useAuth } from "@contexts";
+import { withAuth } from "@hoc";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { BackendPaymentForm } from "@components/backendPaymentForm";
-import { withAuth } from "@hoc";
-import { useAuth } from "@contexts";
-import { PageLoading } from "@components";
+import { api } from "@utils";
+import { NextSeo } from "next-seo";
 import ErrorPage from "next/error";
-
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
@@ -45,6 +44,19 @@ const BackEndCheckout = () => {
 
   return (
     <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">
+      <NextSeo
+        noindex={true}
+        nofollow={true}
+        robotsProps={{
+          nosnippet: true,
+          notranslate: true,
+          noimageindex: true,
+          noarchive: true,
+          maxSnippet: -1,
+          maxImagePreview: "none",
+          maxVideoPreview: -1,
+        }}
+      />
       <div className="container">
         <div className="row">
           <Elements

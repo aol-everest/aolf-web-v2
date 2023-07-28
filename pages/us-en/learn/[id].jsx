@@ -1,42 +1,41 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useRef } from "react";
-import { useRouter } from "next/router";
-import { api, isSSR } from "@utils";
-import classNames from "classnames";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { secondsToHms } from "@utils";
-import { NextSeo } from "next-seo";
-import {
-  useGlobalAudioPlayerContext,
-  useGlobalAlertContext,
-  useGlobalVideoPlayerContext,
-  useGlobalModalContext,
-} from "@contexts";
-import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { MODAL_TYPES, ALERT_TYPES } from "@constants";
+import { Loader, PageLoading } from "@components";
 import { ChapterItem } from "@components/content";
-import { updateUserActivity } from "@service";
-import { Loader } from "@components";
+import { ALERT_TYPES, MODAL_TYPES } from "@constants";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import {
-  Player,
-  ControlBar,
-  ReplayControl,
-  ForwardControl,
-  CurrentTimeDisplay,
-  TimeDivider,
-  PlaybackRateMenuButton,
-  VolumeMenuButton,
-  LoadingSpinner,
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalAudioPlayerContext,
+  useGlobalModalContext,
+  useGlobalVideoPlayerContext,
+} from "@contexts";
+import {
+  markFavoriteEvent,
+  pushRouteWithUTMQuery,
+  updateUserActivity,
+} from "@service";
+import { api, secondsToHms } from "@utils";
+import classNames from "classnames";
+import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useRef, useState } from "react";
+import { useQuery } from "react-query";
+import {
   BigPlayButton,
-  PlayToggle,
+  ControlBar,
+  CurrentTimeDisplay,
+  ForwardControl,
   FullscreenToggle,
+  LoadingSpinner,
+  PlayToggle,
+  PlaybackRateMenuButton,
+  Player,
+  ReplayControl,
+  TimeDivider,
+  VolumeMenuButton,
 } from "video-react";
 import Styles from "./Learn.module.scss";
-import { PageLoading } from "@components";
-import { useQuery } from "react-query";
-import ErrorPage from "next/error";
-import { useAuth } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;

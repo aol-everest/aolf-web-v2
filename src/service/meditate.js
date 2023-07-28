@@ -1,10 +1,10 @@
-import { api } from "@utils";
-import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import {
-  RetreatPrerequisiteWarning,
   PurchaseMembershipModal,
+  RetreatPrerequisiteWarning,
 } from "@components";
+import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
 import { updateUserActivity } from "@service";
+import { api } from "@utils";
 export const markFavoriteEvent = async ({ meditate, refetch }) => {
   try {
     const data = {

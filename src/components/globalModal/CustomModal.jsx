@@ -1,4 +1,3 @@
-import React from "react";
 import { useGlobalModalContext } from "@contexts";
 import classNames from "classnames";
 

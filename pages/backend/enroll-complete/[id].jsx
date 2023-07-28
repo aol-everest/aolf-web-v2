@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import classNames from "classnames";
-import { api } from "@utils";
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
 import { Radiobox } from "@components/backendPaymentForm/Radiobox";
 import { BackendRegisterationDetail } from "@components/backendRegisterationDetail";
+import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { replaceRouteWithUTMQuery } from "@service";
+import { api } from "@utils";
+import classNames from "classnames";
+import { Formik } from "formik";
+import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 import Style from "./Complete.module.scss";
 
@@ -125,6 +126,19 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
 
   return (
     <main className="body_wrapper backend-reg-body">
+      <NextSeo
+        noindex={true}
+        nofollow={true}
+        robotsProps={{
+          nosnippet: true,
+          notranslate: true,
+          noimageindex: true,
+          noarchive: true,
+          maxSnippet: -1,
+          maxImagePreview: "none",
+          maxVideoPreview: -1,
+        }}
+      />
       <div className="container">
         <div className="row">
           <BackendRegisterationDetail

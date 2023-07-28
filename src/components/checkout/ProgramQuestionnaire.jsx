@@ -1,9 +1,8 @@
-import React from "react";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
-import Select from "react-select";
 import { COURSE_TYPES } from "@constants";
 import classNames from "classnames";
+import { Field, Formik } from "formik";
+import Select from "react-select";
+import * as Yup from "yup";
 
 const checkBoxQuestion = ({
   formikProps,

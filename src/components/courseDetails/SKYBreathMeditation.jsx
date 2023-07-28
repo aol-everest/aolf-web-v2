@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { ResearchPagination } from "./ResearchPagination";
-import { Comment } from "./Comment";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { RegisterPanel } from "./RegisterPanel";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { useGlobalAlertContext } from "@contexts";
-import { ABBRS, COURSE_TYPES, ALERT_TYPES, COURSE_MODES } from "@constants";
 import { HideOn } from "@components";
+import { ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { priceCalculation } from "@utils";
+import { Element, Link } from "react-scroll";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Comment } from "./Comment";
+import { CourseBottomCard } from "./CourseBottomCard";
+import CourseDetailsCard from "./CourseDetailsCard";
+import { RegisterPanel } from "./RegisterPanel";
+import { ResearchFindingSource } from "./ResearchFindingSource";
+import { ResearchPagination } from "./ResearchPagination";
 
 export const SKYBreathMeditation = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -302,7 +301,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                   <div className="comments__person">
                     <div className="comments__person-img">
                       <img
-                        className="rounded-circle tw-w-full tw-h-full"
+                        className="rounded-circle tw-h-full tw-w-full"
                         src="/img/Dan-Joy.jpg"
                         alt="comments"
                       />

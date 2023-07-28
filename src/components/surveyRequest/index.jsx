@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect } from "react";
-import { useRouter } from "next/router";
 import { useGlobalBannerContext } from "@contexts";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export const SurveyRequest = ({ surveyInvite }) => {
   const router = useRouter();
@@ -18,7 +18,7 @@ export const SurveyRequest = ({ surveyInvite }) => {
           <a
             target="_blank"
             href={shortLink}
-            className="tw-text-white tw-font-bold"
+            className="tw-font-bold tw-text-white"
             rel="noopener noreferrer"
           >
             Click here

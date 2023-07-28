@@ -1,20 +1,19 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect } from "react";
-import { api, tConvert } from "@utils";
+import { PageLoading } from "@components";
+import { MembershipCheckoutStripe } from "@components/membership/membershipCheckoutStripe";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { useAuth, useGlobalAlertContext } from "@contexts";
+import { useQueryString } from "@hooks";
+import { pushRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { MembershipCheckoutStripe } from "@components/membership/membershipCheckoutStripe";
-import { useQueryString } from "@hooks";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { useRouter } from "next/router";
+import { api } from "@utils";
 import { NextSeo } from "next-seo";
-import { useAnalytics } from "use-analytics";
-import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useQuery } from "react-query";
-import { useAuth } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
+import { useAnalytics } from "use-analytics";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,

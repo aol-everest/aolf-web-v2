@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIcPlusFocus(props) {
   return (
     <svg

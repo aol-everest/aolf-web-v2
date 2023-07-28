@@ -1,4 +1,3 @@
-import Script from "next/script";
 import { useEffect } from "react";
 
 export default function ClevertapAnalytics() {

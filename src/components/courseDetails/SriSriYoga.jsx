@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import classNames from "classnames";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { CourseBottomCard } from "./CourseBottomCard";
 import { COURSE_TYPES } from "@constants";
-import { priceCalculation } from "@utils";
-import { useRouter } from "next/router";
-import Style from "./CourseDetails.module.scss";
 import { pushRouteWithUTMQuery } from "@service";
+import { priceCalculation } from "@utils";
+import classNames from "classnames";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { Element, Link } from "react-scroll";
+import { CourseBottomCard } from "./CourseBottomCard";
+import Style from "./CourseDetails.module.scss";
+import CourseDetailsCard from "./CourseDetailsCard";
 
 export const SriSriYoga = ({ data, swiperOption }) => {
   const [activeSlider, setActiveSlider] = useState(0);
@@ -76,7 +76,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
               </div>
             </div>
           </div>
-          <div className="top-column !tw-bg-none !tw-p-[0px] tw-bottom-24">
+          <div className="top-column tw-bottom-24 !tw-bg-none !tw-p-[0px]">
             <CourseDetailsCard
               workshop={data}
               courseType={COURSE_TYPES.SRI_SRI_YOGA_MEDITATION}

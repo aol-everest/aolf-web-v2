@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
 import classNames from "classnames";
+import { useRef, useState } from "react";
 
 export const DateRangeInput = (props) => {
   const { buttonText, tabindex, children, value, containerClass = "" } = props;
@@ -41,7 +41,7 @@ export const DateRangeInput = (props) => {
         <div className="tw-relative" ref={popperRef}>
           <ul
             className={classNames(
-              "tooltip-block tw-p-0 tw-left-0 tw-top-0 tw-right-auto tw-bottom-auto",
+              "tooltip-block tw-bottom-auto tw-left-0 tw-right-auto tw-top-0 tw-p-0",
               containerClass,
               {
                 active: visible,

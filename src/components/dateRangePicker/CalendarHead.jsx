@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { THead, Tr, Th } from "./Table";
+import PropTypes from "prop-types";
+import React from "react";
 import CalendarNext from "./CalendarNext";
 import CalendarPrev from "./CalendarPrev";
 import CalendarTitle from "./CalendarTitle";
+import { THead, Th, Tr } from "./Table";
 
 export default class CalendarHeader extends React.Component {
   static propTypes = {

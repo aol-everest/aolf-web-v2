@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIcPlay40(props) {
   return (
     <svg

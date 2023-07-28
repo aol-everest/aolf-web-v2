@@ -63,7 +63,7 @@
 
   &:before {
     position: absolute;
-    content: "";
+    content: '';
     top: 0;
     right: 0;
     bottom: 0;
@@ -89,7 +89,7 @@
     }
 
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       background: linear-gradient(
           109.01deg,
@@ -366,9 +366,8 @@
 
   &__slider {
     @media (min-width: 768px) {
-      display: none !important
+      display: none !important;
     }
-   
   }
 }
 
@@ -788,7 +787,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background-image: url("/img/offer-bg.jpg");
+  background-image: url('/img/offer-bg.jpg');
 
   &__title {
     margin: 0;
@@ -830,7 +829,7 @@
   padding-bottom: 220px;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("/img/transformations-bg.png");
+  background-image: url('/img/transformations-bg.png');
   &__title {
     font-family: Lora, sans-serif;
     font-weight: 700;

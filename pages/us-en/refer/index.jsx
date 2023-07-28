@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import Link from "@components/linkWithUTM";
 import dynamic from "next/dynamic";
 
 const CouponStack = dynamic(() =>

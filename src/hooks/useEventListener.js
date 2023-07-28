@@ -1,5 +1,5 @@
-import { useRef, useEffect, useCallback, RefObject } from "react";
-import { isSSR, getRefElement } from "@utils";
+import { getRefElement, isSSR } from "@utils";
+import { useCallback, useEffect, useRef } from "react";
 
 export const useEventListener = ({
   type,

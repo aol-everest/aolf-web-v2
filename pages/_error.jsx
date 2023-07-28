@@ -1,5 +1,5 @@
-import NextErrorComponent from "next/error";
 import * as Sentry from "@sentry/nextjs";
+import NextErrorComponent from "next/error";
 
 const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
   if (!hasGetInitialPropsRun && err) {
@@ -21,7 +21,7 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
               : "An error occurred on client"}
           </h2>
         </div>
-        <div className="tw-text-left tw-text-xs tw-text-red-400 tw-mt-2">
+        <div className="tw-mt-2 tw-text-left tw-text-xs tw-text-red-400">
           Error: {err?.message}
         </div>
       </div>

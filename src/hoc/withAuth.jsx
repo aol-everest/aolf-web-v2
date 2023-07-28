@@ -1,7 +1,6 @@
-import React from "react";
 import { useAuth } from "@contexts";
-import { useRouter } from "next/router";
 import { pushRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
 
 export const withAuth = (Component = null, options = {}) => {
   const AuthenticatedRoute = (props) => {

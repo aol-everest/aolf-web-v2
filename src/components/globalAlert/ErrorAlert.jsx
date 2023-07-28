@@ -1,4 +1,3 @@
-import React from "react";
 import { useGlobalAlertContext } from "@contexts";
 import classNames from "classnames";
 import Style from "./GlobalAlert.module.scss";

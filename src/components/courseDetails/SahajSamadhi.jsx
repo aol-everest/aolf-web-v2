@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import { HideOn } from "@components";
+import { ALERT_TYPES, COURSE_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
+import { Element, Link } from "react-scroll";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import CourseDetailsCard from "./CourseDetailsCard";
 import { Comment } from "./Comment";
 import { CourseBottomCard } from "./CourseBottomCard";
-import { ALERT_TYPES, COURSE_TYPES } from "@constants";
+import CourseDetailsCard from "./CourseDetailsCard";
 import { RegisterPanel } from "./RegisterPanel";
-import { HideOn } from "@components";
-import { useGlobalAlertContext } from "@contexts";
 
 export const SahajSamadhi = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();

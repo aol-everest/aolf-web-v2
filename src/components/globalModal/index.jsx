@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { LoginModal } from "./LoginModal";
-import { CustomModal } from "./CustomModal";
 import { MODAL_TYPES } from "@constants";
 import { GlobalModalContext } from "@contexts";
+import { useState } from "react";
+import { CustomModal } from "./CustomModal";
 import { EmptyModal } from "./EmptyModal";
+import { LoginModal } from "./LoginModal";
 
 const MODAL_COMPONENTS = {
   [MODAL_TYPES.LOGIN_MODAL]: LoginModal,
