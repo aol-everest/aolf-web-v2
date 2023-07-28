@@ -1,40 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { api } from "@utils";
-import classNames from "classnames";
-import { NextSeo } from "next-seo";
-import { useIntersectionObserver } from "@hooks";
-import { useRouter } from "next/router";
-import { useUIDSeed } from "react-uid";
+import { MobileFilterModal, Popup, SmartDropDown } from "@components";
 import { MeditationTile } from "@components/meditation/meditationTile";
-import "bootstrap-daterangepicker/daterangepicker.css";
-import ContentLoader from "react-content-loader";
+import { DURATION, MODAL_TYPES } from "@constants";
 import {
+  useAuth,
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
-  useGlobalVideoPlayerContext,
   useGlobalModalContext,
+  useGlobalVideoPlayerContext,
 } from "@contexts";
+import { useIntersectionObserver, useQueryString } from "@hooks";
 import {
-  Popup,
-  MobileFilterModal,
-  SmartDropDown,
-  PurchaseMembershipModal,
-  RetreatPrerequisiteWarning,
-} from "@components";
-import { useQueryString } from "@hooks";
-import {
-  ALERT_TYPES,
-  DURATION,
-  MEMBERSHIP_TYPES,
-  MODAL_TYPES,
-} from "@constants";
-import { InfiniteScrollLoader } from "@components/loader";
-import { meditatePlayEvent, markFavoriteEvent } from "@service";
-import { PageLoading } from "@components";
-import ErrorPage from "next/error";
-import { useAuth } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
+  markFavoriteEvent,
+  meditatePlayEvent,
+  pushRouteWithUTMQuery,
+} from "@service";
+import { api } from "@utils";
+import "bootstrap-daterangepicker/daterangepicker.css";
+import classNames from "classnames";
+import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import ContentLoader from "react-content-loader";
+import { useInfiniteQuery, useQuery } from "react-query";
+import { useUIDSeed } from "react-uid";
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;

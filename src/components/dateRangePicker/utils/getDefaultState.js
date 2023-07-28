@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import {
-  interval,
-  getNavigatorLanguage,
   getMonthNamesForLocale,
+  getNavigatorLanguage,
+  interval,
 } from "./index";
 export function getDefaultState() {
   const calendar = dayjs();

@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import classNames from "classnames";
 import {
-  COURSE_TYPES,
-  MEMBERSHIP_TYPES,
   ABBRS,
   COURSE_MODES,
+  COURSE_TYPES,
+  MEMBERSHIP_TYPES,
 } from "@constants";
 import { tConvert } from "@utils";
+import classNames from "classnames";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 

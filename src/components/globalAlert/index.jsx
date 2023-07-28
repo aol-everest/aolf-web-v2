@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { SuccessAlert } from "./SuccessAlert";
-import { CustomAlert } from "./CustomAlert";
-import { ErrorAlert } from "./ErrorAlert";
-import { WarningAlert } from "./WarningAlert";
 import { ALERT_TYPES } from "@constants";
 import { GlobalAlertContext } from "@contexts";
+import { useState } from "react";
+import { CustomAlert } from "./CustomAlert";
+import { ErrorAlert } from "./ErrorAlert";
+import { SuccessAlert } from "./SuccessAlert";
+import { WarningAlert } from "./WarningAlert";
 
 const ALERT_COMPONENTS = {
   [ALERT_TYPES.SUCCESS_ALERT]: SuccessAlert,

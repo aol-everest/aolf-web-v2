@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { ABBRS, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { tConvert } from "@utils";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
 dayjs.extend(utc);
@@ -40,7 +39,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
   return (
     <div className="reciept__details">
       <div className="course">
-        <div className="course__photo tw-max-w-[98px] tw-h-[98px] tw-relative">
+        <div className="course__photo tw-relative tw-h-[98px] tw-max-w-[98px]">
           {isSilentRetreatType && (
             <Image
               src="/img/course-card-4.png"
@@ -80,7 +79,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 {dayjs
                   .utc(eventStartDate)
                   .isSame(dayjs.utc(eventEndDate), "month") && (
-                  <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
+                  <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                     .utc(eventStartDate)
                     .format("MMMM DD")}-${dayjs
                     .utc(eventEndDate)
@@ -89,7 +88,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 {!dayjs
                   .utc(eventStartDate)
                   .isSame(dayjs.utc(eventEndDate), "month") && (
-                  <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
+                  <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                     .utc(eventStartDate)
                     .format("MMMM DD")}-${dayjs
                     .utc(eventEndDate)
@@ -102,7 +101,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                   timings.map((time) => {
                     return (
                       <li
-                        className="tw-text-sm tw-truncate tw-tracking-tighter"
+                        className="tw-truncate tw-text-sm tw-tracking-tighter"
                         key={time.startDate}
                       >
                         {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
@@ -117,32 +116,32 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
           <ul className="info__list mt-3">
             <h2 className="info__title">Instructor(s):</h2>
             {primaryTeacherName && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+              <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                 {primaryTeacherName}
               </li>
             )}
             {coTeacher1Name && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+              <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                 {coTeacher1Name}
               </li>
             )}
             {coTeacher2Name && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+              <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                 {coTeacher2Name}
               </li>
             )}
           </ul>
           <ul className="info__list mt-3">
             <h2 className="info__title">Contact details:</h2>
-            <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+            <li className="tw-truncate tw-text-sm tw-tracking-tighter">
               <a href={`tel:${phone1}`}>{phone1}</a>
             </li>
             {phone2 && (
-              <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+              <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                 <a href={`tel:${phone2}`}>{phone2}</a>
               </li>
             )}
-            <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+            <li className="tw-truncate tw-text-sm tw-tracking-tighter">
               <a href={`mailto:${email}`}>{email}</a>
             </li>
           </ul>
@@ -163,11 +162,11 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                     rel="noreferrer"
                   >
                     {workshop.locationStreet && (
-                      <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                      <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                         {workshop.locationStreet}
                       </li>
                     )}
-                    <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                    <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                       {workshop.locationCity || ""}
                       {", "}
                       {workshop.locationProvince || ""}{" "}
@@ -189,16 +188,16 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                     rel="noreferrer"
                   >
                     {workshop.streetAddress1 && (
-                      <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                      <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                         {workshop.streetAddress1}
                       </li>
                     )}
                     {workshop.streetAddress2 && (
-                      <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                      <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                         {workshop.streetAddress2}
                       </li>
                     )}
-                    <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                    <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                       {workshop.city || ""}
                       {", "}
                       {workshop.state || ""} {workshop.zip || ""}

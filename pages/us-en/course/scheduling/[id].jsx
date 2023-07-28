@@ -1,17 +1,17 @@
+import { AgreementForm, StyledInput } from "@components/checkout";
 import { US_STATES } from "@constants";
-import { useRouter } from "next/router";
-import { api } from "@utils";
-import React, { useState, useEffect, useRef } from "react";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { AgreementForm, Dropdown, StyledInput } from "@components/checkout";
+import { useQueryString } from "@hooks";
+import { replaceRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { replaceRouteWithUTMQuery } from "@service";
-import { useQueryString } from "@hooks";
+import { api } from "@utils";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import * as Yup from "yup";
 
-import { useGlobalModalContext } from "@contexts";
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
+import { useGlobalModalContext } from "@contexts";
 
 const SchedulingPayment = () => {
   const router = useRouter();
@@ -407,6 +407,40 @@ const SchedulingPayment = () => {
                                     fullWidth
                                   ></StyledInput>
                                 </li>
+
+                                <li>
+                                  <div className="scheduling__wcf-select wcf-select wcf-form__field mb-2">
+                                    <label
+                                      htmlFor="get-tickets-country"
+                                      className="wcf-select__label"
+                                    >
+                                      State
+                                    </label>
+
+                                    <select
+                                      id="get-tickets-country"
+                                      name="get-tickets-country"
+                                      data-placeholder="Select your state"
+                                      className="wcf-select__field"
+                                      value={formikProps.values["contactState"]}
+                                      placeholder="State"
+                                      onChange={(ev) => {
+                                        formikProps.setFieldValue(
+                                          "contactState",
+                                          ev.target.value,
+                                        );
+                                      }}
+                                    >
+                                      {US_STATES.map((item, key) => {
+                                        return (
+                                          <option key={key} value={item.value}>
+                                            {item.label}
+                                          </option>
+                                        );
+                                      })}
+                                    </select>
+                                  </div>
+                                </li>
                               </ul>
 
                               {/* <button className="scheduling__plus" type="button">
@@ -420,7 +454,7 @@ const SchedulingPayment = () => {
                               </button> */}
 
                               <div className="row mt-2">
-                                <div className="col-4">
+                                <div className="col-6">
                                   <label
                                     className="scheduling__label"
                                     htmlFor="contactCity"
@@ -435,24 +469,8 @@ const SchedulingPayment = () => {
                                     fullWidth
                                   ></StyledInput>
                                 </div>
-                                <div className="col-4">
-                                  <label
-                                    className="scheduling__label"
-                                    htmlFor="contactState"
-                                  >
-                                    State
-                                  </label>
-                                  <div className="scheduling__select-box select-box">
-                                    <Dropdown
-                                      placeholder="State"
-                                      formikProps={formikProps}
-                                      formikKey="contactState"
-                                      options={US_STATES}
-                                      innerFullWidth={true}
-                                    ></Dropdown>
-                                  </div>
-                                </div>
-                                <div className="col-4">
+
+                                <div className="col-6">
                                   <label
                                     className="scheduling__label"
                                     htmlFor="contactZip"

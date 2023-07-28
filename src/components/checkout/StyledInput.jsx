@@ -1,7 +1,6 @@
-import { FieldWrapper } from "./FieldWrapper";
-import React from "react";
-import MaskedInput from "react-text-mask";
 import classNames from "classnames";
+import MaskedInput from "react-text-mask";
+import { FieldWrapper } from "./FieldWrapper";
 
 const phoneNumberMask = [
   "(",

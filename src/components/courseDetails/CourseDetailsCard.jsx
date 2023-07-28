@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import classNames from "classnames";
-import { ABBRS, COURSE_MODES } from "@constants";
 import { Popup } from "@components";
 import { LinkedCalendar } from "@components/dateRangePicker";
-import { tConvert } from "@utils";
-import { useRouter } from "next/router";
+import { ABBRS, COURSE_MODES } from "@constants";
 import { pushRouteWithUTMQuery } from "@service";
+import { tConvert } from "@utils";
+import classNames from "classnames";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 dayjs.extend(utc);
 
@@ -282,11 +282,11 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
                   rel="noreferrer"
                 >
                   {workshop.locationStreet && (
-                    <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                    <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                       {workshop.locationStreet}
                     </li>
                   )}
-                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                     {workshop.locationCity || ""}
                     {", "}
                     {workshop.locationProvince || ""}{" "}
@@ -310,16 +310,16 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
                   rel="noreferrer"
                 >
                   {workshop.streetAddress1 && (
-                    <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                    <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                       {workshop.streetAddress1}
                     </li>
                   )}
                   {workshop.streetAddress2 && (
-                    <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                    <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                       {workshop.streetAddress2}
                     </li>
                   )}
-                  <li className="tw-text-sm tw-truncate tw-tracking-tighter !tw-text-[#3d8be8]">
+                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
                     {workshop.city || ""}
                     {", "}
                     {workshop.state || ""} {workshop.zip || ""}

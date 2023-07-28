@@ -1,13 +1,12 @@
-import { api, tConvert } from "@utils";
-import { groupBy } from "lodash";
-import dayjs from "dayjs";
-import moment from "moment";
 import { useGlobalModalContext } from "@contexts";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import Flatpickr from "react-flatpickr";
 import { pushRouteWithUTMQuery } from "@service";
-import { Loader } from "@components/loader";
+import { api, tConvert } from "@utils";
+import dayjs from "dayjs";
+import { groupBy } from "lodash";
+import moment from "moment";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Flatpickr from "react-flatpickr";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -115,6 +114,9 @@ const SchedulingRange = () => {
                     <h2 className="scheduling-second__title scheduling-second__title--large mt-2">
                       {selectedWorkshop.title || "SKY Breath Meditation"}
                     </h2>
+                    <p className="scheduling-second__text mt-2">
+                      9 Hours Meditation Course
+                    </p>
                   </div>
                 </div>
               </div>

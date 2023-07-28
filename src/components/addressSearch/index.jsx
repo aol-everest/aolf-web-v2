@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import { Loader } from "@googlemaps/js-api-loader";
+import { useEffect, useRef, useState } from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import { Loader } from "@googlemaps/js-api-loader";
 
 // const scriptOptions = {
 //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
@@ -83,7 +83,7 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
           }) => (
             <div className="smart-input">
               <input
-                className="custom-input tw-mx-auto tw-mt-1 tw-mb-0 !tw-w-[85%]"
+                className="custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%]"
                 {...getInputProps({
                   placeholder,
                 })}

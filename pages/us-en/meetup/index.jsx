@@ -1,40 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { api, stringToBoolean } from "@utils";
-import { NextSeo } from "next-seo";
-import { useIntersectionObserver } from "@hooks";
-import classNames from "classnames";
-import { useUIDSeed } from "react-uid";
-import { MeetupTile } from "@components/meetup/meetupTile";
-import { LinkedCalendar } from "@components/dateRangePicker";
-import { MeetupType } from "@components/meetup/meetupType";
-import { MeetupEnroll } from "@components/meetup/meetupEnroll";
-import { AddressSearch } from "@components";
-import { useGeolocation } from "@hooks";
-import { useAuth } from "@contexts";
-import "bootstrap-daterangepicker/daterangepicker.css";
-import { useRouter } from "next/router";
-import ContentLoader from "react-content-loader";
 import {
-  Popup,
-  SmartInput,
-  MobileFilterModal,
-  SmartDropDown,
+  AddressSearch,
   DateRangeInput,
+  MobileFilterModal,
+  Popup,
+  SmartDropDown,
+  SmartInput,
 } from "@components";
-import { useQueryString } from "@hooks";
+import { LinkedCalendar } from "@components/dateRangePicker";
+import { MeetupEnroll } from "@components/meetup/meetupEnroll";
+import { MeetupTile } from "@components/meetup/meetupTile";
+import { MeetupType } from "@components/meetup/meetupType";
 import {
-  TIME_ZONE,
-  COURSE_MODES,
   ALERT_TYPES,
-  MODAL_TYPES,
+  COURSE_MODES,
   MEMBERSHIP_TYPES,
+  MODAL_TYPES,
+  TIME_ZONE,
 } from "@constants";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
+import {
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalModalContext,
+} from "@contexts";
+import {
+  useGeolocation,
+  useIntersectionObserver,
+  useQueryString,
+} from "@hooks";
 import { orgConfig } from "@org";
-import Style from "./Meetup.module.scss";
 import { pushRouteWithUTMQuery } from "@service";
+import { api, stringToBoolean } from "@utils";
 import { filterAllowedParams } from "@utils/utmParam";
+import "bootstrap-daterangepicker/daterangepicker.css";
+import classNames from "classnames";
+import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import ContentLoader from "react-content-loader";
+import { useInfiniteQuery, useQuery } from "react-query";
+import { useUIDSeed } from "react-uid";
+import Style from "./Meetup.module.scss";
 
 const DATE_PICKER_CONFIG = {
   opens: "center",

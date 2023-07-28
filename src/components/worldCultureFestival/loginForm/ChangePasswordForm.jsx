@@ -1,9 +1,8 @@
-import React from "react";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { object, string, ref, number } from "yup";
+import classNames from "classnames";
+import { useForm } from "react-hook-form";
+import { number, object, ref, string } from "yup";
 
 const schema = object().shape({
   password: string()

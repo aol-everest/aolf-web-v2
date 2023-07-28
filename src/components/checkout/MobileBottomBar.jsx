@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
@@ -24,7 +23,7 @@ export const MobileBottomBar = ({ workshop, toggleDetailMobileModal }) => {
                   {dayjs
                     .utc(eventStartDate)
                     .isSame(dayjs.utc(eventEndDate), "month") && (
-                    <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
+                    <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                       .utc(eventStartDate)
                       .format("MMMM DD")}-${dayjs
                       .utc(eventEndDate)
@@ -33,7 +32,7 @@ export const MobileBottomBar = ({ workshop, toggleDetailMobileModal }) => {
                   {!dayjs
                     .utc(eventStartDate)
                     .isSame(dayjs.utc(eventEndDate), "month") && (
-                    <li className="tw-text-sm tw-truncate tw-tracking-tighter">{`${dayjs
+                    <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                       .utc(eventStartDate)
                       .format("MMMM DD")}-${dayjs
                       .utc(eventEndDate)

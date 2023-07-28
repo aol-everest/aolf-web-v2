@@ -1,42 +1,40 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { useRouter } from "next/router";
-import { isEmpty } from "@utils";
-import "yup-phone";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
+  AgreementForm,
   BillingInfoForm,
+  DiscountCodeInput,
+  MobileCourseDetails,
+  MobileCourseOptions,
   PayWith,
   UserInfoForm,
-  MobileCourseOptions,
-  AgreementForm,
-  MobileCourseDetails,
-  DiscountCodeInput,
 } from "@components/checkout";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { ABBRS } from "@constants";
 import { useAuth } from "@contexts";
-import { tConvert } from "@utils";
-import Image from "next/image";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { pushRouteWithUTMQuery } from "@service";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { isEmpty, tConvert } from "@utils";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { Formik } from "formik";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import * as Yup from "yup";
+import "yup-phone";
 
-import { priceCalculation, Auth } from "@utils";
-import { useQueryString } from "@hooks";
+import { Loader } from "@components";
 import {
+  ALERT_TYPES,
+  MEMBERSHIP_TYPES,
+  MODAL_TYPES,
   PAYMENT_MODES,
   PAYMENT_TYPES,
-  ALERT_TYPES,
-  MODAL_TYPES,
-  MEMBERSHIP_TYPES,
 } from "@constants";
 import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { Loader } from "@components";
-import { api } from "@utils";
+import { useQueryString } from "@hooks";
+import { Auth, api, priceCalculation } from "@utils";
 import { filterAllowedParams } from "@utils/utmParam";
 
 dayjs.extend(utc);
@@ -949,7 +947,7 @@ export const MeetupPaymentForm = ({
                 </div>
                 <div className="reciept__details">
                   <div className="course">
-                    <div className="course__photo tw-max-w-[98px] tw-h-[98px] tw-relative">
+                    <div className="course__photo tw-relative tw-h-[98px] tw-max-w-[98px]">
                       <Image
                         src="/img/course-card-1.png"
                         alt="course-photo"
@@ -988,32 +986,32 @@ export const MeetupPaymentForm = ({
                       <ul className="info__list mt-3">
                         <h2 className="info__title">Instructor(s):</h2>
                         {primaryTeacherName && (
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                             {primaryTeacherName}
                           </li>
                         )}
                         {coTeacher1Name && (
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                             {coTeacher1Name}
                           </li>
                         )}
                         {coTeacher2Name && (
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                             {coTeacher2Name}
                           </li>
                         )}
                       </ul>
                       <ul className="info__list mt-3">
                         <h2 className="info__title">Contact details:</h2>
-                        <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                           <a href={`tel:${phone1}`}>{phone1}</a>
                         </li>
                         {phone2 && (
-                          <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                             <a href={`tel:${phone2}`}>{phone2}</a>
                           </li>
                         )}
-                        <li className="tw-text-sm tw-truncate tw-tracking-tighter">
+                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                           <a href={`mailto:${email}`}>{email}</a>
                         </li>
                       </ul>

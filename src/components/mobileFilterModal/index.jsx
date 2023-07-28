@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import classNames from "classnames";
+import { useState } from "react";
 
 export const MobileFilterModal = (props) => {
   const [isHidden, setIsHidden] = useState(true);

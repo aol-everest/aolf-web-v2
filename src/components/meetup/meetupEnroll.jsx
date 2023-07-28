@@ -1,12 +1,11 @@
-import React from "react";
+import { Loader } from "@components";
+import { ABBRS, COURSE_MODES } from "@constants";
+import { pushRouteWithUTMQuery } from "@service";
+import { tConvert } from "@utils";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Loader } from "@components";
-import { tConvert } from "@utils";
-import { ABBRS, COURSE_MODES } from "@constants";
 import { useRouter } from "next/router";
-import { pushRouteWithUTMQuery } from "@service";
 
 dayjs.extend(utc);
 
@@ -140,7 +139,7 @@ export const MeetupEnroll = ({
                         onClick={checkoutMeetup}
                       >
                         {checkoutLoading && (
-                          <div className="loaded tw-py-0 tw-px-7">
+                          <div className="loaded tw-px-7 tw-py-0">
                             <div className="loader">
                               <div className="loader-inner ball-clip-rotate">
                                 <div />
@@ -185,7 +184,7 @@ export const MeetupEnroll = ({
                         onClick={checkoutMeetup}
                       >
                         {checkoutLoading && (
-                          <div className="loaded tw-py-0 tw-px-7">
+                          <div className="loaded tw-px-7 tw-py-0">
                             <div className="loader">
                               <div className="loader-inner ball-clip-rotate">
                                 <div />

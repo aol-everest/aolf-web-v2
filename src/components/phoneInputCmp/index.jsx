@@ -1,10 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+/* eslint-disable jsx-a11y/role-has-required-aria-props */
+import classNames from "classnames";
 import debounce from "lodash.debounce";
 import memoize from "lodash.memoize";
 import reduce from "lodash.reduce";
 import startsWith from "lodash.startswith";
-import classNames from "classnames";
+import PropTypes from "prop-types";
+import React from "react";
 import "./utils/prototypes";
 
 import CountryData from "./CountryData.js";

@@ -1,15 +1,14 @@
-import React from "react";
-import classNames from "classnames";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { MobileFilterModal, Popup, SmartDropDown } from "@components";
 import Link from "@components/linkWithUTM";
-import { Popup, MobileFilterModal, SmartDropDown } from "@components";
 import { DURATION } from "@constants";
-import { NextSeo } from "next-seo";
-import { api } from "@utils";
-import { useQuery } from "react-query";
-import { useRouter } from "next/router";
-import { uniqBy } from "lodash";
 import { pushRouteWithUTMQuery } from "@service";
+import { api } from "@utils";
+import classNames from "classnames";
+import { uniqBy } from "lodash";
+import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const timeConvert = (data) => {
   const minutes = data % 60;

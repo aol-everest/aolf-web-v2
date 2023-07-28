@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { useGlobalAlertContext } from "@contexts";
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { useQuery } from "react-query";
+import { useGlobalAlertContext } from "@contexts";
 import { api } from "@utils";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
 
 export const CardUpdateRequiredModal = (allSubscriptions) => {
   return (

@@ -1,47 +1,45 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import "yup-phone";
-import { useQuery } from "react-query";
-import { isEmpty, Auth } from "@utils";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
-  BillingInfoForm,
-  PayWith,
-  UserInfoForm,
-  MobileCourseOptions,
   AgreementForm,
-  MobileCourseDetails,
-  DiscountCodeInput,
-  CourseDetailsCard,
-  PreCostDetailsCard,
-  PostCostDetailsCard,
-  ProgramQuestionnaire,
   AttendanceForm,
+  BillingInfoForm,
+  CourseDetailsCard,
+  DiscountCodeInput,
   MobileBottomBar,
+  MobileCourseDetails,
+  MobileCourseOptions,
+  PayWith,
+  PostCostDetailsCard,
+  PreCostDetailsCard,
+  ProgramQuestionnaire,
+  UserInfoForm,
 } from "@components/checkout";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { Auth, isEmpty } from "@utils";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import * as Yup from "yup";
+import "yup-phone";
 
-import { priceCalculation } from "@utils";
-import { useQueryString } from "@hooks";
+import { Loader } from "@components";
 import {
-  PAYMENT_MODES,
-  PAYMENT_TYPES,
   ALERT_TYPES,
   MODAL_TYPES,
+  PAYMENT_MODES,
+  PAYMENT_TYPES,
 } from "@constants";
 import {
+  useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-  useAuth,
 } from "@contexts";
-import { Loader } from "@components";
-import { api } from "@utils";
+import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
+import { api, priceCalculation } from "@utils";
 import { filterAllowedParams } from "@utils/utmParam";
 
 const createOptions = {

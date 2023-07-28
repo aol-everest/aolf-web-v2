@@ -1,15 +1,13 @@
-import React from "react";
-import dayjs from "dayjs";
-import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
-import { MEMBERSHIP_TYPES } from "@constants";
-import { useRouter } from "next/router";
+import { MEMBERSHIP_TYPES, MODAL_TYPES } from "@constants";
 import { useGlobalModalContext } from "@contexts";
-import { MODAL_TYPES } from "@constants";
-import { useQuery } from "react-query";
-import { api } from "@utils";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
+import { api } from "@utils";
+import dayjs from "dayjs";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 export const ProfileHeader = ({
   subscriptions = [],

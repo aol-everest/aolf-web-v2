@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
 import { api } from "@utils";
 import { useRouter } from "next/router";
+import { useRef, useState } from "react";
+import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 const TO_RADIANS = Math.PI / 180;
 
@@ -227,14 +227,14 @@ export const ProfilePicCrop = ({ src, closeDetailAction }) => {
           <p className="tw-flex tw-justify-end">
             <a
               href="#"
-              className="tw-mt-6 btn btn-lg btn-secondary tw-mr-4"
+              className="btn btn-lg btn-secondary tw-mr-4 tw-mt-6"
               onClick={updateProfilePicAction}
             >
               Update Profile Pic
             </a>
             <a
               href="#"
-              className="tw-mt-6 btn btn-lg btn-outline"
+              className="btn btn-lg btn-outline tw-mt-6"
               onClick={closeDetailAction}
             >
               Cancel

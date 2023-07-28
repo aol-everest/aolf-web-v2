@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { pushRouteWithUTMQuery } from "@service";
 import { api } from "@utils";
 import classNames from "classnames";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
 import Style from "./Corporate-email-verify.module.scss";
-import { pushRouteWithUTMQuery } from "@service";
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -89,17 +89,17 @@ function Token() {
               )}
               {success && (
                 <>
-                  <div className="icon-container-success tw-w-[45px] tw-inline-block">
+                  <div className="icon-container-success tw-inline-block tw-w-[45px]">
                     <FaCheckCircle />
                   </div>
-                  <div className="tw-text-sm tw-mt-3">
+                  <div className="tw-mt-3 tw-text-sm">
                     Corporate user marked successfully.
                   </div>
                 </>
               )}
               {message && (
                 <>
-                  <div className="icon-container-error tw-w-[45px] tw-inline-block">
+                  <div className="icon-container-error tw-inline-block tw-w-[45px]">
                     <FaMinusCircle />
                   </div>
                 </>

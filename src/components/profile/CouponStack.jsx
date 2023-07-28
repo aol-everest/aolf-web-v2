@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import classNames from "classnames";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
-import { api } from "@utils";
-import { useGlobalAlertContext, useAuth } from "@contexts";
-import { ALERT_TYPES } from "@constants";
-import { useQuery } from "react-query";
-import { WithContext as ReactTags } from "react-tag-input";
-import ErrorPage from "next/error";
 import { Loader } from "@components";
 import { Dropdown } from "@components/checkout/Dropdown";
+import { ALERT_TYPES } from "@constants";
+import { useAuth, useGlobalAlertContext } from "@contexts";
+import { api } from "@utils";
+import classNames from "classnames";
+import { Field, Formik } from "formik";
+import ErrorPage from "next/error";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { WithContext as ReactTags } from "react-tag-input";
+import * as Yup from "yup";
 
 const KeyCodes = {
   TAB: 9,
@@ -77,10 +77,10 @@ const CouponMergeCmp = ({
           New coupon generated will be ${reedemableAmount}.
         </div>
       </div>
-      <div className="tw-flex tw-justify-end tw-mt-6">
+      <div className="tw-mt-6 tw-flex tw-justify-end">
         <button
           onClick={cancelAction}
-          className="btn-primary d-block ml-4 v2 !tw-text-black !tw-bg-white !tw-border-solid !tw-bg-none !tw-border !tw-border-black hover:!tw-bg-slate-200"
+          className="btn-primary d-block ml-4 v2 !tw-border !tw-border-solid !tw-border-black !tw-bg-white !tw-bg-none !tw-text-black hover:!tw-bg-slate-200"
         >
           Cancel
         </button>

@@ -1,7 +1,6 @@
-import { FieldWrapper } from "./FieldWrapper";
-import React from "react";
 import classNames from "classnames";
 import PhoneInput from "./../phoneInputCmp";
+import { FieldWrapper } from "./FieldWrapper";
 
 export const PhoneNumberInputField = ({
   label,

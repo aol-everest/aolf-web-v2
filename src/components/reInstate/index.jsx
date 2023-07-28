@@ -1,11 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useEffect } from "react";
+import { ALERT_TYPES } from "@constants";
+import { useGlobalAlertContext } from "@contexts";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { UpdateCC } from "./UpdateCC";
-import { useGlobalAlertContext } from "@contexts";
-import { ALERT_TYPES } from "@constants";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -53,7 +53,7 @@ export const ReInstateModal = ({ subscription }) => {
                 <p className="error-message">
                   We're sorry, but something went wrong. Please try again or
                   contact support.
-                  <p className="error-detail tw-text-xs tw-italic tw-text-orange-600 tw-pt-2">
+                  <p className="error-detail tw-pt-2 tw-text-xs tw-italic tw-text-orange-600">
                     Error: {error}
                   </p>
                 </p>

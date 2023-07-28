@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from "@constants";
 import classNames from "classnames";
 import { Field } from "formik";
-import { PAYMENT_TYPES, COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
 
 export const PreCostDetailsCard = ({
   workshop,
@@ -261,9 +260,7 @@ export const PreCostDetailsCard = ({
                             />
                           )}
                           <label htmlFor={product.productSfid}></label>
-                          <span className="ml-2">
-                            {product.productName} Required:
-                          </span>
+                          <span className="ml-2">{product.productName}:</span>
                         </span>
                         <span className="ml-2">${product.unitPrice}</span>
                       </li>
@@ -346,9 +343,7 @@ export const PreCostDetailsCard = ({
                             />
                           )}
                           <label htmlFor={product.productSfid}></label>
-                          <span className="ml-2">
-                            {product.productName} Required:
-                          </span>
+                          <span className="ml-2">{product.productName}:</span>
                         </span>
                         <span className="ml-2">${product.unitPrice}</span>
                       </li>
@@ -415,9 +410,7 @@ export const PreCostDetailsCard = ({
                           />
                         )}
                         <label htmlFor={workshop.productSfid}></label>
-                        <span className="ml-2">
-                          {product.productName} Required:
-                        </span>
+                        <span className="ml-2">{product.productName}:</span>
                       </span>
                       <span className="ml-2">${product.unitPrice}</span>
                     </li>

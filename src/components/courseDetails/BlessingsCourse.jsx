@@ -1,9 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
+import { HideOn } from "@components";
+import { Element, Link } from "react-scroll";
 import { CourseBottomCard } from "./CourseBottomCard";
 import { RegisterPanel } from "./RegisterPanel";
-import { HideOn } from "@components";
 
 export const BlessingsCourse = ({ data }) => {
   const { title, mode, aosCountRequisite, preRequisite } = data || {};

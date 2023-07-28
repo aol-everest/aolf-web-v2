@@ -1,8 +1,7 @@
-import React from "react";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
+import classNames from "classnames";
+import { useForm } from "react-hook-form";
 import { object, string } from "yup";
 
 const schema = object().shape({

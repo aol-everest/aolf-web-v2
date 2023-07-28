@@ -1,30 +1,34 @@
-import React, { useState, useEffect } from "react";
-import dayjs from "dayjs";
+import {
+  PageLoading,
+  PaymentForm,
+  PaymentFormGeneric,
+  PaymentFormHB,
+} from "@components";
+import {
+  ALERT_TYPES,
+  ALLOW_GUEST_LOGIN_CTYPE,
+  COURSE_TYPES,
+  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
+  MODAL_TYPES,
+} from "@constants";
+import {
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalModalContext,
+} from "@contexts";
+import { useQueryString } from "@hooks";
+import { orgConfig } from "@org";
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { PaymentForm, PaymentFormHB, PaymentFormGeneric } from "@components";
 import { api } from "@utils";
-import { useRouter } from "next/router";
-import { useQueryString } from "@hooks";
+import dayjs from "dayjs";
 import { NextSeo } from "next-seo";
-import { ALERT_TYPES } from "@constants";
-import { useAuth } from "@contexts";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { useAnalytics } from "use-analytics";
-import queryString from "query-string";
-import {
-  COURSE_TYPES,
-  MODAL_TYPES,
-  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
-  ALLOW_GUEST_LOGIN_CTYPE,
-} from "@constants";
-import { withAuth } from "@hoc";
-import { PageLoading } from "@components";
 import ErrorPage from "next/error";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { replaceRouteWithUTMQuery } from "@service";
+import { useAnalytics } from "use-analytics";
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -338,7 +342,7 @@ const Checkout = () => {
               <p className="tw-flex tw-justify-center">
                 <a
                   href="#"
-                  className="tw-mt-6 btn btn-lg btn-primary"
+                  className="btn btn-lg btn-primary tw-mt-6"
                   onClick={handleModalToggle}
                 >
                   Close
@@ -409,7 +413,7 @@ const Checkout = () => {
 
             {workshop.isCorporateEvent && (
               <div className="tw-mb-[60px]">
-                <h1 className="tw-text-4xl tw-font-bold tw-text-center tw-text-[#31364e]">
+                <h1 className="tw-text-center tw-text-4xl tw-font-bold tw-text-[#31364e]">
                   {workshop.corporateName}
                 </h1>
               </div>

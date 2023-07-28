@@ -1,5 +1,3 @@
-import * as React from "react";
-
 function SvgIc3DayOnlineCourse(props) {
   return (
     <svg
