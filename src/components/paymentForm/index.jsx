@@ -378,6 +378,7 @@ export const PaymentForm = ({
           return_url: returnUrl,
         },
       });
+      console.log(result);
 
       if (result.error) {
         // Show error to your customer (for example, payment details incomplete)
@@ -994,7 +995,6 @@ export const PaymentForm = ({
     }
     const paymentElement = elements.getElement(PaymentElement);
     if (paymentElement) {
-      console.log(paymentElement);
       paymentElement.update({
         defaultValues: {
           billingDetails: {
