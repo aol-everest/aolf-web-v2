@@ -261,6 +261,9 @@ const Checkout = () => {
     COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(workshop.productTypeId) >=
     0;
 
+  const isStripeIntentPayment =
+    workshop.otherPaymentOptions.indexOf("Stripe Intent Payment") >= 0;
+
   const renderPaymentForm = () => {
     if (isHealingBreathProgram || isInstitutionalProgram) {
       return (
@@ -283,6 +286,10 @@ const Checkout = () => {
     ) {
       return (
         <PaymentForm
+          isStripeIntentPayment={isStripeIntentPayment}
+          campaignid={campaignid}
+          mbsy={mbsy}
+          mbsy_source={mbsy_source}
           workshop={workshop}
           profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
@@ -359,6 +366,12 @@ const Checkout = () => {
         dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
+  const elementsOptions = {
+    mode: "payment",
+    amount: 1099,
+    currency: "usd",
+  };
+
   return (
     <>
       <NextSeo title={workshop.title} />
@@ -413,17 +426,24 @@ const Checkout = () => {
                 </h1>
               </div>
             )}
-            <Elements
-              stripe={stripePromise}
-              fonts={[
-                {
-                  cssSrc:
-                    "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
-                },
-              ]}
-            >
-              {renderPaymentForm()}
-            </Elements>
+            {isStripeIntentPayment && (
+              <Elements stripe={stripePromise} options={elementsOptions}>
+                {renderPaymentForm()}
+              </Elements>
+            )}
+            {!isStripeIntentPayment && (
+              <Elements
+                stripe={stripePromise}
+                fonts={[
+                  {
+                    cssSrc:
+                      "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                  },
+                ]}
+              >
+                {renderPaymentForm()}
+              </Elements>
+            )}
           </div>
         </section>
         <section className="additional-information">
