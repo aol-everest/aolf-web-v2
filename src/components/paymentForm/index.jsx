@@ -363,9 +363,10 @@ export const PaymentForm = ({
         mbsy,
         ...router.query,
       });
-      const returnUrl = `/us-en/course/thankyou/${
+      const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
         data.attendeeId
       }?${queryString.stringify(filteredParams)}`;
+      console.log(returnUrl);
 
       const result = await stripe.confirmPayment({
         //`Elements` instance that was used to create the Payment Element
