@@ -1,10 +1,14 @@
-import { AgreementForm, StyledInput } from "@components/checkout";
+import {
+  AgreementForm,
+  DiscountCodeInput,
+  StyledInput,
+} from "@components/checkout";
 import { US_STATES } from "@constants";
 import { useQueryString } from "@hooks";
 import { replaceRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { api } from "@utils";
+import { api, priceCalculation } from "@utils";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -23,8 +27,15 @@ const SchedulingPayment = () => {
   const childRef = useRef();
 
   const [workshop, setSelectedWorkshop] = useState({});
+  const [discount] = useQueryString("discountCode");
+  const [discountResponse, setDiscountResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const { id: workshopId } = router.query;
+
+  const { fee, delfee } = priceCalculation({
+    workshop,
+    discount: discountResponse,
+  });
 
   useEffect(() => {
     const getWorshopDetails = async () => {
@@ -43,8 +54,13 @@ const SchedulingPayment = () => {
     }
   }, [workshopId]);
 
-  const { complianceQuestionnaire, title, unitPrice, showPrice } =
-    workshop || {};
+  const {
+    complianceQuestionnaire,
+    title,
+    unitPrice,
+    id: productId,
+    addOnProducts,
+  } = workshop || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -71,6 +87,10 @@ const SchedulingPayment = () => {
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   );
 
+  const applyDiscount = (discount) => {
+    setDiscountResponse(discount);
+  };
+
   return (
     <div id="widget-modal" className="overlaying-popup_active" role="dialog">
       <div className="scheduling-modal">
@@ -93,6 +113,7 @@ const SchedulingPayment = () => {
             contactZip: "",
             questionnaire: questionnaireArray,
             ppaAgreement: false,
+            couponCode: discount ? discount : "",
           }}
           validationSchema={Yup.object().shape({
             firstName: Yup.string().required("First Name is required"),
@@ -260,7 +281,23 @@ const SchedulingPayment = () => {
                                   enrollmentCompletionAction={
                                     enrollmentCompletionAction
                                   }
+                                  discount={discount}
                                 />
+                                <div class="scheduling-discount">
+                                  <label
+                                    class="scheduling__label"
+                                    for="discount-code"
+                                  ></label>
+                                  <DiscountCodeInput
+                                    placeholder="Discount Code"
+                                    formikProps={formikProps}
+                                    formikKey="couponCode"
+                                    product={productId}
+                                    applyDiscount={applyDiscount}
+                                    addOnProducts={addOnProducts}
+                                    containerClass="scheduling__input"
+                                  ></DiscountCodeInput>
+                                </div>
                               </div>
                             </Elements>
 
@@ -560,8 +597,10 @@ const SchedulingPayment = () => {
                               </div>
                               <div className="col-4 text-right">
                                 <p className="scheduling__text-black">
-                                  <strong>${unitPrice || 0}</strong>{" "}
-                                  <i>plus tax</i>
+                                  {discountResponse && delfee && (
+                                    <span className="discount">${delfee}</span>
+                                  )}{" "}
+                                  <strong>${fee || 0}</strong> <i>plus tax</i>
                                 </p>
                               </div>
                             </div>
