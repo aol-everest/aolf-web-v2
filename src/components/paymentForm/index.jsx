@@ -975,6 +975,36 @@ export const PaymentForm = ({
       ? Yup.mixed().notRequired()
       : Yup.string().required("Payment mode is required!"),
   });
+
+  const paymentElementOptions = {
+    defaultValues: {
+      billingDetails: {
+        email: email || "",
+        name: (first_name || "") + (last_name || ""),
+        phone: personMobilePhone || "",
+      },
+    },
+  };
+
+  const formikOnChange = (values) => {
+    if (!stripe || !elements) {
+      return;
+    }
+    const paymentElement = elements.getElement(PaymentElement);
+    if (paymentElement) {
+      console.log(paymentElement);
+      paymentElement.update({
+        defaultValues: {
+          billingDetails: {
+            email: values.email,
+            name: (values.firstName || "") + (values.lastName || ""),
+            phone: values.contactPhone,
+          },
+        },
+      });
+    }
+  };
+
   return (
     <>
       <Formik
@@ -1002,6 +1032,7 @@ export const PaymentForm = ({
       >
         {(formikProps) => {
           const { values, handleSubmit } = formikProps;
+          formikOnChange(values);
           const addOnFee = addOnProducts.reduce(
             (
               previousValue,
@@ -1118,7 +1149,7 @@ export const PaymentForm = ({
                     ></DiscountCodeInput>
                     {isStripeIntentPayment && (
                       <div className="input-block order__card__payment">
-                        <PaymentElement />
+                        <PaymentElement options={paymentElementOptions} />
                       </div>
                     )}
                     {!isStripeIntentPayment && (
