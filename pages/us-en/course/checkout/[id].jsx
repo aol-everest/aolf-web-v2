@@ -74,9 +74,15 @@ const Checkout = () => {
   const router = useRouter();
   const { user, authenticated } = useAuth();
   const { id: workshopId, coupon } = router.query;
-  const [mbsy_source] = useQueryString("mbsy_source");
-  const [campaignid] = useQueryString("campaignid");
-  const [mbsy] = useQueryString("mbsy");
+  const [mbsy_source] = useQueryString("mbsy_source", {
+    defaultValue: null,
+  });
+  const [campaignid] = useQueryString("campaignid", {
+    defaultValue: null,
+  });
+  const [mbsy] = useQueryString("mbsy", {
+    defaultValue: null,
+  });
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);

@@ -27,3 +27,14 @@ export function filterAllowedParams(params) {
 
   return params || {};
 }
+
+export function removeNull(obj) {
+  return Object.fromEntries(
+    Object.entries(obj)
+      .filter(([_, value]) => value != null && value.trim().length !== 0)
+      .map(([key, value]) => [
+        key,
+        value === Object(value) ? removeNull(value) : value,
+      ]),
+  );
+}

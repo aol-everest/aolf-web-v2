@@ -35,7 +35,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { Auth, api, isEmpty, priceCalculation } from "@utils";
-import { filterAllowedParams } from "@utils/utmParam";
+import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import queryString from "query-string";
@@ -355,14 +355,16 @@ export const PaymentForm = ({
 
       console.log(stripeIntentObj.client_secret);
 
-      const filteredParams = filterAllowedParams({
+      let filteredParams = {
         ctype: workshop.productTypeId,
         page: "ty",
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
         mbsy,
-        ...router.query,
-      });
+        ...filterAllowedParams(router.query),
+      };
+      filteredParams = removeNull(filteredParams);
+      console.log(filteredParams);
       const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
         data.attendeeId
       }?${queryString.stringify(filteredParams)}`;
