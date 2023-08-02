@@ -407,10 +407,9 @@ const Checkout = () => {
             "0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 7px rgba(18, 42, 66, 0.04)",
         },
         ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
-          border: "none",
+          border: "1px solid #89beec",
           backgroundColor: "#fff",
           boxShadow: "0 2px 25px 0 rgba(61,139,232,.2)",
-          borderColor: "#89beec",
         },
         ".Label": {
           fontWeight: "500",
