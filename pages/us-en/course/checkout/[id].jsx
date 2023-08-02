@@ -373,10 +373,7 @@ const Checkout = () => {
         dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
-  const elementsOptions = {
-    mode: "payment",
-    amount: 1099,
-    currency: "usd",
+  let elementsOptions = {
     appearance: {
       theme: "stripe",
       variables: {
@@ -420,6 +417,15 @@ const Checkout = () => {
       },
     },
   };
+
+  if (isStripeIntentPayment) {
+    elementsOptions = {
+      mode: "payment",
+      amount: 1099,
+      currency: "usd",
+      ...elementsOptions,
+    };
+  }
 
   return (
     <>
