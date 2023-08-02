@@ -268,7 +268,7 @@ const Checkout = () => {
     0;
 
   const isStripeIntentPayment =
-    workshop.otherPaymentOptions.indexOf("Stripe Intent Payment") >= 0;
+    workshop?.otherPaymentOptions?.indexOf("Stripe Intent Payment") >= 0;
 
   const renderPaymentForm = () => {
     if (isHealingBreathProgram || isInstitutionalProgram) {
