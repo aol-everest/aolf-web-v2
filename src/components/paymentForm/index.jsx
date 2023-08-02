@@ -985,7 +985,7 @@ export const PaymentForm = ({
   };
 
   const formikOnChange = (values) => {
-    if (!stripe || !elements) {
+    if (!stripe || !elements || !isStripeIntentPayment) {
       return;
     }
     console.log(values.comboDetailId);
