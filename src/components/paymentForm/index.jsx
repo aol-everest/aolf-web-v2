@@ -353,8 +353,6 @@ export const PaymentForm = ({
         throw new Error(errorMessage);
       }
 
-      console.log(stripeIntentObj.client_secret);
-
       let filteredParams = {
         ctype: workshop.productTypeId,
         page: "ty",
@@ -364,12 +362,9 @@ export const PaymentForm = ({
         ...filterAllowedParams(router.query),
       };
       filteredParams = removeNull(filteredParams);
-      console.log(filteredParams);
       const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
         data.attendeeId
       }?${queryString.stringify(filteredParams)}`;
-      console.log(returnUrl);
-
       const result = await stripe.confirmPayment({
         //`Elements` instance that was used to create the Payment Element
         elements,
@@ -993,6 +988,9 @@ export const PaymentForm = ({
     if (!stripe || !elements) {
       return;
     }
+    elements.update({
+      amount: fee,
+    });
     const paymentElement = elements.getElement(PaymentElement);
     if (paymentElement) {
       paymentElement.update({

@@ -376,6 +376,9 @@ const Checkout = () => {
     mode: "payment",
     amount: 1099,
     currency: "usd",
+    appearance: {
+      theme: "flat",
+    },
   };
 
   return (
