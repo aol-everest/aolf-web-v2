@@ -988,8 +988,19 @@ export const PaymentForm = ({
     if (!stripe || !elements) {
       return;
     }
+    console.log(values.comboDetailId);
+    let finalPrice = fee;
+    if (values.comboDetailId && values.comboDetailId !== workshop.id) {
+      const selectedBundle = workshop.availableBundles.find(
+        (b) => b.comboProductSfid === values.comboDetailId,
+      );
+      if (selectedBundle) {
+        finalPrice = selectedBundle.comboUnitPrice;
+      }
+    }
+    console.log(finalPrice);
     elements.update({
-      amount: fee,
+      amount: finalPrice * 100,
     });
     const paymentElement = elements.getElement(PaymentElement);
     if (paymentElement) {

@@ -377,13 +377,15 @@ const Checkout = () => {
     amount: 1099,
     currency: "usd",
     appearance: {
-      theme: "flat",
+      theme: "stripe",
       variables: {
-        fontFamily: ' "Work Sans", sans-serif',
-        fontLineHeight: "1.5",
-        borderRadius: "10px",
-        colorBackground: "#F6F8FA",
-        colorPrimaryText: "#262626",
+        colorPrimary: "#0570de",
+        colorBackground: "#ffffff",
+        colorText: "#30313d",
+        colorDanger: "#df1b41",
+        fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
+        spacingUnit: "2px",
+        borderRadius: "4px",
       },
       rules: {
         ".Block": {
