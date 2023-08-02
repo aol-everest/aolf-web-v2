@@ -379,7 +379,7 @@ const Checkout = () => {
     appearance: {
       theme: "flat",
       variables: {
-        fontFamily: ' "Gill Sans", sans-serif',
+        fontFamily: ' "Work Sans", sans-serif',
         fontLineHeight: "1.5",
         borderRadius: "10px",
         colorBackground: "#F6F8FA",
@@ -409,8 +409,8 @@ const Checkout = () => {
         ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
           border: "none",
           backgroundColor: "#fff",
-          boxShadow:
-            "0 0 0 1.5px var(--colorPrimaryText), 0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 7px rgba(18, 42, 66, 0.04)",
+          boxShadow: "0 2px 25px 0 rgba(61,139,232,.2)",
+          borderColor: "#89beec",
         },
         ".Label": {
           fontWeight: "500",
