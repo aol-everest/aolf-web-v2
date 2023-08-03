@@ -1274,6 +1274,7 @@ export const PaymentForm = ({
                                 label: "pay",
                               }}
                               fundingSource="paypal"
+                              forceReRender={[formikProps.values]}
                               disabled={
                                 !(formikProps.isValid && formikProps.dirty)
                               }
