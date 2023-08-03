@@ -22,16 +22,18 @@ app.prepare().then(() => {
       contentSecurityPolicy: {
         directives: {
           "default-src": [
+            "*",
             "'self'",
+            "data:",
+            "mediastream:",
+            "blob:",
+            "filesystem:",
+            "about:",
+            "ws:",
+            "wss:",
+            "'unsafe-eval'",
+            "'wasm-unsafe-eval'",
             "'unsafe-inline'",
-            "artofliving.org",
-            "*.artofliving.org",
-            "*.googleapis.com",
-            "cdn.jsdelivr.net",
-            "*.paypal.com",
-            "*.paypal.cn",
-            "*.paypalobjects.com",
-            "objects.paypal.cn",
           ],
           "style-src": [
             "'self'",
