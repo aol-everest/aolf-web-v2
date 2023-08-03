@@ -34,13 +34,17 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+  usePayPalScriptReducer,
+} from "@paypal/react-paypal-js";
 import { Auth, api, isEmpty, priceCalculation } from "@utils";
 import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { useEffect, useState } from "react";
-import { PayPalButton } from "react-paypal-button-v2";
 import * as Yup from "yup";
 import "yup-phone";
 
@@ -1249,13 +1253,14 @@ export const PaymentForm = ({
                         data-method="paypal"
                       >
                         <div className="paypal-info__sign-in tw-relative tw-z-0">
-                          {/* <PayPalScriptProvider
+                          <PayPalScriptProvider
                             options={{
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                               debug: true,
                               currency: "USD",
                               intent: "capture",
+                              components: "buttons",
                             }}
                           >
                             <PayPalButtons
@@ -1267,18 +1272,10 @@ export const PaymentForm = ({
                                 tagline: false,
                                 label: "pay",
                               }}
-                              onClick={async (data, actions) => {
-                                const formErrors =
-                                  await formikProps.validateForm();
-
-                                formikProps.setTouched({
-                                  ...formikProps.touched,
-                                  ...formikProps.errors,
-                                });
-                                if (JSON.stringify(formErrors) !== "{}") {
-                                  return false;
-                                }
-                              }}
+                              fundingSource="paypal"
+                              disabled={
+                                !(formikProps.isValid && formikProps.dirty)
+                              }
                               createOrder={async (data, actions) => {
                                 return await createPaypalOrder(
                                   formikProps.values,
@@ -1286,9 +1283,9 @@ export const PaymentForm = ({
                               }}
                               onApprove={paypalBuyAcknowledgement}
                             />
-                          </PayPalScriptProvider> */}
+                          </PayPalScriptProvider>
 
-                          <PayPalButton
+                          {/* <PayPalButton
                             options={{
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
@@ -1309,7 +1306,7 @@ export const PaymentForm = ({
                               );
                             }}
                             onApprove={paypalBuyAcknowledgement}
-                          />
+                          /> */}
                         </div>
                         <div className="paypal-info__sign-out d-none">
                           <button
