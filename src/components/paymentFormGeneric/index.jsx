@@ -66,6 +66,10 @@ const createOptions = {
 };
 
 export const PaymentFormGeneric = ({
+  isStripeIntentPayment = false,
+  campaignid,
+  mbsy,
+  mbsy_source,
   workshop = {},
   profile = {},
   enrollmentCompletionAction = () => {},

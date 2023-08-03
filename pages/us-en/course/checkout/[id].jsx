@@ -275,6 +275,10 @@ const Checkout = () => {
     if (isHealingBreathProgram || isInstitutionalProgram) {
       return (
         <PaymentFormHB
+          isStripeIntentPayment={isStripeIntentPayment}
+          campaignid={campaignid}
+          mbsy={mbsy}
+          mbsy_source={mbsy_source}
           workshop={workshop}
           profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
@@ -308,6 +312,10 @@ const Checkout = () => {
     }
     return (
       <PaymentFormGeneric
+        isStripeIntentPayment={isStripeIntentPayment}
+        campaignid={campaignid}
+        mbsy={mbsy}
+        mbsy_source={mbsy_source}
         workshop={workshop}
         profile={user?.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
