@@ -988,7 +988,6 @@ export const PaymentForm = ({
     if (!stripe || !elements || !isStripeIntentPayment) {
       return;
     }
-    console.log(values.comboDetailId);
     let finalPrice = fee;
     if (values.comboDetailId && values.comboDetailId !== workshop.id) {
       const selectedBundle = workshop.availableBundles.find(
@@ -1032,7 +1031,10 @@ export const PaymentForm = ({
           questionnaire: questionnaire,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
-          paymentMode: PAYMENT_MODES.STRIPE_PAYMENT_MODE,
+          paymentMode:
+            otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") >= 0
+              ? ""
+              : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
           accommodation: null,
           priceType: "regular",
         }}
