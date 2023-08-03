@@ -267,9 +267,7 @@ const Checkout = () => {
     COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(workshop.productTypeId) >=
     0;
 
-  const isStripeIntentPayment =
-    workshop.otherPaymentOptions &&
-    workshop.otherPaymentOptions.indexOf("Stripe Intent Payment") >= 0;
+  const isStripeIntentPayment = !!workshop.isStripeIntentPayment;
 
   const renderPaymentForm = () => {
     if (isHealingBreathProgram || isInstitutionalProgram) {
