@@ -31,7 +31,13 @@ const createOptions = {
 };
 
 const PaymentFormScheduling = forwardRef((props, ref) => {
-  const { enrollmentCompletionAction, workshop, setLoading, loading } = props;
+  const {
+    enrollmentCompletionAction,
+    workshop,
+    setLoading,
+    loading,
+    couponCode,
+  } = props;
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -135,7 +141,7 @@ const PaymentFormScheduling = forwardRef((props, ref) => {
           shoppingRequest: {
             doNotStoreCC: true,
             tokenizeCC,
-            couponCode: "",
+            couponCode: couponCode || "",
             contactAddress: {
               contactPhone: "",
               contactAddress,
