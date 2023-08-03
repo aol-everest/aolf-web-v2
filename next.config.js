@@ -6,9 +6,10 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const ContentSecurityPolicy = `
+  default-src 'self' *.googleapis.com cdn.jsdelivr.net https://*.paypal.com https://*.paypal.cn https://*.paypalobjects.com https://objects.paypal.cn;
   frame-ancestors 'self' artofliving.org *.artofliving.org *.unbounce.com *.unbouncepreview.com;
   style-src 'self' 'unsafe-inline' *.googleapis.com cdn.jsdelivr.net;
-  font-src 'self' data: *.gstatic.com;
+  font-src 'self' data: *.gstatic.com *.googleapis.com;
 `;
 
 const securityHeaders = [

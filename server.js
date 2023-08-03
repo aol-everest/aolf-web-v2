@@ -19,7 +19,42 @@ app.prepare().then(() => {
   // server.use(helmet.crossOriginEmbedderPolicy());
   server.use(
     helmet({
-      contentSecurityPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          "default-src": [
+            "'self'",
+            "'unsafe-inline'",
+            "artofliving.org",
+            "*.artofliving.org",
+            "*.googleapis.com",
+            "cdn.jsdelivr.net",
+            "*.paypal.com",
+            "*.paypal.cn",
+            "*.paypalobjects.com",
+            "objects.paypal.cn",
+          ],
+          "style-src": [
+            "'self'",
+            "'unsafe-inline'",
+            "*.googleapis.com",
+            "cdn.jsdelivr.net",
+          ],
+          "font-src": [
+            "'self'",
+            "'unsafe-inline'",
+            "data:",
+            "*.gstatic.com",
+            "*.googleapis.com",
+          ],
+          "frame-ancestors": [
+            "'self'",
+            "artofliving.org",
+            "*.artofliving.org",
+            "*.unbounce.com",
+            "*.unbouncepreview.com",
+          ],
+        },
+      },
       crossOriginEmbedderPolicy: false,
     }),
   );
