@@ -18,6 +18,10 @@ const securityHeaders = [
     value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
   },
   {
+    key: "Cross-Origin-Opener-Policy",
+    value: "same-origin-allow-popups", // "same-origin-allow-popups"
+  },
+  {
     key: "x-content-type-options",
     value: "nosniff",
   },

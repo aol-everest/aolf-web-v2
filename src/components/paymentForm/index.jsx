@@ -193,6 +193,7 @@ export const PaymentForm = ({
     } else if (data) {
       enrollmentCompletionAction(data);
     }
+    return true;
   };
 
   const stripeConfirmPayment = async (values) => {
