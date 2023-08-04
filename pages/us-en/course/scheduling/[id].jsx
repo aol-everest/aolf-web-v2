@@ -109,8 +109,9 @@ const SchedulingPayment = () => {
             email: "",
             contactAddress: "",
             contactCity: "",
-            contactState: "",
+            contactState: "AL",
             contactZip: "",
+            contactCountry: "USA",
             questionnaire: questionnaireArray,
             ppaAgreement: false,
             couponCode: discount ? discount : "",
@@ -121,6 +122,7 @@ const SchedulingPayment = () => {
             email: Yup.string()
               .email("Email is invalid!")
               .required("Email is required!"),
+            contactCountry: Yup.string().required("Country is required"),
             contactAddress: Yup.string().required("Address is required"),
             contactCity: Yup.string().required("City is required!"),
             contactState: Yup.string().required("State is required!"),

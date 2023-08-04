@@ -61,7 +61,6 @@ export const authenticateUser = (email, password) => {
 
     cognitoUser.authenticateUser(authDetails, {
       onSuccess: (data) => {
-        console.log("onSuccess:", data);
         resolve({ data, newPasswordRequired: false });
       },
 
@@ -71,7 +70,6 @@ export const authenticateUser = (email, password) => {
       },
 
       newPasswordRequired: (data) => {
-        console.log("newPasswordRequired:", data);
         resolve({ data, newPasswordRequired: true });
       },
     });
