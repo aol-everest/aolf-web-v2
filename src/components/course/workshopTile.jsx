@@ -30,8 +30,6 @@ export const WorkshopTile = ({ data, authenticated }) => {
     isGuestCheckoutEnabled = false,
   } = data || {};
 
-  console.log("data", data);
-
   const enrollAction = (workshopId, productTypeId) => () => {
     if (isGuestCheckoutEnabled || authenticated) {
       pushRouteWithUTMQuery(router, {

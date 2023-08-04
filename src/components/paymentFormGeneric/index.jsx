@@ -513,7 +513,6 @@ export const PaymentFormGeneric = ({
           return_url: returnUrl,
         },
       });
-      console.log(result);
 
       if (result.error) {
         // Show error to your customer (for example, payment details incomplete)
@@ -967,7 +966,6 @@ export const PaymentFormGeneric = ({
         finalPrice = selectedBundle.comboUnitPrice;
       }
     }
-    console.log(finalPrice);
     elements.update({
       amount: finalPrice * 100,
     });
