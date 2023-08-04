@@ -27,6 +27,7 @@ import {
   useGlobalModalContext,
 } from "@contexts";
 import { useQueryString } from "@hooks";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { pushRouteWithUTMQuery } from "@service";
 import {
   CardElement,
@@ -34,7 +35,6 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Auth, api, isEmpty, priceCalculation } from "@utils";
 import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { Formik } from "formik";
