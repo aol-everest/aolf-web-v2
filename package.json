@@ -116,7 +116,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.29.0",
     "eslint-config-next": "^13.4.12",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-no-inline-styles": "^1.0.5",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.2",
