@@ -34,11 +34,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import {
-  PayPalScriptProvider,
-  PayPalButtons,
-  usePayPalScriptReducer,
-} from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Auth, api, isEmpty, priceCalculation } from "@utils";
 import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { Formik } from "formik";
