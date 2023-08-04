@@ -274,7 +274,7 @@ export const MobileCourseOptions = ({
                                   )}
                                   <label htmlFor={product.productSfid}></label>
                                   <span className="ml-2">
-                                    {product.productName} Required:
+                                    {product.productName}:
                                   </span>
                                 </span>
                                 <span className="ml-2">
@@ -363,7 +363,7 @@ export const MobileCourseOptions = ({
                                   )}
                                   <label htmlFor={product.productSfid}></label>
                                   <span className="ml-2">
-                                    {product.productName} Required:
+                                    {product.productName}:
                                   </span>
                                 </span>
                                 <span className="ml-2">
@@ -422,7 +422,7 @@ export const MobileCourseOptions = ({
                                 )}
                                 <label htmlFor={product.productSfid}></label>
                                 <span className="ml-2">
-                                  {product.productName} Required:
+                                  {product.productName}:
                                 </span>
                               </span>
                               <span className="ml-2">${product.unitPrice}</span>

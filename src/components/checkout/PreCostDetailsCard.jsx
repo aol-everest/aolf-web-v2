@@ -260,9 +260,7 @@ export const PreCostDetailsCard = ({
                             />
                           )}
                           <label htmlFor={product.productSfid}></label>
-                          <span className="ml-2">
-                            {product.productName} Required:
-                          </span>
+                          <span className="ml-2">{product.productName}:</span>
                         </span>
                         <span className="ml-2">${product.unitPrice}</span>
                       </li>
@@ -345,9 +343,7 @@ export const PreCostDetailsCard = ({
                             />
                           )}
                           <label htmlFor={product.productSfid}></label>
-                          <span className="ml-2">
-                            {product.productName} Required:
-                          </span>
+                          <span className="ml-2">{product.productName}:</span>
                         </span>
                         <span className="ml-2">${product.unitPrice}</span>
                       </li>
@@ -414,9 +410,7 @@ export const PreCostDetailsCard = ({
                           />
                         )}
                         <label htmlFor={workshop.productSfid}></label>
-                        <span className="ml-2">
-                          {product.productName} Required:
-                        </span>
+                        <span className="ml-2">{product.productName}:</span>
                       </span>
                       <span className="ml-2">${product.unitPrice}</span>
                     </li>

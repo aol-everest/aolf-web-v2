@@ -128,7 +128,7 @@ export const DiscountCodeInput = ({
 
   const applyCoupon = async (e) => {
     if (e) e.preventDefault();
-    const value = formikProps.values[formikKey].trim();
+    const value = formikProps?.values[formikKey]?.trim();
     if (value.length === 0) {
       return;
     }

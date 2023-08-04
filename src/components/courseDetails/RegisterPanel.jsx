@@ -1,9 +1,4 @@
-import {
-  ALLOW_GUEST_LOGIN_CTYPE,
-  COURSE_TYPES,
-  MEMBERSHIP_TYPES,
-  MODAL_TYPES,
-} from "@constants";
+import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from "@constants";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
 import { isEmpty, priceCalculation } from "@utils";
@@ -19,13 +14,12 @@ export const RegisterPanel = ({ workshop }) => {
   const { authenticated = false, user } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
-  const { fee, delfee, offering } = priceCalculation({ workshop });
+  const { fee, delfee } = priceCalculation({ workshop });
 
   const {
     title,
     sfid,
     premiumRate,
-    mode,
     earlyBirdFeeIncreasing,
     roomAndBoardRange,
     usableCredit,
@@ -36,6 +30,7 @@ export const RegisterPanel = ({ workshop }) => {
     repeaterPriceBook,
     standardPriceBook,
     aosCountRequisite,
+    isGuestCheckoutEnabled = false,
   } = workshop || {};
 
   const isSKYType =
@@ -62,7 +57,7 @@ export const RegisterPanel = ({ workshop }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)) {
+    if (authenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {

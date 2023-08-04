@@ -20,13 +20,13 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import utc from "dayjs/plugin/utc";
 import moment from "moment";
+import { NextSeo } from "next-seo";
 import ErrorPage from "next/error";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useAnalytics } from "use-analytics";
-
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 
@@ -431,6 +431,19 @@ const Thankyou = () => {
   return (
     <>
       <main>
+        <NextSeo
+          noindex={true}
+          nofollow={true}
+          robotsProps={{
+            nosnippet: true,
+            notranslate: true,
+            noimageindex: true,
+            noarchive: true,
+            maxSnippet: -1,
+            maxImagePreview: "none",
+            maxVideoPreview: -1,
+          }}
+        />
         {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
           process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
           ["811569", "12371", "12415", "999649"].indexOf(productTypeId) >= 0 &&

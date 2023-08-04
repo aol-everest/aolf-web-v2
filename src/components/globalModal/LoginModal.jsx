@@ -182,7 +182,7 @@ export const LoginModal = () => {
 
   const fbLogin = () => {
     const params = {
-      state: navigateTo,
+      state: navigateTo || router.asPath,
       identity_provider: "Facebook",
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
       client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
@@ -198,7 +198,7 @@ export const LoginModal = () => {
 
   const googleLogin = () => {
     const params = {
-      state: navigateTo,
+      state: navigateTo || router.asPath,
       identity_provider: "Google",
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
       client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,

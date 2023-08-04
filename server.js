@@ -17,18 +17,49 @@ app.prepare().then(() => {
   server.disable("x-powered-by");
   // server.use(helmet.contentSecurityPolicy());
   // server.use(helmet.crossOriginEmbedderPolicy());
-  server.use(helmet.crossOriginOpenerPolicy());
-  server.use(helmet.crossOriginResourcePolicy());
-  server.use(helmet.dnsPrefetchControl());
-  server.use(helmet.frameguard());
-  server.use(helmet.hidePoweredBy());
-  server.use(helmet.hsts());
-  server.use(helmet.ieNoOpen());
-  server.use(helmet.noSniff());
-  server.use(helmet.originAgentCluster());
-  server.use(helmet.permittedCrossDomainPolicies());
-  server.use(helmet.referrerPolicy());
-  server.use(helmet.xssFilter());
+  server.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          "default-src": [
+            "*",
+            "'self'",
+            "data:",
+            "mediastream:",
+            "blob:",
+            "filesystem:",
+            "about:",
+            "ws:",
+            "wss:",
+            "'unsafe-eval'",
+            "'wasm-unsafe-eval'",
+            "'unsafe-inline'",
+          ],
+          "style-src": [
+            "'self'",
+            "'unsafe-inline'",
+            "*.googleapis.com",
+            "cdn.jsdelivr.net",
+          ],
+          "font-src": [
+            "'self'",
+            "'unsafe-inline'",
+            "data:",
+            "*.gstatic.com",
+            "*.googleapis.com",
+          ],
+          "frame-ancestors": [
+            "'self'",
+            "artofliving.org",
+            "*.artofliving.org",
+            "*.unbounce.com",
+            "*.unbouncepreview.com",
+          ],
+        },
+      },
+      crossOriginEmbedderPolicy: false,
+    }),
+  );
   // server.use(nocache());
 
   server.all("*", (req, res) => {

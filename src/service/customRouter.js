@@ -1,11 +1,12 @@
-import { filterAllowedParams } from "@utils/utmParam";
+import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { isNil, isObject, isString } from "lodash";
 import queryString from "query-string";
 
 export function pushRouteWithUTMQuery(router, params) {
   if (isNil(params)) {
     throw new Error("Route url missing");
-  } else if (isString(params)) {
+  }
+  if (isString(params)) {
     const { url, query = {} } = queryString.parseUrl(params);
     const filteredParams = filterAllowedParams(router.query);
     const allParams = {
@@ -24,10 +25,11 @@ export function pushRouteWithUTMQuery(router, params) {
       ...filteredParams,
       ...query,
     };
+    const newQuery = removeNull(allParams);
 
     router.push({
       pathname: pathname,
-      query: allParams,
+      query: newQuery,
     });
   }
 }
@@ -55,9 +57,11 @@ export function replaceRouteWithUTMQuery(router, params) {
       ...query,
     };
 
+    const newQuery = removeNull(allParams);
+
     router.replace({
       pathname: pathname,
-      query: allParams,
+      query: newQuery,
     });
   }
 }
