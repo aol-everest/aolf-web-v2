@@ -6,7 +6,6 @@ import {
 } from "@components";
 import {
   ALERT_TYPES,
-  ALLOW_GUEST_LOGIN_CTYPE,
   COURSE_TYPES,
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
@@ -75,9 +74,15 @@ const Checkout = () => {
   const router = useRouter();
   const { user, authenticated } = useAuth();
   const { id: workshopId, coupon } = router.query;
-  const [mbsy_source] = useQueryString("mbsy_source");
-  const [campaignid] = useQueryString("campaignid");
-  const [mbsy] = useQueryString("mbsy");
+  const [mbsy_source] = useQueryString("mbsy_source", {
+    defaultValue: null,
+  });
+  const [campaignid] = useQueryString("campaignid", {
+    defaultValue: null,
+  });
+  const [mbsy] = useQueryString("mbsy", {
+    defaultValue: null,
+  });
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
@@ -109,11 +114,7 @@ const Checkout = () => {
   );
 
   useEffect(() => {
-    if (
-      workshop &&
-      !authenticated &&
-      !ALLOW_GUEST_LOGIN_CTYPE.includes(workshop.productTypeId)
-    ) {
+    if (workshop && !authenticated && !workshop.isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: "/login",
         query: {
@@ -266,10 +267,16 @@ const Checkout = () => {
     COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(workshop.productTypeId) >=
     0;
 
+  const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
+
   const renderPaymentForm = () => {
     if (isHealingBreathProgram || isInstitutionalProgram) {
       return (
         <PaymentFormHB
+          isStripeIntentPayment={isStripeIntentPayment}
+          campaignid={campaignid}
+          mbsy={mbsy}
+          mbsy_source={mbsy_source}
           workshop={workshop}
           profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
@@ -288,6 +295,10 @@ const Checkout = () => {
     ) {
       return (
         <PaymentForm
+          isStripeIntentPayment={isStripeIntentPayment}
+          campaignid={campaignid}
+          mbsy={mbsy}
+          mbsy_source={mbsy_source}
           workshop={workshop}
           profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
@@ -299,6 +310,10 @@ const Checkout = () => {
     }
     return (
       <PaymentFormGeneric
+        isStripeIntentPayment={isStripeIntentPayment}
+        campaignid={campaignid}
+        mbsy={mbsy}
+        mbsy_source={mbsy_source}
         workshop={workshop}
         profile={user?.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
@@ -364,6 +379,54 @@ const Checkout = () => {
         dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
+  const elementsOptions = {
+    mode: "payment",
+    amount: 1099,
+    currency: "usd",
+    appearance: {
+      theme: "stripe",
+      variables: {
+        colorPrimary: "#0570de",
+        colorBackground: "#ffffff",
+        colorText: "#30313d",
+        colorDanger: "#df1b41",
+        fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
+        spacingUnit: "2px",
+        borderRadius: "4px",
+      },
+      rules: {
+        ".Block": {
+          backgroundColor: "var(--colorBackground)",
+          boxShadow: "none",
+          padding: "12px",
+        },
+        ".Input": {
+          padding: "12px",
+        },
+        ".Input:disabled, .Input--invalid:disabled": {
+          color: "lightgray",
+        },
+        ".Tab": {
+          padding: "10px 12px 8px 12px",
+          border: "none",
+        },
+        ".Tab:hover": {
+          border: "none",
+          boxShadow:
+            "0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 7px rgba(18, 42, 66, 0.04)",
+        },
+        ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
+          border: "1px solid #89beec",
+          backgroundColor: "#fff",
+          boxShadow: "0 2px 25px 0 rgba(61,139,232,.2)",
+        },
+        ".Label": {
+          fontWeight: "500",
+        },
+      },
+    },
+  };
+
   return (
     <>
       <NextSeo title={workshop.title} />
@@ -418,17 +481,24 @@ const Checkout = () => {
                 </h1>
               </div>
             )}
-            <Elements
-              stripe={stripePromise}
-              fonts={[
-                {
-                  cssSrc:
-                    "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
-                },
-              ]}
-            >
-              {renderPaymentForm()}
-            </Elements>
+            {isStripeIntentPayment && (
+              <Elements stripe={stripePromise} options={elementsOptions}>
+                {renderPaymentForm()}
+              </Elements>
+            )}
+            {!isStripeIntentPayment && (
+              <Elements
+                stripe={stripePromise}
+                fonts={[
+                  {
+                    cssSrc:
+                      "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                  },
+                ]}
+              >
+                {renderPaymentForm()}
+              </Elements>
+            )}
           </div>
         </section>
         <section className="additional-information">

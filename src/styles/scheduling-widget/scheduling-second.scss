@@ -8,7 +8,7 @@
 }
 
 .scheduling-second__title {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 19px;
@@ -26,7 +26,7 @@
 }
 
 .scheduling-second__text {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -134,7 +134,7 @@
   outline: none;
 
   text-transform: uppercase;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 12px;
@@ -163,4 +163,20 @@
 
 .scheduling-no-data {
   font-size: small;
+}
+
+.scheduling-discount {
+  .discount-code {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: 100%;
+  }
+  .react-tag-container {
+    margin-top: -5px;
+    border: none;
+  }
+  .validation-mobile-message {
+    padding-top: 4px;
+  }
 }

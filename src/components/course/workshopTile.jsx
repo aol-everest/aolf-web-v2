@@ -1,9 +1,4 @@
-import {
-  ABBRS,
-  ALLOW_GUEST_LOGIN_CTYPE,
-  COURSE_TYPES,
-  MODAL_TYPES,
-} from "@constants";
+import { ABBRS, COURSE_TYPES, MODAL_TYPES } from "@constants";
 import { useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
 import classNames from "classnames";
@@ -32,12 +27,11 @@ export const WorkshopTile = ({ data, authenticated }) => {
     locationCity,
     locationProvince,
     centerName,
+    isGuestCheckoutEnabled = false,
   } = data || {};
 
-  console.log("data", data);
-
   const enrollAction = (workshopId, productTypeId) => () => {
-    if (authenticated || ALLOW_GUEST_LOGIN_CTYPE.includes(productTypeId)) {
+    if (isGuestCheckoutEnabled || authenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {

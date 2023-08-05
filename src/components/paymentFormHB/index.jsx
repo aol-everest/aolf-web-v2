@@ -1022,18 +1022,11 @@ export const PaymentFormHB = ({
                                 tagline: false,
                                 label: "pay",
                               }}
-                              onClick={async (data, actions) => {
-                                const formErrors =
-                                  await formikProps.validateForm();
-
-                                formikProps.setTouched({
-                                  ...formikProps.touched,
-                                  ...formikProps.errors,
-                                });
-                                if (JSON.stringify(formErrors) !== "{}") {
-                                  return false;
-                                }
-                              }}
+                              fundingSource="paypal"
+                              forceReRender={[formikProps.values]}
+                              disabled={
+                                !(formikProps.isValid && formikProps.dirty)
+                              }
                               createOrder={async (data, actions) => {
                                 return await createPaypalOrder(
                                   formikProps.values,
