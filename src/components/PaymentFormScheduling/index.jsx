@@ -36,7 +36,7 @@ const PaymentFormScheduling = forwardRef((props, ref) => {
     workshop,
     setLoading,
     loading,
-    couponCode,
+    discount: couponCode = "",
   } = props;
   const stripe = useStripe();
   const elements = useElements();
