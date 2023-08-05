@@ -283,7 +283,9 @@ const SchedulingPayment = () => {
                                   enrollmentCompletionAction={
                                     enrollmentCompletionAction
                                   }
-                                  discount={discount}
+                                  discount={
+                                    discount || discountResponse?.couponCode
+                                  }
                                 />
                                 <div class="scheduling-discount">
                                   <label
