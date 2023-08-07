@@ -208,7 +208,7 @@ const SchedulingRange = () => {
                               );
                               return (
                                 <li
-                                  className="scheduling-second__item list-item"
+                                  className="scheduling-second__item"
                                   key={firstItem.id}
                                 >
                                   <input
