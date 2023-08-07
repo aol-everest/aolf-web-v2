@@ -274,6 +274,17 @@ export const PaymentFormGeneric = ({
         utm: filterAllowedParams(router.query),
       };
 
+      if (!isLoggedUser) {
+        payLoad = {
+          ...payLoad,
+          user: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+          },
+        };
+      }
+
       if (isGenericWorkshop) {
         const timeSlot =
           availableTimings &&
