@@ -64,10 +64,16 @@ const createOptions = {
 };
 
 export const PaymentFormHB = ({
+  isStripeIntentPayment = false,
+  campaignid,
+  mbsy,
+  mbsy_source,
   workshop = {},
   profile = {},
   enrollmentCompletionAction = () => {},
   handleCouseSelection = () => {},
+  login = () => {},
+  isLoggedUser = false,
 }) => {
   // const {
   //   loading,
@@ -286,6 +292,17 @@ export const PaymentFormHB = ({
         },
         utm: filterAllowedParams(router.query),
       };
+
+      if (!isLoggedUser) {
+        payLoad = {
+          ...payLoad,
+          user: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+          },
+        };
+      }
 
       if (isGenericWorkshop) {
         const timeSlot =
