@@ -207,6 +207,7 @@ export const PaymentFormHB = ({
       paymentOption,
       paymentMode,
       accommodation,
+      email,
     } = values;
 
     if (paymentMode !== PAYMENT_MODES.PAYPAL_PAYMENT_MODE) {
