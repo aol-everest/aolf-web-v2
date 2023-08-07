@@ -1347,7 +1347,10 @@ export const PaymentFormGeneric = ({
                         <span>SSL Secured</span>
                       </p>
                     </div>
-                    <button className="btn-primary">Complete Checkout</button>
+                    {formikProps.values.paymentMode !==
+                      PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
+                      <button className="btn-primary">Complete Checkout</button>
+                    )}
                   </div>
                 </form>
               </div>
