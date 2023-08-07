@@ -61,6 +61,12 @@ const SchedulingRange = () => {
         const newData = groupBy(response?.data, "eventStartDateTimeGMT");
         setLoading(false);
         setWorkshops(newData);
+        const timeContainer = document.querySelector(
+          ".scheduling-second__available",
+        );
+        if (timeContainer) {
+          timeContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
       }
     };
     if (selectedDates?.length > 0) {
