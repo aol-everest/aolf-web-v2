@@ -978,9 +978,11 @@ export const PaymentFormGeneric = ({
         finalPrice = selectedBundle.comboUnitPrice;
       }
     }
-    elements.update({
-      amount: finalPrice * 100,
-    });
+    if (finalPrice > 0) {
+      elements.update({
+        amount: finalPrice * 100,
+      });
+    }
     const paymentElement = elements.getElement(PaymentElement);
     if (paymentElement) {
       paymentElement.update({
