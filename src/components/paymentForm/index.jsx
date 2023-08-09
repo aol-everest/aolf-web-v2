@@ -353,31 +353,36 @@ export const PaymentForm = ({
         throw new Error(errorMessage);
       }
 
-      let filteredParams = {
-        ctype: workshop.productTypeId,
-        page: "ty",
-        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-        campaignid,
-        mbsy,
-        ...filterAllowedParams(router.query),
-      };
-      filteredParams = removeNull(filteredParams);
-      const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-        data.attendeeId
-      }?${queryString.stringify(filteredParams)}`;
-      const result = await stripe.confirmPayment({
-        //`Elements` instance that was used to create the Payment Element
-        elements,
-        clientSecret: stripeIntentObj.client_secret,
-        confirmParams: {
-          return_url: returnUrl,
-        },
-      });
-      console.log(result);
+      if (data && data.totalOrderAmount > 0) {
+        let filteredParams = {
+          ctype: workshop.productTypeId,
+          page: "ty",
+          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+          campaignid,
+          mbsy,
+          ...filterAllowedParams(router.query),
+        };
+        filteredParams = removeNull(filteredParams);
+        const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+          data.attendeeId
+        }?${queryString.stringify(filteredParams)}`;
+        const result = await stripe.confirmPayment({
+          //`Elements` instance that was used to create the Payment Element
+          elements,
+          clientSecret: stripeIntentObj.client_secret,
+          confirmParams: {
+            return_url: returnUrl,
+          },
+        });
+        console.log(result);
 
-      if (result.error) {
-        // Show error to your customer (for example, payment details incomplete)
-        throw new Error(result.error.message);
+        if (result.error) {
+          // Show error to your customer (for example, payment details incomplete)
+          throw new Error(result.error.message);
+        }
+      }
+      if (data) {
+        enrollmentCompletionAction(data);
       }
       setLoading(false);
     } catch (ex) {
