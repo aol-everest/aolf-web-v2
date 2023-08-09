@@ -311,6 +311,9 @@ export const PaymentForm = ({
         utm: filterAllowedParams(router.query),
       };
 
+      if (workshop.isCCNotRequired) {
+        payLoad.shoppingRequest.isStripeIntentPayment = false;
+      }
       if (!isLoggedUser) {
         payLoad = {
           ...payLoad,
