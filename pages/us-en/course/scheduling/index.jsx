@@ -1,3 +1,4 @@
+import { COURSE_MODES } from "@constants";
 import { useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
 import { api, tConvert } from "@utils";
@@ -53,7 +54,7 @@ const SchedulingRange = () => {
           sdate: selectedDates?.[0],
           org: "AOL",
           timingsRequired: true,
-          mode: "online",
+          mode: COURSE_MODES.ONLINE.value,
           ctype: 811569,
         },
       });
