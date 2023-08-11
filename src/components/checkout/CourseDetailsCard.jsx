@@ -17,15 +17,9 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
     primaryTeacherName,
     coTeacher1Name,
     coTeacher2Name,
-    notes,
-    streetAddress1,
-    streetAddress2,
-    state,
-    city,
-    country,
     productTypeId,
     mode,
-    corporateName,
+    centerName,
     isGenericWorkshop,
   } = workshop || {};
 
@@ -110,6 +104,20 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                       </li>
                     );
                   })}
+              </ul>
+              <ul className="info__list mt-3">
+                <h2 className="info__title">Venue:</h2>
+                {mode === COURSE_MODES.IN_PERSON.name ? (
+                  <div className="course_status">
+                    <li className="tw-text-sm tw-tracking-tighter">
+                      {centerName}
+                    </li>
+                  </div>
+                ) : (
+                  <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                    {mode}
+                  </li>
+                )}
               </ul>
             </>
           )}

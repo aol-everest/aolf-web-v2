@@ -1,4 +1,4 @@
-import { ABBRS, COURSE_TYPES, MODAL_TYPES } from "@constants";
+import { ABBRS, COURSE_MODES, COURSE_TYPES, MODAL_TYPES } from "@constants";
 import { useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
 import classNames from "classnames";
@@ -141,7 +141,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
           )}
         </div>
         <div className="course_info">
-          {mode === "In Person" ? (
+          {mode === COURSE_MODES.IN_PERSON.name ? (
             <div className="course_status">
               {locationCity ? (
                 <span>
