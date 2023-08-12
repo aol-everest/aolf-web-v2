@@ -5,7 +5,6 @@ import {
 } from "@components/checkout";
 import { US_STATES } from "@constants";
 import { useQueryString } from "@hooks";
-import { replaceRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { api, priceCalculation } from "@utils";
@@ -16,6 +15,7 @@ import * as Yup from "yup";
 
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
 import { useGlobalModalContext } from "@contexts";
+import { openNewTabWithUTMQuery } from "src/service/customRouter";
 
 const SchedulingPayment = () => {
   const router = useRouter();
@@ -57,7 +57,6 @@ const SchedulingPayment = () => {
   const {
     complianceQuestionnaire,
     title,
-    unitPrice,
     id: productId,
     addOnProducts,
   } = workshop || {};
@@ -70,7 +69,7 @@ const SchedulingPayment = () => {
     : [];
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
-    replaceRouteWithUTMQuery(router, {
+    openNewTabWithUTMQuery(router, {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
@@ -93,6 +92,7 @@ const SchedulingPayment = () => {
 
   return (
     <div id="widget-modal" className="overlaying-popup_active" role="dialog">
+      {loading && <div className="cover-spin"></div>}
       <div className="scheduling-modal">
         <div
           role="button"
