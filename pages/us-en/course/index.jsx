@@ -456,7 +456,7 @@ const Course = () => {
   }
 
   return (
-    <main className="meetsup-filter">
+    <main className="course-filter">
       <NextSeo title="Workshops" />
       <section className="courses">
         {orgConfig.name !== "HB" && (
@@ -468,192 +468,196 @@ const Course = () => {
                 </div>
               </div>
               <div className="row">
-                <div className="search-form col-12 d-flex align-items-center">
-                  {/* <div id="switch-filter" className="btn_outline_box ml-0">
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
-                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                <div
+                  id="courses-filters"
+                  className="search-form col-12 d-flex align-items-center"
                 >
-                  Online
-                </a>
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={
-                    activeFilterType === COURSE_MODES.IN_PERSON
-                  }
-                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
-                >
-                  In Person
-                </a>
-              </div> */}
-                  <div className="switch-flter-container">
-                    <Popup
-                      tabIndex="1"
-                      value={COURSE_MODES[activeFilterType] && activeFilterType}
-                      buttonText={
-                        activeFilterType && COURSE_MODES[activeFilterType]
-                          ? COURSE_MODES[activeFilterType].name
-                          : "Course Format"
-                      }
-                      closeEvent={onFilterChange("activeFilterType")}
-                    >
-                      {({ closeHandler }) => (
-                        <>
-                          {orgConfig.courseModes.map((courseMode, index) => {
-                            return (
-                              <li
-                                key={index}
-                                onClick={closeHandler(courseMode)}
-                              >
-                                {COURSE_MODES[courseMode].name}
-                              </li>
-                            );
-                          })}
-                        </>
-                      )}
-                    </Popup>
-                    {activeFilterType === "IN_PERSON" && (
-                      <Popup
-                        tabIndex="2"
-                        value={locationFilter}
-                        buttonText={
-                          locationFilter
-                            ? `${locationFilter.loactionName}`
-                            : "Location"
-                        }
-                        closeEvent={onFilterChange("locationFilter")}
-                      >
-                        {({ closeHandler }) => (
-                          <AddressSearch
-                            closeHandler={closeHandler}
-                            placeholder="Search for Location"
-                          />
-                        )}
-                      </Popup>
+                  <Popup
+                    isWorkshop
+                    tabIndex="1"
+                    value={COURSE_MODES[activeFilterType] && activeFilterType}
+                    buttonText={
+                      activeFilterType && COURSE_MODES[activeFilterType]
+                        ? COURSE_MODES[activeFilterType].name
+                        : "Course Format"
+                    }
+                    closeEvent={onFilterChange("activeFilterType")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {orgConfig.courseModes.map((courseMode, index) => {
+                          return (
+                            <li
+                              key={index}
+                              className="courses-filter__list-item"
+                              onClick={closeHandler(courseMode)}
+                            >
+                              {COURSE_MODES[courseMode].name}
+                            </li>
+                          );
+                        })}
+                      </>
                     )}
+                  </Popup>
 
+                  {activeFilterType === "IN_PERSON" && (
                     <Popup
-                      tabIndex="3"
-                      value={courseTypeFilter}
+                      isWorkshop
+                      tabIndex="2"
+                      value={locationFilter}
                       buttonText={
-                        courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                          ? COURSE_TYPES[courseTypeFilter].name
-                          : "Course Type"
+                        locationFilter
+                          ? `${locationFilter.loactionName}`
+                          : "Location"
                       }
-                      closeEvent={onFilterChange("courseTypeFilter")}
+                      closeEvent={onFilterChange("locationFilter")}
                     >
                       {({ closeHandler }) => (
-                        <>
-                          {otherCType && (
-                            <>
-                              {orgConfig.otherCourseTypes.map(
-                                (courseType, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      onClick={closeHandler(courseType)}
-                                    >
-                                      {COURSE_TYPES[courseType].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                          {!otherCType && (
-                            <>
-                              {orgConfig.courseTypes.map(
-                                (courseType, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      onClick={closeHandler(courseType)}
-                                    >
-                                      {COURSE_TYPES[courseType].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </>
-                      )}
-                    </Popup>
-                    <Popup
-                      containerClassName={Style.daterangepickerPopup}
-                      tabIndex="3"
-                      value={filterStartEndDate}
-                      buttonText={
-                        filterStartEndDate
-                          ? filterStartEndDate.split("|").join(" - ")
-                          : "Dates"
-                      }
-                      closeEvent={onDatesChange}
-                    >
-                      {({ closeHandler }) => (
-                        <LinkedCalendar
-                          {...DATE_PICKER_CONFIG}
-                          noFooter
-                          noInfo
-                          noCancel
-                          onDatesChange={closeHandler}
-                          className={Style.daterangepicker}
+                        <AddressSearch
+                          closeHandler={closeHandler}
+                          placeholder="Search for Location"
                         />
                       )}
                     </Popup>
-                    <Popup
-                      tabIndex="4"
-                      value={timeZoneFilter}
-                      buttonText={
-                        timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                          ? TIME_ZONE[timeZoneFilter].name
-                          : "Time Zone"
-                      }
-                      closeEvent={onFilterChange("timeZoneFilter")}
-                    >
-                      {({ closeHandler }) => (
-                        <>
-                          <li onClick={closeHandler(TIME_ZONE.EST.value)}>
-                            {TIME_ZONE.EST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.CST.value)}>
-                            {TIME_ZONE.CST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.MST.value)}>
-                            {TIME_ZONE.MST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.PST.value)}>
-                            {TIME_ZONE.PST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.HST.value)}>
-                            {TIME_ZONE.HST.name}
-                          </li>
-                        </>
-                      )}
-                    </Popup>
+                  )}
 
-                    <Popup
-                      tabIndex="5"
-                      value={instructorFilter ? instructorFilter.label : null}
-                      buttonText={
-                        instructorFilter ? instructorFilter.label : "Instructor"
-                      }
-                      closeEvent={onFilterChange("instructorFilter")}
-                    >
-                      {({ closeHandler }) => (
-                        <SmartInput
-                          inputclassName={Style.instructor_input}
-                          onSearchKeyChange={(value) => setSearchKey(value)}
-                          dataList={instructorList}
-                          closeHandler={closeHandler}
-                          value={searchKey}
-                        ></SmartInput>
-                      )}
-                    </Popup>
-                  </div>
+                  <Popup
+                    isWorkshop
+                    tabIndex="3"
+                    value={courseTypeFilter}
+                    buttonText={
+                      courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                        ? COURSE_TYPES[courseTypeFilter].name
+                        : "Course Type"
+                    }
+                    closeEvent={onFilterChange("courseTypeFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {otherCType && (
+                          <>
+                            {orgConfig.otherCourseTypes.map(
+                              (courseType, index) => {
+                                return (
+                                  <li
+                                    className="courses-filter__list-item"
+                                    key={index}
+                                    onClick={closeHandler(courseType)}
+                                  >
+                                    {COURSE_TYPES[courseType].name}
+                                  </li>
+                                );
+                              },
+                            )}
+                          </>
+                        )}
+                        {!otherCType && (
+                          <>
+                            {orgConfig.courseTypes.map((courseType, index) => {
+                              return (
+                                <li
+                                  className="courses-filter__list-item"
+                                  key={index}
+                                  onClick={closeHandler(courseType)}
+                                >
+                                  {COURSE_TYPES[courseType].name}
+                                </li>
+                              );
+                            })}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Popup>
+                  <Popup
+                    isWorkshop
+                    containerClassName={Style.daterangepickerPopup}
+                    tabIndex="3"
+                    value={filterStartEndDate}
+                    buttonText={
+                      filterStartEndDate
+                        ? filterStartEndDate.split("|").join(" - ")
+                        : "Dates"
+                    }
+                    closeEvent={onDatesChange}
+                  >
+                    {({ closeHandler }) => (
+                      <LinkedCalendar
+                        {...DATE_PICKER_CONFIG}
+                        noFooter
+                        noInfo
+                        noCancel
+                        onDatesChange={closeHandler}
+                        className={Style.daterangepicker}
+                      />
+                    )}
+                  </Popup>
+                  <Popup
+                    isWorkshop
+                    tabIndex="4"
+                    value={timeZoneFilter}
+                    buttonText={
+                      timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                        ? TIME_ZONE[timeZoneFilter].name
+                        : "Time Zone"
+                    }
+                    closeEvent={onFilterChange("timeZoneFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.EST.value)}
+                        >
+                          {TIME_ZONE.EST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.CST.value)}
+                        >
+                          {TIME_ZONE.CST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.MST.value)}
+                        >
+                          {TIME_ZONE.MST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.PST.value)}
+                        >
+                          {TIME_ZONE.PST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.HST.value)}
+                        >
+                          {TIME_ZONE.HST.name}
+                        </li>
+                      </>
+                    )}
+                  </Popup>
+
+                  <Popup
+                    isWorkshop
+                    tabIndex="5"
+                    value={instructorFilter ? instructorFilter.label : null}
+                    buttonText={
+                      instructorFilter ? instructorFilter.label : "Instructor"
+                    }
+                    closeEvent={onFilterChange("instructorFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <SmartInput
+                        inputclassName={Style.instructor_input}
+                        onSearchKeyChange={(value) => setSearchKey(value)}
+                        dataList={instructorList}
+                        closeHandler={closeHandler}
+                        value={searchKey}
+                      ></SmartInput>
+                    )}
+                  </Popup>
                 </div>
               </div>
             </div>
