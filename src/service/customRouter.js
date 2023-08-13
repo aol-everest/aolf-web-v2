@@ -78,7 +78,8 @@ export function iframeRouteWithUTMQuery(router, params) {
     };
 
     const result = "?" + new URLSearchParams(allParams).toString();
-    window.top.location.href = window.location.href + url + result;
+    window.top.location.href =
+      window.location.protocol + "//" + window.location.host + url + result;
   } else if (isObject(params)) {
     const { pathname, query = {} } = params;
     const filteredParams = filterAllowedParams(router.query);
@@ -89,6 +90,11 @@ export function iframeRouteWithUTMQuery(router, params) {
 
     const newQuery = removeNull(allParams);
     const result = "?" + new URLSearchParams(newQuery).toString();
-    window.top.location.href = window.location.href + pathname + result;
+    window.top.location.href =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      pathname +
+      result;
   }
 }
