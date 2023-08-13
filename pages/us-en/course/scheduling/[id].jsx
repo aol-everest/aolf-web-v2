@@ -15,7 +15,7 @@ import * as Yup from "yup";
 
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
 import { useGlobalModalContext } from "@contexts";
-import { openNewTabWithUTMQuery } from "src/service/customRouter";
+import { iframeRouteWithUTMQuery, replaceRouteWithUTMQuery } from "@service";
 
 const SchedulingPayment = () => {
   const router = useRouter();
@@ -69,17 +69,31 @@ const SchedulingPayment = () => {
     : [];
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
-    openNewTabWithUTMQuery(router, {
-      pathname: `/us-en/course/thankyou/${attendeeId}`,
-      query: {
-        ctype: workshop.productTypeId,
-        comboId: workshop?.sfid,
-        page: "ty",
-        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-        campaignid,
-        mbsy,
-      },
-    });
+    if (window.self !== window.top) {
+      iframeRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/thankyou/${attendeeId}`,
+        query: {
+          ctype: workshop.productTypeId,
+          comboId: workshop?.sfid,
+          page: "ty",
+          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+          campaignid,
+          mbsy,
+        },
+      });
+    } else {
+      replaceRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/thankyou/${attendeeId}`,
+        query: {
+          ctype: workshop.productTypeId,
+          comboId: workshop?.sfid,
+          page: "ty",
+          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+          campaignid,
+          mbsy,
+        },
+      });
+    }
   };
 
   const stripePromise = loadStripe(

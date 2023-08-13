@@ -66,7 +66,7 @@ export function replaceRouteWithUTMQuery(router, params) {
   }
 }
 
-export function openNewTabWithUTMQuery(router, params) {
+export function iframeRouteWithUTMQuery(router, params) {
   if (isNil(params)) {
     throw new Error("Route url missing");
   } else if (isString(params)) {
@@ -78,7 +78,7 @@ export function openNewTabWithUTMQuery(router, params) {
     };
 
     const result = "?" + new URLSearchParams(allParams).toString();
-    window.open(url + result, "_blank", "noopener,noreferrer");
+    window.top.location.href = window.location.href + url + result;
   } else if (isObject(params)) {
     const { pathname, query = {} } = params;
     const filteredParams = filterAllowedParams(router.query);
@@ -89,6 +89,6 @@ export function openNewTabWithUTMQuery(router, params) {
 
     const newQuery = removeNull(allParams);
     const result = "?" + new URLSearchParams(newQuery).toString();
-    window.open(pathname + result, "_blank", "noopener,noreferrer");
+    window.top.location.href = window.location.href + pathname + result;
   }
 }
