@@ -1453,13 +1453,9 @@ export const PaymentFormGeneric = ({
                             >
                               <h6>Venue:</h6>
                               {mode === COURSE_MODES.IN_PERSON.name ? (
-                                <div className="course_status">
-                                  {centerName}
-                                </div>
+                                <div>{centerName}</div>
                               ) : (
-                                <div className="tw-truncate tw-text-sm tw-tracking-tighter">
-                                  {mode}
-                                </div>
+                                <div>{mode}</div>
                               )}
                             </div>
                           </div>
