@@ -5,7 +5,6 @@ import {
 } from "@components/checkout";
 import { US_STATES } from "@constants";
 import { useQueryString } from "@hooks";
-import { replaceRouteWithUTMQuery } from "@service";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { api, priceCalculation } from "@utils";
@@ -16,6 +15,7 @@ import * as Yup from "yup";
 
 import PaymentFormScheduling from "@components/PaymentFormScheduling";
 import { useGlobalModalContext } from "@contexts";
+import { iframeRouteWithUTMQuery, replaceRouteWithUTMQuery } from "@service";
 
 const SchedulingPayment = () => {
   const router = useRouter();
@@ -57,7 +57,6 @@ const SchedulingPayment = () => {
   const {
     complianceQuestionnaire,
     title,
-    unitPrice,
     id: productId,
     addOnProducts,
   } = workshop || {};
@@ -70,17 +69,31 @@ const SchedulingPayment = () => {
     : [];
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
-    replaceRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/thankyou/${attendeeId}`,
-      query: {
-        ctype: workshop.productTypeId,
-        comboId: workshop?.sfid,
-        page: "ty",
-        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-        campaignid,
-        mbsy,
-      },
-    });
+    if (window.self !== window.top) {
+      iframeRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/thankyou/${attendeeId}`,
+        query: {
+          ctype: workshop.productTypeId,
+          comboId: workshop?.sfid,
+          page: "ty",
+          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+          campaignid,
+          mbsy,
+        },
+      });
+    } else {
+      replaceRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/thankyou/${attendeeId}`,
+        query: {
+          ctype: workshop.productTypeId,
+          comboId: workshop?.sfid,
+          page: "ty",
+          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+          campaignid,
+          mbsy,
+        },
+      });
+    }
   };
 
   const stripePromise = loadStripe(
@@ -93,6 +106,7 @@ const SchedulingPayment = () => {
 
   return (
     <div id="widget-modal" className="overlaying-popup_active" role="dialog">
+      {loading && <div className="cover-spin"></div>}
       <div className="scheduling-modal">
         <div
           role="button"
