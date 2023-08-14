@@ -34,6 +34,7 @@ import "yup-phone";
 import { Loader } from "@components";
 import {
   ABBRS,
+  COURSE_MODES,
   ALERT_TYPES,
   COURSE_TYPES,
   MODAL_TYPES,
@@ -799,6 +800,8 @@ export const PaymentFormGeneric = ({
     email: contactEmail,
     paymentMethod = {},
     productTypeId,
+    centerName,
+    mode,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -1442,6 +1445,23 @@ export const PaymentFormGeneric = ({
                                   );
                                 })}
                             </div>
+                            <div
+                              className={classNames(
+                                "col-12",
+                                Style.datetime_box,
+                              )}
+                            >
+                              <h6>Venue:</h6>
+                              {mode === COURSE_MODES.IN_PERSON.name ? (
+                                <div className="course_status">
+                                  {centerName}
+                                </div>
+                              ) : (
+                                <div className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                  {mode}
+                                </div>
+                              )}
+                            </div>
                           </div>
 
                           <div
@@ -1455,10 +1475,7 @@ export const PaymentFormGeneric = ({
                                     Style.img,
                                     "rounded-circle",
                                   )}
-                                  src={
-                                    primaryTeacherPic ||
-                                    "/assets/images/user.png"
-                                  }
+                                  src={primaryTeacherPic || "/img/user.png"}
                                 />
                                 {primaryTeacherName}
                               </div>
@@ -1470,9 +1487,7 @@ export const PaymentFormGeneric = ({
                                     Style.img,
                                     "rounded-circle",
                                   )}
-                                  src={
-                                    coTeacher1Pic || "/assets/images/user.png"
-                                  }
+                                  src={coTeacher1Pic || "/img/user.png"}
                                 />
                                 {coTeacher1Name}
                               </div>
@@ -1484,9 +1499,7 @@ export const PaymentFormGeneric = ({
                                     Style.img,
                                     "rounded-circle",
                                   )}
-                                  src={
-                                    coTeacher2Pic || "/assets/images/user.png"
-                                  }
+                                  src={coTeacher2Pic || "/img/user.png"}
                                 />
                                 {coTeacher2Name}
                               </div>
