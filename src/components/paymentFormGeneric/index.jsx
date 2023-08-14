@@ -1451,11 +1451,83 @@ export const PaymentFormGeneric = ({
                                 Style.datetime_box,
                               )}
                             >
-                              <h6>Venue:</h6>
-                              {mode === COURSE_MODES.IN_PERSON.name ? (
-                                <div>{centerName}</div>
-                              ) : (
-                                <div>{mode}</div>
+                              <h6>Location:</h6>
+                              {(mode === COURSE_MODES.IN_PERSON.name ||
+                                mode ===
+                                  COURSE_MODES.DESTINATION_RETREATS.name) && (
+                                <>
+                                  {!workshop.isLocationEmpty && (
+                                    <ul className="info__list mt-3">
+                                      <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${
+                                          workshop.locationStreet || ""
+                                        }, ${workshop.locationCity} ${
+                                          workshop.locationProvince
+                                        } ${workshop.locationPostalCode} ${
+                                          workshop.locationCountry
+                                        }`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      >
+                                        {workshop.locationStreet && (
+                                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                            {workshop.locationStreet}
+                                          </li>
+                                        )}
+                                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                          {workshop.locationCity || ""}
+                                          {", "}
+                                          {workshop.locationProvince || ""}{" "}
+                                          {workshop.locationPostalCode || ""}
+                                        </li>
+                                      </a>
+                                    </ul>
+                                  )}
+                                  {workshop.isLocationEmpty && (
+                                    <ul className="info__list mt-3">
+                                      <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${
+                                          workshop.streetAddress1 || ""
+                                        },${workshop.streetAddress2 || ""} ${
+                                          workshop.city
+                                        } ${workshop.state} ${workshop.zip} ${
+                                          workshop.country
+                                        }`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      >
+                                        {workshop.streetAddress1 && (
+                                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                            {workshop.streetAddress1}
+                                          </li>
+                                        )}
+                                        {workshop.streetAddress2 && (
+                                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                            {workshop.streetAddress2}
+                                          </li>
+                                        )}
+                                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                          {workshop.city || ""}
+                                          {", "}
+                                          {workshop.state || ""}{" "}
+                                          {workshop.zip || ""}
+                                        </li>
+                                      </a>
+                                    </ul>
+                                  )}
+                                </>
+                              )}
+
+                              {mode === COURSE_MODES.ONLINE.name && (
+                                <>
+                                  {!workshop.isLocationEmpty && (
+                                    <ul className="info__list mt-3">
+                                      <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                        {mode}
+                                      </li>
+                                    </ul>
+                                  )}
+                                </>
                               )}
                             </div>
                           </div>
