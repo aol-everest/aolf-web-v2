@@ -1457,7 +1457,7 @@ export const PaymentFormGeneric = ({
                                   COURSE_MODES.DESTINATION_RETREATS.name) && (
                                 <>
                                   {!workshop.isLocationEmpty && (
-                                    <ul className="info__list mt-3">
+                                    <ul>
                                       <a
                                         href={`https://www.google.com/maps/search/?api=1&query=${
                                           workshop.locationStreet || ""
@@ -1484,7 +1484,7 @@ export const PaymentFormGeneric = ({
                                     </ul>
                                   )}
                                   {workshop.isLocationEmpty && (
-                                    <ul className="info__list mt-3">
+                                    <ul>
                                       <a
                                         href={`https://www.google.com/maps/search/?api=1&query=${
                                           workshop.streetAddress1 || ""
@@ -1521,7 +1521,7 @@ export const PaymentFormGeneric = ({
                               {mode === COURSE_MODES.ONLINE.name && (
                                 <>
                                   {!workshop.isLocationEmpty && (
-                                    <ul className="info__list mt-3">
+                                    <ul>
                                       <li className="tw-truncate tw-text-sm tw-tracking-tighter">
                                         {mode}
                                       </li>
