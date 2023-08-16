@@ -338,3 +338,9 @@
     grid-template-columns: 1fr;
   }
 }
+.daterangepicker.openscenter:before {
+  display: none;
+}
+.daterangepicker.openscenter:after {
+  display: none;
+}

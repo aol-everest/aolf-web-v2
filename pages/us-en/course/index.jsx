@@ -474,7 +474,6 @@ const Course = () => {
                   className="search-form col-12 d-flex align-items-center"
                 >
                   <Popup
-                    isWorkshop
                     tabIndex="1"
                     value={COURSE_MODES[activeFilterType] && activeFilterType}
                     buttonText={
@@ -503,7 +502,6 @@ const Course = () => {
 
                   {activeFilterType === "IN_PERSON" && (
                     <Popup
-                      isWorkshop
                       tabIndex="2"
                       value={locationFilter}
                       buttonText={
@@ -523,7 +521,6 @@ const Course = () => {
                   )}
 
                   <Popup
-                    isWorkshop
                     tabIndex="3"
                     value={courseTypeFilter}
                     buttonText={
@@ -571,7 +568,6 @@ const Course = () => {
                     )}
                   </Popup>
                   <Popup
-                    isWorkshop
                     containerClassName={Style.daterangepickerPopup}
                     tabIndex="3"
                     value={filterStartEndDate}
@@ -594,7 +590,6 @@ const Course = () => {
                     )}
                   </Popup>
                   <Popup
-                    isWorkshop
                     tabIndex="4"
                     value={timeZoneFilter}
                     buttonText={
@@ -641,7 +636,6 @@ const Course = () => {
                   </Popup>
 
                   <Popup
-                    isWorkshop
                     tabIndex="5"
                     value={instructorFilter ? instructorFilter.label : null}
                     buttonText={
