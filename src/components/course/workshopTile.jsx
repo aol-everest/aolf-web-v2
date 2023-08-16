@@ -1,6 +1,7 @@
 import { ABBRS, COURSE_MODES, COURSE_TYPES, MODAL_TYPES } from "@constants";
 import { useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
+import { tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
@@ -29,6 +30,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
     coTeacher2Name,
+    timings,
   } = data || {};
 
   const enrollAction = (workshopId, productTypeId) => () => {
@@ -194,18 +196,17 @@ export const WorkshopTile = ({ data, authenticated }) => {
       </p>
 
       <div class="course-card__times">
-        <p class="course-card__time">
-          <span>Fri</span>7 AM - 9 PM PT
-        </p>
-        <p class="course-card__time">
-          <span>Sat</span>7 AM - 9 PM PT
-        </p>
-        <p class="course-card__time">
-          <span>Sat</span>7 AM - 9 PM PT
-        </p>
-        <p class="course-card__time">
-          <span>Sat</span>7 AM - 9 PM PT
-        </p>
+        {timings?.length > 0 &&
+          timings.map((time, i) => {
+            return (
+              <p class="course-card__time" key={i}>
+                <span>{dayjs.utc(time.startDate).format("ddd")}</span>
+                {`${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                  ABBRS[time.timeZone]
+                }`}
+              </p>
+            );
+          })}
       </div>
 
       <div className="course-card__navigation">

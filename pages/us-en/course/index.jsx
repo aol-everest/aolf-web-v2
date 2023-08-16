@@ -336,6 +336,7 @@ const Course = () => {
       let param = {
         page: pageParam,
         size: 12,
+        timingsRequired: true,
       };
 
       if (activeFilterType && COURSE_MODES[activeFilterType]) {
