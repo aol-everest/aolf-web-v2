@@ -1,0 +1,26 @@
+<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="clock 1" clip-path="url(#clip0_23_1450)">
+<g id="Group">
+<g id="Group_2">
+<g id="Group_3">
+<path id="Vector" d="M6 2.10425V2.35044" stroke="#7D7D7D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M6 9.64966V9.89585" stroke="#7D7D7D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="Group_4">
+<path id="Vector_3" d="M9.89585 6H9.64966" stroke="#7D7D7D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M2.35044 6H2.10425" stroke="#7D7D7D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="Group_5">
+<path id="Vector_5" d="M3.71362 3.72656L6.49073 6.60788" stroke="#7D7D7D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_6" d="M7.38331 4.72095L5.49634 6.6079" stroke="#7D7D7D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<path id="Vector_7" d="M10.7249 8.87716C11.2365 8.03888 11.5312 7.05387 11.5312 6C11.5312 2.94518 9.05482 0.46875 6 0.46875C2.94518 0.46875 0.46875 2.94518 0.46875 6C0.46875 9.05482 2.94518 11.5312 6 11.5312C7.15259 11.5312 8.22279 11.1787 9.10875 10.5755" stroke="#7D7D7D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_23_1450">
+<rect width="12" height="12" fill="white"/>
+</clipPath>
+</defs>
+</svg>
