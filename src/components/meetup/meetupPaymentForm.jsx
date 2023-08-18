@@ -421,9 +421,11 @@ export const MeetupPaymentForm = ({
     !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
   const { fee, delfee, offering } = priceCalculation({
-    meetup,
+    workshop: meetup,
     discountResponse,
   });
+
+  console.log(fee, delfee);
 
   const isRegularPrice = priceType === null || priceType === "regular";
 

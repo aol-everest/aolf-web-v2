@@ -818,7 +818,6 @@ export const PaymentForm = ({
     workshop,
     discount: discountResponse,
   });
-  console.log(fee, delfee);
 
   const { isCreditCardRequired } = discountResponse || {};
 
