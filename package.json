@@ -115,7 +115,7 @@
     "cssnano": "^6.0.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.29.0",
-    "eslint-config-next": "^13.4.12",
+    "eslint-config-next": "^13.4.18",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-no-inline-styles": "^1.0.5",
     "eslint-plugin-prettier": "^4.2.1",
