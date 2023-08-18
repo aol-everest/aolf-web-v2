@@ -67,9 +67,7 @@ const createOptions = {
 
 export const PaymentForm = ({
   isStripeIntentPayment = false,
-  campaignid,
-  mbsy,
-  mbsy_source,
+  enrollmentCompletionLink,
   workshop = {},
   profile = {},
   enrollmentCompletionAction = () => {},
@@ -357,18 +355,7 @@ export const PaymentForm = ({
       }
 
       if (data && data.totalOrderAmount > 0) {
-        let filteredParams = {
-          ctype: workshop.productTypeId,
-          page: "ty",
-          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-          campaignid,
-          mbsy,
-          ...filterAllowedParams(router.query),
-        };
-        filteredParams = removeNull(filteredParams);
-        const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-          data.attendeeId
-        }?${queryString.stringify(filteredParams)}`;
+        const returnUrl = enrollmentCompletionLink(data);
         const result = await stripe.confirmPayment({
           //`Elements` instance that was used to create the Payment Element
           elements,
@@ -377,7 +364,6 @@ export const PaymentForm = ({
             return_url: returnUrl,
           },
         });
-        console.log(result);
 
         if (result.error) {
           // Show error to your customer (for example, payment details incomplete)

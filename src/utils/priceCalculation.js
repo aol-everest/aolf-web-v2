@@ -1,4 +1,5 @@
 import { COURSE_TYPES } from "@constants";
+
 export const priceCalculation = ({
   workshop,
   discount,
@@ -7,8 +8,8 @@ export const priceCalculation = ({
   const { listPrice, unitPrice, CMEPricing, showPrice, productTypeId } =
     workshop || {};
 
-  let fee = "";
-  let delfee = "";
+  let fee = unitPrice;
+  let delfee = listPrice;
 
   if (agreementCMEAccepted) {
     fee = CMEPricing.unitPrice;
@@ -16,25 +17,24 @@ export const priceCalculation = ({
     fee = discount.newPrice;
     delfee = discount.oldPrice;
   } else if (
-    `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(productTypeId) >= 0
+    `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.includes(productTypeId)
   ) {
     fee = unitPrice;
-    delfee = showPrice ? showPrice : listPrice;
+    delfee = showPrice || listPrice;
   } else if (listPrice === unitPrice) {
     fee = unitPrice;
-    delfee = "";
-  } else {
-    fee = unitPrice;
-    delfee = listPrice;
+    delfee = null;
   }
-  if (fee > delfee || fee === delfee) {
+
+  if (delfee && fee >= delfee) {
     return {
       fee,
       delfee: null,
     };
+  } else {
+    return {
+      fee,
+      delfee,
+    };
   }
-  return {
-    fee,
-    delfee,
-  };
 };

@@ -534,10 +534,7 @@ const MembershipThankyou = () => {
             )}
 
             {getEventImage()}
-            {/* <img
-                src={require('../../assests/images/new_design/journey-card-bg.png')}
-                alt="card"
-              /> */}
+
             <div className="journey-confirmation_mobile__course-detail">
               <h4 className="journey-confirmation_mobile__course-type !tw-text-slate-700">
                 {mode}
