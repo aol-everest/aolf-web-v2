@@ -218,9 +218,7 @@ const SchedulingRange = () => {
                                   key={i}
                                 >
                                   <div className="scheduling-modal__content-option-row-date">
-                                    {dayjs
-                                      .utc(time.startDate)
-                                      .format("ddd, Do")}
+                                    {dayjs.utc(time.startDate).format("ddd, D")}
                                   </div>
                                   <div className="scheduling-modal__content-option-row-time">
                                     {tConvert(time.startTime, true)} -{" "}
