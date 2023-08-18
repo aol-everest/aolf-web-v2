@@ -1077,6 +1077,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  margin-top: 180px;
 }
 @media screen and (max-width: 991px) {
   .scheduling-modal__practices {

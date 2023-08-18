@@ -160,6 +160,7 @@ function App({ Component, pageProps }) {
           >
             <Layout
               hideHeader={Component.hideHeader}
+              noHeader={Component.noHeader}
               hideFooter={Component.hideFooter}
               wcfHeader={Component.wcfHeader}
             >
