@@ -7,8 +7,8 @@ export const priceCalculation = ({
   const { listPrice, unitPrice, CMEPricing, showPrice, productTypeId } =
     workshop || {};
 
-  let fee = "";
-  let delfee = "";
+  let fee = unitPrice;
+  let delfee = listPrice;
 
   if (agreementCMEAccepted) {
     fee = CMEPricing.unitPrice;
@@ -22,12 +22,9 @@ export const priceCalculation = ({
     delfee = showPrice ? showPrice : listPrice;
   } else if (listPrice === unitPrice) {
     fee = unitPrice;
-    delfee = "";
-  } else {
-    fee = unitPrice;
-    delfee = listPrice;
+    delfee = null;
   }
-  if (fee > delfee || fee === delfee) {
+  if (delfee && (fee > delfee || fee === delfee)) {
     return {
       fee,
       delfee: null,
