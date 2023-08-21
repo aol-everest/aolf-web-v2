@@ -992,7 +992,6 @@ export const PaymentForm = ({
         finalPrice = selectedBundle.comboUnitPrice;
       }
     }
-    console.log(finalPrice);
     if (finalPrice > 0) {
       elements.update({
         amount: finalPrice * 100,

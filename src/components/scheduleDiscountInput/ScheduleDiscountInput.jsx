@@ -1,14 +1,13 @@
-import { api } from "@utils";
 import classNames from "classnames";
+import { api } from "@utils";
 import { useEffect, useState } from "react";
-import { FieldWrapper } from "./FieldWrapper";
 
-export const DiscountCodeInput = ({
+export const ScheduleDiscountInput = ({
   label,
+  fullWidth,
+  containerClass = "",
   formikProps,
   formikKey,
-  containerClass,
-  fullWidth,
   productType = "workshop",
   addOnProducts = [],
   product,
@@ -22,8 +21,6 @@ export const DiscountCodeInput = ({
   const [showTag, setShowTag] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(0);
-  const [isCouponApplied, setIsCouponApplied] = useState(false);
-  const [response, setResponse] = useState(null);
 
   // Validating coupon if present on the initial load
   useEffect(() => {
@@ -48,17 +45,6 @@ export const DiscountCodeInput = ({
     setStatus(0);
 
     try {
-      let plan = formikProps.values.plan;
-      // const {
-      //   token: accessToken,
-      //   product = plan,
-      //   addOnProducts = [],
-      //   productType = "workshop",
-      //   applyDiscount,
-      //   setUser,
-      //   userId,
-      // } = this.props;
-
       let AddOnProductIds = formikProps.values.selectedAddOn
         ? [formikProps.values.selectedAddOn]
         : [];
@@ -97,10 +83,8 @@ export const DiscountCodeInput = ({
       if (results.status !== 200) {
         throw new Error(results.error || "Internal Server error.");
       }
-      setIsCouponApplied(true);
       setStatus(1);
       setLoading(false);
-      setResponse(results);
 
       applyDiscount(results);
       if (setUser) {
@@ -113,15 +97,8 @@ export const DiscountCodeInput = ({
         formikKey,
         message ? `Error: ${message} (${statusCode})` : ex.message,
       );
-
-      setIsCouponApplied(false);
       setStatus(2);
       setLoading(false);
-      setResponse({
-        discountNotApplicableReason: message
-          ? `Error: ${message} (${statusCode})`
-          : ex.message,
-      });
       applyDiscount(null);
     }
   };
@@ -132,7 +109,6 @@ export const DiscountCodeInput = ({
     if (value.length === 0) {
       return;
     }
-
     await validateCoupon();
   };
 
@@ -154,55 +130,53 @@ export const DiscountCodeInput = ({
   };
 
   return (
-    <FieldWrapper
-      label={label}
-      formikKey={formikKey}
-      formikProps={formikProps}
-      containerClass={containerClass}
-      fullWidth={fullWidth}
+    <li
+      className={classNames(`${containerClass}`, {
+        error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
+        "validate-error":
+          formikProps.errors[formikKey] && formikProps.touched[formikKey],
+      })}
     >
       <>
         {!showTag && (
           <>
             <input
-              type="text"
+              className="text-input discount-code"
               {...rest}
               id={formikKey}
               value={formikProps.values[formikKey]}
               name={formikKey}
               onChange={onChangeAction}
-              className="discount-code"
               onBlur={applyCoupon}
               onKeyDown={onKeyDown}
             />
+            <label className="label-placeholder-style required">{label}</label>
             {loading && <span className="loader-inline"></span>}
           </>
         )}
         {showTag && (
           <>
-            <div className="react-tag-container">
-              <span
-                className={classNames("badge", "react-tag", {
-                  "badge-light": status === 0,
-                  "badge-success": status === 1,
-                  "badge-danger": status === 2,
+            <span
+              className={classNames("discount-text-input badge", "react-tag", {
+                "badge-light": status === 0,
+                "badge-success": status === 1,
+                "badge-danger": status === 2,
+              })}
+            >
+              {formikProps.values[formikKey]}
+              <a
+                className={classNames("react-tag-remove", {
+                  "!tw-text-white": status === 2,
                 })}
+                onClick={removeCoupon}
               >
-                {formikProps.values[formikKey]}
-                <a
-                  className={classNames("react-tag-remove", {
-                    "!tw-text-white": status === 2,
-                  })}
-                  onClick={removeCoupon}
-                >
-                  ×
-                </a>
-              </span>
-              {loading && <span className="loader-inline"></span>}
-            </div>
+                ×
+              </a>
+            </span>
+            {loading && <span className="loader-inline"></span>}
           </>
         )}
       </>
-    </FieldWrapper>
+    </li>
   );
 };

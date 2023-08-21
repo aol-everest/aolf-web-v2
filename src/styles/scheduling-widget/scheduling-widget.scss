@@ -46,11 +46,6 @@
   grid-template-columns: 689px 463px;
   column-gap: 24px;
 }
-@media screen and (min-width: 991px) {
-  .scheduling-modal__template.second {
-    grid-template-rows: 507px max-content;
-  }
-}
 .scheduling-modal__template.third {
   grid-template-columns: 1fr !important;
   width: 100%;
@@ -63,6 +58,12 @@
 @media screen and (max-width: 991px) {
   .scheduling-modal__template {
     grid-template-columns: 1fr;
+  }
+}
+@media screen and (min-width: 991px) {
+  .scheduling-modal__total {
+    grid-row: 1/4;
+    grid-column: 2/3;
   }
 }
 .scheduling-modal__wrapper {
@@ -218,6 +219,16 @@
     grid-template-columns: 1fr;
   }
 }
+.scheduling-modal__content-wrapper-form-list.credit-card {
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.scheduling-modal__content-wrapper-form-list.credit-card.show {
+  display: grid;
+}
+.scheduling-modal__content-wrapper-form-list.credit-card li:first-child {
+  grid-column: 1/4;
+}
 .scheduling-modal__content-wrapper-form-list li {
   position: relative;
 }
@@ -227,6 +238,25 @@
   padding: 20px;
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(38, 38, 39, 0.9);
+  font-family: Work Sans, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 20px;
+}
+.scheduling-modal__content-wrapper-form-list input.text-input::placeholder {
+  color: #fff;
+}
+.scheduling-modal__content-wrapper-form-list
+  input.text-input:not(:placeholder-shown)
+  + label.label-placeholder-style,
+.scheduling-modal__content-wrapper-form-list
+  input.text-input:focus
+  + label.label-placeholder-style {
+  top: -5px;
+  transform: translateY(0);
+  background-color: #fff;
+  padding: 0px 3px;
 }
 .scheduling-modal__content-wrapper-form-list label.label-placeholder-style {
   position: absolute;
@@ -238,6 +268,7 @@
   font-size: 14px;
   font-weight: 300;
   line-height: 20px;
+  transition: all 0.35s ease;
 }
 @media (min-width: 1200px) {
   .scheduling-modal__content-wrapper-form-list label.label-placeholder-style {
@@ -1029,6 +1060,18 @@
   content: url('/img/phone 1.svg');
   margin-right: 8px;
 }
+@media screen and (max-width: 1200px) {
+  .scheduling-modal__content-total-contacts {
+    display: block;
+  }
+  .scheduling-modal__content-total-contacts p {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px !important;
+    align-items: flex-start;
+    gap: 0;
+  }
+}
 .scheduling-modal__content-total-links {
   display: flex;
   align-items: center;
@@ -1077,7 +1120,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 180px;
 }
 @media screen and (max-width: 991px) {
   .scheduling-modal__practices {
@@ -1318,4 +1360,32 @@
 
 .select2-search--dropdown {
   display: none !important;
+}
+.scheduling-modal__content-wrapper-form-list input.text-input-error {
+  border-color: red;
+}
+
+.scheduling-modal__content-wrapper-form-list .discount-text-input {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 20px;
+  margin-top: 5px;
+
+  a {
+    text-decoration: none;
+    font-size: 26px;
+  }
+}
+
+.scheduling-modal__content-wrapper-form-list-row {
+  .loader-inline {
+    right: 16px;
+    top: 10px;
+  }
 }
