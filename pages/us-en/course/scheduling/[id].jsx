@@ -12,7 +12,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { api, priceCalculation, tConvert } from "@utils";
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import * as Yup from "yup";
@@ -22,6 +22,7 @@ import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { ScheduleInput } from "@components/scheduleInput/ScheduleInput";
 import { ScheduleDiscountInput } from "@components/scheduleDiscountInput/ScheduleDiscountInput";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm/ScheduleAgreementForm";
+import { PhoneNumberInputField } from "@components/checkout/PhoneNumberInputField";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -252,6 +253,7 @@ const SchedulingPaymentForm = ({
       lastName,
       email,
       couponCode,
+      contactPhone,
     } = values;
 
     const complianceQuestionnaire = questionnaire.reduce(
@@ -310,14 +312,14 @@ const SchedulingPaymentForm = ({
         shoppingRequest: {
           couponCode: couponCode || "",
           contactAddress: {
-            contactPhone: "",
+            contactPhone,
             contactAddress,
             contactCity,
             contactState,
             contactZip,
           },
           billingAddress: {
-            billingPhone: "",
+            billingPhone: contactPhone,
             billingAddress: contactAddress,
             billingCity: contactCity,
             billingState: contactState,
@@ -454,6 +456,7 @@ const SchedulingPaymentForm = ({
           questionnaire: questionnaireArray,
           ppaAgreement: false,
           couponCode: discount ? discount : "",
+          contactPhone: "",
         }}
         validationSchema={Yup.object().shape({
           firstName: Yup.string().required("First Name is required"),
@@ -461,6 +464,11 @@ const SchedulingPaymentForm = ({
           email: Yup.string()
             .email("Email is invalid!")
             .required("Email is required!"),
+          contactPhone: Yup.string()
+            .label("Phone")
+            .required("Phone is required")
+            .phone(null, false, "Phone is invalid")
+            .nullable(),
           contactCountry: Yup.string().required("Country is required"),
           contactAddress: Yup.string().required("Address is required"),
           contactCity: Yup.string().required("City is required!"),
@@ -528,6 +536,21 @@ const SchedulingPaymentForm = ({
                       onPaste={(event) => {
                         event.preventDefault();
                       }}
+                    ></ScheduleInput>
+
+                    {/* <Field
+                      name="contactPhone"
+                      type="tel"
+                      component={PhoneNumberInputField}
+                    /> */}
+
+                    <ScheduleInput
+                      containerClass={`scheduling-modal__content-wrapper-form-list-row`}
+                      formikProps={formikProps}
+                      formikKey="contactPhone"
+                      label="Mobile Number"
+                      placeholder="Mobile Number"
+                      type="tel"
                     ></ScheduleInput>
 
                     <ScheduleDiscountInput
