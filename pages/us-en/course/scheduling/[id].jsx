@@ -246,10 +246,6 @@ const SchedulingPaymentForm = ({
 
     const {
       questionnaire,
-      contactAddress,
-      contactCity,
-      contactState,
-      contactZip,
       firstName,
       lastName,
       email,
@@ -314,17 +310,9 @@ const SchedulingPaymentForm = ({
           couponCode: couponCode || "",
           contactAddress: {
             contactPhone,
-            contactAddress,
-            contactCity,
-            contactState,
-            contactZip,
           },
           billingAddress: {
             billingPhone: contactPhone,
-            billingAddress: contactAddress,
-            billingCity: contactCity,
-            billingState: contactState,
-            billingZip: contactZip,
           },
           products,
           complianceQuestionnaire,
@@ -449,11 +437,6 @@ const SchedulingPaymentForm = ({
           firstName: "",
           lastName: "",
           email: "",
-          contactAddress: "Test",
-          contactCity: "Test",
-          contactState: "AL",
-          contactZip: "Test",
-          contactCountry: "USA",
           questionnaire: questionnaireArray,
           ppaAgreement: false,
           couponCode: discount ? discount : "",
@@ -470,14 +453,6 @@ const SchedulingPaymentForm = ({
             .required("Phone is required")
             .phone(null, false, "Phone is invalid")
             .nullable(),
-          contactCountry: Yup.string().required("Country is required"),
-          contactAddress: Yup.string().required("Address is required"),
-          contactCity: Yup.string().required("City is required!"),
-          contactState: Yup.string().required("State is required!"),
-          contactZip: Yup.string()
-            //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-            .min(2, "Zip is invalid")
-            .max(10, "Zip is invalid"),
           ppaAgreement: Yup.boolean()
             .label("Terms")
             .test(
