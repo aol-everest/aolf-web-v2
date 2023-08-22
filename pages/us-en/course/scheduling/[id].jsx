@@ -600,7 +600,7 @@ const SchedulingPaymentForm = ({
                     <hr />
                     <div className="scheduling-modal__content-total-instructors-wrapper">
                       <div className="scheduling-modal__content-total-instructors">
-                        Instructor(s):
+                        {" Instructor(s):"}
                       </div>
                       <ul className="scheduling-modal__content-total-instructors-list">
                         <li>{workshop.primaryTeacherName}</li>
@@ -635,9 +635,9 @@ const SchedulingPaymentForm = ({
                     <span>Total</span>
                     <span>
                       {discountResponse && delfee && (
-                        <span className="discount">${delfee}</span>
+                        <span className="discount">${delfee.toFixed(2)}</span>
                       )}{" "}
-                      ${fee || 0}
+                      ${fee.toFixed(2) || "0".toFixed(2)}
                     </span>
                   </p>
 

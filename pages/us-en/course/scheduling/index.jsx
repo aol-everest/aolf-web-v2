@@ -235,12 +235,12 @@ const SchedulingRange = () => {
                               })}
                           </ul>
 
-                          <p className="scheduling-modal__content-option-footer">
+                          {/* <p className="scheduling-modal__content-option-footer">
                             <span className="scheduling-modal__content-option-footer-text-with-icon">
                               Instructor
                             </span>
                             <span>{firstItem.primaryTeacherName}</span>
-                          </p>
+                          </p> */}
                         </li>
                       );
                     })
