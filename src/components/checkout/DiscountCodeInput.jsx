@@ -24,7 +24,6 @@ export const DiscountCodeInput = ({
   const [status, setStatus] = useState(0);
   const [isCouponApplied, setIsCouponApplied] = useState(false);
   const [response, setResponse] = useState(null);
-  console.log(product);
 
   // Validating coupon if present on the initial load
   useEffect(() => {

@@ -49,6 +49,7 @@ const SchedulingPayment = () => {
           id: workshopId,
           rp: "checkout",
         },
+        isUnauthorized: true,
       });
       return response.data;
     },
@@ -370,6 +371,7 @@ const SchedulingPaymentForm = ({
       } = await api.post({
         path: "createAndPayOrder",
         body: payLoad,
+        isUnauthorized: true,
       });
 
       if (status === 400 || isError) {
