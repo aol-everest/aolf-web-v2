@@ -34,6 +34,75 @@
   }
 }
 
+.scheduling-types {
+  &__container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 45px;
+    border-radius: 16px;
+
+    margin-top: 12px;
+
+    background-color: #fef5ec;
+  }
+
+  &__label {
+    position: relative;
+  }
+
+  &__input {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__background {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
+    margin: 6px;
+    border-radius: 12px;
+    background-color: transparent;
+
+    color: #262627;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+
+    transition: background 0.35s ease;
+  }
+
+  &__input:checked + &__background {
+    background-color: #fca248;
+  }
+
+  &__input:not(:checked):hover + &__background {
+    background-color: rgb(252 162 72 / 20%);
+  }
+
+  @media screen and (max-width: 991px) {
+    &__background {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      border-radius: 16px;
+
+      font-size: 10px;
+    }
+  }
+}
+
 @media (min-width: 1200px) {
   .scheduling-modal {
     max-width: 1144px;
@@ -765,6 +834,36 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+@media screen and (min-width: 991px) {
+  .scheduling-modal__content-options {
+    max-height: 560px;
+    overflow-y: auto;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    /* width */
+    /* Track */
+    /* Handle */
+    /* Handle on hover */
+  }
+  .scheduling-modal__content-options::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scheduling-modal__content-options::-webkit-scrollbar-track {
+    background: #fef5ec;
+  }
+  .scheduling-modal__content-options::-webkit-scrollbar-thumb {
+    background: #fca248;
+    border-radius: 4px;
+  }
+  .scheduling-modal__content-options::-webkit-scrollbar-thumb:hover {
+    background: rgba(252, 162, 72, 0.6901960784);
+  }
+}
+@media screen and (min-width: 1240px) {
+  .scheduling-modal__content-options {
+    max-height: 460px;
+  }
 }
 .scheduling-modal__content-option {
   padding: 20px;

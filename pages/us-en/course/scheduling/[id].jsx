@@ -23,6 +23,7 @@ import { ScheduleInput } from "@components/scheduleInput/ScheduleInput";
 import { ScheduleDiscountInput } from "@components/scheduleDiscountInput/ScheduleDiscountInput";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm/ScheduleAgreementForm";
 import { PhoneNumberInputField } from "@components/checkout/PhoneNumberInputField";
+import { SchedulePhoneInput } from "@components/schedulingPhoneInput/SchedulingPhoneInput";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -544,14 +545,14 @@ const SchedulingPaymentForm = ({
                       component={PhoneNumberInputField}
                     /> */}
 
-                    <ScheduleInput
+                    <SchedulePhoneInput
                       containerClass={`scheduling-modal__content-wrapper-form-list-row`}
                       formikProps={formikProps}
                       formikKey="contactPhone"
                       label="Mobile Number"
                       placeholder="Mobile Number"
                       type="tel"
-                    ></ScheduleInput>
+                    ></SchedulePhoneInput>
 
                     <ScheduleDiscountInput
                       formikProps={formikProps}
