@@ -180,6 +180,48 @@ const SchedulingRange = () => {
                 <h3>Available Class Times</h3>
                 <p>Based on the selected date range</p>
 
+                {/* <div class="scheduling-types__container">
+                  <label
+                    class="scheduling-types__label"
+                    for="online-type-course"
+                  >
+                    <input
+                      type="radio"
+                      class="scheduling-types__input"
+                      id="online-type-course"
+                      name="type-course"
+                      value="online"
+                    />
+                    <span class="scheduling-types__background">Online</span>
+                  </label>
+
+                  <label
+                    class="scheduling-types__label"
+                    for="person-type-course"
+                  >
+                    <input
+                      type="radio"
+                      class="scheduling-types__input"
+                      id="person-type-course"
+                      name="type-course"
+                      value="in-person"
+                    />
+                    <span class="scheduling-types__background">In-person</span>
+                  </label>
+
+                  <label class="scheduling-types__label" for="both-type-course">
+                    <input
+                      type="radio"
+                      class="scheduling-types__input"
+                      id="both-type-course"
+                      name="type-course"
+                      value="both"
+                      checked
+                    />
+                    <span class="scheduling-types__background">Both</span>
+                  </label>
+                </div> */}
+
                 <ul className="scheduling-modal__content-options">
                   {!loading && Object.keys(workshops).length ? (
                     Object.keys(workshops)?.map((workshop, index) => {
