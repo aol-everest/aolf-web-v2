@@ -416,6 +416,22 @@
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
+
+.scheduling-modal__content-wrapper-form-checkbox input:checked + label:before {
+  background-color: #ff9e1b;
+}
+.scheduling-modal__content-wrapper-form-checkbox input:checked + label:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 4px;
+  left: 9px;
+  width: 6px;
+  height: 14px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
 .scheduling-modal__content-calendar {
   margin-top: 24px;
 }
