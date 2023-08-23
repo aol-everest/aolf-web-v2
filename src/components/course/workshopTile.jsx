@@ -147,9 +147,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
           layout="fill"
         />
       )}
-      <h3 class="course-card__title">
+      <h3 className="course-card__title">
         {mode === COURSE_MODES.IN_PERSON.name ? (
-          <span class="course-card__type">
+          <span className="course-card__type">
             {locationCity ? (
               <span>
                 {" "}
@@ -162,19 +162,19 @@ export const WorkshopTile = ({ data, authenticated }) => {
             )}
           </span>
         ) : (
-          <span class="course-card__type">{mode}</span>
+          <span className="course-card__type">{mode}</span>
         )}
 
         <span
-          class="course-card__name"
+          className="course-card__name"
           dangerouslySetInnerHTML={{ __html: title }}
         ></span>
-        <span class="course-card__others">
+        <span className="course-card__others">
           {primaryTeacherName} {extraTeachers ? `${extraTeachers} more` : ""}
         </span>
       </h3>
 
-      <p class="course-card__date">
+      <p className="course-card__date">
         {dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), "month") && (
           <>
             {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
@@ -195,11 +195,11 @@ export const WorkshopTile = ({ data, authenticated }) => {
         )}
       </p>
 
-      <div class="course-card__times">
+      <div className="course-card__times">
         {timings?.length > 0 &&
           timings.map((time, i) => {
             return (
-              <p class="course-card__time" key={i}>
+              <p className="course-card__time" key={i}>
                 <span>{dayjs.utc(time.startDate).format("ddd")}</span>
                 {`${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
                   ABBRS[time.timeZone]
@@ -211,13 +211,13 @@ export const WorkshopTile = ({ data, authenticated }) => {
 
       <div className="course-card__navigation">
         <button
-          class="btn btn_box_primary text-center"
+          className="btn btn_box_primary text-center"
           onClick={enrollAction(sfid, productTypeId)}
         >
           Enroll
         </button>
         <button
-          class="btn btn-box-light text-center"
+          className="btn btn-box-light text-center"
           onClick={detailAction(sfid, productTypeId)}
         >
           Details
