@@ -12,7 +12,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { api, priceCalculation, tConvert } from "@utils";
-import { Field, Formik } from "formik";
+import { Formik } from "formik";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import * as Yup from "yup";
@@ -22,7 +22,6 @@ import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { ScheduleInput } from "@components/scheduleInput/ScheduleInput";
 import { ScheduleDiscountInput } from "@components/scheduleDiscountInput/ScheduleDiscountInput";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm/ScheduleAgreementForm";
-import { PhoneNumberInputField } from "@components/checkout/PhoneNumberInputField";
 import { SchedulePhoneInput } from "@components/schedulingPhoneInput/SchedulingPhoneInput";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
@@ -64,8 +63,6 @@ const SchedulingPayment = () => {
     workshop,
     discount: discountResponse,
   });
-
-  const { title } = workshop || {};
 
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -164,7 +161,7 @@ const SchedulingPayment = () => {
               />
             </svg>
             <div className="scheduling-modal__header-text">
-              <h3>{title}</h3>
+              <h3>{workshop?.title}</h3>
               <p>9 hours meditation course</p>
             </div>
           </div>
@@ -216,6 +213,18 @@ const SchedulingPaymentForm = ({
     title,
     id: productId,
     addOnProducts,
+    eventStartTime,
+    eventEndTime,
+    eventStartDate,
+    eventEndDate,
+    primaryTeacherName,
+    coTeacher1Name,
+    phone1,
+    email,
+    streetAddress1,
+    streetAddress2,
+    country,
+    city,
   } = workshop;
 
   const questionnaireArray = complianceQuestionnaire
@@ -242,7 +251,12 @@ const SchedulingPaymentForm = ({
       throw submitError;
     }
 
-    const { id: productId, addOnProducts } = workshop;
+    const {
+      id: productId,
+      addOnProducts,
+      productTypeId,
+      isCCNotRequired,
+    } = workshop;
 
     const {
       questionnaire,
@@ -322,7 +336,7 @@ const SchedulingPaymentForm = ({
         utm: filterAllowedParams(router.query),
       };
 
-      if (workshop.isCCNotRequired) {
+      if (isCCNotRequired) {
         payLoad.shoppingRequest.isStripeIntentPayment = false;
       }
 
@@ -353,7 +367,7 @@ const SchedulingPaymentForm = ({
 
       if (data && data.totalOrderAmount > 0) {
         let filteredParams = {
-          ctype: workshop.productTypeId,
+          ctype: productTypeId,
           page: "ty",
           type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
           campaignid,
@@ -549,16 +563,16 @@ const SchedulingPaymentForm = ({
                         Daily
                       </div>
                       <div className="scheduling-modal__content-total-time">
-                        {tConvert(workshop.eventStartTime, true)} -{" "}
-                        {tConvert(workshop.eventEndTime, true)}
+                        {tConvert(eventStartTime, true)} -{" "}
+                        {tConvert(eventEndTime, true)}
                       </div>
                     </div>
                     <div className="scheduling-modal__content-total-dates">
                       <div className="scheduling-modal__content-total-date">
-                        {dayjs.utc(workshop.eventStartDate).format("ddd, D")}
+                        {dayjs.utc(eventStartDate).format("ddd, D")}
                       </div>
                       <div className="scheduling-modal__content-total-date">
-                        {dayjs.utc(workshop.eventEndDate).format("ddd, D")}
+                        {dayjs.utc(eventEndDate).format("ddd, D")}
                       </div>
                     </div>
                     <hr />
@@ -567,8 +581,8 @@ const SchedulingPaymentForm = ({
                         {" Instructor(s):"}
                       </div>
                       <ul className="scheduling-modal__content-total-instructors-list">
-                        <li>{workshop.primaryTeacherName}</li>
-                        <li>{workshop.coTeacher1Name}</li>
+                        <li>{primaryTeacherName}</li>
+                        <li>{coTeacher1Name}</li>
                       </ul>
                     </div>
                     <hr />
@@ -576,7 +590,8 @@ const SchedulingPaymentForm = ({
                       Location:
                       <p class="scheduling-modal__content-total-links">
                         <a href="#" target="_blank" rel="noopener noreferrer">
-                          13473 Dolomite Dr Frisco, TX 75035
+                          {`${streetAddress1 || ""} ${streetAddress2 || ""}
+                          ${city || ""} ${country || ""}`}
                         </a>
                       </p>
                     </div>
@@ -584,10 +599,8 @@ const SchedulingPaymentForm = ({
                     <div className="scheduling-modal__content-total-contacts">
                       Contact details:
                       <p className="scheduling-modal__content-total-links">
-                        <a href={`tel:${workshop.phone1}`}>{workshop.phone1}</a>
-                        <a href={`mailto:${workshop.email}`}>
-                          {workshop.email}
-                        </a>
+                        <a href={`tel:${phone1}`}>{phone1}</a>
+                        <a href={`mailto:${email}`}>{email}</a>
                       </p>
                     </div>
                   </div>

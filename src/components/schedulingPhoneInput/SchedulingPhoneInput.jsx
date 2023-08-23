@@ -45,8 +45,6 @@ export const SchedulePhoneInput = ({
     };
   }
 
-  console.log("formikProps", formikProps);
-
   return (
     <li
       className={classNames(`${containerClass}`, {
