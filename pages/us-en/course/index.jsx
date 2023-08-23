@@ -168,6 +168,9 @@ const Course = () => {
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: "ONLINE",
   });
+  const [onlyWeekend, setOnlyWeekend] = useQueryString("onlyWeekend", {
+    defaultValue: false,
+  });
   const [otherCType] = useQueryString("other-ctype", {
     defaultValue: false,
     parse: stringToBoolean,
@@ -183,7 +186,6 @@ const Course = () => {
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
   });
-  const [cityFilter, setCityFilter] = useQueryString("city");
   const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
   const [ctypesFilter, setCtypesFilter] = useQueryString("ctypes");
   const [filterStartEndDate, setFilterStartEndDate] =
@@ -228,6 +230,9 @@ const Course = () => {
       case "activeFilterType":
         setActiveFilterType(value);
         break;
+      case "onlyWeekend":
+        setOnlyWeekend(value);
+        break;
       case "locationFilter":
         if (value) {
           setLocationFilter(JSON.stringify(value));
@@ -258,6 +263,9 @@ const Course = () => {
       case "activeFilterType":
         setActiveFilterType(value);
         break;
+      case "onlyWeekend":
+        setOnlyWeekend(value);
+        break;
       case "locationFilter":
         if (value) {
           setLocationFilter(JSON.stringify(value));
@@ -287,6 +295,9 @@ const Course = () => {
       case "activeFilterType":
         setActiveFilterType(null);
         break;
+      case "onlyWeekend":
+        setOnlyWeekend(null);
+        break;
       case "locationFilter":
         setLocationFilter(null);
         break;
@@ -308,120 +319,114 @@ const Course = () => {
     );
   };
 
-  const {
-    status,
-    isSuccess,
-    data,
-    error,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteQuery(
-    [
-      "workshops",
+  const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteQuery(
+      [
+        "workshops",
+        {
+          privateEvent,
+          otherCType,
+          locationFilter,
+          ctypesFilter,
+          courseTypeFilter,
+          filterStartEndDate,
+          timeZoneFilter,
+          instructorFilter,
+          activeFilterType,
+          onlyWeekend,
+        },
+      ],
+      async ({ pageParam = 1 }) => {
+        let param = {
+          page: pageParam,
+          size: 12,
+          timingsRequired: true,
+        };
+
+        if (activeFilterType && COURSE_MODES[activeFilterType]) {
+          param = {
+            ...param,
+            mode: COURSE_MODES[activeFilterType].value,
+          };
+        }
+        if (institutionalCourses) {
+          param = {
+            ...param,
+            ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
+          };
+        } else if (ctypesFilter) {
+          param = {
+            ...param,
+            ctype: ctypesFilter,
+          };
+        } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+          param = {
+            ...param,
+            ctype: COURSE_TYPES[courseTypeFilter].value,
+          };
+        }
+        if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
+          param = {
+            ...param,
+            timeZone: TIME_ZONE[timeZoneFilter].value,
+          };
+        }
+        if (instructorFilter && instructorFilter.value) {
+          param = {
+            ...param,
+            teacherId: instructorFilter.value,
+          };
+        }
+        if (filterStartEndDate) {
+          const [startDate, endDate] = filterStartEndDate.split("|");
+          param = {
+            ...param,
+            sdate: startDate,
+            edate: endDate,
+          };
+        }
+        if (locationFilter) {
+          const { lat, lng } = locationFilter;
+          param = {
+            ...param,
+            lat,
+            lng,
+          };
+        }
+        if (otherCType) {
+          param = {
+            ...param,
+            other: 1,
+          };
+        }
+        if (privateEvent) {
+          param = {
+            ...param,
+            isPrivateEvent: 1,
+          };
+        }
+        if (onlyWeekend) {
+          param = {
+            ...param,
+            onlyWeekend: onlyWeekend,
+          };
+        }
+
+        const res = await api.get({
+          path: "workshops",
+          param,
+        });
+        return res;
+      },
       {
-        privateEvent,
-        otherCType,
-        locationFilter,
-        ctypesFilter,
-        courseTypeFilter,
-        filterStartEndDate,
-        timeZoneFilter,
-        instructorFilter,
-        activeFilterType,
-        cityFilter,
+        getNextPageParam: (page) => {
+          return page.currectPage === page.lastPage
+            ? undefined
+            : page.currectPage + 1;
+        },
       },
-    ],
-    async ({ pageParam = 1 }) => {
-      let param = {
-        page: pageParam,
-        size: 12,
-      };
-
-      if (activeFilterType && COURSE_MODES[activeFilterType]) {
-        param = {
-          ...param,
-          mode: COURSE_MODES[activeFilterType].value,
-        };
-      }
-      if (institutionalCourses) {
-        param = {
-          ...param,
-          ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
-        };
-      } else if (ctypesFilter) {
-        param = {
-          ...param,
-          ctype: ctypesFilter,
-        };
-      } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
-        param = {
-          ...param,
-          ctype: COURSE_TYPES[courseTypeFilter].value,
-        };
-      }
-      if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
-        param = {
-          ...param,
-          timeZone: TIME_ZONE[timeZoneFilter].value,
-        };
-      }
-      if (instructorFilter && instructorFilter.value) {
-        param = {
-          ...param,
-          teacherId: instructorFilter.value,
-        };
-      }
-      if (filterStartEndDate) {
-        const [startDate, endDate] = filterStartEndDate.split("|");
-        param = {
-          ...param,
-          sdate: startDate,
-          edate: endDate,
-        };
-      }
-      if (locationFilter) {
-        const { lat, lng } = locationFilter;
-        param = {
-          ...param,
-          lat,
-          lng,
-        };
-      }
-      if (otherCType) {
-        param = {
-          ...param,
-          other: 1,
-        };
-      }
-      if (privateEvent) {
-        param = {
-          ...param,
-          isPrivateEvent: 1,
-        };
-      }
-      if (cityFilter) {
-        param = {
-          ...param,
-          city: cityFilter,
-        };
-      }
-
-      const res = await api.get({
-        path: "workshops",
-        param,
-      });
-      return res;
-    },
-    {
-      getNextPageParam: (page) => {
-        return page.currectPage === page.lastPage
-          ? undefined
-          : page.currectPage + 1;
-      },
-    },
-    // { initialData: workshops },
-  );
+      // { initialData: workshops },
+    );
 
   const loadMoreRef = React.useRef();
   const { track } = useAnalytics();
@@ -456,7 +461,7 @@ const Course = () => {
   }
 
   return (
-    <main className="meetsup-filter">
+    <main className="course-filter">
       <NextSeo title="Workshops" />
       <section className="courses">
         {orgConfig.name !== "HB" && (
@@ -468,192 +473,199 @@ const Course = () => {
                 </div>
               </div>
               <div className="row">
-                <div className="search-form col-12 d-flex align-items-center">
-                  {/* <div id="switch-filter" className="btn_outline_box ml-0">
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={activeFilterType === COURSE_MODES.ONLINE}
-                  onClick={toggleActiveFilter(COURSE_MODES.ONLINE)}
+                <div
+                  id="courses-filters"
+                  className="search-form col-12 d-flex align-items-center"
                 >
-                  Online
-                </a>
-                <a
-                  className="btn"
-                  href="#"
-                  data-swicth-active={
-                    activeFilterType === COURSE_MODES.IN_PERSON
-                  }
-                  onClick={toggleActiveFilter(COURSE_MODES.IN_PERSON)}
-                >
-                  In Person
-                </a>
-              </div> */}
-                  <div className="switch-flter-container">
-                    <Popup
-                      tabIndex="1"
-                      value={COURSE_MODES[activeFilterType] && activeFilterType}
-                      buttonText={
-                        activeFilterType && COURSE_MODES[activeFilterType]
-                          ? COURSE_MODES[activeFilterType].name
-                          : "Course Format"
-                      }
-                      closeEvent={onFilterChange("activeFilterType")}
-                    >
-                      {({ closeHandler }) => (
-                        <>
-                          {orgConfig.courseModes.map((courseMode, index) => {
-                            return (
-                              <li
-                                key={index}
-                                onClick={closeHandler(courseMode)}
-                              >
-                                {COURSE_MODES[courseMode].name}
-                              </li>
-                            );
-                          })}
-                        </>
-                      )}
-                    </Popup>
-                    {activeFilterType === "IN_PERSON" && (
-                      <Popup
-                        tabIndex="2"
-                        value={locationFilter}
-                        buttonText={
-                          locationFilter
-                            ? `${locationFilter.loactionName}`
-                            : "Location"
-                        }
-                        closeEvent={onFilterChange("locationFilter")}
-                      >
-                        {({ closeHandler }) => (
-                          <AddressSearch
-                            closeHandler={closeHandler}
-                            placeholder="Search for Location"
-                          />
-                        )}
-                      </Popup>
+                  <Popup
+                    tabIndex="1"
+                    value={COURSE_MODES[activeFilterType] && activeFilterType}
+                    buttonText={
+                      activeFilterType && COURSE_MODES[activeFilterType]
+                        ? COURSE_MODES[activeFilterType].name
+                        : "Course Format"
+                    }
+                    closeEvent={onFilterChange("activeFilterType")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {orgConfig.courseModes.map((courseMode, index) => {
+                          return (
+                            <li
+                              key={index}
+                              className="courses-filter__list-item"
+                              onClick={closeHandler(courseMode)}
+                            >
+                              {COURSE_MODES[courseMode].name}
+                            </li>
+                          );
+                        })}
+                      </>
                     )}
+                  </Popup>
 
+                  {activeFilterType === "IN_PERSON" && (
                     <Popup
-                      tabIndex="3"
-                      value={courseTypeFilter}
+                      tabIndex="2"
+                      value={locationFilter}
                       buttonText={
-                        courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                          ? COURSE_TYPES[courseTypeFilter].name
-                          : "Course Type"
+                        locationFilter
+                          ? `${locationFilter.loactionName}`
+                          : "Location"
                       }
-                      closeEvent={onFilterChange("courseTypeFilter")}
+                      closeEvent={onFilterChange("locationFilter")}
                     >
                       {({ closeHandler }) => (
-                        <>
-                          {otherCType && (
-                            <>
-                              {orgConfig.otherCourseTypes.map(
-                                (courseType, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      onClick={closeHandler(courseType)}
-                                    >
-                                      {COURSE_TYPES[courseType].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                          {!otherCType && (
-                            <>
-                              {orgConfig.courseTypes.map(
-                                (courseType, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      onClick={closeHandler(courseType)}
-                                    >
-                                      {COURSE_TYPES[courseType].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </>
-                      )}
-                    </Popup>
-                    <Popup
-                      containerClassName={Style.daterangepickerPopup}
-                      tabIndex="3"
-                      value={filterStartEndDate}
-                      buttonText={
-                        filterStartEndDate
-                          ? filterStartEndDate.split("|").join(" - ")
-                          : "Dates"
-                      }
-                      closeEvent={onDatesChange}
-                    >
-                      {({ closeHandler }) => (
-                        <LinkedCalendar
-                          {...DATE_PICKER_CONFIG}
-                          noFooter
-                          noInfo
-                          noCancel
-                          onDatesChange={closeHandler}
-                          className={Style.daterangepicker}
+                        <AddressSearch
+                          closeHandler={closeHandler}
+                          placeholder="Search for Location"
                         />
                       )}
                     </Popup>
-                    <Popup
-                      tabIndex="4"
-                      value={timeZoneFilter}
-                      buttonText={
-                        timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                          ? TIME_ZONE[timeZoneFilter].name
-                          : "Time Zone"
-                      }
-                      closeEvent={onFilterChange("timeZoneFilter")}
-                    >
-                      {({ closeHandler }) => (
-                        <>
-                          <li onClick={closeHandler(TIME_ZONE.EST.value)}>
-                            {TIME_ZONE.EST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.CST.value)}>
-                            {TIME_ZONE.CST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.MST.value)}>
-                            {TIME_ZONE.MST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.PST.value)}>
-                            {TIME_ZONE.PST.name}
-                          </li>
-                          <li onClick={closeHandler(TIME_ZONE.HST.value)}>
-                            {TIME_ZONE.HST.name}
-                          </li>
-                        </>
-                      )}
-                    </Popup>
+                  )}
 
-                    <Popup
-                      tabIndex="5"
-                      value={instructorFilter ? instructorFilter.label : null}
-                      buttonText={
-                        instructorFilter ? instructorFilter.label : "Instructor"
-                      }
-                      closeEvent={onFilterChange("instructorFilter")}
-                    >
-                      {({ closeHandler }) => (
-                        <SmartInput
-                          inputclassName={Style.instructor_input}
-                          onSearchKeyChange={(value) => setSearchKey(value)}
-                          dataList={instructorList}
-                          closeHandler={closeHandler}
-                          value={searchKey}
-                        ></SmartInput>
-                      )}
-                    </Popup>
-                  </div>
+                  <Popup
+                    tabIndex="3"
+                    value={courseTypeFilter}
+                    buttonText={
+                      courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                        ? COURSE_TYPES[courseTypeFilter].name
+                        : "Course Type"
+                    }
+                    closeEvent={onFilterChange("courseTypeFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {otherCType && (
+                          <>
+                            {orgConfig.otherCourseTypes.map(
+                              (courseType, index) => {
+                                return (
+                                  <li
+                                    className="courses-filter__list-item"
+                                    key={index}
+                                    onClick={closeHandler(courseType)}
+                                  >
+                                    {COURSE_TYPES[courseType].name}
+                                  </li>
+                                );
+                              },
+                            )}
+                          </>
+                        )}
+                        {!otherCType && (
+                          <>
+                            {orgConfig.courseTypes.map((courseType, index) => {
+                              return (
+                                <li
+                                  className="courses-filter__list-item"
+                                  key={index}
+                                  onClick={closeHandler(courseType)}
+                                >
+                                  {COURSE_TYPES[courseType].name}
+                                </li>
+                              );
+                            })}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Popup>
+                  <Popup
+                    containerClassName={Style.daterangepickerPopup}
+                    tabIndex="3"
+                    value={filterStartEndDate}
+                    buttonText={
+                      filterStartEndDate
+                        ? filterStartEndDate.split("|").join(" - ")
+                        : "Dates"
+                    }
+                    closeEvent={onDatesChange}
+                  >
+                    {({ closeHandler }) => (
+                      <LinkedCalendar
+                        {...DATE_PICKER_CONFIG}
+                        noFooter
+                        noInfo
+                        noCancel
+                        onDatesChange={closeHandler}
+                        className={Style.daterangepicker}
+                      />
+                    )}
+                  </Popup>
+
+                  <Popup
+                    tabIndex="2"
+                    value={onlyWeekend}
+                    buttonText="Weekend courses"
+                    closeEvent={onFilterChange("onlyWeekend")}
+                    showList={false}
+                  ></Popup>
+
+                  <Popup
+                    tabIndex="4"
+                    value={timeZoneFilter}
+                    buttonText={
+                      timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                        ? TIME_ZONE[timeZoneFilter].name
+                        : "Time Zone"
+                    }
+                    closeEvent={onFilterChange("timeZoneFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.EST.value)}
+                        >
+                          {TIME_ZONE.EST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.CST.value)}
+                        >
+                          {TIME_ZONE.CST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.MST.value)}
+                        >
+                          {TIME_ZONE.MST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.PST.value)}
+                        >
+                          {TIME_ZONE.PST.name}
+                        </li>
+                        <li
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(TIME_ZONE.HST.value)}
+                        >
+                          {TIME_ZONE.HST.name}
+                        </li>
+                      </>
+                    )}
+                  </Popup>
+
+                  <Popup
+                    tabIndex="5"
+                    value={instructorFilter ? instructorFilter.label : null}
+                    buttonText={
+                      instructorFilter ? instructorFilter.label : "Instructor"
+                    }
+                    closeEvent={onFilterChange("instructorFilter")}
+                  >
+                    {({ closeHandler }) => (
+                      <SmartInput
+                        inputclassName={Style.instructor_input}
+                        onSearchKeyChange={(value) => setSearchKey(value)}
+                        dataList={instructorList}
+                        closeHandler={closeHandler}
+                        value={searchKey}
+                      ></SmartInput>
+                    )}
+                  </Popup>
                 </div>
               </div>
             </div>
@@ -946,43 +958,39 @@ const Course = () => {
               )}
             </div>
           </div>
-          <div className="row mb-4">
+          <div className="upcoming_list">
             {!isSuccess && (
               <>
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
+                <div className="course-card">
+                  <ContentLoader viewBox="0 0 80 120">
+                    {/* Only SVG shapes */}
+                    <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                  </ContentLoader>
                 </div>
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
+
+                <div className="course-card">
+                  <ContentLoader viewBox="0 0 80 120">
+                    {/* Only SVG shapes */}
+                    <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                  </ContentLoader>
                 </div>
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
+
+                <div className="course-card">
+                  <ContentLoader viewBox="0 0 80 120">
+                    {/* Only SVG shapes */}
+                    <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                  </ContentLoader>
                 </div>
-                <div className="col-6 col-lg-3 col-md-4">
-                  <div className="upcoming_course_card meetup_course_card">
-                    <ContentLoader viewBox="0 0 80 120">
-                      {/* Only SVG shapes */}
-                      <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
-                    </ContentLoader>
-                  </div>
+
+                <div className="course-card">
+                  <ContentLoader viewBox="0 0 80 120">
+                    {/* Only SVG shapes */}
+                    <rect x="0" y="0" rx="5" ry="5" width="80" height="110" />
+                  </ContentLoader>
                 </div>
               </>
             )}
+
             {isSuccess &&
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
@@ -995,6 +1003,7 @@ const Course = () => {
                   ))}
                 </React.Fragment>
               ))}
+
             <div ref={loadMoreRef} className="col-12">
               {isFetchingNextPage && (
                 <div className="row">
