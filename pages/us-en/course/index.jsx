@@ -864,6 +864,39 @@ const Course = () => {
                   </MobileFilterModal>
 
                   <MobileFilterModal
+                    modalTitle="Weekend Filter"
+                    buttonText={
+                      onlyWeekend ? "Weekend Courses: True" : "Weekend courses"
+                    }
+                    closeEvent={onFilterChange("onlyWeekend")}
+                  >
+                    <div className="dropdown">
+                      <SmartDropDown
+                        value={onlyWeekend}
+                        buttonText={onlyWeekend ? " True" : "False"}
+                        closeEvent={onFilterChange("onlyWeekend")}
+                      >
+                        {({ closeHandler }) => (
+                          <>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(true)}
+                            >
+                              True
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(null)}
+                            >
+                              False
+                            </li>
+                          </>
+                        )}
+                      </SmartDropDown>
+                    </div>
+                  </MobileFilterModal>
+
+                  <MobileFilterModal
                     modalTitle="Time"
                     buttonText={
                       timeZoneFilter && TIME_ZONE[timeZoneFilter]
