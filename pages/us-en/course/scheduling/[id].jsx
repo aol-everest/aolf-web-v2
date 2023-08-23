@@ -463,11 +463,7 @@ const SchedulingPaymentForm = ({
           email: Yup.string()
             .email("Email is invalid!")
             .required("Email is required!"),
-          contactPhone: Yup.string()
-            .label("Phone")
-            .required("Phone is required")
-            .phone(null, false, "Phone is invalid")
-            .nullable(),
+          contactPhone: Yup.string().required("Phone is required"),
           ppaAgreement: Yup.boolean()
             .label("Terms")
             .test(
@@ -484,6 +480,7 @@ const SchedulingPaymentForm = ({
         {(formikProps) => {
           const { values, handleSubmit } = formikProps;
           formikOnChange(values);
+          console.log("formikProps", formikProps);
           return (
             <div
               id="second-step"
