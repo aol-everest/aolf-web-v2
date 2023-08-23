@@ -168,6 +168,9 @@ const Course = () => {
   const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
     defaultValue: "ONLINE",
   });
+  const [onlyWeekend, setOnlyWeekend] = useQueryString("onlyWeekend", {
+    defaultValue: false,
+  });
   const [otherCType] = useQueryString("other-ctype", {
     defaultValue: false,
     parse: stringToBoolean,
@@ -183,7 +186,6 @@ const Course = () => {
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
   });
-  const [cityFilter, setCityFilter] = useQueryString("city");
   const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
   const [ctypesFilter, setCtypesFilter] = useQueryString("ctypes");
   const [filterStartEndDate, setFilterStartEndDate] =
@@ -228,6 +230,9 @@ const Course = () => {
       case "activeFilterType":
         setActiveFilterType(value);
         break;
+      case "onlyWeekend":
+        setOnlyWeekend(value);
+        break;
       case "locationFilter":
         if (value) {
           setLocationFilter(JSON.stringify(value));
@@ -258,6 +263,9 @@ const Course = () => {
       case "activeFilterType":
         setActiveFilterType(value);
         break;
+      case "onlyWeekend":
+        setOnlyWeekend(value);
+        break;
       case "locationFilter":
         if (value) {
           setLocationFilter(JSON.stringify(value));
@@ -287,6 +295,9 @@ const Course = () => {
       case "activeFilterType":
         setActiveFilterType(null);
         break;
+      case "onlyWeekend":
+        setOnlyWeekend(null);
+        break;
       case "locationFilter":
         setLocationFilter(null);
         break;
@@ -308,121 +319,114 @@ const Course = () => {
     );
   };
 
-  const {
-    status,
-    isSuccess,
-    data,
-    error,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteQuery(
-    [
-      "workshops",
+  const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteQuery(
+      [
+        "workshops",
+        {
+          privateEvent,
+          otherCType,
+          locationFilter,
+          ctypesFilter,
+          courseTypeFilter,
+          filterStartEndDate,
+          timeZoneFilter,
+          instructorFilter,
+          activeFilterType,
+          onlyWeekend,
+        },
+      ],
+      async ({ pageParam = 1 }) => {
+        let param = {
+          page: pageParam,
+          size: 12,
+          timingsRequired: true,
+        };
+
+        if (activeFilterType && COURSE_MODES[activeFilterType]) {
+          param = {
+            ...param,
+            mode: COURSE_MODES[activeFilterType].value,
+          };
+        }
+        if (institutionalCourses) {
+          param = {
+            ...param,
+            ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
+          };
+        } else if (ctypesFilter) {
+          param = {
+            ...param,
+            ctype: ctypesFilter,
+          };
+        } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+          param = {
+            ...param,
+            ctype: COURSE_TYPES[courseTypeFilter].value,
+          };
+        }
+        if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
+          param = {
+            ...param,
+            timeZone: TIME_ZONE[timeZoneFilter].value,
+          };
+        }
+        if (instructorFilter && instructorFilter.value) {
+          param = {
+            ...param,
+            teacherId: instructorFilter.value,
+          };
+        }
+        if (filterStartEndDate) {
+          const [startDate, endDate] = filterStartEndDate.split("|");
+          param = {
+            ...param,
+            sdate: startDate,
+            edate: endDate,
+          };
+        }
+        if (locationFilter) {
+          const { lat, lng } = locationFilter;
+          param = {
+            ...param,
+            lat,
+            lng,
+          };
+        }
+        if (otherCType) {
+          param = {
+            ...param,
+            other: 1,
+          };
+        }
+        if (privateEvent) {
+          param = {
+            ...param,
+            isPrivateEvent: 1,
+          };
+        }
+        if (onlyWeekend) {
+          param = {
+            ...param,
+            onlyWeekend: onlyWeekend,
+          };
+        }
+
+        const res = await api.get({
+          path: "workshops",
+          param,
+        });
+        return res;
+      },
       {
-        privateEvent,
-        otherCType,
-        locationFilter,
-        ctypesFilter,
-        courseTypeFilter,
-        filterStartEndDate,
-        timeZoneFilter,
-        instructorFilter,
-        activeFilterType,
-        cityFilter,
+        getNextPageParam: (page) => {
+          return page.currectPage === page.lastPage
+            ? undefined
+            : page.currectPage + 1;
+        },
       },
-    ],
-    async ({ pageParam = 1 }) => {
-      let param = {
-        page: pageParam,
-        size: 12,
-        timingsRequired: true,
-      };
-
-      if (activeFilterType && COURSE_MODES[activeFilterType]) {
-        param = {
-          ...param,
-          mode: COURSE_MODES[activeFilterType].value,
-        };
-      }
-      if (institutionalCourses) {
-        param = {
-          ...param,
-          ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
-        };
-      } else if (ctypesFilter) {
-        param = {
-          ...param,
-          ctype: ctypesFilter,
-        };
-      } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
-        param = {
-          ...param,
-          ctype: COURSE_TYPES[courseTypeFilter].value,
-        };
-      }
-      if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
-        param = {
-          ...param,
-          timeZone: TIME_ZONE[timeZoneFilter].value,
-        };
-      }
-      if (instructorFilter && instructorFilter.value) {
-        param = {
-          ...param,
-          teacherId: instructorFilter.value,
-        };
-      }
-      if (filterStartEndDate) {
-        const [startDate, endDate] = filterStartEndDate.split("|");
-        param = {
-          ...param,
-          sdate: startDate,
-          edate: endDate,
-        };
-      }
-      if (locationFilter) {
-        const { lat, lng } = locationFilter;
-        param = {
-          ...param,
-          lat,
-          lng,
-        };
-      }
-      if (otherCType) {
-        param = {
-          ...param,
-          other: 1,
-        };
-      }
-      if (privateEvent) {
-        param = {
-          ...param,
-          isPrivateEvent: 1,
-        };
-      }
-      if (cityFilter) {
-        param = {
-          ...param,
-          city: cityFilter,
-        };
-      }
-
-      const res = await api.get({
-        path: "workshops",
-        param,
-      });
-      return res;
-    },
-    {
-      getNextPageParam: (page) => {
-        return page.currectPage === page.lastPage
-          ? undefined
-          : page.currectPage + 1;
-      },
-    },
-    // { initialData: workshops },
-  );
+      // { initialData: workshops },
+    );
 
   const loadMoreRef = React.useRef();
   const { track } = useAnalytics();
@@ -589,6 +593,15 @@ const Course = () => {
                       />
                     )}
                   </Popup>
+
+                  <Popup
+                    tabIndex="2"
+                    value={onlyWeekend}
+                    buttonText="Weekend courses"
+                    closeEvent={onFilterChange("onlyWeekend")}
+                    showList={false}
+                  ></Popup>
+
                   <Popup
                     tabIndex="4"
                     value={timeZoneFilter}
