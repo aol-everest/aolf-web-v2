@@ -958,7 +958,7 @@ const Course = () => {
               )}
             </div>
           </div>
-          <div class="upcoming_list">
+          <div className="upcoming_list">
             {!isSuccess && (
               <>
                 <div className="course-card">

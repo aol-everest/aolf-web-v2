@@ -90,7 +90,7 @@ export const Popup = (props) => {
       >
         {value && (
           <button
-            class="courses-filter__remove"
+            className="courses-filter__remove"
             data-filter="event-type"
             onClick={closeHandler(null)}
           >
@@ -114,7 +114,7 @@ export const Popup = (props) => {
         )}
 
         <button
-          class="courses-filter__button"
+          className="courses-filter__button"
           data-filter="event-type"
           onClick={!showList ? handleSelectFilter : handleDropdownClick}
         >
@@ -122,7 +122,7 @@ export const Popup = (props) => {
         </button>
 
         {showList && (
-          <div class="courses-filter__wrapper-list">
+          <div className="courses-filter__wrapper-list">
             <ul
               id={showId ? "time-tooltip" : ""}
               className={classNames(
