@@ -130,53 +130,51 @@ export const ScheduleDiscountInput = ({
   };
 
   return (
-    <li
+    <label
       className={classNames(`${containerClass}`, {
         error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
         "validate-error":
           formikProps.errors[formikKey] && formikProps.touched[formikKey],
       })}
     >
-      <>
-        {!showTag && (
-          <>
-            <input
-              className="text-input discount-code"
-              {...rest}
-              id={formikKey}
-              value={formikProps.values[formikKey]}
-              name={formikKey}
-              onChange={onChangeAction}
-              onBlur={applyCoupon}
-              onKeyDown={onKeyDown}
-            />
-            <label className="label-placeholder-style required">{label}</label>
-            {loading && <span className="loader-inline"></span>}
-          </>
-        )}
-        {showTag && (
-          <>
-            <span
-              className={classNames("discount-text-input badge", "react-tag", {
-                "badge-light": status === 0,
-                "badge-success": status === 1,
-                "badge-danger": status === 2,
+      {showTag ? (
+        <span
+          className={classNames("discount-text-input badge", "react-tag", {
+            "badge-light": status === 0,
+            "badge-success": status === 1,
+            "badge-danger": status === 2,
+          })}
+        >
+          {formikProps.values[formikKey]}
+          {!loading && (
+            <a
+              className={classNames("react-tag-remove", {
+                "!tw-text-white": status === 2,
               })}
+              onClick={removeCoupon}
             >
-              {formikProps.values[formikKey]}
-              <a
-                className={classNames("react-tag-remove", {
-                  "!tw-text-white": status === 2,
-                })}
-                onClick={removeCoupon}
-              >
-                ×
-              </a>
-            </span>
-            {loading && <span className="loader-inline"></span>}
-          </>
-        )}
-      </>
-    </li>
+              ×
+            </a>
+          )}
+        </span>
+      ) : (
+        <input
+          className="tickets-modal__input discount-code"
+          {...rest}
+          id={formikKey}
+          value={formikProps.values[formikKey]}
+          name={formikKey}
+          onChange={onChangeAction}
+          onBlur={applyCoupon}
+          onKeyDown={onKeyDown}
+          placeholder="Add code"
+        />
+      )}
+
+      <span class="scheduling-modal__coupon-label">
+        Do you have a discount code?
+      </span>
+      {loading && <span className="loader-inline"></span>}
+    </label>
   );
 };

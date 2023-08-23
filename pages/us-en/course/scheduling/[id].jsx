@@ -528,17 +528,6 @@ const SchedulingPaymentForm = ({
                       placeholder="Mobile Number"
                       type="tel"
                     ></SchedulePhoneInput>
-
-                    <ScheduleDiscountInput
-                      formikProps={formikProps}
-                      placeholder="Discount"
-                      formikKey="couponCode"
-                      product={productId}
-                      applyDiscount={applyDiscount}
-                      addOnProducts={addOnProducts}
-                      containerClass={`scheduling-modal__content-wrapper-form-list-row`}
-                      label="Discount Code"
-                    ></ScheduleDiscountInput>
                   </ul>
 
                   <hr />
@@ -556,7 +545,7 @@ const SchedulingPaymentForm = ({
                       {title}
                     </h5>
                     <div className="scheduling-modal__content-total-date-time">
-                      <div className="scheduling-modal__content-option-text-with-clock">
+                      <div class="scheduling-modal__content-ranges-text-with-clock">
                         Daily
                       </div>
                       <div className="scheduling-modal__content-total-time">
@@ -583,6 +572,15 @@ const SchedulingPaymentForm = ({
                       </ul>
                     </div>
                     <hr />
+                    <div class="scheduling-modal__content-total-location show">
+                      Location:
+                      <p class="scheduling-modal__content-total-links">
+                        <a href="#" target="_blank" rel="noopener noreferrer">
+                          13473 Dolomite Dr Frisco, TX 75035
+                        </a>
+                      </p>
+                    </div>
+
                     <div className="scheduling-modal__content-total-contacts">
                       Contact details:
                       <p className="scheduling-modal__content-total-links">
@@ -592,6 +590,19 @@ const SchedulingPaymentForm = ({
                         </a>
                       </p>
                     </div>
+                  </div>
+
+                  <div class="scheduling-modal__coupon">
+                    <ScheduleDiscountInput
+                      formikProps={formikProps}
+                      placeholder="Discount"
+                      formikKey="couponCode"
+                      product={productId}
+                      applyDiscount={applyDiscount}
+                      addOnProducts={addOnProducts}
+                      containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                      label="Discount Code"
+                    ></ScheduleDiscountInput>
                   </div>
 
                   <p className="scheduling-modal__content-wrapper-form-checkbox">

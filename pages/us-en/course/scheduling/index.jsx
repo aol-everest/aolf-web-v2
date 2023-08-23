@@ -232,57 +232,53 @@ const SchedulingRange = () => {
                       );
                       return (
                         <li
-                          className="scheduling-modal__content-option"
+                          className="scheduling-modal__content-ranges"
                           key={firstItem.id}
                         >
-                          <p className="scheduling-modal__content-option-title">
-                            <input
-                              type="radio"
-                              id={`time-range-${index + 1}`}
-                              value={selectedWorkshopId}
-                              name="scheduling-options"
-                              checked={selectedWorkshopId === firstItem.id}
-                              onChange={() =>
-                                handleWorkshopSelect(items[randomWorkshop])
-                              }
-                            />
-                            <label htmlFor="time-range-1">
-                              Time ranges #{index + 1}
+                          <input
+                            type="radio"
+                            id={`time-range-${index + 1}`}
+                            value={selectedWorkshopId}
+                            name="scheduling-options"
+                            checked={selectedWorkshopId === firstItem.id}
+                            onChange={() =>
+                              handleWorkshopSelect(items[randomWorkshop])
+                            }
+                          />
+                          <div className="scheduling-modal__content-option">
+                            <label
+                              className="scheduling-modal__content-ranges-title"
+                              htmlFor={`time-range-${index + 1}`}
+                            >
+                              <span> Time ranges #{index + 1}</span>
                             </label>
-                          </p>
 
-                          <p className="scheduling-modal__content-option-text-with-clock">
-                            Daily
-                          </p>
+                            <p className="scheduling-modal__content-ranges-text-with-clock">
+                              Daily
+                            </p>
 
-                          <ul className="scheduling-modal__content-option-variants">
-                            {firstItem?.timings &&
-                              firstItem.timings.map((time, i) => {
-                                return (
-                                  <li
-                                    className="scheduling-modal__content-option-row"
-                                    key={i}
-                                  >
-                                    <div className="scheduling-modal__content-option-row-date">
-                                      {dayjs
-                                        .utc(time.startDate)
-                                        .format("ddd, D")}
-                                    </div>
-                                    <div className="scheduling-modal__content-option-row-time">
-                                      {tConvert(time.startTime, true)} -{" "}
-                                      {tConvert(time.endTime, true)}
-                                    </div>
-                                  </li>
-                                );
-                              })}
-                          </ul>
-
-                          {/* <p className="scheduling-modal__content-option-footer">
-                            <span className="scheduling-modal__content-option-footer-text-with-icon">
-                              Instructor
-                            </span>
-                            <span>{firstItem.primaryTeacherName}</span>
-                          </p> */}
+                            <ul className="scheduling-modal__content-ranges-variants">
+                              {firstItem?.timings &&
+                                firstItem.timings.map((time, i) => {
+                                  return (
+                                    <li
+                                      className="scheduling-modal__content-ranges-row"
+                                      key={i}
+                                    >
+                                      <div className="scheduling-modal__content-ranges-row-date">
+                                        {dayjs
+                                          .utc(time.startDate)
+                                          .format("ddd, D")}
+                                      </div>
+                                      <div className="scheduling-modal__content-ranges-row-time">
+                                        {tConvert(time.startTime, true)} -{" "}
+                                        {tConvert(time.endTime, true)}
+                                      </div>
+                                    </li>
+                                  );
+                                })}
+                            </ul>
+                          </div>
                         </li>
                       );
                     })
