@@ -23,6 +23,9 @@ class PhoneInput extends React.Component {
     searchPlaceholder: PropTypes.string,
     searchNotFound: PropTypes.string,
     disabled: PropTypes.bool,
+    showSpecialLabel: PropTypes.bool,
+    showLabel: PropTypes.bool,
+    label: PropTypes.string,
 
     containerStyle: PropTypes.object,
     inputStyle: PropTypes.object,
@@ -120,7 +123,10 @@ class PhoneInput extends React.Component {
     dropdownClass: "",
     searchClass: "",
     className: "",
+    label: "",
 
+    showLabel: false,
+    showSpecialLabel: true,
     autoFormat: true,
     enableAreaCodes: false,
     enableTerritories: false,
@@ -1184,6 +1190,9 @@ class PhoneInput extends React.Component {
       isValid,
       defaultErrorMessage,
       specialLabel,
+      showSpecialLabel,
+      showLabel,
+      label,
     } = this.props;
 
     let isValidValue, errorMessage;
@@ -1235,7 +1244,9 @@ class PhoneInput extends React.Component {
         style={this.props.style || this.props.containerStyle}
         onKeyDown={this.handleKeydown}
       >
-        {specialLabel && <div className="special-label">{specialLabel}</div>}
+        {showSpecialLabel && specialLabel && (
+          <div className="special-label">{specialLabel}</div>
+        )}
         {errorMessage && (
           <div className="invalid-number-message">{errorMessage}</div>
         )}
@@ -1263,6 +1274,10 @@ class PhoneInput extends React.Component {
             }
           }}
         />
+
+        {showLabel && (
+          <label className="label-placeholder-style required">{label}</label>
+        )}
 
         <div
           className={flagViewClasses}

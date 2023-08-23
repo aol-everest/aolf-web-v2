@@ -252,7 +252,6 @@ const Checkout = () => {
   };
 
   const handleCouseSelection = (selectedId) => {
-    console.log(comboProductSfid);
     if (selectedId === workshop.id) {
       setComboProductSfid("");
     } else {
