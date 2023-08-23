@@ -65,11 +65,9 @@ const createOptions = {
 
 export const PaymentFormHB = ({
   isStripeIntentPayment = false,
-  campaignid,
-  mbsy,
-  mbsy_source,
   workshop = {},
   profile = {},
+  enrollmentCompletionLink,
   enrollmentCompletionAction = () => {},
   handleCouseSelection = () => {},
   login = () => {},

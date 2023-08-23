@@ -421,7 +421,7 @@ export const MeetupPaymentForm = ({
     !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
   const { fee, delfee, offering } = priceCalculation({
-    meetup,
+    workshop: meetup,
     discountResponse,
   });
 

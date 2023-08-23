@@ -1,5 +1,153 @@
-@import "flatpickr/dist/flatpickr.css";
-@import "./scheduling-modal";
-@import "./scheduling-content"; // first step (PAYMENT)
-@import "./scheduling-second"; //second step (SCHEDULING)
-@import "./scheduling-custom-calendar";
+@import 'flatpickr/dist/flatpickr.css';
+@import './scheduling-modal';
+@import './scheduling-style'; // first step (PAYMENT)
+@import './scheduling-second'; //second step (SCHEDULING)
+@import './scheduling-custom-calendar';
+
+.checkout-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+
+  &__logo {
+    width: 132px;
+    height: 48px;
+  }
+}
+
+.main {
+  max-width: 1240px;
+  margin: 0 auto 24px;
+  padding: 32px;
+
+  border-radius: 24px;
+  background: rgba(252, 162, 72, 0.1);
+
+  @media screen and (max-width: 1240px) {
+    margin: 0 12px 24px;
+  }
+
+  @media screen and (max-width: 991px) {
+    padding: 24px 16px;
+  }
+}
+
+.scheduling-types {
+  &__container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 45px;
+    border-radius: 16px;
+
+    margin-top: 12px;
+
+    background-color: #fef5ec;
+  }
+
+  &__label {
+    position: relative;
+  }
+
+  &__input {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__background {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
+    margin: 6px;
+    border-radius: 12px;
+    background-color: transparent;
+
+    color: #262627;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+
+    transition: background 0.35s ease;
+  }
+
+  &__input:checked + &__background {
+    background-color: #fca248;
+  }
+
+  &__input:not(:checked):hover + &__background {
+    background-color: rgb(252 162 72 / 20%);
+  }
+
+  @media screen and (max-width: 991px) {
+    &__background {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      border-radius: 16px;
+
+      font-size: 10px;
+    }
+  }
+}
+
+.scheduling-modal__coupon {
+  margin: 16px 0;
+
+  &-label {
+    order: -1;
+    margin-bottom: 12px;
+
+    font-family: Work Sans;
+    color: #262627;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+}
+
+.tickets-modal__input-label input.text-input-error {
+  border-color: red;
+}
+
+.tickets-modal__input-label .discount-text-input {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-family: Work Sans;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+
+  a {
+    text-decoration: none;
+    font-size: 26px;
+  }
+}
+
+.tickets-modal__input-label {
+  .loader-inline {
+    right: 16px;
+    top: 43px;
+  }
+}
+
+.select2-search {
+  display: none;
+}

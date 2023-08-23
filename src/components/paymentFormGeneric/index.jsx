@@ -34,6 +34,7 @@ import "yup-phone";
 import { Loader } from "@components";
 import {
   ABBRS,
+  COURSE_MODES,
   ALERT_TYPES,
   COURSE_TYPES,
   MODAL_TYPES,
@@ -73,11 +74,9 @@ const createOptions = {
 
 export const PaymentFormGeneric = ({
   isStripeIntentPayment = false,
-  campaignid,
-  mbsy,
-  mbsy_source,
   workshop = {},
   profile = {},
+  enrollmentCompletionLink,
   enrollmentCompletionAction = () => {},
   handleCouseSelection = () => {},
   login = () => {},
@@ -504,31 +503,24 @@ export const PaymentFormGeneric = ({
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       }
+      if (data && data.totalOrderAmount > 0) {
+        const returnUrl = enrollmentCompletionLink(data);
+        const result = await stripe.confirmPayment({
+          //`Elements` instance that was used to create the Payment Element
+          elements,
+          clientSecret: stripeIntentObj.client_secret,
+          confirmParams: {
+            return_url: returnUrl,
+          },
+        });
 
-      let filteredParams = {
-        ctype: workshop.productTypeId,
-        page: "ty",
-        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-        campaignid,
-        mbsy,
-        ...filterAllowedParams(router.query),
-      };
-      filteredParams = removeNull(filteredParams);
-      const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-        data.attendeeId
-      }?${queryString.stringify(filteredParams)}`;
-      const result = await stripe.confirmPayment({
-        //`Elements` instance that was used to create the Payment Element
-        elements,
-        clientSecret: stripeIntentObj.client_secret,
-        confirmParams: {
-          return_url: returnUrl,
-        },
-      });
-
-      if (result.error) {
-        // Show error to your customer (for example, payment details incomplete)
-        throw new Error(result.error.message);
+        if (result.error) {
+          // Show error to your customer (for example, payment details incomplete)
+          throw new Error(result.error.message);
+        }
+      }
+      if (data) {
+        enrollmentCompletionAction(data);
       }
       setLoading(false);
     } catch (ex) {
@@ -799,6 +791,8 @@ export const PaymentFormGeneric = ({
     email: contactEmail,
     paymentMethod = {},
     productTypeId,
+    centerName,
+    mode,
   } = workshop;
 
   const { subscriptions = [] } = profile;
@@ -1442,6 +1436,91 @@ export const PaymentFormGeneric = ({
                                   );
                                 })}
                             </div>
+                            <div
+                              className={classNames(
+                                "col-12",
+                                Style.datetime_box,
+                              )}
+                            >
+                              <h6>Location:</h6>
+                              {(mode === COURSE_MODES.IN_PERSON.name ||
+                                mode ===
+                                  COURSE_MODES.DESTINATION_RETREATS.name) && (
+                                <>
+                                  {!workshop.isLocationEmpty && (
+                                    <ul>
+                                      <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${
+                                          workshop.locationStreet || ""
+                                        }, ${workshop.locationCity} ${
+                                          workshop.locationProvince
+                                        } ${workshop.locationPostalCode} ${
+                                          workshop.locationCountry
+                                        }`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      >
+                                        {workshop.locationStreet && (
+                                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                            {workshop.locationStreet}
+                                          </li>
+                                        )}
+                                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                          {workshop.locationCity || ""}
+                                          {", "}
+                                          {workshop.locationProvince || ""}{" "}
+                                          {workshop.locationPostalCode || ""}
+                                        </li>
+                                      </a>
+                                    </ul>
+                                  )}
+                                  {workshop.isLocationEmpty && (
+                                    <ul>
+                                      <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${
+                                          workshop.streetAddress1 || ""
+                                        },${workshop.streetAddress2 || ""} ${
+                                          workshop.city
+                                        } ${workshop.state} ${workshop.zip} ${
+                                          workshop.country
+                                        }`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      >
+                                        {workshop.streetAddress1 && (
+                                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                            {workshop.streetAddress1}
+                                          </li>
+                                        )}
+                                        {workshop.streetAddress2 && (
+                                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                            {workshop.streetAddress2}
+                                          </li>
+                                        )}
+                                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                          {workshop.city || ""}
+                                          {", "}
+                                          {workshop.state || ""}{" "}
+                                          {workshop.zip || ""}
+                                        </li>
+                                      </a>
+                                    </ul>
+                                  )}
+                                </>
+                              )}
+
+                              {mode === COURSE_MODES.ONLINE.name && (
+                                <>
+                                  {!workshop.isLocationEmpty && (
+                                    <ul>
+                                      <li className="tw-truncate tw-text-sm tw-tracking-tighter">
+                                        {mode}
+                                      </li>
+                                    </ul>
+                                  )}
+                                </>
+                              )}
+                            </div>
                           </div>
 
                           <div
@@ -1455,10 +1534,7 @@ export const PaymentFormGeneric = ({
                                     Style.img,
                                     "rounded-circle",
                                   )}
-                                  src={
-                                    primaryTeacherPic ||
-                                    "/assets/images/user.png"
-                                  }
+                                  src={primaryTeacherPic || "/img/user.png"}
                                 />
                                 {primaryTeacherName}
                               </div>
@@ -1470,9 +1546,7 @@ export const PaymentFormGeneric = ({
                                     Style.img,
                                     "rounded-circle",
                                   )}
-                                  src={
-                                    coTeacher1Pic || "/assets/images/user.png"
-                                  }
+                                  src={coTeacher1Pic || "/img/user.png"}
                                 />
                                 {coTeacher1Name}
                               </div>
@@ -1484,9 +1558,7 @@ export const PaymentFormGeneric = ({
                                     Style.img,
                                     "rounded-circle",
                                   )}
-                                  src={
-                                    coTeacher2Pic || "/assets/images/user.png"
-                                  }
+                                  src={coTeacher2Pic || "/img/user.png"}
                                 />
                                 {coTeacher2Name}
                               </div>
