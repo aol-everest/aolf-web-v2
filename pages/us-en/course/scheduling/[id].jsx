@@ -388,7 +388,6 @@ const SchedulingPaymentForm = ({
             return_url: returnUrl,
           },
         });
-
         if (result.error) {
           // Show error to your customer (for example, payment details incomplete)
           throw new Error(result.error.message);
@@ -529,12 +528,6 @@ const SchedulingPaymentForm = ({
                         event.preventDefault();
                       }}
                     ></ScheduleInput>
-
-                    {/* <Field
-                      name="contactPhone"
-                      type="tel"
-                      component={PhoneNumberInputField}
-                    /> */}
 
                     <SchedulePhoneInput
                       containerClass={`scheduling-modal__content-wrapper-form-list-row`}

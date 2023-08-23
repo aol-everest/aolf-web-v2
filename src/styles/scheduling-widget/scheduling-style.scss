@@ -218,6 +218,10 @@
   font-weight: 300;
   line-height: 20px;
 }
+.scheduling-modal__content-wrapper-form-list input.text-input-error {
+  border-color: red;
+}
+
 .scheduling-modal__content-wrapper-form-list input.text-input::placeholder {
   color: #fff;
 }

@@ -54,20 +54,20 @@ export const SchedulePhoneInput = ({
       })}
     >
       <PhoneInput
-        {...rest}
-        {...inputProps}
         placeholder="Phone No"
         country="us"
         inputClass={
-          formikProps.errors?.contactPhone ? "text-input error" : "text-input"
+          formikProps.errors?.contactPhone
+            ? "text-input text-input-error"
+            : "text-input"
         }
         containerClass="input-block"
         countryCodeEditable={true}
-        onChange={onChangeAction}
-        onFocus={onFocusAction}
         showSpecialLabel={false}
         showLabel={true}
         label={label}
+        {...rest}
+        {...inputProps}
       />
 
       {tooltip && (
