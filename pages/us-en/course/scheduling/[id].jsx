@@ -561,7 +561,7 @@ const SchedulingPaymentForm = ({
                       {title}
                     </h5>
                     <div className="scheduling-modal__content-total-date-time">
-                      <div class="scheduling-modal__content-ranges-text-with-clock">
+                      <div className="scheduling-modal__content-ranges-text-with-clock">
                         Daily
                       </div>
                       <div className="scheduling-modal__content-total-time">
@@ -588,9 +588,9 @@ const SchedulingPaymentForm = ({
                       </ul>
                     </div>
                     <hr />
-                    <div class="scheduling-modal__content-total-location show">
+                    <div className="scheduling-modal__content-total-location show">
                       Location:
-                      <p class="scheduling-modal__content-total-links">
+                      <p className="scheduling-modal__content-total-links">
                         <a href="#" target="_blank" rel="noopener noreferrer">
                           {`${streetAddress1 || ""} ${streetAddress2 || ""}
                           ${city || ""} ${country || ""}`}
@@ -607,7 +607,7 @@ const SchedulingPaymentForm = ({
                     </div>
                   </div>
 
-                  <div class="scheduling-modal__coupon">
+                  <div className="scheduling-modal__coupon">
                     <ScheduleDiscountInput
                       formikProps={formikProps}
                       placeholder="Discount"

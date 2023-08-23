@@ -103,8 +103,8 @@ const SchedulingRange = () => {
 
   return (
     <>
-      <header class="checkout-header">
-        <img class="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
+      <header className="checkout-header">
+        <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
       </header>
       <main className="main">
         <div className="scheduling-modal__step">
@@ -180,45 +180,45 @@ const SchedulingRange = () => {
                 <h3>Available Class Times</h3>
                 <p>Based on the selected date range</p>
 
-                {/* <div class="scheduling-types__container">
+                {/* <div className="scheduling-types__container">
                   <label
-                    class="scheduling-types__label"
+                    className="scheduling-types__label"
                     for="online-type-course"
                   >
                     <input
                       type="radio"
-                      class="scheduling-types__input"
+                      className="scheduling-types__input"
                       id="online-type-course"
                       name="type-course"
                       value="online"
                     />
-                    <span class="scheduling-types__background">Online</span>
+                    <span className="scheduling-types__background">Online</span>
                   </label>
 
                   <label
-                    class="scheduling-types__label"
+                    className="scheduling-types__label"
                     for="person-type-course"
                   >
                     <input
                       type="radio"
-                      class="scheduling-types__input"
+                      className="scheduling-types__input"
                       id="person-type-course"
                       name="type-course"
                       value="in-person"
                     />
-                    <span class="scheduling-types__background">In-person</span>
+                    <span className="scheduling-types__background">In-person</span>
                   </label>
 
-                  <label class="scheduling-types__label" for="both-type-course">
+                  <label className="scheduling-types__label" for="both-type-course">
                     <input
                       type="radio"
-                      class="scheduling-types__input"
+                      className="scheduling-types__input"
                       id="both-type-course"
                       name="type-course"
                       value="both"
                       checked
                     />
-                    <span class="scheduling-types__background">Both</span>
+                    <span className="scheduling-types__background">Both</span>
                   </label>
                 </div> */}
 

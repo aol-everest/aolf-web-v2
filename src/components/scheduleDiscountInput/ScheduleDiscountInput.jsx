@@ -171,7 +171,7 @@ export const ScheduleDiscountInput = ({
         />
       )}
 
-      <span class="scheduling-modal__coupon-label">
+      <span className="scheduling-modal__coupon-label">
         Do you have a discount code?
       </span>
       {loading && <span className="loader-inline"></span>}
