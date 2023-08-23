@@ -40,7 +40,7 @@ export const ScheduleAgreementForm = ({
 
   return (
     <>
-      <p class="scheduling-modal__content-wrapper-form-checkbox">
+      <p className="scheduling-modal__content-wrapper-form-checkbox">
         <input
           type="checkbox"
           className={classNames("", {
@@ -48,7 +48,6 @@ export const ScheduleAgreementForm = ({
               formikProps.errors.ppaAgreement &&
               formikProps.touched.ppaAgreement,
           })}
-          placeholder=" "
           id="privacy"
           checked={formikProps.values.ppaAgreement}
           onChange={formikProps.handleChange("ppaAgreement")}
@@ -80,7 +79,7 @@ export const ScheduleAgreementForm = ({
       <div className="agreement mt-4">
         {formikProps.errors.ppaAgreement &&
           formikProps.touched.ppaAgreement && (
-            <p class="scheduling-modal__content-wrapper-form-checkbox">
+            <p className="scheduling-modal__content-wrapper-form-checkbox">
               <img
                 className="agreement__important-icon"
                 src="/img/warning.svg"
@@ -94,7 +93,7 @@ export const ScheduleAgreementForm = ({
         <div className="health-confirmation mt-4">
           {complianceQuestionnaire.map((compliance) => (
             <p
-              class="scheduling-modal__content-wrapper-form-checkbox"
+              className="scheduling-modal__content-wrapper-form-checkbox"
               key={compliance.questionSfid}
             >
               <Field
