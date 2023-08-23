@@ -104,7 +104,7 @@ class LinkedCalendar extends React.Component {
   render() {
     const { opens, children, className } = this.props;
     const classNameObj = classNames(
-      "daterangepicker ltr auto-apply show-calendar openscenter",
+      `daterangepicker ltr auto-apply show-calendar opens${opens}`,
       className,
     );
     const styles = {
