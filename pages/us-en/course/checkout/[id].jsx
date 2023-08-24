@@ -27,7 +27,9 @@ import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import queryString from "query-string";
 import { useAnalytics } from "use-analytics";
+import { filterAllowedParams, removeNull } from "@utils/utmParam";
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -226,6 +228,25 @@ const Checkout = () => {
     });
   };
 
+  const enrollmentCompletionLink = ({ attendeeId }) => {
+    let filteredParams = {
+      ctype: workshop.productTypeId,
+      comboId: comboProductSfid,
+      page: "ty",
+      type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+      campaignid,
+      mbsy,
+      ...filterAllowedParams(router.query),
+    };
+    filteredParams = removeNull(filteredParams);
+    const returnUrl = `${
+      window.location.origin
+    }/us-en/course/thankyou/${attendeeId}?${queryString.stringify(
+      filteredParams,
+    )}`;
+    return returnUrl;
+  };
+
   const login = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL);
   };
@@ -274,12 +295,10 @@ const Checkout = () => {
       return (
         <PaymentFormHB
           isStripeIntentPayment={isStripeIntentPayment}
-          campaignid={campaignid}
-          mbsy={mbsy}
-          mbsy_source={mbsy_source}
           workshop={workshop}
           profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
+          enrollmentCompletionLink={enrollmentCompletionLink}
           handleCouseSelection={handleCouseSelection}
           login={login}
           isLoggedUser={authenticated}
@@ -296,12 +315,10 @@ const Checkout = () => {
       return (
         <PaymentForm
           isStripeIntentPayment={isStripeIntentPayment}
-          campaignid={campaignid}
-          mbsy={mbsy}
-          mbsy_source={mbsy_source}
           workshop={workshop}
           profile={user?.profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
+          enrollmentCompletionLink={enrollmentCompletionLink}
           handleCouseSelection={handleCouseSelection}
           login={login}
           isLoggedUser={authenticated}
@@ -311,12 +328,10 @@ const Checkout = () => {
     return (
       <PaymentFormGeneric
         isStripeIntentPayment={isStripeIntentPayment}
-        campaignid={campaignid}
-        mbsy={mbsy}
-        mbsy_source={mbsy_source}
         workshop={workshop}
         profile={user?.profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
+        enrollmentCompletionLink={enrollmentCompletionLink}
         handleCouseSelection={handleCouseSelection}
         login={login}
         isLoggedUser={authenticated}

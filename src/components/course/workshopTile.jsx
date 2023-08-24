@@ -1,7 +1,7 @@
 import { ABBRS, COURSE_MODES, COURSE_TYPES, MODAL_TYPES } from "@constants";
 import { useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
-import classNames from "classnames";
+import { tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
@@ -28,6 +28,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
     locationProvince,
     centerName,
     isGuestCheckoutEnabled = false,
+    coTeacher1Name,
+    coTeacher2Name,
+    timings,
   } = data || {};
 
   const enrollAction = (workshopId, productTypeId) => () => {
@@ -64,6 +67,15 @@ export const WorkshopTile = ({ data, authenticated }) => {
       0 ||
     COURSE_TYPES.SANYAM_COURSE.value.indexOf(productTypeId) >= 0;
 
+  const coTeacherNames = [coTeacher1Name, coTeacher2Name];
+  let extraTeachers = 0;
+
+  for (const name of coTeacherNames) {
+    if (name) {
+      extraTeachers += 1;
+    }
+  }
+
   const detailAction = (workshopId, productTypeId) => () => {
     if (isKnownWorkshop) {
       pushRouteWithUTMQuery(router, {
@@ -98,94 +110,122 @@ export const WorkshopTile = ({ data, authenticated }) => {
     0;
 
   return (
-    <div className="col-6 col-lg-3 col-md-4">
-      <div
-        className="upcoming_course_card meetup_course_card"
-        data-full={isEventFull}
-        data-complete={isPurchased}
-      >
-        {isSilentRetreatType && (
-          <Image src="/img/course-card-4.png" alt="bg" layout="fill" />
+    <div
+      className="course-card"
+      data-full={isEventFull}
+      data-complete={isPurchased}
+    >
+      {isSilentRetreatType && (
+        <Image
+          className="course-card__image"
+          src="/img/course-card-4.png"
+          alt="bg"
+          layout="fill"
+        />
+      )}
+      {isSKYType && (
+        <Image
+          className="course-card__image"
+          src="/img/course-card-2.png"
+          alt="bg"
+          layout="fill"
+        />
+      )}
+      {isSahajSamadhiMeditationType && (
+        <Image
+          className="course-card__image"
+          src="/img/course-card-5.png"
+          alt="bg"
+          layout="fill"
+        />
+      )}
+      {!isSilentRetreatType && !isSKYType && !isSahajSamadhiMeditationType && (
+        <Image
+          className="course-card__image"
+          src="/img/course-card-1.png"
+          alt="bg"
+          layout="fill"
+        />
+      )}
+      <h3 className="course-card__title">
+        {mode === COURSE_MODES.IN_PERSON.name ? (
+          <span className="course-card__type">
+            {locationCity ? (
+              <span>
+                {" "}
+                {locationCity || ""}
+                {locationProvince && ", "}
+                {locationProvince || ""}
+              </span>
+            ) : (
+              centerName
+            )}
+          </span>
+        ) : (
+          <span className="course-card__type">{mode}</span>
         )}
-        {isSKYType && (
-          <Image src="/img/course-card-2.png" alt="bg" layout="fill" />
+
+        <span
+          className="course-card__name"
+          dangerouslySetInnerHTML={{ __html: title }}
+        ></span>
+        <span className="course-card__others">
+          {primaryTeacherName} {extraTeachers ? `${extraTeachers} more` : ""}
+        </span>
+      </h3>
+
+      <p className="course-card__date">
+        {dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), "month") && (
+          <>
+            {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+              .utc(eventEndDate)
+              .format("DD, YYYY")}`}
+            {" " + ABBRS[eventTimeZone]}
+          </>
         )}
-        {isSahajSamadhiMeditationType && (
-          <Image src="/img/course-card-5.png" alt="bg" layout="fill" />
+        {!dayjs
+          .utc(eventStartDate)
+          .isSame(dayjs.utc(eventEndDate), "month") && (
+          <>
+            {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+              .utc(eventEndDate)
+              .format("MMMM DD, YYYY")}`}
+            {" " + ABBRS[eventTimeZone]}
+          </>
         )}
-        {!isSilentRetreatType &&
-          !isSKYType &&
-          !isSahajSamadhiMeditationType && (
-            <Image src="/img/course-card-1.png" alt="bg" layout="fill" />
-          )}
-        <div className="parentData">
-          {dayjs
-            .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
-            <div className="course_data">
-              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                .utc(eventEndDate)
-                .format("DD, YYYY")}`}
-              {" " + ABBRS[eventTimeZone]}
-            </div>
-          )}
-          {!dayjs
-            .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
-            <div className="course_data">
-              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                .utc(eventEndDate)
-                .format("MMMM DD, YYYY")}`}
-              {" " + ABBRS[eventTimeZone]}
-            </div>
-          )}
-        </div>
-        <div className="course_info">
-          {mode === COURSE_MODES.IN_PERSON.name ? (
-            <div className="course_status">
-              {locationCity ? (
-                <span>
-                  {" "}
-                  {locationCity || ""}
-                  {locationProvince && ", "}
-                  {locationProvince || ""}
-                </span>
-              ) : (
-                centerName
-              )}
-            </div>
-          ) : (
-            <div className="course_status">{mode}</div>
-          )}
-          <div
-            className="course_name"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></div>
-          <div className="course_place">{primaryTeacherName}</div>
-        </div>
-        <div className="course_complete">Course full</div>
-        <div className="course_complete_registration">already registered</div>
-        <div
-          className={classNames("course_detail_box", {
-            "d-none": isPurchased || isEventFull,
+      </p>
+
+      <div className="course-card__times">
+        {timings?.length > 0 &&
+          timings.map((time, i) => {
+            return (
+              <p className="course-card__time" key={i}>
+                <span>{dayjs.utc(time.startDate).format("ddd")}</span>
+                {`${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                  ABBRS[time.timeZone]
+                }`}
+              </p>
+            );
           })}
-        >
-          <div className="course_detail_btn_box">
-            <button
-              className="btn btn_box_primary text-center"
-              onClick={enrollAction(sfid, productTypeId)}
-            >
-              Enroll
-            </button>
-            <button
-              className="btn btn-box-light text-center"
-              onClick={detailAction(sfid, productTypeId)}
-            >
-              Details
-            </button>
-          </div>
-        </div>
       </div>
+
+      <div className="course-card__navigation">
+        <button
+          className="btn btn_box_primary text-center"
+          onClick={enrollAction(sfid, productTypeId)}
+        >
+          Enroll
+        </button>
+        <button
+          className="btn btn-box-light text-center"
+          onClick={detailAction(sfid, productTypeId)}
+        >
+          Details
+        </button>
+      </div>
+
+      <div className="course_complete">Course full</div>
+      <div className="course_complete_registration">already registered</div>
     </div>
   );
 };
