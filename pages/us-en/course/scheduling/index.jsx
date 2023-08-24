@@ -16,7 +16,9 @@ dayjs.extend(advancedFormat);
 const SchedulingRange = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [courseTypeFilter] = useQueryString("courseType");
+  const [courseTypeFilter] = useQueryString("courseType", {
+    defaultValue: "SKY_BREATH_MEDITATION",
+  });
   const [timezoneFilter, setTimezoneFilter] = useState("EST");
   const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);

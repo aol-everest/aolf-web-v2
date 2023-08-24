@@ -170,6 +170,7 @@ const Course = () => {
   });
   const [onlyWeekend, setOnlyWeekend] = useQueryString("onlyWeekend", {
     defaultValue: false,
+    parse: stringToBoolean,
   });
   const [otherCType] = useQueryString("other-ctype", {
     defaultValue: false,
