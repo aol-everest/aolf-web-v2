@@ -1,4 +1,5 @@
-import { COURSE_MODES } from "@constants";
+import { COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
 import { api, tConvert } from "@utils";
 import dayjs from "dayjs";
@@ -15,6 +16,7 @@ dayjs.extend(advancedFormat);
 const SchedulingRange = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [courseTypeFilter] = useQueryString("courseType");
   const [timezoneFilter, setTimezoneFilter] = useState("EST");
   const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
@@ -54,7 +56,9 @@ const SchedulingRange = () => {
           org: "AOL",
           timingsRequired: true,
           mode: COURSE_MODES.ONLINE.value,
-          ctype: 811569,
+          ctype:
+            COURSE_TYPES[courseTypeFilter]?.value ||
+            COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
         },
       });
       if (response?.data) {
@@ -122,7 +126,11 @@ const SchedulingRange = () => {
               />
             </svg>
             <div className="scheduling-modal__header-text">
-              <h3> {selectedWorkshop.title || "SKY Breath Meditation"}</h3>
+              <h3>
+                {selectedWorkshop.title ||
+                  COURSE_TYPES[courseTypeFilter]?.name ||
+                  COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
+              </h3>
               <p>9 hours meditation course</p>
             </div>
           </div>
@@ -168,7 +176,10 @@ const SchedulingRange = () => {
                     defaultValue={"EST"}
                     multiple={false}
                     data={timezones}
-                    onSelect={(ev) => setTimezoneFilter(ev?.target?.value)}
+                    onChange={(ev) => {
+                      ev.preventDefault();
+                      setTimezoneFilter(ev?.target?.value);
+                    }}
                     value={timezoneFilter}
                   />
                 </label>
@@ -295,29 +306,6 @@ const SchedulingRange = () => {
                   )}
                 </ul>
               </div>
-
-              <button
-                className="scheduling-modal__apple-pay d-lg-none"
-                type="button"
-              >
-                <svg
-                  fill="none"
-                  height="18"
-                  viewBox="0 0 15 18"
-                  width="15"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9.97991 3.43337C10.545 2.72649 10.9285 1.77746 10.8274 0.807617C10.0002 0.848773 8.99066 1.35343 8.40622 2.06077C7.88141 2.66658 7.41697 3.65537 7.53809 4.58452C8.46659 4.66505 9.39444 4.12037 9.97991 3.43337Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M10.8168 4.76588C9.46824 4.68554 8.32159 5.53125 7.67752 5.53125C7.03318 5.53125 6.04693 4.80638 4.98024 4.82588C3.5919 4.84632 2.30368 5.63129 1.59915 6.87975C0.150056 9.37735 1.21674 13.0822 2.6259 15.1163C3.31018 16.1226 4.13499 17.2307 5.22165 17.1908C6.2484 17.1505 6.65087 16.526 7.89887 16.526C9.14602 16.526 9.50856 17.1908 10.5954 17.1707C11.7226 17.1505 12.4272 16.1638 13.1115 15.1565C13.8965 14.0093 14.2179 12.9016 14.2381 12.8408C14.2178 12.8206 12.0646 11.9946 12.0447 9.51779C12.0243 7.44394 13.7352 6.45741 13.8157 6.39629C12.8497 4.96754 11.3401 4.80638 10.8168 4.76588Z"
-                    fill="white"
-                  />
-                </svg>
-                Pay
-              </button>
 
               <button
                 className="scheduling-modal__continue"

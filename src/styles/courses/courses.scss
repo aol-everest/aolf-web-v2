@@ -216,11 +216,14 @@
   row-gap: 25px;
   column-gap: 30px;
 }
+.upcoming_course .course-card {
+  min-height: 321px;
+}
 
 .course-card {
   position: relative;
   height: max-content;
-  min-height: 321px;
+  //
   height: 100%;
   max-height: 380px;
   // margin: 15px 0;
