@@ -866,14 +866,14 @@ const Course = () => {
                   <MobileFilterModal
                     modalTitle="Weekend Filter"
                     buttonText={
-                      onlyWeekend ? "Weekend Courses: True" : "Weekend courses"
+                      onlyWeekend ? "Weekend Courses: Yes" : "Weekend courses"
                     }
                     closeEvent={onFilterChange("onlyWeekend")}
                   >
                     <div className="dropdown">
                       <SmartDropDown
                         value={onlyWeekend}
-                        buttonText={onlyWeekend ? " True" : "False"}
+                        buttonText={onlyWeekend ? " Yes" : "No"}
                         closeEvent={onFilterChange("onlyWeekend")}
                       >
                         {({ closeHandler }) => (
@@ -882,13 +882,13 @@ const Course = () => {
                               className="dropdown-item"
                               onClick={closeHandler(true)}
                             >
-                              True
+                              Yes
                             </li>
                             <li
                               className="dropdown-item"
                               onClick={closeHandler(null)}
                             >
-                              False
+                              No
                             </li>
                           </>
                         )}
