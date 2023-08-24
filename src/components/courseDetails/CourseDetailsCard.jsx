@@ -66,6 +66,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
     corporateName,
     coTeacher1Name,
     coTeacher2Name,
+    isGuestCheckoutEnabled = false,
   } = workshop || {};
 
   const datePickerConfig = {
@@ -101,7 +102,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated) {
+    if (authenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
