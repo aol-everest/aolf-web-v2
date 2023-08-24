@@ -7750,14 +7750,6 @@ react-scroll@^1.8.8:
     lodash.throttle "^4.1.1"
     prop-types "^15.7.2"
 
-react-select2-wrapper@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-select2-wrapper/-/react-select2-wrapper-1.0.3.tgz#67f47ff350abd7d339632ae7cf3eb929604c979a"
-  integrity sha512-mClwxsH2E73Gu0IciJ2MVlBuD0d+VgdnigGFnd7oDgWHWl/ITMvbl2KwZfZkA278gl3cCVjKENWF6NnB6jT2+Q==
-  dependencies:
-    select2 "^4.0.0"
-    shallow-equal-fuzzy "^0.0.2"
-
 react-select2-wrapper@^1.0.4-beta6:
   version "1.0.4-beta6"
   resolved "https://registry.yarnpkg.com/react-select2-wrapper/-/react-select2-wrapper-1.0.4-beta6.tgz#f2681d86cc6828fccc078037d51f82019df02434"
@@ -7766,13 +7758,6 @@ react-select2-wrapper@^1.0.4-beta6:
     prop-types "^15.5.8"
     select2 "^4.0.0"
     shallow-equal-fuzzy "^0.0.2"
-
-react-select2@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/react-select2/-/react-select2-4.0.3.tgz#89cc79e7eafcdff1a2f31f096e8deb483b7503ea"
-  integrity sha512-wvn7uV0UW5O0TdeEeBRLxB1GJ7NAFTbMumgRa/+e2TVHnqUdMM7wX+ImjpsITcuIjbwyRmkIpBoooZyM3MMffw==
-  dependencies:
-    react-select2-wrapper "^1.0.3"
 
 react-select@^5.7.0:
   version "5.7.4"
