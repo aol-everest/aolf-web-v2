@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { PageLoading } from "@components";
-import { ALERT_TYPES } from "@constants";
+import { ALERT_TYPES, COURSE_MODES } from "@constants";
 import { useQueryString } from "@hooks";
 import queryString from "query-string";
 import { useGlobalAlertContext } from "@contexts";
@@ -226,6 +226,7 @@ const SchedulingPaymentForm = ({
     streetAddress2,
     country,
     city,
+    mode,
   } = workshop;
 
   const questionnaireArray = complianceQuestionnaire
@@ -463,11 +464,7 @@ const SchedulingPaymentForm = ({
           email: Yup.string()
             .email("Email is invalid!")
             .required("Email is required!"),
-          contactPhone: Yup.string()
-            .label("Phone")
-            .required("Phone is required")
-            .phone(null, false, "Phone is invalid")
-            .nullable(),
+          contactPhone: Yup.string().required("Phone is required"),
           ppaAgreement: Yup.boolean()
             .label("Terms")
             .test(
@@ -484,6 +481,7 @@ const SchedulingPaymentForm = ({
         {(formikProps) => {
           const { values, handleSubmit } = formikProps;
           formikOnChange(values);
+          console.log("formikProps", formikProps);
           return (
             <div
               id="second-step"
@@ -584,10 +582,14 @@ const SchedulingPaymentForm = ({
                     <div className="scheduling-modal__content-total-location show">
                       Location:
                       <p className="scheduling-modal__content-total-links">
-                        <a href="#" target="_blank" rel="noopener noreferrer">
-                          {`${streetAddress1 || ""} ${streetAddress2 || ""}
+                        {mode === COURSE_MODES.ONLINE.name ? (
+                          mode
+                        ) : (
+                          <a href="#" target="_blank" rel="noopener noreferrer">
+                            {`${streetAddress1 || ""} ${streetAddress2 || ""}
                           ${city || ""} ${country || ""}`}
-                        </a>
+                          </a>
+                        )}
                       </p>
                     </div>
 

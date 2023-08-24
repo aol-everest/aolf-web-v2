@@ -1,4 +1,4 @@
-@import "../variables";
+@import '../variables';
 
 .header_line_blue {
   padding: 11px 0;
@@ -12,7 +12,7 @@
 }
 
 .btn_outline_box {
-  border: $grey-border;
+  border: $grey69-border;
   border-radius: 16px;
   padding: 5px;
   display: inline-flex;
@@ -190,18 +190,18 @@
   line-height: 18px;
 }
 
-.upcoming_course_card[data-full="true"],
-.upcoming_course_card[data-complete="true"] {
+.upcoming_course_card[data-full='true'],
+.upcoming_course_card[data-complete='true'] {
   cursor: not-allowed;
 }
 
-[data-full="false"] .course_complete {
+[data-full='false'] .course_complete {
   display: none;
 }
 
-[data-full="true"]::after,
-[data-complete="true"]::after {
-  content: "";
+[data-full='true']::after,
+[data-complete='true']::after {
+  content: '';
   display: block;
   position: absolute;
   border-radius: 16px;
@@ -213,21 +213,21 @@
   z-index: 10;
 }
 
-[data-full="true"] .course_complete {
+[data-full='true'] .course_complete {
   z-index: 100;
 }
 
-[data-complete="false"] .course_complete_registration {
+[data-complete='false'] .course_complete_registration {
   display: none;
 }
 
-[data-complete="true"] .course_complete_registration {
+[data-complete='true'] .course_complete_registration {
   z-index: 11;
 }
 
 .happines_title {
   color: $shark;
-  font-family: "Lora";
+  font-family: 'Lora';
   font-size: 36px;
   font-weight: bold;
   letter-spacing: 0;
@@ -297,7 +297,7 @@ main.background-image {
   color: $text-color;
 }
 
-[type="submit"].btn-primary {
+[type='submit'].btn-primary {
   border: none;
   background: linear-gradient(0deg, $blue 0%, $blue-hover 100%);
 }
@@ -312,7 +312,7 @@ main.background-image {
   transition: all 0.3s ease-in-out;
 }
 
-.btn[data-swicth-active="true"] {
+.btn[data-swicth-active='true'] {
   color: $white;
   border: none;
   background: linear-gradient(0deg, $blue 0%, $blue-hover 100%);
@@ -470,7 +470,7 @@ main.background-image {
 
 .btn_outline_box {
   &:hover {
-    border-color: $blue-hover;
+    border-color: $grey69-border;
   }
 }
 
@@ -510,7 +510,7 @@ main.background-image {
   }
 
   .tooltip-arrow::after {
-    content: "";
+    content: '';
     display: block;
     border-top: $grey-border;
     border-left: $grey-border;
@@ -538,7 +538,7 @@ main.background-image {
     background-color: $white;
     border-radius: 4px;
 
-    &[aria-expanded="true"] {
+    &[aria-expanded='true'] {
       border-radius: 4px 4px 0 0;
     }
 
@@ -672,7 +672,7 @@ main.background-image {
   height: 32px;
   font-size: 16px;
   line-height: 28px;
-  background-image: url("/img/ic-close.svg");
+  background-image: url('/img/ic-close.svg');
   background-size: 14px;
   background-repeat: no-repeat;
   background-position: center;
@@ -733,7 +733,7 @@ main.background-image {
     transition: 400ms 100ms ease-out;
   }
 
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     position: absolute;
     opacity: 0;
     left: -1000px;
@@ -753,7 +753,7 @@ main.background-image {
   }
 
   .marker:before {
-    content: "";
+    content: '';
     position: absolute;
     left: calc(15px * -0.125);
     bottom: calc(15px * -0.25);
@@ -762,7 +762,7 @@ main.background-image {
   }
 
   .marker:after {
-    content: "";
+    content: '';
     position: absolute;
     right: calc(15px * -0.25);
     top: calc(15px * -0.125);
@@ -770,12 +770,12 @@ main.background-image {
     border-radius: 50%;
   }
 
-  input[type="checkbox"]:checked + label .marker {
+  input[type='checkbox']:checked + label .marker {
     opacity: 1;
     transform: rotate(45deg) scale(1);
   }
 
-  input[type="checkbox"]:focus + label {
+  input[type='checkbox']:focus + label {
     -webkit-animation: 400ms linear cb-pop;
     animation: 400ms linear cb-pop;
   }
@@ -817,7 +817,7 @@ main.background-image {
   }
 }
 .rsvp-confirm {
-  background-image: url("/img/rsvp-confirm-bg.jpg");
+  background-image: url('/img/rsvp-confirm-bg.jpg');
   background-position: center bottom;
   background-size: cover;
   background-repeat: no-repeat;
@@ -840,7 +840,7 @@ main.background-image {
         font-size: 24px;
         font-weight: 600;
         color: #31364e;
-        font-family: "Work Sans";
+        font-family: 'Work Sans';
         position: relative;
         img {
           position: absolute;
@@ -872,7 +872,7 @@ main.background-image {
   }
 }
 .rsvp-fail {
-  background-image: url("/img/rsvp-fail-bg.jpg");
+  background-image: url('/img/rsvp-fail-bg.jpg');
   background-position: center bottom;
   background-size: cover;
   background-repeat: no-repeat;
@@ -895,7 +895,7 @@ main.background-image {
         font-size: 24px;
         font-weight: 600;
         color: #31364e;
-        font-family: "Work Sans";
+        font-family: 'Work Sans';
         position: relative;
         img {
           position: absolute;
@@ -970,7 +970,7 @@ main.background-image {
         }
       }
 
-      .btn[data-swicth-active="true"] {
+      .btn[data-swicth-active='true'] {
         color: $white;
         opacity: 1;
       }
@@ -1003,7 +1003,7 @@ main.background-image {
         }
       }
 
-      .btn[data-swicth-active="true"] {
+      .btn[data-swicth-active='true'] {
         color: $white;
       }
     }
@@ -1244,7 +1244,7 @@ main.background-image {
       font-size: 16px;
       font-weight: 600;
       color: $text-color;
-      font-family: "Work Sans";
+      font-family: 'Work Sans';
     }
 
     .custom-dropdown {
@@ -1603,7 +1603,7 @@ main.background-image {
 
   // Box.
   & + label:before {
-    content: "";
+    content: '';
     margin-right: 10px;
     display: inline-block;
     vertical-align: text-top;
@@ -1647,12 +1647,12 @@ main.background-image {
 
   // Disabled box.
   &:checked:disabled + label::after {
-    content: url("/img/ic-tick-disabled.svg");
+    content: url('/img/ic-tick-disabled.svg');
   }
 
   // Checkmark. Could be replaced with an image
   &:checked + label:after {
-    content: url("/img/ic-tick.svg");
+    content: url('/img/ic-tick.svg');
     position: absolute;
     left: 10px;
     width: 20px;
