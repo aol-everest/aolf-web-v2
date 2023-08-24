@@ -247,16 +247,15 @@ const SchedulingRange = () => {
                         <li
                           className="scheduling-modal__content-ranges"
                           key={firstItem.id}
+                          onClick={() =>
+                            handleWorkshopSelect(items[randomWorkshop])
+                          }
                         >
                           <input
                             type="radio"
                             id={`time-range-${index + 1}`}
                             value={selectedWorkshopId}
                             name="scheduling-options"
-                            checked={selectedWorkshopId === firstItem.id}
-                            onChange={() =>
-                              handleWorkshopSelect(items[randomWorkshop])
-                            }
                           />
                           <div className="scheduling-modal__content-option">
                             <label

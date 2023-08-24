@@ -28,8 +28,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
   const onDatesChange = (date) => {
     const { startDate, endDate } = date || {};
-    setFilterStartDate(startDate ? startDate.format("MM/DD") : null);
-    setFilterEndDate(endDate ? endDate.format("MM/DD") : null);
+    setFilterStartDate(startDate ? startDate.format("YYYY-MM-DD") : null);
+    setFilterEndDate(endDate ? endDate.format("YYYY-MM-DD") : null);
   };
 
   const handleSearchDates = () => {
@@ -64,6 +64,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
     productTypeId,
     mode,
     corporateName,
+    coTeacher1Name,
+    coTeacher2Name,
   } = workshop || {};
 
   const datePickerConfig = {
@@ -147,7 +149,28 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         <div class="top right course-details__cell">
           <p class="course-details__table-text">
             LOCATION
-            <span>{mode}</span>
+            <span>
+              {mode === COURSE_MODES.ONLINE.name ? (
+                mode
+              ) : (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${
+                    workshop.locationStreet || ""
+                  }, ${workshop.locationCity} ${workshop.locationProvince} ${
+                    workshop.locationPostalCode
+                  } ${workshop.locationCountry}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {`${workshop.locationStreet || ""} ${
+                    workshop.locationCity || ""
+                  }
+                          ${workshop.locationProvince || ""} ${
+                    workshop.locationCountry || ""
+                  }`}
+                </a>
+              )}
+            </span>
           </p>
         </div>
 
@@ -170,6 +193,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           <p class="course-details__table-text">
             INSTRUCTORS
             {primaryTeacherName && <span>{primaryTeacherName}</span>}
+            {coTeacher1Name && <span>{coTeacher1Name}</span>}
+            {coTeacher2Name && <span>{coTeacher2Name}</span>}
           </p>
         </div>
 
