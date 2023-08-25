@@ -90,13 +90,13 @@
   resolved "https://registry.yarnpkg.com/@analytics/type-utils/-/type-utils-0.6.2.tgz#60d706603a98a95681d4b1e9726c703fdd541a9e"
   integrity sha512-TD+xbmsBLyYy/IxFimW/YL/9L2IEnM7/EoV9Aeh56U64Ify8o27HJcKjo38XY9Tcn0uOq1AX3thkKgvtWvwFQg==
 
-"@aws-amplify/analytics@^6.0.9":
-  version "6.4.1"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/analytics/-/analytics-6.4.1.tgz#93a3df21599ceaeb1841fb5b4f280c8224242af0"
-  integrity sha512-MDkkjCbDWtIqXHleJdLHbgRTi+XA4hFC3Fd4xQzozm4vCxs1SlQqr4HRkfx75iIhqd2IIfDad2/AiDehY9YIrQ==
+"@aws-amplify/analytics@^6.5.4":
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/analytics/-/analytics-6.5.4.tgz#71b1a5e320de0e02ad978a5a275d63ff2b9588cf"
+  integrity sha512-MwHRGshhgw7BOZW+amdaNdCjJP8cp2GWL4V0uFgdWdkbe6p7ONN4cfoAnWmv9EIPpg412mWTk1iWZck2dT4q5A==
   dependencies:
-    "@aws-amplify/cache" "5.1.5"
-    "@aws-amplify/core" "5.7.0"
+    "@aws-amplify/cache" "5.1.10"
+    "@aws-amplify/core" "5.8.4"
     "@aws-sdk/client-firehose" "3.6.1"
     "@aws-sdk/client-kinesis" "3.6.1"
     "@aws-sdk/client-personalize-events" "3.6.1"
@@ -105,18 +105,18 @@
     tslib "^1.8.0"
     uuid "^3.2.1"
 
-"@aws-amplify/cache@5.1.5":
-  version "5.1.5"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/cache/-/cache-5.1.5.tgz#5cbbc5808da84321ce44dbd325f8cd967d16312e"
-  integrity sha512-gOHZWsxjeySVMseOFRNe6CtRX/r1/j4gNvVSTWZeNCncvPB1X1iiQVtjKOCPxuY6X1DdmH65U1jnKxWV683tJQ==
+"@aws-amplify/cache@5.1.10":
+  version "5.1.10"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/cache/-/cache-5.1.10.tgz#9baaf6c1fb54b0f93cc26081be579ddc9decd9c7"
+  integrity sha512-4svwr6CEhOwBf2PlUcE6Tl6HI5qL1gJa7X4vhOyYMBfsDaQzPbP4QxnvGMWM8O9OCdAIBCIWCdJPCMvDSYpOwQ==
   dependencies:
-    "@aws-amplify/core" "5.7.0"
+    "@aws-amplify/core" "5.8.4"
     tslib "^1.8.0"
 
-"@aws-amplify/core@5.7.0":
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-5.7.0.tgz#5a0d1cccee9c8d7f62c19630797fda419611a23d"
-  integrity sha512-P8dk4hmxm5XBtKI59XFjiUKUMIlzrgyGapnL3DAfE+twE8JEgRa7XtiffYy4drIXt7+Nl8tYyDhHlUI9/9I3Ow==
+"@aws-amplify/core@5.8.4":
+  version "5.8.4"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-5.8.4.tgz#462ad05a24ccf1fdc3f6166fa86a3072f37a8779"
+  integrity sha512-xFLciGRhRGSzLNqQoS/rFA2PAhggVvh9AFljlAuPyKykmFhxhGKx/k8a/q3GBcF8HiBAlJ6jpNz5X8RONr9Nkw==
   dependencies:
     "@aws-crypto/sha256-js" "1.2.2"
     "@aws-sdk/client-cloudwatch-logs" "3.6.1"
