@@ -15,6 +15,8 @@ import { ALERT_TYPES } from "@constants";
 import queryString from "query-string";
 import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { useRouter } from "next/router";
+import Style from "./StripeExpressCheckoutElement.module.scss";
+import classNames from "classnames";
 
 const elementsOptions = {
   mode: "payment",
@@ -102,21 +104,10 @@ const CheckoutPage = ({ workshop }) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
-  // Optional: If you're doing custom animations, hide the Element
-  const [visibility, setVisibility] = useState("hidden");
   const [loading, setLoading] = useState(false);
   const { showAlert } = useGlobalAlertContext();
 
   const completeEnrollmentAction = () => {};
-
-  const onReady = ({ availablePaymentMethods }) => {
-    if (!availablePaymentMethods) {
-      // No buttons will show
-    } else {
-      // Optional: Animate in the Element
-      setVisibility("initial");
-    }
-  };
 
   const onConfirm = async (event) => {
     if (loading) {
@@ -170,7 +161,7 @@ const CheckoutPage = ({ workshop }) => {
         // `clientSecret` from the created PaymentIntent
         clientSecret: stripeIntentObj.client_secret,
         confirmParams: {
-          return_url: "https://example.com/order/123/complete",
+          return_url: returnUrl,
         },
       });
 
@@ -236,9 +227,16 @@ const CheckoutPage = ({ workshop }) => {
                   />
                 </p>
               </div>
-              <div id="express-checkout-element" style={{ visibility }}>
+
+              <div className="tw-relative">
+                <div
+                  className={
+                    !formikProps.isValid || !formikProps.dirty
+                      ? Style.express_checkout_block
+                      : ""
+                  }
+                ></div>
                 <ExpressCheckoutElement
-                  onReady={onReady}
                   options={options}
                   onClick={onClick}
                   onConfirm={onConfirm}
