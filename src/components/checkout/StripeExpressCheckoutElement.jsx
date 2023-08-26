@@ -134,14 +134,14 @@ const CheckoutPage = ({ workshop }) => {
         value: false,
       }))
     : [];
-  /* const onClick = ({ resolve }) => {
+  const onClick = ({ resolve }) => {
     const options = {
       emailRequired: true,
       phoneNumberRequired: true,
       billingAddressRequired: true,
     };
     resolve(options);
-  }; */
+  };
   return (
     <div>
       <Formik
@@ -187,6 +187,7 @@ const CheckoutPage = ({ workshop }) => {
                 <ExpressCheckoutElement
                   options={options}
                   onConfirm={onConfirm}
+                  onClick={onClick}
                 />
               </div>
             </>
