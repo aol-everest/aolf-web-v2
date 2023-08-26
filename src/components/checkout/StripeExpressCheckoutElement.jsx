@@ -9,7 +9,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { api } from "@utils";
+import { api, priceCalculation } from "@utils";
 import { useGlobalAlertContext } from "@contexts";
 import { ALERT_TYPES } from "@constants";
 import queryString from "query-string";
@@ -18,75 +18,22 @@ import { useRouter } from "next/router";
 import Style from "./StripeExpressCheckoutElement.module.scss";
 import classNames from "classnames";
 
-const elementsOptions = {
-  mode: "payment",
-  amount: 1099,
-  currency: "usd",
-  appearance: {
-    theme: "stripe",
-    variables: {
-      colorPrimary: "#0570de",
-      colorBackground: "#ffffff",
-      colorText: "#30313d",
-      colorDanger: "#df1b41",
-      fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
-      spacingUnit: "2px",
-      borderRadius: "4px",
-    },
-    rules: {
-      ".Block": {
-        backgroundColor: "var(--colorBackground)",
-        boxShadow: "none",
-        padding: "12px",
-      },
-      ".Input": {
-        padding: "14px",
-        width: "100%",
-        maxHeight: "48px",
-        borderRadius: "16px",
-        border: "1px solid rgba(0, 0, 0, 0.15)",
-      },
-      ".Input:disabled, .Input--invalid:disabled": {
-        color: "lightgray",
-      },
-      ".Tab": {
-        borderRadius: "16px",
-        border: "1px solid rgba(0, 0, 0, 0.15)",
-        padding: "16px 24px",
-        color: "#FCA248",
-      },
-      ".Tab:hover": {
-        borderRadius: "16px",
-        border: "1px solid #FF9E1B",
-        padding: "16px 24px",
-        color: "#FCA248",
-        boxShadow: "none",
-      },
-      ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
-        borderRadius: "16px",
-        border: "1px solid #FF9E1B",
-        padding: "16px 24px",
-        color: "#FCA248",
-        boxShadow: "none",
-      },
-      ".TabIcon--selected, .TabIcon--selected:focus, .TabIcon--selected:hover":
-        {
-          color: "#FCA248",
-          fill: "#FCA248",
-        },
-      ".TabIcon, .TabIcon:hover": {
-        color: "#FCA248",
-        fill: "#FCA248",
-      },
-      ".Label": {
-        opacity: "0",
-      },
-    },
-  },
-};
-
 export const StripeExpressCheckoutElement = ({ workshop }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
+  const { fee } = priceCalculation({
+    workshop,
+  });
+  const elementsOptions = {
+    mode: "payment",
+    amount: fee,
+    currency: "usd",
+    appearance: {
+      theme: "stripe",
+      variables: {
+        borderRadius: "36px",
+      },
+    },
+  };
   return (
     <Elements stripe={stripePromise} options={elementsOptions}>
       <CheckoutPage workshop={workshop} />
@@ -95,7 +42,11 @@ export const StripeExpressCheckoutElement = ({ workshop }) => {
 };
 
 const options = {
-  wallets: { linkPay: "never" },
+  buttonType: {
+    applePay: "buy",
+    googlePay: "buy",
+  },
+  paymentMethodOrder: ["apple_pay", "google_pay"],
 };
 
 const CheckoutPage = ({ workshop }) => {
@@ -104,8 +55,6 @@ const CheckoutPage = ({ workshop }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { showAlert } = useGlobalAlertContext();
-
-  const completeEnrollmentAction = () => {};
 
   const onConfirm = async (event) => {
     if (loading) {
@@ -207,9 +156,7 @@ const CheckoutPage = ({ workshop }) => {
               (value) => value === true,
             ),
         })}
-        onSubmit={async (values) => {
-          await completeEnrollmentAction(values);
-        }}
+        onSubmit={() => {}}
       >
         {(formikProps) => {
           return (
