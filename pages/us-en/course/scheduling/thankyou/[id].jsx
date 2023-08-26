@@ -22,26 +22,9 @@ import ErrorPage from "next/error";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
+
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
-
-/* export async function getServerSideProps(context) {
-  const { query, req, res } = context;
-  const { id } = query;
-  const { data, attendeeRecord } = await api.get({
-    path: "getWorkshopByAttendee",
-    param: {
-      aid: id,
-      skipcheck: 1,
-    },
-  });
-  return {
-    props: {
-      workshop: data,
-      attendeeRecord,
-    },
-  };
-} */
 
 const renderVideo = (productTypeId) => {
   switch (productTypeId) {
