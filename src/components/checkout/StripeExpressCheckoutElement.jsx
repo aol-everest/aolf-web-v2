@@ -45,6 +45,10 @@ const options = {
     applePay: "buy",
     googlePay: "buy",
   },
+  wallets: {
+    applePay: "always",
+    googlePay: "always",
+  },
   paymentMethodOrder: ["apple_pay", "google_pay"],
 };
 
