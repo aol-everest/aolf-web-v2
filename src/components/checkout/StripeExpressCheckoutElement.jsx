@@ -9,6 +9,12 @@ import { loadStripe } from "@stripe/stripe-js";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { api } from "@utils";
+import { useGlobalAlertContext } from "@contexts";
+import { ALERT_TYPES } from "@constants";
+import queryString from "query-string";
+import { filterAllowedParams, removeNull } from "@utils/utmParam";
+import { useRouter } from "next/router";
 
 const elementsOptions = {
   mode: "payment",
@@ -76,6 +82,7 @@ const elementsOptions = {
     },
   },
 };
+
 export const StripeExpressCheckoutElement = ({ workshop }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   return (
@@ -94,9 +101,11 @@ const options = {
 const CheckoutPage = ({ workshop }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
   // Optional: If you're doing custom animations, hide the Element
   const [visibility, setVisibility] = useState("hidden");
-  const [errorMessage, setErrorMessage] = useState();
+  const [loading, setLoading] = useState(false);
+  const { showAlert } = useGlobalAlertContext();
 
   const completeEnrollmentAction = () => {};
 
@@ -110,42 +119,72 @@ const CheckoutPage = ({ workshop }) => {
   };
 
   const onConfirm = async (event) => {
-    if (!stripe) {
-      // Stripe.js hasn't loaded yet.
+    if (loading) {
+      return null;
+    }
+    if (!stripe || !elements) {
+      // Stripe.js hasn't yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
     const { error: submitError } = await elements.submit();
     if (submitError) {
-      setErrorMessage(submitError.message);
-      return;
+      throw submitError;
     }
+    try {
+      // Create the PaymentIntent and obtain clientSecret
+      const {
+        stripeIntentObj,
+        status,
+        data,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: "createIntentForExpressCheckout",
+        body: {
+          workshopId: workshop.id,
+        },
+        isUnauthorized: true,
+      });
 
-    // Create the PaymentIntent and obtain clientSecret
-    const res = await fetch("/create-intent", {
-      method: "POST",
-    });
-    const { client_secret: clientSecret } = await res.json();
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
 
-    // Confirm the PaymentIntent using the details collected by the Express Checkout Element
-    const { error } = await stripe.confirmPayment({
-      // `elements` instance used to create the Express Checkout Element
-      elements,
-      // `clientSecret` from the created PaymentIntent
-      clientSecret,
-      confirmParams: {
-        return_url: "https://example.com/order/123/complete",
-      },
-    });
+      let filteredParams = {
+        ctype: workshop.productTypeId,
+        ...filterAllowedParams(router.query),
+      };
+      filteredParams = removeNull(filteredParams);
+      const returnUrl = `${
+        window.location.origin
+      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
+        filteredParams,
+      )}`;
 
-    if (error) {
-      // This point is only reached if there's an immediate error when
-      // confirming the payment. Show the error to your customer (for example, payment details incomplete)
-      setErrorMessage(error.message);
-    } else {
-      // The payment UI automatically closes with a success animation.
-      // Your customer is redirected to your `return_url`.
+      // Confirm the PaymentIntent using the details collected by the Express Checkout Element
+      const { error } = await stripe.confirmPayment({
+        // `elements` instance used to create the Express Checkout Element
+        elements,
+        // `clientSecret` from the created PaymentIntent
+        clientSecret: stripeIntentObj.client_secret,
+        confirmParams: {
+          return_url: "https://example.com/order/123/complete",
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
     }
   };
   const questionnaireArray = workshop.complianceQuestionnaire
@@ -202,6 +241,7 @@ const CheckoutPage = ({ workshop }) => {
                   onReady={onReady}
                   options={options}
                   onClick={onClick}
+                  onConfirm={onConfirm}
                 />
               </div>
             </>
