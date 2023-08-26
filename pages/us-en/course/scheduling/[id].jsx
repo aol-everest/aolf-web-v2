@@ -19,10 +19,10 @@ import * as Yup from "yup";
 import ErrorPage from "next/error";
 import { useQuery } from "react-query";
 import { filterAllowedParams, removeNull } from "@utils/utmParam";
-import { ScheduleInput } from "@components/scheduleInput/ScheduleInput";
-import { ScheduleDiscountInput } from "@components/scheduleDiscountInput/ScheduleDiscountInput";
-import { ScheduleAgreementForm } from "@components/scheduleAgreementForm/ScheduleAgreementForm";
-import { SchedulePhoneInput } from "@components/schedulingPhoneInput/SchedulingPhoneInput";
+import { ScheduleInput } from "@components/scheduleInput";
+import { ScheduleDiscountInput } from "@components/scheduleDiscountInput";
+import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
+import { SchedulePhoneInput } from "@components/schedulingPhoneInput";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
