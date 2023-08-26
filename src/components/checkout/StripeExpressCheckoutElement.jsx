@@ -16,7 +16,6 @@ import queryString from "query-string";
 import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { useRouter } from "next/router";
 import Style from "./StripeExpressCheckoutElement.module.scss";
-import classNames from "classnames";
 
 export const StripeExpressCheckoutElement = ({ workshop }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
@@ -25,7 +24,7 @@ export const StripeExpressCheckoutElement = ({ workshop }) => {
   });
   const elementsOptions = {
     mode: "payment",
-    amount: fee,
+    amount: fee * 100,
     currency: "usd",
     appearance: {
       theme: "stripe",
