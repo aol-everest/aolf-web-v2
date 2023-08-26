@@ -95,9 +95,7 @@ export const StripeExpressCheckoutElement = ({ workshop }) => {
 };
 
 const options = {
-  buttonTheme: { applePay: "black" },
-  buttonType: { applePay: "buy" },
-  wallets: { applePay: "always" },
+  wallets: { linkPay: "never" },
 };
 
 const CheckoutPage = ({ workshop }) => {
@@ -184,14 +182,14 @@ const CheckoutPage = ({ workshop }) => {
         value: false,
       }))
     : [];
-  const onClick = ({ resolve }) => {
+  /* const onClick = ({ resolve }) => {
     const options = {
       emailRequired: true,
       phoneNumberRequired: true,
       billingAddressRequired: true,
     };
     resolve(options);
-  };
+  }; */
   return (
     <div>
       <Formik
@@ -238,7 +236,6 @@ const CheckoutPage = ({ workshop }) => {
                 ></div>
                 <ExpressCheckoutElement
                   options={options}
-                  onClick={onClick}
                   onConfirm={onConfirm}
                 />
               </div>
