@@ -9,9 +9,35 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 import Select2 from "react-select2-wrapper";
+import { useQuery } from "react-query";
+import { StripeExpressCheckoutElement } from "@components/checkout/StripeExpressCheckoutElement";
+import "flatpickr/dist/flatpickr.min.css";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
+
+const timezones = [
+  {
+    timezone: "US/Eastern",
+    text: "Eastern Time - US & Canada",
+    id: "EST",
+  },
+  {
+    timezone: "US/Central",
+    text: "Central Time - US & Canada",
+    id: "CST",
+  },
+  {
+    timezone: "US/Mountain",
+    text: "Mountain Time - US & Canada",
+    id: "MST",
+  },
+  {
+    timezone: "America/Los_Angeles",
+    text: "Pacific Time - US & Canada",
+    id: "PST",
+  },
+];
 
 const SchedulingRange = () => {
   const router = useRouter();
@@ -19,68 +45,88 @@ const SchedulingRange = () => {
   const [courseTypeFilter] = useQueryString("ctype", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
-  const [timezoneFilter, setTimezoneFilter] = useState("EST");
-  const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
+  const [mode, setMode] = useQueryString("mode", {
+    defaultValue: "ONLINE",
+  });
+  const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
+    defaultValue: "EST",
+  });
+  const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [workshops, setWorkshops] = useState([]);
+  const [activeWorkshop, setActiveWorkshop] = useState(null);
   const [selectedWorkshop, setSelectedWorkshop] = useState({});
+  const [currentMonthYear, setCurrentMonthYear] = useQueryString("my", {
+    defaultValue: `${moment().year()}-${moment().month() + 1}`,
+  });
 
-  const timezones = [
-    {
-      timezone: "US/Eastern",
-      text: "Eastern Time - US & Canada",
-      id: "EST",
-    },
-    {
-      timezone: "US/Central",
-      text: "Central Time - US & Canada",
-      id: "CST",
-    },
-    {
-      timezone: "US/Mountain",
-      text: "Mountain Time - US & Canada",
-      id: "MST",
-    },
-    {
-      timezone: "America/Los_Angeles",
-      text: "Pacific Time - US & Canada",
-      id: "PST",
-    },
-  ];
-
-  useEffect(() => {
-    const getWorkshops = async () => {
+  const { data, isLoading, isError, error } = useQuery(
+    [
+      "workshopMonthCalendar",
+      currentMonthYear,
+      courseTypeFilter,
+      timezoneFilter,
+      mode,
+    ],
+    async () => {
       const response = await api.get({
-        path: "workshops",
+        path: "workshopMonthCalendar",
         param: {
-          timeZone: timezoneFilter,
-          sdate: selectedDates?.[0],
-          org: "AOL",
-          timingsRequired: true,
-          mode: COURSE_MODES.ONLINE.value,
           ctype:
             COURSE_TYPES[courseTypeFilter]?.value ||
             COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+          month: currentMonthYear,
+          timeZone: timezoneFilter,
+          mode: COURSE_MODES[mode]?.value || COURSE_MODES.ONLINE.value,
         },
       });
-      if (response?.data) {
-        const newData = groupBy(response?.data, "eventStartDateTimeGMT");
-        setLoading(false);
-        setWorkshops(newData);
+      const result = Object.keys(response.data).map((key) => {
+        return {
+          from: key,
+          to: moment(key, "YYYY-MM-DD").add(2, "days").format("YYYY-MM-DD"),
+        };
+      });
+      return result;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
-        setTimeout(() => {
-          const timeContainer = document.querySelector(
-            ".scheduling-modal__content-option",
-          );
-          if (timeContainer) {
-            timeContainer.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }
-        }, 100);
-      }
-    };
+  const getWorkshops = async () => {
+    const response = await api.get({
+      path: "workshops",
+      param: {
+        timeZone: timezoneFilter,
+        sdate: selectedDates?.[0],
+        org: "AOL",
+        timingsRequired: true,
+        mode: COURSE_MODES.ONLINE.value,
+        ctype:
+          COURSE_TYPES[courseTypeFilter]?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+      },
+    });
+    if (response?.data) {
+      const newData = groupBy(response?.data, "eventStartDateTimeGMT");
+      setLoading(false);
+      setWorkshops(newData);
+
+      setTimeout(() => {
+        const timeContainer = document.querySelector(
+          ".scheduling-modal__content-option",
+        );
+        if (timeContainer) {
+          timeContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }, 100);
+    }
+  };
+
+  useEffect(() => {
     if (selectedDates?.length > 0) {
       setLoading(true);
       getWorkshops();
@@ -96,9 +142,26 @@ const SchedulingRange = () => {
     setSelectedDates([selectedDate, tomorrowDate, dayAfterTomorrowDate]);
   };
 
+  const getWorkshopDetails = async (workshopId) => {
+    setLoading(true);
+    const response = await await api.get({
+      path: "workshopDetail",
+      param: {
+        id: workshopId,
+        rp: "checkout",
+      },
+      isUnauthorized: true,
+    });
+    if (response?.data) {
+      setActiveWorkshop(response?.data);
+    }
+    setLoading(false);
+  };
+
   const handleWorkshopSelect = (workshop) => {
     setSelectedWorkshop(workshop);
     setSelectedWorkshopId(workshop?.id);
+    getWorkshopDetails(workshop?.id);
   };
 
   const goToPaymentModal = () => {
@@ -107,11 +170,16 @@ const SchedulingRange = () => {
     });
   };
 
+  const onMonthChangeAction = (e, d, instance) => {
+    setCurrentMonthYear(`${instance.currentYear}-${instance.currentMonth + 1}`);
+  };
+
   return (
     <>
       <header className="checkout-header">
         <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
       </header>
+      {loading && <div className="cover-spin"></div>}
       <main className="main">
         <div className="scheduling-modal__step">
           <div id="modal-header" className="scheduling-modal__header">
@@ -166,6 +234,7 @@ const SchedulingRange = () => {
                       dateFormat: "Y-m-d",
                       defaultDate: [],
                     }}
+                    onMonthChange={onMonthChangeAction}
                   />
                 </label>
               </div>
@@ -236,7 +305,7 @@ const SchedulingRange = () => {
                 </div> */}
 
                 <ul className="scheduling-modal__content-options">
-                  {!loading && Object.keys(workshops).length ? (
+                  {Object.keys(workshops).length > 0 &&
                     Object.keys(workshops)?.map((workshop, index) => {
                       const items = workshops[workshop];
                       const firstItem = items?.[0];
@@ -293,20 +362,18 @@ const SchedulingRange = () => {
                           </div>
                         </li>
                       );
-                    })
-                  ) : loading ? (
-                    <li>
-                      <div className="cover-spin"></div>
+                    })}
+                  {Object.keys(workshops).length === 0 && (
+                    <li className="scheduling-modal__content-option scheduling-no-data">
+                      No Workshop Found
                     </li>
-                  ) : (
-                    Object.keys(workshops).length === 0 && (
-                      <li className="scheduling-modal__content-option scheduling-no-data">
-                        No Workshop Found
-                      </li>
-                    )
                   )}
                 </ul>
               </div>
+
+              {activeWorkshop && activeWorkshop.id && (
+                <StripeExpressCheckoutElement workshop={activeWorkshop} />
+              )}
 
               <button
                 className="scheduling-modal__continue"
