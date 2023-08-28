@@ -243,7 +243,7 @@ const SchedulingRange = () => {
       <header className="checkout-header">
         <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
       </header>
-      {loading && <div className="cover-spin"></div>}
+      {(loading || isLoading) && <div className="cover-spin"></div>}
       <main className="main">
         <div className="scheduling-modal__step">
           <div id="modal-header" className="scheduling-modal__header">
