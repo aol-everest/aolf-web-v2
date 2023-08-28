@@ -236,6 +236,7 @@ const SchedulingRange = () => {
                       monthSelectorType: "static",
                       dateFormat: "Y-m-d",
                       defaultDate: [],
+                      enable: data || [],
                     }}
                     onMonthChange={onMonthChangeAction}
                   />
