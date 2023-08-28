@@ -45,9 +45,7 @@ const SchedulingRange = () => {
   const [courseTypeFilter] = useQueryString("ctype", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
-  const [mode, setMode] = useQueryString("mode", {
-    defaultValue: "ONLINE",
-  });
+  const [mode, setMode] = useQueryString("mode");
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
   });
@@ -69,16 +67,19 @@ const SchedulingRange = () => {
       mode,
     ],
     async () => {
+      let param = {
+        ctype:
+          COURSE_TYPES[courseTypeFilter]?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+        month: currentMonthYear,
+        timeZone: timezoneFilter,
+      };
+      if (mode) {
+        param = { ...param, mode };
+      }
       const response = await api.get({
         path: "workshopMonthCalendar",
-        param: {
-          ctype:
-            COURSE_TYPES[courseTypeFilter]?.value ||
-            COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-          month: currentMonthYear,
-          timeZone: timezoneFilter,
-          mode: COURSE_MODES[mode]?.value || COURSE_MODES.ONLINE.value,
-        },
+        param,
       });
       const result = Object.keys(response.data).map((key) => {
         return {
@@ -94,17 +95,20 @@ const SchedulingRange = () => {
   );
 
   const getWorkshops = async () => {
+    let param = {
+      timeZone: timezoneFilter,
+      sdate: selectedDates?.[0],
+      timingsRequired: true,
+      ctype:
+        COURSE_TYPES[courseTypeFilter]?.value ||
+        COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+    };
+    if (mode) {
+      param = { ...param, mode };
+    }
     const response = await api.get({
       path: "workshops",
-      param: {
-        timeZone: timezoneFilter,
-        sdate: selectedDates?.[0],
-        timingsRequired: true,
-        mode: COURSE_MODES.ONLINE.value,
-        ctype:
-          COURSE_TYPES[courseTypeFilter]?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-      },
+      param,
     });
     if (response?.data) {
       const newData = groupBy(response?.data, "eventStartDateTimeGMT");
@@ -276,7 +280,7 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="online-type-course"
                       name="type-course"
-                      value={mode}
+                      value={COURSE_MODES.ONLINE.value}
                       checked={mode === COURSE_MODES.ONLINE.value}
                       onChange={() =>
                         handleSelectMode(COURSE_MODES.ONLINE.value)
@@ -294,7 +298,7 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="person-type-course"
                       name="type-course"
-                      value={mode}
+                      value={COURSE_MODES.IN_PERSON.value}
                       checked={mode === COURSE_MODES.IN_PERSON.value}
                       onChange={() =>
                         handleSelectMode(COURSE_MODES.IN_PERSON.value)
@@ -314,7 +318,7 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="both-type-course"
                       name="type-course"
-                      value={mode || ""}
+                      value={null}
                       checked={!mode}
                       onChange={() => handleSelectMode(null)}
                     />
