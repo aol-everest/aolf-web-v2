@@ -42,11 +42,12 @@ const timezones = [
 const SchedulingRange = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [selectedMode, setSelectedMode] = useState(COURSE_MODES.ONLINE.value);
   const [courseTypeFilter] = useQueryString("ctype", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
   const [mode, setMode] = useQueryString("mode", {
-    defaultValue: "ONLINE",
+    defaultValue: COURSE_MODES.ONLINE.value,
   });
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
@@ -72,6 +73,9 @@ const SchedulingRange = () => {
       const response = await api.get({
         path: "workshopMonthCalendar",
         param: {
+          sdate: selectedDates?.[0],
+          org: "AOL",
+          timingsRequired: true,
           ctype:
             COURSE_TYPES[courseTypeFilter]?.value ||
             COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
@@ -131,7 +135,7 @@ const SchedulingRange = () => {
       setLoading(true);
       getWorkshops();
     }
-  }, [selectedDates, timezoneFilter]);
+  }, [selectedDates, timezoneFilter, selectedMode]);
 
   const handleDateChange = (date) => {
     const selectedDate = moment(date).format("YYYY-MM-DD");
@@ -168,6 +172,10 @@ const SchedulingRange = () => {
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/${selectedWorkshopId}`,
     });
+  };
+
+  const handleSelectMode = (value) => {
+    setSelectedMode(value);
   };
 
   const onMonthChangeAction = (e, d, instance) => {
@@ -262,7 +270,7 @@ const SchedulingRange = () => {
                 <h3>Available Class Times</h3>
                 <p>Based on the selected date range</p>
 
-                {/* <div className="scheduling-types__container">
+                <div className="scheduling-types__container">
                   <label
                     className="scheduling-types__label"
                     for="online-type-course"
@@ -272,7 +280,11 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="online-type-course"
                       name="type-course"
-                      value="online"
+                      value={selectedMode}
+                      checked={selectedMode === COURSE_MODES.ONLINE.value}
+                      onChange={() =>
+                        handleSelectMode(COURSE_MODES.ONLINE.value)
+                      }
                     />
                     <span className="scheduling-types__background">Online</span>
                   </label>
@@ -286,23 +298,33 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="person-type-course"
                       name="type-course"
-                      value="in-person"
+                      value={selectedMode}
+                      checked={selectedMode === COURSE_MODES.IN_PERSON.value}
+                      onChange={() =>
+                        handleSelectMode(COURSE_MODES.IN_PERSON.value)
+                      }
                     />
-                    <span className="scheduling-types__background">In-person</span>
+                    <span className="scheduling-types__background">
+                      In-person
+                    </span>
                   </label>
 
-                  <label className="scheduling-types__label" for="both-type-course">
+                  <label
+                    className="scheduling-types__label"
+                    for="both-type-course"
+                  >
                     <input
                       type="radio"
                       className="scheduling-types__input"
                       id="both-type-course"
                       name="type-course"
-                      value="both"
-                      checked
+                      value={selectedMode || ""}
+                      checked={!selectedMode}
+                      onChange={() => handleSelectMode(null)}
                     />
                     <span className="scheduling-types__background">Both</span>
                   </label>
-                </div> */}
+                </div>
 
                 <ul className="scheduling-modal__content-options">
                   {Object.keys(workshops).length > 0 &&
