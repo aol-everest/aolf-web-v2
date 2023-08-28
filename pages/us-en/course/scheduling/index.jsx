@@ -136,7 +136,7 @@ const SchedulingRange = () => {
     }
   }, [selectedDates, timezoneFilter, mode]);
 
-  const handleDateChange = (date) => {
+  /* const handleDateChange = (date) => {
     const selectedDate = moment(date).format("YYYY-MM-DD");
     const tomorrowDate = moment(date).add(1, "days").format("YYYY-MM-DD");
     const dayAfterTomorrowDate = moment(date)
@@ -147,7 +147,7 @@ const SchedulingRange = () => {
     setActiveWorkshop(null);
     setSelectedWorkshop(null);
     setSelectedWorkshopId(null);
-  };
+  }; */
 
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
@@ -195,6 +195,49 @@ const SchedulingRange = () => {
     setCurrentMonthYear(`${instance.currentYear}-${instance.currentMonth + 1}`);
   };
 
+  const getDates = (startDate, stopDate) => {
+    const addDays = (date, days) => {
+      date.setDate(date.getDate() + days);
+      return date;
+    };
+    let dateArray = [];
+    let currentDate = startDate;
+    while (currentDate <= stopDate) {
+      dateArray.push(new Date(currentDate));
+      currentDate = addDays(new Date(currentDate), 1);
+    }
+    return dateArray;
+  };
+
+  const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
+    if (selectedDates.length > 0 && dateStr !== "update") {
+      let today = new Date(selectedDates[selectedDates.length - 1]);
+      let intervalSelected = [];
+      instance.config._enable.forEach((item) => {
+        if (
+          new Date(today).getTime() >= item.from.getTime() &&
+          new Date(today).setHours(0, 0, 0, 0) <= item.to.getTime()
+        ) {
+          intervalSelected = getDates(item.from, item.to);
+        }
+      });
+
+      instance.selectedDates = [...intervalSelected];
+      selectedDates = [...intervalSelected];
+
+      instance.setDate(intervalSelected);
+      setSelectedDates(
+        intervalSelected.map((d) => moment(d).format("YYYY-MM-DD")),
+      );
+
+      /* const lastItem =
+        selectedDates?.length > 0
+          ? selectedDates[selectedDates?.length - 1]
+          : selectedDates[0];
+      handleDateChange(lastItem); */
+    }
+  };
+
   return (
     <>
       <header className="checkout-header">
@@ -238,13 +281,7 @@ const SchedulingRange = () => {
                 <label>
                   <Flatpickr
                     data-enable-time
-                    onChange={(selectedDates) => {
-                      const lastItem =
-                        selectedDates?.length > 0
-                          ? selectedDates[selectedDates?.length - 1]
-                          : selectedDates[0];
-                      handleDateChange(lastItem);
-                    }}
+                    onChange={handleFlatpickrOnChange}
                     value={selectedDates}
                     options={{
                       allowInput: false,
