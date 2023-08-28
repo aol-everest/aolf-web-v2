@@ -23,6 +23,7 @@ import { ScheduleInput } from "@components/scheduleInput";
 import { ScheduleDiscountInput } from "@components/scheduleDiscountInput";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
 import { SchedulePhoneInput } from "@components/schedulingPhoneInput";
+import { replaceRouteWithUTMQuery } from "@service";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -368,30 +369,39 @@ const SchedulingPaymentForm = ({
         throw new Error(errorMessage);
       }
 
-      if (data && data.totalOrderAmount > 0) {
-        let filteredParams = {
-          ctype: productTypeId,
-          page: "ty",
-          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-          campaignid,
-          mbsy,
-          ...filterAllowedParams(router.query),
-        };
-        filteredParams = removeNull(filteredParams);
-        const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-          data.attendeeId
-        }?${queryString.stringify(filteredParams)}`;
-        const result = await stripe.confirmPayment({
-          //`Elements` instance that was used to create the Payment Element
-          elements,
-          clientSecret: stripeIntentObj.client_secret,
-          confirmParams: {
-            return_url: returnUrl,
-          },
-        });
-        if (result.error) {
-          // Show error to your customer (for example, payment details incomplete)
-          throw new Error(result.error.message);
+      if (data) {
+        if (data.totalOrderAmount > 0) {
+          let filteredParams = {
+            ctype: productTypeId,
+            page: "ty",
+            type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+            campaignid,
+            mbsy,
+            ...filterAllowedParams(router.query),
+          };
+          filteredParams = removeNull(filteredParams);
+          const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+            data.attendeeId
+          }?${queryString.stringify(filteredParams)}`;
+          const result = await stripe.confirmPayment({
+            //`Elements` instance that was used to create the Payment Element
+            elements,
+            clientSecret: stripeIntentObj.client_secret,
+            confirmParams: {
+              return_url: returnUrl,
+            },
+          });
+          if (result.error) {
+            // Show error to your customer (for example, payment details incomplete)
+            throw new Error(result.error.message);
+          }
+        } else {
+          replaceRouteWithUTMQuery(router, {
+            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+            query: {
+              ctype: workshop.productTypeId,
+            },
+          });
         }
       }
 
@@ -537,11 +547,14 @@ const SchedulingPaymentForm = ({
                     ></SchedulePhoneInput>
                   </ul>
 
-                  <hr />
+                  {fee > 0 && (
+                    <>
+                      <hr />
+                      <h3>Pay with</h3>
 
-                  <h3>Pay with</h3>
-
-                  <PaymentElement />
+                      <PaymentElement />
+                    </>
+                  )}
                 </form>
               </div>
 
