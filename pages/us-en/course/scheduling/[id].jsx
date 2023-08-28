@@ -223,10 +223,11 @@ const SchedulingPaymentForm = ({
     coTeacher1Name,
     phone1,
     email,
-    streetAddress1,
-    streetAddress2,
-    country,
-    city,
+    locationCity,
+    locationStreet,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
     mode,
   } = workshop;
 
@@ -565,9 +566,6 @@ const SchedulingPaymentForm = ({
                       {title}
                     </h5>
                     <div className="scheduling-modal__content-total-date-time">
-                      <div className="scheduling-modal__content-ranges-text-with-clock">
-                        Daily
-                      </div>
                       <div className="scheduling-modal__content-total-time">
                         {tConvert(eventStartTime, true)} -{" "}
                         {tConvert(eventEndTime, true)}
@@ -598,9 +596,17 @@ const SchedulingPaymentForm = ({
                         {mode === COURSE_MODES.ONLINE.name ? (
                           mode
                         ) : (
-                          <a href="#" target="_blank" rel="noopener noreferrer">
-                            {`${streetAddress1 || ""} ${streetAddress2 || ""}
-                          ${city || ""} ${country || ""}`}
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${
+                              locationStreet || ""
+                            }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {`${locationStreet || ""} ${locationCity || ""},
+                          ${locationProvince || ""} ${
+                              locationPostalCode || ""
+                            }`}
                           </a>
                         )}
                       </p>

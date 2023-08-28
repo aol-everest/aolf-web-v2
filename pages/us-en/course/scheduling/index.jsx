@@ -404,10 +404,6 @@ const SchedulingRange = () => {
                               <span> Time ranges #{index + 1}</span>
                             </label>
 
-                            <p className="scheduling-modal__content-ranges-text-with-clock">
-                              Daily
-                            </p>
-
                             <ul className="scheduling-modal__content-ranges-variants">
                               {firstItem?.timings &&
                                 firstItem.timings.map((time, i) => {
