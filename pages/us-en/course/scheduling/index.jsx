@@ -143,6 +143,10 @@ const SchedulingRange = () => {
       .add(2, "days")
       .format("YYYY-MM-DD");
     setSelectedDates([selectedDate, tomorrowDate, dayAfterTomorrowDate]);
+    setWorkshops([]);
+    setActiveWorkshop(null);
+    setSelectedWorkshop(null);
+    setSelectedWorkshopId(null);
   };
 
   const getWorkshopDetails = async (workshopId) => {
@@ -204,7 +208,7 @@ const SchedulingRange = () => {
             </svg>
             <div className="scheduling-modal__header-text">
               <h3>
-                {selectedWorkshop.title ||
+                {selectedWorkshop?.title ||
                   COURSE_TYPES[courseTypeFilter]?.name ||
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </h3>
