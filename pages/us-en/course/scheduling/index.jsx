@@ -56,7 +56,7 @@ const SchedulingRange = () => {
   const [workshops, setWorkshops] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
   const [selectedWorkshop, setSelectedWorkshop] = useState({});
-  const [currentMonthYear, setCurrentMonthYear] = useQueryString("my", {
+  const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
 
