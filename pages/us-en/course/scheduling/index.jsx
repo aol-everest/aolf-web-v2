@@ -42,12 +42,11 @@ const timezones = [
 const SchedulingRange = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [selectedMode, setSelectedMode] = useState(COURSE_MODES.ONLINE.value);
   const [courseTypeFilter] = useQueryString("ctype", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
   const [mode, setMode] = useQueryString("mode", {
-    defaultValue: COURSE_MODES.ONLINE.value,
+    defaultValue: "ONLINE",
   });
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
@@ -73,9 +72,6 @@ const SchedulingRange = () => {
       const response = await api.get({
         path: "workshopMonthCalendar",
         param: {
-          sdate: selectedDates?.[0],
-          org: "AOL",
-          timingsRequired: true,
           ctype:
             COURSE_TYPES[courseTypeFilter]?.value ||
             COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
@@ -103,7 +99,6 @@ const SchedulingRange = () => {
       param: {
         timeZone: timezoneFilter,
         sdate: selectedDates?.[0],
-        org: "AOL",
         timingsRequired: true,
         mode: COURSE_MODES.ONLINE.value,
         ctype:
@@ -135,7 +130,7 @@ const SchedulingRange = () => {
       setLoading(true);
       getWorkshops();
     }
-  }, [selectedDates, timezoneFilter, selectedMode]);
+  }, [selectedDates, timezoneFilter, mode]);
 
   const handleDateChange = (date) => {
     const selectedDate = moment(date).format("YYYY-MM-DD");
@@ -175,7 +170,7 @@ const SchedulingRange = () => {
   };
 
   const handleSelectMode = (value) => {
-    setSelectedMode(value);
+    setMode(value);
   };
 
   const onMonthChangeAction = (e, d, instance) => {
@@ -280,8 +275,8 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="online-type-course"
                       name="type-course"
-                      value={selectedMode}
-                      checked={selectedMode === COURSE_MODES.ONLINE.value}
+                      value={mode}
+                      checked={mode === COURSE_MODES.ONLINE.value}
                       onChange={() =>
                         handleSelectMode(COURSE_MODES.ONLINE.value)
                       }
@@ -298,8 +293,8 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="person-type-course"
                       name="type-course"
-                      value={selectedMode}
-                      checked={selectedMode === COURSE_MODES.IN_PERSON.value}
+                      value={mode}
+                      checked={mode === COURSE_MODES.IN_PERSON.value}
                       onChange={() =>
                         handleSelectMode(COURSE_MODES.IN_PERSON.value)
                       }
@@ -318,8 +313,8 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="both-type-course"
                       name="type-course"
-                      value={selectedMode || ""}
-                      checked={!selectedMode}
+                      value={mode || ""}
+                      checked={!mode}
                       onChange={() => handleSelectMode(null)}
                     />
                     <span className="scheduling-types__background">Both</span>
