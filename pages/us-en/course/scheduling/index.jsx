@@ -170,6 +170,13 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(workshop?.id);
     getWorkshopDetails(workshop?.id);
   };
+  const handleTimezoneChange = (ev) => {
+    ev.preventDefault();
+    setTimezoneFilter(ev?.target?.value);
+    setActiveWorkshop(null);
+    setSelectedWorkshop(null);
+    setSelectedWorkshopId(null);
+  };
 
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
@@ -179,6 +186,9 @@ const SchedulingRange = () => {
 
   const handleSelectMode = (value) => {
     setMode(value);
+    setActiveWorkshop(null);
+    setSelectedWorkshop(null);
+    setSelectedWorkshopId(null);
   };
 
   const onMonthChangeAction = (e, d, instance) => {
@@ -259,10 +269,7 @@ const SchedulingRange = () => {
                     defaultValue={"EST"}
                     multiple={false}
                     data={timezones}
-                    onChange={(ev) => {
-                      ev.preventDefault();
-                      setTimezoneFilter(ev?.target?.value);
-                    }}
+                    onChange={handleTimezoneChange}
                     value={timezoneFilter}
                   />
                 </label>
