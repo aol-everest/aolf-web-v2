@@ -45,9 +45,7 @@ const SchedulingRange = () => {
   const [courseTypeFilter] = useQueryString("ctype", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
-  const [mode, setMode] = useQueryString("mode", {
-    defaultValue: "ONLINE",
-  });
+  const [mode, setMode] = useQueryString("mode");
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
   });
@@ -56,7 +54,7 @@ const SchedulingRange = () => {
   const [workshops, setWorkshops] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
   const [selectedWorkshop, setSelectedWorkshop] = useState({});
-  const [currentMonthYear, setCurrentMonthYear] = useQueryString("my", {
+  const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
 
@@ -69,16 +67,19 @@ const SchedulingRange = () => {
       mode,
     ],
     async () => {
+      let param = {
+        ctype:
+          COURSE_TYPES[courseTypeFilter]?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+        month: currentMonthYear,
+        timeZone: timezoneFilter,
+      };
+      if (mode) {
+        param = { ...param, mode };
+      }
       const response = await api.get({
         path: "workshopMonthCalendar",
-        param: {
-          ctype:
-            COURSE_TYPES[courseTypeFilter]?.value ||
-            COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-          month: currentMonthYear,
-          timeZone: timezoneFilter,
-          mode: COURSE_MODES[mode]?.value || COURSE_MODES.ONLINE.value,
-        },
+        param,
       });
       const result = Object.keys(response.data).map((key) => {
         return {
@@ -94,18 +95,20 @@ const SchedulingRange = () => {
   );
 
   const getWorkshops = async () => {
+    let param = {
+      timeZone: timezoneFilter,
+      sdate: selectedDates?.[0],
+      timingsRequired: true,
+      ctype:
+        COURSE_TYPES[courseTypeFilter]?.value ||
+        COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+    };
+    if (mode) {
+      param = { ...param, mode };
+    }
     const response = await api.get({
       path: "workshops",
-      param: {
-        timeZone: timezoneFilter,
-        sdate: selectedDates?.[0],
-        org: "AOL",
-        timingsRequired: true,
-        mode: COURSE_MODES.ONLINE.value,
-        ctype:
-          COURSE_TYPES[courseTypeFilter]?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-      },
+      param,
     });
     if (response?.data) {
       const newData = groupBy(response?.data, "eventStartDateTimeGMT");
@@ -131,16 +134,20 @@ const SchedulingRange = () => {
       setLoading(true);
       getWorkshops();
     }
-  }, [selectedDates, timezoneFilter]);
+  }, [selectedDates, timezoneFilter, mode]);
 
-  const handleDateChange = (date) => {
+  /* const handleDateChange = (date) => {
     const selectedDate = moment(date).format("YYYY-MM-DD");
     const tomorrowDate = moment(date).add(1, "days").format("YYYY-MM-DD");
     const dayAfterTomorrowDate = moment(date)
       .add(2, "days")
       .format("YYYY-MM-DD");
     setSelectedDates([selectedDate, tomorrowDate, dayAfterTomorrowDate]);
-  };
+    setWorkshops([]);
+    setActiveWorkshop(null);
+    setSelectedWorkshop(null);
+    setSelectedWorkshopId(null);
+  }; */
 
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
@@ -163,6 +170,13 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(workshop?.id);
     getWorkshopDetails(workshop?.id);
   };
+  const handleTimezoneChange = (ev) => {
+    ev.preventDefault();
+    setTimezoneFilter(ev?.target?.value);
+    setActiveWorkshop(null);
+    setSelectedWorkshop(null);
+    setSelectedWorkshopId(null);
+  };
 
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
@@ -170,8 +184,58 @@ const SchedulingRange = () => {
     });
   };
 
+  const handleSelectMode = (value) => {
+    setMode(value);
+    setActiveWorkshop(null);
+    setSelectedWorkshop(null);
+    setSelectedWorkshopId(null);
+  };
+
   const onMonthChangeAction = (e, d, instance) => {
     setCurrentMonthYear(`${instance.currentYear}-${instance.currentMonth + 1}`);
+  };
+
+  const getDates = (startDate, stopDate) => {
+    const addDays = (date, days) => {
+      date.setDate(date.getDate() + days);
+      return date;
+    };
+    let dateArray = [];
+    let currentDate = startDate;
+    while (currentDate <= stopDate) {
+      dateArray.push(new Date(currentDate));
+      currentDate = addDays(new Date(currentDate), 1);
+    }
+    return dateArray;
+  };
+
+  const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
+    if (selectedDates.length > 0 && dateStr !== "update") {
+      let today = new Date(selectedDates[selectedDates.length - 1]);
+      let intervalSelected = [];
+      instance.config._enable.forEach((item) => {
+        if (
+          new Date(today).getTime() >= item.from.getTime() &&
+          new Date(today).setHours(0, 0, 0, 0) <= item.to.getTime()
+        ) {
+          intervalSelected = getDates(item.from, item.to);
+        }
+      });
+
+      instance.selectedDates = [...intervalSelected];
+      selectedDates = [...intervalSelected];
+
+      instance.setDate(intervalSelected);
+      setSelectedDates(
+        intervalSelected.map((d) => moment(d).format("YYYY-MM-DD")),
+      );
+
+      /* const lastItem =
+        selectedDates?.length > 0
+          ? selectedDates[selectedDates?.length - 1]
+          : selectedDates[0];
+      handleDateChange(lastItem); */
+    }
   };
 
   return (
@@ -179,7 +243,7 @@ const SchedulingRange = () => {
       <header className="checkout-header">
         <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
       </header>
-      {loading && <div className="cover-spin"></div>}
+      {(loading || isLoading) && <div className="cover-spin"></div>}
       <main className="main">
         <div className="scheduling-modal__step">
           <div id="modal-header" className="scheduling-modal__header">
@@ -197,7 +261,7 @@ const SchedulingRange = () => {
             </svg>
             <div className="scheduling-modal__header-text">
               <h3>
-                {selectedWorkshop.title ||
+                {selectedWorkshop?.title ||
                   COURSE_TYPES[courseTypeFilter]?.name ||
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </h3>
@@ -217,13 +281,7 @@ const SchedulingRange = () => {
                 <label>
                   <Flatpickr
                     data-enable-time
-                    onChange={(selectedDates) => {
-                      const lastItem =
-                        selectedDates?.length > 0
-                          ? selectedDates[selectedDates?.length - 1]
-                          : selectedDates[0];
-                      handleDateChange(lastItem);
-                    }}
+                    onChange={handleFlatpickrOnChange}
                     value={selectedDates}
                     options={{
                       allowInput: false,
@@ -233,6 +291,7 @@ const SchedulingRange = () => {
                       monthSelectorType: "static",
                       dateFormat: "Y-m-d",
                       defaultDate: [],
+                      enable: data || [],
                     }}
                     onMonthChange={onMonthChangeAction}
                   />
@@ -247,10 +306,7 @@ const SchedulingRange = () => {
                     defaultValue={"EST"}
                     multiple={false}
                     data={timezones}
-                    onChange={(ev) => {
-                      ev.preventDefault();
-                      setTimezoneFilter(ev?.target?.value);
-                    }}
+                    onChange={handleTimezoneChange}
                     value={timezoneFilter}
                   />
                 </label>
@@ -262,7 +318,7 @@ const SchedulingRange = () => {
                 <h3>Available Class Times</h3>
                 <p>Based on the selected date range</p>
 
-                {/* <div className="scheduling-types__container">
+                <div className="scheduling-types__container">
                   <label
                     className="scheduling-types__label"
                     for="online-type-course"
@@ -272,7 +328,11 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="online-type-course"
                       name="type-course"
-                      value="online"
+                      value={COURSE_MODES.ONLINE.value}
+                      checked={mode === COURSE_MODES.ONLINE.value}
+                      onChange={() =>
+                        handleSelectMode(COURSE_MODES.ONLINE.value)
+                      }
                     />
                     <span className="scheduling-types__background">Online</span>
                   </label>
@@ -286,23 +346,33 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="person-type-course"
                       name="type-course"
-                      value="in-person"
+                      value={COURSE_MODES.IN_PERSON.value}
+                      checked={mode === COURSE_MODES.IN_PERSON.value}
+                      onChange={() =>
+                        handleSelectMode(COURSE_MODES.IN_PERSON.value)
+                      }
                     />
-                    <span className="scheduling-types__background">In-person</span>
+                    <span className="scheduling-types__background">
+                      In-person
+                    </span>
                   </label>
 
-                  <label className="scheduling-types__label" for="both-type-course">
+                  <label
+                    className="scheduling-types__label"
+                    for="both-type-course"
+                  >
                     <input
                       type="radio"
                       className="scheduling-types__input"
                       id="both-type-course"
                       name="type-course"
-                      value="both"
-                      checked
+                      value={null}
+                      checked={!mode}
+                      onChange={() => handleSelectMode(null)}
                     />
                     <span className="scheduling-types__background">Both</span>
                   </label>
-                </div> */}
+                </div>
 
                 <ul className="scheduling-modal__content-options">
                   {Object.keys(workshops).length > 0 &&
@@ -333,10 +403,6 @@ const SchedulingRange = () => {
                             >
                               <span> Time ranges #{index + 1}</span>
                             </label>
-
-                            <p className="scheduling-modal__content-ranges-text-with-clock">
-                              Daily
-                            </p>
 
                             <ul className="scheduling-modal__content-ranges-variants">
                               {firstItem?.timings &&

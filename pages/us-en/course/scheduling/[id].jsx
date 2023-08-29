@@ -23,6 +23,7 @@ import { ScheduleInput } from "@components/scheduleInput";
 import { ScheduleDiscountInput } from "@components/scheduleDiscountInput";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
 import { SchedulePhoneInput } from "@components/schedulingPhoneInput";
+import { replaceRouteWithUTMQuery } from "@service";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -222,10 +223,11 @@ const SchedulingPaymentForm = ({
     coTeacher1Name,
     phone1,
     email,
-    streetAddress1,
-    streetAddress2,
-    country,
-    city,
+    locationCity,
+    locationStreet,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
     mode,
   } = workshop;
 
@@ -368,30 +370,39 @@ const SchedulingPaymentForm = ({
         throw new Error(errorMessage);
       }
 
-      if (data && data.totalOrderAmount > 0) {
-        let filteredParams = {
-          ctype: productTypeId,
-          page: "ty",
-          type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-          campaignid,
-          mbsy,
-          ...filterAllowedParams(router.query),
-        };
-        filteredParams = removeNull(filteredParams);
-        const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-          data.attendeeId
-        }?${queryString.stringify(filteredParams)}`;
-        const result = await stripe.confirmPayment({
-          //`Elements` instance that was used to create the Payment Element
-          elements,
-          clientSecret: stripeIntentObj.client_secret,
-          confirmParams: {
-            return_url: returnUrl,
-          },
-        });
-        if (result.error) {
-          // Show error to your customer (for example, payment details incomplete)
-          throw new Error(result.error.message);
+      if (data) {
+        if (data.totalOrderAmount > 0) {
+          let filteredParams = {
+            ctype: productTypeId,
+            page: "ty",
+            type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+            campaignid,
+            mbsy,
+            ...filterAllowedParams(router.query),
+          };
+          filteredParams = removeNull(filteredParams);
+          const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+            data.attendeeId
+          }?${queryString.stringify(filteredParams)}`;
+          const result = await stripe.confirmPayment({
+            //`Elements` instance that was used to create the Payment Element
+            elements,
+            clientSecret: stripeIntentObj.client_secret,
+            confirmParams: {
+              return_url: returnUrl,
+            },
+          });
+          if (result.error) {
+            // Show error to your customer (for example, payment details incomplete)
+            throw new Error(result.error.message);
+          }
+        } else {
+          replaceRouteWithUTMQuery(router, {
+            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+            query: {
+              ctype: workshop.productTypeId,
+            },
+          });
         }
       }
 
@@ -537,11 +548,14 @@ const SchedulingPaymentForm = ({
                     ></SchedulePhoneInput>
                   </ul>
 
-                  <hr />
+                  {fee > 0 && (
+                    <>
+                      <hr />
+                      <h3>Pay with</h3>
 
-                  <h3>Pay with</h3>
-
-                  <PaymentElement />
+                      <PaymentElement />
+                    </>
+                  )}
                 </form>
               </div>
 
@@ -552,9 +566,6 @@ const SchedulingPaymentForm = ({
                       {title}
                     </h5>
                     <div className="scheduling-modal__content-total-date-time">
-                      <div className="scheduling-modal__content-ranges-text-with-clock">
-                        Daily
-                      </div>
                       <div className="scheduling-modal__content-total-time">
                         {tConvert(eventStartTime, true)} -{" "}
                         {tConvert(eventEndTime, true)}
@@ -585,9 +596,17 @@ const SchedulingPaymentForm = ({
                         {mode === COURSE_MODES.ONLINE.name ? (
                           mode
                         ) : (
-                          <a href="#" target="_blank" rel="noopener noreferrer">
-                            {`${streetAddress1 || ""} ${streetAddress2 || ""}
-                          ${city || ""} ${country || ""}`}
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${
+                              locationStreet || ""
+                            }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {`${locationStreet || ""} ${locationCity || ""},
+                          ${locationProvince || ""} ${
+                              locationPostalCode || ""
+                            }`}
                           </a>
                         )}
                       </p>

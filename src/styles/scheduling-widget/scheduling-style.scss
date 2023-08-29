@@ -1007,7 +1007,7 @@
   align-self: stretch;
   gap: 8px;
 }
-.scheduling-modal__continue {
+button.scheduling-modal__continue {
   margin-top: 16px;
   width: 100%;
   border: none;
@@ -1025,6 +1025,11 @@
   font-weight: 600;
   line-height: 24px;
   text-transform: uppercase;
+}
+button.scheduling-modal__continue:disabled,
+button.scheduling-modal__continue[disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 @media (min-width: 1200px) {
   .scheduling-modal__continue {
