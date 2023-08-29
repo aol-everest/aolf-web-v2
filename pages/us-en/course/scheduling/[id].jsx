@@ -229,6 +229,7 @@ const SchedulingPaymentForm = ({
     locationPostalCode,
     locationCountry,
     mode,
+    timings = [],
   } = workshop;
 
   const questionnaireArray = complianceQuestionnaire
@@ -572,12 +573,16 @@ const SchedulingPaymentForm = ({
                       </div>
                     </div>
                     <div className="scheduling-modal__content-total-dates">
-                      <div className="scheduling-modal__content-total-date">
-                        {dayjs.utc(eventStartDate).format("ddd, D")}
-                      </div>
-                      <div className="scheduling-modal__content-total-date">
-                        {dayjs.utc(eventEndDate).format("ddd, D")}
-                      </div>
+                      {timings.map((t) => {
+                        return (
+                          <div
+                            className="scheduling-modal__content-total-date"
+                            key={t.sfid}
+                          >
+                            {dayjs.utc(t.startDate).format("ddd, D")}
+                          </div>
+                        );
+                      })}
                     </div>
                     <hr />
                     <div className="scheduling-modal__content-total-instructors-wrapper">
