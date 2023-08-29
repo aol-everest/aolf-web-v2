@@ -42,7 +42,7 @@ const timezones = [
 const SchedulingRange = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [courseTypeFilter] = useQueryString("ctype", {
+  const [courseTypeFilter] = useQueryString("courseType", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
   const [mode, setMode] = useQueryString("mode");
@@ -321,7 +321,7 @@ const SchedulingRange = () => {
                 <div className="scheduling-types__container">
                   <label
                     className="scheduling-types__label"
-                    for="online-type-course"
+                    htmlFor="online-type-course"
                   >
                     <input
                       type="radio"
@@ -339,7 +339,7 @@ const SchedulingRange = () => {
 
                   <label
                     className="scheduling-types__label"
-                    for="person-type-course"
+                    htmlFor="person-type-course"
                   >
                     <input
                       type="radio"
@@ -359,7 +359,7 @@ const SchedulingRange = () => {
 
                   <label
                     className="scheduling-types__label"
-                    for="both-type-course"
+                    htmlFor="both-type-course"
                   >
                     <input
                       type="radio"
