@@ -196,6 +196,7 @@ const Course = () => {
     parse: JSON.parse,
   });
 
+  const [cityFilter] = useQueryString("city");
   const [searchKey, setSearchKey] = useState("");
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -335,6 +336,7 @@ const Course = () => {
           instructorFilter,
           activeFilterType,
           onlyWeekend,
+          cityFilter,
         },
       ],
       async ({ pageParam = 1 }) => {
@@ -410,6 +412,12 @@ const Course = () => {
           param = {
             ...param,
             onlyWeekend: onlyWeekend,
+          };
+        }
+        if (cityFilter) {
+          param = {
+            ...param,
+            city: cityFilter,
           };
         }
 
