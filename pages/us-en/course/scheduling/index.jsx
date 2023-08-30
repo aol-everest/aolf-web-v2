@@ -1,3 +1,4 @@
+import React, { useRef } from "react";
 import { COURSE_MODES, COURSE_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
@@ -40,6 +41,7 @@ const timezones = [
 ];
 
 const SchedulingRange = () => {
+  const fp = useRef(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [courseTypeFilter] = useQueryString("courseType", {
@@ -60,7 +62,12 @@ const SchedulingRange = () => {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
 
-  const { data, isLoading, isError, error } = useQuery(
+  const {
+    data: dateAvailable = {},
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
     [
       "workshopMonthCalendar",
       currentMonthYear,
@@ -83,19 +90,23 @@ const SchedulingRange = () => {
         path: "workshopMonthCalendar",
         param,
       });
-      const result = Object.keys(response.data).map((key) => {
-        return {
-          from: key,
-          to: moment(key, "YYYY-MM-DD").add(2, "days").format("YYYY-MM-DD"),
-        };
-      });
-      return result;
+      const defaultDate =
+        Object.keys(response.data).length > 0
+          ? response.data[Object.keys(response.data)[0]]
+          : [];
+      if (fp?.current?.flatpickr && defaultDate.length > 0) {
+        fp.current.flatpickr.jumpToDate(defaultDate[0]);
+        setTimeout(() => {
+          fp.current.flatpickr.setDate(defaultDate, true);
+        }, 10);
+      }
+      return response.data;
     },
     {
       refetchOnWindowFocus: false,
     },
   );
-
+  
   function getGroupedUniqueEventIds(response) {
     const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
       let timings = obj.timings;
@@ -109,6 +120,13 @@ const SchedulingRange = () => {
     }, {});
     return values(pairOfTimingAndEventId);
   }
+
+  const enableDates = Object.keys(dateAvailable).map((key) => {
+    return {
+      from: key,
+      to: dateAvailable[key][dateAvailable[key].length - 1],
+    };
+  });
 
   const getWorkshops = async () => {
     let param = {
@@ -293,6 +311,7 @@ const SchedulingRange = () => {
               <div className="scheduling-modal__content-calendar">
                 <label>
                   <Flatpickr
+                    ref={fp}
                     data-enable-time
                     onChange={handleFlatpickrOnChange}
                     value={selectedDates}
@@ -303,9 +322,8 @@ const SchedulingRange = () => {
                       enableTime: false,
                       monthSelectorType: "static",
                       dateFormat: "Y-m-d",
-                      defaultDate: [],
-                      enable: data || [],
                       minDate: "today",
+                      enable: enableDates || [],
                     }}
                     onMonthChange={onMonthChangeAction}
                   />
