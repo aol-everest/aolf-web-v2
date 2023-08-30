@@ -3,7 +3,7 @@ import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
 import { api, tConvert } from "@utils";
 import dayjs from "dayjs";
-import { groupBy } from "lodash";
+import { groupBy, sortBy, values } from "lodash";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -45,7 +45,9 @@ const SchedulingRange = () => {
   const [courseTypeFilter] = useQueryString("courseType", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
-  const [mode, setMode] = useQueryString("mode");
+  const [mode, setMode] = useQueryString("mode", {
+    defaultValue: COURSE_MODES.ONLINE.value,
+  });
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
   });
@@ -94,6 +96,20 @@ const SchedulingRange = () => {
     },
   );
 
+  function getGroupedUniqueEventIds(response) {
+    const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
+      let timings = obj.timings;
+      timings = sortBy(timings, (obj) => new Date(obj.startDate));
+      const timing_Str = timings.reduce((acc1, obj) => {
+        acc1 += "" + obj.startDate + "" + obj.startTime;
+        return acc1;
+      }, "");
+      acc = { ...acc, [timing_Str]: obj.id };
+      return acc;
+    }, {});
+    return values(pairOfTimingAndEventId);
+  }
+
   const getWorkshops = async () => {
     let param = {
       timeZone: timezoneFilter,
@@ -111,9 +127,12 @@ const SchedulingRange = () => {
       param,
     });
     if (response?.data) {
-      const newData = groupBy(response?.data, "eventStartDateTimeGMT");
+      const selectedSfids = getGroupedUniqueEventIds(response);
+      const finalWorkshops = response?.data.filter((item) =>
+        selectedSfids.includes(item.sfid),
+      );
       setLoading(false);
-      setWorkshops(newData);
+      setWorkshops(finalWorkshops);
 
       setTimeout(() => {
         const timeContainer = document.querySelector(
@@ -265,18 +284,12 @@ const SchedulingRange = () => {
                   COURSE_TYPES[courseTypeFilter]?.name ||
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </h3>
-              <p>9 hours meditation course</p>
             </div>
           </div>
 
           <div id="first-step" className="scheduling-modal__template">
             <div className="scheduling-modal__content-wrapper">
-              <h3>Select a Date Range & Times</h3>
-              <p>
-                Courses are three days and start every Friday, as well as other
-                days during the week. Choose your preferred start date and time
-                zone
-              </p>
+              <h3>Choose Workshop Date & Time</h3>
               <div className="scheduling-modal__content-calendar">
                 <label>
                   <Flatpickr
@@ -292,6 +305,7 @@ const SchedulingRange = () => {
                       dateFormat: "Y-m-d",
                       defaultDate: [],
                       enable: data || [],
+                      minDate: "today",
                     }}
                     onMonthChange={onMonthChangeAction}
                   />
@@ -366,70 +380,82 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="both-type-course"
                       name="type-course"
-                      value={null}
+                      value={""}
                       checked={!mode}
-                      onChange={() => handleSelectMode(null)}
+                      onChange={() => handleSelectMode("")}
                     />
                     <span className="scheduling-types__background">Both</span>
                   </label>
                 </div>
 
                 <ul className="scheduling-modal__content-options">
-                  {Object.keys(workshops).length > 0 &&
-                    Object.keys(workshops)?.map((workshop, index) => {
-                      const items = workshops[workshop];
-                      const firstItem = items?.[0];
-                      const randomWorkshop = Math.floor(
-                        Math.random() * items.length,
-                      );
-                      return (
-                        <li
-                          className="scheduling-modal__content-ranges"
-                          key={firstItem.id}
-                          onClick={() =>
-                            handleWorkshopSelect(items[randomWorkshop])
-                          }
-                        >
-                          <input
-                            type="radio"
-                            id={`time-range-${index + 1}`}
-                            value={selectedWorkshopId}
-                            name="scheduling-options"
-                          />
-                          <div className="scheduling-modal__content-option">
-                            <label
-                              className="scheduling-modal__content-ranges-title"
-                              htmlFor={`time-range-${index + 1}`}
-                            >
-                              <span> Time ranges #{index + 1}</span>
-                            </label>
+                  {workshops?.map((workshop, index) => {
+                    return (
+                      <li
+                        className="scheduling-modal__content-ranges"
+                        key={workshop.id}
+                        onClick={() => handleWorkshopSelect(workshop)}
+                      >
+                        <input
+                          type="radio"
+                          id={`time-range-${index + 1}`}
+                          value={selectedWorkshopId}
+                          name="scheduling-options"
+                        />
+                        <div className="scheduling-modal__content-option">
+                          <label
+                            className="scheduling-modal__content-ranges-title"
+                            htmlFor={`time-range-${index + 1}`}
+                          >
+                            <span>
+                              {workshop.mode}:{" "}
+                              {dayjs
+                                .utc(workshop.eventStartDate)
+                                .format("MMM DD")}{" "}
+                              -{" "}
+                              {dayjs
+                                .utc(workshop.eventEndDate)
+                                .format("MMM DD")}
+                            </span>
+                          </label>
+                          {workshop.mode !== COURSE_MODES.ONLINE.name && (
+                            <p>
+                              Location:{" "}
+                              {`${workshop.locationStreet || ""} ${
+                                workshop.locationCity || ""
+                              },
+                              ${workshop.locationProvince || ""} ${
+                                workshop.locationPostalCode || ""
+                              }`}
+                            </p>
+                          )}
 
-                            <ul className="scheduling-modal__content-ranges-variants">
-                              {firstItem?.timings &&
-                                firstItem.timings.map((time, i) => {
-                                  return (
-                                    <li
-                                      className="scheduling-modal__content-ranges-row"
-                                      key={i}
-                                    >
-                                      <div className="scheduling-modal__content-ranges-row-date">
-                                        {dayjs
-                                          .utc(time.startDate)
-                                          .format("ddd, D")}
-                                      </div>
-                                      <div className="scheduling-modal__content-ranges-row-time">
-                                        {tConvert(time.startTime, true)} -{" "}
-                                        {tConvert(time.endTime, true)}
-                                      </div>
-                                    </li>
-                                  );
-                                })}
-                            </ul>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  {Object.keys(workshops).length === 0 && (
+                          <ul className="scheduling-modal__content-ranges-variants">
+                            {workshop?.timings &&
+                              workshop.timings.map((time, i) => {
+                                return (
+                                  <li
+                                    className="scheduling-modal__content-ranges-row"
+                                    key={i}
+                                  >
+                                    <div className="scheduling-modal__content-ranges-row-date">
+                                      {dayjs
+                                        .utc(time.startDate)
+                                        .format("ddd, D")}
+                                    </div>
+                                    <div className="scheduling-modal__content-ranges-row-time">
+                                      {tConvert(time.startTime, true)} -{" "}
+                                      {tConvert(time.endTime, true)}
+                                    </div>
+                                  </li>
+                                );
+                              })}
+                          </ul>
+                        </div>
+                      </li>
+                    );
+                  })}
+                  {workshops.length === 0 && (
                     <li className="scheduling-modal__content-option scheduling-no-data">
                       No Workshop Found
                     </li>

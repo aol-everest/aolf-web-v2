@@ -23,7 +23,7 @@ export const OnlineMeetup = () => {
             Getting your tech ready in advance
           </h3>
           <p className="journey-starts__step-text">
-            Download Zoom - When you clock on the zoom call link, it will prompt
+            Download Zoom - When you click on the zoom call link, it will prompt
             you to download the Zoom app.
           </p>
         </div>
