@@ -106,7 +106,7 @@ const SchedulingRange = () => {
       refetchOnWindowFocus: false,
     },
   );
-  
+
   function getGroupedUniqueEventIds(response) {
     const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
       let timings = obj.timings;
