@@ -75,6 +75,12 @@ const CheckoutPage = ({ workshop }) => {
     }
     try {
       // Create the PaymentIntent and obtain clientSecret
+      let filteredParams = {
+        ctype: workshop.productTypeId,
+        ...filterAllowedParams(router.query),
+      };
+      filteredParams = removeNull(filteredParams);
+
       const {
         stripeIntentObj,
         status,
@@ -85,6 +91,7 @@ const CheckoutPage = ({ workshop }) => {
         path: "createIntentForExpressCheckout",
         body: {
           workshopId: workshop.id,
+          utmParams: filteredParams,
         },
         isUnauthorized: true,
       });
@@ -93,11 +100,6 @@ const CheckoutPage = ({ workshop }) => {
         throw new Error(errorMessage);
       }
 
-      let filteredParams = {
-        ctype: workshop.productTypeId,
-        ...filterAllowedParams(router.query),
-      };
-      filteredParams = removeNull(filteredParams);
       const returnUrl = `${
         window.location.origin
       }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(

@@ -164,7 +164,6 @@ const SchedulingPayment = () => {
             </svg>
             <div className="scheduling-modal__header-text">
               <h3>{workshop?.title}</h3>
-              <p>9 hours meditation course</p>
             </div>
           </div>
 
