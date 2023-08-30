@@ -111,10 +111,11 @@ const SchedulingRange = () => {
     const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
       let timings = obj.timings;
       timings = sortBy(timings, (obj) => new Date(obj.startDate));
-      const timing_Str = timings.reduce((acc1, obj) => {
+      let timing_Str = timings.reduce((acc1, obj) => {
         acc1 += "" + obj.startDate + "" + obj.startTime;
         return acc1;
       }, "");
+      timing_Str = obj.mode + "_" + timing_Str;
       acc = { ...acc, [timing_Str]: obj.id };
       return acc;
     }, {});
@@ -146,6 +147,7 @@ const SchedulingRange = () => {
     });
     if (response?.data) {
       const selectedSfids = getGroupedUniqueEventIds(response);
+      console.log("selectedSfids", selectedSfids);
       const finalWorkshops = response?.data.filter((item) =>
         selectedSfids.includes(item.sfid),
       );
