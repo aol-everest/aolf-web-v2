@@ -165,7 +165,6 @@ const SchedulingRange = () => {
     });
     if (response?.data) {
       const selectedSfids = getGroupedUniqueEventIds(response);
-      console.log("selectedSfids", selectedSfids);
       const finalWorkshops = response?.data.filter((item) =>
         selectedSfids.includes(item.sfid),
       );
@@ -268,13 +267,10 @@ const SchedulingRange = () => {
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
     if (selectedDates.length > 0 && dateStr !== "update") {
-      let today = new Date(selectedDates[selectedDates.length - 1]);
+      let today = moment(selectedDates[0]);
       let intervalSelected = [];
       instance.config._enable.forEach((item) => {
-        if (
-          new Date(today).getTime() >= item.from.getTime() &&
-          new Date(today).setHours(0, 0, 0, 0) <= item.to.getTime()
-        ) {
+        if (today.isBetween(moment(item.from), moment(item.to), "days", "[]")) {
           intervalSelected = getDates(item.from, item.to);
         }
       });
