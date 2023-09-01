@@ -219,7 +219,7 @@ const SchedulingRange = () => {
 
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/scheduling/${selectedWorkshopId}`,
+      pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
     });
   };
 
