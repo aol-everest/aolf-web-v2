@@ -819,7 +819,6 @@
     & [type='radio']:checked + .scheduling-modal__content-option label,
     & [type='radio']:not(:checked) + .scheduling-modal__content-option label {
       position: relative;
-      padding-left: 28px;
       cursor: pointer;
       display: inline-block;
     }
@@ -830,30 +829,15 @@
       + .scheduling-modal__content-option
       label:before {
       content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translate(0px, -50%);
-      width: 18px;
-      height: 18px;
-      border-radius: 100%;
-      background: #fef5ec;
-    }
-
-    & [type='radio']:checked + .scheduling-modal__content-option label:after,
-    &
-      [type='radio']:not(:checked)
-      + .scheduling-modal__content-option
-      label:after {
-      content: '';
-      width: 12px;
-      height: 12px;
-      background: #fca248;
-      position: absolute;
-      top: 50%;
-      left: 3px;
-      border-radius: 100%;
-      transition: all 0.2s ease;
+      background-color: transparent;
+      border: 2px solid #ff9e1b;
+      border-radius: 50%;
+      padding: 10px;
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      cursor: pointer;
+      margin-right: 5px;
     }
 
     &

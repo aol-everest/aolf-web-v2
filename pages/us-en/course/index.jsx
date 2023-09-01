@@ -519,7 +519,7 @@ const Course = () => {
                       value={locationFilter}
                       buttonText={
                         locationFilter
-                          ? `${locationFilter.loactionName}`
+                          ? `${locationFilter.locationName}`
                           : "Location"
                       }
                       closeEvent={onFilterChange("locationFilter")}
@@ -772,7 +772,7 @@ const Course = () => {
                       modalTitle="Location"
                       buttonText={
                         locationFilter
-                          ? `${locationFilter.loactionName}`
+                          ? `${locationFilter.locationName}`
                           : "Location"
                       }
                       clearEvent={onFilterClearEvent("locationFilter")}

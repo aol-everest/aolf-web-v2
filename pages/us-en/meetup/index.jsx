@@ -642,7 +642,7 @@ const Meetup = () => {
                 tabIndex="1"
                 value={locationFilter}
                 buttonText={
-                  locationFilter ? `${locationFilter.loactionName}` : "Location"
+                  locationFilter ? `${locationFilter.locationName}` : "Location"
                 }
                 closeEvent={onFilterChange("locationFilter")}
               >
@@ -894,7 +894,7 @@ const Meetup = () => {
               <MobileFilterModal
                 modalTitle="Location"
                 buttonText={
-                  locationFilter ? `${locationFilter.loactionName}` : "Location"
+                  locationFilter ? `${locationFilter.locationName}` : "Location"
                 }
                 clearEvent={onFilterClearEvent("locationFilter")}
               >
