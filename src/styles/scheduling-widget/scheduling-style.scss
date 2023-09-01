@@ -1479,17 +1479,30 @@ button.scheduling-modal__continue[disabled] {
   border-radius: 16px;
   margin-top: 12px;
   background-color: #fef5ec;
+}
+
+.scheduling-types__location {
+  position: relative;
+  display: flex;
+  height: 45px;
+  border-radius: 16px;
+  margin-top: 12px;
+  justify-content: center;
 
   label {
     height: 45px;
   }
+  .location-container {
+    width: 100%;
+  }
 
   .scheduling-address {
-    min-width: 365px;
     max-height: 45px;
     border-radius: 16px;
     margin-top: 0;
+    width: 100% !important;
   }
+
   input,
   input::placeholder {
     font-size: 14px;
@@ -1499,11 +1512,10 @@ button.scheduling-modal__continue[disabled] {
     font-family: Work Sans;
   }
   .smart-input--list-item {
-    font-size: 20px;
+    font-size: 14px;
   }
   .schedule-location-input {
     display: flex;
-    padding-left: 16px;
     font-size: 20px;
     font-weight: 700;
     text-align: center;
@@ -1514,6 +1526,8 @@ button.scheduling-modal__continue[disabled] {
     font-weight: 400;
     align-items: center;
     height: 45px;
+    padding: 13px 15px;
+    border: 1px solid #e9e9e9;
 
     a {
       text-decoration: none;
@@ -1522,8 +1536,10 @@ button.scheduling-modal__continue[disabled] {
   }
   .schedule-location-value {
     margin-right: 10px;
+    font-size: 16px;
   }
 }
+
 .scheduling-types__label {
   position: relative;
 }

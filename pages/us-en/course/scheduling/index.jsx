@@ -444,10 +444,11 @@ const SchedulingRange = () => {
                   </label>
                 </div>
                 {mode === COURSE_MODES.IN_PERSON.value && (
-                  <div className="scheduling-types__container">
+                  <div className="scheduling-types__location">
                     <ScheduleLocationFilter
                       handleLocationChange={handleLocationFilterChange}
                       value={locationFilter}
+                      containerClass="location-container"
                     />
                   </div>
                 )}

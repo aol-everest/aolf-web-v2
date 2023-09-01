@@ -18,7 +18,9 @@ export const ScheduleLocationFilter = ({
   return (
     <label className={classNames(`${containerClass}`, {})}>
       {value?.locationName ? (
-        <span className={classNames("schedule-location-input")}>
+        <span
+          className={classNames("schedule-location-input scheduling-address")}
+        >
           <span className={classNames("schedule-location-value")}>
             {value.locationName}
           </span>
