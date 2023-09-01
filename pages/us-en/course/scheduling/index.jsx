@@ -63,7 +63,7 @@ const SchedulingRange = () => {
   });
 
   const {
-    data: dateAvailable = {},
+    data: dateAvailable = [],
     isLoading,
     isError,
     error,
@@ -91,9 +91,7 @@ const SchedulingRange = () => {
         param,
       });
       const defaultDate =
-        Object.keys(response.data).length > 0
-          ? response.data[Object.keys(response.data)[0]]
-          : [];
+        response.data.length > 0 ? response.data[0].allDates : [];
       if (fp?.current?.flatpickr && defaultDate.length > 0) {
         fp.current.flatpickr.jumpToDate(defaultDate[0]);
         setTimeout(() => {
@@ -122,10 +120,10 @@ const SchedulingRange = () => {
     return values(pairOfTimingAndEventId);
   }
 
-  const enableDates = Object.keys(dateAvailable).map((key) => {
+  const enableDates = dateAvailable.map((da) => {
     return {
-      from: key,
-      to: dateAvailable[key][dateAvailable[key].length - 1],
+      from: da.firstDate,
+      to: da.allDates[da.allDates.length - 1],
     };
   });
 
