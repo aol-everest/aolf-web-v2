@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import { Loader } from "@googlemaps/js-api-loader";
 import { useEffect, useRef, useState } from "react";
 import PlacesAutocomplete, {
@@ -10,9 +11,14 @@ import PlacesAutocomplete, {
 //   libraries: ["places"],
 // };
 
-export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
+export const AddressSearch = ({
+  filter,
+  closeHandler,
+  placeholder,
+  parentClass = "",
+  isDefaultLocation = false,
+}) => {
   const [address, setAddress] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [isGeocoding, setIsGeocoding] = useState(false);
@@ -28,17 +34,18 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
     loader.load().then(() => {
       setIsLoading(false);
     });
+    if (isDefaultLocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        closeHandler({
+          lat: position.coords.latitude.toFixed(4),
+          lng: position.coords.longitude.toFixed(4),
+        })();
+      });
+    }
   }, []);
 
   const handleChange = (address) => {
     setAddress(address);
-  };
-
-  const handleCloseClick = () => {
-    setAddress("");
-    setLatitude(null);
-    setLongitude(null);
-    filter({ lat: null, lng: null });
   };
 
   const handleSelect = async (selected) => {
@@ -51,11 +58,12 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
       setLatitude(lat);
       setLongitude(lng);
       setIsGeocoding(false);
-      // this.props.filter({ lat, lng, loactionName: locationResult.formatted_address });
+      // this.props.filter({ lat, lng, locationName: locationResult.formatted_address });
+
       closeHandler({
         lat,
         lng,
-        loactionName: locationResult.formatted_address,
+        locationName: locationResult.formatted_address,
       })();
     } catch (error) {
       setIsGeocoding(false);
@@ -83,13 +91,15 @@ export const AddressSearch = ({ filter, closeHandler, placeholder }) => {
           }) => (
             <div className="smart-input">
               <input
-                className="custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%]"
+                className={[
+                  `custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%] ${parentClass}`,
+                ]}
                 {...getInputProps({
                   placeholder,
                 })}
               />
               {suggestions.length > 0 && (
-                <div>
+                <div style={{ zIndex: 9 }}>
                   {suggestions.map((suggestion) => {
                     const className = suggestion.active
                       ? "suggestion-item--active smart-input--list-item"

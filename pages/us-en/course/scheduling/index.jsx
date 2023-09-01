@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { COURSE_MODES, COURSE_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
@@ -13,6 +13,8 @@ import Select2 from "react-select2-wrapper";
 import { useQuery } from "react-query";
 import { StripeExpressCheckoutElement } from "@components/checkout/StripeExpressCheckoutElement";
 import "flatpickr/dist/flatpickr.min.css";
+import { AddressSearch } from "@components/addressSearch";
+import { ScheduleLocationFilter } from "@components/scheduleLocationFilter/ScheduleLocationFilter";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -53,17 +55,39 @@ const SchedulingRange = () => {
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
   });
+  const [locationFilter, setLocationFilter] = useQueryString("location", {
+    parse: JSON.parse,
+  });
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
-  const [workshops, setWorkshops] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
-  const [selectedWorkshop, setSelectedWorkshop] = useState({});
   const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
+  const courseTypeValue =
+    COURSE_TYPES[courseTypeFilter]?.value ||
+    COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+  const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
+  const { data: workshopMaster = {} } = useQuery(
+    ["workshopMaster"],
+    async () => {
+      let param = {
+        ctypeId,
+      };
+      const response = await api.get({
+        path: "workshopMaster",
+        param,
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const {
-    data: dateAvailable = {},
+    data: dateAvailable = [],
     isLoading,
     isError,
     error,
@@ -74,6 +98,7 @@ const SchedulingRange = () => {
       courseTypeFilter,
       timezoneFilter,
       mode,
+      locationFilter,
     ],
     async () => {
       let param = {
@@ -86,14 +111,22 @@ const SchedulingRange = () => {
       if (mode) {
         param = { ...param, mode };
       }
+      if (locationFilter) {
+        const { lat, lng } = locationFilter || {};
+        if (lat || lng) {
+          param = {
+            ...param,
+            lat,
+            lng,
+          };
+        }
+      }
       const response = await api.get({
         path: "workshopMonthCalendar",
         param,
       });
       const defaultDate =
-        Object.keys(response.data).length > 0
-          ? response.data[Object.keys(response.data)[0]]
-          : [];
+        response.data.length > 0 ? response.data[0].allDates : [];
       if (fp?.current?.flatpickr && defaultDate.length > 0) {
         fp.current.flatpickr.jumpToDate(defaultDate[0]);
         setTimeout(() => {
@@ -111,80 +144,74 @@ const SchedulingRange = () => {
     const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
       let timings = obj.timings;
       timings = sortBy(timings, (obj) => new Date(obj.startDate));
-      const timing_Str = timings.reduce((acc1, obj) => {
+      let timing_Str = timings.reduce((acc1, obj) => {
         acc1 += "" + obj.startDate + "" + obj.startTime;
         return acc1;
       }, "");
+      timing_Str = obj.mode + "_" + timing_Str;
       acc = { ...acc, [timing_Str]: obj.id };
       return acc;
     }, {});
     return values(pairOfTimingAndEventId);
   }
 
-  const enableDates = Object.keys(dateAvailable).map((key) => {
+  const enableDates = dateAvailable.map((da) => {
     return {
-      from: key,
-      to: dateAvailable[key][dateAvailable[key].length - 1],
+      from: da.firstDate,
+      to: da.allDates[da.allDates.length - 1],
     };
   });
 
-  const getWorkshops = async () => {
-    let param = {
-      timeZone: timezoneFilter,
-      sdate: selectedDates?.[0],
-      timingsRequired: true,
-      ctype:
-        COURSE_TYPES[courseTypeFilter]?.value ||
-        COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-    };
-    if (mode) {
-      param = { ...param, mode };
-    }
-    const response = await api.get({
-      path: "workshops",
-      param,
-    });
-    if (response?.data) {
-      const selectedSfids = getGroupedUniqueEventIds(response);
-      const finalWorkshops = response?.data.filter((item) =>
-        selectedSfids.includes(item.sfid),
-      );
-      setLoading(false);
-      setWorkshops(finalWorkshops);
-
-      setTimeout(() => {
-        const timeContainer = document.querySelector(
-          ".scheduling-modal__content-option",
-        );
-        if (timeContainer) {
-          timeContainer.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
+  const { data: workshops = [] } = useQuery(
+    ["workshops", selectedDates, timezoneFilter, mode, locationFilter],
+    async () => {
+      let param = {
+        timeZone: timezoneFilter,
+        sdate: selectedDates?.[0],
+        timingsRequired: true,
+        skipFullCourses: true,
+        ctype:
+          COURSE_TYPES[courseTypeFilter]?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+      };
+      if (locationFilter) {
+        const { lat, lng } = locationFilter || {};
+        if (lat || lng) {
+          param = {
+            ...param,
+            lat,
+            lng,
+          };
         }
-      }, 100);
-    }
-  };
+      }
+      if (mode) {
+        param = { ...param, mode };
+      }
+      const response = await api.get({
+        path: "workshops",
+        param,
+      });
+      if (response?.data && selectedDates?.length > 0) {
+        const selectedSfids = getGroupedUniqueEventIds(response);
+        const finalWorkshops = response?.data.filter((item) =>
+          selectedSfids.includes(item.sfid),
+        );
 
-  useEffect(() => {
-    if (selectedDates?.length > 0) {
-      setLoading(true);
-      getWorkshops();
-    }
-  }, [selectedDates, timezoneFilter, mode]);
-
-  /* const handleDateChange = (date) => {
-    const selectedDate = moment(date).format("YYYY-MM-DD");
-    const tomorrowDate = moment(date).add(1, "days").format("YYYY-MM-DD");
-    const dayAfterTomorrowDate = moment(date)
-      .add(2, "days")
-      .format("YYYY-MM-DD");
-    setSelectedDates([selectedDate, tomorrowDate, dayAfterTomorrowDate]);
-    setWorkshops([]);
-    setActiveWorkshop(null);
-    setSelectedWorkshop(null);
-    setSelectedWorkshopId(null);
-  }; */
+        setTimeout(() => {
+          const timeContainer = document.querySelector(
+            ".scheduling-modal__content-option",
+          );
+          if (timeContainer) {
+            timeContainer.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }, 100);
+        return finalWorkshops;
+      }
+    },
+  );
 
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
@@ -203,7 +230,6 @@ const SchedulingRange = () => {
   };
 
   const handleWorkshopSelect = (workshop) => {
-    setSelectedWorkshop(workshop);
     setSelectedWorkshopId(workshop?.id);
     getWorkshopDetails(workshop?.id);
   };
@@ -211,20 +237,21 @@ const SchedulingRange = () => {
     ev.preventDefault();
     setTimezoneFilter(ev?.target?.value);
     setActiveWorkshop(null);
-    setSelectedWorkshop(null);
     setSelectedWorkshopId(null);
   };
 
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/scheduling/${selectedWorkshopId}`,
+      pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
     });
   };
 
   const handleSelectMode = (value) => {
+    if (mode !== COURSE_MODES.IN_PERSON.value) {
+      handleLocationFilterChange({});
+    }
     setMode(value);
     setActiveWorkshop(null);
-    setSelectedWorkshop(null);
     setSelectedWorkshopId(null);
   };
 
@@ -248,16 +275,23 @@ const SchedulingRange = () => {
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
     if (selectedDates.length > 0 && dateStr !== "update") {
-      let today = new Date(selectedDates[selectedDates.length - 1]);
+      const today = moment(selectedDates[selectedDates.length - 1]);
       let intervalSelected = [];
-      instance.config._enable.forEach((item) => {
-        if (
-          new Date(today).getTime() >= item.from.getTime() &&
-          new Date(today).setHours(0, 0, 0, 0) <= item.to.getTime()
-        ) {
-          intervalSelected = getDates(item.from, item.to);
+      for (const enableItem of instance.config._enable) {
+        const fromMoment = moment(enableItem.from);
+        const toMoment = moment(enableItem.to);
+        const isWithinRange = today.isBetween(
+          fromMoment,
+          toMoment,
+          "days",
+          "[]",
+        );
+
+        if (isWithinRange) {
+          intervalSelected = getDates(enableItem.from, enableItem.to);
+          break; // Exit the loop when the condition is true
         }
-      });
+      }
 
       instance.selectedDates = [...intervalSelected];
       selectedDates = [...intervalSelected];
@@ -273,6 +307,10 @@ const SchedulingRange = () => {
           : selectedDates[0];
       handleDateChange(lastItem); */
     }
+  };
+
+  const handleLocationFilterChange = (value) => {
+    setLocationFilter(JSON.stringify(value));
   };
 
   return (
@@ -298,7 +336,7 @@ const SchedulingRange = () => {
             </svg>
             <div className="scheduling-modal__header-text">
               <h3>
-                {selectedWorkshop?.title ||
+                {workshopMaster?.title ||
                   COURSE_TYPES[courseTypeFilter]?.name ||
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </h3>
@@ -405,6 +443,15 @@ const SchedulingRange = () => {
                     <span className="scheduling-types__background">Both</span>
                   </label>
                 </div>
+                {mode === COURSE_MODES.IN_PERSON.value && (
+                  <div className="scheduling-types__location">
+                    <ScheduleLocationFilter
+                      handleLocationChange={handleLocationFilterChange}
+                      value={locationFilter}
+                      containerClass="location-container"
+                    />
+                  </div>
+                )}
 
                 <ul className="scheduling-modal__content-options">
                   {workshops?.map((workshop, index) => {
