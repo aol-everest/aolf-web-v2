@@ -61,10 +61,10 @@ const SchedulingRange = () => {
   const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
-  const ctypeId = (
-    COURSE_TYPES[courseTypeFilter]?.value |
-    COURSE_TYPES.SKY_BREATH_MEDITATION?.value
-  ).split(";")[0];
+  const courseTypeValue =
+    COURSE_TYPES[courseTypeFilter]?.value ||
+    COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+  const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
   const { data: workshopMaster = {} } = useQuery(
     ["workshopMaster"],
     async () => {
