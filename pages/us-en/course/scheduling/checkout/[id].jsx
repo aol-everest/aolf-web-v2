@@ -492,7 +492,6 @@ const SchedulingPaymentForm = ({
         {(formikProps) => {
           const { values, handleSubmit } = formikProps;
           formikOnChange(values);
-          console.log("formikProps", formikProps);
           return (
             <div
               id="second-step"
