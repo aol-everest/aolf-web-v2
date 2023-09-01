@@ -82,7 +82,7 @@
     "react-hook-form": "^7.45.4",
     "react-html-parser": "^2.0.2",
     "react-icons": "^4.7.1",
-    "react-image-crop": "^10.0.9",
+    "react-image-crop": "^10.1.8",
     "react-lines-ellipsis": "^0.15.3",
     "react-phone-input-2": "^2.15.1",
     "react-places-autocomplete": "^7.3.0",
