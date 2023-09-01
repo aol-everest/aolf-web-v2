@@ -275,16 +275,23 @@ const SchedulingRange = () => {
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
     if (selectedDates.length > 0 && dateStr !== "update") {
-      let today = new Date(selectedDates[selectedDates.length - 1]);
+      const today = moment(selectedDates[selectedDates.length - 1]);
       let intervalSelected = [];
-      instance.config._enable.forEach((item) => {
-        if (
-          new Date(today).getTime() >= item.from.getTime() &&
-          new Date(today).setHours(0, 0, 0, 0) <= item.to.getTime()
-        ) {
-          intervalSelected = getDates(item.from, item.to);
+      for (const enableItem of instance.config._enable) {
+        const fromMoment = moment(enableItem.from);
+        const toMoment = moment(enableItem.to);
+        const isWithinRange = today.isBetween(
+          fromMoment,
+          toMoment,
+          "days",
+          "[]",
+        );
+
+        if (isWithinRange) {
+          intervalSelected = getDates(enableItem.from, enableItem.to);
+          break; // Exit the loop when the condition is true
         }
-      });
+      }
 
       instance.selectedDates = [...intervalSelected];
       selectedDates = [...intervalSelected];
