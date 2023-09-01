@@ -61,6 +61,26 @@ const SchedulingRange = () => {
   const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
+  const ctypeId = (
+    COURSE_TYPES[courseTypeFilter]?.value |
+    COURSE_TYPES.SKY_BREATH_MEDITATION?.value
+  ).split(";")[0];
+  const { data: workshopMaster = {} } = useQuery(
+    ["workshopMaster"],
+    async () => {
+      let param = {
+        ctypeId,
+      };
+      const response = await api.get({
+        path: "workshopMaster",
+        param,
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const {
     data: dateAvailable = [],
@@ -298,7 +318,7 @@ const SchedulingRange = () => {
             </svg>
             <div className="scheduling-modal__header-text">
               <h3>
-                {selectedWorkshop?.title ||
+                {workshopMaster?.title ||
                   COURSE_TYPES[courseTypeFilter]?.name ||
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </h3>
