@@ -583,7 +583,7 @@ const SchedulingPaymentForm = ({
                         );
                       })}
                     </div>
-                    <hr />
+                    {/* <hr />
                     <div className="scheduling-modal__content-total-instructors-wrapper">
                       <div className="scheduling-modal__content-total-instructors">
                         {" Instructor(s):"}
@@ -592,7 +592,7 @@ const SchedulingPaymentForm = ({
                         <li>{primaryTeacherName}</li>
                         <li>{coTeacher1Name}</li>
                       </ul>
-                    </div>
+                    </div> */}
                     <hr />
                     <div className="scheduling-modal__content-total-location show">
                       Location:
