@@ -978,38 +978,6 @@ export const MeetupPaymentForm = ({
 
                       <ul className="info__list mt-3">
                         <h2 className="info__title">Instructor(s):</h2>
-                        {primaryTeacherName && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            {primaryTeacherName}
-                          </li>
-                        )}
-                        {coTeacher1Name && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            {coTeacher1Name}
-                          </li>
-                        )}
-                        {coTeacher2Name && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            {coTeacher2Name}
-                          </li>
-                        )}
-                      </ul>
-                      <ul className="info__list mt-3">
-                        <h2 className="info__title">Contact details:</h2>
-                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                          <a href={`tel:${phone1}`}>{phone1}</a>
-                        </li>
-                        {phone2 && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            <a href={`tel:${phone2}`}>{phone2}</a>
-                          </li>
-                        )}
-                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                          <a href={`mailto:${email}`}>{email}</a>
-                        </li>
-                      </ul>
-                      <ul className="info__list mt-3">
-                        <h2 className="info__title">Instructor(s):</h2>
                         {primaryTeacherName && <li>{primaryTeacherName}</li>}
                         {coTeacher1Name && <li>{coTeacher1Name}</li>}
                         {coTeacher2Name && <li>{coTeacher2Name}</li>}
