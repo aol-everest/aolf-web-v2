@@ -342,7 +342,7 @@ const LibrarySearch = () => {
           </div>
           <div className="row">
             <div className="search-form col-12 d-flex align-items-center">
-              <div className="switch-flter-container">
+              <div id="courses-filters" className="switch-flter-container">
                 <Popup
                   tabIndex="1"
                   value={topic}
@@ -353,7 +353,11 @@ const LibrarySearch = () => {
                     <>
                       {meditationCategory &&
                         meditationCategory.map((category) => (
-                          <li key={category} onClick={closeHandler(category)}>
+                          <li
+                            className="courses-filter__list-item"
+                            key={category}
+                            onClick={closeHandler(category)}
+                          >
                             {category}
                           </li>
                         ))}
@@ -369,13 +373,22 @@ const LibrarySearch = () => {
                 >
                   {({ closeHandler }) => (
                     <>
-                      <li onClick={closeHandler("MINUTES_5")}>
+                      <li
+                        className="courses-filter__list-item"
+                        onClick={closeHandler("MINUTES_5")}
+                      >
                         {DURATION.MINUTES_5.name}
                       </li>
-                      <li onClick={closeHandler("MINUTES_10")}>
+                      <li
+                        className="courses-filter__list-item"
+                        onClick={closeHandler("MINUTES_10")}
+                      >
                         {DURATION.MINUTES_10.name}
                       </li>
-                      <li onClick={closeHandler("MINUTES_20")}>
+                      <li
+                        className="courses-filter__list-item"
+                        onClick={closeHandler("MINUTES_20")}
+                      >
                         {DURATION.MINUTES_20.name}
                       </li>
                     </>
@@ -393,7 +406,7 @@ const LibrarySearch = () => {
                         instructorList.map((instructor) => (
                           <li
                             key={instructor.primaryTeacherName}
-                            className="topic-dropdown"
+                            className="courses-filter__list-item topic-dropdown"
                             onClick={closeHandler(
                               instructor.primaryTeacherName,
                             )}
