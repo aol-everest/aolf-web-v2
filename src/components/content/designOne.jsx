@@ -446,7 +446,7 @@ export const DesignOne = ({
         )}
       <section className="browse-category most-popular d-none d-md-block">
         <p className="title-slider">Find a meditation</p>
-        <div className="search-form buttons-wrapper">
+        <div id="courses-filters" className="search-form buttons-wrapper">
           <Popup
             tabIndex="1"
             value={topic}
@@ -457,7 +457,11 @@ export const DesignOne = ({
               <>
                 {meditationCategory &&
                   meditationCategory.map((category) => (
-                    <li onClick={closeHandler(category)} key={category}>
+                    <li
+                      className="courses-filter__list-item topic-dropdown"
+                      onClick={closeHandler(category)}
+                      key={category}
+                    >
                       {category}
                     </li>
                   ))}
@@ -473,13 +477,22 @@ export const DesignOne = ({
           >
             {({ closeHandler }) => (
               <>
-                <li onClick={closeHandler("MINUTES_5")}>
+                <li
+                  className="courses-filter__list-item"
+                  onClick={closeHandler("MINUTES_5")}
+                >
                   {DURATION.MINUTES_5.name}
                 </li>
-                <li onClick={closeHandler("MINUTES_10")}>
+                <li
+                  className="courses-filter__list-item"
+                  onClick={closeHandler("MINUTES_10")}
+                >
                   {DURATION.MINUTES_10.name}
                 </li>
-                <li onClick={closeHandler("MINUTES_20")}>
+                <li
+                  className="courses-filter__list-item"
+                  onClick={closeHandler("MINUTES_20")}
+                >
                   {DURATION.MINUTES_20.name}
                 </li>
               </>
@@ -497,7 +510,7 @@ export const DesignOne = ({
                   instructorList.map((instructor) => (
                     <li
                       key={instructor.primaryTeacherName}
-                      className="topic-dropdown"
+                      className="courses-filter__list-item"
                       onClick={closeHandler(instructor.primaryTeacherName)}
                     >
                       {instructor.primaryTeacherName}
