@@ -168,7 +168,7 @@ const CheckoutPage = ({ workshop }) => {
       >
         {(formikProps) => {
           const hidePayMessage =
-            formikProps?.values.ppaAgreement &&
+            formikProps?.values?.ppaAgreement &&
             formikProps?.values?.questionnaire?.some((item) => item.value);
           return (
             <>
