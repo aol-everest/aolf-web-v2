@@ -186,8 +186,8 @@ const CheckoutPage = ({ workshop }) => {
 
               {!hidePayMessage && (
                 <div className={Style.pay_message}>
-                  *To proceed using Apple Pay, kindly acknowledge the agreements
-                  above.
+                  *To proceed using Apple or Google Pay, kindly acknowledge the
+                  agreements above.
                 </div>
               )}
 
