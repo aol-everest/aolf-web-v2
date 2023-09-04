@@ -153,6 +153,7 @@ export const MobileCourseDetails = ({
 }) => {
   const {
     title,
+    meetupTitle,
     productTypeId,
     eventStartDate,
     eventEndDate,
@@ -214,7 +215,7 @@ export const MobileCourseDetails = ({
           <div className="close-line"></div>
           <div className="close-line"></div>
         </div>
-        <div className="course-name">{title}</div>
+        <div className="course-name">{title || meetupTitle}</div>
         <CourseFeeRender
           userSubscriptions={userSubscriptions}
           productTypeId={productTypeId}
