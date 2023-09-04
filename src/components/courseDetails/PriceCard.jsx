@@ -357,16 +357,16 @@ export const PriceCard = ({ workshop }) => {
               </button> */}
             </div>
           </div>
-          <div class="text-right">
-            <button
-              className={classNames("register-button mt-4", {
-                disabled: isSearchDatesDisabled,
-              })}
-              onClick={handleSearchDates}
-            >
-              Search <FaSearchengin />
-            </button>
-          </div>
+          {!isSearchDatesDisabled && (
+            <div class="text-right">
+              <button
+                className="register-button mt-4"
+                onClick={handleSearchDates}
+              >
+                Search <FaSearchengin />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
