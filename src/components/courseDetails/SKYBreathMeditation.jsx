@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { useContext } from "react";
-import { ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
+import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
 import { priceCalculation } from "@utils";
 import { Accordion, Card, AccordionContext } from "react-bootstrap";
 import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
@@ -11,6 +11,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { PriceCard } from "./PriceCard";
+import queryString from "query-string";
+import { pushRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
 import {
   FaArrowRightLong,
   FaClock,
@@ -54,12 +57,37 @@ const settings = {
 };
 
 export const SKYBreathMeditation = ({ data, swiperOption }) => {
-  const { showAlert } = useGlobalAlertContext();
+  const {
+    sfid,
+    title,
+    workshopTotalHours,
+    mode,
+    isGuestCheckoutEnabled,
+    productTypeId,
+  } = data || {};
+  const router = useRouter();
+  const { authenticated = false, user } = useAuth();
+  const { showModal } = useGlobalModalContext();
 
-  const { title, workshopTotalHours, mode } = data || {};
-  const { fee, delfee, offering } = priceCalculation({ workshop: data });
-
-  const inPersonCourse = mode === COURSE_MODES.IN_PERSON.name;
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (authenticated || isGuestCheckoutEnabled) {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/checkout/${sfid}`,
+        query: {
+          ctype: productTypeId,
+          page: "c-o",
+        },
+      });
+    } else {
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
+        defaultView: "SIGNUP_MODE",
+      });
+    }
+  };
 
   return (
     <>
@@ -208,7 +236,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                       sleep, a stronger immune system, and increased energy
                       levels.
                     </p>
-                    <button class="register-button">
+                    <button class="register-button" onClick={handleRegister}>
                       Register Now <FaArrowRightLong />
                     </button>
                   </div>

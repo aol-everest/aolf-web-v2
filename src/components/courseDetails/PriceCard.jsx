@@ -12,8 +12,6 @@ import queryString from "query-string";
 import { Popup } from "@components";
 import {
   FaArrowRightLong,
-  FaClock,
-  FaCalendarDays,
   FaUser,
   FaPhone,
   FaSearchengin,
