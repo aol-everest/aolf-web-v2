@@ -130,12 +130,14 @@ const CheckoutPage = ({ workshop }) => {
       });
     }
   };
+
   const questionnaireArray = workshop.complianceQuestionnaire
     ? workshop.complianceQuestionnaire.map((current) => ({
         key: current.questionSfid,
         value: false,
       }))
     : [];
+
   const onClick = ({ resolve }) => {
     const options = {
       emailRequired: true,
@@ -144,6 +146,7 @@ const CheckoutPage = ({ workshop }) => {
     };
     resolve(options);
   };
+
   return (
     <div>
       <Formik
@@ -164,9 +167,12 @@ const CheckoutPage = ({ workshop }) => {
         onSubmit={() => {}}
       >
         {(formikProps) => {
+          const hidePayMessage =
+            formikProps?.values?.ppaAgreement &&
+            formikProps?.values?.questionnaire?.some((item) => item.value);
           return (
             <>
-              <div class="scheduling-modal__content-wrapper">
+              <div className="scheduling-modal__content-wrapper">
                 <p className="scheduling-modal__content-wrapper-form-checkbox">
                   <ScheduleAgreementForm
                     formikProps={formikProps}
@@ -177,6 +183,13 @@ const CheckoutPage = ({ workshop }) => {
                   />
                 </p>
               </div>
+
+              {!hidePayMessage && (
+                <div className={Style.pay_message}>
+                  *To proceed using Apple Pay, kindly acknowledge the agreements
+                  above.
+                </div>
+              )}
 
               <div className="tw-relative">
                 <div
