@@ -14,14 +14,7 @@ import { PriceCard } from "./PriceCard";
 import queryString from "query-string";
 import { pushRouteWithUTMQuery } from "@service";
 import { useRouter } from "next/router";
-import {
-  FaArrowRightLong,
-  FaClock,
-  FaCalendarDays,
-  FaUser,
-  FaPhone,
-  FaSearch,
-} from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const settings = {
   slidesToShow: 3,

@@ -99,9 +99,17 @@ export const PriceCard = ({ workshop }) => {
 
   const isSearchDatesDisabled = !filterStartDate;
 
+  let courseType = "SKY_BREATH_MEDITATION";
+  if (isSilentRetreatType) {
+    courseType = "SILENT_RETREAT";
+  }
+  if (isSahajSamadhiMeditationType) {
+    courseType = "SAHAJ_SAMADHI_MEDITATION";
+  }
+
   const handleSearchDates = () => {
     if (!isSearchDatesDisabled) {
-      let query = { courseType: "SKY_BREATH_MEDITATION" };
+      let query = { courseType };
       if (filterStartDate) {
         query = {
           ...query,
