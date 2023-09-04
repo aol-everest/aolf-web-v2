@@ -1,43 +1,60 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
+import { useContext } from "react";
 import { ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
 import { priceCalculation } from "@utils";
-import { Element, Link } from "react-scroll";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Comment } from "./Comment";
-import { CourseBottomCard } from "./CourseBottomCard";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { RegisterPanel } from "./RegisterPanel";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { ResearchPagination } from "./ResearchPagination";
+import { Accordion, Card, AccordionContext } from "react-bootstrap";
+import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
+import classNames from "classnames";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { PriceCard } from "./PriceCard";
+import {
+  FaArrowRightLong,
+  FaClock,
+  FaCalendarDays,
+  FaUser,
+  FaPhone,
+  FaSearch,
+} from "react-icons/fa6";
+
+const settings = {
+  slidesToShow: 3,
+  slidesToScroll: 3,
+  centerMode: false,
+  arrows: false,
+  dots: true,
+  speed: 300,
+  centerPadding: "0px",
+  infinite: true,
+  autoplaySpeed: 5000,
+  autoplay: true,
+  responsive: [
+    {
+      breakpoint: 768,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "40px",
+        slidesToShow: 1,
+      },
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "40px",
+        slidesToShow: 1,
+      },
+    },
+  ],
+};
 
 export const SKYBreathMeditation = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
-
-  const showResearchModal = (e) => {
-    if (e) e.preventDefault();
-    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Success",
-      children: <ResearchFindingSource />,
-      className: "research-detail-modal",
-      hideConfirm: true,
-    });
-  };
-
-  const autoSwiperOption = {
-    slidesPerView: 1,
-    spaceBetween: 30,
-    centeredSlides: true,
-    autoplay: {
-      delay: 2000,
-    },
-    pagination: {
-      el: ".research__list-pagination",
-      clickable: true,
-    },
-  };
 
   const { title, workshopTotalHours, mode } = data || {};
   const { fee, delfee, offering } = priceCalculation({ workshop: data });
@@ -46,746 +63,499 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
 
   return (
     <>
-      <main>
-        <section className="top-column sky-breath-meditation">
-          <div className="container">
-            <p className="type-course">{mode}</p>
-            <h1 className="course-name">{title}</h1>
-            <ul className="course-details-list">
-              <li>Relieve stress, anxiety, and tension</li>
-              <li>Improve your energy & calm</li>
-              <li>Experience deep meditation</li>
-            </ul>
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-100}
-            >
-              Register Now
-            </Link>
-          </div>
-          <CourseDetailsCard
-            workshop={data}
-            courseType={COURSE_TYPES.SKY_BREATH_MEDITATION}
-          ></CourseDetailsCard>
-        </section>
-        <section
-          className={[
-            `progress-section sky-breath-meditation ${
-              inPersonCourse ? "in-person" : ""
-            }`,
-          ]}
-        >
-          <div className="container">
-            <h2 className="progress-section__title">
-              Discover the transformation that millions
+      <main class="sky-breath-course">
+        <section class="top-column sky-breath">
+          <div class="container first-section">
+            <div class="banner-title">
+              Sky Breath
               <br />
-              of people <span>in 180 countries</span> have experienced.
-            </h2>
-            <div className="achivment">
-              <div className="row">
-                <div
-                  className={`col-12 ${
-                    inPersonCourse ? "col-lg-4" : "col-lg-3"
-                  } text-center text-lg-left`}
-                >
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-40-years-of-programs.svg" alt="years" />
-                    </div>
-                    <h2 className="achivment__title">
-                      42 years <br />
-                      of programs
-                    </h2>
-                    <p className="achivment__text">
-                      Learn from the pioneers of breath-based meditation
-                      practice
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className={`col-12 ${
-                    inPersonCourse ? "col-lg-4" : "col-lg-3"
-                  }  text-center text-lg-left mt-4 mt-lg-0`}
-                >
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img
-                        src="/img/ic-70-independent-studies.svg"
-                        alt="years"
-                      />
-                    </div>
-                    <h2 className="achivment__title">
-                      Backed by 100
-                      <br />
-                      independent studies
-                    </h2>
-                    <p className="achivment__text">
-                      <span>56%</span> reduced anxiety <br />
-                      <span>3x</span> better sleep <br />
-                      <span>5x</span> improved immunity
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className={`col-12 ${
-                    inPersonCourse ? "col-lg-4" : "col-lg-3"
-                  }  text-center text-lg-left mt-4 mt-lg-0`}
-                >
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-3-day-online-course.svg" alt="day" />
-                    </div>
-                    <h2 className="achivment__title">
-                      3-Day {mode} <br />
-                      course
-                    </h2>
-
-                    <p className="achivment__text">
-                      {workshopTotalHours} hours a day live interactive sessions
-                      with certified instructors
-                    </p>
-                  </div>
-                </div>
-                {!inPersonCourse && (
-                  <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                    <div className="logo-achivment">
-                      <div className="achivment__logo">
-                        <img src="/img/ic-limited-time-only.svg" alt="day" />
-                      </div>
-                      <h2 className="achivment__title">
-                        Limited time <br />
-                        only
-                      </h2>
-                      <p className="achivment__text">
-                        This program is regularly{" "}
-                        <span className="discount">${delfee}</span> and
-                        currently offered online for <span> ${fee}</span>
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <span>Meditation</span>
             </div>
-            <div className="featured-in">
-              <h2 className="featured-in__title">Featured in</h2>
-              <div className="featured-in__box d-none d-lg-flex">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-tnyt.png" alt="tnyt" />
-                <img src="/img/featured-in-time.png" alt="time" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
+            <div class="banner-desc">
+              Discover Gurudev Sri Sri Ravi Shankar’s
+              <span>ancient secret to modern well-being</span>
+            </div>
+            <ul>
+              <li>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="#ED930F"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                </svg>
+                Relieve stress, anxiety, and tension
+              </li>
+              <li>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="#ED930F"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                </svg>
+                Improve your energy & calm
+              </li>
+              <li>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="#ED930F"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                </svg>
+                Experience deep meditation
+              </li>
+            </ul>
+          </div>
+          <PriceCard workshop={data} />
+        </section>
+        <section class="progress-section">
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="progress_box">
+                  <div class="progress_logo">
+                    <img
+                      src="/img/transforming-lives.svg"
+                      alt="transforming lives"
+                    />
+                  </div>
+                  <div class="progress_content">
+                    <span class="title">42 Years</span>
+                    <br />
+                    <span class="content">of transforming lives</span>
+                  </div>
+                </div>
               </div>
-              <div className="featured-in__box d-flex d-lg-none">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-time.png" alt="time" />
-                <img
-                  className="m-auto"
-                  src="/img/featured-in-tnyt.png"
-                  alt="tnyt"
-                />
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="progress_box">
+                  <div class="progress_logo">
+                    <img src="/img/worldwide.svg" alt="transforming lives" />
+                  </div>
+                  <div class="progress_content">
+                    <span class="title">10,000+ Centers</span>
+                    <br />
+                    <span class="content">worldwide</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="progress_box">
+                  <div class="progress_logo">
+                    <img src="/img/countries.svg" alt="transforming lives" />
+                  </div>
+                  <div class="progress_content">
+                    <span class="title">180 Countries</span>
+                    <br />
+                    <span class="content">
+                      where our programs made a difference
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="progress_box">
+                  <div class="progress_logo">
+                    <img src="/img/people.svg" alt="transforming lives" />
+                  </div>
+                  <div class="progress_content">
+                    <span class="title">500M+ Lives</span>
+                    <br />
+                    <span class="content">
+                      touched through our courses & events
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
-        <section className="how-it-works">
-          <div className="container">
-            <div className="how-it-works__block">
-              <h2 className="how-it-works__title section-title">
-                Why this workshop is so powerful
+        <section class="breadth-meditation">
+          <div class="container">
+            <div class="row">
+              <div class="breadth-meditation__block">
+                <h2 class="breadth-meditation__title section-title text-center">
+                  What is SKY Breath Meditation?
+                </h2>
+                <div class="col-12 col-lg-6 float-left">
+                  <div class="comments__video">
+                    <iframe
+                      src="https://player.vimeo.com/video/854478087?h=0eaa68b0ef&wmode=opaque"
+                      width="100%"
+                      height="100%"
+                      frameborder="0"
+                      allow="autoplay; fullscreen"
+                      allowfullscreen
+                    ></iframe>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6 float-left">
+                  <div class="breadth-meditation_content">
+                    <p class="">
+                      SKY Breath Meditation is a powerful rhythmic breathing
+                      technique that harmonizes the body-mind complex.
+                      Participants notice reduced stress and anxiety, better
+                      sleep, a stronger immune system, and increased energy
+                      levels.
+                    </p>
+                    <button class="register-button">
+                      Register Now <FaArrowRightLong />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="row">
+              <div class="col-12 px-2 col-lg-12 text-center text-lg-center">
+                <img src="/img/smallLine.svg" />
+                <h2 class="breadth-meditation__title section-title benefits-title text-center">
+                  Impacts of SKY Breath Meditation
+                </h2>
+                <p class="section-desc text-center">
+                  Science-backed benefits of SKY Breath Meditation, shown in
+                  over 100 independent studies.
+                </p>
+              </div>
+              <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
+                <div class="breadth-meditation_box">
+                  <div class="breadth-meditation_logo">
+                    <img src="/img/icon1.svg" alt="transforming lives" />
+                  </div>
+                  <div class="breadth-meditation_content">
+                    <span class="title stats-1">
+                      +33%
+                      <br />
+                      Immune Cell Count
+                    </span>
+                    <br />
+                    <span class="content stats-desc">
+                      Increase in lymphocytes in 6 weeks & remained in the
+                      normal range
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
+                <div class="breadth-meditation_box">
+                  <div class="breadth-meditation_logo">
+                    <img src="/img/icon2.svg" alt="transforming lives" />
+                  </div>
+                  <div class="breadth-meditation_content">
+                    <span class="title stats-2">
+                      21%
+                      <br />
+                      Life Satisfaction
+                    </span>
+                    <br />
+                    <span class="content stats-desc">
+                      Increase within 1 week
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
+                <div class="breadth-meditation_box">
+                  <div class="breadth-meditation_logo">
+                    <img src="/img/icon3.svg" alt="transforming lives" />
+                  </div>
+                  <div class="breadth-meditation_content">
+                    <span class="title stats-3">
+                      -57%
+                      <br />
+                      Stress Hormones
+                    </span>
+                    <br />
+                    <span class="content stats-desc">
+                      Decrease in serum cortisol in 2 weeks
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="key-highlight-section">
+          <div class="container">
+            <div class="key-highlight_block">
+              <h2 class="key-highlight_title section-title text-center">
+                Key Highlights of
+                <br />
+                the 3 Day Course
               </h2>
-              <p className="how-it-works__text">
-                Breathe your stress away with this evidence-based practice.
-                Using the science of breath, you can raise your energy, manage
-                your emotions, and find lasting ease...so you’re ready to face
-                your day. Every day!
+            </div>
+            <Slider {...settings}>
+              <div class="slide">
+                <div class="key-highlight-box">
+                  <div class="key-highlight-logo">
+                    <img src="/img/key-11.png" alt="transforming lives" />
+                  </div>
+                  <div class="key-highlight-content">
+                    <span class="title">Pranayama</span>
+                    <br />
+                    <span class="content">
+                      Breathing exercise to improve your energy levels and
+                      reduce stress
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="slide">
+                <div class="key-highlight-box">
+                  <div class="key-highlight-logo">
+                    <img src="/img/key-2.jpg" alt="transforming lives" />
+                  </div>
+                  <div class="key-highlight-content">
+                    <span class="title">SKY Breath Meditation</span>
+                    <br />
+                    <span class="content">
+                      Learn the most powerful breathing technique based on an
+                      ancient tradition
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="slide">
+                <div class="key-highlight-box">
+                  <div class="key-highlight-logo">
+                    <img src="/img/key-3.jpg" alt="transforming lives" />
+                  </div>
+                  <div class="key-highlight-content">
+                    <span class="title">5 Keys to a Joyful Life</span>
+                    <br />
+                    <span class="content">
+                      Simple toolkit to help you navigate life joyfully
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="slide">
+                <div class="key-highlight-box">
+                  <div class="key-highlight-logo">
+                    <img src="/img/key-4.jpg" alt="transforming lives" />
+                  </div>
+                  <div class="key-highlight-content">
+                    <span class="title">Lifetime Access</span>
+                    <br />
+                    <span class="content">
+                      Join weekly for in-person or online group SKY practice
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Slider>
+          </div>
+        </section>
+
+        <section class="quote-section">
+          <div class="container">
+            <div class="col-12 main-area">
+              <p class="quote-section__quote">
+                <span>
+                  “Meditation is the journey from sound to silence., from
+                  movement to stillness, from a limited identity to unlimited
+                  space.”
+                </span>
+              </p>
+              <p class="quote-section__text">
+                <img src="/img/Guruji-2.png" />
+                <br />~ Gurudev Sri Sri Ravi Shankar
               </p>
             </div>
-            <div className="how-it-works__list">
-              <h2>How it works</h2>
-              <div className="how-it-works__item">
-                <p>
-                  <span>Clear</span> stress from every cell of your body
-                </p>
-                SKY Breath Meditation, the most powerful breathing technique of
-                our time, uses specific, natural rhythms of the breath to deeply
-                clear more than 90% of the toxins and accumulated stress tension
-                on a cellular level. Removing all the negativity from your whole
-                system, leaving you restored, clear, and energized.
-              </div>
-              <div className="how-it-works__item">
-                <p>
-                  <span>Unlock</span> your freedom & joy within
-                </p>
-                <div>
-                  Like atoms, our central core is positive. The electrons, or
-                  negative charge, are only on the surface.
+          </div>
+        </section>
+
+        <section class="feature-section">
+          <div class="container">
+            <div class="feature_block">
+              <h2 class="feature_title section-title text-center">
+                Featured in
+              </h2>
+            </div>
+            <div class="row">
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box pinkbox">
+                  <div class="feature_logo">
+                    <img src="/img/CNN.png" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">"Life Changing"</span>
+                  </div>
                 </div>
-                Since positivity is within you, it's not something you have to
-                learn or get. On the contrary, through specific breathing
-                techniques, you can drop stress and negativity. Then you
-                naturally connect with your positive core—energy, ease, and
-                clarity.
               </div>
-              <div className="how-it-works__item">
-                <p>
-                  <span>Transform</span> your life
-                </p>
-                With the inner freedom you’ll gain from this practice, you’ll be
-                able to:
-                <ul>
-                  <li>
-                    <span>Take action & feel empowered</span>
-                  </li>
-                  <li>
-                    <span>Handle stressful situations with ease</span>
-                  </li>
-                  <li>
-                    <span>Connect more deeply and easily with others</span>
-                  </li>
-                  <li>
-                    <span>Improve life-work balance</span>
-                  </li>
-                  <li>
-                    <span>Attract the things you want</span>
-                  </li>
-                  <li>
-                    <span>Heal your mind and body</span>
-                  </li>
-                  <li>
-                    <span>Release old patterns and habits</span>
-                  </li>
-                  <li>
-                    <span>
-                      Feel empowered to make positive change in your life.
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box greybox">
+                  <div class="feature_logo">
+                    <img src="/img/Yoga.png" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">
+                      "May be the fastest growing spiritual practice on the
+                      planet"
                     </span>
-                  </li>
-                </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box pinkbox">
+                  <div class="feature_logo">
+                    <img src="/img/Harvard.png" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">
+                      "Shows promise in providing relief for depression"
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box greybox">
+                  <div class="feature_logo">
+                    <img src="/img/WP.png" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">"Like Fresh air to millions"</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
-        <section className="comments">
-          <div className="container">
-            <h2 className="comments__title section-title text-center">
-              How this workshop is changing lives
+
+        <section class="comments">
+          <div class="container">
+            <h2 class="comments__title section-title text-center">
+              How is SKY Breath Meditation Changing Lives?
             </h2>
           </div>
-          <div className="comments__video">
+          <div class="comments__video">
             <iframe
               src="https://player.vimeo.com/video/428103610"
               width="100%"
               height="100%"
-              frameBorder="0"
+              frameborder="0"
               allow="autoplay; fullscreen"
-              allowFullScreen
+              allowfullscreen
             ></iframe>
           </div>
-          <Swiper className="px-3 px-lg-0" {...swiperOption}>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="When I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before."
-                fullText="When I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img
-                        className="rounded-circle tw-h-full tw-w-full"
-                        src="/img/Dan-Joy.jpg"
-                        alt="comments"
-                      />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Dan J. </h3>
-                      <p className="comments__person-about">
-                        Chef
-                        <br />
-                        Asheville, NC
-                      </p>
-                    </div>
-                  </div>
-                  <p className="comments__quote">
-                    “Come to Work in a Better Mindset”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="I joined the Happiness program after an introductory meet up
-                    at the Art of Living Center. It felt like it could be a
-                    great program for me, and before I could change my mind, I
-                    signed up for it. If I had waited until later to join, I
-                    would have missed out on a truly life transforming
-                    experience. The program gave me great insights and practical
-                    too…"
-                fullText="I joined the Happiness program after an introductory meet up
-                    at the Art of Living Center. It felt like it could be a
-                    great program for me, and before I could change my mind, I
-                    signed up for it. If I had waited until later to join, I
-                    would have missed out on a truly life transforming
-                    experience. The program gave me great insights and practical
-                    tools to dealing with life's stressful situations. I met
-                    some really good friends that I still stay in contact with."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/2-comments.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Tiffany Guynes</h3>
-                      <p className="comments__person-about">
-                        Chef & private caterer,
-                        <br />
-                        Austin, TX
-                      </p>
-                    </div>
-                  </div>
-                  <p className="comments__quote">
-                    “Great insights and practical tools”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="Before the Happiness Program, I was on medication for panic
-                    and anxiety attacks. After the first day of the Happiness
-                    Program, I experienced a full night’s sleep, which was rare
-                    for me. The next morning was one of the happiest I had ever
-                    felt. I’ve been constant with my SKY meditation practice for
-                    the..."
-                fullText="Before the Happiness Program, I was on medication for panic
-                    and anxiety attacks. After the first day of the Happiness
-                    Program, I experienced a full night’s sleep, which was rare
-                    for me. The next morning was one of the happiest I had ever
-                    felt. I’ve been constant with my SKY meditation practice for
-                    the last two years - it makes me feel so alive. My friends
-                    and family tell me that I am much more confident and
-                    happier. Despite the struggles last year - my grandfather
-                    passed away, I lost my job and I went through a divorce - I
-                    still did not have a panic or anxiety attack. I feel
-                    grateful for this inner strength because I don’t know where
-                    I would be without it."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/3-comments.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Robert Delmont</h3>
-                      <p className="comments__person-about">
-                        Elementary music teacher,
-                        <br />
-                        Boston, MA
-                      </p>
-                    </div>
-                  </div>
-                  <p className="comments__quote">
-                    “Much more confident and happier, despite the struggles”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="I was at the height of my career, with a high profile job
-                    and a wonderful family. But stress was taking a toll on my
-                    physical and mental health – and I was relying on
-                    antibiotics and pain medicine regularly. Practicing SKY
-                    Meditation has reduced my stress levels and improved my
-                    immune system…"
-                fullText="I was at the height of my career, with a high profile job
-                    and a wonderful family. But stress was taking a toll on my
-                    physical and mental health – and I was relying on
-                    antibiotics and pain medicine regularly. Practicing SKY
-                    Meditation has reduced my stress levels and improved my
-                    immune system dramatically. I haven’t needed medication for
-                    4 years now! This course is the best financial investment I
-                    have made in myself"
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/4-comments.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Uma Vishwanath</h3>
-                      <p className="comments__person-about">
-                        Team lead in a high-tech company,
-                        <br />
-                        Lexington, MA
-                      </p>
-                    </div>
-                  </div>
+        </section>
 
-                  <p className="comments__quote">
-                    “The best financial investment I have made in myself”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-          </Swiper>
-        </section>
-        <section className="powerful" id="third">
-          <div className="container">
-            <div className="col-lg-10 p-0 m-auto">
-              <h4 className="powerful__message text-lg-center">
-                LET'S DO THIS
-              </h4>
-              <h2 className="powerful__title section-title text-lg-center">
-                Experience powerful shifts for less than a cup of coffee a day
-              </h2>
-              <h3 className="powerful__subtitle text-lg-center">
-                How much do we spend on
-              </h3>
-              <div className="powerful__list flex-lg-row flex-column">
-                <div className="col-lg-3 col-12">
-                  <div className="powerful__item d-flex mt-3 mt-lg-0 align-items-center flex-row flex-lg-column">
-                    <img src="/img/ic-starbucks.svg" alt="starbucks" />
-                    <p className="mt-lg-4">A Starbucks habit?</p>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-12">
-                  <div className="powerful__item d-flex mt-3 mt-lg-0 align-items-center flex-row flex-lg-column">
-                    <img src="/img/ic-gym.svg" alt="gym" />
-                    <p className="mt-lg-4">The gym?</p>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-12">
-                  <div className="powerful__item d-flex mt-3 mt-lg-0 align-items-center flex-row flex-lg-column">
-                    <img src="/img/ic-dinner.svg" alt="dinner" />
-                    <p className="mt-lg-4">A dinner out for 4?</p>
-                  </div>
-                </div>
-              </div>
-              <p className="powerful__text">
-                <span>
-                  A gym membership can easily cost you upwards of $650 a year.
-                </span>
-                <span>
-                  A daily Starbucks habit? That’s <b>$1,100</b> a year or more
-                  when you add it all up, according to a recent study of 1,008
-                  coffee drinkers!
-                </span>
-                <span>
-                  How much do we invest in a calm and clear mind? In feeling
-                  energized and excited about life? In equipping ourselves with
-                  tools to clear the mind and boost your energy — so that you
-                  can better care for your family, your friends, and your work?
-                </span>
-                <span>
-                  Imagine waking up each day, knowing you have a morning routine
-                  that leaves you strong, calm, and ready to face your day,
-                  whatever comes.
-                </span>
-                <span>
-                  Now’s your chance. For ${fee}, way less and more powerful than
-                  a coffee a day.
-                </span>
-              </p>
-              <Element name="registerNowBlock">
-                <RegisterPanel workshop={data} />
-              </Element>
-            </div>
-          </div>
-        </section>
-        <section className="quote-section">
-          <div className="container">
-            <div className="offset-lg-6">
-              <p className="quote-section__name">
-                Gurudev Sri Sri Ravi Shankar
-                <span>Founder of The Art of Living</span>
-              </p>
-              <p className="quote-section__quote">
-                “
-                <span>
-                  Meditation is the journey from sound to silence, from movement
-                  to stillness, from a limited identity to unlimited space.
-                </span>
-              </p>
-            </div>
-          </div>
-        </section>
-        <section className="studies">
-          <div className="container">
-            <h2 className="col-lg-10 p-0 mx-auto studies__title section-title">
-              An evidence-based practice that can significantly lower stress
-              from the very 1st session!
+        <section class="faq">
+          <div class="container">
+            <h2 class="section-title pl-0 pr-0">
+              Frequently Asked Questions
+              <img src="/img/FAQ.svg" />
             </h2>
-            <div className="studies__block">
-              <div className="studies__info-block">
-                <div className="studies__info">
-                  <h3 className="studies__number">100</h3>
-                  <h3 className="studies__name">
-                    independent <br />
-                    studies
-                  </h3>
-                  <img src="/img/mask.svg" alt="mask" />
-                </div>
-                <p>on SKY Breath Meditation (SK&P)</p>
-              </div>
-              <p className="studies__text">
-                <span>
-                  From reducing stress to getting better rest, the SKY Breath
-                  Meditation techniques have demonstrated measurable impact on
-                  quality of life.
-                </span>
-                <span>
-                  Over 100 independent studies conducted on four continents and
-                  published in peer review journals, have demonstrated a
-                  comprehensive range of benefits from practicing SKY
-                  Meditation.
-                </span>
-
-                <p className="summary_detail_c">
-                  Summary of Independent Research Findings and{" "}
-                  <a href="#" onClick={showResearchModal}>
-                    Sources
-                  </a>
-                </p>
-              </p>
-            </div>
-            <div className="studies__result">
-              <h3 className="studies__result-title section-title">
-                Research result key findings
-              </h3>
-              <div className="studies__list">
-                <div className="container col-12 col-lg-10">
-                  <div className="row">
-                    <div className="col-12 col-md-3 studies__item studies__item_violet">
-                      <h3>Deep Sleep Increases</h3>
-
-                      <div className="studies__item-img">
-                        218%
-                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Deep Sleep Increases</h3>
-                        <p>
-                          <span>INCREASE</span>
-                          in deep sleep
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_violet">
-                      <h3>Well-Being Hormones Increase</h3>
-
-                      <div className="studies__item-img">
-                        50%
-                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Well-Being Hormones Increase</h3>
-                        <p>
-                          <span>INCREASE</span>
-                          serum prolactin
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_blue">
-                      <h3>Depression Decreases</h3>
-
-                      <div className="studies__item-img">
-                        70%
-                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Depression Decreases</h3>
-                        <p>
-                          <span>REMISSION RATE</span> in depression in 1 month
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_blue">
-                      <h3>Stress Hormones Decrease</h3>
-
-                      <div className="studies__item-img">
-                        56%
-                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Stress Hormones Decrease</h3>
-                        <p>
-                          <span>REDUCTION</span>
-                          serum cortisol
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Accordion defaultActiveKey="0" class="accordion">
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey="0">
+                    What is the duration of the SKY Breath Meditation workshop?
+                  </ContextAwareToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body>
+                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
+                    of live online sessions each day with a certified
+                    instructor.
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey="1">
+                    What are the benefits of SKY Breath Meditation?
+                  </ContextAwareToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                  <Card.Body>
+                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
+                    of live online sessions each day with a certified
+                    instructor.
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey="2">
+                    Can I reschedule my SKY Breath Meditation course after my
+                    initial registration?
+                  </ContextAwareToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="2">
+                  <Card.Body>
+                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
+                    of live online sessions each day with a certified
+                    instructor.
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey="3">
+                    Is there an age limit to learn SKY Breath Meditation?
+                  </ContextAwareToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="3">
+                  <Card.Body>
+                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
+                    of live online sessions each day with a certified
+                    instructor.
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey="4">
+                    What’s the cost of the SKY Breath Meditation course?
+                  </ContextAwareToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="4">
+                  <Card.Body>
+                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
+                    of live online sessions each day with a certified
+                    instructor.
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
           </div>
         </section>
-        <section className="research text-center">
-          <div className="container">
-            <h2 className="research__title section-title">
-              Research highlights
-            </h2>
-            <ResearchPagination></ResearchPagination>
-
-            <Swiper
-              className="d-lg-none research__list-container swiper-container"
-              {...autoSwiperOption}
-            >
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  "Improved immune cell counts within as little as 3 weeks"
-                </p>
-                <div>
-                  <img
-                    src="/img/research-highlights-ijoy-color.png"
-                    alt="ljoy"
-                  />
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  “3x more time spent in deep, restful stages of sleep.”
-                </p>
-                <div>
-                  <img
-                    src="/img/research-highlights-sabr-color.png"
-                    alt="sabr"
-                  />
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  "The Easy Breathing Technique That Can Lower Your Anxiety 44%"
-                </p>
-                <div>
-                  <img
-                    src="/img/research-highlights-prevention-color.png"
-                    alt="prevention"
-                  />
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p className="research__quote">
-                  "Shows promise in providing relief for depression"
-                </p>
-                <div>
-                  <img src="/img/research-highlights-hhp-color.png" alt="hhp" />
-                </div>
-              </SwiperSlide>
-              <div className="research__list-pagination"></div>
-            </Swiper>
-          </div>
-        </section>
-        <section className="life-time">
-          <div className="container">
-            <h2 className="life-time__title section-title">
-              Learn tools for a lifetime
-            </h2>
-            <div className="life-time__block">
-              <h3>Experience the essence of meditation</h3>
-              <p className="life-time__text">
-                Discover advanced breathing techniques that have been
-                scientifically shown to effectively reduce anxiety, calm the
-                mind, and take you into a state of deep meditation.
-              </p>
-            </div>
-            <div className="life-time__block">
-              <h3>Mental hygiene kit</h3>
-              <p className="life-time__text">
-                Discover how the wisdom of yoga can be applied in everyday life
-                to not accumulate stress to begin with.
-              </p>
-            </div>
-            <div className="life-time__block">
-              <h3>Lifetime access to a global community</h3>
-              <p className="life-time__text">
-                This course doesn't just end after three days.. You’ll have
-                access to weekly practice groups around the world and a
-                community of positive, like-minded people for connection and
-                support—online and in-person.
-              </p>
-            </div>
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-100}
-            >
-              Let’s Get Started
-            </Link>
-          </div>
-        </section>
-        <section className="about">
-          <div className="container">
-            <h2 className="about__title section-title text-center">
-              About the Art of Living
-            </h2>
-            <div className="row">
-              <div className="col-12 col-md-3 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-39-years.svg" alt="years" />
-                </div>
-                <p className="about__text">
-                  <span>42 years</span> of service to society
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-3000-centers.svg" alt="centers" />
-                </div>
-                <p className="about__text">
-                  <span>10,000+ centers</span> worldwide
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-156-countries.svg" alt="countries" />
-                </div>
-                <p className="about__text">
-                  <span>180 countries</span> where our programs made a
-                  difference
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-450-m-lives.svg" alt="lives" />
-                </div>
-                <p className="about__text">
-                  <span>500M+ lives</span> touched through our courses & events
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* <section className="details">
-          <div className="container"></div>
-        </section> */}
       </main>
-      <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
-      </HideOn>
     </>
   );
 };
+
+function ContextAwareToggle({ children, eventKey, callback }) {
+  const currentEventKey = useContext(AccordionContext);
+
+  const decoratedOnClick = useAccordionToggle(
+    eventKey,
+    () => callback && callback(eventKey),
+  );
+
+  const isCurrentEventKey = currentEventKey === eventKey;
+
+  return (
+    <h5 class="mb-0">
+      <button
+        class={classNames("btn btn-link", { collapsed: !isCurrentEventKey })}
+        onClick={decoratedOnClick}
+      >
+        {children}
+      </button>
+    </h5>
+  );
+}
