@@ -3,7 +3,6 @@
 import { useContext } from "react";
 import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { useAuth, useGlobalModalContext } from "@contexts";
-import { priceCalculation } from "@utils";
 import { Accordion, Card, AccordionContext } from "react-bootstrap";
 import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
 import classNames from "classnames";
@@ -49,35 +48,37 @@ const settings = {
   ],
 };
 
-export const SKYBreathMeditation = ({ data, swiperOption }) => {
-  const {
-    sfid,
-    title,
-    workshopTotalHours,
-    mode,
-    isGuestCheckoutEnabled,
-    productTypeId,
-  } = data || {};
+export const SKYBreathMeditation = ({ data }) => {
+  const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
   const router = useRouter();
-  const { authenticated = false, user } = useAuth();
+  const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated || isGuestCheckoutEnabled) {
+    if (sfid) {
+      if (authenticated || isGuestCheckoutEnabled) {
+        pushRouteWithUTMQuery(router, {
+          pathname: `/us-en/course/checkout/${sfid}`,
+          query: {
+            ctype: productTypeId,
+            page: "c-o",
+          },
+        });
+      } else {
+        showModal(MODAL_TYPES.LOGIN_MODAL, {
+          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+            router.query,
+          )}`,
+          defaultView: "SIGNUP_MODE",
+        });
+      }
+    } else {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
+        pathname: `/us-en/course/scheduling`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
         },
-      });
-    } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-        defaultView: "SIGNUP_MODE",
       });
     }
   };
@@ -134,7 +135,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
               </li>
             </ul>
           </div>
-          <PriceCard workshop={data} />
+          {sfid && <PriceCard workshop={data} />}
         </section>
         <section class="progress-section">
           <div class="container">
