@@ -93,6 +93,13 @@ export const SKYBreathMeditation = ({ data }) => {
               Discover a meditation technique from an ancient tradition, shown
               by research to
             </div>
+            {!sfid && (
+              <div class="hero-register-button-wrapper">
+                <a class="hero-register-button" onClick={handleRegister}>
+                  <img src="/img/regiter-btn.original.png" alt="" />
+                </a>
+              </div>
+            )}
             <ul>
               <li>
                 <svg
@@ -600,6 +607,18 @@ export const SKYBreathMeditation = ({ data }) => {
             </Accordion>
           </div>
         </section>
+        <div class="float-bar">
+          <div class="float-wrapper clearfix">
+            <div class="bar-left">
+              <div class="bar-title">Start Your Journey to Inner Peace</div>
+            </div>
+            <div class="bar-right">
+              <a href="#" onClick={handleRegister}>
+                <img src="/img/regiter-btn-alt.original.png" alt="" />
+              </a>
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );
