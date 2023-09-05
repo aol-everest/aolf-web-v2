@@ -156,6 +156,10 @@ export const PriceCard = ({ workshop }) => {
     setTimeZoneFilter(value);
   };
 
+  const teachers = [primaryTeacherName, coTeacher1Name, coTeacher2Name]
+    .filter((name) => name && name.trim() !== "")
+    .join(", ");
+
   return (
     <div class="container">
       <div class="registration-widget">
@@ -237,11 +241,7 @@ export const PriceCard = ({ workshop }) => {
             <div class="instructor-content">
               <span class="title">Instructor</span>
               <br />
-              <span class="content">
-                {primaryTeacherName ? primaryTeacherName + ", " : ""}
-                {coTeacher1Name ? coTeacher1Name + ", " : ""}
-                {coTeacher2Name ? coTeacher2Name : ""}
-              </span>
+              <span class="content">{teachers}</span>
             </div>
           </div>
           <div class="col location contact">
