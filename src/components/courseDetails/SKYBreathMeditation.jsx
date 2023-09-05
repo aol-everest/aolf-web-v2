@@ -89,8 +89,8 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
           <div class="container first-section">
             <div class="banner-title">{title}</div>
             <div class="banner-desc">
-              Discover Gurudev Sri Sri Ravi Shankar’s
-              <span>&nbsp;ancient secret to modern well-being</span>
+              Discover a meditation technique from an ancient tradition, shown
+              by research to
             </div>
             <ul>
               <li>
@@ -104,7 +104,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                 >
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                 </svg>
-                Relieve stress, anxiety, and tension
+                Reduce stress, anxiety, and depression
               </li>
               <li>
                 <svg
@@ -117,7 +117,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                 >
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                 </svg>
-                Improve your energy & calm
+                Improve sleep
               </li>
               <li>
                 <svg
@@ -130,7 +130,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                 >
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                 </svg>
-                Experience deep meditation
+                Boost immunity
               </li>
             </ul>
           </div>
@@ -202,7 +202,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
             <div class="row">
               <div class="breadth-meditation__block">
                 <h2 class="breadth-meditation__title section-title text-center">
-                  What is SKY Breath Meditation?
+                  A Signature Meditation Technique
                 </h2>
                 <div class="col-12 col-lg-6 float-left">
                   <div class="comments__video">
@@ -219,7 +219,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                 <div class="col-12 col-lg-6 float-left">
                   <div class="breadth-meditation_content">
                     <p class="">
-                      SKY Breath Meditation is a powerful rhythmic breathing
+                      <strong>{title}</strong> is a powerful rhythmic breathing
                       technique that harmonizes the body-mind complex.
                       Participants notice reduced stress and anxiety, better
                       sleep, a stronger immune system, and increased energy
@@ -239,11 +239,11 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
               <div class="col-12 px-2 col-lg-12 text-center text-lg-center">
                 <img src="/img/smallLine.svg" />
                 <h2 class="breadth-meditation__title section-title benefits-title text-center">
-                  Impacts of SKY Breath Meditation
+                  Impacts of {title}
                 </h2>
                 <p class="section-desc text-center">
-                  Science-backed benefits of SKY Breath Meditation, shown in
-                  over 100 independent studies.
+                  Researched in over 100 independent studies, here is a glimpse
+                  of science-backed benefits of {title}:
                 </p>
               </div>
               <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
@@ -292,7 +292,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     <span class="title stats-3">
                       -57%
                       <br />
-                      Stress Hormones
+                      Stress Hormone
                     </span>
                     <br />
                     <span class="content stats-desc">
@@ -320,11 +320,11 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     <img src="/img/key-11.png" alt="transforming lives" />
                   </div>
                   <div class="key-highlight-content">
-                    <span class="title">Pranayama</span>
+                    <span class="title">Breathwork</span>
                     <br />
                     <span class="content">
-                      Breathing exercise to improve your energy levels and
-                      reduce stress
+                      Improve your energy levels and reduce stress through
+                      breathing exercises
                     </span>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     <img src="/img/key-2.jpg" alt="transforming lives" />
                   </div>
                   <div class="key-highlight-content">
-                    <span class="title">SKY Breath Meditation</span>
+                    <span class="title">{title}</span>
                     <br />
                     <span class="content">
                       Learn the most powerful breathing technique based on an
@@ -353,7 +353,8 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     <span class="title">5 Keys to a Joyful Life</span>
                     <br />
                     <span class="content">
-                      Simple toolkit to help you navigate life joyfully
+                      Simple, yet powerful principles to help you navigate life
+                      joyfully
                     </span>
                   </div>
                 </div>
@@ -364,10 +365,26 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                     <img src="/img/key-4.jpg" alt="transforming lives" />
                   </div>
                   <div class="key-highlight-content">
-                    <span class="title">Lifetime Access</span>
+                    <span class="title">Tap Into Community</span>
                     <br />
                     <span class="content">
-                      Join weekly for in-person or online group SKY practice
+                      Connect with live teachers and a like-minded community of
+                      people
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="slide">
+                <div class="key-highlight-box">
+                  <div class="key-highlight-logo">
+                    <img src="/img/key-3.jpg" alt="transforming lives" />
+                  </div>
+                  <div class="key-highlight-content">
+                    <span class="title">Ongoing Support</span>
+                    <br />
+                    <span class="content">
+                      Continue to enjoy access to teachers, digital content, and
+                      weekly group practice
                     </span>
                   </div>
                 </div>
@@ -432,7 +449,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
                   </div>
                   <div class="feature-content">
                     <span class="content">
-                      "Shows promise in providing relief for depression"
+                      "Show promise in providing relief for depression"
                     </span>
                   </div>
                 </div>
@@ -454,7 +471,7 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
         <section class="comments">
           <div class="container">
             <h2 class="comments__title section-title text-center">
-              How is SKY Breath Meditation Changing Lives?
+              How is {title} Changing Lives?
             </h2>
           </div>
           <div class="comments__video">
@@ -479,71 +496,103 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="0">
-                    What is the duration of the SKY Breath Meditation workshop?
+                    What is the duration of the {title} workshop?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
-                    of live online sessions each day with a certified
-                    instructor.
+                    You can learn {title} in 3 days with 2.5 hours of live
+                    online sessions each day with a certified instructor.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="1">
-                    What are the benefits of SKY Breath Meditation?
+                    What are the benefits of practicing {title}?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="1">
                   <Card.Body>
-                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
-                    of live online sessions each day with a certified
-                    instructor.
+                    {title} has been researched in over 100 independent,
+                    peer-reviewed studies and shown significant mind and body
+                    benefits. It lowers stress levels, improves mental clarity,
+                    enhances emotional well-being, contributes to better sleep,
+                    raises energy levels, and provides a greater sense of inner
+                    peace. The physical benefits include boosting immunity,
+                    heart health, and more.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="2">
-                    Can I reschedule my SKY Breath Meditation course after my
-                    initial registration?
+                    Can I reschedule my {title} course after my initial
+                    registration?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="2">
                   <Card.Body>
-                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
-                    of live online sessions each day with a certified
-                    instructor.
+                    Yes, you can reschedule to a different {title} course if you
+                    are unable to attend the original dates selected.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="3">
-                    Is there an age limit to learn SKY Breath Meditation?
+                    Is there an age limit to learn {title}?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
                   <Card.Body>
-                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
-                    of live online sessions each day with a certified
-                    instructor.
+                    Yes, you must be at least 18 years old to learn {title}.{" "}
+                    <br />
+                    The Art of Living offers alternative programs for children
+                    and teens (18 years and under). Contact us at
+                    support@us.artofliving.org to learn more.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="4">
-                    What’s the cost of the SKY Breath Meditation course?
+                    What’s the cost of the {title} course?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="4">
                   <Card.Body>
-                    You can learn SKY Breath Meditation in 3 days with 2.5 hours
-                    of live online sessions each day with a certified
-                    instructor.
+                    <p>The online {title} course is $295*</p>
+                    <p>What’s included:</p>
+                    <ul>
+                      <li>
+                        <strong>&bull;</strong> 2.5 hour daily live sessions
+                      </li>
+                      <li>
+                        <strong>&bull;</strong> certified expert instruction
+                      </li>
+                      <li>
+                        <strong>&bull;</strong> guided techniques with Q&A
+                      </li>
+                      <li>
+                        <strong>&bull;</strong> real-time support
+                      </li>
+                      <li>
+                        <strong>&bull;</strong> interactive wisdom sessions
+                      </li>
+                      <li>
+                        <strong>&bull;</strong> small group size
+                      </li>
+                    </ul>
+                    <p>
+                      You’ll gain a life-transforming breathwork technique
+                      backed by over 100+ independent studies you can practice
+                      anytime you need.
+                    </p>
+                    <p>
+                      *A one-time payment for a LIVE course, and not a
+                      subscription.
+                    </p>
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>

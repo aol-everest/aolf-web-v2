@@ -21,6 +21,7 @@
         text-transform: uppercase;
         font-weight: 600;
         margin-bottom: 2.1875rem;
+        max-width: 550px;
         span {
           font-weight: 300;
         }
@@ -81,159 +82,10 @@
         margin-bottom: 1.8rem;
       }
     }
-    .second-section {
-      position: relative;
-      right: auto;
-      left: auto;
-      bottom: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      padding: 2.5rem;
-      border-radius: 16px;
-      background: #fff;
-      border: 1px solid #d0d0d0;
-
-      .register-content {
-        padding-bottom: 1.875rem;
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 1.875rem;
-
-        .discount-price {
-          font-size: 42px;
-          font-weight: 600;
-          line-height: 50px;
-          text-align: left;
-          color: #000;
-        }
-        .actual-price {
-          font-size: 42px;
-          font-weight: 300;
-          line-height: 50px;
-          text-align: left;
-          color: #aeaeae;
-        }
-        .circle {
-          display: flex;
-          justify-content: flex-start;
-          align-items: baseline;
-        }
-        .circle::before {
-          content: ' ';
-          background-color: #ffb566;
-          width: 8px;
-          height: 8px;
-          border-radius: 12px;
-          display: inline-block;
-          position: relative;
-          bottom: 4px;
-          margin-right: 1.6875rem;
-        }
-        .dates {
-          .title {
-            font-size: 20px;
-            line-height: 24px;
-          }
-          .content {
-            font-size: 18px;
-            font-weight: 300;
-            line-height: 22px;
-          }
-        }
-        .instructor {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          align-items: baseline;
-          .instructor-content {
-            margin-left: 1.6875rem;
-          }
-        }
-        .contact {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          align-items: baseline;
-          .contact-content {
-            margin-left: 1.6875rem;
-          }
-        }
-        @media only screen and (max-width: 768px) {
-          .dates {
-            margin: 1rem 0;
-          }
-        }
-        .location {
-          .title {
-            font-size: 20px;
-            line-height: 24px;
-          }
-          .content {
-            font-size: 18px;
-            font-weight: 300;
-            line-height: 22px;
-          }
-        }
-        .select-date-timezone {
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          .title {
-            font-size: 20px;
-            line-height: 24px;
-            margin-right: 1.4rem;
-            display: block;
-          }
-          .select-button {
-            margin-right: 0.4rem;
-            background: #f0f0f0;
-            color: #898989;
-            border: 0px;
-            border-radius: 2rem;
-            padding: 0.5rem 1.5rem;
-          }
-        }
-        @media only screen and (max-width: 768px) {
-          .select-date-timezone {
-            text-align: center;
-            margin: 1rem 0;
-            flex-direction: column;
-            .actions {
-              margin-top: 10px;
-            }
-          }
-        }
-        .register-button {
-          background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
-          color: #fff;
-          border: 0px;
-          border-radius: 2rem;
-          padding: 1rem 4rem;
-        }
-        @media only screen and (max-width: 768px) {
-          .register-button {
-            width: 100%;
-          }
-        }
-        &.no_border {
-          padding-bottom: 0;
-        }
-      }
-      @media only screen and (max-width: 768px) {
-        .register-content {
-          flex-direction: column;
-        }
-      }
-    }
-    @media only screen and (max-width: 768px) {
-      .second-section {
-        padding: 30px;
-      }
-    }
   }
   @media only screen and (max-width: 768px) {
     .sky-breath {
-      background-image: url('/img/sky-breath-mobile.png');
+      background-image: url(/img/sky-breath-mobile.png);
       background-size: 500px;
       background-repeat: no-repeat;
       background-position: center -120px;
@@ -310,7 +162,7 @@
   .breadth-meditation {
     background-color: #f7f5f4;
     padding: 122px 0 100px 0;
-    background-image: url('/img/Breath-meditation-bg-desktop.png');
+    background-image: url(/img/Breath-meditation-bg-desktop.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
@@ -402,7 +254,7 @@
   }
   @media only screen and (max-width: 768px) {
     .breadth-meditation {
-      background-image: url('/img/Breath-meditation-bg-mobile.png');
+      background-image: url(/img/Breath-meditation-bg-mobile.png);
 
       padding-top: 40px;
     }
@@ -455,21 +307,21 @@
   .comments {
     background-color: #f7f5f4;
     padding: 122px 0 100px 0;
-    background-image: url('/img/video-thumb-desktop.png');
+    background-image: url(/img/video-thumb-desktop.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
   }
   @media only screen and (max-width: 768px) {
     .comments {
-      background-image: url('/img/video-bg-mobile.png');
+      background-image: url(/img/video-bg-mobile.png);
       padding-top: 40px;
     }
   }
   .quote-section {
     background-color: #f7f5f4;
     padding: 122px 0 100px 0;
-    background-image: url('/img/Quote-dektop.png');
+    background-image: url(/img/Quote-dektop.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
@@ -518,7 +370,7 @@
   }
   @media only screen and (max-width: 768px) {
     .comments {
-      background-image: url('/img/quote-bg-mobile.png');
+      background-image: url(/img/quote-bg-mobile.png);
     }
   }
   .feature-section {
@@ -740,6 +592,54 @@
     display: inline-block;
     @media screen and (max-width: 768px) {
       padding-top: 0;
+    }
+  }
+  .float-bar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    padding: 10px 0;
+    z-index: 10;
+  }
+  .float-wrapper {
+    max-width: 1125px;
+    margin: 0 auto;
+    @media screen and (max-width: 768px) {
+      max-width: 320px;
+    }
+  }
+  .bar-left {
+    float: left;
+    width: calc(50% - 10px);
+    text-align: right;
+    padding-right: 10px;
+    @media screen and (max-width: 767px) {
+      width: 50%;
+      padding-right: 0px;
+    }
+    .bar-title {
+      font-size: 24px;
+      line-height: 63px;
+      @media screen and (max-width: 767px) {
+        font-size: 16px;
+        line-height: 17px;
+        text-align: left;
+        padding: 8px 0 0 10px;
+      }
+    }
+  }
+  .bar-right {
+    float: right;
+    width: calc(50% - 10px);
+    text-align: left;
+    padding-left: 10px;
+    a img {
+      width: 35%;
+      @media screen and (max-width: 767px) {
+        width: 132px;
+      }
     }
   }
 }
