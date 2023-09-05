@@ -1,12 +1,48 @@
-import { HideOn } from "@components";
-import { ALERT_TYPES, COURSE_TYPES } from "@constants";
+/* eslint-disable react/no-unescaped-entities */
+import { ALERT_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
-import { Element, Link } from "react-scroll";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Comment } from "./Comment";
-import { CourseBottomCard } from "./CourseBottomCard";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { RegisterPanel } from "./RegisterPanel";
+import classNames from "classnames";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
+import { Accordion, Card, AccordionContext } from "react-bootstrap";
+import { PriceCard } from "./PriceCard";
+import { useContext } from "react";
+
+const settings = {
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  centerMode: true,
+  arrows: false,
+  dots: true,
+  adaptiveHeight: true,
+  speed: 300,
+  centerPadding: "32%",
+  infinite: true,
+  autoplaySpeed: 5000,
+  autoplay: false,
+  responsive: [
+    {
+      breakpoint: 768,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "40px",
+        slidesToShow: 1,
+      },
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "40px",
+        slidesToShow: 1,
+      },
+    },
+  ],
+};
 
 export const SahajSamadhi = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -20,392 +56,291 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
     });
   };
 
+  function ContextAwareToggle({ children, eventKey, callback }) {
+    const currentEventKey = useContext(AccordionContext);
+
+    const decoratedOnClick = useAccordionToggle(
+      eventKey,
+      () => callback && callback(eventKey),
+    );
+
+    const isCurrentEventKey = currentEventKey === eventKey;
+
+    return (
+      <h5 class="mb-0">
+        <button
+          class={classNames("btn btn-link", { collapsed: !isCurrentEventKey })}
+          onClick={decoratedOnClick}
+        >
+          {children}
+        </button>
+      </h5>
+    );
+  }
+
   const { title, mode } = data || {};
   return (
     <>
-      <main>
-        <section className="top-column sahaj-samadhi">
-          <div className="container">
-            <p className="type-course">{mode}</p>
-            <h1 className="course-name">
+      <main class="course-filter course-sahaj-samadhi">
+        <section class="samadhi-top-section">
+          <div class="container banner">
+            <div class="courses-title">Courses</div>
+            <div class="banner-title">
               {title}
-              <span>&trade;</span>
-            </h1>
-
-            <ul className="course-details-list">
-              <li>Discover lasting calm with clear focus</li>
-              <li>Reduce stress, worry, and anxiety</li>
-              <li>
-                Incredibly easy to learn and practice: <br />
-                Start to experience positive results from week one
-              </li>
-            </ul>
-
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-100}
-            >
-              Register Now
-            </Link>
+              <sup>TM</sup>: Your Path to Effortless Ease
+            </div>
+            <div class="banner-description">
+              Experience freedom from worry and anxiety
+            </div>
           </div>
-          <CourseDetailsCard
-            workshop={data}
-            courseType={COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION}
-          ></CourseDetailsCard>
-        </section>
-        <section className="meditation-details sahaj-details">
-          <div className="container mb-4">
-            <div className="meditation-details__block">
-              <h2 className="meditation-details__block__title meditation-details__block__title-main">
-                Meditation is easier than you think
-              </h2>
-              <p className="meditation-details__block__text">
-                Meditation doesn’t need to be difficult, either to learn or to
-                practice. In fact, it’s probably easier than you think. And the
-                science shows that meditation helps you feel and perform better
-                in all areas of life from lowering stress to improving
-                relationships, from sleep to overall health. Who wouldn’t want
-                that?
+          <PriceCard workshop={data} />
+          <div class="container samadhi-featuers">
+            <div class="feature-box">
+              <div class="feature-icon">
+                <img src="/img/sahaj-samadhi-smile-icon.png" alt="Enhance" />
+              </div>
+              <div class="feature-text">Feel clearer & lighter</div>
+            </div>
+            <div class="feature-box">
+              <div class="feature-icon">
+                <img src="/img/sahaj-samadhi-uparrow-icon.png" alt="Elevate" />
+              </div>
+              <div class="feature-text">Enjoy deep rest</div>
+            </div>
+            <div class="feature-box">
+              <div class="feature-icon">
+                <img src="/img/sahaj-samadhi-smile-icon.png" alt="Enhance" />
+              </div>
+              <div class="feature-text">Enhance emotional well-being</div>
+            </div>
+            <div class="feature-box">
+              <div class="feature-icon">
+                <img src="/img/sahaj-samadhi-eye-icon.png" alt="Unlock" />
+              </div>
+              <div class="feature-text">Unlock intuitive skills</div>
+            </div>
+          </div>
+          <div class="container content-area1">
+            <p>
+              Sahaj Samadhi Meditation is committed to enhancing the quality of
+              life through the blend of ancient wisdom and modern science, with
+              a particular focus on stress reduction and mental well-being.
+            </p>
+          </div>
+          <div class="container content-video-area">
+            <div class="video-section-textbox">
+              <h2 class="section-title">What is Sahaj Samadhi Meditation?</h2>
+              <p>
+                Sahaj translates to "effortless," and Samadhi signifies a state
+                of profound meditation. In simple terms, it's a technique to
+                effortlessly enjoy deep meditation, as well as the profound rest
+                and wealth of other benefits that meditation provides.{" "}
+              </p>
+              <p>
+                You'll receive a personalized mantra, a charged sound, that
+                makes meditation easier and more effective. The mantra acts as a
+                conduit, guiding you through mental clutter into a state of
+                serene repose.
               </p>
             </div>
-          </div>
-          <div className="meditation-details__img">
-            <img
-              src="/img/sahaj-samadhi-woman-mobile.png"
-              className="w-100 h-100"
-              alt=""
-            />
-          </div>
-          <div className="container">
-            <div className="meditation-details__block meditation-details__block-second">
-              <h2 className="meditation-details__block__title">
-                A powerful way to meditate, naturally
-              </h2>
-              <p className="meditation-details__block__text">
-                You’ll learn a practice called “Sahaj Samadhi Meditation”. Sahaj
-                means effortless. Samadhi means a state of true meditation.
-                Simply put, it’s an effective, personalized way to easily enter
-                into a deep meditative state. Using the power of ancient sound,
-                or mantra, you can effortlessly cut through mental chatter and
-                connect with a state of deep rest and relaxation.
-              </p>
-            </div>
-
-            <div className="meditation-details__unique">
-              <h6 className="meditation-details__unique__title">
-                What makes Sahaj Samadhi Meditation unique?
-              </h6>
-              <ul className="meditation-details__unique__list">
-                <li>
-                  <span>
-                    Perfect complement to deepen and strengthen your SKY
-                    practice
-                  </span>
-                </li>
-                <li>
-                  <span>
-                    Classes capped at 10 people for personal attention
-                  </span>
-                </li>
-                <li>
-                  <span>
-                    Learn a personalized meditation practice with a certified
-                    instructor. All instructors have a minimum of five years
-                    prior teaching experience. So you’re in good hands!
-                  </span>
-                </li>
-                <li>
-                  <span>Easy to learn, yet effective</span>
-                </li>
-              </ul>
+            <div class="video-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/860926723?h=8bf163df0e&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                title="Sahaj Samadhi"
+              ></iframe>
             </div>
           </div>
-        </section>
-        <section className="meditation">
-          <div className="container">
-            <h6 className="meditation__title">
-              Meditation: it’s a global phenomenon
-            </h6>
-            <h2 className="meditation__quote">
-              When you meditate, you’re not alone. You’re part of a movement
-              towards mental wellness that has touched{" "}
-              <span>over 40 million lives</span> worldwide.
+          <div class="container samadhi-benefits-section">
+            <h2 class="section-title">
+              <strong>Benefits</strong> of Sahaj Samadhi Meditation
             </h2>
-          </div>
-        </section>
-        <section className="steps">
-          <div className="container">
-            <h3 className="steps__title">
-              3 easy steps to start a meditation practice that works for you
-            </h3>
-            <div className="steps__list">
-              <div className="steps__step">
-                <div className="steps__step__number">
-                  <span>1</span>
-                </div>
-                <p className="steps__step__text">
-                  Join a class LIVE ONLINE with a certified meditation
-                  instructor.
-                </p>
-              </div>
-              <div className="steps__step">
-                <div className="steps__step__number">
-                  <span>2</span>
-                </div>
-                <p className="steps__step__text">
-                  Get real time answers to your questions as you train and
-                  practice together with your teacher in a small group.
-                </p>
-              </div>
-              <div className="steps__step">
-                <div className="steps__step__number">
-                  <span>3</span>
-                </div>
-                <p className="steps__step__text">
-                  Download the app to get further content and guided practice.
-                </p>
-              </div>
+            <div class="section-description">
+              Powerful breathing techniques and wisdom that can change your life
             </div>
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-100}
-            >
-              Register Today
-            </Link>
-          </div>
-        </section>
-
-        <section className="comments sahaj-samadhi">
-          <div className="container">
-            <h2 className="comments__title text-center">
-              Why Sahaj Samadhi Meditation<span>&trade;</span>&nbsp;?
-            </h2>
-            <p className="comments__subtitle text-center">
-              The benefits of meditation are many. Here are some that
-              participants share:
-            </p>
-          </div>
-          <Swiper className="px-3 px-lg-0" {...swiperOption}>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment shortText="I am enjoying the calmness and peace that comes with Sahaj Samadhi meditation.">
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/1-sahaj-comment.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Dr. Lewis</h3>
-                      <p className="comments__person-about">
-                        Sahaj Samadhi participant
-                      </p>
-                    </div>
+            <div class="samadhi-benefits-wrapper row">
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box1">
+                  <div class="benefit-title">
+                    <strong>Revitalize</strong>
+                    <br />
+                    physical health
                   </div>
-                  <p className="comments__quote">Calmness and peace</p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="Sahaj Samadhi allows me to tap into a reservoir of energy, which leaves me rejuvenated
-                                and revitalized, like a new person."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/2-sahaj-comment.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Brian</h3>
-                      <p className="comments__person-about">
-                        Sahaj Samadhi participant
-                      </p>
-                    </div>
+                  <div class="benefit-text">
+                    By soothing and rejuvenating your nervous system, Sahaj
+                    Samadhi Meditation radiates positive effects throughout your
+                    body. Experience improved cardiovascular, digestive, and
+                    respiratory system functionality for enhanced overall
+                    health.
                   </div>
-                  <p className="comments__quote">Reservoir of energy</p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment shortText="I got so happy for no reason. I hadn’t experienced that in a long time.">
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <img src="/img/slider-bg.png" alt="comments" />
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Phillip</h3>
-                      <p className="comments__person-about">
-                        Sahaj Samadhi participant
-                      </p>
-                    </div>
+                </div>
+              </div>
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box2">
+                  <div class="benefit-title">
+                    <strong>Unlock</strong>
+                    <br />
+                    intuitive skills
                   </div>
-                  <p className="comments__quote">Happy</p>
-                </>
-              </Comment>
-            </SwiperSlide>
-          </Swiper>
-        </section>
-        <section className="research sahaj-samadhi">
-          <div className="container">
-            <h2 className="research__title">The research behind meditation</h2>
-            <p className="research__text">
-              From the cover of Time Magazine to more than 3,000 scientific
-              studies, the benefits of meditation are becoming clearer and
-              clearer. Sahaj Samadhi itself has been shown in independent
-              research to significantly reduce anxiety and depression. Here are
-              just some of the scientifically validated benefits of meditation:
-            </p>
-            <div className="research__list">
-              <div className="research__list__item">
-                <h6>Experience deeper sleep</h6>
-                <p>Nix insomnia and have deeper, more restorative sleep.</p>
+                  <div class="benefit-text">
+                    In the midst of mental clutter and repetitive overthinking,
+                    Sahaj Samadhi Meditation guides you to your authentic inner
+                    voice. Tap into this innate wisdom and you strengthen your
+                    intuition, refine your judgment, and experience new
+                    insights.
+                  </div>
+                </div>
               </div>
-
-              <div className="research__list__item">
-                <h6>Decrease anxiety and increase happiness</h6>
-                <p>
-                  Meditation increases activity in those parts of the brain
-                  responsible for happiness and other positive emotions.
-                </p>
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box3 ">
+                  <div class="benefit-title">
+                    <strong>Find</strong>
+                    <br />
+                    mental clarity
+                  </div>
+                  <div class="benefit-text">
+                    Quieting the constant stream of thoughts, Sahaj Samadhi
+                    Meditation gives greater clarity of mind and heightened
+                    awareness. Enjoy a longer attention span, greater
+                    self-awareness, and improved decision-making skills.
+                  </div>
+                </div>
               </div>
-
-              <div className="research__list__item">
-                <h6>Improve mental focus</h6>
-                <p>
-                  Meditation has been associated with increased blood flow to
-                  the brain and increased activity in the brain region
-                  responsible for mental focus and executive function.
-                </p>
-              </div>
-
-              <div className="research__list__item">
-                <h6>Promote longevity</h6>
-                <p>
-                  Quieting the brain through meditation helps you live longer.
-                  Meditation slows the shortening of telomeres (the caps at the
-                  end of our chromosomes). Longer telomeres mean slower aging.
-                </p>
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box4">
+                  <div class="benefit-title">
+                    <strong>Experience</strong>
+                    <br />
+                    effortless ease
+                  </div>
+                  <div class="benefit-text">
+                    Sahaj Samadhi Meditation is the epitome of effortless ease
+                    and tranquility. With a personalized mantra, you
+                    effortlessly transcend mental chatter and negative thought
+                    patterns, immersing yourself in deep rest and relaxation.
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="research__list__mobile-img">
-            <img
-              src="/img/bg-mobile-research.png"
-              className="w-100 h-100"
-              alt=""
-            />
-          </div>
         </section>
-        <Element name="registerNowBlock">
-          <section className="powerful silent-retreat">
-            <div className="container">
-              <div className="col-lg-10 p-0 m-auto" id="third">
-                <RegisterPanel workshop={data} />
+
+        <section class="section-sahaj-reviews">
+          <h2 class="section-title">
+            How Sahaj Samadhi Meditation is Changing Lives?
+          </h2>
+
+          <Slider {...settings} className="reviews-slider center">
+            <div class="slide">
+              <div class="review-box">
+                <div class="review-title">Calmness and peace</div>
+                <div class="review-text">
+                  I am enjoying the calmness and peace that comes with Sahaj
+                  Samadhi meditation.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/brian-review.png" alt="reviewer" />
+                  </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Dr. Lewis</div>
+                    <div class="reviwer-position">
+                      Sahaj Samadhi participant
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </section>
-        </Element>
-        <section className="experiences">
-          <div className="container">
-            <h2 className="experiences__title text-center">More experiences</h2>
-            <p className="experiences__subtitle text-center">
-              The benefits of meditation are many. Here are some that
-              participants share:
-            </p>
-          </div>
-          <Swiper className="px-3 px-lg-0" {...swiperOption}>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="Sahaj Samadhi is helping me to feel calmer and less anxious, but best of all it has
-                                helped me to wake up early in the mornings feeling more relaxed, productive, and
-                                happier. Also, things are smoother at work."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <span className="comments__person-img_none">M</span>
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Manu</h3>
-                      <p className="comments__person-about">
-                        Sahaj Samadhi participant
-                      </p>
+            <div class="slide">
+              <div class="review-box">
+                <div class="review-title">Reservoir of energy</div>
+                <div class="review-text">
+                  Sahaj Samadhi allows me to tap into a reservoir of energy,
+                  which leaves me rejuvenated and revitalized, like a new
+                  person.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/brian-review.png" alt="reviewer" />
+                  </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Brian</div>
+                    <div class="reviwer-position">
+                      Sahaj Samadhi participant
                     </div>
                   </div>
-                  <p className="comments__quote">
-                    Helping me to feel calmer and less anxious
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment shortText="My mind became clear and I became more comfortable in my body.">
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <span className="comments__person-img_none">P</span>
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Patricia</h3>
-                      <p className="comments__person-about">
-                        Sahaj Samadhi participant
-                      </p>
+                </div>
+              </div>
+            </div>
+            <div class="slide">
+              <div class="review-box">
+                <div class="review-title">Happy</div>
+                <div class="review-text">
+                  I got so happy for no reason. I hadn't experienced that in a
+                  long time.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/phillip-review.png" alt="reviewer" />
+                  </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Phillip</div>
+                    <div class="reviwer-position">
+                      Sahaj Samadhi participant
                     </div>
                   </div>
-                  <p className="comments__quote">My mind became clear</p>
-                </>
-              </Comment>
-            </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <Comment
-                shortText="I always feel more peace of mind…I have a knee that’s giving me trouble. After the
-                                session I have less sense of the pain. It sort of overrides the physical issues."
-              >
-                <>
-                  <div className="comments__person">
-                    <div className="comments__person-img">
-                      <span className="comments__person-img_none">A</span>
-                      <span>“</span>
-                    </div>
-                    <div className="comments__person-info">
-                      <h3 className="comments__name">Alison</h3>
-                      <p className="comments__person-about">
-                        Sahaj Samadhi participant
-                      </p>
-                    </div>
-                  </div>
-
-                  <p className="comments__quote">
-                    Better able to manage physical pain”
-                  </p>
-                </>
-              </Comment>
-            </SwiperSlide>
-          </Swiper>
+                </div>
+              </div>
+            </div>
+          </Slider>
         </section>
-
-        {/* <section className="details">
-          <div className="container"></div>
-        </section> */}
+        <section class="faq">
+          <div class="container">
+            <h2 class="section-title pl-0 pr-0">FAQs</h2>
+            <Accordion defaultActiveKey="0" class="accordion">
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey="0">
+                    What is the duration of the Sahaj Samadhi Meditation course?
+                  </ContextAwareToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body>
+                    You can learn Sahaj Samadhi Meditation in 3 days with 2
+                    hours of live online sessions each day with a certified
+                    instructor.
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              <Card>
+                <Card.Header>
+                  <ContextAwareToggle eventKey="1">
+                    How is Sahaj Samadhi Meditation different from guided
+                    meditation?
+                  </ContextAwareToggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                  <Card.Body>
+                    Guided meditations help you meditate with verbal
+                    instructions and music. They help you relax and unwind by
+                    providing a soothing and peaceful ambience. On the other
+                    hand, Sahaj Samadhi Meditation is a mantra-based meditation
+                    technique. The mantra is a charged, subtle sound that takes
+                    you to deeper states of consciousness. Guided meditations
+                    require, well, guidance, but once you learn Sahaj Samadhi
+                    Meditation, you can meditate on your own with this
+                    technique. It needs 20 minutes of your time, and a quiet
+                    corner where you can sit comfortably. With regular practice,
+                    you will feel more at peace and start noticing the
+                    improvements in your physical health, mental acumen,
+                    increased awareness, and sharpened intuitive skills.
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          </div>
+        </section>
       </main>
-      <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
-      </HideOn>
     </>
   );
 };
