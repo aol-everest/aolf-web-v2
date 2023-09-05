@@ -18,7 +18,6 @@ import "bootstrap-daterangepicker/daterangepicker.css";
 import classNames from "classnames";
 import { NextSeo } from "next-seo";
 import ErrorPage from "next/error";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 
@@ -101,7 +100,7 @@ function Tile({
         data-full="false"
         data-complete="false"
       >
-        <Image
+        <img
           src={coverImage ? coverImage.url : "/img/card-1.png"}
           alt="bg"
           layout="fill"

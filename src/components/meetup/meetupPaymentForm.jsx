@@ -18,7 +18,6 @@ import { isEmpty, tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Formik } from "formik";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -941,7 +940,7 @@ export const MeetupPaymentForm = ({
                 <div className="reciept__details">
                   <div className="course">
                     <div className="course__photo tw-relative tw-h-[98px] tw-max-w-[98px]">
-                      <Image
+                      <img
                         src="/img/course-card-1.png"
                         alt="course-photo"
                         layout="fill"
