@@ -406,9 +406,9 @@ export const SKYBreathMeditation = ({ data }) => {
             <div class="col-12 main-area">
               <p class="quote-section__quote">
                 <span>
-                  “Meditation is the journey from sound to silence., from
+                  “Meditation is the journey from sound to silence, from
                   movement to stillness, from a limited identity to unlimited
-                  space.”
+                  space”
                 </span>
               </p>
               <p class="quote-section__text">
