@@ -157,222 +157,226 @@ export const PriceCard = ({ workshop }) => {
   };
 
   return (
-    <div class="container second-section">
-      <div class=" row register-content">
-        <div class="col discount-price">
-          ${fee}&nbsp;
-          <span class="actual-price">
-            <s>${delfee}</s>
-          </span>
-        </div>
-        <div class="col dates">
-          <span class="title">Dates</span>
-          <br />
-          <span class="content">
-            {dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") &&
-              `${dayjs.utc(eventStartDate).format("M/D/YYYY")} - ${dayjs
-                .utc(eventEndDate)
-                .format("M/D/YYYY")}`}
-            {!dayjs
-              .utc(eventStartDate)
-              .isSame(dayjs.utc(eventEndDate), "month") &&
-              `${dayjs.utc(eventStartDate).format("M/DD/YYYY")} - ${dayjs
-                .utc(eventEndDate)
-                .format("M/DD/YYYY")}`}
-          </span>
-        </div>
-        <div class="col location">
-          <span class="title">Location</span>
-          <br />
-          <span class="content">
-            {mode === COURSE_MODES.ONLINE.name ? (
-              mode
-            ) : (
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${
-                  workshop.locationStreet || ""
-                }, ${workshop.locationCity} ${workshop.locationProvince} ${
-                  workshop.locationPostalCode
-                } ${workshop.locationCountry}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {`${workshop.locationStreet || ""} ${
-                  workshop.locationCity || ""
-                }
+    <div class="container">
+      <div class="registration-widget">
+        <div class=" row register-content">
+          <div class="col discount-price">
+            ${fee}&nbsp;
+            <span class="actual-price">
+              <s>${delfee}</s>
+            </span>
+          </div>
+          <div class="col dates">
+            <span class="title">Dates</span>
+            <br />
+            <span class="content">
+              {dayjs
+                .utc(eventStartDate)
+                .isSame(dayjs.utc(eventEndDate), "month") &&
+                `${dayjs.utc(eventStartDate).format("M/D/YYYY")} - ${dayjs
+                  .utc(eventEndDate)
+                  .format("M/D/YYYY")}`}
+              {!dayjs
+                .utc(eventStartDate)
+                .isSame(dayjs.utc(eventEndDate), "month") &&
+                `${dayjs.utc(eventStartDate).format("M/DD/YYYY")} - ${dayjs
+                  .utc(eventEndDate)
+                  .format("M/DD/YYYY")}`}
+            </span>
+          </div>
+          <div class="col location">
+            <span class="title">Location</span>
+            <br />
+            <span class="content">
+              {mode === COURSE_MODES.ONLINE.name ? (
+                mode
+              ) : (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${
+                    workshop.locationStreet || ""
+                  }, ${workshop.locationCity} ${workshop.locationProvince} ${
+                    workshop.locationPostalCode
+                  } ${workshop.locationCountry}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {`${workshop.locationStreet || ""} ${
+                    workshop.locationCity || ""
+                  }
                           ${workshop.locationProvince || ""} ${
-                  workshop.locationCountry || ""
-                }`}
-              </a>
-            )}
-          </span>
+                    workshop.locationCountry || ""
+                  }`}
+                </a>
+              )}
+            </span>
+          </div>
         </div>
-      </div>
-      <div class=" row register-content">
-        {timings &&
-          timings.map((time) => {
-            return (
-              <div class="col circle" key={time.startDate}>
-                <div class="dates">
-                  <span class="title">
-                    {dayjs.utc(time.startDate).format("ddd, MMM DD")}
-                  </span>
-                  <br />
-                  <span class="content">
-                    {tConvert(time.startTime)}-{tConvert(time.endTime)}
-                    {` (${ABBRS[time.timeZone]})`}
-                  </span>
+        <div class=" row register-content">
+          {timings &&
+            timings.map((time) => {
+              return (
+                <div class="col circle" key={time.startDate}>
+                  <div class="dates">
+                    <span class="title">
+                      {dayjs.utc(time.startDate).format("ddd, MMM DD")}
+                    </span>
+                    <br />
+                    <span class="content">
+                      {tConvert(time.startTime)}-{tConvert(time.endTime)}
+                      {` (${ABBRS[time.timeZone]})`}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-      </div>
-      <div class=" row register-content">
-        <div class="col dates instructor">
-          <FaUser class="fa-solid orange" />
+              );
+            })}
+        </div>
+        <div class=" row register-content">
+          <div class="col dates instructor">
+            <FaUser class="fa-solid orange" />
 
-          <div class="instructor-content">
-            <span class="title">Instructor</span>
-            <br />
-            <span class="content">
-              {primaryTeacherName ? primaryTeacherName + ", " : ""}
-              {coTeacher1Name ? coTeacher1Name + ", " : ""}
-              {coTeacher2Name ? coTeacher2Name : ""}
-            </span>
+            <div class="instructor-content">
+              <span class="title">Instructor</span>
+              <br />
+              <span class="content">
+                {primaryTeacherName ? primaryTeacherName + ", " : ""}
+                {coTeacher1Name ? coTeacher1Name + ", " : ""}
+                {coTeacher2Name ? coTeacher2Name : ""}
+              </span>
+            </div>
+          </div>
+          <div class="col location contact">
+            <FaPhone class="fa-solid orange" />
+            <div class="contact-content">
+              <span class="title">Contact</span>
+              <br />
+              <span class="content">
+                {email} | {phone1}
+              </span>
+            </div>
           </div>
         </div>
-        <div class="col location contact">
-          <FaPhone class="fa-solid orange" />
-          <div class="contact-content">
-            <span class="title">Contact</span>
-            <br />
-            <span class="content">
-              {email} | {phone1}
-            </span>
+
+        <div class=" row register-content no_border">
+          <div class="col-md-4">
+            <button class="register-button" onClick={handleRegister}>
+              Register Now <FaArrowRightLong />
+            </button>
           </div>
-        </div>
-      </div>
+          <div class="col-md-8">
+            <div class="select-date-timezone">
+              <span class="title">Looking for another date?</span>
+              <div class="actions search-form d-flex align-items-center">
+                <Popup
+                  tabIndex="1"
+                  value={filterStartDate}
+                  buttonText={
+                    filterStartDate
+                      ? filterStartDate + " - " + filterEndDate
+                      : "Dates"
+                  }
+                  closeEvent={onDatesChange}
+                  containerClassName="course-details__popup_calendar"
+                  parentClassName="tw-mr-[20px]"
+                  buttonTextclassName={classNames({
+                    "select-button": true,
+                    active: filterStartDate !== null,
+                  })}
+                >
+                  {({ closeHandler }) => (
+                    <LinkedCalendar
+                      {...datePickerConfig}
+                      noFooter
+                      noInfo
+                      noCancel
+                      onDatesChange={closeHandler}
+                    />
+                  )}
+                </Popup>
 
-      <div class=" row register-content no_border">
-        <div class="col-md-4">
-          <button class="register-button" onClick={handleRegister}>
-            Register Now <FaArrowRightLong />
-          </button>
-        </div>
-        <div class="col-md-8">
-          <div class="select-date-timezone">
-            <span class="title">Looking for another date?</span>
-            <div class="actions search-form d-flex align-items-center">
-              <Popup
-                tabIndex="1"
-                value={filterStartDate}
-                buttonText={
-                  filterStartDate
-                    ? filterStartDate + " - " + filterEndDate
-                    : "Dates"
-                }
-                closeEvent={onDatesChange}
-                containerClassName="course-details__popup_calendar"
-                parentClassName="tw-mr-[20px]"
-                buttonTextclassName={classNames({
-                  "select-button": true,
-                  active: filterStartDate !== null,
-                })}
-              >
-                {({ closeHandler }) => (
-                  <LinkedCalendar
-                    {...datePickerConfig}
-                    noFooter
-                    noInfo
-                    noCancel
-                    onDatesChange={closeHandler}
-                  />
-                )}
-              </Popup>
-
-              <Popup
-                tabIndex="2"
-                value={timeZoneFilter}
-                buttonText={timeZoneFilter ? timeZoneFilter.name : "Time Zone"}
-                closeEvent={onFilterChange}
-                parentClassName={classNames({
-                  "hidden-border": true,
-                })}
-                buttonTextclassName={classNames({
-                  "course-details__filter__button": true,
-                  active: timeZoneFilter !== null,
-                })}
-              >
-                {({ closeHandler }) => (
-                  <>
-                    <li
-                      class="courses-filter__list-item"
-                      onClick={closeHandler({
-                        name: "Eastern",
-                        value: "EST",
-                      })}
-                    >
-                      Eastern
-                    </li>
-                    <li
-                      class="courses-filter__list-item"
-                      onClick={closeHandler({
-                        name: "Central",
-                        value: "CST",
-                      })}
-                    >
-                      Central
-                    </li>
-                    <li
-                      class="courses-filter__list-item"
-                      onClick={closeHandler({
-                        name: "Mountain",
-                        value: "MST",
-                      })}
-                    >
-                      Mountain
-                    </li>
-                    <li
-                      class="courses-filter__list-item"
-                      onClick={closeHandler({
-                        name: "Pacific",
-                        value: "PST",
-                      })}
-                    >
-                      Pacific
-                    </li>
-                    <li
-                      class="courses-filter__list-item"
-                      onClick={closeHandler({
-                        name: "Hawaii",
-                        value: "HST",
-                      })}
-                    >
-                      Hawaii
-                    </li>
-                  </>
-                )}
-              </Popup>
-              {/* <button class="select-button">
+                <Popup
+                  tabIndex="2"
+                  value={timeZoneFilter}
+                  buttonText={
+                    timeZoneFilter ? timeZoneFilter.name : "Time Zone"
+                  }
+                  closeEvent={onFilterChange}
+                  parentClassName={classNames({
+                    "hidden-border": true,
+                  })}
+                  buttonTextclassName={classNames({
+                    "course-details__filter__button": true,
+                    active: timeZoneFilter !== null,
+                  })}
+                >
+                  {({ closeHandler }) => (
+                    <>
+                      <li
+                        class="courses-filter__list-item"
+                        onClick={closeHandler({
+                          name: "Eastern",
+                          value: "EST",
+                        })}
+                      >
+                        Eastern
+                      </li>
+                      <li
+                        class="courses-filter__list-item"
+                        onClick={closeHandler({
+                          name: "Central",
+                          value: "CST",
+                        })}
+                      >
+                        Central
+                      </li>
+                      <li
+                        class="courses-filter__list-item"
+                        onClick={closeHandler({
+                          name: "Mountain",
+                          value: "MST",
+                        })}
+                      >
+                        Mountain
+                      </li>
+                      <li
+                        class="courses-filter__list-item"
+                        onClick={closeHandler({
+                          name: "Pacific",
+                          value: "PST",
+                        })}
+                      >
+                        Pacific
+                      </li>
+                      <li
+                        class="courses-filter__list-item"
+                        onClick={closeHandler({
+                          name: "Hawaii",
+                          value: "HST",
+                        })}
+                      >
+                        Hawaii
+                      </li>
+                    </>
+                  )}
+                </Popup>
+                {/* <button class="select-button">
                 <FaCalendarDays /> Dates
               </button>
               <button class="select-button">
                 <FaClock /> Time Zone
               </button> */}
+              </div>
             </div>
+            {!isSearchDatesDisabled && (
+              <div class="text-right">
+                <button
+                  className="register-button mt-4"
+                  onClick={handleSearchDates}
+                >
+                  Search <FaSearchengin />
+                </button>
+              </div>
+            )}
           </div>
-          {!isSearchDatesDisabled && (
-            <div class="text-right">
-              <button
-                className="register-button mt-4"
-                onClick={handleSearchDates}
-              >
-                Search <FaSearchengin />
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
