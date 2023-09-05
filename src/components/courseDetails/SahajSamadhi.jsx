@@ -1,6 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
 import classNames from "classnames";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,6 +7,12 @@ import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
 import { Accordion, Card, AccordionContext } from "react-bootstrap";
 import { PriceCard } from "./PriceCard";
 import { useContext } from "react";
+import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
+import queryString from "query-string";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const settings = {
   slidesToShow: 1,
@@ -45,18 +49,41 @@ const settings = {
 };
 
 export const SahajSamadhi = ({ data, swiperOption }) => {
-  const { showAlert } = useGlobalAlertContext();
+  const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
+  const router = useRouter();
+  const { authenticated = false } = useAuth();
+  const { showModal } = useGlobalModalContext();
 
-  const showResearchModal = (e) => {
-    if (e) e.preventDefault();
-    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Success",
-      className: "research-detail-modal",
-      hideConfirm: true,
-    });
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (sfid) {
+      if (authenticated || isGuestCheckoutEnabled) {
+        pushRouteWithUTMQuery(router, {
+          pathname: `/us-en/course/checkout/${sfid}`,
+          query: {
+            ctype: productTypeId,
+            page: "c-o",
+          },
+        });
+      } else {
+        showModal(MODAL_TYPES.LOGIN_MODAL, {
+          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+            router.query,
+          )}`,
+          defaultView: "SIGNUP_MODE",
+        });
+      }
+    } else {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/scheduling`,
+        query: {
+          courseType: "SAHAJ_SAMADHI_MEDITATION",
+        },
+      });
+    }
   };
 
-  function ContextAwareToggle({ children, eventKey, callback }) {
+  const ContextAwareToggle = ({ children, eventKey, callback }) => {
     const currentEventKey = useContext(AccordionContext);
 
     const decoratedOnClick = useAccordionToggle(
@@ -76,9 +103,8 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
         </button>
       </h5>
     );
-  }
+  };
 
-  const { title, mode } = data || {};
   return (
     <>
       <main class="course-filter course-sahaj-samadhi">
@@ -92,8 +118,15 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
             <div class="banner-description">
               Experience freedom from worry and anxiety
             </div>
+            {!sfid && (
+              <div class="hero-register-button-wrapper">
+                <button class="hero-register-button" onClick={handleRegister}>
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
+              </div>
+            )}
           </div>
-          <PriceCard workshop={data} />
+          {sfid && <PriceCard workshop={data} />}
           <div class="container samadhi-featuers">
             <div class="feature-box">
               <div class="feature-icon">

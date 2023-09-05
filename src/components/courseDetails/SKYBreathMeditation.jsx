@@ -76,9 +76,6 @@ export const SKYBreathMeditation = ({ data }) => {
     } else {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/scheduling`,
-        query: {
-          ctype: productTypeId,
-        },
       });
     }
   };
@@ -93,13 +90,7 @@ export const SKYBreathMeditation = ({ data }) => {
               Discover a meditation technique from an ancient tradition, shown
               by research to
             </div>
-            {!sfid && (
-              <div class="hero-register-button-wrapper">
-                <a class="hero-register-button" onClick={handleRegister}>
-                  <img src="/img/regiter-btn.original.png" alt="" />
-                </a>
-              </div>
-            )}
+
             <ul>
               <li>
                 <svg
@@ -141,6 +132,13 @@ export const SKYBreathMeditation = ({ data }) => {
                 Boost immunity
               </li>
             </ul>
+            {!sfid && (
+              <div class="hero-register-button-wrapper">
+                <a class="hero-register-button" onClick={handleRegister}>
+                  <img src="/img/regiter-btn.original.png" alt="" />
+                </a>
+              </div>
+            )}
           </div>
           {sfid && <PriceCard workshop={data} />}
         </section>

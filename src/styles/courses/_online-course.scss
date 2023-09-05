@@ -28,7 +28,7 @@
         }
       }
       .hero-register-button-wrapper {
-        margin-top: -30px;
+        margin-top: 30px;
         margin-bottom: 20px;
         a.hero-register-button {
           img {
@@ -37,7 +37,8 @@
         }
         @media only screen and (max-width: 768px) {
           text-align: center;
-          margin-top: 0px;
+          margin-top: 30px;
+          margin-bottom: 0;
           a.hero-register-button {
             img {
               width: 222px;

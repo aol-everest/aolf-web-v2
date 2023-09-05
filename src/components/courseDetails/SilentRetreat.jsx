@@ -3,6 +3,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { PriceCard } from "./PriceCard";
+import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
+import queryString from "query-string";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const settings = {
   slidesToShow: 1,
@@ -38,20 +44,60 @@ const settings = {
   ],
 };
 
-export const SilentRetreat = ({ data, swiperOption }) => {
-  const { title, mode } = data || {};
+export const SilentRetreat = ({ data }) => {
+  const { sfid, title, mode, productTypeId, isGuestCheckoutEnabled } =
+    data || {};
+  const router = useRouter();
+  const { authenticated = false } = useAuth();
+  const { showModal } = useGlobalModalContext();
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (sfid) {
+      if (authenticated || isGuestCheckoutEnabled) {
+        pushRouteWithUTMQuery(router, {
+          pathname: `/us-en/course/checkout/${sfid}`,
+          query: {
+            ctype: productTypeId,
+            page: "c-o",
+          },
+        });
+      } else {
+        showModal(MODAL_TYPES.LOGIN_MODAL, {
+          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+            router.query,
+          )}`,
+          defaultView: "SIGNUP_MODE",
+        });
+      }
+    } else {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/scheduling`,
+        query: {
+          courseType: "SILENT_RETREAT",
+        },
+      });
+    }
+  };
   return (
     <>
       <main class="course-filter art-of-silence">
         <section class="samadhi-top-section">
           <div class="container banner">
             <div class="courses-title">Courses</div>
-            <div class="banner-title">Art of Living Part II</div>
+            <div class="banner-title">{title}</div>
             <div class="banner-description">
               Give yourself a true vacation for body, mind, and spirit
             </div>
+            {!sfid && (
+              <div class="hero-register-button-wrapper">
+                <button class="hero-register-button" onClick={handleRegister}>
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
+              </div>
+            )}
           </div>
-          <PriceCard workshop={data} />
+          {sfid && <PriceCard workshop={data} />}
           <div class="container samadhi-featuers">
             <div class="feature-box">
               <div class="feature-icon">
