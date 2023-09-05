@@ -87,14 +87,10 @@ export const SKYBreathMeditation = ({ data, swiperOption }) => {
       <main class="sky-breath-course">
         <section class="top-column sky-breath">
           <div class="container first-section">
-            <div class="banner-title">
-              Sky Breath
-              <br />
-              <span>Meditation</span>
-            </div>
+            <div class="banner-title">{title}</div>
             <div class="banner-desc">
               Discover Gurudev Sri Sri Ravi Shankar’s
-              <span>ancient secret to modern well-being</span>
+              <span>&nbsp;ancient secret to modern well-being</span>
             </div>
             <ul>
               <li>
