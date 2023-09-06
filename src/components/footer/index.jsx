@@ -43,7 +43,7 @@ export function Footer() {
   }
   return (
     <>
-      <main className="course-filter">
+      <main>
         <section className="details new-footer-container">
           <div className="container">
             <div className="row justify-content-center">
