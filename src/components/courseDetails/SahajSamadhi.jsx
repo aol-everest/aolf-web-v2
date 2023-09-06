@@ -16,7 +16,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 
 const settings = {
   slidesToShow: 1,
-  slidesToScroll: 1,
+  slidesToScroll: 3,
   centerMode: true,
   arrows: false,
   dots: true,
@@ -109,36 +109,38 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
     <>
       <main class="course-filter course-sahaj-samadhi">
         <section class="samadhi-top-section">
-          <div class="container banner">
-            <div class="courses-title">Courses</div>
-            <div class="banner-title">
-              {title}
-              <sup>TM</sup>: Your Path to Effortless Ease
-            </div>
-            <div class="banner-description">
-              Experience freedom from worry and anxiety
-            </div>
-            {!sfid && (
-              <div class="hero-register-button-wrapper">
-                <button class="hero-register-button" onClick={handleRegister}>
-                  Register Now <FaArrowRightLong className="fa-solid" />
-                </button>
+          <div class="banner">
+            <div class="container">
+              <div class="courses-title">Courses</div>
+              <div class="banner-title">
+                {title}
+                <sup>TM</sup>: Your Path to Effortless Ease
               </div>
-            )}
+              <div class="banner-description">
+                Experience freedom from worry and anxiety
+              </div>
+              {!sfid && (
+                <div class="hero-register-button-wrapper">
+                  <button class="hero-register-button" onClick={handleRegister}>
+                    Register Now <FaArrowRightLong className="fa-solid" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           {sfid && <PriceCard workshop={data} />}
           <div class="container samadhi-featuers">
             <div class="feature-box">
               <div class="feature-icon">
-                <img src="/img/sahaj-samadhi-smile-icon.png" alt="Enhance" />
+                <img src="/img/sahaj-samadhi-uparrow-icon.png" alt="Enhance" />
               </div>
               <div class="feature-text">Feel clearer & lighter</div>
             </div>
             <div class="feature-box">
               <div class="feature-icon">
-                <img src="/img/sahaj-samadhi-uparrow-icon.png" alt="Elevate" />
+                <img src="/img/sahaj-samadhi-eye-icon.png" alt="Elevate" />
               </div>
-              <div class="feature-text">Enjoy deep rest</div>
+              <div class="feature-text">Unlock intuitive skills</div>
             </div>
             <div class="feature-box">
               <div class="feature-icon">
@@ -146,23 +148,11 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
               </div>
               <div class="feature-text">Enhance emotional well-being</div>
             </div>
-            <div class="feature-box">
-              <div class="feature-icon">
-                <img src="/img/sahaj-samadhi-eye-icon.png" alt="Unlock" />
-              </div>
-              <div class="feature-text">Unlock intuitive skills</div>
-            </div>
           </div>
-          <div class="container content-area1">
-            <p>
-              Sahaj Samadhi Meditation is committed to enhancing the quality of
-              life through the blend of ancient wisdom and modern science, with
-              a particular focus on stress reduction and mental well-being.
-            </p>
-          </div>
+
           <div class="container content-video-area">
             <div class="video-section-textbox">
-              <h2 class="section-title">What is Sahaj Samadhi Meditation?</h2>
+              <h2 class="section-title">What is {title}?</h2>
               <p>
                 Sahaj translates to "effortless," and Samadhi signifies a state
                 of profound meditation. In simple terms, it's a technique to
@@ -178,6 +168,8 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
             </div>
             <div class="video-wrapper">
               <iframe
+                width="519"
+                height="291"
                 src="https://player.vimeo.com/video/860926723?h=8bf163df0e&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                 frameborder="0"
                 title="Sahaj Samadhi"
@@ -186,7 +178,7 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
           </div>
           <div class="container samadhi-benefits-section">
             <h2 class="section-title">
-              <strong>Benefits</strong> of Sahaj Samadhi Meditation
+              <strong>Benefits</strong> of {title}
             </h2>
             <div class="section-description">
               Powerful breathing techniques and wisdom that can change your life
@@ -257,11 +249,21 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
             </div>
           </div>
         </section>
+        <section class="register-to-unlock">
+          <div class="container">
+            <div class="unlock-title">
+              Unlock your Inner Peace with this 3-day course for $295
+            </div>
+            <div class="unlock-register">
+              <button class="register-button" onClick={handleRegister}>
+                Register Now <FaArrowRightLong className="fa-solid" />
+              </button>
+            </div>
+          </div>
+        </section>
 
         <section class="section-sahaj-reviews">
-          <h2 class="section-title">
-            How Sahaj Samadhi Meditation is Changing Lives?
-          </h2>
+          <h2 class="section-title">How {title} is Changing Lives?</h2>
 
           <Slider {...settings} className="reviews-slider center">
             <div class="slide">
@@ -373,6 +375,20 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
             </Accordion>
           </div>
         </section>
+        <div class="float-bar">
+          <div class="float-wrapper clearfix">
+            <div class="bar-left">
+              <div class="bar-title">
+                Reserve Your Journey to a Worry-Free Mind
+              </div>
+            </div>
+            <div class="bar-right">
+              <button class="register-button" onClick={handleRegister}>
+                Register Now <FaArrowRightLong className="fa-solid" />
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );
