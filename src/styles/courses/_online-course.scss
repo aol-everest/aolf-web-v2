@@ -1,0 +1,722 @@
+.sky-breath-course {
+  .sky-breath {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url(/img/sky-breath-long.png);
+    box-shadow: inset 0px 0px 89px -60px white;
+    padding-bottom: 100px;
+    background-position: center top;
+    padding-top: 150px;
+    .first-section {
+      margin-bottom: 4.875rem;
+      .banner-title {
+        font-size: 68px;
+        line-height: 62px;
+        font-family: 'museo_sans700';
+        background: linear-gradient(
+          90deg,
+          #0580ce 0%,
+          rgba(5, 128, 206, 0.28) 100%
+        );
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-transform: uppercase;
+        margin-bottom: 2.1875rem;
+        max-width: 700px;
+        span {
+          font-family: 'museo_sans100';
+        }
+      }
+      .hero-register-button-wrapper {
+        margin-top: 30px;
+        margin-bottom: 20px;
+        a.hero-register-button {
+          img {
+            width: 320px;
+          }
+        }
+        @media only screen and (max-width: 768px) {
+          text-align: center;
+          margin-top: 30px;
+          margin-bottom: 0;
+          a.hero-register-button {
+            img {
+              width: 222px;
+            }
+          }
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        .banner-title {
+          width: 100%;
+          text-align: center;
+          font-size: 36px;
+          line-height: 34px;
+          margin-bottom: 12px;
+        }
+      }
+      .banner-desc {
+        margin-bottom: 3.1875rem;
+        font-family: 'museo_sans300';
+        font-size: 34px;
+        line-height: 45px;
+        color: #007fce;
+        font-weight: 300;
+        width: 700px;
+        span {
+          font-family: 'museo_sans700';
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        .banner-desc {
+          width: 100%;
+          text-align: center;
+          font-size: 1rem;
+          line-height: 20px;
+          margin-bottom: 18rem;
+        }
+      }
+      ul {
+        font-family: Lora;
+        font-size: 22px;
+        font-style: italic;
+        font-weight: 400;
+        li {
+          line-height: 30px;
+          svg {
+            margin-right: 1.375rem;
+          }
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        ul {
+          width: 100%;
+          font-size: 1rem;
+          line-height: 20px;
+        }
+      }
+    }
+
+    @media only screen and (max-width: 768px) {
+      .first-section {
+        margin-bottom: 1.8rem;
+      }
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .sky-breath {
+      background-image: url(/img/sky-breath-mobile.jpg);
+      background-repeat: no-repeat;
+      background-position: center top;
+      padding: 30px 7px;
+      background-size: 100%;
+    }
+  }
+  @media only screen and (max-width: 480px) {
+    .sky-breath {
+      background-position: center 100px;
+    }
+  }
+  .progress-section {
+    background-color: #fff6ec;
+    padding-top: 100px;
+    .progress_box {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      margin: 1rem 0;
+      align-items: center;
+      .progress_logo {
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+        img {
+          width: 85px;
+          height: 85px;
+        }
+      }
+      .title {
+        font-size: 29px;
+        line-height: 44px !important;
+      }
+      .content {
+        font-size: 29px;
+        line-height: 32px !important;
+        color: #898989;
+      }
+    }
+    @media only screen and (max-width: 768px) {
+      .progress_box {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin: 1rem 0;
+        align-items: center;
+        .progress_logo {
+          margin-right: 1rem;
+          margin-bottom: 0rem;
+          img {
+            width: 45px;
+            height: 45px;
+          }
+        }
+        .title {
+          font-size: 24px;
+        }
+        .content {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .progress-section {
+      padding-top: 30px;
+      background-color: #fff6ec;
+      padding-left: 8px;
+      padding-right: 8px;
+      .container {
+        padding-top: 30px;
+        border-radius: 16px;
+        border: 1px solid #d0d0d0;
+        background-color: #ffffff;
+      }
+    }
+  }
+
+  .breadth-meditation {
+    background-color: #f7f5f4;
+    padding: 80px 0 100px 0;
+    background-image: url(/img/Breath-meditation-bg-desktop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    .breadth-meditation_content {
+      .title {
+        height: 90px;
+        display: block;
+      }
+      .stats-desc {
+        height: 100px;
+        display: block;
+        padding-top: 20px;
+      }
+    }
+    .breadth-meditation__block {
+      margin-bottom: 2rem;
+      .breadth-meditation__title {
+        margin-bottom: 1.5rem;
+      }
+      @media only screen and (max-width: 768px) {
+        .breadth-meditation__title {
+          margin: 0 1rem;
+        }
+      }
+      .breadth-meditation_content {
+        margin: 60px 30px;
+        font-size: 24px;
+        .title {
+          height: 100px;
+          display: block;
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        .breadth-meditation_content {
+          margin: 15px 15px;
+          font-size: 1rem;
+          text-align: center;
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        .comments__video {
+          margin: 1rem auto;
+        }
+      }
+    }
+    .breadth-meditation_box {
+      display: flex;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 30px 0px;
+      min-height: 215px;
+      align-items: flex-start;
+      justify-content: flex-start;
+      .breadth-meditation_logo {
+        margin-right: 1rem;
+        img {
+          width: 57px;
+          padding-top: 10px;
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        margin-bottom: 0;
+      }
+    }
+    .register-button {
+      background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+      color: #fff;
+      border: 0px;
+      border-radius: 2rem;
+      padding: 1rem 4rem;
+      margin-top: 2rem;
+    }
+    @media only screen and (max-width: 768px) {
+      .register-button {
+        width: 100%;
+      }
+    }
+    .breadth-meditation__title {
+      padding: 0 150px 45px;
+    }
+    @media only screen and (max-width: 768px) {
+      .breadth-meditation__title {
+        margin-top: 2rem;
+        padding: 0 45px 45px;
+      }
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .breadth-meditation {
+      background-image: url(/img/Breath-meditation-bg-mobile.png);
+
+      padding-top: 40px;
+    }
+  }
+
+  .key-highlight-section {
+    background-color: #ffffff;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    .key-highlight_block {
+      padding-bottom: 2rem;
+    }
+    .key-highlight-box {
+      margin-bottom: 1rem;
+      margin-left: 10px;
+      margin-right: 10px;
+
+      img {
+        width: 100%;
+      }
+      .key-highlight-content {
+        background-color: #ffedd9;
+        padding: 35px;
+        .title {
+          font-family: 'museo_sans700';
+          font-size: 29px;
+          line-height: 39px;
+        }
+        .content {
+          display: flex;
+          margin: 0.8rem 0;
+          min-height: 60px;
+          font-family: 'museo_sans300';
+          font-size: 20px;
+          line-height: 29px;
+        }
+        @media only screen and (min-width: 992px) {
+          min-height: 270px;
+        }
+      }
+    }
+  }
+  .highlights-slider {
+    .slick-dots {
+      li {
+        margin: 0;
+      }
+
+      :before {
+        font-size: 12px;
+      }
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .key-highlight-box {
+      background-color: #ffedd9;
+      min-height: 500px;
+    }
+    .key-highlight-section {
+      padding-top: 30px;
+      padding-bottom: 30px;
+      background-color: #fff;
+    }
+  }
+
+  .comments {
+    background-color: #f7f5f4;
+    padding: 122px 0 100px 0;
+    background-image: url(/img/video-thumb-desktop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+  }
+  .comments__video {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+  .comments__title {
+    font-family: 'museo_sans500';
+    padding-bottom: 50px !important;
+  }
+  @media only screen and (max-width: 768px) {
+    .comments {
+      background-image: url(/img/video-bg-mobile.png) !important;
+      background-position: center;
+      background-size: cover;
+      padding: 50px 30px;
+      .comments__title {
+        padding: 0 !important;
+      }
+      .comments__video {
+        margin-bottom: 0;
+        background: none;
+        height: 180px;
+      }
+    }
+  }
+  .quote-section {
+    background-color: #f7f5f4;
+    padding: 122px 0 100px 0;
+    background-image: url(/img/Quote-dektop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    .main-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      span {
+        font-family: 'Lora', serif;
+        font-size: 46px;
+        line-height: 56px !important;
+        color: #fff;
+        padding: 0 50px;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+        max-width: 100%;
+        font-style: normal;
+      }
+      @media only screen and (max-width: 768px) {
+        span {
+          font-size: 21px;
+          line-height: 22px !important;
+        }
+      }
+    }
+    .quote-section__text {
+      text-align: center;
+      color: #ffffff;
+      margin-top: 1rem;
+
+      font-size: 36px;
+      line-height: 71px;
+      color: #fff;
+      img {
+        width: 144px;
+        height: 144px;
+      }
+    }
+    @media only screen and (max-width: 768px) {
+      .quote-section__text {
+        font-size: 15px;
+        line-height: 36px !important;
+      }
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .comments {
+      background-image: url(/img/quote-bg-mobile.png);
+    }
+  }
+  .feature-section {
+    background-color: #ffffff;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    .feature_block {
+      padding-bottom: 2rem;
+    }
+    .feature_box {
+      display: flex;
+      flex-direction: row;
+      padding: 1rem;
+      margin: 1rem 0;
+      min-height: 15rem;
+      text-align: center;
+      border-radius: 20px;
+      .feature_logo {
+        margin-bottom: 1rem;
+        min-height: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 24px;
+        img {
+          width: 180px;
+        }
+      }
+      .feature-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: left;
+        margin-left: 2rem;
+        font-size: 24px;
+        font-style: italic;
+        line-height: normal;
+      }
+    }
+    @media only screen and (max-width: 768px) {
+      .feature_box {
+        margin: 2px 0;
+        height: 100px;
+        min-height: unset;
+        flex-direction: row;
+        border-radius: 0;
+        .feature_logo {
+          margin-bottom: 1rem;
+          min-height: unset;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100px;
+          margin: 20px 0;
+          img {
+            max-width: 100px;
+          }
+        }
+        .feature-content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: left;
+          margin-left: 2rem;
+          font-family: 'lora';
+          font-size: 16px;
+          line-height: 24px;
+        }
+      }
+    }
+    .pinkbox {
+      background: #fef2f2;
+    }
+    .greybox {
+      background: #f5f5f5;
+    }
+  }
+  .faq {
+    //background-color: #f7f5f4;
+    padding: 122px 0 100px 0;
+
+    .accordion {
+      margin: 30px auto;
+    }
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+    }
+    .card {
+      border: none;
+      border-bottom: 1px solid #dcdcdc !important;
+      .card-header {
+        background: #ffffff;
+        border: none;
+        @media only screen and (max-width: 768px) {
+          padding: 0;
+        }
+        h5 .btn {
+          font-family: 'museo_sans500';
+          text-align: left;
+
+          font-size: 36px !important;
+          line-height: 36px !important;
+          color: #010101;
+          background: transparent !important;
+          border: none !important;
+          position: relative;
+          padding: 50px 0 40px !important;
+          text-decoration: none;
+          display: block;
+          width: 100%;
+          padding-right: 50px !important;
+          &:after {
+            content: '';
+            font-size: 26px;
+            color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            display: block;
+            height: 20px;
+            width: 20px;
+            border-top: 3px solid rgba(0, 0, 0, 0.3);
+            border-right: 3px solid rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            transform: rotate(140deg);
+          }
+          &.collapsed:after {
+            transform: rotate(45deg);
+            transition: all ease 0.5ms;
+          }
+          @media only screen and (max-width: 768px) {
+            font-size: 20px !important;
+            line-height: normal !important;
+          }
+        }
+      }
+      .card-body {
+        font-size: 24px !important;
+        line-height: 28px !important;
+        color: #010101;
+        font-family: 'museo_sans300';
+        padding-bottom: 50px;
+        padding-top: 0;
+        @media only screen and (max-width: 768px) {
+          font-size: 18px !important;
+          line-height: normal !important;
+          padding: 0 0 20px;
+        }
+      }
+      .collapse {
+      }
+    }
+    @media only screen and (max-width: 768px) {
+      padding-top: 60px;
+      .section-title {
+        padding-bottom: 0;
+      }
+    }
+  }
+  .orange {
+    color: #ff8400;
+  }
+  .no_border {
+    border-top: 0px !important;
+    border-bottom: 0px !important;
+    border-left: 0px !important;
+    border-right: 0px !important;
+  }
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: 50px;
+    line-height: 50px !important;
+    padding: 0 150px 80px;
+    font-weight: 500;
+  }
+  @media only screen and (max-width: 768px) {
+    .section-title {
+      font-size: 24px;
+      line-height: 24px !important;
+      padding: 0 50px 40px;
+      font-weight: 500;
+    }
+  }
+  .benefits-title {
+    padding: 0 150px 80px;
+  }
+  .section-desc {
+    font-size: 28px;
+    line-height: 34px !important;
+    color: #000;
+  }
+  .stats-1 {
+    background: linear-gradient(0deg, #0997ac 0%, #9ee9ac 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    font-size: 29px;
+    line-height: 29px;
+  }
+  .stats-2 {
+    background: linear-gradient(0deg, #0bbafb 0%, #4285ec 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    font-size: 29px;
+    line-height: 29px;
+  }
+  .stats-3 {
+    background: linear-gradient(0deg, #f39459 0%, #6f5ea4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    font-size: 29px;
+    line-height: 29px;
+  }
+  .stats-desc {
+    font-size: 21px;
+    line-height: 25px;
+    color: #000;
+    padding-top: 35px;
+    letter-spacing: -0.5px;
+    display: inline-block;
+    @media screen and (max-width: 768px) {
+      padding-top: 0;
+    }
+  }
+  .float-bar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    padding: 10px 0;
+    z-index: 10;
+  }
+  .float-wrapper {
+    max-width: 1125px;
+    margin: 0 auto;
+    @media screen and (max-width: 768px) {
+      max-width: 320px;
+    }
+  }
+  .bar-left {
+    float: left;
+    width: calc(50% - 10px);
+    text-align: right;
+    padding-right: 10px;
+    @media screen and (max-width: 767px) {
+      width: 50%;
+      padding-right: 0px;
+    }
+    .bar-title {
+      font-family: 'museo_sans500';
+      font-size: 24px;
+      line-height: 63px;
+      @media screen and (max-width: 767px) {
+        font-size: 16px;
+        line-height: 17px;
+        text-align: left;
+        padding: 8px 0 0 10px;
+      }
+    }
+  }
+  .bar-right {
+    float: right;
+    width: calc(50% - 10px);
+    text-align: left;
+    padding-left: 10px;
+    a img {
+      width: 35%;
+      @media screen and (max-width: 767px) {
+        width: 132px;
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    &::before {
+      background-color: #ffe7cd;
+      height: 200px;
+      content: '';
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+}

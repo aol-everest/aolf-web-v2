@@ -2,7 +2,6 @@ import { ABBRS, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import Image from "next/image";
 
 dayjs.extend(utc);
 
@@ -34,21 +33,21 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
       <div className="course">
         <div className="course__photo tw-relative tw-h-[98px] tw-max-w-[98px]">
           {isSilentRetreatType && (
-            <Image
+            <img
               src="/img/course-card-4.png"
               alt="course-photo"
               layout="fill"
             />
           )}
           {isSKYType && (
-            <Image
+            <img
               src="/img/course-card-2.png"
               alt="course-photo"
               layout="fill"
             />
           )}
           {isSahajSamadhiMeditationType && (
-            <Image
+            <img
               src="/img/course-card-5.png"
               alt="course-photo"
               layout="fill"
@@ -57,7 +56,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
           {!isSilentRetreatType &&
             !isSKYType &&
             !isSahajSamadhiMeditationType && (
-              <Image
+              <img
                 src="/img/course-card-1.png"
                 alt="course-photo"
                 layout="fill"

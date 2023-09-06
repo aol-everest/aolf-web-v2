@@ -85,11 +85,11 @@ export const SHARE_SITES = {
 
 export const COURSE_TYPES = {
   SKY_BREATH_MEDITATION: {
-    name: "SKY Breath Meditation",
+    name: "Art of Living Part I",
     value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
   },
   SILENT_RETREAT: {
-    name: "Silent Retreat",
+    name: "Art of Living Part II",
     value: process.env.NEXT_PUBLIC_SILENT_RETREAT_CTYPE || "",
   },
   SAHAJ_SAMADHI_MEDITATION: {
@@ -113,7 +113,7 @@ export const COURSE_TYPES = {
     value: process.env.NEXT_PUBLIC_HEALING_BREATH_CTYPE || "",
   },
   SKY_SILENT_RETREAT: {
-    name: "SKY Silent Retreat",
+    name: "Silent Retreat",
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || "",
   },
   SKY_WITH_SAHAJ: {

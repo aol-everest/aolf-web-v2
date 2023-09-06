@@ -1,416 +1,394 @@
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
-import { COURSE_TYPES } from "@constants";
-import { Element, Link } from "react-scroll";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { PriceCard } from "./PriceCard";
+import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useAuth, useGlobalModalContext } from "@contexts";
+import { pushRouteWithUTMQuery } from "@service";
+import { useRouter } from "next/router";
+import queryString from "query-string";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { CourseBottomCard } from "./CourseBottomCard";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { RegisterPanel } from "./RegisterPanel";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
-export const SilentRetreat = ({ data, swiperOption }) => {
-  const { title, mode } = data || {};
+const swiperOption = {
+  modules: [Pagination, A11y],
+  slidesPerView: 1,
+  spaceBetween: 10,
+  pagination: { clickable: true },
+  breakpoints: {
+    640: {
+      slidesPerView: 1,
+      spaceBetween: 20,
+    },
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 30,
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 30,
+    },
+  },
+};
+
+export const SilentRetreat = ({ data }) => {
+  const { sfid, title, mode, productTypeId, isGuestCheckoutEnabled } =
+    data || {};
+  const router = useRouter();
+  const { authenticated = false } = useAuth();
+  const { showModal } = useGlobalModalContext();
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (sfid) {
+      if (authenticated || isGuestCheckoutEnabled) {
+        pushRouteWithUTMQuery(router, {
+          pathname: `/us-en/course/checkout/${sfid}`,
+          query: {
+            ctype: productTypeId,
+            page: "c-o",
+          },
+        });
+      } else {
+        showModal(MODAL_TYPES.LOGIN_MODAL, {
+          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+            router.query,
+          )}`,
+          defaultView: "SIGNUP_MODE",
+        });
+      }
+    } else {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/scheduling`,
+        query: {
+          courseType: "SILENT_RETREAT",
+        },
+      });
+    }
+  };
   return (
     <>
-      <main>
-        <section className="top-column silent-retreat">
-          <div className="container">
-            <p className="type-course">{mode}</p>
-            <h1 className="course-name">{title}</h1>
+      <main class="course-filter art-of-silence">
+        <section class="samadhi-top-section">
+          <div class="banner">
+            <div class="container">
+              <div class="courses-title">Courses</div>
+              <div class="banner-title">Art of Living Part II</div>
+              <div class="banner-description">
+                Give yourself a true vacation for body, mind, and spirit
+              </div>
+              {!sfid && (
+                <div class="hero-register-button-wrapper">
+                  <button class="hero-register-button" onClick={handleRegister}>
+                    Register Now <FaArrowRightLong className="fa-solid" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          {sfid && <PriceCard workshop={data} />}
+          <div class="container samadhi-featuers">
+            <div class="feature-box">
+              <div class="feature-icon">
+                <img src="/img/aos-eye-icon.png" alt="Elevate" />
+              </div>
+              <div class="feature-text">
+                Immerse yourself in deep rest & rejuvenation
+              </div>
+            </div>
+            <div class="feature-box">
+              <div class="feature-icon">
+                <img src="/img/aos-flower-icon.png" alt="Enhance" />
+              </div>
+              <div class="feature-text">
+                Naturally elevate your energy levels
+              </div>
+            </div>
+            <div class="feature-box">
+              <div class="feature-icon">
+                <img src="/img/aos-uparrow-icon.png" alt="Unlock" />
+              </div>
+              <div class="feature-text">
+                Uncover the profound art of inner silence
+              </div>
+            </div>
+          </div>
 
-            <ul className="course-details-list">
-              <li>Discover a profound depth of inner silence</li>
-              <li>Enjoy deep rest & rejuvenation</li>
-              <li>Begin or renew a restorative meditation practice</li>
-            </ul>
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={0}
-            >
-              Register Now
-            </Link>
-          </div>
-          <CourseDetailsCard
-            workshop={data}
-            courseType={COURSE_TYPES.SILENT_RETREAT}
-          ></CourseDetailsCard>
-        </section>
-        <section className="why-course">
-          <div className="container">
-            <h2 className="col-lg-7 p-0 section-title why-course__title">
-              Why take few days out of your busy life for a Silent Retreat?
-            </h2>
-            <p className="col-xl-8 col-lg-7 p-0 why-course__text">
-              <span>
-                The Silent Retreat is a wonderful mix of restorative breathing
-                practices, daily yoga, deep wisdom, silence, and powerful guided
-                meditations.
-              </span>
-              <span>
-                Many people report remarkable shifts during the retreat—renewed
-                perspective, fresh insight, a clearer mind. These few days also
-                make the rest of your year more alive, productive, and full of
-                energy. When you emerge, you feel centered and refreshed, ready
-                to take on life with greater focus and joy.
-              </span>
-              <span>
-                The retreat is an ideal way to reconnect with your practices and
-                the experience of SKY Breath Meditation and take your energy to
-                another level.
-              </span>
-            </p>
-          </div>
-        </section>
-        <section className="how-it-works silent-retreat">
-          <div className="container">
-            <div className="col-xl-6 col-lg-7 p-0">
-              <div className="how-it-works__block">
-                <h2 className="how-it-works__title silent-retreat__title section-title">
-                  Discover just how refreshing silence can be
-                </h2>
-              </div>
-              <div className="how-it-works__list">
-                <div className="how-it-works__item">
-                  <p>
-                    <span>A renewal in mind, body, and spirit</span>
-                  </p>
-                  The practice of silence—of consciously withdrawing our energy
-                  and attention from outer distractions—has been used in
-                  different traditions for thousands of years as a pathway to
-                  physical, mental, and spiritual renewal. On the retreat, you
-                  experience an extraordinary sense of peace and renewed
-                  vitality, that will increase your resilience to stress and
-                  enhance your ability to thrive.
-                </div>
-                <div className="how-it-works__item">
-                  <p>
-                    <span>Create shifts in your life</span>
-                  </p>
-                  The Silent Retreat can help you drop limiting beliefs, regrets
-                  and worries, bringing you more fully into the present moment
-                  and into a bigger vision for yourself. You may find a joy that
-                  is unshaken by outer circumstances.
-                </div>
-                <div className="how-it-works__item">
-                  <p>
-                    <span>Find freedom from the mind’s chatter</span>
-                  </p>
-                  Many people may find it challenging knowing how to quiet their
-                  mind. The Silent Retreat provides optimal conditions for
-                  sinking deep within and breaking free from mental chatter.
-                  Your whole day is carefully guided and crafted to give you as
-                  relaxing and transformative an experience possible. It’s no
-                  wonder that many retreat participants refer to it as the ideal
-                  vacation for body, mind, and spirit.
-                </div>
-              </div>
-              <p className="silent-retreat-condition">
-                <span>*</span>
-                <span>
-                  SKY Breath Meditation is a prerequisite to enroll in the
-                  Silent Retreat. You can learn more{" "}
-                  <a
-                    className="link silent-retreat__link"
-                    href="https://event.us.artofliving.org/us-en/online-course-2/"
-                    target="blank"
-                  >
-                    here
-                  </a>
-                  .
-                </span>
+          <div class="container content-video-area">
+            <div class="video-section-textbox">
+              <h2 class="section-title">
+                Why take a few days to unplug from the world for a silent
+                retreat?
+              </h2>
+              <p>
+                The Part II course builds on your Part I experience* with a
+                unique blend of advanced breathwork, signature guided
+                meditations, daily yoga, and profound insights into the mind.
+                This is all designed to{" "}
+                <strong>
+                  provide an optimal environment to break free from a busy mind
+                </strong>
+                , dive deep within, and experience transformative shifts—fresh
+                perspective, deep insights, and clarity. These moments
+                supercharge the rest of your year, making it more vibrant,
+                productive, and full of energy. As you emerge, you feel
+                centered, recharged, and ready to embrace life with renewed
+                focus and joy. This retreat is your avenue to rekindle your
+                connection with SKY Breath Meditation, elevating your energy to
+                new heights.
               </p>
+
+              <p>
+                *You can take the Part II Course only after completing the Part
+                I course. If you would like to do a silent retreat and have not
+                yet done Part I, please visit this page.{" "}
+              </p>
+            </div>
+            <div class="video-wrapper">
+              <iframe
+                width="400"
+                height="315"
+                src="https://www.youtube.com/embed/w2ixmLA37ck?si=TXikDVJxA89TzEsm"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+          <div class="container samadhi-benefits-section">
+            <h2 class="section-title">
+              <strong>Course</strong> Highlights
+            </h2>
+
+            <div class="samadhi-benefits-wrapper row">
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box1">
+                  <div class="benefit-title">
+                    <strong>Deep</strong> Meditations
+                  </div>
+                  <div class="benefit-text">
+                    Exclusive to this course—immerse in unique guided
+                    meditations crafted by Gurudev to release deep layers of
+                    stress and tension.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box2">
+                  <div class="benefit-title">
+                    <strong>Silence</strong>
+                  </div>
+                  <div class="benefit-text">
+                    Experience the extraordinary peace and rest that come from
+                    spending time in silence.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box3 ">
+                  <div class="benefit-title">
+                    <strong>Yoga</strong>
+                  </div>
+                  <div class="benefit-text">
+                    Unite mind and body through invigorating morning yoga
+                    sessions.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 py-1 px-1">
+                <div class="samadhi-benefit-box box4">
+                  <div class="benefit-title">
+                    <strong>Ancient</strong>Wisdom
+                  </div>
+                  <div class="benefit-text">
+                    Tap into timeless teachings that equip you to lead a joyful
+                    and fulfilling life, unshaken by outer circumstances.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-        <section className="comments silent-retreat">
-          <div className="container">
-            <h2 className="comments__title section-title text-center">
-              How lives are transformed
-            </h2>
+        <section class="container banner2">
+          <div class="aos-banner-second">
+            <div class="guru-quote">
+              "Meditation is absolute comfort, coming back to the serenity that
+              is your original nature."
+            </div>
+            <div class="quote-author">~ Gurudev Sri Sri Ravi Shankar</div>
           </div>
-          <div className="comments__video">
-            <iframe
-              src="https://player.vimeo.com/video/432237531"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            ></iframe>
+        </section>
+        <section class="container banner3">
+          <div class="aos-banner-third">
+            <div class="banner-title">Escape the mind's clutter</div>
+            <div class="banner-text">
+              The Part II course provides the ideal environment to dive deep
+              within, breaking free from the constant chatter of the mind. Each
+              day is carefully structured to offer a transformative and relaxing
+              experience, a true vacation for your body, mind, and soul.
+            </div>
+            <button class="enroll-btn" onClick={handleRegister}>
+              Enroll Now →
+            </button>
           </div>
-          <Swiper className="px-3 px-lg-0" {...swiperOption}>
-            <SwiperSlide className="swiper-slide comments__item">
-              <div className="comments__person">
-                <div className="comments__person-img">
-                  <img src="/img/1-silent-comments.png" alt="comments" />
-                  <span>“</span>
+        </section>
+        <section class="section-sahaj-reviews">
+          <h2 class="section-title">
+            Transforming lives through silent retreats
+          </h2>
+          <Swiper {...swiperOption} className="reviews-slider">
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">
+                    ...very, very powerful...such a sense of calm
+                  </div>
+                  <div class="review-text">
+                    It was very, very powerful. I gained such a sense of calm,
+                    more than I ever could have imagined.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/max-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Max Goldberg</div>
+                      <div class="reviwer-position">
+                        Silent Retreat participant
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="comments__person-info">
-                  <h3 className="comments__name">Max Goldberg</h3>
-                  <p className="comments__person-about">
-                    Silent Retreat participant
-                  </p>
-                </div>
-              </div>
-              <p className="comments__quote">
-                “...very, very powerful...such a sense of calm”
-              </p>
-              <div className="comments__text">
-                <p className="short">
-                  It was very, very powerful. I gained such a sense of calm,
-                  more than I ever could have imagined.
-                </p>
               </div>
             </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <div className="comments__person">
-                <div className="comments__person-img">
-                  <img src="/img/2-silent-comments.png" alt="comments" />
-                  <span>“</span>
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">
+                    relaxed, refreshed, and happier
+                  </div>
+                  <div class="review-text">
+                    It helped me to put into practice the valuable wisdom which
+                    I had picked up on the SKY Breath Meditation course. I came
+                    away relaxed, refreshed and happier than I had felt for a
+                    long time.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/reviewer-photo.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Julie Madeley</div>
+                      <div class="reviwer-position">
+                        Silent Retreat participant
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="comments__person-info">
-                  <h3 className="comments__name">Julie Madeley</h3>
-                  <p className="comments__person-about">
-                    Silent Retreat participant
-                  </p>
-                </div>
-              </div>
-              <p className="comments__quote">
-                “relaxed, refreshed, and happier”
-              </p>
-              <div className="comments__text">
-                <p className="short">
-                  It helped me to put into practice the valuable wisdom which I
-                  had picked up on the SKY Breath Meditation course. I came away
-                  relaxed, refreshed and happier than I had felt for a long
-                  time.
-                </p>
               </div>
             </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <div className="comments__person">
-                <div className="comments__person-img">
-                  <img src="/img/3-silent-comments.png" alt="comments" />
-                  <span>“</span>
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">Felt more balanced</div>
+                  <div class="review-text">
+                    I've been on quite a few silent retreats in the past and
+                    this felt more balanced, nourishing and comfortable than any
+                    other retreat I'd been on.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/michelle-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Michelle Garisson</div>
+                      <div class="reviwer-position">
+                        Silent Retreat participant
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="comments__person-info">
-                  <h3 className="comments__name">Michelle Garisson</h3>
-                  <p className="comments__person-about">
-                    Silent Retreat participant
-                  </p>
-                </div>
-              </div>
-              <p className="comments__quote">“felt more balanced”</p>
-              <div className="comments__text">
-                <p className="short">
-                  I've been on quite a few silent retreats in the past and this
-                  felt more balanced, nourishing and comfortable than any other
-                  retreat I'd been on.
-                </p>
               </div>
             </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <div className="comments__person">
-                <div className="comments__person-img">
-                  <img src="/img/4-silent-comments.png" alt="comments" />
-                  <span>“</span>
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">
+                    extremely relaxing, yet energizing experience
+                  </div>
+                  <div class="review-text">
+                    The meditations are deep! It was an extremely relaxing yet
+                    energizing experience.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/vinita-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Vinita D.</div>
+                      <div class="reviwer-position">
+                        Silent Retreat participant
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="comments__person-info">
-                  <h3 className="comments__name">Vinita D.</h3>
-                  <p className="comments__person-about">
-                    Silent Retreat participant
-                  </p>
-                </div>
-              </div>
-
-              <p className="comments__quote">
-                “extremely relaxing, yet energizing experience”
-              </p>
-              <div className="comments__text">
-                <p className="short">
-                  The meditations are deep! It was an extremely relaxing yet
-                  energizing experience.
-                </p>
               </div>
             </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <div className="comments__person">
-                <div className="comments__person-img">
-                  <img src="/img/5-silent-comments.png" alt="comments" />
-                  <span>“</span>
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">wonderful, peaceful retreat</div>
+                  <div class="review-text">
+                    A wonderful, peaceful retreat ... extremely joyful and easy.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/aarti-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Aarti R.</div>
+                      <div class="reviwer-position">
+                        Silent Retreat participant
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="comments__person-info">
-                  <h3 className="comments__name">Aarti R.</h3>
-                  <p className="comments__person-about">
-                    Silent Retreat participant
-                  </p>
-                </div>
-              </div>
-
-              <p className="comments__quote">“wonderful, peaceful retreat”</p>
-              <div className="comments__text">
-                <p className="short">
-                  A wonderful, peaceful retreat ... extremely joyful and easy.
-                </p>
               </div>
             </SwiperSlide>
-            <SwiperSlide className="swiper-slide comments__item">
-              <div className="comments__person">
-                <div className="comments__person-img">
-                  <img src="/img/6-silent-comments.png" alt="comments" />
-                  <span>“</span>
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">I feel more like myself</div>
+                  <div class="review-text">
+                    I feel more like myself after the Silence Retreat. My life
+                    goes smoother after it and I feel the difference for a good
+                    3-6 months.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/daniel-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Daniel M.</div>
+                      <div class="reviwer-position">
+                        Silent Retreat participant
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="comments__person-info">
-                  <h3 className="comments__name">Daniel M.</h3>
-                  <p className="comments__person-about">
-                    Silent Retreat participant
-                  </p>
-                </div>
-              </div>
-
-              <p className="comments__quote">“I feel more like myself”</p>
-              <div className="comments__text">
-                <p className="short">
-                  I feel more like myself after the Silence Retreat. My life
-                  goes smoother after it and I feel the difference for a good
-                  3-6 months.
-                </p>
               </div>
             </SwiperSlide>
           </Swiper>
-        </section>
-        <Element name="registerNowBlock">
-          <section className="powerful silent-retreat" id="third">
-            <div className="container">
-              <div className="col-lg-10 p-0 m-auto">
-                <h2 className="text-center mb-3 silent-retreat__title">
-                  Even just a few minutes of true silence gives a rest far
-                  deeper than sleep, and possibly anything else you’ve
-                  experienced in life.
-                </h2>
-                <h2 className="text-center silent-retreat__title">
-                  Discover true silence.
-                </h2>
-                <RegisterPanel workshop={data} />
-              </div>
-            </div>
-          </section>
-        </Element>
-
-        <section className="quote-section">
-          <div className="container">
-            <div className="offset-lg-6">
-              <p className="quote-section__name">
-                Gurudev Sri Sri Ravi Shankar
-                <span>Founder of The Art of Living</span>
-              </p>
-              <p className="quote-section__quote">
-                “
-                <span>
-                  True laughter and celebration are born only out of deep
-                  silence...
-                </span>
-              </p>
-            </div>
-          </div>
-        </section>
-        <section className="life-time silent-retreat">
-          <div className="container">
-            <div className="col-xl-5 col-lg-6 p-0">
-              <h2 className="life-time__title section-title">
-                Renewed energy & focus that lasts the whole year
-              </h2>
-              <div className="life-time__block">
-                <h3>Release deep layers of stress</h3>
-                <p className="life-time__text">
-                  Experience a set of unique guided meditations, designed by
-                  meditation master, Gurudev Sri Sri Ravi Shankar, geared
-                  towards drawing out the deepest layers of stress and tension
-                  from the nervous system, leaving you with a feeling of
-                  lightness, freedom, energy, and joy.
-                </p>
-              </div>
-              <div className="life-time__block">
-                <h3>Gain life-changing insight & self-awareness</h3>
-                <p className="life-time__text">
-                  Transform every aspect of your daily life through enhanced
-                  self-awareness and practical wisdom tools that tap into the
-                  profound connection to bliss.
-                </p>
-              </div>
-              <div className="life-time__block">
-                <h3>Reconnect with YOU</h3>
-                <p className="life-time__text">
-                  Enjoy practices that powerfully realign and reconnect you with
-                  your authentic self. Guided meditation, yoga, silent
-                  self-inquiry, wisdom, and live interactive sessions with our
-                  certified instructors—we take care of your journey.
-                </p>
-              </div>
-              <Link
-                activeClassName="active"
-                className="btn-secondary v2"
-                to="registerNowBlock"
-                spy={true}
-                smooth={true}
-                duration={500}
-                offset={0}
-              >
-                Register Today
-              </Link>
-            </div>
-          </div>
-        </section>
-        <section className="about tw-pb-[200px]">
-          <div className="container">
-            <h2 className="about__title section-title text-center">
-              About the Art of Living
-            </h2>
-            <div className="row">
-              <div className="col-12 col-md-3 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-39-years.svg" alt="years" />
-                </div>
-                <p className="about__text">
-                  <span>42 years</span> of service to society
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-3000-centers.svg" alt="centers" />
-                </div>
-                <p className="about__text">
-                  <span>10,000+ centers</span> worldwide
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-156-countries.svg" alt="countries" />
-                </div>
-                <p className="about__text">
-                  <span>180 countries</span> where our programs made a
-                  difference
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-450-m-lives.svg" alt="lives" />
-                </div>
-                <p className="about__text">
-                  <span>500M+ lives</span> touched through our courses & events
-                </p>
-              </div>
-            </div>
-          </div>
+          <div class="pagination"></div>
         </section>
       </main>
-      <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
-      </HideOn>
     </>
   );
 };

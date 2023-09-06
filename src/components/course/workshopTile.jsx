@@ -4,7 +4,6 @@ import { pushRouteWithUTMQuery } from "@service";
 import { tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 
@@ -116,7 +115,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
       data-complete={isPurchased}
     >
       {isSilentRetreatType && (
-        <Image
+        <img
           className="course-card__image"
           src="/img/course-card-4.png"
           alt="bg"
@@ -124,7 +123,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
         />
       )}
       {isSKYType && (
-        <Image
+        <img
           className="course-card__image"
           src="/img/course-card-2.png"
           alt="bg"
@@ -132,7 +131,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
         />
       )}
       {isSahajSamadhiMeditationType && (
-        <Image
+        <img
           className="course-card__image"
           src="/img/course-card-5.png"
           alt="bg"
@@ -140,7 +139,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
         />
       )}
       {!isSilentRetreatType && !isSKYType && !isSahajSamadhiMeditationType && (
-        <Image
+        <img
           className="course-card__image"
           src="/img/course-card-1.png"
           alt="bg"

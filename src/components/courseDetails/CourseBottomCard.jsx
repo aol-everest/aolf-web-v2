@@ -2,7 +2,6 @@ import { COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import Image from "next/image";
 import { Link } from "react-scroll";
 
 dayjs.extend(utc);
@@ -23,21 +22,21 @@ export const CourseBottomCard = ({ workshop, onRegister = null }) => {
           <div className="course-bottom-card__info-block">
             <div className="course-bottom-card__img d-none d-lg-block tw-relative tw-h-[60px] tw-max-w-[60px]">
               {isSilentRetreatType && (
-                <Image
+                <img
                   src="/img/course-card-4.png"
                   alt="course-photo"
                   layout="fill"
                 />
               )}
               {isSKYType && (
-                <Image
+                <img
                   src="/img/course-card-2.png"
                   alt="course-photo"
                   layout="fill"
                 />
               )}
               {isSahajSamadhiMeditationType && (
-                <Image
+                <img
                   src="/img/course-card-5.png"
                   alt="course-photo"
                   layout="fill"
@@ -46,7 +45,7 @@ export const CourseBottomCard = ({ workshop, onRegister = null }) => {
               {!isSilentRetreatType &&
                 !isSKYType &&
                 !isSahajSamadhiMeditationType && (
-                  <Image
+                  <img
                     src="/img/course-card-1.png"
                     alt="course-photo"
                     layout="fill"

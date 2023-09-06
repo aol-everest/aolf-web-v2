@@ -37,7 +37,6 @@ import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
 import { api, priceCalculation, tConvert } from "@utils";
 import { filterAllowedParams } from "@utils/utmParam";
-import Image from "next/image";
 
 const createOptions = {
   style: {
@@ -1047,7 +1046,7 @@ export const PaymentFormWebinar = ({
                     <div class="reciept__details ">
                       <div class="course pb-3">
                         <div class="d-none d-lg-block course__photo course__photo--min-width tw-relative tw-h-[98px] tw-min-w-[98px]">
-                          <Image
+                          <img
                             src={"/img/card-2.png"}
                             alt="course-photo"
                             layout="fill"

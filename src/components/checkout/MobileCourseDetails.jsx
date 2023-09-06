@@ -153,6 +153,7 @@ export const MobileCourseDetails = ({
 }) => {
   const {
     title,
+    meetupTitle,
     productTypeId,
     eventStartDate,
     eventEndDate,
@@ -168,7 +169,16 @@ export const MobileCourseDetails = ({
     premiumRate,
     isGenericWorkshop,
     mode,
+    meetupStartDate,
+    meetupStartTime,
+    eventTimeZone,
+    meetupStartDateTime,
+    primaryTeacherMobilePhone,
+    primaryTeacherPhone,
+    primaryTeacherEmail,
   } = workshop || {};
+
+  const day = meetupStartDateTime && meetupStartDateTime.split(",")[0];
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
@@ -205,7 +215,7 @@ export const MobileCourseDetails = ({
           <div className="close-line"></div>
           <div className="close-line"></div>
         </div>
-        <div className="course-name">{title}</div>
+        <div className="course-name">{title || meetupTitle}</div>
         <CourseFeeRender
           userSubscriptions={userSubscriptions}
           productTypeId={productTypeId}
@@ -222,25 +232,35 @@ export const MobileCourseDetails = ({
           <>
             <div className="course-detail">
               Your course:{" "}
-              {dayjs
-                .utc(eventStartDate)
-                .isSame(dayjs.utc(eventEndDate), "month") && (
-                <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                  .utc(eventEndDate)
-                  .format("DD, YYYY")}`}</span>
-              )}
-              {!dayjs
-                .utc(eventStartDate)
-                .isSame(dayjs.utc(eventEndDate), "month") && (
-                <span>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
-                  .utc(eventEndDate)
-                  .format("MMMM DD, YYYY")}`}</span>
+              {meetupStartDate && dayjs.utc(meetupStartDate) ? (
+                <span>{`${dayjs.utc(meetupStartDate).format("MMMM DD")}, ${dayjs
+                  .utc(meetupStartDate)
+                  .format("YYYY")}`}</span>
+              ) : (
+                <>
+                  {dayjs
+                    .utc(eventStartDate)
+                    .isSame(dayjs.utc(eventEndDate), "month") && (
+                    <span>{`${dayjs
+                      .utc(eventStartDate)
+                      .format("MMMM DD")}`}</span>
+                  )}
+                  {!dayjs
+                    .utc(eventStartDate)
+                    .isSame(dayjs.utc(eventEndDate), "month") && (
+                    <span>{`${dayjs
+                      .utc(eventStartDate)
+                      .format("MMMM DD")}-${dayjs
+                      .utc(eventEndDate)
+                      .format("MMMM DD, YYYY")}`}</span>
+                  )}
+                </>
               )}
             </div>
 
             <div className="course-detail">
               Timings:
-              {timings &&
+              {timings ? (
                 timings.map((time) => {
                   return (
                     <>
@@ -251,7 +271,14 @@ export const MobileCourseDetails = ({
                       </span>
                     </>
                   );
-                })}
+                })
+              ) : (
+                <span>
+                  {`${day}: ${tConvert(meetupStartTime)} ${
+                    ABBRS[eventTimeZone]
+                  }`}
+                </span>
+              )}
             </div>
           </>
         )}
@@ -323,9 +350,34 @@ export const MobileCourseDetails = ({
         )}
         <div className="course-detail">
           Contact details:
-          <span>{phone1}</span>
-          {phone2 && <span>{phone2}</span>}
-          <span>{contactEmail}</span>
+          {phone1 || phone2 || contactEmail ? (
+            <>
+              <span>{phone1}</span>
+              {phone2 && <span>{phone2}</span>}
+              <span>{contactEmail}</span>
+            </>
+          ) : (
+            <>
+              <span>
+                <a href={`tel:${primaryTeacherMobilePhone}`}>
+                  {primaryTeacherMobilePhone}
+                </a>
+              </span>
+              {primaryTeacherPhone && (
+                <span>
+                  <a href={`tel:${primaryTeacherPhone}`}>
+                    {primaryTeacherPhone}
+                  </a>
+                </span>
+              )}
+              {/* <li>{contactPersonName1}</li> */}
+              <span className="meetup-emial">
+                <a href={`mailto:${primaryTeacherEmail}`}>
+                  {primaryTeacherEmail}
+                </a>
+              </span>
+            </>
+          )}
         </div>
         <div className="course-more word-wrap">
           {notes && (

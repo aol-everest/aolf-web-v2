@@ -18,7 +18,6 @@ import { isEmpty, tConvert } from "@utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Formik } from "formik";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -943,7 +942,7 @@ export const MeetupPaymentForm = ({
                 <div className="reciept__details">
                   <div className="course">
                     <div className="course__photo tw-relative tw-h-[98px] tw-max-w-[98px]">
-                      <Image
+                      <img
                         src="/img/course-card-1.png"
                         alt="course-photo"
                         layout="fill"
@@ -978,38 +977,6 @@ export const MeetupPaymentForm = ({
                         </li>
                       </ul>
 
-                      <ul className="info__list mt-3">
-                        <h2 className="info__title">Instructor(s):</h2>
-                        {primaryTeacherName && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            {primaryTeacherName}
-                          </li>
-                        )}
-                        {coTeacher1Name && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            {coTeacher1Name}
-                          </li>
-                        )}
-                        {coTeacher2Name && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            {coTeacher2Name}
-                          </li>
-                        )}
-                      </ul>
-                      <ul className="info__list mt-3">
-                        <h2 className="info__title">Contact details:</h2>
-                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                          <a href={`tel:${phone1}`}>{phone1}</a>
-                        </li>
-                        {phone2 && (
-                          <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                            <a href={`tel:${phone2}`}>{phone2}</a>
-                          </li>
-                        )}
-                        <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                          <a href={`mailto:${email}`}>{email}</a>
-                        </li>
-                      </ul>
                       <ul className="info__list mt-3">
                         <h2 className="info__title">Instructor(s):</h2>
                         {primaryTeacherName && <li>{primaryTeacherName}</li>}

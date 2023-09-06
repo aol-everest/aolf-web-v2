@@ -80,7 +80,7 @@ const AOL_MENU = [
         link: "https://www.artofliving.org/us-en/courses",
       },
       {
-        name: "SKY Breath Meditation",
+        name: "Art Of Living Part I",
         link: "/us-en/lp/online-course-2",
         // link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
       },
@@ -90,7 +90,7 @@ const AOL_MENU = [
         // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
-        name: "Silent Retreat",
+        name: "Art Of Living Part II",
         link: "https://www.artofliving.org/us-en/silence-retreat",
         // link: `/us-en?courseType=SILENT_RETREAT`,
       },
