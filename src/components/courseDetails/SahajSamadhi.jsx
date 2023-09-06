@@ -10,6 +10,7 @@ import { pushRouteWithUTMQuery } from "@service";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { priceCalculation } from "@utils";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
@@ -42,6 +43,7 @@ export const SahajSamadhi = ({ data }) => {
   const router = useRouter();
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
+  const { fee, delfee } = sfid ? priceCalculation({ workshop: data }) : {};
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -238,18 +240,20 @@ export const SahajSamadhi = ({ data }) => {
             </div>
           </div>
         </section>
-        <section class="register-to-unlock">
-          <div class="container">
-            <div class="unlock-title">
-              Unlock your Inner Peace with this 3-day course for $295
+        {sfid && (
+          <section class="register-to-unlock">
+            <div class="container">
+              <div class="unlock-title">
+                Unlock your Inner Peace with this 3-day course for ${fee}
+              </div>
+              <div class="unlock-register">
+                <button class="register-button" onClick={handleRegister}>
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
+              </div>
             </div>
-            <div class="unlock-register">
-              <button class="register-button" onClick={handleRegister}>
-                Register Now <FaArrowRightLong className="fa-solid" />
-              </button>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <section class="section-sahaj-reviews">
           <h2 class="section-title">How {title} is Changing Lives?</h2>

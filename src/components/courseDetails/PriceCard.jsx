@@ -166,9 +166,11 @@ export const PriceCard = ({ workshop }) => {
         <div class=" row register-content">
           <div class="col discount-price">
             ${fee}&nbsp;
-            <span class="actual-price">
-              <s>${delfee}</s>
-            </span>
+            {delfee && (
+              <span class="actual-price">
+                <s>${delfee}</s>
+              </span>
+            )}
           </div>
           <div class="col dates">
             <span class="title">Dates</span>
