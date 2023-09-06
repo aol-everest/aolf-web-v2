@@ -15,7 +15,7 @@
         line-height: 62px;
         font-family: 'museo_sans700';
         background: linear-gradient(
-          180deg,
+          90deg,
           #0580ce 0%,
           rgba(5, 128, 206, 0.28) 100%
         );
@@ -267,7 +267,6 @@
       }
     }
     .breadth-meditation__title {
-      margin-top: 2rem;
       padding: 0 150px 45px;
     }
     @media only screen and (max-width: 768px) {
@@ -302,15 +301,22 @@
       }
       .key-highlight-content {
         background-color: #ffedd9;
-        padding: 15px;
+        padding: 35px;
         .title {
-          font-family: 'museo_sans500';
+          font-family: 'museo_sans700';
+          font-size: 29px;
+          line-height: 39px;
         }
         .content {
           display: flex;
           margin: 0.8rem 0;
           min-height: 60px;
           font-family: 'museo_sans300';
+          font-size: 20px;
+          line-height: 29px;
+        }
+        @media only screen and (min-width: 992px) {
+          min-height: 270px;
         }
       }
     }
@@ -346,8 +352,13 @@
     background-size: cover;
     background-position-y: center;
   }
+  .comments__video {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
   .comments__title {
     font-family: 'museo_sans500';
+    padding-bottom: 50px !important;
   }
   @media only screen and (max-width: 768px) {
     .comments {
@@ -356,11 +367,12 @@
       background-size: cover;
       padding: 50px 30px;
       .comments__title {
-        padding: 0;
+        padding: 0 !important;
       }
       .comments__video {
         margin-bottom: 0;
         background: none;
+        height: 180px;
       }
     }
   }
