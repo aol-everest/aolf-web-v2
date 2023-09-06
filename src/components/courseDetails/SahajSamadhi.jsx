@@ -325,7 +325,6 @@ export const SahajSamadhi = ({ data }) => {
                 </div>
               </div>
             </SwiperSlide>
-            ...
           </Swiper>
         </section>
         <section class="faq">

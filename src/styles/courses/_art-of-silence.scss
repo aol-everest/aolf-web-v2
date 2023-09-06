@@ -1,4 +1,7 @@
 .art-of-silence {
+  &.course-filter {
+    padding-top: 0;
+  }
   @media screen and (max-width: 991px) {
     padding-top: 0 !important;
   }
@@ -20,7 +23,9 @@
       height: 402px;
       width: 100%;
       background: url(/img/art-of-silence-banner.jpg) no-repeat top left;
-      padding: 50px 76px 50px 76px;
+      padding: 60px 76px 50px 76px;
+      background-size: cover;
+      background-position: center;
       .courses-title {
         display: none;
         font-size: 16px;
@@ -49,10 +54,12 @@
         }
       }
       @media screen and (max-width: 767px) {
-        background: url(/img/sahaj-samadhi-banner-mobile.jpg) no-repeat bottom
+        background: url(/img/art-of-silence-banner-mobile.png) no-repeat bottom
           center;
         height: 600px;
         padding: 36px 32px 10px;
+        background-size: cover;
+        background-position: center bottom;
         &-title {
           font-size: 26px;
           line-height: 30px;
@@ -81,22 +88,7 @@
         }
       }
     }
-    .content-area1 {
-      padding: 50px 76px;
-      p {
-        font-size: 18px;
-        line-height: 24px;
-      }
-      @media screen and (max-width: 991px) {
-        padding: 20px 0;
-      }
-      @media screen and (max-width: 767px) {
-        padding: 30px 20px;
-        p {
-          font-size: 16px;
-        }
-      }
-    }
+
     .content-video-area {
       display: flex;
       padding: 40px 76px;
@@ -249,6 +241,8 @@
         height: 400px;
         text-align: left;
         padding: 24px;
+        background-size: cover !important;
+        background-position: top center !important;
         .benefit-title {
           font-size: 28px;
           line-height: 30px;
@@ -267,6 +261,7 @@
     padding-top: 112px;
     background: url(/img/samadhi-carousel-bg.png) repeat-x top left;
     padding-bottom: 150px;
+    position: relative;
     .section-title {
       font-family: 'Work Sans';
       font-size: 36px;
@@ -275,30 +270,18 @@
       text-align: center;
       margin-bottom: 70px;
     }
-    .slick-slider {
-      height: 334px;
+    .swiper-wrapper {
+      display: flex;
     }
-    .slick-current {
-      opacity: 1;
-      margin: 0 25px;
-      .slide {
-        opacity: 1;
-      }
-    }
-    .slide {
-      opacity: 0.5;
-    }
-
-    @media screen and (max-width: 767px) {
-      .slick-current {
-        padding: 0 15px;
-        margin: 0;
-      }
+    .swiper-slide {
+      align-self: stretch;
+      height: auto;
     }
     .review-box {
       background: white;
       border-bottom: #a0b2fd 8px solid;
       padding: 30px;
+      height: 100%;
     }
     .review-title {
       font-family: 'Lora';
@@ -338,23 +321,20 @@
     .reviwer-position {
       color: #6f6f6f;
     }
-    .slick-list {
-    }
-    .slick-dots {
-      li {
-        margin: 0;
-      }
-      bottom: -100px;
-      :before {
-        font-size: 12px;
-      }
+    .swiper-pagination {
+      bottom: -5px;
     }
     @media screen and (max-width: 767px) {
+      padding-top: 0;
+      .swiper-slide {
+        padding: 0 20px;
+      }
       .section-title {
         font-size: 28px;
         line-height: 30px;
         padding: 0 30px;
         text-align: left;
+        margin-bottom: 36px;
       }
       .review-box {
         padding: 20px;
@@ -477,9 +457,7 @@
     .circle:before {
       background-color: #0398b5;
     }
-    .fa-solid {
-      color: #0398b5;
-    }
+    .fa-solid,
     .fa-solid:before {
       color: #0398b5;
     }
@@ -487,6 +465,59 @@
       background: linear-gradient(90deg, #57bacd 9.51%, #0398b5 93.54%);
       .fa-solid:before {
         color: #ffffff;
+      }
+    }
+  }
+  .float-bar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    padding: 10px 0;
+    z-index: 10;
+  }
+  .float-wrapper {
+    max-width: 1125px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @media screen and (max-width: 768px) {
+      max-width: 320px;
+    }
+  }
+  .bar-left {
+    text-align: right;
+    padding-right: 10px;
+    @media screen and (max-width: 767px) {
+      width: 50%;
+      padding-right: 0px;
+    }
+    .bar-title {
+      font-family: 'museo_sans500';
+      font-size: 24px;
+      line-height: normal;
+      @media screen and (max-width: 767px) {
+        font-size: 16px;
+        line-height: 17px;
+        text-align: left;
+        padding: 8px 0 0 10px;
+      }
+    }
+  }
+  .bar-right {
+    text-align: left;
+    padding-left: 10px;
+    button {
+      background: linear-gradient(90deg, #57bacd 9.51%, #0398b5 93.54%);
+      color: #fff;
+      border: 0px;
+      border-radius: 2rem;
+      padding: 1rem 4rem;
+      white-space: nowrap;
+      @media screen and (max-width: 767px) {
+        padding: 10px 20px;
       }
     }
   }
