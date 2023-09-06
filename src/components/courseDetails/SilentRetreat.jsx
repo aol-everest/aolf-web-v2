@@ -11,6 +11,7 @@ import queryString from "query-string";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Link from "next/link";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -147,7 +148,11 @@ export const SilentRetreat = ({ data }) => {
               <p>
                 *You can take the Part II Course only after completing the Part
                 I course. If you would like to do a silent retreat and have not
-                yet done Part I, please visit this page.{" "}
+                yet done Part I, please visit{" "}
+                <Link href="/us-en/course?courseType=SKY_BREATH_MEDITATION">
+                  this page
+                </Link>
+                .{" "}
               </p>
             </div>
             <div class="video-wrapper">
@@ -245,148 +250,133 @@ export const SilentRetreat = ({ data }) => {
           </h2>
           <Swiper {...swiperOption} className="reviews-slider">
             <SwiperSlide>
-              <div class="swiper-slide">
-                <div class="review-box">
-                  <div class="review-title">
-                    ...very, very powerful...such a sense of calm
+              <div class="review-box">
+                <div class="review-title">
+                  ...very, very powerful...such a sense of calm
+                </div>
+                <div class="review-text">
+                  It was very, very powerful. I gained such a sense of calm,
+                  more than I ever could have imagined.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/max-review.png" alt="reviewer" />
                   </div>
-                  <div class="review-text">
-                    It was very, very powerful. I gained such a sense of calm,
-                    more than I ever could have imagined.
-                  </div>
-                  <div class="review-author">
-                    <div class="reviewer-photo">
-                      <img src="/img/max-review.png" alt="reviewer" />
-                    </div>
-                    <div class="reviewer-info">
-                      <div class="reviewer-name">Max Goldberg</div>
-                      <div class="reviwer-position">
-                        Silent Retreat participant
-                      </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Max Goldberg</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div class="swiper-slide">
-                <div class="review-box">
-                  <div class="review-title">
-                    relaxed, refreshed, and happier
+              <div class="review-box">
+                <div class="review-title">relaxed, refreshed, and happier</div>
+                <div class="review-text">
+                  It helped me to put into practice the valuable wisdom which I
+                  had picked up on the SKY Breath Meditation course. I came away
+                  relaxed, refreshed and happier than I had felt for a long
+                  time.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/reviewer-photo.png" alt="reviewer" />
                   </div>
-                  <div class="review-text">
-                    It helped me to put into practice the valuable wisdom which
-                    I had picked up on the SKY Breath Meditation course. I came
-                    away relaxed, refreshed and happier than I had felt for a
-                    long time.
-                  </div>
-                  <div class="review-author">
-                    <div class="reviewer-photo">
-                      <img src="/img/reviewer-photo.png" alt="reviewer" />
-                    </div>
-                    <div class="reviewer-info">
-                      <div class="reviewer-name">Julie Madeley</div>
-                      <div class="reviwer-position">
-                        Silent Retreat participant
-                      </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Julie Madeley</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div class="swiper-slide">
-                <div class="review-box">
-                  <div class="review-title">Felt more balanced</div>
-                  <div class="review-text">
-                    I've been on quite a few silent retreats in the past and
-                    this felt more balanced, nourishing and comfortable than any
-                    other retreat I'd been on.
+              <div class="review-box">
+                <div class="review-title">Felt more balanced</div>
+                <div class="review-text">
+                  I've been on quite a few silent retreats in the past and this
+                  felt more balanced, nourishing and comfortable than any other
+                  retreat I'd been on.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/michelle-review.png" alt="reviewer" />
                   </div>
-                  <div class="review-author">
-                    <div class="reviewer-photo">
-                      <img src="/img/michelle-review.png" alt="reviewer" />
-                    </div>
-                    <div class="reviewer-info">
-                      <div class="reviewer-name">Michelle Garisson</div>
-                      <div class="reviwer-position">
-                        Silent Retreat participant
-                      </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Michelle Garisson</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div class="swiper-slide">
-                <div class="review-box">
-                  <div class="review-title">
-                    extremely relaxing, yet energizing experience
+              <div class="review-box">
+                <div class="review-title">
+                  extremely relaxing, yet energizing experience
+                </div>
+                <div class="review-text">
+                  The meditations are deep! It was an extremely relaxing yet
+                  energizing experience.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/vinita-review.png" alt="reviewer" />
                   </div>
-                  <div class="review-text">
-                    The meditations are deep! It was an extremely relaxing yet
-                    energizing experience.
-                  </div>
-                  <div class="review-author">
-                    <div class="reviewer-photo">
-                      <img src="/img/vinita-review.png" alt="reviewer" />
-                    </div>
-                    <div class="reviewer-info">
-                      <div class="reviewer-name">Vinita D.</div>
-                      <div class="reviwer-position">
-                        Silent Retreat participant
-                      </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Vinita D.</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div class="swiper-slide">
-                <div class="review-box">
-                  <div class="review-title">wonderful, peaceful retreat</div>
-                  <div class="review-text">
-                    A wonderful, peaceful retreat ... extremely joyful and easy.
+              <div class="review-box">
+                <div class="review-title">wonderful, peaceful retreat</div>
+                <div class="review-text">
+                  A wonderful, peaceful retreat ... extremely joyful and easy.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/aarti-review.png" alt="reviewer" />
                   </div>
-                  <div class="review-author">
-                    <div class="reviewer-photo">
-                      <img src="/img/aarti-review.png" alt="reviewer" />
-                    </div>
-                    <div class="reviewer-info">
-                      <div class="reviewer-name">Aarti R.</div>
-                      <div class="reviwer-position">
-                        Silent Retreat participant
-                      </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Aarti R.</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div class="swiper-slide">
-                <div class="review-box">
-                  <div class="review-title">I feel more like myself</div>
-                  <div class="review-text">
-                    I feel more like myself after the Silence Retreat. My life
-                    goes smoother after it and I feel the difference for a good
-                    3-6 months.
+              <div class="review-box">
+                <div class="review-title">I feel more like myself</div>
+                <div class="review-text">
+                  I feel more like myself after the Silence Retreat. My life
+                  goes smoother after it and I feel the difference for a good
+                  3-6 months.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/daniel-review.png" alt="reviewer" />
                   </div>
-                  <div class="review-author">
-                    <div class="reviewer-photo">
-                      <img src="/img/daniel-review.png" alt="reviewer" />
-                    </div>
-                    <div class="reviewer-info">
-                      <div class="reviewer-name">Daniel M.</div>
-                      <div class="reviwer-position">
-                        Silent Retreat participant
-                      </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Daniel M.</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
           </Swiper>
-          <div class="pagination"></div>
         </section>
       </main>
     </>
