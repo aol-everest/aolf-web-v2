@@ -17,7 +17,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 
 const settings = {
   slidesToShow: 3,
-  slidesToScroll: 3,
+  slidesToScroll: 1,
   centerMode: false,
   arrows: false,
   dots: true,
@@ -85,10 +85,15 @@ export const SKYBreathMeditation = ({ data }) => {
       <main class="sky-breath-course">
         <section class="top-column sky-breath">
           <div class="container first-section">
-            <div class="banner-title">{title}</div>
+            <div class="banner-title">
+              The Art of Living
+              <br />
+              <span>Part I</span>
+            </div>
             <div class="banner-desc">
-              Discover a meditation technique from an ancient tradition, shown
-              by research to
+              Discover Gurudev Sri Sri Ravi Shankar’s
+              <br />
+              <span>ancient secret to modern well-being</span>
             </div>
 
             <ul>
@@ -225,11 +230,11 @@ export const SKYBreathMeditation = ({ data }) => {
                 <div class="col-12 col-lg-6 float-left">
                   <div class="breadth-meditation_content">
                     <p class="">
-                      <strong>{title}</strong> is a powerful rhythmic breathing
-                      technique that harmonizes the body-mind complex.
-                      Participants notice reduced stress and anxiety, better
-                      sleep, a stronger immune system, and increased energy
-                      levels.
+                      Sudarshan Kriya (SKY Breath Meditation) taught in the
+                      {title} course is a powerful rhythmic breathing technique
+                      that harmonizes the body-mind complex. Participants notice
+                      reduced stress and anxiety, better sleep, a stronger
+                      immune system, and increased energy levels.
                     </p>
                     <button class="register-button" onClick={handleRegister}>
                       Register Now <FaArrowRightLong />
@@ -245,11 +250,11 @@ export const SKYBreathMeditation = ({ data }) => {
               <div class="col-12 px-2 col-lg-12 text-center text-lg-center">
                 <img src="/img/smallLine.svg" />
                 <h2 class="breadth-meditation__title section-title benefits-title text-center">
-                  Impacts of {title}
+                  Impacts of SKY Breath Meditation
                 </h2>
                 <p class="section-desc text-center">
-                  Researched in over 100 independent studies, here is a glimpse
-                  of science-backed benefits of {title}:
+                  Science-backed benefits of SKY, shown in over 100 independent
+                  studies
                 </p>
               </div>
               <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
@@ -326,7 +331,7 @@ export const SKYBreathMeditation = ({ data }) => {
                     <img src="/img/key-11.png" alt="transforming lives" />
                   </div>
                   <div class="key-highlight-content">
-                    <span class="title">Breathwork</span>
+                    <span class="title">Pranayama</span>
                     <br />
                     <span class="content">
                       Improve your energy levels and reduce stress through
@@ -389,8 +394,8 @@ export const SKYBreathMeditation = ({ data }) => {
                     <span class="title">Ongoing Support</span>
                     <br />
                     <span class="content">
-                      Continue to enjoy access to teachers, digital content, and
-                      weekly group practice
+                      Continued access to teachers, digital content, and weekly
+                      group practice
                     </span>
                   </div>
                 </div>
@@ -477,7 +482,7 @@ export const SKYBreathMeditation = ({ data }) => {
         <section class="comments">
           <div class="container">
             <h2 class="comments__title section-title text-center">
-              How is {title} Changing Lives?
+              How is Art of Living Part I Course Changing Lives?
             </h2>
           </div>
           <div class="comments__video">

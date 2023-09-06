@@ -7,8 +7,8 @@ export default function ArtOfLivingPart2() {
 
   return (
     <>
-      <NextSeo title="Art Of Living Part 2" />
-      <SilentRetreat data={{ title: "Art Of Living Part 2" }} />
+      <NextSeo title="Art of Living Part II Course" />
+      <SilentRetreat data={{ title: "Art of Living Part II Course" }} />
     </>
   );
 }

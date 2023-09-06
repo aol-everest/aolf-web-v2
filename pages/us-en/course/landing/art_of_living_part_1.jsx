@@ -7,8 +7,8 @@ export default function ArtOfLivingPart1() {
 
   return (
     <>
-      <NextSeo title="Art Of Living Part 1" />
-      <SKYBreathMeditation data={{ title: "Art Of Living Part 1" }} />
+      <NextSeo title="Art of Living Part I Course" />
+      <SKYBreathMeditation data={{ title: "Art of Living Part I Course" }} />
     </>
   );
 }

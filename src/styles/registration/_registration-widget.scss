@@ -10,6 +10,7 @@
   border-radius: 16px;
   background: #fff;
   border: 1px solid #d0d0d0;
+  font-family: 'museo_sans300';
 
   .fa-solid {
     color: #ff8400;
@@ -25,13 +26,14 @@
       word-break: break-word;
     }
     .discount-price {
+      font-family: 'museo_sans700';
       font-size: 42px;
-      font-weight: 600;
       line-height: 50px;
       text-align: left;
       color: #000;
     }
     .actual-price {
+      font-family: 'museo_sans300';
       font-size: 42px;
       font-weight: 300;
       line-height: 50px;
@@ -56,6 +58,7 @@
     }
     .dates {
       .title {
+        font-family: 'museo_sans500';
         font-size: 20px;
         line-height: 24px;
       }
@@ -90,6 +93,7 @@
     }
     .location {
       .title {
+        font-family: 'museo_sans500';
         font-size: 20px;
         line-height: 24px;
       }
@@ -104,6 +108,7 @@
       align-items: center;
       justify-content: flex-end;
       .title {
+        font-family: 'museo_sans500';
         font-size: 20px;
         line-height: 24px;
         margin-right: 1.4rem;

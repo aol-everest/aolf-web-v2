@@ -7,11 +7,13 @@
     box-shadow: inset 0px 0px 89px -60px white;
     padding-bottom: 100px;
     background-position: center top;
+    padding-top: 150px;
     .first-section {
       margin-bottom: 4.875rem;
       .banner-title {
         font-size: 68px;
         line-height: 62px;
+        font-family: 'museo_sans700';
         background: linear-gradient(
           180deg,
           #0580ce 0%,
@@ -20,11 +22,10 @@
         background-clip: text;
         -webkit-text-fill-color: transparent;
         text-transform: uppercase;
-        font-weight: 600;
         margin-bottom: 2.1875rem;
-        max-width: 550px;
+        max-width: 700px;
         span {
-          font-weight: 300;
+          font-family: 'museo_sans100';
         }
       }
       .hero-register-button-wrapper {
@@ -57,14 +58,14 @@
       }
       .banner-desc {
         margin-bottom: 3.1875rem;
-        font-size: 24px;
-        line-height: 28px;
+        font-family: 'museo_sans300';
+        font-size: 34px;
+        line-height: 45px;
         color: #007fce;
-        width: 50%;
         font-weight: 300;
-
+        width: 700px;
         span {
-          font-weight: 600;
+          font-family: 'museo_sans700';
         }
       }
       @media only screen and (max-width: 768px) {
@@ -105,12 +106,16 @@
   }
   @media only screen and (max-width: 768px) {
     .sky-breath {
-      background-image: url(/img/sky-breath-mobile.png);
-      background-size: 500px;
+      background-image: url(/img/sky-breath-mobile.jpg);
       background-repeat: no-repeat;
-      background-position: center -120px;
+      background-position: center top;
       padding: 30px 7px;
-      background-color: #fff6ec;
+      background-size: 100%;
+    }
+  }
+  @media only screen and (max-width: 480px) {
+    .sky-breath {
+      background-position: center 100px;
     }
   }
   .progress-section {
@@ -181,7 +186,7 @@
 
   .breadth-meditation {
     background-color: #f7f5f4;
-    padding: 122px 0 100px 0;
+    padding: 80px 0 100px 0;
     background-image: url(/img/Breath-meditation-bg-desktop.png);
     background-repeat: no-repeat;
     background-size: cover;
@@ -291,16 +296,21 @@
       margin-bottom: 1rem;
       margin-left: 10px;
       margin-right: 10px;
+
       img {
         width: 100%;
       }
       .key-highlight-content {
         background-color: #ffedd9;
         padding: 15px;
+        .title {
+          font-family: 'museo_sans500';
+        }
         .content {
           display: flex;
           margin: 0.8rem 0;
           min-height: 60px;
+          font-family: 'museo_sans300';
         }
       }
     }
@@ -317,6 +327,10 @@
     }
   }
   @media only screen and (max-width: 768px) {
+    .key-highlight-box {
+      background-color: #ffedd9;
+      min-height: 350px;
+    }
     .key-highlight-section {
       padding-top: 30px;
       padding-bottom: 30px;
@@ -332,10 +346,22 @@
     background-size: cover;
     background-position-y: center;
   }
+  .comments__title {
+    font-family: 'museo_sans500';
+  }
   @media only screen and (max-width: 768px) {
     .comments {
-      background-image: url(/img/video-bg-mobile.png);
-      padding-top: 40px;
+      background-image: url(/img/video-bg-mobile.png) !important;
+      background-position: center;
+      background-size: cover;
+      padding: 50px 30px;
+      .comments__title {
+        padding: 0;
+      }
+      .comments__video {
+        margin-bottom: 0;
+        background: none;
+      }
     }
   }
   .quote-section {
@@ -432,19 +458,21 @@
     }
     @media only screen and (max-width: 768px) {
       .feature_box {
-        margin: 5px 0;
-        flex-direction: column;
-        min-height: 7rem;
+        margin: 2px 0;
+        height: 100px;
+        min-height: unset;
+        flex-direction: row;
+        border-radius: 0;
         .feature_logo {
           margin-bottom: 1rem;
-          min-height: 4rem;
+          min-height: unset;
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 200px;
-          margin: 20px auto;
+          width: 100px;
+          margin: 20px 0;
           img {
-            width: 200px;
+            max-width: 100px;
           }
         }
         .feature-content {
@@ -453,6 +481,9 @@
           align-items: center;
           text-align: left;
           margin-left: 2rem;
+          font-family: 'lora';
+          font-size: 16px;
+          line-height: 24px;
         }
       }
     }
@@ -484,7 +515,7 @@
           padding: 0;
         }
         h5 .btn {
-          font-weight: 500;
+          font-family: 'museo_sans500';
           text-align: left;
 
           font-size: 36px !important;
@@ -493,7 +524,7 @@
           background: transparent !important;
           border: none !important;
           position: relative;
-          padding: 50px 0 !important;
+          padding: 50px 0 40px !important;
           text-decoration: none;
           display: block;
           width: 100%;
@@ -527,7 +558,9 @@
         font-size: 24px !important;
         line-height: 28px !important;
         color: #010101;
-        font-weight: 100;
+        font-family: 'museo_sans300';
+        padding-bottom: 50px;
+        padding-top: 0;
         @media only screen and (max-width: 768px) {
           font-size: 18px !important;
           line-height: normal !important;
@@ -640,6 +673,7 @@
       padding-right: 0px;
     }
     .bar-title {
+      font-family: 'museo_sans500';
       font-size: 24px;
       line-height: 63px;
       @media screen and (max-width: 767px) {
@@ -660,6 +694,17 @@
       @media screen and (max-width: 767px) {
         width: 132px;
       }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    &::before {
+      background-color: #ffe7cd;
+      height: 200px;
+      content: '';
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
   }
 }
