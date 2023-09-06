@@ -81,17 +81,17 @@ const AOL_MENU = [
       },
       {
         name: "Art Of Living Part I",
-        link: "/us-en/course/landing/art_of_living_part_1",
+        link: "https://event.us.artofliving.org/us-en/online-course-2",
         // link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
       },
       {
         name: "Sahaj Meditation",
-        link: "/us-en/course/landing/sahaj_samadhi",
+        link: `https://event.us.artofliving.org/us-en/sahajsamadhi`,
         // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
         name: "Art Of Living Part II",
-        link: "/us-en/course/landing/art_of_living_part_2",
+        link: "https://event.us.artofliving.org/us-en/artoflivingpart2",
         // link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
