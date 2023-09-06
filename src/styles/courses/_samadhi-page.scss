@@ -281,6 +281,7 @@
     padding-top: 112px;
     background: url(/img/samadhi-carousel-bg.png) repeat-x top left;
     padding-bottom: 150px;
+    position: relative;
     .section-title {
       font-family: 'Work Sans';
       font-size: 36px;
@@ -289,13 +290,13 @@
       text-align: center;
       margin-bottom: 70px;
     }
-    .slide {
-      opacity: 0.5;
-      margin: 0 15px;
-      &.slick-current {
-        opacity: 1;
-      }
-    }
+    /*.swiper-slide {
+            opacity: 0.5;
+            margin: 0 15px;
+            &.slick-current {
+                opacity: 1;
+            }
+        }*/
     .review-box {
       background: white;
       border-bottom: #a0b2fd 8px solid;
@@ -343,14 +344,8 @@
     }
     .slick-list {
     }
-    .slick-dots {
-      li {
-        margin: 0;
-      }
-      bottom: -100px;
-      :before {
-        font-size: 12px;
-      }
+    .swiper-pagination {
+      bottom: 90px;
     }
     @media screen and (max-width: 767px) {
       padding-top: 50px;

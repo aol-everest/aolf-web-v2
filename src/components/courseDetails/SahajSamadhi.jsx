@@ -1,8 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import classNames from "classnames";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
 import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
 import { Accordion, Card, AccordionContext } from "react-bootstrap";
 import { PriceCard } from "./PriceCard";
@@ -13,42 +10,35 @@ import { pushRouteWithUTMQuery } from "@service";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
-const settings = {
-  slidesToShow: 1,
-  slidesToScroll: 3,
-  centerMode: true,
-  arrows: false,
-  dots: true,
-  adaptiveHeight: true,
-  speed: 300,
-  centerPadding: "32%",
-  infinite: true,
-  autoplaySpeed: 5000,
-  autoplay: false,
-  responsive: [
-    {
-      breakpoint: 768,
-      settings: {
-        arrows: false,
-        centerMode: true,
-        centerPadding: "40px",
-        slidesToShow: 1,
-      },
+const swiperOption = {
+  modules: [Pagination, Scrollbar, A11y],
+  slidesPerView: 1,
+  spaceBetween: 10,
+  pagination: { clickable: true },
+  scrollbar: { draggable: true },
+  breakpoints: {
+    640: {
+      slidesPerView: 1,
+      spaceBetween: 20,
     },
-    {
-      breakpoint: 480,
-      settings: {
-        arrows: false,
-        centerMode: true,
-        centerPadding: "40px",
-        slidesToShow: 1,
-      },
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 30,
     },
-  ],
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 30,
+    },
+  },
 };
-
-export const SahajSamadhi = ({ data, swiperOption }) => {
+export const SahajSamadhi = ({ data }) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
   const router = useRouter();
   const { authenticated = false } = useAuth();
@@ -264,70 +254,142 @@ export const SahajSamadhi = ({ data, swiperOption }) => {
 
         <section class="section-sahaj-reviews">
           <h2 class="section-title">How {title} is Changing Lives?</h2>
-
-          <Slider {...settings} className="reviews-slider center">
-            <div class="slide">
-              <div class="review-box">
-                <div class="review-title">Calmness and peace</div>
-                <div class="review-text">
-                  I am enjoying the calmness and peace that comes with Sahaj
-                  Samadhi meditation.
-                </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
-                    <img src="/img/brian-review.png" alt="reviewer" />
+          <Swiper {...swiperOption} className="reviews-slider">
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">Calmness and peace</div>
+                  <div class="review-text">
+                    I am enjoying the calmness and peace that comes with Sahaj
+                    Samadhi meditation.
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Dr. Lewis</div>
-                    <div class="reviwer-position">
-                      Sahaj Samadhi participant
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/dr-lewis-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Dr. Lewis</div>
+                      <div class="reviwer-position">
+                        Sahaj Samadhi participant
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">Reservoir of energy</div>
+                  <div class="review-text">
+                    Sahaj Samadhi allows me to tap into a reservoir of energy,
+                    which leaves me rejuvenated and revitalized, like a new
+                    person.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/brian-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Brian</div>
+                      <div class="reviwer-position">
+                        Sahaj Samadhi participant
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">Happy</div>
+                  <div class="review-text">
+                    I got so happy for no reason. I hadn’t experienced that in a
+                    long time.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/phillip-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Phillip</div>
+                      <div class="reviwer-position">
+                        Sahaj Samadhi participant
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+            ...
+          </Swiper>
+          <div class="reviews-slider swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">Calmness and peace</div>
+                  <div class="review-text">
+                    I am enjoying the calmness and peace that comes with Sahaj
+                    Samadhi meditation.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/dr-lewis-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Dr. Lewis</div>
+                      <div class="reviwer-position">
+                        Sahaj Samadhi participant
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">Reservoir of energy</div>
+                  <div class="review-text">
+                    Sahaj Samadhi allows me to tap into a reservoir of energy,
+                    which leaves me rejuvenated and revitalized, like a new
+                    person.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/brian-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Brian</div>
+                      <div class="reviwer-position">
+                        Sahaj Samadhi participant
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="review-box">
+                  <div class="review-title">Happy</div>
+                  <div class="review-text">
+                    I got so happy for no reason. I hadn’t experienced that in a
+                    long time.
+                  </div>
+                  <div class="review-author">
+                    <div class="reviewer-photo">
+                      <img src="/img/phillip-review.png" alt="reviewer" />
+                    </div>
+                    <div class="reviewer-info">
+                      <div class="reviewer-name">Phillip</div>
+                      <div class="reviwer-position">
+                        Sahaj Samadhi participant
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="slide">
-              <div class="review-box">
-                <div class="review-title">Reservoir of energy</div>
-                <div class="review-text">
-                  Sahaj Samadhi allows me to tap into a reservoir of energy,
-                  which leaves me rejuvenated and revitalized, like a new
-                  person.
-                </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
-                    <img src="/img/brian-review.png" alt="reviewer" />
-                  </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Brian</div>
-                    <div class="reviwer-position">
-                      Sahaj Samadhi participant
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="slide">
-              <div class="review-box">
-                <div class="review-title">Happy</div>
-                <div class="review-text">
-                  I got so happy for no reason. I hadn't experienced that in a
-                  long time.
-                </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
-                    <img src="/img/phillip-review.png" alt="reviewer" />
-                  </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Phillip</div>
-                    <div class="reviwer-position">
-                      Sahaj Samadhi participant
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Slider>
+          </div>
+          <div class="swiper-pagination"></div>
         </section>
         <section class="faq">
           <div class="container">
