@@ -56,10 +56,21 @@ export function filterAllowedParams(params) {
 export function removeNull(obj) {
   return Object.fromEntries(
     Object.entries(obj)
-      .filter(([_, value]) => value != null && value.trim().length !== 0)
-      .map(([key, value]) => [
-        key,
-        value === Object(value) ? removeNull(value) : value,
-      ]),
+      .map(([key, value]) => {
+        if (
+          Array.isArray(value) &&
+          value.length > 0 &&
+          typeof value[0] === "string"
+        ) {
+          // If it's an array of strings, use the first element as the value
+          return [key, value[0]];
+        } else if (value !== null && String(value).trim() !== "") {
+          // If it's not null or an empty string, or an array of strings, keep the value
+          return [key, value];
+        }
+        // Otherwise, skip this key-value pair
+        return null;
+      })
+      .filter((pair) => pair !== null),
   );
 }
