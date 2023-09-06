@@ -88,7 +88,7 @@ export const SKYBreathMeditation = ({ data }) => {
             <div class="banner-title">
               The Art of Living
               <br />
-              <span>Part I</span>
+              <span>Part I Course</span>
             </div>
             <div class="banner-desc">
               Discover Gurudev Sri Sri Ravi Shankar’s
@@ -230,11 +230,12 @@ export const SKYBreathMeditation = ({ data }) => {
                 <div class="col-12 col-lg-6 float-left">
                   <div class="breadth-meditation_content">
                     <p class="">
-                      Sudarshan Kriya (SKY Breath Meditation) taught in the
-                      {title} course is a powerful rhythmic breathing technique
-                      that harmonizes the body-mind complex. Participants notice
-                      reduced stress and anxiety, better sleep, a stronger
-                      immune system, and increased energy levels.
+                      Sudarshan Kriya (SKY Breath Meditation) taught in the Art
+                      of Living Part I course is a powerful rhythmic breathing
+                      technique that harmonizes the body-mind complex.
+                      Participants notice reduced stress and anxiety, better
+                      sleep, a stronger immune system, and increased energy
+                      levels.
                     </p>
                     <button class="register-button" onClick={handleRegister}>
                       Register Now <FaArrowRightLong />
@@ -346,7 +347,7 @@ export const SKYBreathMeditation = ({ data }) => {
                     <img src="/img/key-2.jpg" alt="transforming lives" />
                   </div>
                   <div class="key-highlight-content">
-                    <span class="title">{title}</span>
+                    <span class="title">SKY Breath Meditation</span>
                     <br />
                     <span class="content">
                       Learn the most powerful breathing technique based on an

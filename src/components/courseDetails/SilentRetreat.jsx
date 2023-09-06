@@ -247,7 +247,9 @@ export const SilentRetreat = ({ data }) => {
               day is carefully structured to offer a transformative and relaxing
               experience, a true vacation for your body, mind, and soul.
             </div>
-            <button class="enroll-btn">Enroll Now →</button>
+            <button class="enroll-btn" onClick={handleRegister}>
+              Enroll Now →
+            </button>
           </div>
         </section>
         <section class="section-sahaj-reviews">
