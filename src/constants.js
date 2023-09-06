@@ -85,11 +85,11 @@ export const SHARE_SITES = {
 
 export const COURSE_TYPES = {
   SKY_BREATH_MEDITATION: {
-    name: "Art of Living Part 1",
+    name: "Art of Living Part I",
     value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
   },
   SILENT_RETREAT: {
-    name: "Art of Living Part 2",
+    name: "Art of Living Part II",
     value: process.env.NEXT_PUBLIC_SILENT_RETREAT_CTYPE || "",
   },
   SAHAJ_SAMADHI_MEDITATION: {
