@@ -5,6 +5,10 @@
   width: 100%;
   z-index: 101;
 
+  @media screen and (max-width: 991px) {
+    position: relative !important;
+  }
+
   .navbar {
     padding-top: 0;
     padding-bottom: 0;
@@ -565,7 +569,7 @@
         position: fixed;
         width: 100%;
         left: 0px;
-        top: 62px;
+        top: 6.4375rem;
         background-color: #ffffff;
       }
     }

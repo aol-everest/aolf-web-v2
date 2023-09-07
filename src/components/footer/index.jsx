@@ -642,7 +642,11 @@ export function Footer() {
                 <a href="#">SMS Policy</a>
               </li>
               <li className="footer-navbar--item">
-                <Link prefetch={false} href="/policy/privacy" legacyBehavior>
+                <Link
+                  prefetch={false}
+                  href="https://www.artofliving.org/us-en/privacy-policy"
+                  legacyBehavior
+                >
                   <a target="_blank">Privacy Policy</a>
                 </Link>
               </li>
@@ -650,7 +654,11 @@ export function Footer() {
                 <a href="#">Cookie Policy</a>
               </li>
               <li className="footer-navbar--item">
-                <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
+                <Link
+                  prefetch={false}
+                  href="https://www.artofliving.org/us-en/terms-of-use"
+                  legacyBehavior
+                >
                   <a target="_blank">Terms of Use</a>
                 </Link>
               </li>
