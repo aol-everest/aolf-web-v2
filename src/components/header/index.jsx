@@ -505,16 +505,16 @@ export const Header = () => {
     <>
       <header className="header header-v2" onMouseLeave={onMenuMouseLeave}>
         <div className="header__container">
-          <a href="https://www.artofliving.org/" class="logo">
+          <a href="https://www.artofliving.org/" className="logo">
             <img
               src={`/img/${orgConfig.logo}`}
               alt="logo"
-              class="logo__image"
+              className="logo__image"
             />
           </a>
-          <nav class="navbar navbar-expand-lg navbar-light">
+          <nav className="navbar navbar-expand-lg navbar-light">
             <button
-              class="navbar-toggler-header"
+              className="navbar-toggler-header"
               type="button"
               data-toggle="collapse"
               data-target="#navbarNavDropdown"
@@ -522,10 +522,10 @@ export const Header = () => {
               aria-label="Toggle navigation"
               onClick={toggleSidebar}
             >
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar top-bar"></span>
-              <span class="icon-bar middle-bar"></span>
-              <span class="icon-bar bottom-bar"></span>
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar top-bar"></span>
+              <span className="icon-bar middle-bar"></span>
+              <span className="icon-bar bottom-bar"></span>
             </button>
 
             <div
@@ -576,7 +576,7 @@ export const Header = () => {
 
                       {menu.submenu && (
                         <div
-                          class={`dropdown-menu${
+                          className={`dropdown-menu${
                             currentDropdownItem === menu.name ? " show" : ""
                           } `}
                           aria-labelledby="navbarCoursesDropdown"
