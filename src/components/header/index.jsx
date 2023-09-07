@@ -7,8 +7,6 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import React, { useState } from "react";
-import Dropdown from "react-bootstrap/Dropdown";
-import { FiPhone } from "react-icons/fi";
 import Style from "./Header.module.scss";
 // import { FaUserCircle } from "react-icons/fa";
 import { CONTENT_FOLDER_IDS, MODAL_TYPES } from "@constants";
@@ -477,6 +475,7 @@ export const Header = () => {
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [currentActiveMenu, setCurrentActiveMenu] = useState("");
+  const [currentDropdownItem, setCurrentDropdownItem] = useState("");
 
   const toggleSidebar = () => setShowSidebar(!showSidebar);
 
@@ -498,173 +497,110 @@ export const Header = () => {
     setCurrentActiveMenu("");
   };
 
+  const handleMenuItemClick = (menu) => {
+    setCurrentDropdownItem((prevState) => (prevState ? "" : menu));
+  };
+
   return (
     <>
-      <div
-        className={classNames("sidebar", { sidebar_active: showSidebar })}
-        id="sidebar"
-      >
-        <div className="sidebar__header">
-          <button
-            className="sidebar-button"
-            type="button"
-            onClick={toggleSidebar}
-          >
-            <img
-              src="/img/Times.svg"
-              alt="Close Sidebar"
-              className="sidebar-button__icon"
-            />
-          </button>
-        </div>
-        <div className="sidebar__body">
-          <nav className="menu">
-            {MENU.map((menu) => {
-              return (
-                <Dropdown key={menu.name}>
-                  <Dropdown.Toggle as={CustomToggle}>
-                    {menu.name}
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu as={CustomMenu}>
-                    {menu.submenu &&
-                      menu.submenu.map((submenu) => {
-                        return (
-                          <Dropdown.Item
-                            key={submenu.name}
-                            link={submenu.link}
-                            onSelect={onMenuSelection(submenu)}
-                          >
-                            {submenu.name}
-                          </Dropdown.Item>
-                        );
-                      })}
-                  </Dropdown.Menu>
-                </Dropdown>
-              );
-            })}
-            <div className="dropdown">
-              <a
-                className={classNames(Style.phone_number)}
-                href={`tel:${orgConfig.contactNumberLink}`}
-              >
-                <FiPhone size={20} className="tw-mr-4" />
-                {orgConfig.contactNumber}
-              </a>
-            </div>
-          </nav>
-        </div>
-      </div>
-      <header className="header" onMouseLeave={onMenuMouseLeave}>
+      <header className="header header-v2" onMouseLeave={onMenuMouseLeave}>
         <div className="header__container">
-          <button
-            className="sidebar-button header__sidebar-button"
-            type="button"
-            onClick={toggleSidebar}
-          >
-            <img
-              src="/img/Hamburger.svg"
-              alt="Open Sidebar"
-              className="sidebar-button__icon"
-            />
-          </button>
-          <a href="https://www.artofliving.org/" className="logo">
+          <a href="https://www.artofliving.org/" class="logo">
             <img
               src={`/img/${orgConfig.logo}`}
               alt="logo"
-              className="logo__image"
+              class="logo__image"
             />
           </a>
-          <nav className="menu">
-            <ul className="menu__list" id="desktop-menu-content">
-              {MENU.map((menu) => {
-                return (
-                  <li
-                    className="menu-item"
-                    key={menu.name}
-                    onMouseOver={onMenuMouseOver(menu.name)}
-                  >
-                    {menu.link && (
-                      <Link prefetch={false} href={menu.link} legacyBehavior>
-                        <a className="menu-item__link">
-                          {menu.icon || ""}
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <button
+              class="navbar-toggler-header"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarNavDropdown"
+              aria-controls="navbarNavDropdown"
+              aria-label="Toggle navigation"
+              onClick={toggleSidebar}
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar top-bar"></span>
+              <span class="icon-bar middle-bar"></span>
+              <span class="icon-bar bottom-bar"></span>
+            </button>
+
+            <div
+              className={classNames("collapse navbar-collapse", {
+                show: showSidebar,
+              })}
+              id="navbarNavDropdown"
+            >
+              <ul className="navbar-nav" id="desktop-menu-content">
+                {MENU.map((menu) => {
+                  return (
+                    <li
+                      className={`nav-item${
+                        currentActiveMenu === menu.name ? " active" : ""
+                      }${menu.submenu ? " dropdown" : ""}
+                      ${currentDropdownItem === menu.name ? " show" : ""} `}
+                      key={menu.name}
+                      onMouseOver={onMenuMouseOver(menu.name)}
+                      onClick={() => handleMenuItemClick(menu.name)}
+                    >
+                      {menu.link && (
+                        <Link prefetch={false} href={menu.link} legacyBehavior>
+                          <a
+                            className={`nav-link${
+                              menu.submenu ? " dropdown-toggle" : ""
+                            }`}
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded={currentActiveMenu === menu.name}
+                          >
+                            {menu.icon || ""}
+                            {menu.name}
+                          </a>
+                        </Link>
+                      )}
+                      {!menu.link && (
+                        <a
+                          className={`nav-link${
+                            menu.submenu ? " dropdown-toggle" : ""
+                          }`}
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded={currentActiveMenu === menu.name}
+                        >
                           {menu.name}
                         </a>
-                      </Link>
-                    )}
-                    {!menu.link && (
-                      <a className="menu-item__link">{menu.name}</a>
-                    )}
+                      )}
 
-                    {menu.submenu && (
-                      <>
-                        <b
-                          className={classNames(
-                            Style.menuItemArrow,
-                            "menu-item__arrow",
-                          )}
-                          style={{
-                            display:
-                              currentActiveMenu === menu.name
-                                ? "block"
-                                : "none",
-                          }}
-                        ></b>
+                      {menu.submenu && (
                         <div
-                          className={classNames(Style.subMenu, "sub-menu")}
-                          style={{
-                            display:
-                              currentActiveMenu === menu.name
-                                ? "block"
-                                : "none",
-                          }}
+                          class={`dropdown-menu${
+                            currentDropdownItem === menu.name ? " show" : ""
+                          } `}
+                          aria-labelledby="navbarCoursesDropdown"
                         >
-                          <ul
-                            className={classNames(
-                              "sub-menu__list",
-                              Style.sub_menu__list,
-                            )}
-                          >
-                            {menu.submenu.map((submenu) => {
-                              return (
-                                <li
-                                  className={classNames(
-                                    "sub-menu-item",
-                                    Style.sub_menu__item,
-                                  )}
-                                  key={submenu.name}
-                                >
-                                  <span>
-                                    <Link
-                                      prefetch={false}
-                                      href={submenu.link}
-                                      legacyBehavior
-                                    >
-                                      <a className="sub-menu-item__link">
-                                        {submenu.name}
-                                      </a>
-                                    </Link>
-                                  </span>
-                                </li>
-                              );
-                            })}
-                          </ul>
+                          {menu.submenu.map((submenu) => {
+                            return (
+                              <Link
+                                prefetch={false}
+                                onSelect={onMenuSelection(submenu)}
+                                href={submenu.link}
+                                legacyBehavior
+                                key={submenu.name}
+                              >
+                                <a className="dropdown-item">{submenu.name}</a>
+                              </Link>
+                            );
+                          })}
                         </div>
-                      </>
-                    )}
-                  </li>
-                );
-              })}
-              <li className="menu-item">
-                <a
-                  className="menu-item__link"
-                  href={`tel:${orgConfig.contactNumberLink}`}
-                >
-                  <FiPhone size={20} className="tw-mr-2" />
-                  {orgConfig.contactNumber}
-                </a>
-              </li>
-            </ul>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </nav>
           {!authenticated && (
             <button
@@ -717,126 +653,6 @@ export const Header = () => {
           )}
         </div>
       </header>
-      {/* <header className="aol_header" id="site-header">
-        <Navbar expand="md" className="navbar aol_navbar ">
-          <figure className="container mrgb">
-            <a
-              href="https://www.artofliving.org/"
-              className="navbar-brand aol_brandLogo"
-            >
-              <img src="/img/ic-logo.svg" alt="logo" />
-            </a>
-            <NavbarToggler
-              onClick={toggle}
-              className={classNames({ collapsed: !collapsed })}
-            >
-              <span className="icon-bar top-bar" />
-              <span className="icon-bar middle-bar" />
-              <span className="icon-bar bottom-bar" />
-              <span className="sr-only">Toggle navigation</span>
-            </NavbarToggler>
-            <Collapse isOpen={collapsed} navbar>
-              <Nav className="ml-auto" navbar>
-                <ActiveLink
-                  activeClassName="active"
-                  href={`/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
-                  setCollapsed={setCollapsed}
-                >
-                  <NavItem className="nav-item">
-                    <a className="nav-link">
-                      <img src="/img/sun-icon.png" /> Meditate
-                    </a>
-                  </NavItem>
-                </ActiveLink>
-                <ActiveLink
-                  activeClassName="active"
-                  href="/us-en/meetup"
-                  setCollapsed={setCollapsed}
-                >
-                  <NavItem className="nav-item">
-                    <a className="nav-link">
-                      <img src="/img/map-pin.png" /> Meetups
-                    </a>
-                  </NavItem>
-                </ActiveLink>
-                <ActiveLink
-                  activeClassName="active"
-                  href="/us-en"
-                  setCollapsed={setCollapsed}
-                >
-                  <NavItem className="nav-item">
-                    <a className="nav-link">
-                      <img src="/img/books-icon.png" /> Courses
-                    </a>
-                  </NavItem>
-                </ActiveLink>
-                <ActiveLink
-                  activeClassName="active"
-                  href={`/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`}
-                  setCollapsed={setCollapsed}
-                >
-                  <NavItem className="nav-item">
-                    <a className="nav-link">
-                      <img src="/img/book-open.png" /> Learn
-                    </a>
-                  </NavItem>
-                </ActiveLink>
-                <NavItem className="nav-item">
-                  <a href="tel:8552024400" className="nav-link">
-                    <FiPhone size="2em" /> (855) 202-4400
-                  </a>
-                </NavItem>
-                {!isLoggedIn && (
-                  <NavItem className="nav-item">
-                    <a href="#" className="nav-link" onClick={loginAction}>
-                      <FaUserCircle
-                        style={{ color: "#313651", fontSize: "28px" }}
-                      />{" "}
-                      <span className="d-md-none">Login</span>
-                    </a>
-                  </NavItem>
-                )}
-                {isLoggedIn && (
-                  <NavItem
-                    className={classNames("nav-item", Style.userNavitem)}
-                  >
-                    <ActiveLink
-                      activeClassName="active"
-                      href="/us-en/profile"
-                      setCollapsed={setCollapsed}
-                    >
-                      <a className="nav-link">
-                        {first_name || last_name}
-                        <div
-                          className={classNames(
-                            "top-nav-bar",
-                            Style.userProfilePic,
-                            Style.profileHeadeImage,
-                          )}
-                        >
-                          <p className={Style.initials}>{initials}</p>
-                          {profilePic && (
-                            <img
-                              src={profilePic}
-                              className={classNames(
-                                "rounded-circle",
-                                Style.userProfilePic,
-                                Style.profilePic,
-                              )}
-                              alt=""
-                              onError={(i) => (i.target.src = "")}
-                            />
-                          )}
-                        </div>
-                      </a>
-                    </ActiveLink>
-                  </NavItem>
-                )}
-              </Nav>
-            </Collapse>
-          </figure>
-        </Navbar>
-      </header> */}
     </>
   );
 };
