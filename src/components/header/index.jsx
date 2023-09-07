@@ -67,189 +67,95 @@ const HB_MENU = [
 
 const AOL_MENU = [
   {
+    name: "Gurudev",
+    link: "/us-en/lp/gurudev",
+  },
+  {
     name: "Courses",
     submenu: [
       {
-        name: "Join A Free Intro",
-        link: "/us-en/lp/introtalks-hq?id=a388X000000ZHkzQAG&utm_source=organic&utm_medium=website&utm_campaign=menu",
-      },
-      {
-        name: "Overview",
-        link: "https://www.artofliving.org/us-en/courses",
-      },
-      {
         name: "Art Of Living Part I",
         link: "https://event.us.artofliving.org/us-en/online-course-2",
-        // link: `/us-en?courseType=SKY_BREATH_MEDITATION`,
       },
       {
-        name: "Sahaj Meditation",
+        name: "Sahaj Meditation Meditation",
         link: `https://event.us.artofliving.org/us-en/sahajsamadhi`,
-        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
         name: "Art Of Living Part II",
         link: "https://event.us.artofliving.org/us-en/artoflivingpart2",
-        // link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
-        name: "Advanced Courses",
-        link: "/us-en/lp/advanced-courses",
-      },
-      {
-        name: "Healthcare Providers",
-        link: "https://www.healingbreaths.org/",
-      },
-      {
-        name: "Yoga Course",
-        link: "/us-en/lp/online-foundation-program/",
-      },
-      {
-        name: "College Courses",
-        link: "https://www.skycampushappiness.org/",
-      },
-      // {
-      //   name: "Youth Courses",
-      //   link: "https://www.skyforkids.org/",
-      // },
-      {
-        name: "Destination Retreats",
-        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
+        name: "Sri Sri Yoga Foundation Program ",
+        link: "https://members.us.artofliving.org/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431",
       },
       {
         name: "All Courses",
         link: "/us-en/course",
       },
-    ],
-  },
-  {
-    name: "Meditate",
-    submenu: [
       {
-        name: "Guided meditations",
-        link: `/us-en/library/guided-meditations`,
-      },
-      {
-        name: "Live meetups",
-        link: "/us-en/meetup",
-      },
-      // {
-      //   name: "Guided breathwork",
-      //   link: "#",
-      // },
-      // {
-      //   name: "Guided Yoga",
-      //   link: "#",
-      // },
-    ],
-  },
-  {
-    name: "Resources",
-    submenu: [
-      {
-        name: "Journey App",
-        link: "/us-en/lp/journey-app",
-      },
-      {
-        name: "Blog",
-        link: "https://www.artofliving.org/us-en/blog",
-      },
-      {
-        name: "Wisdom Snippets",
-        link: `/us-en/library/wisdom-snippets`,
-      },
-      // {
-      //   name: "Meditation",
-      //   link: "https://www.artofliving.org/us-en/meditation",
-      // },
-      {
-        name: "Better Sleep",
-        link: "https://www.artofliving.org/us-en/blog/start-sleeping-restfully-all-night-using-this-meditation-sleep-guide",
-      },
-      {
-        name: "Breathwork",
-        link: "https://www.artofliving.org/us-en/yoga/breathing-techniques/yoga-and-pranayama",
-      },
-      {
-        name: "Yoga",
-        link: "https://www.artofliving.org/us-en/yoga",
-      },
-      // {
-      //   name: "Guided Meditation",
-      //   link: "https://www.artofliving.org/us-en/online-guided-meditation",
-      // },
-      {
-        name: "Meditation for Beginners",
-        link: "https://www.artofliving.org/us-en/8-tips-get-started-meditation",
+        name: "Destination Retreats",
+        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/?utm_source=organic&utm_medium=home&utm_content=destinationretreats",
       },
     ],
   },
   {
-    name: "About",
-    submenu: [
-      {
-        name: "Art of Living",
-        link: "https://www.artofliving.org/us-en/about-us",
-      },
-      {
-        name: "Founder",
-        link: "/us-en/lp/gurudev",
-      },
-      {
-        name: "Humanitarian Work",
-        link: "https://www.artofliving.org/us-en/service-projects-overview",
-      },
-      {
-        name: "Experiences & Reviews",
-        link: "https://www.artofliving.org/us-en/testimonials/search",
-      },
-      {
-        name: "Research",
-        link: "https://www.artofliving.org/us-en/research-sudarshan-kriya",
-      },
-      {
-        name: "Press & Media",
-        link: "https://www.artofliving.org/us-en/media-coverage",
-      },
-      {
-        name: "Retreat Center",
-        link: "/us-en/lp/theartoflivingretreatcenter",
-      },
-    ],
+    name: "App",
+    link: "/us-en/lp/journey-app",
   },
   {
-    name: "Contact",
-    submenu: [
-      {
-        name: "Contact & Support",
-        link: "https://www.artofliving.org/us-en/contact-us",
-      },
-      {
-        name: "Donate",
-        link: "https://aolf.kindful.com/",
-      },
-    ],
-  },
-  {
-    name: "EVENTS",
+    name: "Events",
     submenu: [
       {
         name: "World Culture Festival",
         link: "https://wcf.artofliving.org/",
       },
       {
-        name: "Summer Tour 2023",
+        name: "Gurudev USA Tour",
         link: "/us-en/lp/sixthsensetour",
       },
       {
-        name: "Wisdom Series with Gurudev",
+        name: "Wisdom Series",
         link: "https://www.artofliving.org/us-en/program/196004",
       },
     ],
   },
   {
-    name: "DONATE",
-    link: "/us-en/lp/donations",
+    name: "About Us",
+    submenu: [
+      {
+        name: "Art of Living",
+        link: "https://www.artofliving.org/us-en/about-us",
+      },
+      {
+        name: "Service Projects",
+        link: "https://www.artofliving.org/us-en/service-projects-overview",
+      },
+      {
+        name: "Research",
+        link: "https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya",
+      },
+      {
+        name: "Retreat Center",
+        link: "/us-en/lp/theartoflivingretreatcenter",
+      },
+      {
+        name: "Blog",
+        link: "https://www.artofliving.org/us-en/blog",
+      },
+      {
+        name: "Press & Media",
+        link: "https://www.artofliving.org/us-en/media-coverage?search=",
+      },
+      {
+        name: "Testimonials",
+        link: "https://www.artofliving.org/us-en/testimonials/search",
+      },
+      {
+        name: "Contact Us",
+        link: "https://www.artofliving.org/us-en/contact-us",
+      },
+    ],
   },
 ];
 
