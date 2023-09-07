@@ -520,6 +520,7 @@ export const Header = () => {
               data-target="#navbarNavDropdown"
               aria-controls="navbarNavDropdown"
               aria-label="Toggle navigation"
+              aria-expanded={showSidebar}
               onClick={toggleSidebar}
             >
               <span className="sr-only">Toggle navigation</span>
