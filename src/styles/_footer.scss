@@ -139,7 +139,7 @@
         padding-bottom: 1rem;
         margin-bottom: 1rem;
         input[type='checkbox'] {
-          top: 1.1rem;
+          top: 0.6rem;
           visibility: inherit;
           position: absolute;
           right: 0;
@@ -189,6 +189,23 @@
     .nav-item-box {
       .nav-item--title {
         font-weight: 600;
+        line-height: 1.9rem;
+      }
+      .nav-item {
+        overflow: hidden;
+        white-space: break-spaces;
+        word-break: break-word;
+        a {
+          font-size: 1rem;
+          line-height: 1.9rem;
+        }
+      }
+    }
+    @media screen and (max-width: 767px) {
+      .nav-item-box {
+        input[type='checkbox'] {
+          top: 0.28rem;
+        }
       }
     }
   }
