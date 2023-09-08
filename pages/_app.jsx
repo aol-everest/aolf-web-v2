@@ -12,7 +12,7 @@ import { GlobalBottomBanner } from "@components/globalBottomBanner";
 import { GlobalLoading } from "@components/globalLoading";
 import { GlobalModal } from "@components/globalModal";
 import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
-import { AuthProvider, SegmentAnalyticsProvider } from "@contexts";
+import { AuthProvider } from "@contexts";
 import { orgConfig } from "@org";
 import { analytics } from "@service";
 import { Auth, Compose, Talkable, api } from "@utils";
@@ -142,47 +142,45 @@ function App({ Component, pageProps }) {
   return (
     <AnalyticsProvider instance={analytics}>
       <QueryClientProvider client={queryClient}>
-        <SegmentAnalyticsProvider>
-          <AuthProvider
-            userInfo={user}
-            setUserInfo={setUser}
-            reloadProfile={fetchProfile}
-            authenticated={!!user}
+        <AuthProvider
+          userInfo={user}
+          setUserInfo={setUser}
+          reloadProfile={fetchProfile}
+          authenticated={!!user}
+        >
+          <Compose
+            components={[
+              GlobalModal,
+              GlobalAlert,
+              GlobalAudioPlayer,
+              GlobalVideoPlayer,
+              GlobalLoading,
+              GlobalBottomBanner,
+            ]}
           >
-            <Compose
-              components={[
-                GlobalModal,
-                GlobalAlert,
-                GlobalAudioPlayer,
-                GlobalVideoPlayer,
-                GlobalLoading,
-                GlobalBottomBanner,
-              ]}
+            <Layout
+              hideHeader={Component.hideHeader}
+              noHeader={Component.noHeader}
+              hideFooter={Component.hideFooter}
+              wcfHeader={Component.wcfHeader}
             >
-              <Layout
-                hideHeader={Component.hideHeader}
-                noHeader={Component.noHeader}
-                hideFooter={Component.hideFooter}
-                wcfHeader={Component.wcfHeader}
-              >
-                <DefaultSeo {...SEO} />
-                <UsePagesViews />
-                {/* <TopProgressBar /> */}
-                {isReInstateRequired && (
-                  <ReInstate subscription={reinstateRequiredSubscription} />
-                )}
-                {/* {pendingSurveyInvite && (
+              <DefaultSeo {...SEO} />
+              <UsePagesViews />
+              {/* <TopProgressBar /> */}
+              {isReInstateRequired && (
+                <ReInstate subscription={reinstateRequiredSubscription} />
+              )}
+              {/* {pendingSurveyInvite && (
                 <SurveyRequest surveyInvite={pendingSurveyInvite} />
               )} */}
-                {isCCUpdateRequired && <CardUpdateRequired />}
-                {isPendingAgreement && <PendingAgreement />}
-                <Component {...pageProps} />
-                <ClevertapAnalytics></ClevertapAnalytics>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </Layout>
-            </Compose>
-          </AuthProvider>
-        </SegmentAnalyticsProvider>
+              {isCCUpdateRequired && <CardUpdateRequired />}
+              {isPendingAgreement && <PendingAgreement />}
+              <Component {...pageProps} />
+              <ClevertapAnalytics></ClevertapAnalytics>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Layout>
+          </Compose>
+        </AuthProvider>
       </QueryClientProvider>
     </AnalyticsProvider>
   );
