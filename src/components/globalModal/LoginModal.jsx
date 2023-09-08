@@ -103,6 +103,10 @@ export const LoginModal = () => {
           email: userInfo.profile.email,
           first_name: userInfo.profile.first_name,
           last_name: userInfo.profile.last_name,
+          subscriptions: userInfo.profile.subscriptions,
+          sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
+          sahaj_flag: userInfo.profile.isSahajGraduate,
+          silence_course_count: userInfo.profile.aosCountTotal,
         });
 
         if (isStudent) {

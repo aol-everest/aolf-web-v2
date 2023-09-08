@@ -98,7 +98,7 @@ function CourseDetail() {
   const { user, authenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId } = router.query;
-  const { track } = useAnalytics();
+  const { track, page } = useAnalytics();
   const { data, isLoading, isError, error } = useQuery(
     "workshopDetail",
     async () => {
@@ -119,6 +119,14 @@ function CourseDetail() {
     if (!authenticated || !data) return;
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
+    page({
+      category: "course_registration",
+      name: "course",
+      amount: unitPrice,
+      title,
+      ctype: productTypeId,
+      user: user.profile,
+    });
     track("workshopview", {
       viewType: "workshop",
       requestType: "Detail",

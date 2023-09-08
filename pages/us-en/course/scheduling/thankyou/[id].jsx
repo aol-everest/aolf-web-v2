@@ -12,7 +12,7 @@ import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
 import { useGlobalAlertContext } from "@contexts";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
-import { Talkable, api, calculateBusinessDays, tConvert } from "@utils";
+import { api, calculateBusinessDays, tConvert } from "@utils";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import utc from "dayjs/plugin/utc";
@@ -21,6 +21,9 @@ import { NextSeo } from "next-seo";
 import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
+import { useQueryString } from "@hooks";
+import { useEffectOnce } from "react-use";
+import { useAnalytics } from "use-analytics";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -68,7 +71,9 @@ const renderVideo = (productTypeId) => {
 
 const Thankyou = () => {
   const router = useRouter();
+  const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
+  const [paymentIntent] = useQueryString("payment_intent");
   const { id: workshopId } = router.query;
   const {
     data: workshop,
@@ -93,6 +98,15 @@ const Thankyou = () => {
       enabled: !!workshopId,
     },
   );
+
+  useEffectOnce(() => {
+    page({
+      category: "course_registration",
+      name: "course_registration_thank_you",
+      payment_intent: paymentIntent,
+      course_type: "",
+    });
+  });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !workshopId) return <PageLoading />;
@@ -187,6 +201,13 @@ const Thankyou = () => {
         hideAlert();
       },
     });
+
+    track("click_button", {
+      screen_name: "course_registration_thank_you",
+      event_target: "add_to_calendar_button",
+      course_type: "",
+      payment_intent: paymentIntent,
+    });
   };
 
   const showTiming = (timeZone, option) => {
@@ -280,6 +301,24 @@ const Thankyou = () => {
     });
   };
 
+  const iosAppDownloadAction = () => {
+    track("click_button", {
+      screen_name: "course_registration_thank_you",
+      event_target: "ios_app_link",
+      course_type: "",
+      payment_intent: paymentIntent,
+    });
+  };
+
+  const androidAppDownloadAction = () => {
+    track("click_button", {
+      screen_name: "course_registration_thank_you",
+      event_target: "android_app_link",
+      course_type: "",
+      payment_intent: paymentIntent,
+    });
+  };
+
   return (
     <>
       <main>
@@ -354,6 +393,7 @@ const Thankyou = () => {
                         <div className="btn-wrapper">
                           <a
                             className="btn-outline tw-mr-2"
+                            onClick={iosAppDownloadAction}
                             href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
                             target="_blank"
                             rel="noreferrer"
@@ -363,6 +403,7 @@ const Thankyou = () => {
                           </a>
                           <a
                             className="btn-outline"
+                            onClick={androidAppDownloadAction}
                             href="https://play.google.com/store/apps/details?id=com.aol.app"
                             target="_blank"
                             rel="noreferrer"

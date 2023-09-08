@@ -6,11 +6,11 @@ import clevertapPlugin from "./clevertapPlugin";
 
 let plugins = [];
 
-if (process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY) {
+if (process.env.NEXT_PUBLIC_SEGMENT_WRITE_KEY) {
   plugins = [
     ...plugins,
     segmentPlugin({
-      writeKey: process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY,
+      writeKey: process.env.NEXT_PUBLIC_SEGMENT_WRITE_KEY,
     }),
   ];
 }

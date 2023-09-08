@@ -90,7 +90,7 @@ const Checkout = () => {
   const [showTopMessage, setShowTopMessage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [comboProductSfid, setComboProductSfid] = useState("");
-  const { track } = useAnalytics();
+  const { track, page } = useAnalytics();
 
   const {
     data: workshop,
@@ -157,6 +157,18 @@ const Checkout = () => {
         price: unitPrice,
       },
     ];
+
+    page({
+      category: "course_registration",
+      name: "course_checkout",
+      title: title,
+      ctype: productTypeId,
+      amount: unitPrice,
+      requestType: "Detail",
+      hitType: "paymentpage",
+      user: user.profile.id,
+    });
+
     track("eec.checkout", {
       page: `Art of Living ${title} workshop registration page`,
       viewType: "workshop",
