@@ -92,7 +92,7 @@ const renderVideo = (productTypeId) => {
 const Thankyou = () => {
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { track, page } = useAnalytics();
+  const { track, page, identify } = useAnalytics();
   const { id: attendeeId, comboId } = router.query;
   const {
     data: result,
@@ -119,6 +119,12 @@ const Thankyou = () => {
 
   useEffect(() => {
     if (!result || hasCookie(orderExternalId)) return;
+    identify(userEmail, {
+      id: userExternalId,
+      email: userEmail,
+      first_name: first_name,
+      last_name: last_name,
+    });
     page({
       category: "course_registration",
       name: "course_registration_thank_you_referral_popup",
