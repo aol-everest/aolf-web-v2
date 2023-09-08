@@ -414,7 +414,7 @@ export const Header = () => {
   return (
     <>
       <header className="header header-v2" onMouseLeave={onMenuMouseLeave}>
-        <div className="header__container">
+        <div className="header__container container">
           <a href="https://www.artofliving.org/us-en" className="logo">
             <img
               src={`/img/${orgConfig.logo}`}
