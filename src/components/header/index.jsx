@@ -300,7 +300,7 @@ const IAHV_MENU = [
     ],
   },
   {
-    name: "EVENTS",
+    name: "Events",
     submenu: [
       {
         name: "World Culture Festival",
@@ -311,10 +311,6 @@ const IAHV_MENU = [
         link: "/us-en/lp/sixthsensetour",
       },
     ],
-  },
-  {
-    name: "DONATE",
-    link: "/us-en/lp/donations",
   },
 ];
 
