@@ -518,9 +518,9 @@ export const Header = () => {
                     </li>
                   );
                 })}
-                <li class="nav-item mobileView">
+                <li className="nav-item mobileView">
                   <a
-                    class="nav-link"
+                    className="nav-link"
                     href="https://members.us.artofliving.org/us-en/lp/donations?_gl=1*ep179x*_ga*MTEzODQzOTQwOS4xNjkzOTgwNjA2*_ga_53SWQFSBV0*MTY5NDEwMjcxNC44LjEuMTY5NDEwMjc0NS4yOS4wLjA."
                   >
                     Donation
@@ -529,25 +529,25 @@ export const Header = () => {
               </ul>
             </div>
           </nav>
-          <div class="user-profile-link">
-            <div class="nav-item desktopView">
+          <div className="user-profile-link">
+            <div className="nav-item desktopView">
               <Link
                 prefetch={false}
                 href="/us-en/lp/donations?_gl=1*ep179x*_ga*MTEzODQzOTQwOS4xNjkzOTgwNjA2*_ga_53SWQFSBV0*MTY5NDEwMjcxNC44LjEuMTY5NDEwMjc0NS4yOS4wLjA."
                 legacyBehavior
               >
-                <a class="nav-link donate-link">
+                <a className="nav-link donate-link">
                   <img
                     src="/img/donate.svg"
                     alt="Donate"
-                    class="donate__image"
+                    className="donate__image"
                   />{" "}
                   Donation
                 </a>
               </Link>
             </div>
 
-            <div class="UserprofileView">
+            <div className="UserprofileView">
               {!authenticated && (
                 <button
                   className="btn btn-outline header__button"
@@ -560,12 +560,16 @@ export const Header = () => {
 
               {authenticated && (
                 <>
-                  <span class="username">{first_name || last_name}</span>
+                  <span className="username">{first_name || last_name}</span>
                   <Link prefetch={false} href="/us-en/profile" legacyBehavior>
-                    <a class="header_profileHeaderImage" href="#">
-                      <p class="initials">{initials}</p>
+                    <a className="header_profileHeaderImage" href="#">
+                      <p className="initials">{initials}</p>
                       {profilePic && (
-                        <img src={profilePic} alt="PC" class="rounded-circle" />
+                        <img
+                          src={profilePic}
+                          alt="PC"
+                          className="rounded-circle"
+                        />
                       )}
                     </a>
                   </Link>
