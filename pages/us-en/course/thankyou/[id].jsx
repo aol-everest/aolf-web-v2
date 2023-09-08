@@ -26,6 +26,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useAnalytics } from "use-analytics";
+
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 
@@ -91,7 +92,7 @@ const renderVideo = (productTypeId) => {
 const Thankyou = () => {
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { track } = useAnalytics();
+  const { track, page } = useAnalytics();
   const { id: attendeeId, comboId } = router.query;
   const {
     data: result,
@@ -118,6 +119,11 @@ const Thankyou = () => {
 
   useEffect(() => {
     if (!result || hasCookie(orderExternalId)) return;
+    page({
+      category: "course_registration",
+      name: "course_registration_thank_you_referral_popup",
+      course_type: "",
+    });
     track(
       "'aol_purchase'",
       {
@@ -425,6 +431,22 @@ const Thankyou = () => {
   const showSecondCourseButton =
     isSkyPlusSahajFirstCourse && comboCourse.showSecondCourseButton;
 
+  const iosAppDownloadAction = () => {
+    track("click_button", {
+      screen_name: "course_registration_thank_you",
+      event_target: "ios_app_link",
+      course_type: "",
+    });
+  };
+
+  const androidAppDownloadAction = () => {
+    track("click_button", {
+      screen_name: "course_registration_thank_you",
+      event_target: "android_app_link",
+      course_type: "",
+    });
+  };
+
   const autoVoidParam = ammountPaid === 0 ? "&autovoid=1" : "";
 
   return (
@@ -539,6 +561,7 @@ const Thankyou = () => {
                             href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
                             target="_blank"
                             rel="noreferrer"
+                            onClick={iosAppDownloadAction}
                           >
                             <img src="/img/ic-apple.svg" alt="apple" />
                             iOS App
@@ -548,6 +571,7 @@ const Thankyou = () => {
                             href="https://play.google.com/store/apps/details?id=com.aol.app"
                             target="_blank"
                             rel="noreferrer"
+                            onClick={androidAppDownloadAction}
                           >
                             <img src="/img/ic-android.svg" alt="android" />
                             Android App

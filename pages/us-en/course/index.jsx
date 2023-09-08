@@ -18,6 +18,7 @@ import ContentLoader from "react-content-loader";
 import { useInfiniteQuery, useQuery } from "react-query";
 import { useUIDSeed } from "react-uid";
 import { useAnalytics } from "use-analytics";
+import { useEffectOnce } from "react-use";
 
 import "bootstrap-daterangepicker/daterangepicker.css";
 import Style from "./Course.module.scss";
@@ -438,7 +439,7 @@ const Course = () => {
     );
 
   const loadMoreRef = React.useRef();
-  const { track } = useAnalytics();
+  const { track, page } = useAnalytics();
 
   useIntersectionObserver({
     target: loadMoreRef,
@@ -446,11 +447,15 @@ const Course = () => {
     enabled: hasNextPage,
   });
 
-  useEffect(() => {
+  useEffectOnce(() => {
+    page({
+      category: "course_registration",
+      name: "course_search",
+    });
     track("Product List Viewed", {
       category: "Course",
     });
-  }, []);
+  });
 
   let filterCount = 0;
   if (locationFilter) {

@@ -4,17 +4,18 @@ import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
 import { api, tConvert } from "@utils";
 import dayjs from "dayjs";
-import { groupBy, sortBy, values } from "lodash";
+import { sortBy, values } from "lodash";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Flatpickr from "react-flatpickr";
 import Select2 from "react-select2-wrapper";
 import { useQuery } from "react-query";
 import { StripeExpressCheckoutElement } from "@components/checkout/StripeExpressCheckoutElement";
 import "flatpickr/dist/flatpickr.min.css";
-import { AddressSearch } from "@components/addressSearch";
 import { ScheduleLocationFilter } from "@components/scheduleLocationFilter/ScheduleLocationFilter";
+import { useEffectOnce } from "react-use";
+import { useAnalytics } from "use-analytics";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -44,6 +45,7 @@ const timezones = [
 
 const SchedulingRange = () => {
   const fp = useRef(null);
+  const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [courseTypeFilter] = useQueryString("courseType", {
@@ -140,6 +142,14 @@ const SchedulingRange = () => {
     },
   );
 
+  useEffectOnce(() => {
+    page({
+      category: "course_registration",
+      name: "course_search_scheduling",
+      course_type: courseTypeFilter || "SKY_BREATH_MEDITATION",
+    });
+  });
+
   function getGroupedUniqueEventIds(response) {
     const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
       let timings = obj.timings;
@@ -208,6 +218,11 @@ const SchedulingRange = () => {
             });
           }
         }, 100);
+        track("click_calendar", {
+          course_type: courseTypeFilter || "SKY_BREATH_MEDITATION",
+          location_type: mode,
+          num_results: response?.data.length,
+        });
         return finalWorkshops;
       }
     },

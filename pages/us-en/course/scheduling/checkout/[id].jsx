@@ -24,6 +24,8 @@ import { ScheduleDiscountInput } from "@components/scheduleDiscountInput";
 import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
 import { SchedulePhoneInput } from "@components/schedulingPhoneInput";
 import { replaceRouteWithUTMQuery } from "@service";
+import { useEffectOnce } from "react-use";
+import { useAnalytics } from "use-analytics";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
@@ -33,6 +35,7 @@ const SchedulingPayment = () => {
   const [discount] = useQueryString("discountCode");
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
+  const { track, page } = useAnalytics();
 
   const {
     data: workshop,
@@ -57,6 +60,13 @@ const SchedulingPayment = () => {
       enabled: !!workshopId,
     },
   );
+
+  useEffectOnce(() => {
+    page({
+      category: "course_registration",
+      name: "course_scheduling_checkout",
+    });
+  });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !workshopId) return <PageLoading />;
@@ -176,6 +186,7 @@ const SchedulingPayment = () => {
               fee={fee}
               delfee={delfee}
               router={router}
+              pageViewed={page}
             />
           </Elements>
         </div>
@@ -192,6 +203,7 @@ const SchedulingPaymentForm = ({
   fee,
   delfee,
   router,
+  pageViewed,
 }) => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -414,6 +426,13 @@ const SchedulingPaymentForm = ({
       setLoading(false);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+      pageViewed({
+        category: "course_registration",
+        name: "course_scheduling_checkout_error",
+        error_message: message
+          ? `Error: ${message} (${statusCode})`
+          : ex.message,
       });
     }
   };
