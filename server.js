@@ -1,6 +1,5 @@
 const next = require("next");
 const express = require("express");
-const nocache = require("nocache");
 const helmet = require("helmet");
 const sslRedirect = require("heroku-ssl-redirect").default; // to make it work with 'require' keyword.
 
@@ -60,7 +59,6 @@ app.prepare().then(() => {
       crossOriginEmbedderPolicy: false,
     }),
   );
-  // server.use(nocache());
 
   server.all("*", (req, res) => {
     return handle(req, res);
