@@ -467,7 +467,9 @@ export function Footer() {
                       </a>
                     </li>
                     <li className="nav-item">
-                      <a href="#">Art of Living Part II</a>
+                      <a href="https://event.us.artofliving.org/us-en/artoflivingpart2">
+                        Art of Living Part II
+                      </a>
                     </li>
                     <li className="nav-item">
                       <a href="https://members.us.artofliving.org/us-en/lp/online-foundation-program?_gl=1*1q9xag8*_ga*MTk0NjUzNTA2MC4xNjkzNTcxNzMy*_ga_53SWQFSBV0*MTY5MzcxNzMxOC4zLjEuMTY5MzcxNzQwMC4zOC4wLjA.">
@@ -607,22 +609,22 @@ export function Footer() {
               </div>
               <ul className="footer-navbar--list footer-social-links order-2 order-md-2 mb-2 mb-md-0 mobileView">
                 <li className="footer-navbar--item">
-                  <a href="#">
+                  <a href="https://www.facebook.com/ArtofLivingUSA">
                     <img src="/img/footer/Fb.svg" />
                   </a>
                 </li>
                 <li className="footer-navbar--item">
-                  <a href="#">
+                  <a href="https://twitter.com/artoflivingusa">
                     <img src="/img/footer/Twitter.svg" />
                   </a>
                 </li>
                 <li className="footer-navbar--item">
-                  <a href="#">
+                  <a href="https://www.instagram.com/artoflivingusa/">
                     <img src="/img/footer/Insta.svg" />
                   </a>
                 </li>
                 <li className="footer-navbar--item">
-                  <a href="#">
+                  <a href="https://www.youtube.com/@artofliving">
                     <img src="/img/footer/Youtube.svg" />
                   </a>
                 </li>
@@ -639,7 +641,9 @@ export function Footer() {
             </li>
             <div className="privacy-links">
               <li className="footer-navbar--item">
-                <a href="#">SMS Policy</a>
+                <a href="https://www.artofliving.org/us-en/sms-policy">
+                  SMS Policy
+                </a>
               </li>
               <li className="footer-navbar--item">
                 <Link
@@ -651,7 +655,9 @@ export function Footer() {
                 </Link>
               </li>
               <li className="footer-navbar--item">
-                <a href="#">Cookie Policy</a>
+                <a href="https://www.artofliving.org/us-en/cookie-policy">
+                  Cookie Policy
+                </a>
               </li>
               <li className="footer-navbar--item">
                 <Link
@@ -666,22 +672,22 @@ export function Footer() {
           </ul>
           <ul className="footer-navbar--list footer-social-links order-2 order-md-2 mb-2 mb-md-0 desktopView">
             <li className="footer-navbar--item">
-              <a href="#">
+              <a href="https://www.facebook.com/ArtofLivingUSA">
                 <img src="/img/footer/Fb.svg" />
               </a>
             </li>
             <li className="footer-navbar--item">
-              <a href="#">
+              <a href="https://twitter.com/artoflivingusa">
                 <img src="/img/footer/Twitter.svg" />
               </a>
             </li>
             <li className="footer-navbar--item">
-              <a href="#">
+              <a href="https://www.instagram.com/artoflivingusa/">
                 <img src="/img/footer/Insta.svg" />
               </a>
             </li>
             <li className="footer-navbar--item">
-              <a href="#">
+              <a href="https://www.youtube.com/@artofliving">
                 <img src="/img/footer/Youtube.svg" />
               </a>
             </li>
