@@ -3,11 +3,7 @@
   border-bottom: 1px solid $border-color;
   background: white;
   width: 100%;
-  z-index: 101;
-
-  @media screen and (max-width: 991px) {
-    position: relative !important;
-  }
+  z-index: 25;
 
   .navbar {
     padding-top: 0;
@@ -412,12 +408,30 @@
 }
 
 .header-v2 {
+  z-index: 101;
+  @media screen and (max-width: 991px) {
+    position: relative !important;
+  }
   .header__container {
     flex-direction: unset;
     .logo {
       @media screen and (max-width: 991px) {
         width: 120px;
         height: 46px;
+        order: 2;
+        margin: 0 auto;
+      }
+    }
+    .desktopView {
+      display: inline-block;
+      @media screen and (max-width: 991px) {
+        display: none;
+      }
+    }
+    .mobileView {
+      display: none;
+      @media screen and (max-width: 991px) {
+        display: inline-block;
       }
     }
   }
@@ -460,7 +474,7 @@
         }
       }
       .nav-link {
-        font-weight: 500;
+        font-weight: 400;
         color: #000000;
         &:hover {
           color: #ff9200;
@@ -473,6 +487,13 @@
           &::after {
             display: none;
           }
+        }
+      }
+      .donate-link {
+        display: flex;
+        font-weight: 500;
+        img {
+          margin-right: 0.5rem;
         }
       }
     }
@@ -525,12 +546,13 @@
   @media screen and (max-width: 991px) {
     .header__button {
       display: none;
+      display: flex;
     }
     .navbar {
-      margin-left: auto;
+      order: 3;
       .navbar-nav {
         padding: 5px 20px;
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 2px rgb(174 174 174 / 30%);
         .nav-item {
           &:not(:last-child) {
             margin-right: 0;
@@ -569,9 +591,62 @@
         position: fixed;
         width: 100%;
         left: 0px;
-        top: 6.4375rem;
+        top: 4rem;
         background-color: #ffffff;
       }
+    }
+  }
+  .user-profile-link {
+    padding: 4px 15px;
+    margin: 0 0 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    img {
+      border: 0;
+      width: 24px;
+      margin-right: 0.5rem;
+    }
+    .UserprofileView {
+      display: flex;
+      align-items: center;
+      .username {
+        font: 600 16px 'Work Sans';
+        @media screen and (max-width: 1199px) {
+          display: none;
+        }
+      }
+    }
+    .header_profileHeaderImage {
+      border-radius: 50%;
+      box-shadow: 0 2px 25px 0 rgba(61, 139, 232, 0.2);
+      color: #ffffff;
+      font-family: Lora, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      height: 2.375rem;
+      margin: 4px 10px 0;
+      width: 2.375rem;
+      img {
+        width: 2.375rem;
+        height: 2.375rem;
+        margin-right: 0;
+      }
+    }
+    .initials {
+      display: flex;
+      position: absolute;
+      width: 2.375rem;
+      height: 2.375rem;
+      justify-content: center;
+      align-items: center;
+      background-color: #ef6c00;
+      border-radius: 50%;
+    }
+    @media screen and (max-width: 991px) {
+      order: 1;
+      margin: unset;
+      padding: 0;
     }
   }
 }

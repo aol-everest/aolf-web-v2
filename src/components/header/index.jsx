@@ -392,7 +392,9 @@ export const Header = () => {
   };
 
   const onMenuSelection = (submenu) => () => {
+    console.log("callleddd", submenu);
     setShowSidebar(false);
+    setCurrentDropdownItem("");
     pushRouteWithUTMQuery(router, submenu.link);
   };
 
@@ -402,16 +404,22 @@ export const Header = () => {
   const onMenuMouseLeave = () => {
     setCurrentActiveMenu("");
   };
+  console.log("showS", showSidebar);
 
   const handleMenuItemClick = (menu) => {
-    setCurrentDropdownItem((prevState) => (prevState ? "" : menu));
+    setCurrentDropdownItem((prevState) => (prevState ? "" : menu.name));
+    if (!menu.submenu) {
+      setShowSidebar(false);
+      setCurrentActiveMenu("");
+      setCurrentDropdownItem("");
+    }
   };
 
   return (
     <>
       <header className="header header-v2" onMouseLeave={onMenuMouseLeave}>
         <div className="header__container">
-          <a href="https://www.artofliving.org/" className="logo">
+          <a href="https://www.artofliving.org/us-en" className="logo">
             <img
               src={`/img/${orgConfig.logo}`}
               alt="logo"
@@ -451,7 +459,7 @@ export const Header = () => {
                       ${currentDropdownItem === menu.name ? " show" : ""} `}
                       key={menu.name}
                       onMouseOver={onMenuMouseOver(menu.name)}
-                      onClick={() => handleMenuItemClick(menu.name)}
+                      onClick={() => handleMenuItemClick(menu)}
                     >
                       {menu.link && (
                         <Link prefetch={false} href={menu.link} legacyBehavior>
@@ -492,12 +500,16 @@ export const Header = () => {
                             return (
                               <Link
                                 prefetch={false}
-                                onSelect={onMenuSelection(submenu)}
                                 href={submenu.link}
                                 legacyBehavior
                                 key={submenu.name}
                               >
-                                <a className="dropdown-item">{submenu.name}</a>
+                                <a
+                                  onClick={() => onMenuSelection(submenu)}
+                                  className="dropdown-item"
+                                >
+                                  {submenu.name}
+                                </a>
                               </Link>
                             );
                           })}
@@ -506,58 +518,61 @@ export const Header = () => {
                     </li>
                   );
                 })}
+                <li class="nav-item mobileView">
+                  <a
+                    class="nav-link"
+                    href="https://members.us.artofliving.org/us-en/lp/donations?_gl=1*ep179x*_ga*MTEzODQzOTQwOS4xNjkzOTgwNjA2*_ga_53SWQFSBV0*MTY5NDEwMjcxNC44LjEuMTY5NDEwMjc0NS4yOS4wLjA."
+                  >
+                    Donation
+                  </a>
+                </li>
               </ul>
             </div>
           </nav>
-          {!authenticated && (
-            <button
-              className="btn btn-outline header__button"
-              type="button"
-              onClick={loginAction}
-            >
-              Log In
-            </button>
-          )}
-          {authenticated && (
-            <Link prefetch={false} href="/us-en/profile" legacyBehavior>
-              <a
-                className={classNames(
-                  Style.header__button,
-                  "user-profile-link header__button",
-                )}
+          <div class="user-profile-link">
+            <div class="nav-item desktopView">
+              <Link
+                prefetch={false}
+                href="/us-en/lp/donations?_gl=1*ep179x*_ga*MTEzODQzOTQwOS4xNjkzOTgwNjA2*_ga_53SWQFSBV0*MTY5NDEwMjcxNC44LjEuMTY5NDEwMjc0NS4yOS4wLjA."
+                legacyBehavior
               >
-                <span
-                  className={classNames(
-                    Style.userName,
-                    "d-none d-md-inline-block userName",
-                  )}
+                <a class="nav-link donate-link">
+                  <img
+                    src="/img/donate.svg"
+                    alt="Donate"
+                    class="donate__image"
+                  />{" "}
+                  Donation
+                </a>
+              </Link>
+            </div>
+
+            <div class="UserprofileView">
+              {!authenticated && (
+                <button
+                  className="btn btn-outline header__button"
+                  type="button"
+                  onClick={loginAction}
                 >
-                  {first_name || last_name}
-                </span>
-                <div
-                  className={classNames(
-                    "top-nav-bar",
-                    Style.userProfilePic,
-                    Style.profileHeadeImage,
-                  )}
-                >
-                  <p className={Style.initials}>{initials}</p>
-                  {profilePic && (
-                    <img
-                      src={profilePic}
-                      className={classNames(
-                        "rounded-circle",
-                        Style.userProfilePic,
-                        Style.profilePic,
+                  Log In
+                </button>
+              )}
+
+              {authenticated && (
+                <>
+                  <span class="username">{first_name || last_name}</span>
+                  <Link prefetch={false} href="/us-en/profile" legacyBehavior>
+                    <a class="header_profileHeaderImage" href="#">
+                      <p class="initials">{initials}</p>
+                      {profilePic && (
+                        <img src={profilePic} alt="PC" class="rounded-circle" />
                       )}
-                      alt=""
-                      onError={(i) => (i.target.style.display = "none")}
-                    />
-                  )}
-                </div>
-              </a>
-            </Link>
-          )}
+                    </a>
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </header>
     </>
