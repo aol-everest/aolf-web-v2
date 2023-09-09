@@ -75,6 +75,6 @@ function LandingPage() {
   );
 }
 
-LandingPage.hideFooter = true;
+LandingPage.hideFooter = false;
 
 export default LandingPage;
