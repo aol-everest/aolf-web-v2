@@ -89,3 +89,18 @@ yarn commit
 ![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.14.31%20PM.png?raw=true)
 
 12. This will ask you some questions about your changes before running the LINT fix.
+13. After a successful commit push changes to qa 
+```
+git push qa
+```
+14. Wait for 15 minutes and then test changes on the QA instance
+```
+https://qa.members.us.artofliving.org
+```
+15. After a successful test result on qa move changes to the main branch
+```
+Git checkout main
+Git merge qa -m “Merge changes to main”
+Git push main
+```
+16. Wait for 15 minutes and then review changes in the production environment.
