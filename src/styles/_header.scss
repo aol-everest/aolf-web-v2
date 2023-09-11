@@ -650,6 +650,23 @@
       padding: 0;
     }
   }
+  .resourceNav {
+    .navbar-nav {
+      width: auto !important;
+    }
+  }
+  .desktopView {
+    .dropdown-toggle {
+      &:after {
+        display: none;
+      }
+    }
+    .resources {
+      font-weight: 400;
+      color: #000000;
+      margin-right: 10px;
+    }
+  }
 }
 
 @import './header-media';
