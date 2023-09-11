@@ -54,7 +54,7 @@ NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID=865-58W-ZK6Z
 git checkout qa
 ```
 
-![](RackMultipart20230911-1-l2k3v1_html_2bcd9406108196e.png)
+![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.09.19%20PM.png?raw=true)
 
 7. If the yarn is not installed globally install yarn using the below command otherwise you can skip this step.
 
@@ -62,7 +62,7 @@ git checkout qa
 npm install -g yarn
 ```
 
-![](RackMultipart20230911-1-l2k3v1_html_bb52ce62a457f167.png)
+![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.10.14%20PM.png?raw=true)
 
 8. Install project dependency locally using the below command.
 
@@ -70,7 +70,7 @@ npm install -g yarn
 yarn install
 ```
 
-![](RackMultipart20230911-1-l2k3v1_html_f0d9faff961ed4ed.png)
+![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.11.25%20PM.png?raw=true)
 
 9. Do the needful code changes in the codebase using the code editor
 10. Run the local development server to test changes by running this command
@@ -78,7 +78,7 @@ yarn install
 ```
 yarn develop:qa
 ```
-![](RackMultipart20230911-1-l2k3v1_html_de0b7f256f83bc1d.png)
+![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.13.18%20PM.png?raw=true)
 
 11. If changes look good in the local test then stop the local development server using the cmd+c key and add changes to the git qa branch using the below commands
 
@@ -86,6 +86,6 @@ yarn develop:qa
 git add .
 yarn commit
 ```
-![](RackMultipart20230911-1-l2k3v1_html_2f571de52be022ad.png)
+![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.14.31%20PM.png?raw=true)
 
 12. This will ask you some questions about your changes before running the LINT fix.
