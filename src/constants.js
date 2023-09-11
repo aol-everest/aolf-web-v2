@@ -87,6 +87,7 @@ export const COURSE_TYPES = {
   SKY_BREATH_MEDITATION: {
     name: "Art of Living Part I",
     value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
+    code: "10101000",
   },
   SILENT_RETREAT: {
     name: "Art of Living Part II",
@@ -95,6 +96,7 @@ export const COURSE_TYPES = {
   SAHAJ_SAMADHI_MEDITATION: {
     name: "Sahaj Samadhi Meditation",
     value: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE || "",
+    code: "10102000",
   },
   SRI_SRI_YOGA_MEDITATION: {
     name: "Sri Sri Yoga",
