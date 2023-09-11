@@ -58,20 +58,26 @@ git checkout qa
 
 7. If the yarn is not installed globally install yarn using the below command otherwise you can skip this step.
 
-```npm install -g yarn```
+```
+npm install -g yarn
+```
 
 ![](RackMultipart20230911-1-l2k3v1_html_bb52ce62a457f167.png)
 
 8. Install project dependency locally using the below command.
 
-```yarn install```
+```
+yarn install
+```
 
 ![](RackMultipart20230911-1-l2k3v1_html_f0d9faff961ed4ed.png)
 
 9. Do the needful code changes in the codebase using the code editor
 10. Run the local development server to test changes by running this command
 
-```yarn develop:qa```
+```
+yarn develop:qa
+```
 ![](RackMultipart20230911-1-l2k3v1_html_de0b7f256f83bc1d.png)
 
 11. If changes look good in the local test then stop the local development server using the cmd+c key and add changes to the git qa branch using the below commands
