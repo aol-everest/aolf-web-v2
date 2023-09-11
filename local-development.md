@@ -1,4 +1,4 @@
-### Steps to do change on next js web app from GitHub repo.
+### Steps to make changes in the code base.
 
 1. Clone the app in your local machine using the below git command.
    ```
