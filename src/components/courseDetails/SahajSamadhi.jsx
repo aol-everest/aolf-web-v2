@@ -85,9 +85,11 @@ export const SahajSamadhi = ({ data }) => {
     const isCurrentEventKey = currentEventKey === eventKey;
 
     return (
-      <h5 class="mb-0">
+      <h5 className="mb-0">
         <button
-          class={classNames("btn btn-link", { collapsed: !isCurrentEventKey })}
+          className={classNames("btn btn-link", {
+            collapsed: !isCurrentEventKey,
+          })}
           onClick={decoratedOnClick}
         >
           {children}
@@ -98,21 +100,24 @@ export const SahajSamadhi = ({ data }) => {
 
   return (
     <>
-      <main class="course-filter course-sahaj-samadhi">
-        <section class="samadhi-top-section">
-          <div class="banner">
-            <div class="container">
-              <div class="courses-title">Courses</div>
-              <div class="banner-title">
+      <main className="course-filter course-sahaj-samadhi">
+        <section className="samadhi-top-section">
+          <div className="banner">
+            <div className="container">
+              <div className="courses-title">Courses</div>
+              <div className="banner-title">
                 {title}
                 <sup>TM</sup>: Your Path to Effortless Ease
               </div>
-              <div class="banner-description">
+              <div className="banner-description">
                 Experience freedom from worry and anxiety
               </div>
               {!sfid && (
-                <div class="hero-register-button-wrapper">
-                  <button class="hero-register-button" onClick={handleRegister}>
+                <div className="hero-register-button-wrapper">
+                  <button
+                    className="hero-register-button"
+                    onClick={handleRegister}
+                  >
                     Register Now <FaArrowRightLong className="fa-solid" />
                   </button>
                 </div>
@@ -120,30 +125,30 @@ export const SahajSamadhi = ({ data }) => {
             </div>
           </div>
           {sfid && <PriceCard workshop={data} />}
-          <div class="container samadhi-featuers">
-            <div class="feature-box">
-              <div class="feature-icon">
+          <div className="container samadhi-featuers">
+            <div className="feature-box">
+              <div className="feature-icon">
                 <img src="/img/sahaj-samadhi-uparrow-icon.png" alt="Enhance" />
               </div>
-              <div class="feature-text">Feel clearer & lighter</div>
+              <div className="feature-text">Feel clearer & lighter</div>
             </div>
-            <div class="feature-box">
-              <div class="feature-icon">
+            <div className="feature-box">
+              <div className="feature-icon">
                 <img src="/img/sahaj-samadhi-eye-icon.png" alt="Elevate" />
               </div>
-              <div class="feature-text">Unlock intuitive skills</div>
+              <div className="feature-text">Unlock intuitive skills</div>
             </div>
-            <div class="feature-box">
-              <div class="feature-icon">
+            <div className="feature-box">
+              <div className="feature-icon">
                 <img src="/img/sahaj-samadhi-smile-icon.png" alt="Enhance" />
               </div>
-              <div class="feature-text">Enhance emotional well-being</div>
+              <div className="feature-text">Enhance emotional well-being</div>
             </div>
           </div>
 
-          <div class="container content-video-area">
-            <div class="video-section-textbox">
-              <h2 class="section-title">What is {title}?</h2>
+          <div className="container content-video-area">
+            <div className="video-section-textbox">
+              <h2 className="section-title">What is {title}?</h2>
               <p>
                 Sahaj translates to "effortless," and Samadhi signifies a state
                 of profound meditation. In simple terms, it's a technique to
@@ -157,7 +162,7 @@ export const SahajSamadhi = ({ data }) => {
                 serene repose.
               </p>
             </div>
-            <div class="video-wrapper">
+            <div className="video-wrapper">
               <iframe
                 width="519"
                 height="291"
@@ -167,22 +172,22 @@ export const SahajSamadhi = ({ data }) => {
               ></iframe>
             </div>
           </div>
-          <div class="container samadhi-benefits-section">
-            <h2 class="section-title">
+          <div className="container samadhi-benefits-section">
+            <h2 className="section-title">
               <strong>Benefits</strong> of {title}
             </h2>
-            <div class="section-description">
+            <div className="section-description">
               Powerful breathing techniques and wisdom that can change your life
             </div>
-            <div class="samadhi-benefits-wrapper row">
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box1">
-                  <div class="benefit-title">
+            <div className="samadhi-benefits-wrapper row">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box1">
+                  <div className="benefit-title">
                     <strong>Revitalize</strong>
                     <br />
                     physical health
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     By soothing and rejuvenating your nervous system, Sahaj
                     Samadhi Meditation radiates positive effects throughout your
                     body. Experience improved cardiovascular, digestive, and
@@ -191,14 +196,14 @@ export const SahajSamadhi = ({ data }) => {
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box2">
-                  <div class="benefit-title">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box2">
+                  <div className="benefit-title">
                     <strong>Unlock</strong>
                     <br />
                     intuitive skills
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     In the midst of mental clutter and repetitive overthinking,
                     Sahaj Samadhi Meditation guides you to your authentic inner
                     voice. Tap into this innate wisdom and you strengthen your
@@ -207,14 +212,14 @@ export const SahajSamadhi = ({ data }) => {
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box3 ">
-                  <div class="benefit-title">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box3 ">
+                  <div className="benefit-title">
                     <strong>Find</strong>
                     <br />
                     mental clarity
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     Quieting the constant stream of thoughts, Sahaj Samadhi
                     Meditation gives greater clarity of mind and heightened
                     awareness. Enjoy a longer attention span, greater
@@ -222,14 +227,14 @@ export const SahajSamadhi = ({ data }) => {
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box4">
-                  <div class="benefit-title">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box4">
+                  <div className="benefit-title">
                     <strong>Experience</strong>
                     <br />
                     effortless ease
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     Sahaj Samadhi Meditation is the epitome of effortless ease
                     and tranquility. With a personalized mantra, you
                     effortlessly transcend mental chatter and negative thought
@@ -241,13 +246,13 @@ export const SahajSamadhi = ({ data }) => {
           </div>
         </section>
         {sfid && (
-          <section class="register-to-unlock">
-            <div class="container">
-              <div class="unlock-title">
+          <section className="register-to-unlock">
+            <div className="container">
+              <div className="unlock-title">
                 Unlock your Inner Peace with this 3-day course for ${fee}
               </div>
-              <div class="unlock-register">
-                <button class="register-button" onClick={handleRegister}>
+              <div className="unlock-register">
+                <button className="register-button" onClick={handleRegister}>
                   Register Now <FaArrowRightLong className="fa-solid" />
                 </button>
               </div>
@@ -255,23 +260,23 @@ export const SahajSamadhi = ({ data }) => {
           </section>
         )}
 
-        <section class="section-sahaj-reviews">
-          <h2 class="section-title">How {title} is Changing Lives?</h2>
+        <section className="section-sahaj-reviews">
+          <h2 className="section-title">How {title} is Changing Lives?</h2>
           <Swiper {...swiperOption} className="reviews-slider">
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">Calmness and peace</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">Calmness and peace</div>
+                <div className="review-text">
                   I am enjoying the calmness and peace that comes with Sahaj
                   Samadhi meditation.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/dr-lewis-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Dr. Lewis</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Dr. Lewis</div>
+                    <div className="reviwer-position">
                       Sahaj Samadhi participant
                     </div>
                   </div>
@@ -279,20 +284,20 @@ export const SahajSamadhi = ({ data }) => {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">Reservoir of energy</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">Reservoir of energy</div>
+                <div className="review-text">
                   Sahaj Samadhi allows me to tap into a reservoir of energy,
                   which leaves me rejuvenated and revitalized, like a new
                   person.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/brian-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Brian</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Brian</div>
+                    <div className="reviwer-position">
                       Sahaj Samadhi participant
                     </div>
                   </div>
@@ -300,19 +305,19 @@ export const SahajSamadhi = ({ data }) => {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">Happy</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">Happy</div>
+                <div className="review-text">
                   I got so happy for no reason. I hadn’t experienced that in a
                   long time.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/phillip-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Phillip</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Phillip</div>
+                    <div className="reviwer-position">
                       Sahaj Samadhi participant
                     </div>
                   </div>
@@ -321,10 +326,10 @@ export const SahajSamadhi = ({ data }) => {
             </SwiperSlide>
           </Swiper>
         </section>
-        <section class="faq">
-          <div class="container">
-            <h2 class="section-title pl-0 pr-0">FAQs</h2>
-            <Accordion defaultActiveKey="0" class="accordion">
+        <section className="faq">
+          <div className="container">
+            <h2 className="section-title pl-0 pr-0">FAQs</h2>
+            <Accordion defaultActiveKey="0" className="accordion">
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="0">
@@ -367,15 +372,15 @@ export const SahajSamadhi = ({ data }) => {
             </Accordion>
           </div>
         </section>
-        <div class="float-bar">
-          <div class="float-wrapper clearfix">
-            <div class="bar-left">
-              <div class="bar-title">
+        <div className="float-bar">
+          <div className="float-wrapper clearfix">
+            <div className="bar-left">
+              <div className="bar-title">
                 Reserve Your Journey to a Worry-Free Mind
               </div>
             </div>
-            <div class="bar-right">
-              <button class="register-button" onClick={handleRegister}>
+            <div className="bar-right">
+              <button className="register-button" onClick={handleRegister}>
                 Register Now <FaArrowRightLong className="fa-solid" />
               </button>
             </div>
