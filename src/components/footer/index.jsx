@@ -10,7 +10,9 @@ export function Footer() {
           <p className="copyright order-2 order-md-1"></p>
           <ul className="footer-navbar--list order-1 order-md-2 mb-2 mb-md-0">
             <li className="footer-navbar--item">
-              <a href="https://healingbreaths.org/sms-policy/">SMS Policy</a>
+              <Link href="https://healingbreaths.org/sms-policy/">
+                SMS Policy
+              </Link>
             </li>
 
             <li className="footer-navbar--item">
@@ -19,13 +21,13 @@ export function Footer() {
                 href="https://healingbreaths.org/privacy-policy/"
                 legacyBehavior
               >
-                <a target="_blank">Privacy Policy</a>
+                <Link target="_blank">Privacy Policy</Link>
               </Link>
             </li>
             <li className="footer-navbar--item">
-              <a href="https://healingbreaths.org/cookie-policy/">
+              <Link href="https://healingbreaths.org/cookie-policy/">
                 Cookie Policy
-              </a>
+              </Link>
             </li>
             <li className="footer-navbar--item">
               <Link
@@ -82,49 +84,49 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation">
+                      <Link href="https://www.artofliving.org/us-en/meditation">
                         Meditation Overview
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/benefits/benefits-of-meditation">
+                      <Link href="https://www.artofliving.org/us-en/meditation/benefits/benefits-of-meditation">
                         Benefits Of Meditation
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/beginners-guide/meditation-for-beginners">
+                      <Link href="https://www.artofliving.org/us-en/meditation/beginners-guide/meditation-for-beginners">
                         Meditation For Beginners
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/how-to/how-to-meditate-properly">
+                      <Link href="https://www.artofliving.org/us-en/meditation/how-to/how-to-meditate-properly">
                         How To Meditate
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/chakras/chakras-guide">
+                      <Link href="https://www.artofliving.org/us-en/meditation/chakras/chakras-guide">
                         Chakras
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/beginners-guide/online-guided-meditation">
+                      <Link href="https://www.artofliving.org/us-en/meditation/beginners-guide/online-guided-meditation">
                         Guided Meditation
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/beginners-guide/what-is-meditation">
+                      <Link href="https://www.artofliving.org/us-en/meditation/beginners-guide/what-is-meditation">
                         What Is Meditation?
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/health-and-wellness/yoga-nidra-experience">
+                      <Link href="https://www.artofliving.org/us-en/yoga/health-and-wellness/yoga-nidra-experience">
                         Yoga Nidra Meditation
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/how-to/body-scan-meditation">
+                      <Link href="https://www.artofliving.org/us-en/meditation/how-to/body-scan-meditation">
                         Body Scan Meditation
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -145,44 +147,44 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-techniques">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-techniques">
                         Pranayama Breathwork
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/deep-breathing-exercises">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/deep-breathing-exercises">
                         Deep Breathing Exercises
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-techniques">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-techniques">
                         Breathing Techniques
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/how-to-increase-lung-capacity">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/how-to-increase-lung-capacity">
                         How To Increase Lung Capacity
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-exercises-for-anxiety">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-exercises-for-anxiety">
                         Breathing Exercises For Anxiety / Anxiety Breathing
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-patterns">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/breathing-exercises-101/breathing-patterns">
                         Breathing Patterns
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/pranayama/bhramari-pranayama">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/pranayama/bhramari-pranayama">
                         Bhramari Breath
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathwork/pranayama/alternate-nostril-breathing">
+                      <Link href="https://www.artofliving.org/us-en/breathwork/pranayama/alternate-nostril-breathing">
                         Alternate Nostril Breathing
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -203,44 +205,44 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/poses/sun-salutation">
+                      <Link href="https://www.artofliving.org/us-en/yoga/poses/sun-salutation">
                         Sun Salutations
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/benefits/mudra-for-anxiety">
+                      <Link href="https://www.artofliving.org/us-en/yoga/benefits/mudra-for-anxiety">
                         Mudras
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/poses/yoga-poses">
+                      <Link href="https://www.artofliving.org/us-en/yoga/poses/yoga-poses">
                         Yoga Poses
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/benefits/yoga-benefits">
+                      <Link href="https://www.artofliving.org/us-en/yoga/benefits/yoga-benefits">
                         Benefits Of Yoga
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/beginners/yoga-for-beginners">
+                      <Link href="https://www.artofliving.org/us-en/yoga/beginners/yoga-for-beginners">
                         Yoga For Beginners
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/poses/pigeon-pose">
+                      <Link href="https://www.artofliving.org/us-en/yoga/poses/pigeon-pose">
                         Pigeon Pose
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/poses/lotus-positition">
+                      <Link href="https://www.artofliving.org/us-en/yoga/poses/lotus-positition">
                         Lotus Position
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/poses/shavasana">
+                      <Link href="https://www.artofliving.org/us-en/yoga/poses/shavasana">
                         Shavasana
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -261,44 +263,44 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation-for-sleep-relaxation-techniques-for-body-and-mind">
+                      <Link href="https://www.artofliving.org/us-en/meditation-for-sleep-relaxation-techniques-for-body-and-mind">
                         Meditation For Sleep
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/sleep/sleep-hygiene">
+                      <Link href="https://www.artofliving.org/us-en/meditation/sleep/sleep-hygiene">
                         Sleep Hygiene
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/sleep/guided-sleep-meditation">
+                      <Link href="https://www.artofliving.org/us-en/meditation/sleep/guided-sleep-meditation">
                         Guided Sleep Meditation
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/sleep/how-to-fall-back-asleep">
+                      <Link href="https://www.artofliving.org/us-en/meditation/sleep/how-to-fall-back-asleep">
                         How To Fall Back Asleep
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/sleep/meditation-for-better-sleep">
+                      <Link href="https://www.artofliving.org/us-en/meditation/sleep/meditation-for-better-sleep">
                         Meditation For Better Sleep
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/sleep/sleep-tips">
+                      <Link href="https://www.artofliving.org/us-en/meditation/sleep/sleep-tips">
                         Sleep Tips
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga/health-and-wellness/yoga-nidra-experience">
+                      <Link href="https://www.artofliving.org/us-en/yoga/health-and-wellness/yoga-nidra-experience">
                         Yoga Nidra
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/sleep/meditation-replace-sleep">
+                      <Link href="https://www.artofliving.org/us-en/meditation/sleep/meditation-replace-sleep">
                         Meditation Replace Sleep
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -319,44 +321,44 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/stress/strategies-to-reduce-stress">
+                      <Link href="https://www.artofliving.org/us-en/stress/strategies-to-reduce-stress">
                         How To Relieve Stress
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/blog/how-to-calm-anxiety">
+                      <Link href="https://www.artofliving.org/us-en/blog/how-to-calm-anxiety">
                         How To Calm Anxiety?
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/stress/relief/how-to-deal-with-loneliness">
+                      <Link href="https://www.artofliving.org/us-en/stress/relief/how-to-deal-with-loneliness">
                         I'm So Lonely
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/stress/relief/meditation-for-anxiety">
+                      <Link href="https://www.artofliving.org/us-en/stress/relief/meditation-for-anxiety">
                         Meditation For Anxiety
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/stress/relief/how-to-calm-down">
+                      <Link href="https://www.artofliving.org/us-en/stress/relief/how-to-calm-down">
                         How To Calm Down?
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/stress/relief/how-to-stop-overthinking">
+                      <Link href="https://www.artofliving.org/us-en/stress/relief/how-to-stop-overthinking">
                         How To Stop Overthinking?
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/stress/relief/meditation-for-stress">
+                      <Link href="https://www.artofliving.org/us-en/stress/relief/meditation-for-stress">
                         Meditation For Stress
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/stress/relief/how-to-stop-worrying">
+                      <Link href="https://www.artofliving.org/us-en/stress/relief/how-to-stop-worrying">
                         How To Stop Worrying?
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -377,39 +379,39 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya">
+                      <Link href="https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya">
                         SKY Research
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/blog/is-meditation-making-your-life-better-or-not-find-the-facts-now">
+                      <Link href="https://www.artofliving.org/us-en/blog/is-meditation-making-your-life-better-or-not-find-the-facts-now">
                         Meditation Research
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/blog">
+                      <Link href="https://www.artofliving.org/us-en/blog">
                         Meditation For Heart Health
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/blog/how-meditation-changes-your-brain">
+                      <Link href="https://www.artofliving.org/us-en/blog/how-meditation-changes-your-brain">
                         Meditation For A Healthy Brain
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/benefits/meditation-immunity">
+                      <Link href="https://www.artofliving.org/us-en/meditation/benefits/meditation-immunity">
                         Meditation For Immunity
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/benefits/sudarshan-kriya-benefits">
+                      <Link href="https://www.artofliving.org/us-en/meditation/benefits/sudarshan-kriya-benefits">
                         Sudarshan Kriya Benefits
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://event.us.artofliving.org/us-en/research/">
+                      <Link href="https://event.us.artofliving.org/us-en/research/">
                         Yale Study
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -457,49 +459,47 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://members.us.artofliving.org/us-en/lp/online-course-2">
+                      <Link href="/us-en/lp/online-course-2">
                         Art of Living Part I
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/sahaj-samadhi-meditation">
+                      <Link href="https://www.artofliving.org/us-en/sahaj-samadhi-meditation">
                         Sahaj Samadhi Meditation
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://event.us.artofliving.org/us-en/artoflivingpart2">
+                      <Link href="https://event.us.artofliving.org/us-en/artoflivingpart2">
                         Art of Living Part II
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://members.us.artofliving.org/us-en/lp/online-foundation-program">
+                      <Link href="/us-en/lp/online-foundation-program">
                         Sri Sri Yoga Foundation Program
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://members.us.artofliving.org/us-en/course">
-                        All Courses
-                      </a>
+                      <Link href="/us-en/course">All Courses</Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://members.us.artofliving.org/us-en/lp/advanced-courses">
+                      <Link href="/us-en/lp/advanced-courses">
                         Advanced Courses
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://healingbreaths.org/">
+                      <Link href="https://healingbreaths.org/">
                         Healthcare Providers
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.skycampushappiness.org/">
+                      <Link href="https://www.skycampushappiness.org/">
                         College Courses
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/">
+                      <Link href="https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/">
                         Destination Retreats
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -516,50 +516,50 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="/about">Art of Living</a>
+                      <Link href="/about">Art of Living</Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya">
+                      <Link href="https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya">
                         Research
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/service-projects-overview">
+                      <Link href="https://www.artofliving.org/us-en/service-projects-overview">
                         Service Projects
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/press">
+                      <Link href="https://www.artofliving.org/us-en/press">
                         Press & Media
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://members.us.artofliving.org/us-en/lp/donations">
-                        Donate
-                      </a>
+                      <Link href="/us-en/lp/donations">Donate</Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://endowment.us.artofliving.org/">
+                      <Link href="https://endowment.us.artofliving.org/">
                         Endowment
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artoflivingstore.us/">Bookstore</a>
+                      <Link href="https://www.artoflivingstore.us/">
+                        Bookstore
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://event.us.artofliving.org/gift-cards/">
+                      <Link href="https://event.us.artofliving.org/gift-cards/">
                         Gift Card
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.shareasale.com/shareasale.cfm?merchantID=103115">
+                      <Link href="https://www.shareasale.com/shareasale.cfm?merchantID=103115">
                         Affiliates
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/contact-us">
+                      <Link href="https://www.artofliving.org/us-en/contact-us">
                         Contact Us
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -577,56 +577,58 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/yoga">Yoga</a>
+                      <Link href="https://www.artofliving.org/us-en/yoga">
+                        Yoga
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/meditation">
+                      <Link href="https://www.artofliving.org/us-en/meditation">
                         Meditation
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/breathing-exercises">
+                      <Link href="https://www.artofliving.org/us-en/breathing-exercises">
                         Breathing exercises
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/wisdom">
+                      <Link href="https://www.artofliving.org/us-en/wisdom">
                         Wisdom
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/spirituality">
+                      <Link href="https://www.artofliving.org/us-en/spirituality">
                         Spirituality
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="https://www.artofliving.org/us-en/lifestyle">
+                      <Link href="https://www.artofliving.org/us-en/lifestyle">
                         Lifestyle
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
               </div>
               <ul className="footer-navbar--list footer-social-links order-2 order-md-2 mb-2 mb-md-0 mobileView">
                 <li className="footer-navbar--item">
-                  <a href="https://www.facebook.com/ArtofLivingUSA">
+                  <Link href="https://www.facebook.com/ArtofLivingUSA">
                     <img src="/img/footer/Fb.svg" />
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer-navbar--item">
-                  <a href="https://twitter.com/artoflivingusa">
+                  <Link href="https://twitter.com/artoflivingusa">
                     <img src="/img/footer/Twitter.svg" />
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer-navbar--item">
-                  <a href="https://www.instagram.com/artoflivingusa/">
+                  <Link href="https://www.instagram.com/artoflivingusa/">
                     <img src="/img/footer/Insta.svg" />
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer-navbar--item">
-                  <a href="https://www.youtube.com/@artofliving">
+                  <Link href="https://www.youtube.com/@artofliving">
                     <img src="/img/footer/Youtube.svg" />
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -641,9 +643,9 @@ export function Footer() {
             </li>
             <div className="privacy-links">
               <li className="footer-navbar--item">
-                <a href="https://www.artofliving.org/us-en/sms-policy">
+                <Link href="https://www.artofliving.org/us-en/sms-policy">
                   SMS Policy
-                </a>
+                </Link>
               </li>
               <li className="footer-navbar--item">
                 <Link
@@ -651,13 +653,13 @@ export function Footer() {
                   href="https://www.artofliving.org/us-en/privacy-policy"
                   legacyBehavior
                 >
-                  <a target="_blank">Privacy Policy</a>
+                  <Link target="_blank">Privacy Policy</Link>
                 </Link>
               </li>
               <li className="footer-navbar--item">
-                <a href="https://www.artofliving.org/us-en/cookie-policy">
+                <Link href="https://www.artofliving.org/us-en/cookie-policy">
                   Cookie Policy
-                </a>
+                </Link>
               </li>
               <li className="footer-navbar--item">
                 <Link
@@ -672,24 +674,24 @@ export function Footer() {
           </ul>
           <ul className="footer-navbar--list footer-social-links order-2 order-md-2 mb-2 mb-md-0 desktopView">
             <li className="footer-navbar--item">
-              <a href="https://www.facebook.com/ArtofLivingUSA">
+              <Link href="https://www.facebook.com/ArtofLivingUSA">
                 <img src="/img/footer/Fb.svg" />
-              </a>
+              </Link>
             </li>
             <li className="footer-navbar--item">
-              <a href="https://twitter.com/artoflivingusa">
+              <Link href="https://twitter.com/artoflivingusa">
                 <img src="/img/footer/Twitter.svg" />
-              </a>
+              </Link>
             </li>
             <li className="footer-navbar--item">
-              <a href="https://www.instagram.com/artoflivingusa/">
+              <Link href="https://www.instagram.com/artoflivingusa/">
                 <img src="/img/footer/Insta.svg" />
-              </a>
+              </Link>
             </li>
             <li className="footer-navbar--item">
-              <a href="https://www.youtube.com/@artofliving">
+              <Link href="https://www.youtube.com/@artofliving">
                 <img src="/img/footer/Youtube.svg" />
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>

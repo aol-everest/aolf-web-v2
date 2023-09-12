@@ -353,8 +353,6 @@ export const Header = () => {
   let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
-  const [showSidebar, setShowSidebar] = useState(false);
-
   const loginAction = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL, {
       navigateTo: "/us-en/profile?" + queryString.stringify(router.query),
