@@ -16,6 +16,7 @@ import queryString from "query-string";
 import { filterAllowedParams, removeNull } from "@utils/utmParam";
 import { useRouter } from "next/router";
 import Style from "./StripeExpressCheckoutElement.module.scss";
+import { BiErrorCircle } from "react-icons/bi";
 
 export const StripeExpressCheckoutElement = ({ workshop }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
@@ -57,6 +58,7 @@ const CheckoutPage = ({ workshop }) => {
   const elements = useElements();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   const { showAlert } = useGlobalAlertContext();
 
   const onConfirm = async (event) => {
@@ -138,13 +140,17 @@ const CheckoutPage = ({ workshop }) => {
       }))
     : [];
 
-  const onClick = ({ resolve }) => {
+  const expressCheckoutElementOnClick = ({ resolve }) => {
     const options = {
       emailRequired: true,
       phoneNumberRequired: true,
       billingAddressRequired: true,
     };
     resolve(options);
+  };
+
+  const dummyValidationMessage = () => {
+    setShowMessage(true);
   };
 
   return (
@@ -184,9 +190,11 @@ const CheckoutPage = ({ workshop }) => {
                 </p>
               </div>
 
-              {!hidePayMessage && (
+              {!hidePayMessage && showMessage && (
                 <div className={Style.pay_message}>
-                  *To proceed using Apple or Google Pay, kindly acknowledge the
+                  <BiErrorCircle />
+                  {"  "}
+                  To proceed using Apple or Google Pay, kindly acknowledge the
                   agreements above.
                 </div>
               )}
@@ -198,11 +206,12 @@ const CheckoutPage = ({ workshop }) => {
                       ? Style.express_checkout_block
                       : ""
                   }
+                  onClick={dummyValidationMessage}
                 ></div>
                 <ExpressCheckoutElement
                   options={options}
                   onConfirm={onConfirm}
-                  onClick={onClick}
+                  onClick={expressCheckoutElementOnClick}
                 />
               </div>
             </>
