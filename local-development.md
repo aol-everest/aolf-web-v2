@@ -2,7 +2,7 @@
 
 1. Clone the app in your local machine using the below git command.
    ```
-   git@github.com:aol-everest/aolf-web-v2.git
+   git clone git@github.com:aol-everest/aolf-web-v2.git
    ```
 2. Open the cloned project folder in your favorite code editor (We recommend VS Code)
 3. Create .env file with the below content inside the root folder of the project.
