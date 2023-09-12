@@ -82,7 +82,7 @@
   &__container {
     display: flex;
     align-items: center;
-    padding: 10px 10px;
+    padding: 10px 60px;
   }
 
   &__sidebar-button {
@@ -414,6 +414,7 @@
   }
   .header__container {
     flex-direction: unset;
+    padding: 10px 0px;
     .logo {
       @media screen and (max-width: 991px) {
         width: 120px;
@@ -647,6 +648,23 @@
       order: 1;
       margin: unset;
       padding: 0;
+    }
+  }
+  .resourceNav {
+    .navbar-nav {
+      width: auto !important;
+    }
+  }
+  .desktopView {
+    .dropdown-toggle {
+      &:after {
+        display: none;
+      }
+    }
+    .resources {
+      font-weight: 400;
+      color: #000000;
+      margin-right: 10px;
     }
   }
 }

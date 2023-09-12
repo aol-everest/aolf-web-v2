@@ -270,7 +270,7 @@ export default function Library() {
     if (instructor) {
       query = { ...query, instructor };
     }
-    pushRouteWithUTMQuery({
+    pushRouteWithUTMQuery(router, {
       pathname: "/us-en/library/search",
       query,
     });

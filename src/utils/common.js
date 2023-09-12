@@ -1,3 +1,5 @@
+import { COURSE_TYPES } from "@constants";
+
 export const isSSR = !(
   typeof window !== "undefined" && window.document?.createElement
 );
@@ -78,4 +80,22 @@ export const isEmpty = (obj) => {
     return Object.keys(obj).length >= 1 ? false : true;
   }
   return true;
+};
+
+export const findCourseTypeByKey = (key) => {
+  // First, check if the key matches a course name
+  for (const courseKey in COURSE_TYPES) {
+    if (courseKey === key) {
+      return COURSE_TYPES[courseKey];
+    }
+  }
+
+  // If no match is found, check if the key matches a course code
+  for (const courseKey in COURSE_TYPES) {
+    if (COURSE_TYPES[courseKey].code === key) {
+      return COURSE_TYPES[courseKey];
+    }
+  }
+
+  return null; // Return null if no match is found
 };

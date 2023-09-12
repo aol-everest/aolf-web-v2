@@ -33,6 +33,7 @@ dayjs.extend(advancedFormat);
 const SchedulingPayment = () => {
   const router = useRouter();
   const [discount] = useQueryString("discountCode");
+  const [courseType] = useQueryString("courseType");
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const { track, page } = useAnalytics();
@@ -187,6 +188,7 @@ const SchedulingPayment = () => {
               delfee={delfee}
               router={router}
               pageViewed={page}
+              courseType={courseType}
             />
           </Elements>
         </div>
@@ -204,6 +206,7 @@ const SchedulingPaymentForm = ({
   delfee,
   router,
   pageViewed,
+  courseType,
 }) => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -413,6 +416,7 @@ const SchedulingPaymentForm = ({
             pathname: `/us-en/course/thankyou/${data.attendeeId}`,
             query: {
               ctype: workshop.productTypeId,
+              courseType,
             },
           });
         }

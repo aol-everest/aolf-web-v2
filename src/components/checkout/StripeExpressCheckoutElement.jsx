@@ -77,7 +77,7 @@ const CheckoutPage = ({ workshop }) => {
       // Create the PaymentIntent and obtain clientSecret
       let filteredParams = {
         ctype: workshop.productTypeId,
-        ...filterAllowedParams(router.query),
+        ...router.query,
       };
       filteredParams = removeNull(filteredParams);
 

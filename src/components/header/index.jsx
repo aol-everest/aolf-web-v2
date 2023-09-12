@@ -314,6 +314,24 @@ const IAHV_MENU = [
   },
 ];
 
+const ResourcesMenuItem = {
+  name: "Resources",
+  submenu: [
+    {
+      name: "Meditations",
+      link: "https://members.us.artofliving.org/us-en/library/44s1gKjna5dNhzrn3vTdBq?_gl=1*1t6jd8d*_ga*MjI0NzI4NDg4LjE2OTM3NDk4NjI.*_ga_53SWQFSBV0*MTY5NDQ1MTU3Ni4xMS4xLjE2OTQ0NTI0NTkuNjAuMC4w",
+    },
+    {
+      name: "Wisdom",
+      link: "https://members.us.artofliving.org/us-en/library/4BwEBABbNz7YlDQGZoTPPE?_gl=1*1irn1k8*_ga*MjI0NzI4NDg4LjE2OTM3NDk4NjI.*_ga_53SWQFSBV0*MTY5NDQ1MTU3Ni4xMS4xLjE2OTQ0NTI2MzAuMTkuMC4w",
+    },
+    {
+      name: "Meetups",
+      link: "https://members.us.artofliving.org/us-en/meetup?_gl=1*luvuup*_ga*MjI0NzI4NDg4LjE2OTM3NDk4NjI.*_ga_53SWQFSBV0*MTY5NDQ1MTU3Ni4xMS4xLjE2OTQ0NTI2MzUuMTQuMC4w",
+    },
+  ],
+};
+
 const MENU =
   orgConfig.name === "AOL"
     ? AOL_MENU
@@ -388,7 +406,6 @@ export const Header = () => {
   };
 
   const onMenuSelection = (submenu) => () => {
-    console.log("callleddd", submenu);
     setShowSidebar(false);
     setCurrentDropdownItem("");
     pushRouteWithUTMQuery(router, submenu.link);
@@ -400,7 +417,6 @@ export const Header = () => {
   const onMenuMouseLeave = () => {
     setCurrentActiveMenu("");
   };
-  console.log("showS", showSidebar);
 
   const handleMenuItemClick = (menu) => {
     setCurrentDropdownItem((prevState) => (prevState ? "" : menu.name));
@@ -514,6 +530,69 @@ export const Header = () => {
                     </li>
                   );
                 })}
+                {orgConfig.name === "AOL" && (
+                  <li
+                    className={`nav-item mobileView${
+                      currentActiveMenu === ResourcesMenuItem.name
+                        ? " active"
+                        : ""
+                    }${ResourcesMenuItem.submenu ? " dropdown" : ""}
+                  ${
+                    currentDropdownItem === ResourcesMenuItem.name
+                      ? " show"
+                      : ""
+                  } `}
+                    onClick={() => handleMenuItemClick(ResourcesMenuItem)}
+                  >
+                    <Link
+                      prefetch={false}
+                      href={ResourcesMenuItem.link || ""}
+                      legacyBehavior
+                    >
+                      <a
+                        className={`nav-link${
+                          ResourcesMenuItem.submenu ? " dropdown-toggle" : ""
+                        }`}
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded={
+                          currentActiveMenu === ResourcesMenuItem.name
+                        }
+                      >
+                        {ResourcesMenuItem.icon || ""}
+                        {ResourcesMenuItem.name}
+                      </a>
+                    </Link>
+
+                    <div
+                      className={`dropdown-menu${
+                        currentDropdownItem === ResourcesMenuItem.name
+                          ? " show"
+                          : ""
+                      } `}
+                      aria-labelledby="navbarCoursesDropdown"
+                    >
+                      {ResourcesMenuItem.submenu.map((submenu) => {
+                        return (
+                          <Link
+                            prefetch={false}
+                            href={submenu.link}
+                            legacyBehavior
+                            key={submenu.name}
+                          >
+                            <a
+                              onClick={() => onMenuSelection(submenu)}
+                              className="dropdown-item"
+                            >
+                              {submenu.name}
+                            </a>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </li>
+                )}
+
                 <li className="nav-item mobileView">
                   <a
                     className="nav-link"
@@ -526,6 +605,75 @@ export const Header = () => {
             </div>
           </nav>
           <div className="user-profile-link">
+            {orgConfig.name === "AOL" && (
+              <nav class="navbar navbar-expand-lg navbar-light resourceNav desktopView">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <ul class="navbar-nav">
+                    <li
+                      className={`nav-item${
+                        currentActiveMenu === ResourcesMenuItem.name
+                          ? " active"
+                          : ""
+                      }${ResourcesMenuItem.submenu ? " dropdown" : ""}
+                  ${
+                    currentDropdownItem === ResourcesMenuItem.name
+                      ? " show"
+                      : ""
+                  } `}
+                      onClick={() => handleMenuItemClick(ResourcesMenuItem)}
+                    >
+                      <Link
+                        prefetch={false}
+                        href={ResourcesMenuItem.link || ""}
+                        legacyBehavior
+                      >
+                        <a
+                          className={`nav-link resources${
+                            ResourcesMenuItem.submenu ? " dropdown-toggle" : ""
+                          }`}
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded={
+                            currentActiveMenu === ResourcesMenuItem.name
+                          }
+                        >
+                          {ResourcesMenuItem.icon || ""}
+                          {ResourcesMenuItem.name}
+                        </a>
+                      </Link>
+
+                      <div
+                        className={`dropdown-menu${
+                          currentDropdownItem === ResourcesMenuItem.name
+                            ? " show"
+                            : ""
+                        } `}
+                        aria-labelledby="navbarCoursesDropdown"
+                      >
+                        {ResourcesMenuItem.submenu.map((submenu) => {
+                          return (
+                            <Link
+                              prefetch={false}
+                              href={submenu.link}
+                              legacyBehavior
+                              key={submenu.name}
+                            >
+                              <a
+                                onClick={() => onMenuSelection(submenu)}
+                                className="dropdown-item"
+                              >
+                                {submenu.name}
+                              </a>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            )}
+
             <div className="nav-item desktopView">
               <Link
                 prefetch={false}

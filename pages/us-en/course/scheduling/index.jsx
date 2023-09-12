@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from "react";
 import { COURSE_MODES, COURSE_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
-import { api, tConvert } from "@utils";
+import { api, tConvert, findCourseTypeByKey } from "@utils";
 import dayjs from "dayjs";
 import { sortBy, values } from "lodash";
 import moment from "moment";
@@ -67,7 +67,7 @@ const SchedulingRange = () => {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
   const courseTypeValue =
-    COURSE_TYPES[courseTypeFilter]?.value ||
+    findCourseTypeByKey(courseTypeFilter)?.value ||
     COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
 
   const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
@@ -105,7 +105,7 @@ const SchedulingRange = () => {
     async () => {
       let param = {
         ctype:
-          COURSE_TYPES[courseTypeFilter]?.value ||
+          findCourseTypeByKey(courseTypeFilter)?.value ||
           COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
         month: currentMonthYear,
         timeZone: timezoneFilter,
@@ -181,7 +181,7 @@ const SchedulingRange = () => {
         timingsRequired: true,
         skipFullCourses: true,
         ctype:
-          COURSE_TYPES[courseTypeFilter]?.value ||
+          findCourseTypeByKey(courseTypeFilter)?.value ||
           COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
       };
       if (locationFilter) {
@@ -258,6 +258,11 @@ const SchedulingRange = () => {
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
+      query: {
+        courseType: courseTypeFilter,
+        ctype: activeWorkshop?.productTypeId,
+        mode,
+      },
     });
   };
 
@@ -352,7 +357,7 @@ const SchedulingRange = () => {
             <div className="scheduling-modal__header-text">
               <h3>
                 {workshopMaster?.title ||
-                  COURSE_TYPES[courseTypeFilter]?.name ||
+                  findCourseTypeByKey(courseTypeFilter)?.name ||
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </h3>
             </div>
