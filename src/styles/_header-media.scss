@@ -37,52 +37,45 @@
 
 @media screen and (max-width: 991px) {
   .header-v2 {
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .header__container {
+      justify-content: space-between;
+      padding: 8px 15px;
+    }
 
-      .logo {
-        margin: 0;
+    .logo {
+      margin: 0;
+    }
+
+    .navbar {
+      .navbar-nav {
+        width: unset;
       }
 
-      .navbar {
-        .navbar-nav {
-          width: unset;
+      .nav-item {
+        .nav-link {
+          font-size: 1rem;
         }
-
-        .nav-item {
-          .nav-link {
-            font-size: 1rem;
-          }
-        }
       }
+    }
 
-      &__container {
-        flex-direction: row-reverse;
-        justify-content: space-between;
-        padding: 8px 15px;
-      }
+    .logo {
+      width: 84px;
+      height: 32px;
+    }
 
-      .logo {
-        width: 84px;
-        height: 32px;
-      }
+    .menu {
+      display: none;
+    }
 
-      .menu {
-        display: none;
-      }
+    ~ main {
+      // margin-top: 65px;
+    }
 
-      ~ main {
-        margin-top: 65px;
-      }
-
-      &__button {
-        font-size: 14px !important;
-        line-height: 24px !important;
-        padding: 4px 15px !important;
-        margin-left: 0;
-      }
+    &__button {
+      font-size: 14px !important;
+      line-height: 24px !important;
+      padding: 4px 15px !important;
+      margin-left: 0;
     }
   }
 }

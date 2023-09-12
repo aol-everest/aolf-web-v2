@@ -406,7 +406,6 @@
     font: 600 14px/16px 'Work Sans';
   }
 }
-
 .header-v2 {
   z-index: 101;
   @media screen and (max-width: 991px) {
@@ -518,6 +517,20 @@
         background-color: #b3b3b3;
         & + .icon-bar {
           margin-top: 4px;
+        }
+      }
+      &:not(.collapsed) {
+        .top-bar {
+          opacity: 1;
+          transform: rotate(45deg);
+          transform-origin: 10% 10%;
+        }
+        .middle-bar {
+          opacity: 0;
+        }
+        .bottom-bar {
+          transform: rotate(-45deg);
+          transform-origin: 10% 90%;
         }
       }
       &[aria-expanded='true'] {

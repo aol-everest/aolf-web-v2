@@ -343,6 +343,7 @@ const MENU =
 export const Header = () => {
   const router = useRouter();
   const { authenticated = false, user } = useAuth();
+  const [navExpanded, setNavExpanded] = useState(false);
 
   const { showModal } = useGlobalModalContext();
   const {
@@ -359,6 +360,10 @@ export const Header = () => {
     });
   };
 
+  const onToggleNav = () => {
+    setNavExpanded(!navExpanded);
+  };
+
   return (
     <header className="header header-v2">
       <div className="header__container container">
@@ -369,7 +374,12 @@ export const Header = () => {
             className="logo__image"
           />
         </a>
-        <Navbar expand="lg">
+        <Navbar
+          expand="lg"
+          onToggle={onToggleNav}
+          expanded={navExpanded}
+          collapseOnSelect
+        >
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
             as="button"
