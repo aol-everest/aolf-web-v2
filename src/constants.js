@@ -117,10 +117,12 @@ export const COURSE_TYPES = {
   SKY_SILENT_RETREAT: {
     name: "Silent Retreat",
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || "",
+    code: "10305000",
   },
   SKY_WITH_SAHAJ: {
     name: "SKY with Sahaj",
     value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || "",
+    code: "10304000",
   },
   SKY_HAPPINESS_RETREAT: {
     name: "SKY Happiness Retreat",
