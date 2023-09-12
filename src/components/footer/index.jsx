@@ -457,7 +457,7 @@ export function Footer() {
                   />
                   <ul className="nav-details">
                     <li className="nav-item">
-                      <a href="https://members.us.artofliving.org/us-en/lp/online-course-2?_gl=1*1g8d920*_ga*MTk0NjUzNTA2MC4xNjkzNTcxNzMy*_ga_53SWQFSBV0*MTY5MzcxNzMxOC4zLjAuMTY5MzcxNzMxOS41OS4wLjA.">
+                      <a href="https://members.us.artofliving.org/us-en/lp/online-course-2">
                         Art of Living Part I
                       </a>
                     </li>
@@ -472,7 +472,7 @@ export function Footer() {
                       </a>
                     </li>
                     <li className="nav-item">
-                      <a href="https://members.us.artofliving.org/us-en/lp/online-foundation-program?_gl=1*1q9xag8*_ga*MTk0NjUzNTA2MC4xNjkzNTcxNzMy*_ga_53SWQFSBV0*MTY5MzcxNzMxOC4zLjEuMTY5MzcxNzQwMC4zOC4wLjA.">
+                      <a href="https://members.us.artofliving.org/us-en/lp/online-foundation-program">
                         Sri Sri Yoga Foundation Program
                       </a>
                     </li>

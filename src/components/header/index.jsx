@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import queryString from "query-string";
 import React, { useState } from "react";
 import Style from "./Header.module.scss";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 // import { FaUserCircle } from "react-icons/fa";
 import { CONTENT_FOLDER_IDS, MODAL_TYPES } from "@constants";
 
@@ -87,7 +88,7 @@ const AOL_MENU = [
       },
       {
         name: "Sri Sri Yoga Foundation Program ",
-        link: "https://members.us.artofliving.org/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431",
+        link: "/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431",
       },
       {
         name: "All Courses",
@@ -319,15 +320,15 @@ const ResourcesMenuItem = {
   submenu: [
     {
       name: "Meditations",
-      link: "https://members.us.artofliving.org/us-en/library/44s1gKjna5dNhzrn3vTdBq?_gl=1*1t6jd8d*_ga*MjI0NzI4NDg4LjE2OTM3NDk4NjI.*_ga_53SWQFSBV0*MTY5NDQ1MTU3Ni4xMS4xLjE2OTQ0NTI0NTkuNjAuMC4w",
+      link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
     },
     {
       name: "Wisdom",
-      link: "https://members.us.artofliving.org/us-en/library/4BwEBABbNz7YlDQGZoTPPE?_gl=1*1irn1k8*_ga*MjI0NzI4NDg4LjE2OTM3NDk4NjI.*_ga_53SWQFSBV0*MTY5NDQ1MTU3Ni4xMS4xLjE2OTQ0NTI2MzAuMTkuMC4w",
+      link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
     },
     {
       name: "Meetups",
-      link: "https://members.us.artofliving.org/us-en/meetup?_gl=1*luvuup*_ga*MjI0NzI4NDg4LjE2OTM3NDk4NjI.*_ga_53SWQFSBV0*MTY5NDQ1MTU3Ni4xMS4xLjE2OTQ0NTI2MzUuMTQuMC4w",
+      link: "/us-en/meetup",
     },
   ],
 };
@@ -338,47 +339,6 @@ const MENU =
     : orgConfig.name === "IAHV"
     ? IAHV_MENU
     : HB_MENU;
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    className="dropdown-toggle"
-    href="#"
-    role="button"
-    data-toggle="dropdown"
-    aria-haspopup="true"
-    aria-expanded="false"
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
-
-// forwardRef again here!
-// Dropdown needs access to the DOM of the Menu to measure it
-const CustomMenu = React.forwardRef(
-  ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-    const { asPath } = useRouter();
-
-    return (
-      <div
-        ref={ref}
-        style={style}
-        className={className}
-        aria-labelledby={labeledBy}
-      >
-        {React.Children.toArray(children).map((child) =>
-          React.cloneElement(child, {
-            active: asPath === child.props.link,
-          }),
-        )}
-      </div>
-    );
-  },
-);
 
 export const Header = () => {
   const router = useRouter();
@@ -394,10 +354,6 @@ export const Header = () => {
   initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
   const [showSidebar, setShowSidebar] = useState(false);
-  const [currentActiveMenu, setCurrentActiveMenu] = useState("");
-  const [currentDropdownItem, setCurrentDropdownItem] = useState("");
-
-  const toggleSidebar = () => setShowSidebar(!showSidebar);
 
   const loginAction = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL, {
@@ -405,324 +361,158 @@ export const Header = () => {
     });
   };
 
-  const onMenuSelection = (submenu) => () => {
-    setShowSidebar(false);
-    setCurrentDropdownItem("");
-    pushRouteWithUTMQuery(router, submenu.link);
-  };
-
-  const onMenuMouseOver = (menuName) => () => {
-    setCurrentActiveMenu(menuName);
-  };
-  const onMenuMouseLeave = () => {
-    setCurrentActiveMenu("");
-  };
-
-  const handleMenuItemClick = (menu) => {
-    setCurrentDropdownItem((prevState) => (prevState ? "" : menu.name));
-    if (!menu.submenu) {
-      setShowSidebar(false);
-      setCurrentActiveMenu("");
-      setCurrentDropdownItem("");
-    }
-  };
-
   return (
-    <>
-      <header className="header header-v2" onMouseLeave={onMenuMouseLeave}>
-        <div className="header__container container">
-          <a href="https://www.artofliving.org/us-en" className="logo">
-            <img
-              src={`/img/${orgConfig.logo}`}
-              alt="logo"
-              className="logo__image"
-            />
-          </a>
-          <nav className="navbar navbar-expand-lg navbar-light">
-            <button
-              className="navbar-toggler-header"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarNavDropdown"
-              aria-controls="navbarNavDropdown"
-              aria-label="Toggle navigation"
-              aria-expanded={showSidebar}
-              onClick={toggleSidebar}
-            >
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar top-bar"></span>
-              <span className="icon-bar middle-bar"></span>
-              <span className="icon-bar bottom-bar"></span>
-            </button>
-
-            <div
-              className={classNames("collapse navbar-collapse", {
-                show: showSidebar,
-              })}
-              id="navbarNavDropdown"
-            >
-              <ul className="navbar-nav" id="desktop-menu-content">
-                {MENU.map((menu) => {
+    <header className="header header-v2">
+      <div className="header__container container">
+        <a href="https://www.artofliving.org/us-en" className="logo">
+          <img
+            src={`/img/${orgConfig.logo}`}
+            alt="logo"
+            className="logo__image"
+          />
+        </a>
+        <Navbar expand="lg">
+          <Navbar.Toggle
+            aria-controls="basic-navbar-nav"
+            as="button"
+            className="navbar-toggler-header"
+          >
+            <span className="sr-only">Toggle navigation</span>
+            <span className="icon-bar top-bar"></span>
+            <span className="icon-bar middle-bar"></span>
+            <span className="icon-bar bottom-bar"></span>
+          </Navbar.Toggle>
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto" as="ul">
+              {MENU.map((menu) => {
+                if (menu.link) {
                   return (
-                    <li
-                      className={`nav-item${
-                        currentActiveMenu === menu.name ? " active" : ""
-                      }${menu.submenu ? " dropdown" : ""}
-                      ${currentDropdownItem === menu.name ? " show" : ""} `}
-                      key={menu.name}
-                      onMouseOver={onMenuMouseOver(menu.name)}
-                      onClick={() => handleMenuItemClick(menu)}
-                    >
-                      {menu.link && (
-                        <Link prefetch={false} href={menu.link} legacyBehavior>
-                          <a
-                            className={`nav-link${
-                              menu.submenu ? " dropdown-toggle" : ""
-                            }`}
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded={currentActiveMenu === menu.name}
-                          >
-                            {menu.icon || ""}
-                            {menu.name}
-                          </a>
-                        </Link>
-                      )}
-                      {!menu.link && (
-                        <a
-                          className={`nav-link${
-                            menu.submenu ? " dropdown-toggle" : ""
-                          }`}
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded={currentActiveMenu === menu.name}
-                        >
-                          {menu.name}
-                        </a>
-                      )}
-
-                      {menu.submenu && (
-                        <div
-                          className={`dropdown-menu${
-                            currentDropdownItem === menu.name ? " show" : ""
-                          } `}
-                          aria-labelledby="navbarCoursesDropdown"
-                        >
-                          {menu.submenu.map((submenu) => {
-                            return (
-                              <Link
-                                prefetch={false}
-                                href={submenu.link}
-                                legacyBehavior
-                                key={submenu.name}
-                              >
-                                <a
-                                  onClick={() => onMenuSelection(submenu)}
-                                  className="dropdown-item"
-                                >
-                                  {submenu.name}
-                                </a>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </li>
+                    <Nav.Item as="li" key={menu.name}>
+                      <Nav.Link href="#home" as={Link}>
+                        {menu.icon || ""}
+                        {menu.name}
+                      </Nav.Link>
+                    </Nav.Item>
                   );
-                })}
-                {orgConfig.name === "AOL" && (
-                  <li
-                    className={`nav-item mobileView${
-                      currentActiveMenu === ResourcesMenuItem.name
-                        ? " active"
-                        : ""
-                    }${ResourcesMenuItem.submenu ? " dropdown" : ""}
-                  ${
-                    currentDropdownItem === ResourcesMenuItem.name
-                      ? " show"
-                      : ""
-                  } `}
-                    onClick={() => handleMenuItemClick(ResourcesMenuItem)}
+                }
+                return (
+                  <NavDropdown
+                    title={menu.name}
+                    key={menu.name}
+                    as="li"
+                    renderMenuOnMount
                   >
-                    <Link
-                      prefetch={false}
-                      href={ResourcesMenuItem.link || ""}
-                      legacyBehavior
-                    >
-                      <a
-                        className={`nav-link${
-                          ResourcesMenuItem.submenu ? " dropdown-toggle" : ""
-                        }`}
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded={
-                          currentActiveMenu === ResourcesMenuItem.name
-                        }
-                      >
-                        {ResourcesMenuItem.icon || ""}
-                        {ResourcesMenuItem.name}
-                      </a>
-                    </Link>
-
-                    <div
-                      className={`dropdown-menu${
-                        currentDropdownItem === ResourcesMenuItem.name
-                          ? " show"
-                          : ""
-                      } `}
-                      aria-labelledby="navbarCoursesDropdown"
-                    >
-                      {ResourcesMenuItem.submenu.map((submenu) => {
-                        return (
-                          <Link
-                            prefetch={false}
-                            href={submenu.link}
-                            legacyBehavior
-                            key={submenu.name}
-                          >
-                            <a
-                              onClick={() => onMenuSelection(submenu)}
-                              className="dropdown-item"
-                            >
-                              {submenu.name}
-                            </a>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </li>
-                )}
-
-                <li className="nav-item mobileView">
-                  <a
-                    className="nav-link"
-                    href="https://members.us.artofliving.org/us-en/lp/donations?_gl=1*ep179x*_ga*MTEzODQzOTQwOS4xNjkzOTgwNjA2*_ga_53SWQFSBV0*MTY5NDEwMjcxNC44LjEuMTY5NDEwMjc0NS4yOS4wLjA."
-                  >
-                    Donation
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <div className="user-profile-link">
-            {orgConfig.name === "AOL" && (
-              <nav class="navbar navbar-expand-lg navbar-light resourceNav desktopView">
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                  <ul class="navbar-nav">
-                    <li
-                      className={`nav-item${
-                        currentActiveMenu === ResourcesMenuItem.name
-                          ? " active"
-                          : ""
-                      }${ResourcesMenuItem.submenu ? " dropdown" : ""}
-                  ${
-                    currentDropdownItem === ResourcesMenuItem.name
-                      ? " show"
-                      : ""
-                  } `}
-                      onClick={() => handleMenuItemClick(ResourcesMenuItem)}
-                    >
-                      <Link
-                        prefetch={false}
-                        href={ResourcesMenuItem.link || ""}
-                        legacyBehavior
-                      >
-                        <a
-                          className={`nav-link resources${
-                            ResourcesMenuItem.submenu ? " dropdown-toggle" : ""
-                          }`}
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded={
-                            currentActiveMenu === ResourcesMenuItem.name
-                          }
+                    {menu.submenu.map((submenu) => {
+                      return (
+                        <NavDropdown.Item
+                          href={submenu.link}
+                          key={submenu.name}
+                          as={Link}
                         >
-                          {ResourcesMenuItem.icon || ""}
-                          {ResourcesMenuItem.name}
-                        </a>
-                      </Link>
-
-                      <div
-                        className={`dropdown-menu${
-                          currentDropdownItem === ResourcesMenuItem.name
-                            ? " show"
-                            : ""
-                        } `}
-                        aria-labelledby="navbarCoursesDropdown"
+                          {submenu.name}
+                        </NavDropdown.Item>
+                      );
+                    })}
+                  </NavDropdown>
+                );
+              })}
+              {orgConfig.name === "AOL" && (
+                <NavDropdown
+                  title={ResourcesMenuItem.name}
+                  as="li"
+                  renderMenuOnMount
+                  className="mobileView"
+                >
+                  {ResourcesMenuItem.submenu.map((submenu) => {
+                    return (
+                      <NavDropdown.Item
+                        href={submenu.link}
+                        key={submenu.name}
+                        as={Link}
                       >
-                        {ResourcesMenuItem.submenu.map((submenu) => {
-                          return (
-                            <Link
-                              prefetch={false}
-                              href={submenu.link}
-                              legacyBehavior
-                              key={submenu.name}
-                            >
-                              <a
-                                onClick={() => onMenuSelection(submenu)}
-                                className="dropdown-item"
-                              >
-                                {submenu.name}
-                              </a>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </nav>
+                        {submenu.name}
+                      </NavDropdown.Item>
+                    );
+                  })}
+                </NavDropdown>
+              )}
+              <Nav.Item as="li" className="mobileView">
+                <Nav.Link href="/us-en/lp/donations" as={Link}>
+                  Donation
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <div className="user-profile-link">
+          {orgConfig.name === "AOL" && (
+            <Navbar expand="lg" className="resourceNav desktopView">
+              <Nav className="mr-auto" as="ul">
+                <NavDropdown
+                  title={ResourcesMenuItem.name}
+                  as="li"
+                  renderMenuOnMount
+                >
+                  {ResourcesMenuItem.submenu.map((submenu) => {
+                    return (
+                      <NavDropdown.Item
+                        href={submenu.link}
+                        key={submenu.name}
+                        as={Link}
+                      >
+                        {submenu.name}
+                      </NavDropdown.Item>
+                    );
+                  })}
+                </NavDropdown>
+              </Nav>
+            </Navbar>
+          )}
+
+          <div className="nav-item desktopView">
+            <Link prefetch={false} href="/us-en/lp/donations" legacyBehavior>
+              <a className="nav-link donate-link">
+                <img
+                  src="/img/donate.svg"
+                  alt="Donate"
+                  className="donate__image"
+                />{" "}
+                Donation
+              </a>
+            </Link>
+          </div>
+
+          <div className="UserprofileView">
+            {!authenticated && (
+              <button
+                className="btn btn-outline header__button"
+                type="button"
+                onClick={loginAction}
+              >
+                Log In
+              </button>
             )}
 
-            <div className="nav-item desktopView">
-              <Link
-                prefetch={false}
-                href="/us-en/lp/donations?_gl=1*ep179x*_ga*MTEzODQzOTQwOS4xNjkzOTgwNjA2*_ga_53SWQFSBV0*MTY5NDEwMjcxNC44LjEuMTY5NDEwMjc0NS4yOS4wLjA."
-                legacyBehavior
-              >
-                <a className="nav-link donate-link">
-                  <img
-                    src="/img/donate.svg"
-                    alt="Donate"
-                    className="donate__image"
-                  />{" "}
-                  Donation
-                </a>
-              </Link>
-            </div>
-
-            <div className="UserprofileView">
-              {!authenticated && (
-                <button
-                  className="btn btn-outline header__button"
-                  type="button"
-                  onClick={loginAction}
-                >
-                  Log In
-                </button>
-              )}
-
-              {authenticated && (
-                <>
-                  <span className="username">{first_name || last_name}</span>
-                  <Link prefetch={false} href="/us-en/profile" legacyBehavior>
-                    <a className="header_profileHeaderImage" href="#">
-                      <p className="initials">{initials}</p>
-                      {profilePic && (
-                        <img
-                          src={profilePic}
-                          alt="PC"
-                          className="rounded-circle"
-                        />
-                      )}
-                    </a>
-                  </Link>
-                </>
-              )}
-            </div>
+            {authenticated && (
+              <>
+                <span className="username">{first_name || last_name}</span>
+                <Link prefetch={false} href="/us-en/profile" legacyBehavior>
+                  <a className="header_profileHeaderImage" href="#">
+                    <p className="initials">{initials}</p>
+                    {profilePic && (
+                      <img
+                        src={profilePic}
+                        alt="PC"
+                        className="rounded-circle"
+                      />
+                    )}
+                  </a>
+                </Link>
+              </>
+            )}
           </div>
         </div>
-      </header>
-    </>
+      </div>
+    </header>
   );
 };
