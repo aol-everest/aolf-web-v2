@@ -146,7 +146,7 @@ const SchedulingRange = () => {
     page({
       category: "course_registration",
       name: "course_search_scheduling",
-      course_type: courseTypeFilter || "SKY_BREATH_MEDITATION",
+      course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
   });
 
@@ -219,7 +219,8 @@ const SchedulingRange = () => {
           }
         }, 100);
         track("click_calendar", {
-          course_type: courseTypeFilter || "SKY_BREATH_MEDITATION",
+          course_type:
+            courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
           location_type: mode,
           num_results: response?.data.length,
         });

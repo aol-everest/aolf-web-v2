@@ -25,6 +25,7 @@ import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
+import { useQueryString } from "@hooks";
 import { useAnalytics } from "use-analytics";
 
 dayjs.extend(utc);
@@ -93,6 +94,7 @@ const Thankyou = () => {
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
+  const [courseType] = useQueryString("courseType");
   const { id: attendeeId, comboId } = router.query;
   const {
     data: result,
@@ -128,7 +130,7 @@ const Thankyou = () => {
     page({
       category: "course_registration",
       name: "course_registration_thank_you_referral_popup",
-      course_type: "",
+      course_type: courseType,
     });
     track(
       "'aol_purchase'",
@@ -310,6 +312,11 @@ const Thankyou = () => {
         hideAlert();
       },
     });
+    track("click_button", {
+      screen_name: "course_registration_thank_you",
+      event_target: "add_to_calendar_button",
+      course_type: courseType,
+    });
   };
 
   const showTiming = (timeZone, option) => {
@@ -441,7 +448,7 @@ const Thankyou = () => {
     track("click_button", {
       screen_name: "course_registration_thank_you",
       event_target: "ios_app_link",
-      course_type: "",
+      course_type: courseType,
     });
   };
 
@@ -449,7 +456,7 @@ const Thankyou = () => {
     track("click_button", {
       screen_name: "course_registration_thank_you",
       event_target: "android_app_link",
-      course_type: "",
+      course_type: courseType,
     });
   };
 

@@ -74,6 +74,7 @@ const Thankyou = () => {
   const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const [paymentIntent] = useQueryString("payment_intent");
+  const [courseType] = useQueryString("courseType");
   const { id: workshopId } = router.query;
   const {
     data: workshop,
@@ -104,7 +105,7 @@ const Thankyou = () => {
       category: "course_registration",
       name: "course_registration_thank_you",
       payment_intent: paymentIntent,
-      course_type: "",
+      course_type: courseType,
     });
   });
 
@@ -205,7 +206,7 @@ const Thankyou = () => {
     track("click_button", {
       screen_name: "course_registration_thank_you",
       event_target: "add_to_calendar_button",
-      course_type: "",
+      course_type: courseType,
       payment_intent: paymentIntent,
     });
   };
@@ -305,7 +306,7 @@ const Thankyou = () => {
     track("click_button", {
       screen_name: "course_registration_thank_you",
       event_target: "ios_app_link",
-      course_type: "",
+      course_type: courseType,
       payment_intent: paymentIntent,
     });
   };
@@ -314,7 +315,7 @@ const Thankyou = () => {
     track("click_button", {
       screen_name: "course_registration_thank_you",
       event_target: "android_app_link",
-      course_type: "",
+      course_type: courseType,
       payment_intent: paymentIntent,
     });
   };

@@ -66,6 +66,7 @@ const SchedulingPayment = () => {
     page({
       category: "course_registration",
       name: "course_scheduling_checkout",
+      course_type: courseType,
     });
   });
 
@@ -187,7 +188,7 @@ const SchedulingPayment = () => {
               fee={fee}
               delfee={delfee}
               router={router}
-              pageViewed={page}
+              track={track}
               courseType={courseType}
             />
           </Elements>
@@ -205,7 +206,7 @@ const SchedulingPaymentForm = ({
   fee,
   delfee,
   router,
-  pageViewed,
+  track,
   courseType,
 }) => {
   const formRef = useRef();
@@ -421,9 +422,9 @@ const SchedulingPaymentForm = ({
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: message ? `Error: ${message} (${statusCode})` : ex.message,
       });
-      pageViewed({
-        category: "course_registration",
-        name: "course_scheduling_checkout_error",
+      track("show_error", {
+        screen_name: "course_scheduling_checkout_error",
+        course_type: courseType,
         error_message: message
           ? `Error: ${message} (${statusCode})`
           : ex.message,
