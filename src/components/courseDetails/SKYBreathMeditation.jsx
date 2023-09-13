@@ -76,6 +76,9 @@ export const SKYBreathMeditation = ({ data }) => {
     } else {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/scheduling`,
+        query: {
+          courseType: COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+        },
       });
     }
   };

@@ -68,7 +68,7 @@ export const SahajSamadhi = ({ data }) => {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/scheduling`,
         query: {
-          courseType: "SAHAJ_SAMADHI_MEDITATION",
+          courseType: COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.code,
         },
       });
     }
