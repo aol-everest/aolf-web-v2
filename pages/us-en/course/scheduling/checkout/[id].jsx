@@ -212,15 +212,6 @@ const SchedulingPaymentForm = ({
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  const [mbsy_source] = useQueryString("mbsy_source", {
-    defaultValue: null,
-  });
-  const [campaignid] = useQueryString("campaignid", {
-    defaultValue: null,
-  });
-  const [mbsy] = useQueryString("mbsy", {
-    defaultValue: null,
-  });
 
   const { showAlert } = useGlobalAlertContext();
 
@@ -390,9 +381,7 @@ const SchedulingPaymentForm = ({
           let filteredParams = {
             ctype: productTypeId,
             page: "ty",
-            type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
-            campaignid,
-            mbsy,
+            courseType,
             ...filterAllowedParams(router.query),
           };
           filteredParams = removeNull(filteredParams);
@@ -415,7 +404,8 @@ const SchedulingPaymentForm = ({
           replaceRouteWithUTMQuery(router, {
             pathname: `/us-en/course/thankyou/${data.attendeeId}`,
             query: {
-              ctype: workshop.productTypeId,
+              ctype: productTypeId,
+              page: "ty",
               courseType,
             },
           });
