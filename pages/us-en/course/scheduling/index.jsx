@@ -334,6 +334,8 @@ const SchedulingRange = () => {
     setLocationFilter(JSON.stringify(value));
   };
 
+  console.log("workshopMaster", workshopMaster);
+
   return (
     <>
       <header className="checkout-header">
@@ -357,8 +359,8 @@ const SchedulingRange = () => {
             </svg>
             <div className="scheduling-modal__header-text">
               <h3>
-                {workshopMaster?.title ||
-                  findCourseTypeByKey(courseTypeFilter)?.name ||
+                {findCourseTypeByKey(courseTypeFilter)?.name ||
+                  workshopMaster?.title ||
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </h3>
             </div>
