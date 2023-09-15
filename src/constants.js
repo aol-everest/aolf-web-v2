@@ -120,7 +120,7 @@ export const COURSE_TYPES = {
     code: "10305000",
   },
   SKY_WITH_SAHAJ: {
-    name: "SKY with Sahaj",
+    name: "Art of Living Premium Program",
     value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || "",
     code: "10304000",
   },
