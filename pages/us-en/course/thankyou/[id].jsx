@@ -129,7 +129,7 @@ const Thankyou = () => {
     });
     page({
       category: "course_registration",
-      name: "course_registration_thank_you_referral_popup",
+      name: "course_referral_popup",
       course_type: courseType,
     });
     track(
@@ -313,7 +313,7 @@ const Thankyou = () => {
       },
     });
     track("click_button", {
-      screen_name: "course_registration_thank_you",
+      screen_name: "course_referral_popup",
       event_target: "add_to_calendar_button",
       course_type: courseType,
     });
@@ -446,7 +446,7 @@ const Thankyou = () => {
 
   const iosAppDownloadAction = () => {
     track("click_button", {
-      screen_name: "course_registration_thank_you",
+      screen_name: "course_referral_popup",
       event_target: "ios_app_link",
       course_type: courseType,
     });
@@ -454,7 +454,7 @@ const Thankyou = () => {
 
   const androidAppDownloadAction = () => {
     track("click_button", {
-      screen_name: "course_registration_thank_you",
+      screen_name: "course_referral_popup",
       event_target: "android_app_link",
       course_type: courseType,
     });
