@@ -373,7 +373,7 @@
       .section-title {
         font-size: 28px;
         line-height: 30px;
-        padding: 0 30px;
+        padding: 0 20px;
         text-align: left;
         margin-bottom: 36px;
       }
@@ -550,6 +550,18 @@
     background: url(/img/samadhi-carousel-bg.png) repeat-x top left;
     padding-bottom: 80px;
     position: relative;
+    .container {
+      @media screen and (max-width: 767px) {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        & > * {
+          max-width: 100%;
+          padding: 0 15px;
+          margin: auto;
+        }
+      }
+    }
     .section-title {
       font-family: 'Work Sans';
       font-weight: 400;
@@ -560,7 +572,6 @@
       @media only screen and (max-width: 768px) {
         text-align: left;
         font-size: 26px;
-        padding-left: 20px;
       }
     }
     .refreshing-silence {
