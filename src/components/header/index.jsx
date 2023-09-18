@@ -73,30 +73,41 @@ const AOL_MENU = [
   },
   {
     name: "Courses",
-    submenu: [
+    subHeading: [
       {
-        name: "Art Of Living Part I",
-        link: "https://event.us.artofliving.org/us-en/online-course-2",
+        name: "Beginner's Courses",
+        items: [
+          {
+            name: "Art Of Living Part I",
+            link: "https://event.us.artofliving.org/us-en/online-course-2",
+          },
+          {
+            name: "Sahaj Meditation Meditation",
+            link: `https://event.us.artofliving.org/us-en/sahajsamadhi`,
+          },
+          {
+            name: "Sri Sri Yoga Foundation Program ",
+            link: "/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431",
+          },
+        ],
       },
       {
-        name: "Sahaj Meditation Meditation",
-        link: `https://event.us.artofliving.org/us-en/sahajsamadhi`,
-      },
-      {
-        name: "Art Of Living Part II",
-        link: "https://event.us.artofliving.org/us-en/artoflivingpart2",
-      },
-      {
-        name: "Sri Sri Yoga Foundation Program ",
-        link: "/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431",
-      },
-      {
-        name: "All Courses",
-        link: "/us-en/course",
-      },
-      {
-        name: "Destination Retreats",
-        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/?utm_source=organic&utm_medium=home&utm_content=destinationretreats",
+        name: "Advanced Courses",
+        items: [
+          {
+            name: "Art Of Living Part II",
+            link: "https://event.us.artofliving.org/us-en/artoflivingpart2",
+          },
+
+          {
+            name: "All Courses",
+            link: "/us-en/course",
+          },
+          {
+            name: "Destination Retreats",
+            link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/?utm_source=organic&utm_medium=home&utm_content=destinationretreats",
+          },
+        ],
       },
     ],
   },
@@ -410,17 +421,36 @@ export const Header = () => {
                     as="li"
                     renderMenuOnMount
                   >
-                    {menu.submenu.map((submenu) => {
-                      return (
-                        <NavDropdown.Item
-                          href={submenu.link}
-                          key={submenu.name}
-                          as={Link}
-                        >
-                          {submenu.name}
-                        </NavDropdown.Item>
-                      );
-                    })}
+                    {menu.submenu
+                      ? menu.submenu.map((submenu) => {
+                          return (
+                            <NavDropdown.Item
+                              href={submenu.link}
+                              key={submenu.name}
+                              as={Link}
+                            >
+                              {submenu.name}
+                            </NavDropdown.Item>
+                          );
+                        })
+                      : menu.subHeading?.map((subMenu) => {
+                          return (
+                            <>
+                              <h6 class="dropdown-header">{subMenu.name}</h6>
+                              {subMenu?.items.map((submenu) => {
+                                return (
+                                  <NavDropdown.Item
+                                    href={submenu.link}
+                                    key={submenu.name}
+                                    as={Link}
+                                  >
+                                    {submenu.name}
+                                  </NavDropdown.Item>
+                                );
+                              })}
+                            </>
+                          );
+                        })}
                   </NavDropdown>
                 );
               })}
