@@ -72,7 +72,7 @@ const SchedulingRange = () => {
 
   const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
   const { data: workshopMaster = {} } = useQuery(
-    ["workshopMaster"],
+    "workshopMaster",
     async () => {
       let param = {
         ctypeId,
@@ -333,8 +333,6 @@ const SchedulingRange = () => {
   const handleLocationFilterChange = (value) => {
     setLocationFilter(JSON.stringify(value));
   };
-
-  console.log("workshopMaster", workshopMaster);
 
   return (
     <>

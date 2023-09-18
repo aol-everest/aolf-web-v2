@@ -26,7 +26,7 @@ import { AnalyticsProvider } from "use-analytics";
 
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
-// import * as snippet from "@segment/snippet";
+
 import "@styles/global-customize/style.scss";
 import "@styles/global.scss";
 import "@styles/style.scss";

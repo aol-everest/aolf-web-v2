@@ -33,23 +33,18 @@ export const parseCognitoWebResponse = (href) => {
   return new Promise((resolve, reject) => {
     const auth = createCognitoAuth();
 
-    // userHandler will trigger the promise
     auth.userhandler = {
-      onSuccess: function (result) {
-        resolve(result);
-      },
-      onFailure: function (err) {
-        console.log(
-          "🚀 ~ file: auth.js ~ line 43 ~ returnnewPromise ~ err",
-          err,
-        );
-        console.log(err);
+      onSuccess: (result) => resolve(result),
+      onFailure: (err) => {
+        console.error("Failure parsing Cognito web response:", err);
         reject(new Error("Failure parsing Cognito web response: " + err));
       },
     };
+
     auth.parseCognitoWebResponse(href);
   });
 };
+
 export const authenticateUser = (email, password) => {
   return new Promise((resolve, reject) => {
     const cognitoUser = getUser(email);
@@ -172,24 +167,25 @@ export const fetchUserProfile = async (access_token) => {
 
 export const getSession = async () => {
   return await new Promise((resolve, reject) => {
-    const user = UserPool.getCurrentUser();
-    if (user) {
-      user.getSession(async (err, session) => {
-        if (err) {
-          reject(err);
-        } else {
-          if (!session.isValid()) {
-            session = await renewToken({
-              email: session.idToken.payload.email,
-              refreshToken: session.refreshToken.token,
-            });
-          }
-          resolve({ session, user });
-        }
-      });
-    } else {
-      reject();
+    const cognitoUser = UserPool.getCurrentUser();
+    if (!cognitoUser) {
+      reject("Could not retrieve current user");
+      return;
     }
+
+    cognitoUser.getSession(async (err, session) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (!session.isValid()) {
+        session = await renewToken({
+          email: session.idToken.payload.email,
+          refreshToken: session.refreshToken.token,
+        });
+      }
+      resolve({ session, user: cognitoUser });
+    });
   });
 };
 
@@ -215,7 +211,7 @@ export const getUserAttributes = (user) => {
 export const logout = async () => {
   const cognitoUser = UserPool.getCurrentUser();
   if (cognitoUser) {
-    await cognitoUser.signOut();
+    // await cognitoUser.signOut();
   }
 };
 
@@ -336,7 +332,7 @@ const reFetchProfile = async () => {
 
     return userInfo;
   } catch (ex) {
-    console.log(ex);
+    console.error(ex);
     await logout();
   }
   throw new Error("Something is wrong. Try again.");
