@@ -75,27 +75,30 @@ export const PriceCard = ({ workshop }) => {
     phone1,
   } = workshop || {};
 
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
-    0;
-  const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
+  const isSKYType = COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(
+    workshop.productTypeId,
+  );
+  const isSilentRetreatType = COURSE_TYPES.SILENT_RETREAT.value.includes(
+    workshop.productTypeId,
+  );
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(
       workshop.productTypeId,
-    ) >= 0;
+    );
   const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.includes(
       workshop.productTypeId,
-    ) >= 0;
+    );
   const isSKYCampusHappinessRetreat =
-    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
+    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.includes(
       workshop.productTypeId,
-    ) >= 0;
-  const isSanyamCourse =
-    COURSE_TYPES.SANYAM_COURSE.value.indexOf(workshop.productTypeId) >= 0;
-  const isBlessingsCourse =
-    COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(workshop.productTypeId) >= 0;
+    );
+  const isSanyamCourse = COURSE_TYPES.SANYAM_COURSE.value.includes(
+    workshop.productTypeId,
+  );
+  const isBlessingsCourse = COURSE_TYPES.BLESSINGS_COURSE.value.includes(
+    workshop.productTypeId,
+  );
 
   const isSearchDatesDisabled = !filterStartDate;
 

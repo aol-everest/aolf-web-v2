@@ -1,3 +1,17 @@
+// Function to get an environment variable's value with an optional transformation
+function getEnvVariable(
+  key,
+  defaultValue = null,
+  transform = (value) => value,
+) {
+  const envValue = process.env[key];
+  if (envValue !== undefined) {
+    // Apply the transformation function to the retrieved value
+    return transform(envValue);
+  }
+  return defaultValue;
+}
+
 export const ABBRS = {
   null: "",
   EST: "ET",
@@ -86,82 +100,150 @@ export const SHARE_SITES = {
 export const COURSE_TYPES = {
   SKY_BREATH_MEDITATION: {
     name: "Art of Living Part I",
-    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
     code: "10101000",
   },
   SILENT_RETREAT: {
     name: "Art of Living Part II",
-    value: process.env.NEXT_PUBLIC_SILENT_RETREAT_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_SILENT_RETREAT_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   SAHAJ_SAMADHI_MEDITATION: {
     name: "Sahaj Samadhi Meditation",
-    value: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
     code: "10102000",
   },
   SRI_SRI_YOGA_MEDITATION: {
     name: "Sri Sri Yoga",
-    value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   CHAKRA_KRIYA: {
     name: "Chakra Kriya",
-    value: process.env.NEXT_PUBLIC_CHAKRA_KRIYA_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_CHAKRA_KRIYA_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   VOLUNTEER_TRAINING_PROGRAM: {
     name: "Volunteer Training Program",
-    value: process.env.NEXT_PUBLIC_VOLUNTEER_TRAINING_PROGRAM_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_VOLUNTEER_TRAINING_PROGRAM_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
   },
   HEALING_BREATH: {
     name: "Healing Breath",
-    value: process.env.NEXT_PUBLIC_HEALING_BREATH_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_HEALING_BREATH_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   SKY_SILENT_RETREAT: {
     name: "Silent Retreat",
-    value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
     code: "10305000",
   },
-  SKY_WITH_SAHAJ: {
+  ART_OF_LIVING_PREMIUM_PROGRAM: {
     name: "Art of Living Premium Program",
-    value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
     code: "10304000",
   },
   SKY_HAPPINESS_RETREAT: {
     name: "SKY Happiness Retreat",
-    value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
   },
   BLESSINGS_COURSE: {
     name: "Blessings Course",
-    value: process.env.NEXT_PUBLIC_BLESSINGS_COURSE_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_BLESSINGS_COURSE_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   INSTITUTIONAL_COURSE: {
     name: "Institutional",
-    value: process.env.NEXT_PUBLIC_INSTITUTIONAL_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_INSTITUTIONAL_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   SKY_CAMPUS_HAPPINESS_RETREAT: {
     name: "SKY Happiness Retreat",
-    value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
   },
   SANYAM_COURSE: {
     name: "Sanyam Course",
-    value: process.env.NEXT_PUBLIC_SANYAM_COURSE_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_SANYAM_COURSE_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   MEDITATION_DELUXE_COURSE: {
     name: "MEDITATION_DELUXE_COURSE",
-    value: process.env.NEXT_PUBLIC_MEDITATION_DELUXE_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_MEDITATION_DELUXE_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
   },
   GATEWAY_TO_INFINITY_COURSE: {
     name: "GATEWAY_TO_INFINITY_COURSE",
-    value: process.env.NEXT_PUBLIC_GATEWAY_TO_INFINITY_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_GATEWAY_TO_INFINITY_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
   },
 };
 
 export const MEETUP_TYPES = {
   SKY_MEETUP: {
     name: "SKY Meetup",
-    value: process.env.NEXT_PUBLIC_SKY_MEETUP_CTYPE || "",
+    value: getEnvVariable("NEXT_PUBLIC_SKY_MEETUP_CTYPE", [], (value) => {
+      return value.split(",");
+    }),
   },
   SAHAJ_SAMADHI_MEETUP: {
     name: "Sahaj Samadhi Meetup",
-    value: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_MEETUP_CTYPE || "",
+    value: getEnvVariable(
+      "NEXT_PUBLIC_SAHAJ_SAMADHI_MEETUP_CTYPE",
+      [],
+      (value) => {
+        return value.split(",");
+      },
+    ),
   },
 };
 

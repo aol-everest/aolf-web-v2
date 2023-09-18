@@ -41,11 +41,11 @@ export const MobileCourseOptions = ({
   } = workshop;
 
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
   const gatewayToInfinity =
-    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value === productTypeId;
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.includes(productTypeId);
   const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value === productTypeId;
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.includes(productTypeId);
   const isJourneyPremium =
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];

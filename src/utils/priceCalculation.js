@@ -16,9 +16,7 @@ export const priceCalculation = ({
   } else if (discount) {
     fee = discount.newPrice;
     delfee = discount.oldPrice;
-  } else if (
-    `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.includes(productTypeId)
-  ) {
+  } else if (COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId)) {
     fee = unitPrice;
     delfee = showPrice || listPrice;
   } else if (listPrice === unitPrice) {

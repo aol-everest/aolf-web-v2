@@ -70,7 +70,7 @@ const SchedulingRange = () => {
     findCourseTypeByKey(courseTypeFilter)?.value ||
     COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
 
-  const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
+  const [ctypeId] = courseTypeValue;
   const { data: workshopMaster = {} } = useQuery(
     "workshopMaster",
     async () => {
@@ -105,8 +105,8 @@ const SchedulingRange = () => {
     async () => {
       let param = {
         ctype:
-          findCourseTypeByKey(courseTypeFilter)?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+          findCourseTypeByKey(courseTypeFilter)?.value.join(";") ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value.join(";"),
         month: currentMonthYear,
         timeZone: timezoneFilter,
       };
@@ -181,8 +181,8 @@ const SchedulingRange = () => {
         timingsRequired: true,
         skipFullCourses: true,
         ctype:
-          findCourseTypeByKey(courseTypeFilter)?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+          findCourseTypeByKey(courseTypeFilter)?.value.join(";") ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value.join(";"),
       };
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};

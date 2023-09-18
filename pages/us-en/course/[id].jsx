@@ -209,32 +209,35 @@ function CourseDetail() {
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
-  const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
+  const isSKYType = COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(
+    data.productTypeId,
+  );
+  const isSilentRetreatType = COURSE_TYPES.SILENT_RETREAT.value.includes(
+    data.productTypeId,
+  );
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(data.productTypeId) >=
-    0;
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.includes(data.productTypeId);
   const isSriSriYogaMeditationType =
-    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(data.productTypeId) >= 0;
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.includes(data.productTypeId);
   const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(data.productTypeId) >=
-    0;
-  const isHealingBreathType =
-    COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
-  const isInstitutionalProgram =
-    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(data.productTypeId) >= 0;
-  const isSKYSilentRetreatType =
-    COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
-  const isBlessingsCourse =
-    COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0;
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.includes(data.productTypeId);
+  const isHealingBreathType = COURSE_TYPES.HEALING_BREATH.includes(
+    data.productTypeId,
+  );
+  const isInstitutionalProgram = COURSE_TYPES.INSTITUTIONAL_COURSE.includes(
+    data.productTypeId,
+  );
+  const isSKYSilentRetreatType = COURSE_TYPES.SKY_SILENT_RETREAT.includes(
+    data.productTypeId,
+  );
+  const isBlessingsCourse = COURSE_TYPES.BLESSINGS_COURSE.includes(
+    data.productTypeId,
+  );
   const isSKYCampusHappinessRetreat =
-    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
-      data.productTypeId,
-    ) >= 0;
-  const isSanyamCourse =
-    COURSE_TYPES.SANYAM_COURSE.value.indexOf(data.productTypeId) >= 0;
+    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.includes(data.productTypeId);
+  const isSanyamCourse = COURSE_TYPES.SANYAM_COURSE.includes(
+    data.productTypeId,
+  );
 
   const props = {
     data,

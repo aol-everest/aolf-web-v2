@@ -26,7 +26,7 @@ const CourseFeeRender = ({
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
 
   if (isSilentRetreatType) {
     if (!isJourneyPremium && !isJourneyPlus) {
@@ -112,13 +112,13 @@ const CourseButtonRender = ({
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
 
   const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId);
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(productTypeId);
   const isSriSriYogaMeditationType =
-    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.includes(productTypeId);
   if (isSilentRetreatType) {
     if (
       !isJourneyPremium &&
@@ -181,11 +181,11 @@ export const MobileCourseDetails = ({
   const day = meetupStartDateTime && meetupStartDateTime.split(",")[0];
 
   const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId);
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(productTypeId);
 
   let modalStyle = {
     backgroundPositionY: "-12px",

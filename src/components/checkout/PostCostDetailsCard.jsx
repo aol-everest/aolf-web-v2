@@ -43,11 +43,11 @@ export const PostCostDetailsCard = ({
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
 
   const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId);
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(productTypeId);
   const isJourneyPremium =
     userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];

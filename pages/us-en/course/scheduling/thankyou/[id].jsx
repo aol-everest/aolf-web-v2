@@ -147,16 +147,16 @@ const Thankyou = () => {
   } = workshop;
 
   const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId);
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(productTypeId);
 
   const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value === productTypeId;
+    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value.includes(productTypeId);
   const gatewayToInfinity =
-    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value === productTypeId;
+    COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value.includes(productTypeId);
 
   const newTitle = title || meetupTitle;
   const duration = 2;

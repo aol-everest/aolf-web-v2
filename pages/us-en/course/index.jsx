@@ -356,7 +356,7 @@ const Course = () => {
         if (institutionalCourses) {
           param = {
             ...param,
-            ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
+            ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value.join(";"),
           };
         } else if (ctypesFilter) {
           param = {
@@ -364,9 +364,14 @@ const Course = () => {
             ctype: ctypesFilter,
           };
         } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+          console.log(
+            "in---",
+            courseTypeFilter,
+            COURSE_TYPES[courseTypeFilter],
+          );
           param = {
             ...param,
-            ctype: COURSE_TYPES[courseTypeFilter].value,
+            ctype: COURSE_TYPES[courseTypeFilter].value.join(";"),
           };
         }
         if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {

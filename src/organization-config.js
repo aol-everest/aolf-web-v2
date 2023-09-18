@@ -23,6 +23,7 @@ const allOrganizationConfig = [
       "SAHAJ_SAMADHI_MEDITATION",
       "SRI_SRI_YOGA_MEDITATION",
       "SKY_SILENT_RETREAT",
+      "ART_OF_LIVING_PREMIUM_PROGRAM",
     ],
     otherCourseTypes: [
       "CHAKRA_KRIYA",
