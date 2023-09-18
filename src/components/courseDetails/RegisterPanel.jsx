@@ -33,30 +33,27 @@ export const RegisterPanel = ({ workshop }) => {
     isGuestCheckoutEnabled = false,
   } = workshop || {};
 
-  const isSKYType = COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(
-    workshop.productTypeId,
-  );
-  const isSilentRetreatType = COURSE_TYPES.SILENT_RETREAT.value.includes(
-    workshop.productTypeId,
-  );
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
+    0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
       workshop.productTypeId,
-    );
+    ) >= 0;
   const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.includes(
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
       workshop.productTypeId,
-    );
+    ) >= 0;
   const isSKYCampusHappinessRetreat =
-    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.includes(
+    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
       workshop.productTypeId,
-    );
-  const isSanyamCourse = COURSE_TYPES.SANYAM_COURSE.value.includes(
-    workshop.productTypeId,
-  );
-  const isBlessingsCourse = COURSE_TYPES.BLESSINGS_COURSE.value.includes(
-    workshop.productTypeId,
-  );
+    ) >= 0;
+  const isSanyamCourse =
+    COURSE_TYPES.SANYAM_COURSE.value.indexOf(workshop.productTypeId) >= 0;
+  const isBlessingsCourse =
+    COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(workshop.productTypeId) >= 0;
 
   const handleRegister = (e) => {
     e.preventDefault();

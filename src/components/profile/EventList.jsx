@@ -48,11 +48,11 @@ const renderEventMobile = (workshop) => {
   } = workshop || {};
 
   const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId);
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(productTypeId);
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
   let imageSrc = null;
   if (eventType === "Meetup") {
@@ -181,11 +181,11 @@ const renderEvent = (workshop) => {
   let imageSrc = null;
 
   const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId);
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
   const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId);
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(productTypeId);
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
   if (eventType === "Meetup") {
     const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");

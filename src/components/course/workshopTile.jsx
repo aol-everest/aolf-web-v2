@@ -53,17 +53,18 @@ export const WorkshopTile = ({ data, authenticated }) => {
   };
 
   const isKnownWorkshop =
-    COURSE_TYPES.SILENT_RETREAT.value.includes(productTypeId) ||
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId) ||
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(productTypeId) ||
-    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.includes(productTypeId) ||
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.includes(productTypeId) ||
-    COURSE_TYPES.HEALING_BREATH.value.includes(data.productTypeId) ||
-    COURSE_TYPES.INSTITUTIONAL_COURSE.value.includes(data.productTypeId) ||
-    COURSE_TYPES.SKY_SILENT_RETREAT.value.includes(data.productTypeId) ||
-    COURSE_TYPES.BLESSINGS_COURSE.value.includes(data.productTypeId) ||
-    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.includes(productTypeId) ||
-    COURSE_TYPES.SANYAM_COURSE.value.includes(productTypeId);
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0 ||
+    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(data.productTypeId) >= 0 ||
+    COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0 ||
+    COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0 ||
+    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(productTypeId) >=
+      0 ||
+    COURSE_TYPES.SANYAM_COURSE.value.indexOf(productTypeId) >= 0;
 
   const coTeacherNames = [coTeacher1Name, coTeacher2Name];
   let extraTeachers = 0;
@@ -99,14 +100,13 @@ export const WorkshopTile = ({ data, authenticated }) => {
     }
   };
 
-  const isSKYType = COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(
-    data.productTypeId,
-  );
-  const isSilentRetreatType = COURSE_TYPES.SILENT_RETREAT.value.includes(
-    data.productTypeId,
-  );
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(data.productTypeId);
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(data.productTypeId) >=
+    0;
 
   return (
     <div

@@ -200,21 +200,23 @@ const MembershipThankyou = () => {
       }
     } else if (courseDetail.eventType === "Workshop") {
       if (
-        COURSE_TYPES.SILENT_RETREAT.value.includes(courseDetail.productTypeId)
+        `${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(
+          courseDetail.productTypeId,
+        ) >= 0
       ) {
         return <img src="/img/Silence_desktop.png" alt="card" />;
       }
       if (
-        COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(
-          courseDetail.productTypeId,
-        )
+        `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(
+          workshopDetail.productTypeId,
+        ) >= 0
       ) {
         return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
       }
       if (
-        COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(
+        `${COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value}`.indexOf(
           courseDetail.productTypeId,
-        )
+        ) >= 0
       ) {
         return <img src="/img/Sahaj_meetup_desktop.png" alt="card" />;
       }
@@ -239,9 +241,8 @@ const MembershipThankyou = () => {
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
-  const isSilentRetreatType = COURSE_TYPES.SILENT_RETREAT.value.includes(
-    courseDetail.productTypeId,
-  );
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(courseDetail.productTypeId) >= 0;
 
   const {
     title,

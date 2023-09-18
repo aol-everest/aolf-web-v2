@@ -276,28 +276,29 @@ const Checkout = () => {
 
   const stripePromise = loadStripe(workshop.publishableKey);
 
-  const isSKYType = COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(
-    workshop.productTypeId,
-  );
-  const isSilentRetreatType = COURSE_TYPES.SILENT_RETREAT.value.includes(
-    workshop.productTypeId,
-  );
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
+    0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.includes(
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
       workshop.productTypeId,
-    );
+    ) >= 0;
   const isSriSriYogaMeditationType =
-    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.includes(workshop.productTypeId);
-  const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.includes(
+    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(
       workshop.productTypeId,
-    );
-  const isHealingBreathProgram = COURSE_TYPES.HEALING_BREATH.value.includes(
-    workshop.productTypeId,
-  );
+    ) >= 0;
+  const isVolunteerTrainingProgram =
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
+  const isHealingBreathProgram =
+    COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
 
   const isInstitutionalProgram =
-    COURSE_TYPES.INSTITUTIONAL_COURSE.value.includes(workshop.productTypeId);
+    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(workshop.productTypeId) >=
+    0;
 
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 

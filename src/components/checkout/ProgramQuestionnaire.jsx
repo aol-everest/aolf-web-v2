@@ -332,7 +332,7 @@ export const ProgramQuestionnaire = ({
   };
 
   const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.includes(productTypeId);
+    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0;
 
   return (
     <Formik

@@ -356,7 +356,7 @@ const Course = () => {
         if (institutionalCourses) {
           param = {
             ...param,
-            ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value.join(";"),
+            ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
           };
         } else if (ctypesFilter) {
           param = {
@@ -366,7 +366,7 @@ const Course = () => {
         } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
           param = {
             ...param,
-            ctype: COURSE_TYPES[courseTypeFilter].value.join(";"),
+            ctype: COURSE_TYPES[courseTypeFilter].value,
           };
         }
         if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
