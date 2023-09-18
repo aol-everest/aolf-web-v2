@@ -364,11 +364,6 @@ const Course = () => {
             ctype: ctypesFilter,
           };
         } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
-          console.log(
-            "in---",
-            courseTypeFilter,
-            COURSE_TYPES[courseTypeFilter],
-          );
           param = {
             ...param,
             ctype: COURSE_TYPES[courseTypeFilter].value.join(";"),
