@@ -119,7 +119,7 @@ export const COURSE_TYPES = {
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || "",
     code: "10305000",
   },
-  SKY_WITH_SAHAJ: {
+  ART_OF_LIVING_PREMIUM_PROGRAM: {
     name: "Art of Living Premium Program",
     value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || "",
     code: "10304000",
