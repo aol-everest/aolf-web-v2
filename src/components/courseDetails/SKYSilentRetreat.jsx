@@ -240,7 +240,7 @@ export const SKYSilentRetreat = ({ data }) => {
         <section className="breadth-meditation sudarshan-kriya">
           <div className="container">
             <div className="row">
-              <div className="col-12 px-2 col-lg-12 text-center text-lg-center">
+              <div className="col-12 px-1 col-lg-12 text-center text-lg-center">
                 <h2 className="section-title">
                   <strong>Impacts</strong> of Sudarshan Kriya
                 </h2>
@@ -249,7 +249,7 @@ export const SKYSilentRetreat = ({ data }) => {
                   independent studies
                 </div>
               </div>
-              <div className="col-12 px-2 col-md-4 col-lg-4 text-left text-lg-left">
+              <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
                     <img src="/img/icon1.svg" alt="transforming lives" />
@@ -267,7 +267,7 @@ export const SKYSilentRetreat = ({ data }) => {
                   </div>
                 </div>
               </div>
-              <div className="col-12 px-2 col-md-4 col-lg-4 text-left text-lg-left">
+              <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
                     <img src="/img/icon2.svg" alt="transforming lives" />
@@ -284,7 +284,7 @@ export const SKYSilentRetreat = ({ data }) => {
                   </div>
                 </div>
               </div>
-              <div className="col-12 px-2 col-md-4 col-lg-4 text-left text-lg-left">
+              <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
                     <img src="/img/icon3.svg" alt="transforming lives" />
@@ -305,10 +305,12 @@ export const SKYSilentRetreat = ({ data }) => {
           </div>
           <div className="container refreshing-silence">
             <div className="row">
-              <h2 className="section-title">
-                Discover just how refreshing silence can be
-              </h2>
-              <div className="col-12 px-2 col-lg-8 text-left text-lg-left">
+              <div class="col-12 px-1">
+                <h2 class="section-title">
+                  Discover just how refreshing silence can be
+                </h2>
+              </div>
+              <div class="col-12 px-1 col-lg-8 text-left text-lg-left">
                 <p>
                   Many people may find it challenging knowing how to quiet their
                   mind. The Silent Retreat provides techniques and optimal
@@ -322,7 +324,7 @@ export const SKYSilentRetreat = ({ data }) => {
                   the ideal vacation for body, mind, and spirit.
                 </p>
               </div>
-              <div className="col-12 px-2 col-lg-4 text-left text-lg-left mobileColumn">
+              <div className="col-12 px-1 col-lg-4 text-left text-lg-left mobileColumn">
                 <p className="mobileView">
                   It’s no wonder that many retreat participants refer to it as
                   the ideal vacation for body, mind, and spirit.
@@ -398,19 +400,21 @@ export const SKYSilentRetreat = ({ data }) => {
           <Swiper {...swiperOption} className="reviews-slider">
             <SwiperSlide>
               <div className="review-box">
-                <div className="review-title">Calmness and peace</div>
-                <div className="review-text">
-                  I am enjoying the calmness and peace that comes with Sahaj
-                  Samadhi meditation.
+                <div class="review-title">
+                  ...very, very powerful...such a sense of calm
                 </div>
-                <div className="review-author">
-                  <div className="reviewer-photo">
-                    <img src="/img/dr-lewis-review.png" alt="reviewer" />
+                <div class="review-text">
+                  It was very, very powerful. I gained such a sense of calm,
+                  more than I ever could have imagined.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/max-review.png" alt="reviewer" />
                   </div>
-                  <div className="reviewer-info">
-                    <div className="reviewer-name">Dr. Lewis</div>
-                    <div className="reviwer-position">
-                      Sahaj Samadhi participant
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Max Goldberg</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
@@ -418,21 +422,22 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div className="review-box">
-                <div className="review-title">Reservoir of energy</div>
-                <div className="review-text">
-                  Sahaj Samadhi allows me to tap into a reservoir of energy,
-                  which leaves me rejuvenated and revitalized, like a new
-                  person.
+              <div class="review-box">
+                <div class="review-title">relaxed, refreshed, and happier</div>
+                <div class="review-text">
+                  It helped me to put into practice the valuable wisdom which I
+                  had picked up on the SKY Breath Meditation course. I came away
+                  relaxed, refreshed and happier than I had felt for a long
+                  time.
                 </div>
-                <div className="review-author">
-                  <div className="reviewer-photo">
-                    <img src="/img/brian-review.png" alt="reviewer" />
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/julie-review.png" alt="reviewer" />
                   </div>
-                  <div className="reviewer-info">
-                    <div className="reviewer-name">Brian</div>
-                    <div className="reviwer-position">
-                      Sahaj Samadhi participant
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Julie Madeley</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
@@ -440,20 +445,86 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div className="review-box">
-                <div className="review-title">Happy</div>
-                <div className="review-text">
-                  I got so happy for no reason. I hadn’t experienced that in a
-                  long time.
+              <div class="review-box">
+                <div class="review-title">Felt more balanced</div>
+                <div class="review-text">
+                  I've been on quite a few silent retreats in the past and this
+                  felt more balanced, nourishing and comfortable than any other
+                  retreat I'd been on.
                 </div>
-                <div className="review-author">
-                  <div className="reviewer-photo">
-                    <img src="/img/phillip-review.png" alt="reviewer" />
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/michelle-review.png" alt="reviewer" />
                   </div>
-                  <div className="reviewer-info">
-                    <div className="reviewer-name">Phillip</div>
-                    <div className="reviwer-position">
-                      Sahaj Samadhi participant
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Michelle Garisson</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div class="review-box">
+                <div class="review-title">
+                  extremely relaxing, yet energizing experience
+                </div>
+                <div class="review-text">
+                  The meditations are deep! It was an extremely relaxing yet
+                  energizing experience.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/vinita-review.png" alt="reviewer" />
+                  </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Vinita D.</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div class="review-box">
+                <div class="review-title">wonderful, peaceful retreat</div>
+                <div class="review-text">
+                  A wonderful, peaceful retreat ... extremely joyful and easy.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/aarti-review.png" alt="reviewer" />
+                  </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Aarti R.</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div class="review-box">
+                <div class="review-title">I feel more like myself</div>
+                <div class="review-text">
+                  I feel more like myself after the Silence Retreat. My life
+                  goes smoother after it and I feel the difference for a good
+                  3-6 months.
+                </div>
+                <div class="review-author">
+                  <div class="reviewer-photo">
+                    <img src="/img/daniel-review.png" alt="reviewer" />
+                  </div>
+                  <div class="reviewer-info">
+                    <div class="reviewer-name">Daniel M.</div>
+                    <div class="reviwer-position">
+                      Silent Retreat participant
                     </div>
                   </div>
                 </div>
@@ -525,7 +596,7 @@ export const SKYSilentRetreat = ({ data }) => {
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="3">
-                    What’s the cost of the Art of Living-Part I Course?
+                    What’s the cost of the Silent Retreat Course?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
