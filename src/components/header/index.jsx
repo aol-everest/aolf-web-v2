@@ -98,7 +98,18 @@ const AOL_MENU = [
             name: "Art Of Living Part II",
             link: "https://event.us.artofliving.org/us-en/artoflivingpart2",
           },
-
+          {
+            name: "Blessings",
+            link: "/us-en/lp/blessings-course",
+          },
+          {
+            name: "Chakra Kriya",
+            link: "/us-en/lp/chakra-kriya",
+          },
+          {
+            name: "Sanyam",
+            link: "/us-en/lp/sanyam",
+          },
           {
             name: "All Courses",
             link: "/us-en/course",
