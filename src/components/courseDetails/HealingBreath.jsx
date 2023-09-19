@@ -354,7 +354,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   </h4>
                   <img src="/img/mask.svg" alt="mask" />
                 </div>
-                <p>on SKY Breath Meditation (SKY)</p>
+                <p>on {COURSE_TYPES.SKY_BREATH_MEDITATION.name} (SKY)</p>
               </div>
               <p className="studies__text">
                 <span>
@@ -367,7 +367,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   published in peer review journals, have demonstrated a
                   comprehensive range of benefits from practicing SKY Breath.
                 </span>
-                {/* 
+                {/*
                   <p className="summary_detail_c">
                     Summary of Independent Research Findings and{' '}
                     <a onClick={(e) => this.openResearchModal(e)}>Sources</a>

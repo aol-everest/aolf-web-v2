@@ -141,8 +141,8 @@ export const SilentRetreat = ({ data }) => {
                 productive, and full of energy. As you emerge, you feel
                 centered, recharged, and ready to embrace life with renewed
                 focus and joy. This retreat is your avenue to rekindle your
-                connection with SKY Breath Meditation, elevating your energy to
-                new heights.
+                connection with {COURSE_TYPES.SKY_BREATH_MEDITATION.name},
+                elevating your energy to new heights.
               </p>
 
               <p>
@@ -276,9 +276,9 @@ export const SilentRetreat = ({ data }) => {
                 <div class="review-title">relaxed, refreshed, and happier</div>
                 <div class="review-text">
                   It helped me to put into practice the valuable wisdom which I
-                  had picked up on the SKY Breath Meditation course. I came away
-                  relaxed, refreshed and happier than I had felt for a long
-                  time.
+                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
+                  course. I came away relaxed, refreshed and happier than I had
+                  felt for a long time.
                 </div>
                 <div class="review-author">
                   <div class="reviewer-photo">

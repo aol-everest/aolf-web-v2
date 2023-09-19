@@ -233,12 +233,12 @@ export const SKYBreathMeditation = ({ data }) => {
                 <div class="col-12 col-lg-6 float-left">
                   <div class="breadth-meditation_content">
                     <p class="">
-                      Sudarshan Kriya (SKY Breath Meditation) taught in the Art
-                      of Living Part I course is a powerful rhythmic breathing
-                      technique that harmonizes the body-mind complex.
-                      Participants notice reduced stress and anxiety, better
-                      sleep, a stronger immune system, and increased energy
-                      levels.
+                      Sudarshan Kriya ({COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                      ) taught in the Art of Living Part I course is a powerful
+                      rhythmic breathing technique that harmonizes the body-mind
+                      complex. Participants notice reduced stress and anxiety,
+                      better sleep, a stronger immune system, and increased
+                      energy levels.
                     </p>
                     <button class="register-button" onClick={handleRegister}>
                       Register Now <FaArrowRightLong />
@@ -254,7 +254,7 @@ export const SKYBreathMeditation = ({ data }) => {
               <div class="col-12 px-2 col-lg-12 text-center text-lg-center">
                 <img src="/img/smallLine.svg" />
                 <h2 class="breadth-meditation__title section-title benefits-title text-center">
-                  Impacts of SKY Breath Meditation
+                  Impacts of {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                 </h2>
                 <p class="section-desc text-center">
                   Science-backed benefits of SKY, shown in over 100 independent
@@ -350,7 +350,9 @@ export const SKYBreathMeditation = ({ data }) => {
                     <img src="/img/key-2.jpg" alt="transforming lives" />
                   </div>
                   <div class="key-highlight-content">
-                    <span class="title">SKY Breath Meditation</span>
+                    <span class="title">
+                      {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                    </span>
                     <br />
                     <span class="content">
                       Learn the most powerful breathing technique based on an

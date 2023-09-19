@@ -81,7 +81,7 @@ export const MobileCourseOptions = ({
                         </li>
                         <li>
                           <p class="font-weight-normal">
-                            SKY Breath Meditation
+                            {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                           </p>
                           <p class="font-weight-bold">
                             {delfee && (

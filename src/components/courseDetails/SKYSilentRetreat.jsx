@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from "@components";
-import { MODAL_TYPES } from "@constants";
+import { MODAL_TYPES, COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 import { useAuth, useGlobalModalContext } from "@contexts";
 import { pushRouteWithUTMQuery } from "@service";
@@ -173,8 +173,8 @@ export const SKYSilentRetreat = ({ data }) => {
             </div>
             <p>
               You'll also learn the powerful breathing practice, Sudarshan Kriya
-              also known as SKY Breath Meditation taught in the Art of Living
-              Part I course.
+              also known as {COURSE_TYPES.SKY_BREATH_MEDITATION.name} taught in
+              the Art of Living Part I course.
             </p>
           </div>
 
@@ -426,9 +426,9 @@ export const SKYSilentRetreat = ({ data }) => {
                 <div class="review-title">relaxed, refreshed, and happier</div>
                 <div class="review-text">
                   It helped me to put into practice the valuable wisdom which I
-                  had picked up on the SKY Breath Meditation course. I came away
-                  relaxed, refreshed and happier than I had felt for a long
-                  time.
+                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
+                  course. I came away relaxed, refreshed and happier than I had
+                  felt for a long time.
                 </div>
                 <div class="review-author">
                   <div class="reviewer-photo">
@@ -547,9 +547,10 @@ export const SKYSilentRetreat = ({ data }) => {
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
                     For those who have not taken the Art of Living Part I Course
-                    or SKY Breath Meditation workshop and would like to learn
-                    the tools and techniques to begin a meditation practice and
-                    experience the power of silence — gentle, light, and easy.
+                    or {COURSE_TYPES.SKY_BREATH_MEDITATION.name} workshop and
+                    would like to learn the tools and techniques to begin a
+                    meditation practice and experience the power of silence —
+                    gentle, light, and easy.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>

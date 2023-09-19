@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import dynamic from "next/dynamic";
+import { COURSE_TYPES } from "@constants";
 
 const CouponStack = dynamic(() =>
   import("@components/profile").then((mod) => mod.CouponStack),
@@ -13,7 +14,8 @@ export default function TalkableRefer() {
           <h6 className="course-details-card__subtitle">How To Earn Rewards</h6>
           <ol>
             <li>
-              Invite your friends to take the SKY Breath Meditation course
+              Invite your friends to take the{" "}
+              {COURSE_TYPES.SKY_BREATH_MEDITATION.name} course
             </li>
             <li>
               Your friends will get 20% off their very first SKY Breath

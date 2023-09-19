@@ -1,6 +1,7 @@
 import { api } from "@utils";
 import { useState } from "react";
 import { useQuery } from "react-query";
+import { COURSE_TYPES } from "@constants";
 
 export const PastCourses = ({ isMobile }) => {
   const [pastWorkshops, setPastWorkshops] = useState([]);
@@ -52,7 +53,7 @@ export const PastCourses = ({ isMobile }) => {
         <div className="past-courses__cards">
           <div className="past-courses__cards__item">
             <h4 className="past-courses__cards__item-title mr-2">
-              SKY Breath Meditation
+              {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
             </h4>
             <div className="past-courses__cards__item-counter">
               <span>{skyBreathMeditationCount}</span> times

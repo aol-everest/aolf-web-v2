@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Loader } from "@components";
 import Link from "@components/linkWithUTM";
-import { ALERT_TYPES, MODAL_TYPES } from "@constants";
+import { ALERT_TYPES, MODAL_TYPES, COURSE_TYPES } from "@constants";
 import {
   useAuth,
   useGlobalAlertContext,
@@ -496,7 +496,8 @@ const Profile = ({ tab }) => {
                   </h6>
                   <ol>
                     <li>
-                      Invite your friends to take the SKY Breath Meditation
+                      Invite your friends to take the{" "}
+                      {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                       course
                     </li>
                     <li>

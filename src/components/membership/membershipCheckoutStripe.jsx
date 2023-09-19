@@ -6,7 +6,7 @@ import {
   UserInfoForm,
 } from "@components/checkout";
 import Link from "@components/linkWithUTM";
-import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
+import { ALERT_TYPES, MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
 import { useAuth, useGlobalAlertContext } from "@contexts";
 import { orgConfig } from "@org";
 import { pushRouteWithUTMQuery } from "@service";
@@ -47,9 +47,10 @@ const RetreatPrerequisiteWarning = () => {
       <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
         the Journey + membership, which is{" "}
-        <strong>SKY Breath Meditation</strong> (formerly known as the Happiness
-        Program). In SKY Breath Meditation, you'll learn a powerful breath
-        meditation to effectively settle and calm the mind.
+        <strong>{COURSE_TYPES.SKY_BREATH_MEDITATION.name}</strong> (formerly
+        known as the Happiness Program). In{" "}
+        {COURSE_TYPES.SKY_BREATH_MEDITATION.name}, you'll learn a powerful
+        breath meditation to effectively settle and calm the mind.
       </p>
       <p className="course-join-card__text">
         If our records are not accurate, please contact customer service at{" "}
@@ -146,7 +147,7 @@ export const MembershipCheckoutStripe = ({
               className="btn-secondary v2"
               onClick={closeRetreatPrerequisiteWarning}
             >
-              Discover SKY Breath Meditation
+              Discover {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
             </button>
           );
         },

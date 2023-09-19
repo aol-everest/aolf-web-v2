@@ -120,11 +120,12 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
                 <p>
                   <span>Clear</span> stress from every cell of your body
                 </p>
-                SKY Breath Meditation, the most powerful breathing technique of
-                our time, uses specific, natural rhythms of the breath to deeply
-                clear more than 90% of the toxins and accumulated stress tension
-                on a cellular level. Removing all the negativity from your whole
-                system, leaving you restored, clear, and energized.
+                {COURSE_TYPES.SKY_BREATH_MEDITATION.name}, the most powerful
+                breathing technique of our time, uses specific, natural rhythms
+                of the breath to deeply clear more than 90% of the toxins and
+                accumulated stress tension on a cellular level. Removing all the
+                negativity from your whole system, leaving you restored, clear,
+                and energized.
               </div>
               <div className="how-it-works__item">
                 <p>
@@ -237,7 +238,7 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
                   </h3>
                   <img src="/img/mask.svg" alt="mask" />
                 </div>
-                <p>on SKY Breath Meditation (SK&P)</p>
+                <p>on {COURSE_TYPES.SKY_BREATH_MEDITATION.name} (SK&P)</p>
               </div>
               <p className="studies__text">
                 <span>

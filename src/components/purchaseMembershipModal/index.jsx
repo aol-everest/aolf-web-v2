@@ -1,5 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 
+import { COURSE_TYPES } from "@constants";
+
 export const PurchaseMembershipModal = ({ modalSubscription }) => {
   return (
     <>
@@ -17,7 +19,7 @@ export const PurchaseMembershipModal = ({ modalSubscription }) => {
         )}
 
         <p className="modal-gray-text">
-          * Available to SKY Breath Meditation graduates
+          * Available to {COURSE_TYPES.SKY_BREATH_MEDITATION.name} graduates
         </p>
       </div>
     </>

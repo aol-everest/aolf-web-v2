@@ -12,6 +12,7 @@ import { MeetupTile } from "@components/meetup/meetupTile";
 import { MeetupType } from "@components/meetup/meetupType";
 import {
   ALERT_TYPES,
+  COURSE_TYPES,
   COURSE_MODES,
   MEMBERSHIP_TYPES,
   MODAL_TYPES,
@@ -84,7 +85,7 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
       <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
         the {meetup.meetupTitle}, which is{" "}
-        <strong>SKY Breath Meditation</strong>.
+        <strong>{COURSE_TYPES.SKY_BREATH_MEDITATION.name}</strong>.
       </p>
       <p className="course-join-card__text">
         If our records are not accurate, please contact customer service at{" "}
@@ -443,7 +444,7 @@ const Meetup = () => {
                 className="btn-secondary v2"
                 onClick={closeRetreatPrerequisiteWarning}
               >
-                Discover SKY Breath Meditation
+                Discover {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
               </button>
             );
           },

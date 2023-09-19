@@ -1,6 +1,6 @@
 import { MobileFilterModal, Popup, SmartDropDown } from "@components";
 import Link from "@components/linkWithUTM";
-import { DURATION } from "@constants";
+import { DURATION, COURSE_TYPES } from "@constants";
 import { pushRouteWithUTMQuery } from "@service";
 import classNames from "classnames";
 import { useRouter } from "next/router";
@@ -446,11 +446,11 @@ export const DesignTwo = ({
             <p className="card-text">
               SKY Journey helps guide you through the process of how to create a
               habit that sticks. Not just any habit - a life-transforming habit
-              of meditation. Combining guided daily SKY Breath Meditation with
-              insights from a variety of our best teachers, the journey coaches
-              you through your first 5 weeks of practice (and beyond!). Download
-              the Art of Living Journey App to get started on your SKY Journey
-              today!
+              of meditation. Combining guided daily{" "}
+              {COURSE_TYPES.SKY_BREATH_MEDITATION.name} with insights from a
+              variety of our best teachers, the journey coaches you through your
+              first 5 weeks of practice (and beyond!). Download the Art of
+              Living Journey App to get started on your SKY Journey today!
             </p>
           </div>
         </div>

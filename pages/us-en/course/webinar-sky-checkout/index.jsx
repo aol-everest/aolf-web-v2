@@ -4,6 +4,7 @@ import {
   ALERT_TYPES,
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
+  COURSE_TYPES,
 } from "@constants";
 import {
   useAuth,
@@ -342,7 +343,7 @@ const WebinarSkyCheckout = () => {
         <section className="order">
           <div className="container">
             <h1 className="title">
-              {workshop.title || "SKY Breath Meditation"}
+              {workshop.title || COURSE_TYPES.SKY_BREATH_MEDITATION.name}
             </h1>
             {workshop.isGenericWorkshop ? (
               <p className="order__detail">

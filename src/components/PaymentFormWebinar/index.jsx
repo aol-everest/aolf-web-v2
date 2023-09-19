@@ -27,6 +27,7 @@ import {
   MODAL_TYPES,
   PAYMENT_MODES,
   PAYMENT_TYPES,
+  COURSE_TYPES,
 } from "@constants";
 import {
   useAuth,
@@ -1060,7 +1061,8 @@ export const PaymentFormWebinar = ({
                           <h2 class="info__title mt-3">You get:</h2>
                           <ul class="info__list info__list--classic">
                             <li>
-                              SKY Breath Meditation On-Demand Video Access
+                              {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
+                              On-Demand Video Access
                             </li>
                             <li>Plus 2 LIVE online sessions</li>
                           </ul>
