@@ -1,0 +1,709 @@
+import React, { useCallback, useRef } from "react";
+import { COURSE_MODES, COURSE_TYPES } from "@constants";
+import { useQueryString } from "@hooks";
+import { pushRouteWithUTMQuery } from "@service";
+import { api, tConvert, findCourseTypeByKey } from "@utils";
+import dayjs from "dayjs";
+import { sortBy, values } from "lodash";
+import moment from "moment";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import Flatpickr from "react-flatpickr";
+import Select2 from "react-select2-wrapper";
+import { useQuery } from "react-query";
+import { StripeExpressCheckoutElement } from "@components/checkout/StripeExpressCheckoutElement";
+import "flatpickr/dist/flatpickr.min.css";
+import { ScheduleLocationFilter } from "@components/scheduleLocationFilter/ScheduleLocationFilter";
+import { useEffectOnce } from "react-use";
+import { useAnalytics } from "use-analytics";
+import classNames from "classnames";
+import Modal from "react-bootstrap/Modal";
+
+var advancedFormat = require("dayjs/plugin/advancedFormat");
+dayjs.extend(advancedFormat);
+
+const COURSE_MODES_BOTH = "both";
+
+const timezones = [
+  {
+    timezone: "US/Eastern",
+    text: "Eastern Time - US & Canada",
+    id: "EST",
+  },
+  {
+    timezone: "US/Central",
+    text: "Central Time - US & Canada",
+    id: "CST",
+  },
+  {
+    timezone: "US/Mountain",
+    text: "Mountain Time - US & Canada",
+    id: "MST",
+  },
+  {
+    timezone: "America/Los_Angeles",
+    text: "Pacific Time - US & Canada",
+    id: "PST",
+  },
+];
+
+const SchedulingRange = () => {
+  const fp = useRef(null);
+  const { track, page } = useAnalytics();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [courseTypeFilter] = useQueryString("courseType", {
+    defaultValue: "SKY_BREATH_MEDITATION",
+  });
+  const [mode, setMode] = useQueryString("mode", {
+    defaultValue: COURSE_MODES.ONLINE.value,
+  });
+  const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
+    defaultValue: "EST",
+  });
+  const [locationFilter, setLocationFilter] = useQueryString("location", {
+    parse: JSON.parse,
+  });
+  const [selectedWorkshopId, setSelectedWorkshopId] = useState();
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [activeWorkshop, setActiveWorkshop] = useState(null);
+  const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
+    defaultValue: `${moment().year()}-${moment().month() + 1}`,
+  });
+  const courseTypeValue =
+    findCourseTypeByKey(courseTypeFilter)?.value ||
+    COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+  const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
+  const { data: workshopMaster = {} } = useQuery(
+    "workshopMaster",
+    async () => {
+      let param = {
+        ctypeId,
+      };
+      const response = await api.get({
+        path: "workshopMaster",
+        param,
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const {
+    data: dateAvailable = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery(
+    [
+      "workshopMonthCalendar",
+      currentMonthYear,
+      courseTypeFilter,
+      timezoneFilter,
+      mode,
+      locationFilter,
+    ],
+    async () => {
+      let param = {
+        ctype:
+          findCourseTypeByKey(courseTypeFilter)?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+        month: currentMonthYear,
+        timeZone: timezoneFilter,
+      };
+      if (mode && mode !== COURSE_MODES_BOTH) {
+        param = { ...param, mode };
+      }
+      if (locationFilter) {
+        const { lat, lng } = locationFilter || {};
+        if (lat || lng) {
+          param = {
+            ...param,
+            lat,
+            lng,
+          };
+        }
+      }
+      const response = await api.get({
+        path: "workshopMonthCalendar",
+        param,
+      });
+      const defaultDate =
+        response.data.length > 0 ? response.data[0].allDates : [];
+      if (fp?.current?.flatpickr && defaultDate.length > 0) {
+        fp.current.flatpickr.jumpToDate(defaultDate[0]);
+        setTimeout(() => {
+          fp.current.flatpickr.setDate(defaultDate, true);
+        }, 10);
+      }
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  useEffectOnce(() => {
+    page({
+      category: "course_registration",
+      name: "course_search_scheduling",
+      course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+    });
+  });
+
+  function getGroupedUniqueEventIds(response) {
+    const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
+      let timings = obj.timings;
+      timings = sortBy(timings, (obj) => new Date(obj.startDate));
+      let timing_Str = timings.reduce((acc1, obj) => {
+        acc1 += "" + obj.startDate + "" + obj.startTime;
+        return acc1;
+      }, "");
+      timing_Str = obj.mode + "_" + timing_Str;
+      acc = { ...acc, [timing_Str]: obj.id };
+      return acc;
+    }, {});
+    return values(pairOfTimingAndEventId);
+  }
+
+  const enableDates = dateAvailable.map((da) => {
+    return {
+      from: da.firstDate,
+      to: da.allDates[da.allDates.length - 1],
+    };
+  });
+
+  const { data: workshops = [] } = useQuery(
+    ["workshops", selectedDates, timezoneFilter, mode, locationFilter],
+    async () => {
+      let param = {
+        timeZone: timezoneFilter,
+        sdate: selectedDates?.[0],
+        timingsRequired: true,
+        skipFullCourses: true,
+        ctype:
+          findCourseTypeByKey(courseTypeFilter)?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+      };
+      if (locationFilter) {
+        const { lat, lng } = locationFilter || {};
+        if (lat || lng) {
+          param = {
+            ...param,
+            lat,
+            lng,
+          };
+        }
+      }
+      if (mode) {
+        param = { ...param, mode };
+      }
+      const response = await api.get({
+        path: "workshops",
+        param,
+      });
+      if (response?.data && selectedDates?.length > 0) {
+        const selectedSfids = getGroupedUniqueEventIds(response);
+        const finalWorkshops = response?.data.filter((item) =>
+          selectedSfids.includes(item.sfid),
+        );
+
+        setTimeout(() => {
+          const timeContainer = document.querySelector(
+            ".scheduling-modal__content-option",
+          );
+          if (timeContainer) {
+            timeContainer.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }, 100);
+        track("click_calendar", {
+          course_type:
+            courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
+          location_type: mode,
+          num_results: response?.data.length,
+        });
+        return finalWorkshops;
+      }
+    },
+  );
+
+  const getWorkshopDetails = async (workshopId) => {
+    setLoading(true);
+    const response = await await api.get({
+      path: "workshopDetail",
+      param: {
+        id: workshopId,
+        rp: "checkout",
+      },
+      isUnauthorized: true,
+    });
+    if (response?.data) {
+      setActiveWorkshop(response?.data);
+    }
+    setLoading(false);
+  };
+
+  const handleWorkshopSelect = (workshop) => {
+    setSelectedWorkshopId(workshop?.id);
+    getWorkshopDetails(workshop?.id);
+  };
+  const handleTimezoneChange = (ev) => {
+    ev.preventDefault();
+    setTimezoneFilter(ev?.target?.value);
+    setActiveWorkshop(null);
+    setSelectedWorkshopId(null);
+  };
+
+  const goToPaymentModal = () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
+      query: {
+        courseType: courseTypeFilter,
+        ctype: activeWorkshop?.productTypeId,
+        mode,
+      },
+    });
+  };
+
+  const handleSelectMode = (value) => {
+    if (mode !== COURSE_MODES.IN_PERSON.value) {
+      handleLocationFilterChange({});
+    }
+    setMode(value);
+    setActiveWorkshop(null);
+    setSelectedWorkshopId(null);
+  };
+
+  const onMonthChangeAction = (e, d, instance) => {
+    setCurrentMonthYear(`${instance.currentYear}-${instance.currentMonth + 1}`);
+  };
+
+  const getDates = (startDate, stopDate) => {
+    const addDays = (date, days) => {
+      date.setDate(date.getDate() + days);
+      return date;
+    };
+    let dateArray = [];
+    let currentDate = startDate;
+    while (currentDate <= stopDate) {
+      dateArray.push(new Date(currentDate));
+      currentDate = addDays(new Date(currentDate), 1);
+    }
+    return dateArray;
+  };
+
+  const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
+    if (selectedDates.length > 0 && dateStr !== "update") {
+      const today = moment(selectedDates[selectedDates.length - 1]);
+      let intervalSelected = [];
+      for (const enableItem of instance.config._enable) {
+        const fromMoment = moment(enableItem.from);
+        const toMoment = moment(enableItem.to);
+        const isWithinRange = today.isBetween(
+          fromMoment,
+          toMoment,
+          "days",
+          "[]",
+        );
+
+        if (isWithinRange) {
+          intervalSelected = getDates(enableItem.from, enableItem.to);
+          break; // Exit the loop when the condition is true
+        }
+      }
+
+      instance.selectedDates = [...intervalSelected];
+      selectedDates = [...intervalSelected];
+
+      instance.setDate(intervalSelected);
+      setSelectedDates(
+        intervalSelected.map((d) => moment(d).format("YYYY-MM-DD")),
+      );
+
+      /* const lastItem =
+        selectedDates?.length > 0
+          ? selectedDates[selectedDates?.length - 1]
+          : selectedDates[0];
+      handleDateChange(lastItem); */
+    }
+  };
+
+  const handleLocationFilterChange = (value) => {
+    setLocationFilter(JSON.stringify(value));
+  };
+
+  return (
+    <>
+      <header className="checkout-header">
+        <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
+      </header>
+      {(loading || isLoading) && <div className="cover-spin"></div>}
+      <main className="course-filter calendar-online">
+        <section className="calendar-top-section">
+          <div className="container calendar-benefits-section">
+            <h2 className="section-title">
+              <strong>
+                {findCourseTypeByKey(courseTypeFilter)?.name ||
+                  workshopMaster?.title ||
+                  COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
+              </strong>
+            </h2>
+            <div className="section-description">
+              <strong>
+                Join the 45 million individuals across 180 countries
+              </strong>{" "}
+              who have experienced the benefits of this distinctive 3-day course
+              (2.5 hours per day)
+            </div>
+          </div>
+          <div className="container calendar-course-type">
+            <div className="calendar-benefits-wrapper row">
+              <div className="col-12 col-lg-6 paddingRight">
+                <h2 className="section-title">
+                  <img src="/img/calendar.svg" /> Choose your Course Type
+                </h2>
+                <div className="scheduling-types__container">
+                  <label
+                    className="scheduling-types__label"
+                    for="online-type-course"
+                  >
+                    <input
+                      type="radio"
+                      className="scheduling-types__input"
+                      id="online-type-course"
+                      name="type-course"
+                      value={COURSE_MODES.ONLINE.value}
+                      checked={mode === COURSE_MODES.ONLINE.value}
+                      onChange={() =>
+                        handleSelectMode(COURSE_MODES.ONLINE.value)
+                      }
+                    />
+                    <span className="scheduling-types__background">Online</span>
+                  </label>
+
+                  <label
+                    className="scheduling-types__label"
+                    for="person-type-course"
+                  >
+                    <input
+                      type="radio"
+                      className="scheduling-types__input"
+                      id="person-type-course"
+                      name="type-course"
+                      value={COURSE_MODES.IN_PERSON.value}
+                      checked={mode === COURSE_MODES.IN_PERSON.value}
+                      onChange={() =>
+                        handleSelectMode(COURSE_MODES.IN_PERSON.value)
+                      }
+                    />
+                    <span className="scheduling-types__background">
+                      In-person
+                    </span>
+                  </label>
+
+                  <label
+                    className="scheduling-types__label"
+                    for="both-type-course"
+                  >
+                    <input
+                      type="radio"
+                      className="scheduling-types__input"
+                      id="both-type-course"
+                      name="type-course"
+                      value={COURSE_MODES_BOTH}
+                      checked={mode === COURSE_MODES_BOTH}
+                      onChange={() => handleSelectMode(COURSE_MODES_BOTH)}
+                    />
+                    <span className="scheduling-types__background">Both</span>
+                  </label>
+                </div>
+                <div className="course_price">
+                  <h5>Online course price: $295</h5>
+                  <p>Select the start date for this 3-day course</p>
+                </div>
+                <div className="scheduling-modal__content-calendar">
+                  <label>
+                    <Flatpickr
+                      ref={fp}
+                      data-enable-time
+                      onChange={handleFlatpickrOnChange}
+                      value={selectedDates}
+                      options={{
+                        allowInput: false,
+                        inline: true,
+                        mode: "multiple",
+                        enableTime: false,
+                        monthSelectorType: "static",
+                        dateFormat: "Y-m-d",
+                        minDate: "today",
+                        enable: enableDates || [],
+                      }}
+                      onMonthChange={onMonthChangeAction}
+                    />
+                  </label>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 borderLeft">
+                <div class="available-course-time">
+                  <div class="available-course-heading">
+                    <div class="clock_img">
+                      <img src="/img/calendar.svg" />
+                    </div>
+                    <div class="available-course-title">
+                      <h2 class="section-title"> Available Course Times</h2>
+                      <p>Based on the selected date range</p>
+                    </div>
+                  </div>
+                  <div
+                    class="scheduling-modal__content-country-select"
+                    data-select2-id="timezone"
+                  >
+                    <label data-select2-id="timezone">
+                      <Select2
+                        name="timezone"
+                        id="timezone"
+                        className="timezone select2-hidden-accessible"
+                        defaultValue={"EST"}
+                        multiple={false}
+                        data={timezones}
+                        onChange={handleTimezoneChange}
+                        value={timezoneFilter}
+                        options={{ minimumResultsForSearch: -1 }}
+                      />
+                    </label>
+                  </div>
+                  <div class="scheduling-types__location ">
+                    <label class="location-container">
+                      <div class="smart-input">
+                        <input
+                          class="custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%] scheduling-address"
+                          type="text"
+                          autocomplete="off"
+                          role="combobox"
+                          aria-autocomplete="list"
+                          aria-expanded="false"
+                          placeholder="Filter by zip code or city"
+                          value=""
+                        />
+                      </div>
+                    </label>
+                  </div>
+
+                  <div class="date_selection">
+                    <h2 class="scheduling-modal__content-ranges-title">
+                      Sep 10, 11 & 12 (3 days)
+                    </h2>
+
+                    <ul class="scheduling-modal__content-options">
+                      {workshops?.map((workshop, index) => {
+                        return (
+                          <WorkshopListItem
+                            key={workshop.id}
+                            workshop={workshop}
+                            index={index}
+                            selectedWorkshopId={selectedWorkshopId}
+                            handleWorkshopSelect={handleWorkshopSelect}
+                          />
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  <div class="agreement_selection">
+                    <ul class="agreement-options">
+                      <li class="agreement-options-content">
+                        <input
+                          type="checkbox"
+                          id="time-range-1"
+                          name="scheduling-options"
+                          value="a044o000009w7CuAAI"
+                        />
+                        <div class="agreement-text">
+                          <p>
+                            I agree to the Program Participant agreement
+                            including privacy and cancellation policy.
+                          </p>
+                        </div>
+                      </li>
+                      <li class="agreement-options-content">
+                        <input
+                          type="checkbox"
+                          id="time-range-2"
+                          name="scheduling-options"
+                          value="a044o000009w7CuAAI"
+                        />
+                        <div class="agreement-text">
+                          <p>
+                            I agree to the health information statement below. I
+                            represent that I am in good health, and I will
+                            inform the health info desk of any limiting health
+                            conditions before the course begins.
+                          </p>
+                        </div>
+                      </li>
+                    </ul>
+                    <p class="acknowledgment">
+                      <span>*</span>To proceed using Apple or Google Pay, kindly
+                      acknowledge the agreements above.
+                    </p>
+
+                    <button type="button" class="btn btn-continue">
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <LocationSearchModal />
+      </main>
+    </>
+  );
+};
+
+const WorkshopListItem = ({
+  workshop,
+  index,
+  selectedWorkshopId,
+  handleWorkshopSelect,
+}) => {
+  return (
+    <li
+      className={classNames("scheduling-modal__content-ranges", {
+        highlight: selectedWorkshopId === workshop.id,
+      })}
+      onClick={() => handleWorkshopSelect(workshop)}
+    >
+      <input
+        type="radio"
+        id={`time-range-${index + 1}`}
+        value={selectedWorkshopId}
+        name="scheduling-options"
+      />
+      <div class="scheduling-modal__content-option">
+        <ul class="scheduling-modal__content-ranges-variants">
+          {workshop?.timings &&
+            workshop.timings.map((time, i) => {
+              return (
+                <li className="scheduling-modal__content-ranges-row" key={i}>
+                  <div className="scheduling-modal__content-ranges-row-date">
+                    {dayjs.utc(time.startDate).format("ddd, D")}
+                  </div>
+                  <div className="scheduling-modal__content-ranges-row-time">
+                    {tConvert(time.startTime, true)} -{" "}
+                    {tConvert(time.endTime, true)}
+                  </div>
+                </li>
+              );
+            })}
+        </ul>
+      </div>
+    </li>
+  );
+};
+
+const LocationSearchModal = () => {
+  return (
+    <>
+      <Modal
+        show
+        backdrop="static"
+        className="location-search bd-example-modal-lg"
+        dialogClassName="modal-dialog modal-dialog-centered modal-lg"
+      >
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>
+          I<p>On which location would you prefer to schedule your courses?</p>
+          <br />
+          <div class="location-search-field">
+            <input
+              type="text"
+              id="fname"
+              name="fname"
+              placeholder="Filter by zip code or city"
+            />
+            <select name="miles" id="miles">
+              <option value="25miles">25 miles (40km)</option>
+              <option value="35miles">35 miles (50km)</option>
+              <option value="45miles">45 miles (60km)</option>
+              <option value="55miles">55 miles (70km)</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            data-dismiss="modal"
+            class="btn btn-primary find-courses"
+          >
+            Find Courses
+          </button>
+        </Modal.Body>
+      </Modal>
+      <div
+        class="location-search modal fade bd-example-modal-lg"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>
+                On which location would you prefer to schedule your courses?
+              </p>
+              <br />
+              <div class="location-search-field">
+                <input
+                  type="text"
+                  id="fname"
+                  name="fname"
+                  placeholder="Filter by zip code or city"
+                />
+                <select name="miles" id="miles">
+                  <option value="25miles">25 miles (40km)</option>
+                  <option value="35miles">35 miles (50km)</option>
+                  <option value="45miles">45 miles (60km)</option>
+                  <option value="55miles">55 miles (70km)</option>
+                </select>
+              </div>
+
+              <button
+                type="button"
+                data-dismiss="modal"
+                class="btn btn-primary find-courses"
+              >
+                Find Courses
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+SchedulingRange.noHeader = true;
+SchedulingRange.hideFooter = true;
+
+export default SchedulingRange;

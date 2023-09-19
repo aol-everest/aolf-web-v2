@@ -24,7 +24,8 @@
 @import './_react-tag';
 @import './rewards-modals/rewards-modals';
 @import './world-culture-festival';
-@import './scheduling-widget/scheduling-widget';
+// @import "./scheduling-widget/scheduling-widget";
+@import './scheduling-widget-v2/scheduling-widget-v2';
 @import './talk-widget/talk-widget';
 @import './courses/courses';
 @import './courses/reserve-card';
@@ -34,3 +35,4 @@
 @import './registration/registration-widget';
 @import './courses/art-of-silence';
 @import './courses/silence-retreat-page';
+@import './calendar_online/calendar_online';
