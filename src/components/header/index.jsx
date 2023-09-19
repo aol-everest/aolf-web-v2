@@ -110,14 +110,6 @@ const AOL_MENU = [
             name: "Sanyam",
             link: "/us-en/lp/sanyam",
           },
-          {
-            name: "All Courses",
-            link: "/us-en/course",
-          },
-          {
-            name: "Destination Retreats",
-            link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/?utm_source=organic&utm_medium=home&utm_content=destinationretreats",
-          },
         ],
       },
     ],
@@ -447,7 +439,9 @@ export const Header = () => {
                       : menu.subHeading?.map((subMenu) => {
                           return (
                             <>
-                              <h6 class="dropdown-header">{subMenu.name}</h6>
+                              <h6 class="dropdown-header pt-2rem">
+                                {subMenu.name}
+                              </h6>
                               {subMenu?.items.map((submenu) => {
                                 return (
                                   <NavDropdown.Item
