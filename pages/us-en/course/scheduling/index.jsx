@@ -219,6 +219,7 @@ const SchedulingRange = () => {
           }
         }, 100);
         track("click_calendar", {
+          screen_name: "course_search_scheduling",
           course_type:
             courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
           location_type: mode,
