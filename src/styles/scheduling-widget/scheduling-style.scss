@@ -1598,7 +1598,6 @@ button.scheduling-modal__continue[disabled] {
 }
 
 .tickets-modal {
-  position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
@@ -1606,7 +1605,6 @@ button.scheduling-modal__continue[disabled] {
   align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 100vh;
   background-color: rgba(113, 117, 139, 0.8);
 }
 .tickets-modal input::-webkit-outer-spin-button,
@@ -1682,19 +1680,15 @@ button.scheduling-modal__continue[disabled] {
   display: flex;
   align-items: stretch;
   gap: 20px;
-  max-width: 1300px;
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   padding: 40px;
-  border-radius: 20px;
   background-color: #fff;
 }
 .tickets-modal__container.products .tickets-modal__section-products {
   display: block;
 }
-.tickets-modal__container.products .tickets-modal__section-checkout {
-  display: none;
-}
+
 .tickets-modal__container.checkout .tickets-modal__section-products {
   display: none;
 }
@@ -1958,7 +1952,7 @@ button.scheduling-modal__continue[disabled] {
   text-decoration-line: underline;
 }
 .tickets-modal__footer-button {
-  width: 50%;
+  width: 100%;
   padding: 16px 24px;
   background-color: #fca248;
   border-radius: 44px;

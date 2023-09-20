@@ -1,0 +1,92 @@
+<svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                    >
+                      <g clip-path="url(#clip0_1967_3258)">
+                        <mask
+                          id="mask0_1967_3258"
+                          style="mask-type:luminance"
+                          maskUnits="userSpaceOnUse"
+                          x="0"
+                          y="0"
+                          width="32"
+                          height="32"
+                        >
+                          <path d="M32 0H0V32H32V0Z" fill="white" />
+                        </mask>
+                        <g mask="url(#mask0_1967_3258)">
+                          <mask
+                            id="mask1_1967_3258"
+                            style="mask-type:luminance"
+                            maskUnits="userSpaceOnUse"
+                            x="0"
+                            y="0"
+                            width="32"
+                            height="32"
+                          >
+                            <path
+                              d="M0 1.90735e-06H32V32H0V1.90735e-06Z"
+                              fill="white"
+                            />
+                          </mask>
+                          <g mask="url(#mask1_1967_3258)">
+                            <path
+                              d="M29.0625 26H2.9375C1.83294 26 0.9375 25.1046 0.9375 24V8C0.9375 6.89544 1.83294 6 2.9375 6H29.0625C30.1671 6 31.0625 6.89544 31.0625 8V24C31.0625 25.1046 30.1671 26 29.0625 26Z"
+                              stroke="#FF9E1B"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                            <path
+                              d="M1 10H31"
+                              stroke="#FF9E1B"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                            <path
+                              d="M31 14H1"
+                              stroke="#FF9E1B"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                            <path
+                              d="M27.5 22.5H21.5V18.5H27.5V22.5Z"
+                              stroke="#FF9E1B"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                            <path
+                              d="M4.5 19H7"
+                              stroke="#FF9E1B"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                            <path
+                              d="M4.5 22.5H9"
+                              stroke="#FF9E1B"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_1967_3258">
+                          <rect width="32" height="32" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
