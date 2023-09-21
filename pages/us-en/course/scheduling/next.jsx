@@ -50,19 +50,19 @@ const TIMEZONES = [
 const MILES = [
   {
     text: "25 miles (40km)",
-    id: "25miles",
+    id: "25",
   },
   {
     text: "35 miles (50km)",
-    id: "35miles",
+    id: "35",
   },
   {
     text: "45 miles (60km)",
-    id: "45miles",
+    id: "45",
   },
   {
     text: "55 miles (70km)",
-    id: "55miles",
+    id: "55",
   },
 ];
 
@@ -122,7 +122,7 @@ const SchedulingRange = () => {
     defaultValue: "EST",
   });
   const [milesFilter, setMilesFilter] = useQueryString("miles", {
-    defaultValue: "25miles",
+    defaultValue: "25",
   });
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
@@ -244,7 +244,14 @@ const SchedulingRange = () => {
   });
 
   const { data: workshops = [] } = useQuery(
-    ["workshops", selectedDates, timezoneFilter, mode, locationFilter],
+    [
+      "workshops",
+      selectedDates,
+      timezoneFilter,
+      mode,
+      locationFilter,
+      milesFilter,
+    ],
     async () => {
       let param = {
         timeZone: timezoneFilter,
@@ -265,7 +272,10 @@ const SchedulingRange = () => {
           };
         }
       }
-      if (mode) {
+      if (milesFilter) {
+        param = { ...param, radius: milesFilter };
+      }
+      if (mode && mode !== COURSE_MODES_BOTH) {
         param = { ...param, mode };
       }
       const response = await api.get({

@@ -4,6 +4,116 @@
 @import './scheduling-final-step';
 @import './scheduling-custom-calendar';
 
+.scheduling-modal__content-total-location,
+.scheduling-modal__content-total-contacts {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: rgba(38, 38, 39, 0.6);
+  font-family: Work Sans, sans-serif;
+  font-size: 12px;
+  line-height: 12px;
+}
+.scheduling-modal__content-total-location::before,
+.scheduling-modal__content-total-contacts::before {
+  margin-right: 8px;
+}
+@media screen and (max-width: 1200px) {
+  .scheduling-modal__content-total-location,
+  .scheduling-modal__content-total-contacts {
+    display: block;
+  }
+}
+
+.scheduling-modal__content-total-location {
+  margin-bottom: 8px;
+}
+.scheduling-modal__content-total-location:not(.show) {
+  display: none;
+  visibility: hidden;
+}
+.scheduling-modal__content-total-location::before {
+  content: url('/img/location.svg');
+}
+@media screen and (max-width: 1200px) {
+  .scheduling-modal__content-total-location {
+    margin-bottom: 15px;
+  }
+}
+
+.scheduling-modal__coupon-label {
+  color: #262627;
+  font-family: Work Sans;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  margin-bottom: 12px;
+  order: -1;
+}
+
+.tickets-modal__input {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(38, 38, 39, 0.8);
+  font-family: Work Sans;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+}
+
+.tickets-modal__input:not(.with-placeholder)::placeholder {
+  color: #fff;
+}
+.tickets-modal__input-label {
+  position: relative;
+  width: 100%;
+  height: max-content;
+}
+.tickets-modal__input-label--top {
+  display: flex;
+  flex-direction: column;
+}
+.tickets-modal__input-label--top .tickets-modal__input::placeholder {
+  color: rgba(38, 38, 39, 0.8);
+  font-family: Work Sans;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+}
+.tickets-modal__input-placeholder {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.25s ease;
+}
+.scheduling-modal__content-wrapper .tickets-modal__input-placeholder {
+  font-size: 1rem;
+}
+.tickets-modal__input-placeholder--top {
+  order: -1;
+  color: #fca248;
+  font-family: Work Sans;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  text-transform: uppercase;
+  margin: 0px 0px 4px 20px;
+}
+.tickets-modal__input:focus + .tickets-modal__input-placeholder,
+.tickets-modal__input:not(:placeholder-shown)
+  + .tickets-modal__input-placeholder {
+  top: -12px;
+  background-color: #fff;
+  padding: 0px 2px;
+  transform: inherit;
+}
+.scheduling-modal__coupon {
+  margin: 16px 0;
+}
+
 .checkout-header {
   display: flex;
   align-items: center;
