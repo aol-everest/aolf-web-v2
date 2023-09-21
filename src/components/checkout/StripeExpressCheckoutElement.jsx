@@ -30,7 +30,8 @@ export const StripeExpressCheckoutElement = ({ workshop }) => {
     appearance: {
       theme: "stripe",
       variables: {
-        borderRadius: "36px",
+        borderRadius: "8px",
+        height: "62.5px",
       },
     },
   };

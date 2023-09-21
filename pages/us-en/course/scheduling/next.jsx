@@ -24,7 +24,7 @@ dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = "both";
 
-const timezones = [
+const TIMEZONES = [
   {
     timezone: "US/Eastern",
     text: "Eastern Time - US & Canada",
@@ -47,11 +47,71 @@ const timezones = [
   },
 ];
 
+const MILES = [
+  {
+    text: "25 miles (40km)",
+    id: "25miles",
+  },
+  {
+    text: "35 miles (50km)",
+    id: "35miles",
+  },
+  {
+    text: "45 miles (60km)",
+    id: "45miles",
+  },
+  {
+    text: "55 miles (70km)",
+    id: "55miles",
+  },
+];
+
+function formatDateWithMonth(dateString) {
+  const options = { month: "short", day: "numeric" };
+  return new Date(dateString).toLocaleDateString("en-US", options);
+}
+
+function formatDateOnly(dateString) {
+  const options = { day: "numeric" };
+  return new Date(dateString).toLocaleDateString("en-US", options);
+}
+
+function formatDates(dates) {
+  const numDates = dates.length;
+
+  if (numDates === 0) {
+    return "";
+  } else if (numDates === 1) {
+    return formatDateWithMonth(dates[0]);
+  } else {
+    const [firstDate, ...rest] = dates;
+    const lastDate = new Date(dates[numDates - 1]);
+    const numDays = numDates;
+    const formattedDates = [
+      formatDateWithMonth(firstDate),
+      ...rest.map((date) => formatDateOnly(date)),
+    ];
+
+    // Check if the dates span across multiple months
+    if (new Date(firstDate).getMonth() !== lastDate.getMonth()) {
+      const lastDateFormatted = formatDateWithMonth(dates[numDates - 1]);
+      return `${formattedDates
+        .slice(0, -1)
+        .join(", ")} & ${lastDateFormatted} (${numDays} days)`;
+    } else {
+      return `${formattedDates
+        .slice(0, -1)
+        .join(", ")} & ${formattedDates.slice(-1)} (${numDays} days)`;
+    }
+  }
+}
+
 const SchedulingRange = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const [courseTypeFilter] = useQueryString("courseType", {
     defaultValue: "SKY_BREATH_MEDITATION",
   });
@@ -60,6 +120,9 @@ const SchedulingRange = () => {
   });
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
+  });
+  const [milesFilter, setMilesFilter] = useQueryString("miles", {
+    defaultValue: "25miles",
   });
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
@@ -153,6 +216,10 @@ const SchedulingRange = () => {
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
   });
+
+  const handleModalToggle = () => {
+    setShowLocationModal(!showLocationModal);
+  };
 
   function getGroupedUniqueEventIds(response) {
     const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
@@ -260,6 +327,11 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(null);
   };
 
+  const handleMilesChange = (ev) => {
+    ev.preventDefault();
+    setMilesFilter(ev?.target?.value);
+  };
+
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
@@ -272,8 +344,8 @@ const SchedulingRange = () => {
   };
 
   const handleSelectMode = (value) => {
-    if (mode !== COURSE_MODES.IN_PERSON.value) {
-      handleLocationFilterChange({});
+    if (value !== COURSE_MODES.ONLINE.value) {
+      setShowLocationModal(true);
     }
     setMode(value);
     setActiveWorkshop(null);
@@ -471,33 +543,29 @@ const SchedulingRange = () => {
                         className="timezone select2-hidden-accessible"
                         defaultValue={"EST"}
                         multiple={false}
-                        data={timezones}
+                        data={TIMEZONES}
                         onChange={handleTimezoneChange}
                         value={timezoneFilter}
                         options={{ minimumResultsForSearch: -1 }}
                       />
                     </label>
                   </div>
-                  <div class="scheduling-types__location ">
-                    <label class="location-container">
-                      <div class="smart-input">
-                        <input
-                          class="custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%] scheduling-address"
-                          type="text"
-                          autocomplete="off"
-                          role="combobox"
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          placeholder="Filter by zip code or city"
-                          value=""
-                        />
-                      </div>
-                    </label>
-                  </div>
+                  {mode !== COURSE_MODES.ONLINE.value && (
+                    <div class="scheduling-types__location ">
+                      <ScheduleLocationFilter
+                        handleLocationChange={handleLocationFilterChange}
+                        value={locationFilter}
+                        containerClass="location-container"
+                        listClassName="result-list"
+                      />
+                    </div>
+                  )}
 
                   <div class="date_selection">
                     <h2 class="scheduling-modal__content-ranges-title">
-                      Sep 10, 11 & 12 (3 days)
+                      {selectedDates &&
+                        selectedDates.length > 0 &&
+                        formatDates(selectedDates)}
                     </h2>
 
                     <ul class="scheduling-modal__content-options">
@@ -512,48 +580,25 @@ const SchedulingRange = () => {
                           />
                         );
                       })}
+                      {workshops.length === 0 && (
+                        <li className="scheduling-modal__content-option scheduling-no-data">
+                          No Workshop Found
+                        </li>
+                      )}
                     </ul>
                   </div>
 
                   <div class="agreement_selection">
-                    <ul class="agreement-options">
-                      <li class="agreement-options-content">
-                        <input
-                          type="checkbox"
-                          id="time-range-1"
-                          name="scheduling-options"
-                          value="a044o000009w7CuAAI"
-                        />
-                        <div class="agreement-text">
-                          <p>
-                            I agree to the Program Participant agreement
-                            including privacy and cancellation policy.
-                          </p>
-                        </div>
-                      </li>
-                      <li class="agreement-options-content">
-                        <input
-                          type="checkbox"
-                          id="time-range-2"
-                          name="scheduling-options"
-                          value="a044o000009w7CuAAI"
-                        />
-                        <div class="agreement-text">
-                          <p>
-                            I agree to the health information statement below. I
-                            represent that I am in good health, and I will
-                            inform the health info desk of any limiting health
-                            conditions before the course begins.
-                          </p>
-                        </div>
-                      </li>
-                    </ul>
-                    <p class="acknowledgment">
-                      <span>*</span>To proceed using Apple or Google Pay, kindly
-                      acknowledge the agreements above.
-                    </p>
+                    {activeWorkshop && activeWorkshop.id && (
+                      <StripeExpressCheckoutElement workshop={activeWorkshop} />
+                    )}
 
-                    <button type="button" class="btn btn-continue">
+                    <button
+                      type="button"
+                      class="btn btn-continue tw-mt-5"
+                      disabled={!selectedWorkshopId}
+                      onClick={goToPaymentModal}
+                    >
                       Continue
                     </button>
                   </div>
@@ -562,7 +607,14 @@ const SchedulingRange = () => {
             </div>
           </div>
         </section>
-        <LocationSearchModal />
+        <LocationSearchModal
+          handleModalToggle={handleModalToggle}
+          showLocationModal={showLocationModal}
+          milesFilter={milesFilter}
+          handleMilesChange={handleMilesChange}
+          locationFilter={locationFilter}
+          handleLocationFilterChange={handleLocationFilterChange}
+        />
       </main>
     </>
   );
@@ -609,97 +661,55 @@ const WorkshopListItem = ({
   );
 };
 
-const LocationSearchModal = () => {
+const LocationSearchModal = ({
+  handleModalToggle,
+  showLocationModal,
+  milesFilter,
+  handleMilesChange,
+  locationFilter,
+  handleLocationFilterChange,
+}) => {
   return (
-    <>
-      <Modal
-        show
-        backdrop="static"
-        className="location-search bd-example-modal-lg"
-        dialogClassName="modal-dialog modal-dialog-centered modal-lg"
-      >
-        <Modal.Header closeButton></Modal.Header>
-        <Modal.Body>
-          I<p>On which location would you prefer to schedule your courses?</p>
-          <br />
-          <div class="location-search-field">
-            <input
-              type="text"
-              id="fname"
-              name="fname"
-              placeholder="Filter by zip code or city"
+    <Modal
+      show={showLocationModal}
+      onHide={handleModalToggle}
+      backdrop="static"
+      className="location-search bd-example-modal-lg"
+      dialogClassName="modal-dialog modal-dialog-centered modal-lg"
+    >
+      <Modal.Header closeButton></Modal.Header>
+      <Modal.Body>
+        <p>On which location would you prefer to schedule your courses?</p>
+        <br />
+        <div class="location-search-field">
+          <ScheduleLocationFilter
+            handleLocationChange={handleLocationFilterChange}
+            value={locationFilter}
+            containerClass="location-input"
+            listClassName="result-list"
+          />
+          <div class="miles-input">
+            <Select2
+              name="miles"
+              id="miles"
+              defaultValue={"25miles"}
+              multiple={false}
+              data={MILES}
+              onChange={handleMilesChange}
+              value={milesFilter}
+              options={{ minimumResultsForSearch: -1 }}
             />
-            <select name="miles" id="miles">
-              <option value="25miles">25 miles (40km)</option>
-              <option value="35miles">35 miles (50km)</option>
-              <option value="45miles">45 miles (60km)</option>
-              <option value="55miles">55 miles (70km)</option>
-            </select>
-          </div>
-          <button
-            type="button"
-            data-dismiss="modal"
-            class="btn btn-primary find-courses"
-          >
-            Find Courses
-          </button>
-        </Modal.Body>
-      </Modal>
-      <div
-        class="location-search modal fade bd-example-modal-lg"
-        id="exampleModal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div
-          class="modal-dialog modal-dialog-centered modal-lg"
-          role="document"
-        >
-          <div class="modal-content">
-            <div class="modal-header">
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>
-                On which location would you prefer to schedule your courses?
-              </p>
-              <br />
-              <div class="location-search-field">
-                <input
-                  type="text"
-                  id="fname"
-                  name="fname"
-                  placeholder="Filter by zip code or city"
-                />
-                <select name="miles" id="miles">
-                  <option value="25miles">25 miles (40km)</option>
-                  <option value="35miles">35 miles (50km)</option>
-                  <option value="45miles">45 miles (60km)</option>
-                  <option value="55miles">55 miles (70km)</option>
-                </select>
-              </div>
-
-              <button
-                type="button"
-                data-dismiss="modal"
-                class="btn btn-primary find-courses"
-              >
-                Find Courses
-              </button>
-            </div>
           </div>
         </div>
-      </div>
-    </>
+        <button
+          type="button"
+          data-dismiss="modal"
+          class="btn btn-primary find-courses"
+        >
+          Find Courses
+        </button>
+      </Modal.Body>
+    </Modal>
   );
 };
 
