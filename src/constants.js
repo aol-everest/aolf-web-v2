@@ -53,7 +53,7 @@ export const PAYMENT_MODES = {
 export const COURSE_MODES = {
   ONLINE: {
     name: "Online",
-    value: "online",
+    value: "Online",
   },
   IN_PERSON: {
     name: "In Person",

@@ -168,6 +168,7 @@ const SchedulingRange = () => {
       timezoneFilter,
       mode,
       locationFilter,
+      milesFilter,
     ],
     async () => {
       let param = {
@@ -179,6 +180,9 @@ const SchedulingRange = () => {
       };
       if (mode && mode !== COURSE_MODES_BOTH) {
         param = { ...param, mode };
+      }
+      if (milesFilter) {
+        param = { ...param, radius: milesFilter };
       }
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};
@@ -300,6 +304,7 @@ const SchedulingRange = () => {
           }
         }, 100);
         track("click_calendar", {
+          screen_name: "course_search_scheduling",
           course_type:
             courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
           location_type: mode,
@@ -354,12 +359,13 @@ const SchedulingRange = () => {
   };
 
   const handleSelectMode = (value) => {
-    if (value !== COURSE_MODES.ONLINE.value) {
+    if (value !== COURSE_MODES.ONLINE.value && !locationFilter) {
       setShowLocationModal(true);
     }
     setMode(value);
     setActiveWorkshop(null);
     setSelectedWorkshopId(null);
+    setSelectedDates([]);
   };
 
   const onMonthChangeAction = (e, d, instance) => {
@@ -506,7 +512,10 @@ const SchedulingRange = () => {
                   </label>
                 </div>
                 <div className="course_price">
-                  <h5>Online course price: $295</h5>
+                  <h5>
+                    {mode !== COURSE_MODES_BOTH ? mode : ""} course price: $
+                    {workshopMaster.unitPrice}
+                  </h5>
                   <p>Select the start date for this 3-day course</p>
                 </div>
                 <div className="scheduling-modal__content-calendar">
@@ -715,6 +724,7 @@ const LocationSearchModal = ({
           type="button"
           data-dismiss="modal"
           class="btn btn-primary find-courses"
+          onClick={handleModalToggle}
         >
           Find Courses
         </button>
@@ -724,6 +734,5 @@ const LocationSearchModal = ({
 };
 
 SchedulingRange.noHeader = true;
-SchedulingRange.hideFooter = true;
 
 export default SchedulingRange;
