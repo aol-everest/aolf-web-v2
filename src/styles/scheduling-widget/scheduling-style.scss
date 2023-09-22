@@ -523,7 +523,7 @@
 }
 @media screen and (max-width: 991px) {
   .scheduling-modal__content-calendar .dayContainer {
-    column-gap: 10px;
+    column-gap: 6px;
   }
 }
 .scheduling-modal__content-calendar .flatpickr-days,
@@ -663,6 +663,8 @@
 @media screen and (max-width: 991px) {
   .scheduling-modal__content-calendar .flatpickr-day.selected:before {
     height: 38px;
+    width: 45px;
+    border-radius: 4px;
   }
 }
 .scheduling-modal__content-country-select label,
@@ -1437,6 +1439,12 @@ button.scheduling-modal__continue[disabled] {
 
 .select2-container--default
   .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: #fef5ec;
+  color: #fca248;
+}
+
+.select2-container--default
+  .select2-results__option--highlighted[aria-selected] {
   background-color: #fef5ec;
   color: #fca248;
 }
