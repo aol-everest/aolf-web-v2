@@ -8,3 +8,4 @@ export { SanyamCourse } from "./SanyamCourse";
 export { SilentRetreat } from "./SilentRetreat";
 export { SriSriYoga } from "./SriSriYoga";
 export { VolunteerTrainingProgram } from "./VolunteerTrainingProgram";
+export { SKYWithSahaj } from "./SKYWithSahaj";

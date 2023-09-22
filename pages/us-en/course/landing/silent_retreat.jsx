@@ -4,8 +4,8 @@ import { NextSeo } from "next-seo";
 export default function SilentRetreat() {
   return (
     <>
-      <NextSeo title="Silent retreat" />
-      <SKYSilentRetreat data={{ title: "Silent retreat" }} />
+      <NextSeo title="Silent Retreat" />
+      <SKYSilentRetreat data={{ title: "Silent Retreat" }} />
     </>
   );
 }

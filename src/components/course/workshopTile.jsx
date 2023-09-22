@@ -64,7 +64,9 @@ export const WorkshopTile = ({ data, authenticated }) => {
     COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0 ||
     COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(productTypeId) >=
       0 ||
-    COURSE_TYPES.SANYAM_COURSE.value.indexOf(productTypeId) >= 0;
+    COURSE_TYPES.SANYAM_COURSE.value.indexOf(productTypeId) >= 0 ||
+    COURSE_TYPES.ART_OF_LIVING_PREMIUM_PROGRAM.value.indexOf(productTypeId) >=
+      0;
 
   const coTeacherNames = [coTeacher1Name, coTeacher2Name];
   let extraTeachers = 0;
