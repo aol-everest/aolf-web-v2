@@ -250,7 +250,7 @@ const SchedulingRange = () => {
 
   enableDates = [...enableDates, ...selectedDates];
 
-  const { data: workshops = [] } = useQuery(
+  const { data: workshops = [], isLoading: isLoadingWorkshops } = useQuery(
     [
       "workshops",
       selectedDates,
@@ -427,7 +427,9 @@ const SchedulingRange = () => {
       <header className="checkout-header">
         <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
       </header>
-      {(loading || isLoading) && <div className="cover-spin"></div>}
+      {(loading || isLoading || isLoadingWorkshops) && (
+        <div className="cover-spin"></div>
+      )}
       <main className="course-filter calendar-online">
         <section className="calendar-top-section">
           <div className="container calendar-benefits-section">
@@ -603,17 +605,23 @@ const SchedulingRange = () => {
 
                   <div class="agreement_selection">
                     {activeWorkshop && activeWorkshop.id && (
-                      <StripeExpressCheckoutElement workshop={activeWorkshop} />
+                      <StripeExpressCheckoutElement
+                        workshop={activeWorkshop}
+                        goToPaymentModal={goToPaymentModal}
+                        selectedWorkshopId={selectedWorkshopId}
+                      />
                     )}
 
-                    <button
-                      type="button"
-                      class="btn btn-continue tw-mt-5"
-                      disabled={!selectedWorkshopId}
-                      onClick={goToPaymentModal}
-                    >
-                      Continue
-                    </button>
+                    {!activeWorkshop && (
+                      <button
+                        type="button"
+                        class="btn btn-continue tw-mt-5"
+                        disabled={!selectedWorkshopId}
+                        onClick={goToPaymentModal}
+                      >
+                        Continue
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

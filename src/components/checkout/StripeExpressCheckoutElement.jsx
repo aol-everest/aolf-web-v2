@@ -18,7 +18,11 @@ import { useRouter } from "next/router";
 import Style from "./StripeExpressCheckoutElement.module.scss";
 import { BiErrorCircle } from "react-icons/bi";
 
-export const StripeExpressCheckoutElement = ({ workshop }) => {
+export const StripeExpressCheckoutElement = ({
+  workshop,
+  goToPaymentModal,
+  selectedWorkshopId,
+}) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const { fee } = priceCalculation({
     workshop,
@@ -37,7 +41,11 @@ export const StripeExpressCheckoutElement = ({ workshop }) => {
   };
   return (
     <Elements stripe={stripePromise} options={elementsOptions}>
-      <CheckoutPage workshop={workshop} />
+      <CheckoutPage
+        workshop={workshop}
+        goToPaymentModal={goToPaymentModal}
+        selectedWorkshopId={selectedWorkshopId}
+      />
     </Elements>
   );
 };
@@ -54,7 +62,7 @@ const options = {
   paymentMethodOrder: ["apple_pay", "google_pay"],
 };
 
-const CheckoutPage = ({ workshop }) => {
+const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -214,6 +222,14 @@ const CheckoutPage = ({ workshop }) => {
                   onConfirm={onConfirm}
                   onClick={expressCheckoutElementOnClick}
                 />
+                <button
+                  type="button"
+                  class="btn btn-continue tw-mt-5"
+                  disabled={!selectedWorkshopId}
+                  onClick={goToPaymentModal}
+                >
+                  Continue
+                </button>
               </div>
             </>
           );
