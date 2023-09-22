@@ -5,7 +5,7 @@ export default function SilentRetreat() {
   return (
     <>
       <NextSeo title="Silent retreat" />
-      <SKYSilentRetreat data={{ title: "Silent retreat" }} />
+      <SKYSilentRetreat data={{ title: "Silent Retreat" }} />
     </>
   );
 }
