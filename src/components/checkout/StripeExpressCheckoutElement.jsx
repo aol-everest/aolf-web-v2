@@ -203,8 +203,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                 <div className={Style.pay_message}>
                   <BiErrorCircle />
                   {"  "}
-                  To proceed using Apple or Google Pay, kindly acknowledge the
-                  agreements above.
+                  To proceed, kindly acknowledge the agreements above.
                 </div>
               )}
 
