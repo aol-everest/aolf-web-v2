@@ -26,17 +26,36 @@ import { SchedulePhoneInput } from "@components/schedulingPhoneInput";
 import { replaceRouteWithUTMQuery } from "@service";
 import { useEffectOnce } from "react-use";
 import { useAnalytics } from "use-analytics";
+import isUrl from "is-url";
 
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
 
-const SchedulingPayment = () => {
+function getDomainFromUrl(url) {
+  if (!isUrl(url)) {
+    return url;
+  }
+  const domain = new URL(url);
+  return domain.origin;
+}
+
+export const getServerSideProps = async (context) => {
+  const referringURL = context.req.headers.referer || "";
+  const requestingURL = context.req.reqPath || "";
+  return { props: { referringURL, requestingURL } };
+};
+
+const SchedulingPayment = (props) => {
   const router = useRouter();
   const [discount] = useQueryString("discountCode");
   const [courseType] = useQueryString("courseType");
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const { track, page } = useAnalytics();
+
+  const isReferBySameSite =
+    getDomainFromUrl(props.referringURL) ===
+    getDomainFromUrl(process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT);
 
   const {
     data: workshop,
@@ -190,6 +209,7 @@ const SchedulingPayment = () => {
               router={router}
               track={track}
               courseType={courseType}
+              isReferBySameSite={isReferBySameSite}
             />
           </Elements>
         </div>
@@ -208,6 +228,7 @@ const SchedulingPaymentForm = ({
   router,
   track,
   courseType,
+  isReferBySameSite,
 }) => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -241,7 +262,7 @@ const SchedulingPaymentForm = ({
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
         key: current.questionSfid,
-        value: false,
+        value: isReferBySameSite,
       }))
     : [];
 
@@ -479,7 +500,7 @@ const SchedulingPaymentForm = ({
           lastName: "",
           email: "",
           questionnaire: questionnaireArray,
-          ppaAgreement: false,
+          ppaAgreement: isReferBySameSite,
           couponCode: discount ? discount : "",
           contactPhone: "",
         }}
