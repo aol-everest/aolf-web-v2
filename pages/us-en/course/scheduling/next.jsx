@@ -240,12 +240,15 @@ const SchedulingRange = () => {
     return values(pairOfTimingAndEventId);
   }
 
-  const enableDates = dateAvailable.map((da) => {
-    return {
-      from: da.firstDate,
-      to: da.allDates[da.allDates.length - 1],
-    };
+  let enableDates = dateAvailable.map((da) => {
+    return da.firstDate;
+    // return {
+    //   from: da.firstDate,
+    //   to: da.allDates[da.allDates.length - 1],
+    // };
   });
+
+  enableDates = [...enableDates, ...selectedDates];
 
   const { data: workshops = [] } = useQuery(
     [
@@ -373,15 +376,11 @@ const SchedulingRange = () => {
   };
 
   const getDates = (startDate, stopDate) => {
-    const addDays = (date, days) => {
-      date.setDate(date.getDate() + days);
-      return date;
-    };
     let dateArray = [];
     let currentDate = startDate;
     while (currentDate <= stopDate) {
-      dateArray.push(new Date(currentDate));
-      currentDate = addDays(new Date(currentDate), 1);
+      dateArray.push(currentDate.toDate());
+      currentDate = currentDate.add(1, "days");
     }
     return dateArray;
   };
@@ -390,23 +389,20 @@ const SchedulingRange = () => {
     if (selectedDates.length > 0 && dateStr !== "update") {
       const today = moment(selectedDates[selectedDates.length - 1]);
       let intervalSelected = [];
-      for (const enableItem of instance.config._enable) {
-        const fromMoment = moment(enableItem.from);
-        const toMoment = moment(enableItem.to);
-        const isWithinRange = today.isBetween(
-          fromMoment,
-          toMoment,
-          "days",
-          "[]",
+      for (const enableItem of dateAvailable) {
+        const fromMoment = moment(enableItem.firstDate);
+        const toMoment = moment(
+          enableItem.allDates[enableItem.allDates.length - 1],
         );
-
+        const isWithinRange = today.isSame(fromMoment, "date");
         if (isWithinRange) {
-          intervalSelected = getDates(enableItem.from, enableItem.to);
+          intervalSelected = getDates(fromMoment, toMoment);
           break; // Exit the loop when the condition is true
         }
       }
 
       instance.selectedDates = [...intervalSelected];
+
       selectedDates = [...intervalSelected];
 
       instance.setDate(intervalSelected);
@@ -519,25 +515,23 @@ const SchedulingRange = () => {
                   <p>Select the start date for this 3-day course</p>
                 </div>
                 <div className="scheduling-modal__content-calendar">
-                  <label>
-                    <Flatpickr
-                      ref={fp}
-                      data-enable-time
-                      onChange={handleFlatpickrOnChange}
-                      value={selectedDates}
-                      options={{
-                        allowInput: false,
-                        inline: true,
-                        mode: "multiple",
-                        enableTime: false,
-                        monthSelectorType: "static",
-                        dateFormat: "Y-m-d",
-                        minDate: "today",
-                        enable: enableDates || [],
-                      }}
-                      onMonthChange={onMonthChangeAction}
-                    />
-                  </label>
+                  <Flatpickr
+                    ref={fp}
+                    data-enable-time
+                    onChange={handleFlatpickrOnChange}
+                    value={selectedDates}
+                    options={{
+                      allowInput: false,
+                      inline: true,
+                      mode: "multiple",
+                      enableTime: false,
+                      monthSelectorType: "static",
+                      dateFormat: "Y-m-d",
+                      minDate: "today",
+                      enable: enableDates || [],
+                    }}
+                    onMonthChange={onMonthChangeAction}
+                  />
                 </div>
               </div>
               <div class="col-12 col-lg-6 borderLeft">
