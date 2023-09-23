@@ -55,28 +55,28 @@ export const SanyamCourse = ({ data, swiperOption }) => {
 
   return (
     <>
-      <main class="sanyam">
-        <section class="about-course about-course--sanyam sanyam__section !tw-pt-[0px]">
-          <div class="about-program__image about-program__image--height-auto about-course__image about-course__image_desktop">
+      <main className="sanyam">
+        <section className="about-course about-course--sanyam sanyam__section !tw-pt-[0px]">
+          <div className="about-program__image about-program__image--height-auto about-course__image about-course__image_desktop">
             <img src="/img/sanyam-top-column.jpg" alt="sanyam" />
           </div>
 
-          <div class="about-program__image about-program__image--height-auto about-course__image about-course__image_mobile">
+          <div className="about-program__image about-program__image--height-auto about-course__image about-course__image_mobile">
             <img src="/img/sanyam-top-column-mobile.jpg" alt="sanyam" />
           </div>
-          <div class="container">
-            <div class="row tw-pt-[50px]">
-              <div class="col-lg-7">
-                <div class="about-course__main">
-                  <p class="about-program__main-type">{mode}</p>
-                  <h1 class="about-course__main-name about-course__main-name--font-size">
+          <div className="container">
+            <div className="row tw-pt-[50px]">
+              <div className="col-lg-7">
+                <div className="about-course__main">
+                  <p className="about-program__main-type">{mode}</p>
+                  <h1 className="about-course__main-name about-course__main-name--font-size">
                     {title}
                   </h1>
 
-                  <p class="about-program__main-type about-program__main-type--small">
+                  <p className="about-program__main-type about-program__main-type--small">
                     Sanyam
                   </p>
-                  <ul class="about-course__main-list about-course__main-list_small">
+                  <ul className="about-course__main-list about-course__main-list_small">
                     <li>
                       Gain profound understanding and direct experience of
                       yoga’s timeless wisdom
@@ -91,10 +91,10 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                       journey of self inquiry
                     </li>
                   </ul>
-                  <div class="about-course-box-button--center">
+                  <div className="about-course-box-button--center">
                     <button
                       type="button"
-                      class="btn_box_secondary about-course-button"
+                      className="btn_box_secondary about-course-button"
                       onClick={handleUpcomingSanyamCourse}
                     >
                       Find an Upcoming Course
@@ -106,61 +106,63 @@ export const SanyamCourse = ({ data, swiperOption }) => {
           </div>
         </section>
 
-        <section class="magic-inside magic-inside--sanyam sanyam__section">
-          <div class="magic-inside__container container">
-            <div class="magic-inside__content">
-              <h2 class="magic-inside__title">Unlock the Magic Inside You</h2>
+        <section className="magic-inside magic-inside--sanyam sanyam__section">
+          <div className="magic-inside__container container">
+            <div className="magic-inside__content">
+              <h2 className="magic-inside__title">
+                Unlock the Magic Inside You
+              </h2>
 
-              <p class="magic-inside__subtitle">
+              <p className="magic-inside__subtitle">
                 Upgrade your life with new techniques that lead to:
               </p>
-              <ul class="magic-inside__list">
-                <li class="magic-inside__item">
+              <ul className="magic-inside__list">
+                <li className="magic-inside__item">
                   <img
-                    class="magic-inside__icon"
+                    className="magic-inside__icon"
                     src="/img/ic-check-fade.svg"
                     alt="magic-inside-icon"
                   />
-                  <div class="magic-inside__text">
+                  <div className="magic-inside__text">
                     Deepened Insight and Awareness
                   </div>
                 </li>
 
-                <li class="magic-inside__item">
+                <li className="magic-inside__item">
                   <img
-                    class="magic-inside__icon"
+                    className="magic-inside__icon"
                     src="/img/ic-check-fade.svg"
                     alt="magic-inside-icon"
                   />
-                  <div class="magic-inside__text">
+                  <div className="magic-inside__text">
                     Profound Experiences of Meditation
                   </div>
                 </li>
 
-                <li class="magic-inside__item">
+                <li className="magic-inside__item">
                   <img
-                    class="magic-inside__icon"
+                    className="magic-inside__icon"
                     src="/img/ic-check-fade.svg"
                     alt="magic-inside-icon"
                   />
-                  <div class="magic-inside__text">
+                  <div className="magic-inside__text">
                     RGreater Connection to Your Inner Voice and Intuition
                   </div>
                 </li>
 
-                <li class="magic-inside__item">
+                <li className="magic-inside__item">
                   <img
-                    class="magic-inside__icon"
+                    className="magic-inside__icon"
                     src="/img/ic-check-fade.svg"
                     alt="magic-inside-icon"
                   />
-                  <div class="magic-inside__text">
+                  <div className="magic-inside__text">
                     The Blossoming of Your Virtues and Hidden Talents
                   </div>
                 </li>
               </ul>
             </div>
-            <div class="magic-inside__img">
+            <div className="magic-inside__img">
               <img
                 src="/img/magic-inside-content.jpg"
                 alt="magic-inside-content"
@@ -169,46 +171,46 @@ export const SanyamCourse = ({ data, swiperOption }) => {
           </div>
         </section>
 
-        <section class="revitalize revitalize--sanyam sanyam__section">
-          <div class="revitalize__container container">
-            <h2 class="revitalize__title">Revitalize with Sanyam</h2>
-            <p class="revitalize__text">
+        <section className="revitalize revitalize--sanyam sanyam__section">
+          <div className="revitalize__container container">
+            <h2 className="revitalize__title">Revitalize with Sanyam</h2>
+            <p className="revitalize__text">
               Sanyam is the coming together of attention, meditation, and pure
               joy
             </p>
-            <ul class="revitalize__list-image">
+            <ul className="revitalize__list-image">
               <li>
                 <img
-                  class="revitalize__item-image"
+                  className="revitalize__item-image"
                   src="/img/revitalize-first.jpg"
                   alt="revitalize content first"
                 />
               </li>
               <li>
                 <img
-                  class="revitalize__item-image revitalize__image--only-desktop"
+                  className="revitalize__item-image revitalize__image--only-desktop"
                   src="/img/revitalize-second.jpg"
                   alt="revitalize content second"
                 />
               </li>
             </ul>
 
-            <h3 class="revitalize__subtitle">
+            <h3 className="revitalize__subtitle">
               Sounds good, right? But what does it really mean?
             </h3>
-            <ul class="revitalize__list">
-              <li class="revitalize__item">
+            <ul className="revitalize__list">
+              <li className="revitalize__item">
                 You don’t have to wonder, because in this course, you’ll
                 experience this integration of yoga and meditation firsthand.
               </li>
-              <li class="revitalize__item">
+              <li className="revitalize__item">
                 Some of our top teachers will guide you through deep exploration
                 of the eight limbs of yoga, with an emphasis on experience and
                 not just concepts. This isn’t just an opportunity to expand your
                 mind, but a chance to fully experience the integration of yoga
                 with your entire being.
               </li>
-              <li class="revitalize__item">
+              <li className="revitalize__item">
                 The course culminates with a new practice, called sanyam, which
                 opens new doors in your meditation practice.
               </li>
@@ -216,115 +218,121 @@ export const SanyamCourse = ({ data, swiperOption }) => {
           </div>
         </section>
 
-        <section class="course-elements course-elements--sanyam sanyam__section">
-          <div class="container">
-            <h2 class="course-elements__title">Sanyam Course Elements</h2>
+        <section className="course-elements course-elements--sanyam sanyam__section">
+          <div className="container">
+            <h2 className="course-elements__title">Sanyam Course Elements</h2>
 
-            <p class="course-elements__subtitle">
-              <span class="course-elements__subtitle--block">
+            <p className="course-elements__subtitle">
+              <span className="course-elements__subtitle--block">
                 You’ll dive deep and explore the eight limbs of yoga,
               </span>
               with each day tailored to give you the most profound experience
               possible
             </p>
-            <ul class="course-elements__list">
-              <li class="course-elements__item">
+            <ul className="course-elements__list">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-1.png"
                   alt="Yama icon"
                 />
-                <h3 class="course-elements__name">Yama</h3>
-                <p class="course-elements__text">
+                <h3 className="course-elements__name">Yama</h3>
+                <p className="course-elements__text">
                   Attitudes toward our environment
                 </p>
               </li>
-              <li class="course-elements__item">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-2.png"
                   alt="Niyama icon"
                 />
-                <h3 class="course-elements__name">Niyama</h3>
-                <p class="course-elements__text">Attitudes toward ourselves</p>
+                <h3 className="course-elements__name">Niyama</h3>
+                <p className="course-elements__text">
+                  Attitudes toward ourselves
+                </p>
               </li>
-              <li class="course-elements__item">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-3.png"
                   alt="Asana icon"
                 />
-                <h3 class="course-elements__name">Asana</h3>
-                <p class="course-elements__text">Yoga postures</p>
+                <h3 className="course-elements__name">Asana</h3>
+                <p className="course-elements__text">Yoga postures</p>
               </li>
-              <li class="course-elements__item">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-4.png"
                   alt="Pranayama icon"
                 />
-                <h3 class="course-elements__name">Pranayama</h3>
-                <p class="course-elements__text">Breathwork</p>
+                <h3 className="course-elements__name">Pranayama</h3>
+                <p className="course-elements__text">Breathwork</p>
               </li>
-              <li class="course-elements__item">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-5.png"
                   alt="Pratyahara icon"
                 />
-                <h3 class="course-elements__name">Pratyahara</h3>
-                <p class="course-elements__text">Turning the senses inward</p>
+                <h3 className="course-elements__name">Pratyahara</h3>
+                <p className="course-elements__text">
+                  Turning the senses inward
+                </p>
               </li>
-              <li class="course-elements__item">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-6.png"
                   alt="Dharana icon"
                 />
-                <h3 class="course-elements__name">Dharana</h3>
-                <p class="course-elements__text">Concentration</p>
+                <h3 className="course-elements__name">Dharana</h3>
+                <p className="course-elements__text">Concentration</p>
               </li>
-              <li class="course-elements__item">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-7.png"
                   alt="Dhyana icon"
                 />
-                <h3 class="course-elements__name">Dhyana</h3>
-                <p class="course-elements__text">Meditation</p>
+                <h3 className="course-elements__name">Dhyana</h3>
+                <p className="course-elements__text">Meditation</p>
               </li>
-              <li class="course-elements__item">
+              <li className="course-elements__item">
                 <img
-                  class="course-elements__icon"
+                  className="course-elements__icon"
                   src="/img/course-elements-icon-8.png"
                   alt="Samadhi icon"
                 />
-                <h3 class="course-elements__name">Samadhi</h3>
-                <p class="course-elements__text">Bliss</p>
+                <h3 className="course-elements__name">Samadhi</h3>
+                <p className="course-elements__text">Bliss</p>
               </li>
             </ul>
           </div>
         </section>
 
-        <section class="share-section participants--sanyam sanyam__section">
-          <div class="container">
-            <div class="participants mt-0">
-              <h5 class="participants__title">What Participants Experience</h5>
-              <div class="row justify-content-between no-gutters">
-                <div class="col-12 col-lg-3 text-center mt-5 mt-lg-0 pr-2 pl-2">
-                  <div class="participants__container">
-                    <div class="participants__image participants__image--margin-top">
+        <section className="share-section participants--sanyam sanyam__section">
+          <div className="container">
+            <div className="participants mt-0">
+              <h5 className="participants__title">
+                What Participants Experience
+              </h5>
+              <div className="row justify-content-between no-gutters">
+                <div className="col-12 col-lg-3 text-center mt-5 mt-lg-0 pr-2 pl-2">
+                  <div className="participants__container">
+                    <div className="participants__image participants__image--margin-top">
                       <img
                         src="/img/sanyam-participants-1.jpg"
                         alt="participants"
                       />
                     </div>
-                    <h6 class="participants__name mb-0">Andrew S.</h6>
-                    <h6 class="participants__job">Sanyam participant</h6>
-                    <h6 class="participants__subtitle">
+                    <h6 className="participants__name mb-0">Andrew S.</h6>
+                    <h6 className="participants__job">Sanyam participant</h6>
+                    <h6 className="participants__subtitle">
                       &#8220;An essential course on&nbsp;the path&#8221;
                     </h6>
-                    <p class="participants__comment">
+                    <p className="participants__comment">
                       My health, quality of mind, and emotional state have all
                       been at a sustained high even weeks after completing the
                       course. And better yet, I now have a sequenced set of
@@ -335,20 +343,20 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                     </p>
                   </div>
                 </div>
-                <div class="col-12 col-lg-3 text-center mt-5 mt-lg-0 pr-2 pl-2">
-                  <div class="participants__container">
-                    <div class="participants__image participants__image--margin-top">
+                <div className="col-12 col-lg-3 text-center mt-5 mt-lg-0 pr-2 pl-2">
+                  <div className="participants__container">
+                    <div className="participants__image participants__image--margin-top">
                       <img
                         src="/img/sanyam-participants-2.jpg"
                         alt="participants"
                       />
                     </div>
-                    <h6 class="participants__name mb-0">Vanitha T.</h6>
-                    <h6 class="participants__job">Sanyam participant</h6>
-                    <h6 class="participants__subtitle">
+                    <h6 className="participants__name mb-0">Vanitha T.</h6>
+                    <h6 className="participants__job">Sanyam participant</h6>
+                    <h6 className="participants__subtitle">
                       &#8220;Simply mind-blowing&#8221;
                     </h6>
-                    <p class="participants__comment">
+                    <p className="participants__comment">
                       The combination of yoga and meditation made my mind and
                       body feel more relaxed with sense of completion. The
                       knowledge given on yoga and how to deal with mind through
@@ -356,20 +364,20 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                     </p>
                   </div>
                 </div>
-                <div class="col-12 col-lg-3 text-center mt-5 mt-lg-0 pr-2 pl-2">
-                  <div class="participants__container">
-                    <div class="participants__image participants__image--margin-top">
+                <div className="col-12 col-lg-3 text-center mt-5 mt-lg-0 pr-2 pl-2">
+                  <div className="participants__container">
+                    <div className="participants__image participants__image--margin-top">
                       <img
                         src="/img/sanyam-participants-3.jpg"
                         alt="participants"
                       />
                     </div>
-                    <h6 class="participants__name mb-0">Ketki M.</h6>
-                    <h6 class="participants__job">Sanyam participant</h6>
-                    <h6 class="participants__subtitle">
+                    <h6 className="participants__name mb-0">Ketki M.</h6>
+                    <h6 className="participants__job">Sanyam participant</h6>
+                    <h6 className="participants__subtitle">
                       &#8220;Truly transformative&#8221;
                     </h6>
-                    <p class="participants__comment">
+                    <p className="participants__comment">
                       Sanyam is the most beautiful course I have ever
                       experienced. It brought me an immense amount of energy and
                       enthusiasm. In the beginning, I had so many questions and
@@ -379,20 +387,20 @@ export const SanyamCourse = ({ data, swiperOption }) => {
                     </p>
                   </div>
                 </div>
-                <div class="col-12 col-lg-3 participants__item--only-desktop text-center mt-5 mt-lg-0 pr-2 pl-2">
-                  <div class="participants__container">
-                    <div class="participants__image participants__image--margin-top">
+                <div className="col-12 col-lg-3 participants__item--only-desktop text-center mt-5 mt-lg-0 pr-2 pl-2">
+                  <div className="participants__container">
+                    <div className="participants__image participants__image--margin-top">
                       <img
                         src="/img/sanyam-participants-4.jpg"
                         alt="participants"
                       />
                     </div>
-                    <h6 class="participants__name mb-0">Rajesh A.</h6>
-                    <h6 class="participants__job">Sanyam participant</h6>
-                    <h6 class="participants__subtitle">
+                    <h6 className="participants__name mb-0">Rajesh A.</h6>
+                    <h6 className="participants__job">Sanyam participant</h6>
+                    <h6 className="participants__subtitle">
                       &#8220;Things holding me back seemed to evaporate&#8221;
                     </h6>
-                    <p class="participants__comment">
+                    <p className="participants__comment">
                       I am feeling reborn after the course! Many things that
                       were causing stress or holding me back seemed to evaporate
                       after the weekend. I am able to enjoy small moments, be
@@ -406,31 +414,33 @@ export const SanyamCourse = ({ data, swiperOption }) => {
           </div>
         </section>
 
-        <section class="offer offer--sanyam sanyam__section">
+        <section className="offer offer--sanyam sanyam__section">
           <Element name="registerNowBlock">
             <RegisterPanel workshop={data} />
           </Element>
         </section>
 
-        <section class="upcoming upcoming--sanyam sanyam__section">
-          <div class="upcoming-section">
-            <div class="upcoming-section__image">
+        <section className="upcoming upcoming--sanyam sanyam__section">
+          <div className="upcoming-section">
+            <div className="upcoming-section__image">
               <img
                 src="/img/sanyam-upcoming-background.jpg"
                 alt="Upcoming Sanyam course"
               />
             </div>
-            <div class="container">
-              <div class="upcoming-section__wrapper">
-                <h5 class="upcoming-section__title">Upcoming Sanyam Courses</h5>
-                <h6 class="upcoming-section__text">
+            <div className="container">
+              <div className="upcoming-section__wrapper">
+                <h5 className="upcoming-section__title">
+                  Upcoming Sanyam Courses
+                </h5>
+                <h6 className="upcoming-section__text">
                   Sanyam is a masterclass in taking the benefits of yoga out of
                   your head, and bringing them into your life. Click below to
                   experience Sanyam for yourself.
                 </h6>
                 <div
                   onClick={handleUpcomingSanyamCourse}
-                  class="upcoming-section__button btn_box_secondary"
+                  className="upcoming-section__button btn_box_secondary"
                 >
                   See upcoming course dates
                 </div>
@@ -439,46 +449,46 @@ export const SanyamCourse = ({ data, swiperOption }) => {
           </div>
         </section>
 
-        <section class="art-section art-section--sanyam sanyam__section">
-          <div class="container">
-            <h5 class="art-section__title">About the Art of Living</h5>
-            <div class="row justify-content-around">
-              <div class="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
-                <div class="art-section__container">
-                  <div class="art-section__icon">
+        <section className="art-section art-section--sanyam sanyam__section">
+          <div className="container">
+            <h5 className="art-section__title">About the Art of Living</h5>
+            <div className="row justify-content-around">
+              <div className="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
+                <div className="art-section__container">
+                  <div className="art-section__icon">
                     <img src="/img/art-section-first.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">42 years</div>
-                  <div class="art-section__text">of service to society</div>
+                  <div className="art-section__name">42 years</div>
+                  <div className="art-section__text">of service to society</div>
                 </div>
               </div>
-              <div class="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
-                <div class="art-section__container">
-                  <div class="art-section__icon">
+              <div className="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
+                <div className="art-section__container">
+                  <div className="art-section__icon">
                     <img src="/img/art-section-second.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">10,000+ centers</div>
-                  <div class="art-section__text">worldwide</div>
+                  <div className="art-section__name">10,000+ centers</div>
+                  <div className="art-section__text">worldwide</div>
                 </div>
               </div>
-              <div class="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
-                <div class="art-section__container">
-                  <div class="art-section__icon">
+              <div className="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
+                <div className="art-section__container">
+                  <div className="art-section__icon">
                     <img src="/img/art-section-third.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">500M+ lives</div>
-                  <div class="art-section__text">
+                  <div className="art-section__name">500M+ lives</div>
+                  <div className="art-section__text">
                     touched through our courses & events
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
-                <div class="art-section__container">
-                  <div class="art-section__icon">
+              <div className="col-12 col-lg-2 col-md-6 col-sm-12 text-center mt-5 mt-lg-0">
+                <div className="art-section__container">
+                  <div className="art-section__icon">
                     <img src="/img/art-section-fourth.png" alt="participants" />
                   </div>
-                  <div class="art-section__name">180 countries</div>
-                  <div class="art-section__text">
+                  <div className="art-section__name">180 countries</div>
+                  <div className="art-section__text">
                     where our programs made a difference
                   </div>
                 </div>

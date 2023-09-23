@@ -74,7 +74,7 @@ export function Footer() {
                     className="nav-item--image"
                     src="/img/footer/footer-meditation-icon.png"
                   />
-                  <label for="MEDITATION" className="nav-item--title">
+                  <label htmlFor="MEDITATION" className="nav-item--title">
                     MEDITATION
                   </label>
                   <input
@@ -137,7 +137,7 @@ export function Footer() {
                     className="nav-item--image"
                     src="/img/footer/footer-breathing-icon.png"
                   />
-                  <label for="BREATHING" className="nav-item--title">
+                  <label htmlFor="BREATHING" className="nav-item--title">
                     BREATHING
                   </label>
                   <input
@@ -195,7 +195,7 @@ export function Footer() {
                     className="nav-item--image"
                     src="/img/footer/footer-yoga-icon.png"
                   />
-                  <label for="YOGA" className="nav-item--title">
+                  <label htmlFor="YOGA" className="nav-item--title">
                     YOGA
                   </label>
                   <input
@@ -253,7 +253,7 @@ export function Footer() {
                     className="nav-item--image"
                     src="/img/footer/footer-sleep-icon.png"
                   />
-                  <label for="SLEEP" className="nav-item--title">
+                  <label htmlFor="SLEEP" className="nav-item--title">
                     SLEEP
                   </label>
                   <input
@@ -311,7 +311,7 @@ export function Footer() {
                     className="nav-item--image"
                     src="/img/footer/footer-stress-icon.png"
                   />
-                  <label for="STRESS" className="nav-item--title">
+                  <label htmlFor="STRESS" className="nav-item--title">
                     STRESS
                   </label>
                   <input
@@ -369,7 +369,10 @@ export function Footer() {
                     className="nav-item--image"
                     src="/img/footer/footer-mr-icon.png"
                   />
-                  <label for="MEDITATION RESEARCH" className="nav-item--title">
+                  <label
+                    htmlFor="MEDITATION RESEARCH"
+                    className="nav-item--title"
+                  >
                     MEDITATION RESEARCH
                   </label>
                   <input
@@ -422,7 +425,7 @@ export function Footer() {
             <div className="row footer-nav second-footer-nav">
               <div className="col-12 col-sm-12 col-md-3 order-lg-1 order-2 col-lg-3">
                 <div className="nav-item-box">
-                  <label for="Gurudev" className="nav-item--title">
+                  <label htmlFor="Gurudev" className="nav-item--title">
                     Gurudev
                   </label>
                   <input
@@ -449,7 +452,7 @@ export function Footer() {
               </div>
               <div className="col-12 col-sm-12 col-md-3 order-lg-1 order-2 col-lg-3">
                 <div className="nav-item-box">
-                  <label for="Courses" className="nav-item--title">
+                  <label htmlFor="Courses" className="nav-item--title">
                     Courses
                   </label>
                   <input
@@ -506,7 +509,7 @@ export function Footer() {
               </div>
               <div className="col-12 col-sm-12 col-md-3 order-lg-1 order-2 col-lg-3">
                 <div className="nav-item-box">
-                  <label for="About Us" className="nav-item--title">
+                  <label htmlFor="About Us" className="nav-item--title">
                     About Us
                   </label>
                   <input
@@ -567,7 +570,7 @@ export function Footer() {
 
               <div className="col-12 col-sm-12 col-md-3 order-lg-1 order-2 col-lg-3">
                 <div className="nav-item-box last-item-box">
-                  <label for="Blog" className="nav-item--title">
+                  <label htmlFor="Blog" className="nav-item--title">
                     Blog
                   </label>
                   <input

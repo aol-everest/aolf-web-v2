@@ -41,7 +41,7 @@ function formatSessionsOption(state) {
 
   const txt = state.text.slice(0, 4);
 
-  return `<span class="select2-selection__choice__display">${txt}</span>`;
+  return `<span className="select2-selection__choice__display">${txt}</span>`;
 }
 
 const WelcomeSessionsInput = ({ field, form, ...props }) => {
@@ -164,8 +164,8 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
                   <Field name="ticketCount" component={NoOfTicketInput} />
                   {errors.ticketCount && (
                     <label
-                      for="welcome-sessions"
-                      class="wcf-select__error-message"
+                      htmlFor="welcome-sessions"
+                      className="wcf-select__error-message"
                     >
                       {errors.ticketCount}
                     </label>
@@ -197,8 +197,8 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
                 </div>
                 {errors.sessionsAttending && (
                   <label
-                    for="welcome-sessions"
-                    class="wcf-select__error-message"
+                    htmlFor="welcome-sessions"
+                    className="wcf-select__error-message"
                   >
                     {errors.sessionsAttending}
                   </label>

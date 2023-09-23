@@ -151,9 +151,9 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !preRequisiteCondition,
           })}
         >
-          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
+          <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
-              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+              <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
               </p>
             )}
@@ -189,9 +189,9 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !preRequisiteCondition,
           })}
         >
-          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
+          <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
-              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+              <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
               </p>
             )}
@@ -248,7 +248,7 @@ export const RegisterPanel = ({ workshop }) => {
             </p>
           )}
           {!isStudentVerified && (
-            <h3 class="!tw-normal-case">
+            <h3 className="!tw-normal-case">
               *Verify your student status with your .edu email ID
             </h3>
           )}
@@ -258,9 +258,9 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !preRequisiteCondition,
           })}
         >
-          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
+          <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
-              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+              <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
               </p>
             )}
@@ -279,25 +279,25 @@ export const RegisterPanel = ({ workshop }) => {
   }
   if (isSanyamCourse) {
     return (
-      <div class="offer__container container_md">
-        <div class="offer__banner offer__banner--sanyam-bg banner-offer">
-          <h5 class="banner-offer__title meditation-title_blue">
-            <span class="meditation-title_blue--block">
+      <div className="offer__container container_md">
+        <div className="offer__banner offer__banner--sanyam-bg banner-offer">
+          <h5 className="banner-offer__title meditation-title_blue">
+            <span className="meditation-title_blue--block">
               Eligibility: {preRequisiteCondition}{" "}
             </span>
             are prerequisites to enroll in the Sanyam Course.
           </h5>
 
-          <div class="banner-offer__price block-title">
+          <div className="banner-offer__price block-title">
             Sanyam Course: ${fee}
           </div>
 
-          <div class="banner-offer__discount">
+          <div className="banner-offer__discount">
             Regular course cost: <span>${delfee}</span>
           </div>
 
           <button
-            class="banner-offer__register sky-button btn-secondary"
+            className="banner-offer__register sky-button btn-secondary"
             onClick={handleRegister}
           >
             Register Now
@@ -311,7 +311,7 @@ export const RegisterPanel = ({ workshop }) => {
     return (
       <div className="powerful__block powerful__block_bottom">
         {isVolunteerTrainingProgram && (
-          <div class="powerful__block-titles !tw-py-[20px]">
+          <div className="powerful__block-titles !tw-py-[20px]">
             <h6 className="caption caption_sm powerful__block-caption">
               Make a difference
             </h6>
@@ -339,9 +339,9 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
-          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
+          <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {earlyBirdFeeIncreasing ? (
-              <div class="!tw-ml-0 tw-flex">
+              <div className="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
                   Register soon. Course fee will go up by $
@@ -355,7 +355,7 @@ export const RegisterPanel = ({ workshop }) => {
               <div />
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
-              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+              <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
               </p>
             )}
@@ -408,9 +408,9 @@ export const RegisterPanel = ({ workshop }) => {
             "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
-          <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
+          <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {earlyBirdFeeIncreasing ? (
-              <div class="!tw-ml-0 tw-flex">
+              <div className="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
                   Register soon. Course fee will go up by $
@@ -424,7 +424,7 @@ export const RegisterPanel = ({ workshop }) => {
               <div />
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
-              <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+              <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: Completion of {preRequisiteCondition}
               </p>
             )}
@@ -483,11 +483,11 @@ export const RegisterPanel = ({ workshop }) => {
           "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
         })}
       >
-        <div class="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
+        <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
           {earlyBirdFeeIncreasing ? (
-            <div class="!tw-ml-0 tw-flex">
+            <div className="!tw-ml-0 tw-flex">
               <img src="/img/ic-timer-orange.svg" alt="timer" />
-              <p class="!tw-mt-1 !tw-text-sm">
+              <p className="!tw-mt-1 !tw-text-sm">
                 Register soon. Course fee will go up by $
                 {earlyBirdFeeIncreasing.increasingFee} on{" "}
                 {dayjs
@@ -499,7 +499,7 @@ export const RegisterPanel = ({ workshop }) => {
             <div />
           )}
           {preRequisiteCondition && preRequisiteCondition.length > 0 && (
-            <p class="!tw-ml-0 !tw-mt-1 !tw-text-sm">
+            <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
               Eligibility: Completion of {preRequisiteCondition}
             </p>
           )}

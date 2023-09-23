@@ -56,26 +56,29 @@ export const PreCostDetailsCard = ({
   ) {
     if (isMeditationDeluxe) {
       return (
-        <div class="reciept reciept--box d-none d-lg-block">
-          <div class="reciept__header">
-            <p class="reciept__item reciept__item_main font-weight-normal">
+        <div className="reciept reciept--box d-none d-lg-block">
+          <div className="reciept__header">
+            <p className="reciept__item reciept__item_main font-weight-normal">
               <span>
                 <img src="/img/ic-timer.svg" alt="timer" />
                 Limited Time Offer
               </span>
             </p>
-            <ul class="reciept__item_list ">
+            <ul className="reciept__item_list ">
               <li>
-                <p class="font-weight-normal">Gateways to Infinity</p>
-                <p class="font-weight-bold">
-                  <span class="discount font-weight-bold">[$590] [$90]</span> $0
+                <p className="font-weight-normal">Gateways to Infinity</p>
+                <p className="font-weight-bold">
+                  <span className="discount font-weight-bold">
+                    [$590] [$90]
+                  </span>{" "}
+                  $0
                 </p>
               </li>
               <li>
-                <p class="font-weight-normal">
+                <p className="font-weight-normal">
                   {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                 </p>
-                <p class="font-weight-bold">
+                <p className="font-weight-bold">
                   {delfee && (
                     <span className="discount font-weight-bold">
                       [${delfee}]
@@ -87,7 +90,7 @@ export const PreCostDetailsCard = ({
             </ul>
           </div>
 
-          <div class="reciept__details text-center">
+          <div className="reciept__details text-center">
             <a href="">
               <img
                 src="/img/trustpilot-logo-mobile.png"
@@ -97,14 +100,14 @@ export const PreCostDetailsCard = ({
               />
             </a>
 
-            <p class="comments__quote comments__quote--max-width mt-4">
+            <p className="comments__quote comments__quote--max-width mt-4">
               “I used to suffer from anxiety and my health was greatly affected
               by it. I feel so free and light now.”
-              <span class="d-block mt-3 font-normal">- Millie I.</span>
+              <span className="d-block mt-3 font-normal">- Millie I.</span>
             </p>
           </div>
 
-          <div class="reciept__more">
+          <div className="reciept__more">
             Additional Notes: Housing will be offsite. Please contact the course
             coordinator for details, and to make arrangements.
             <a href="#">See more</a>
@@ -114,18 +117,18 @@ export const PreCostDetailsCard = ({
     }
     if (gatewayToInfinity) {
       return (
-        <div class="reciept reciept--box d-none d-lg-block">
-          <div class="reciept__header">
-            <p class="reciept__item reciept__item_main font-weight-normal">
+        <div className="reciept reciept--box d-none d-lg-block">
+          <div className="reciept__header">
+            <p className="reciept__item reciept__item_main font-weight-normal">
               <span>
                 <img src="/img/ic-timer.svg" alt="timer" />
                 Limited Time Offer
               </span>
             </p>
-            <ul class="reciept__item_list ">
+            <ul className="reciept__item_list ">
               <li>
-                <p class="font-weight-normal">Regular rate</p>
-                <p class="font-weight-bold">
+                <p className="font-weight-normal">Regular rate</p>
+                <p className="font-weight-bold">
                   {delfee && (
                     <span className="discount font-weight-bold">
                       [${delfee}]
@@ -137,7 +140,7 @@ export const PreCostDetailsCard = ({
             </ul>
           </div>
 
-          <div class="reciept__details text-center">
+          <div className="reciept__details text-center">
             <a href="">
               <img
                 src="/img/trustpilot-logo-mobile.png"
@@ -147,14 +150,14 @@ export const PreCostDetailsCard = ({
               />
             </a>
 
-            <p class="comments__quote comments__quote--max-width mt-4">
+            <p className="comments__quote comments__quote--max-width mt-4">
               “I used to suffer from anxiety and my health was greatly affected
               by it. I feel so free and light now.”
-              <span class="d-block mt-3 font-normal">- Millie I.</span>
+              <span className="d-block mt-3 font-normal">- Millie I.</span>
             </p>
           </div>
 
-          <div class="reciept__more">
+          <div className="reciept__more">
             Additional Notes: Housing will be offsite. Please contact the course
             coordinator for details, and to make arrangements.
             <a href="#">See more</a>
@@ -438,7 +441,7 @@ export const PreCostDetailsCard = ({
           <div className="reciept__payment">
             <div className="reciept__payment-option">
               <Field
-                class={classNames("custom-radio", {
+                className={classNames("custom-radio", {
                   error:
                     formikProps.errors.paymentOption &&
                     formikProps.touched.paymentOption,
@@ -460,7 +463,7 @@ export const PreCostDetailsCard = ({
             </div>
             <div className="reciept__payment-option">
               <Field
-                class={classNames("custom-radio", {
+                className={classNames("custom-radio", {
                   error:
                     formikProps.errors.paymentOption &&
                     formikProps.touched.paymentOption,

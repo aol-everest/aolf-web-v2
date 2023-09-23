@@ -399,7 +399,7 @@ export const PostCostDetailsCard = ({
                           >
                             <span>{residentialAddOn.productName}</span>
                             {residentialAddOn.isFull && (
-                              <span class="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
+                              <span className="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
                                 Full
                               </span>
                             )}

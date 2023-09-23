@@ -13,9 +13,9 @@ import countryData from "./country.json";
 function formatCountryOption(state) {
   if (!state.id) return state.text;
 
-  return `<span class='wcf-country-option'>
-      <img src='https://hatscripts.github.io/circle-flags/flags/${state.element.value.toLowerCase()}.svg' class='wcf-country-option__image'/>
-      <span class='wcf-country-option__text'>${state.text}</span>
+  return `<span className='wcf-country-option'>
+      <img src='https://hatscripts.github.io/circle-flags/flags/${state.element.value.toLowerCase()}.svg' className='wcf-country-option__image'/>
+      <span className='wcf-country-option__text'>${state.text}</span>
     </span>`;
 }
 
@@ -202,8 +202,8 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                   <Field name="country" component={CountryInput} />
                   {errors.country && (
                     <label
-                      for="welcome-sessions"
-                      class="wcf-select__error-message"
+                      htmlFor="welcome-sessions"
+                      className="wcf-select__error-message"
                     >
                       {errors.country}
                     </label>
@@ -228,8 +228,8 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                     <Field name="state" component={StateInput} />
                     {errors.state && (
                       <label
-                        for="welcome-sessions"
-                        class="wcf-select__error-message"
+                        htmlFor="welcome-sessions"
+                        className="wcf-select__error-message"
                       >
                         {errors.state}
                       </label>
@@ -248,8 +248,8 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                 <Field name="phoneNumber" component={PhoneNumberInputField} />
                 {errors.phoneNumber && (
                   <label
-                    for="welcome-sessions"
-                    class="wcf-select__error-message"
+                    htmlFor="welcome-sessions"
+                    className="wcf-select__error-message"
                   >
                     {errors.phoneNumber}
                   </label>

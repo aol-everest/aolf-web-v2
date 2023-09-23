@@ -85,15 +85,15 @@ export const SKYBreathMeditation = ({ data }) => {
 
   return (
     <>
-      <main class="sky-breath-course">
-        <section class="top-column sky-breath">
-          <div class="container first-section">
-            <div class="banner-title">
+      <main className="sky-breath-course">
+        <section className="top-column sky-breath">
+          <div className="container first-section">
+            <div className="banner-title">
               The Art of Living
               <br />
               <span>Part I Course</span>
             </div>
-            <div class="banner-desc">
+            <div className="banner-desc">
               Discover Gurudev Sri Sri Ravi Shankar’s
               <br />
               <span>ancient secret to modern well-being</span>
@@ -106,7 +106,7 @@ export const SKYBreathMeditation = ({ data }) => {
                   width="16"
                   height="16"
                   fill="#ED930F"
-                  class="bi bi-check-circle-fill"
+                  className="bi bi-check-circle-fill"
                   viewBox="0 0 16 16"
                 >
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
@@ -119,7 +119,7 @@ export const SKYBreathMeditation = ({ data }) => {
                   width="16"
                   height="16"
                   fill="#ED930F"
-                  class="bi bi-check-circle-fill"
+                  className="bi bi-check-circle-fill"
                   viewBox="0 0 16 16"
                 >
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
@@ -132,7 +132,7 @@ export const SKYBreathMeditation = ({ data }) => {
                   width="16"
                   height="16"
                   fill="#ED930F"
-                  class="bi bi-check-circle-fill"
+                  className="bi bi-check-circle-fill"
                   viewBox="0 0 16 16"
                 >
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
@@ -141,8 +141,8 @@ export const SKYBreathMeditation = ({ data }) => {
               </li>
             </ul>
             {!sfid && (
-              <div class="hero-register-button-wrapper">
-                <a class="hero-register-button" onClick={handleRegister}>
+              <div className="hero-register-button-wrapper">
+                <a className="hero-register-button" onClick={handleRegister}>
                   <img src="/img/regiter-btn.original.png" alt="" />
                 </a>
               </div>
@@ -150,59 +150,59 @@ export const SKYBreathMeditation = ({ data }) => {
           </div>
           {sfid && <PriceCard workshop={data} />}
         </section>
-        <section class="progress-section">
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="progress_box">
-                  <div class="progress_logo">
+        <section className="progress-section">
+          <div className="container">
+            <div className="row">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="progress_box">
+                  <div className="progress_logo">
                     <img
                       src="/img/transforming-lives.svg"
                       alt="transforming lives"
                     />
                   </div>
-                  <div class="progress_content">
-                    <span class="title">42 Years</span>
+                  <div className="progress_content">
+                    <span className="title">42 Years</span>
                     <br />
-                    <span class="content">of transforming lives</span>
+                    <span className="content">of transforming lives</span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="progress_box">
-                  <div class="progress_logo">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="progress_box">
+                  <div className="progress_logo">
                     <img src="/img/worldwide.svg" alt="transforming lives" />
                   </div>
-                  <div class="progress_content">
-                    <span class="title">10,000+ Centers</span>
+                  <div className="progress_content">
+                    <span className="title">10,000+ Centers</span>
                     <br />
-                    <span class="content">worldwide</span>
+                    <span className="content">worldwide</span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="progress_box">
-                  <div class="progress_logo">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="progress_box">
+                  <div className="progress_logo">
                     <img src="/img/countries.svg" alt="transforming lives" />
                   </div>
-                  <div class="progress_content">
-                    <span class="title">180 Countries</span>
+                  <div className="progress_content">
+                    <span className="title">180 Countries</span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       where our programs made a difference
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="progress_box">
-                  <div class="progress_logo">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="progress_box">
+                  <div className="progress_logo">
                     <img src="/img/people.svg" alt="transforming lives" />
                   </div>
-                  <div class="progress_content">
-                    <span class="title">500M+ Lives</span>
+                  <div className="progress_content">
+                    <span className="title">500M+ Lives</span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       touched through our courses & events
                     </span>
                   </div>
@@ -211,15 +211,15 @@ export const SKYBreathMeditation = ({ data }) => {
             </div>
           </div>
         </section>
-        <section class="breadth-meditation">
-          <div class="container">
-            <div class="row">
-              <div class="breadth-meditation__block">
-                <h2 class="breadth-meditation__title section-title text-center">
+        <section className="breadth-meditation">
+          <div className="container">
+            <div className="row">
+              <div className="breadth-meditation__block">
+                <h2 className="breadth-meditation__title section-title text-center">
                   A Signature Meditation Technique
                 </h2>
-                <div class="col-12 col-lg-6 float-left">
-                  <div class="comments__video">
+                <div className="col-12 col-lg-6 float-left">
+                  <div className="comments__video">
                     <iframe
                       src="https://player.vimeo.com/video/854478087?h=0eaa68b0ef&wmode=opaque"
                       width="100%"
@@ -230,9 +230,9 @@ export const SKYBreathMeditation = ({ data }) => {
                     ></iframe>
                   </div>
                 </div>
-                <div class="col-12 col-lg-6 float-left">
-                  <div class="breadth-meditation_content">
-                    <p class="">
+                <div className="col-12 col-lg-6 float-left">
+                  <div className="breadth-meditation_content">
+                    <p className="">
                       Sudarshan Kriya ({COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                       ) taught in the Art of Living Part I course is a powerful
                       rhythmic breathing technique that harmonizes the body-mind
@@ -240,7 +240,10 @@ export const SKYBreathMeditation = ({ data }) => {
                       better sleep, a stronger immune system, and increased
                       energy levels.
                     </p>
-                    <button class="register-button" onClick={handleRegister}>
+                    <button
+                      className="register-button"
+                      onClick={handleRegister}
+                    >
                       Register Now <FaArrowRightLong />
                     </button>
                   </div>
@@ -249,68 +252,68 @@ export const SKYBreathMeditation = ({ data }) => {
             </div>
           </div>
 
-          <div class="container">
-            <div class="row">
-              <div class="col-12 px-2 col-lg-12 text-center text-lg-center">
+          <div className="container">
+            <div className="row">
+              <div className="col-12 px-2 col-lg-12 text-center text-lg-center">
                 <img src="/img/smallLine.svg" />
-                <h2 class="breadth-meditation__title section-title benefits-title text-center">
+                <h2 className="breadth-meditation__title section-title benefits-title text-center">
                   Impacts of {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                 </h2>
-                <p class="section-desc text-center">
+                <p className="section-desc text-center">
                   Science-backed benefits of SKY, shown in over 100 independent
                   studies
                 </p>
               </div>
-              <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
-                <div class="breadth-meditation_box">
-                  <div class="breadth-meditation_logo">
+              <div className="col-12 px-2 col-lg-4 text-left text-lg-left">
+                <div className="breadth-meditation_box">
+                  <div className="breadth-meditation_logo">
                     <img src="/img/icon1.svg" alt="transforming lives" />
                   </div>
-                  <div class="breadth-meditation_content">
-                    <span class="title stats-1">
+                  <div className="breadth-meditation_content">
+                    <span className="title stats-1">
                       +33%
                       <br />
                       Immune Cell Count
                     </span>
                     <br />
-                    <span class="content stats-desc">
+                    <span className="content stats-desc">
                       Increase in lymphocytes in 6 weeks & remained in the
                       normal range
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
-                <div class="breadth-meditation_box">
-                  <div class="breadth-meditation_logo">
+              <div className="col-12 px-2 col-lg-4 text-left text-lg-left">
+                <div className="breadth-meditation_box">
+                  <div className="breadth-meditation_logo">
                     <img src="/img/icon2.svg" alt="transforming lives" />
                   </div>
-                  <div class="breadth-meditation_content">
-                    <span class="title stats-2">
+                  <div className="breadth-meditation_content">
+                    <span className="title stats-2">
                       21%
                       <br />
                       Life Satisfaction
                     </span>
                     <br />
-                    <span class="content stats-desc">
+                    <span className="content stats-desc">
                       Increase within 1 week
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
-                <div class="breadth-meditation_box">
-                  <div class="breadth-meditation_logo">
+              <div className="col-12 px-2 col-lg-4 text-left text-lg-left">
+                <div className="breadth-meditation_box">
+                  <div className="breadth-meditation_logo">
                     <img src="/img/icon3.svg" alt="transforming lives" />
                   </div>
-                  <div class="breadth-meditation_content">
-                    <span class="title stats-3">
+                  <div className="breadth-meditation_content">
+                    <span className="title stats-3">
                       -57%
                       <br />
                       Stress Hormone
                     </span>
                     <br />
-                    <span class="content stats-desc">
+                    <span className="content stats-desc">
                       Decrease in serum cortisol in 2 weeks
                     </span>
                   </div>
@@ -319,87 +322,87 @@ export const SKYBreathMeditation = ({ data }) => {
             </div>
           </div>
         </section>
-        <section class="key-highlight-section">
-          <div class="container">
-            <div class="key-highlight_block">
-              <h2 class="key-highlight_title section-title text-center">
+        <section className="key-highlight-section">
+          <div className="container">
+            <div className="key-highlight_block">
+              <h2 className="key-highlight_title section-title text-center">
                 Key Highlights of
                 <br />
                 the 3 Day Course
               </h2>
             </div>
             <Slider {...settings}>
-              <div class="slide">
-                <div class="key-highlight-box">
-                  <div class="key-highlight-logo">
+              <div className="slide">
+                <div className="key-highlight-box">
+                  <div className="key-highlight-logo">
                     <img src="/img/key-11.png" alt="transforming lives" />
                   </div>
-                  <div class="key-highlight-content">
-                    <span class="title">Pranayama</span>
+                  <div className="key-highlight-content">
+                    <span className="title">Pranayama</span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       Improve your energy levels and reduce stress through
                       breathing exercises
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="slide">
-                <div class="key-highlight-box">
-                  <div class="key-highlight-logo">
+              <div className="slide">
+                <div className="key-highlight-box">
+                  <div className="key-highlight-logo">
                     <img src="/img/key-2.jpg" alt="transforming lives" />
                   </div>
-                  <div class="key-highlight-content">
-                    <span class="title">
+                  <div className="key-highlight-content">
+                    <span className="title">
                       {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                     </span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       Learn the most powerful breathing technique based on an
                       ancient tradition
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="slide">
-                <div class="key-highlight-box">
-                  <div class="key-highlight-logo">
+              <div className="slide">
+                <div className="key-highlight-box">
+                  <div className="key-highlight-logo">
                     <img src="/img/key-3.jpg" alt="transforming lives" />
                   </div>
-                  <div class="key-highlight-content">
-                    <span class="title">5 Keys to a Joyful Life</span>
+                  <div className="key-highlight-content">
+                    <span className="title">5 Keys to a Joyful Life</span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       Simple, yet powerful principles to help you navigate life
                       joyfully
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="slide">
-                <div class="key-highlight-box">
-                  <div class="key-highlight-logo">
+              <div className="slide">
+                <div className="key-highlight-box">
+                  <div className="key-highlight-logo">
                     <img src="/img/key-4.jpg" alt="transforming lives" />
                   </div>
-                  <div class="key-highlight-content">
-                    <span class="title">Tap Into Community</span>
+                  <div className="key-highlight-content">
+                    <span className="title">Tap Into Community</span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       Connect with live teachers and a like-minded community of
                       people
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="slide">
-                <div class="key-highlight-box">
-                  <div class="key-highlight-logo">
+              <div className="slide">
+                <div className="key-highlight-box">
+                  <div className="key-highlight-logo">
                     <img src="/img/key-3.jpg" alt="transforming lives" />
                   </div>
-                  <div class="key-highlight-content">
-                    <span class="title">Ongoing Support</span>
+                  <div className="key-highlight-content">
+                    <span className="title">Ongoing Support</span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       Continued access to teachers, digital content, and weekly
                       group practice
                     </span>
@@ -410,17 +413,17 @@ export const SKYBreathMeditation = ({ data }) => {
           </div>
         </section>
 
-        <section class="quote-section">
-          <div class="container">
-            <div class="col-12 main-area">
-              <p class="quote-section__quote">
+        <section className="quote-section">
+          <div className="container">
+            <div className="col-12 main-area">
+              <p className="quote-section__quote">
                 <span>
                   “Meditation is the journey from sound to silence, from
                   movement to stillness, from a limited identity to unlimited
                   space”
                 </span>
               </p>
-              <p class="quote-section__text">
+              <p className="quote-section__text">
                 <img src="/img/Guruji-2.png" />
                 <br />~ Gurudev Sri Sri Ravi Shankar
               </p>
@@ -428,56 +431,58 @@ export const SKYBreathMeditation = ({ data }) => {
           </div>
         </section>
 
-        <section class="feature-section">
-          <div class="container">
-            <div class="feature_block">
-              <h2 class="feature_title section-title text-center">
+        <section className="feature-section">
+          <div className="container">
+            <div className="feature_block">
+              <h2 className="feature_title section-title text-center">
                 Featured in
               </h2>
             </div>
-            <div class="row">
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="feature_box pinkbox">
-                  <div class="feature_logo">
+            <div className="row">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="feature_box pinkbox">
+                  <div className="feature_logo">
                     <img src="/img/CNN.png" alt="transforming lives" />
                   </div>
-                  <div class="feature-content">
-                    <span class="content">"Life Changing"</span>
+                  <div className="feature-content">
+                    <span className="content">"Life Changing"</span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="feature_box greybox">
-                  <div class="feature_logo">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="feature_box greybox">
+                  <div className="feature_logo">
                     <img src="/img/Yoga.png" alt="transforming lives" />
                   </div>
-                  <div class="feature-content">
-                    <span class="content">
+                  <div className="feature-content">
+                    <span className="content">
                       "May be the fastest growing spiritual practice on the
                       planet"
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="feature_box pinkbox">
-                  <div class="feature_logo">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="feature_box pinkbox">
+                  <div className="feature_logo">
                     <img src="/img/Harvard.png" alt="transforming lives" />
                   </div>
-                  <div class="feature-content">
-                    <span class="content">
+                  <div className="feature-content">
+                    <span className="content">
                       "Show promise in providing relief for depression"
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-lg-6 text-left text-lg-left">
-                <div class="feature_box greybox">
-                  <div class="feature_logo">
+              <div className="col-12 col-lg-6 text-left text-lg-left">
+                <div className="feature_box greybox">
+                  <div className="feature_logo">
                     <img src="/img/WP.png" alt="transforming lives" />
                   </div>
-                  <div class="feature-content">
-                    <span class="content">"Like Fresh air to millions"</span>
+                  <div className="feature-content">
+                    <span className="content">
+                      "Like Fresh air to millions"
+                    </span>
                   </div>
                 </div>
               </div>
@@ -485,13 +490,13 @@ export const SKYBreathMeditation = ({ data }) => {
           </div>
         </section>
 
-        <section class="comments">
-          <div class="container">
-            <h2 class="comments__title section-title text-center">
+        <section className="comments">
+          <div className="container">
+            <h2 className="comments__title section-title text-center">
               How is Art of Living Part I Course Changing Lives?
             </h2>
           </div>
-          <div class="comments__video">
+          <div className="comments__video">
             <iframe
               src="https://player.vimeo.com/video/428103610"
               width="100%"
@@ -503,13 +508,13 @@ export const SKYBreathMeditation = ({ data }) => {
           </div>
         </section>
 
-        <section class="faq">
-          <div class="container">
-            <h2 class="section-title pl-0 pr-0">
+        <section className="faq">
+          <div className="container">
+            <h2 className="section-title pl-0 pr-0">
               Frequently Asked Questions
               <img src="/img/FAQ.svg" />
             </h2>
-            <Accordion defaultActiveKey="0" class="accordion">
+            <Accordion defaultActiveKey="0" className="accordion">
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="0">
@@ -616,12 +621,12 @@ export const SKYBreathMeditation = ({ data }) => {
             </Accordion>
           </div>
         </section>
-        <div class="float-bar">
-          <div class="float-wrapper clearfix">
-            <div class="bar-left">
-              <div class="bar-title">Start Your Journey to Inner Peace</div>
+        <div className="float-bar">
+          <div className="float-wrapper clearfix">
+            <div className="bar-left">
+              <div className="bar-title">Start Your Journey to Inner Peace</div>
             </div>
-            <div class="bar-right">
+            <div className="bar-right">
               <a href="#" onClick={handleRegister}>
                 <img src="/img/regiter-btn-alt.original.png" alt="" />
               </a>
@@ -644,9 +649,11 @@ function ContextAwareToggle({ children, eventKey, callback }) {
   const isCurrentEventKey = currentEventKey === eventKey;
 
   return (
-    <h5 class="mb-0">
+    <h5 className="mb-0">
       <button
-        class={classNames("btn btn-link", { collapsed: !isCurrentEventKey })}
+        className={classNames("btn btn-link", {
+          collapsed: !isCurrentEventKey,
+        })}
         onClick={decoratedOnClick}
       >
         {children}
