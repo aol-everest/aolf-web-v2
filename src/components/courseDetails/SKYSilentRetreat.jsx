@@ -627,10 +627,6 @@ export const SKYSilentRetreat = ({ data }) => {
           </div>
         </div>
       </main>
-
-      <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
-      </HideOn>
     </>
   );
 };
