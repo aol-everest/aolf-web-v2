@@ -647,7 +647,7 @@
   .section-sahaj-reviews {
     padding-top: 112px;
     background: url(/img/samadhi-carousel-bg.png) repeat-x top left;
-    padding-bottom: 150px;
+    padding-bottom: 90px;
     position: relative;
     .section-title {
       font-family: 'Work Sans';
@@ -709,7 +709,10 @@
       color: #6f6f6f;
     }
     .swiper-pagination {
-      bottom: 90px;
+      bottom: 0px;
+    }
+    .reviews-slider {
+      padding-bottom: 60px;
     }
     @media screen and (max-width: 767px) {
       padding-top: 0;
