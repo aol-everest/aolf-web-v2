@@ -303,12 +303,12 @@ export const SKYSilentRetreat = ({ data }) => {
           </div>
           <div className="container refreshing-silence">
             <div className="row">
-              <div class="col-12 px-1">
-                <h2 class="section-title">
+              <div className="col-12 px-1">
+                <h2 className="section-title">
                   Discover just how refreshing silence can be
                 </h2>
               </div>
-              <div class="col-12 px-1 col-lg-8 text-left text-lg-left">
+              <div className="col-12 px-1 col-lg-8 text-left text-lg-left">
                 <p>
                   Many people may find it challenging knowing how to quiet their
                   mind. The Silent Retreat provides techniques and optimal
@@ -398,20 +398,20 @@ export const SKYSilentRetreat = ({ data }) => {
           <Swiper {...swiperOption} className="reviews-slider">
             <SwiperSlide>
               <div className="review-box">
-                <div class="review-title">
+                <div className="review-title">
                   ...very, very powerful...such a sense of calm
                 </div>
-                <div class="review-text">
+                <div className="review-text">
                   It was very, very powerful. I gained such a sense of calm,
                   more than I ever could have imagined.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/max-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Max Goldberg</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Max Goldberg</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -420,21 +420,23 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">relaxed, refreshed, and happier</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">
+                  relaxed, refreshed, and happier
+                </div>
+                <div className="review-text">
                   It helped me to put into practice the valuable wisdom which I
                   had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
                   course. I came away relaxed, refreshed and happier than I had
                   felt for a long time.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/julie-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Julie Madeley</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Julie Madeley</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -443,20 +445,20 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">Felt more balanced</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">Felt more balanced</div>
+                <div className="review-text">
                   I've been on quite a few silent retreats in the past and this
                   felt more balanced, nourishing and comfortable than any other
                   retreat I'd been on.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/michelle-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Michelle Garisson</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Michelle Garisson</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -465,21 +467,21 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">
+              <div className="review-box">
+                <div className="review-title">
                   extremely relaxing, yet energizing experience
                 </div>
-                <div class="review-text">
+                <div className="review-text">
                   The meditations are deep! It was an extremely relaxing yet
                   energizing experience.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/vinita-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Vinita D.</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Vinita D.</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -488,18 +490,18 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">wonderful, peaceful retreat</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">wonderful, peaceful retreat</div>
+                <div className="review-text">
                   A wonderful, peaceful retreat ... extremely joyful and easy.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/aarti-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Aarti R.</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Aarti R.</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -508,20 +510,20 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">I feel more like myself</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">I feel more like myself</div>
+                <div className="review-text">
                   I feel more like myself after the Silence Retreat. My life
                   goes smoother after it and I feel the difference for a good
                   3-6 months.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/daniel-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Daniel M.</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Daniel M.</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>

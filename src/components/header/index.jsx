@@ -439,17 +439,20 @@ export const Header = () => {
                       : menu.subHeading?.map((subMenu) => {
                           return (
                             <>
-                              <h6 class="dropdown-header pt-2rem">
+                              <h6
+                                className="dropdown-header pt-2rem"
+                                key={subMenu.name}
+                              >
                                 {subMenu.name}
                               </h6>
-                              {subMenu?.items.map((submenu) => {
+                              {subMenu?.items.map((menuItem) => {
                                 return (
                                   <NavDropdown.Item
-                                    href={submenu.link}
-                                    key={submenu.name}
+                                    href={menuItem.link}
+                                    key={menuItem.name}
                                     as={Link}
                                   >
-                                    {submenu.name}
+                                    {menuItem.name}
                                   </NavDropdown.Item>
                                 );
                               })}

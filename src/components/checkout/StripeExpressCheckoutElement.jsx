@@ -223,7 +223,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                 />
                 <button
                   type="button"
-                  class="btn btn-continue tw-mt-5"
+                  className="btn btn-continue tw-mt-5"
                   disabled={!selectedWorkshopId}
                   onClick={goToPaymentModal}
                 >

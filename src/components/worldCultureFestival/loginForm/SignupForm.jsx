@@ -42,7 +42,7 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
     >
       <div className="wcf-form__fields">
         <div className="wcf-input wcf-form__field">
-          <label for="sign-up-email" className="wcf-input__label">
+          <label htmlFor="sign-up-email" className="wcf-input__label">
             Email
           </label>
           <input
@@ -55,14 +55,17 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
             {...register("username")}
           />
           {errors.username && (
-            <label for="welcome-sessions" class="wcf-select__error-message">
+            <label
+              htmlFor="welcome-sessions"
+              className="wcf-select__error-message"
+            >
               {errors.username.message}
             </label>
           )}
         </div>
 
         <div className="wcf-input wcf-form__field">
-          <label for="sign-up-password" className="wcf-input__label">
+          <label htmlFor="sign-up-password" className="wcf-input__label">
             Password
           </label>
           <input
@@ -81,14 +84,17 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
             <img src="/img/Eye.png" />
           </button>
           {errors.password && (
-            <label for="welcome-sessions" class="wcf-select__error-message">
+            <label
+              htmlFor="welcome-sessions"
+              className="wcf-select__error-message"
+            >
               {errors.password.message}
             </label>
           )}
         </div>
 
         <div className="wcf-input wcf-form__field">
-          <label for="sign-up-first-name" className="wcf-input__label">
+          <label htmlFor="sign-up-first-name" className="wcf-input__label">
             First name
           </label>
           <input
@@ -101,14 +107,17 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
             {...register("firstName")}
           />
           {errors.firstName && (
-            <label for="welcome-sessions" class="wcf-select__error-message">
+            <label
+              htmlFor="welcome-sessions"
+              className="wcf-select__error-message"
+            >
               {errors.firstName.message}
             </label>
           )}
         </div>
 
         <div className="wcf-input wcf-form__field">
-          <label for="sign-up-last-name" className="wcf-input__label">
+          <label htmlFor="sign-up-last-name" className="wcf-input__label">
             Last name
           </label>
           <input
@@ -121,7 +130,10 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
             {...register("lastName")}
           />
           {errors.lastName && (
-            <label for="welcome-sessions" class="wcf-select__error-message">
+            <label
+              htmlFor="welcome-sessions"
+              className="wcf-select__error-message"
+            >
               {errors.lastName.message}
             </label>
           )}
@@ -135,7 +147,7 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
             role="status"
             aria-hidden="true"
           ></span>
-          <span class="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </button>
       )}
       {!loading && (

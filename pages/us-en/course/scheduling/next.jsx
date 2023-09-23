@@ -458,7 +458,7 @@ const SchedulingRange = () => {
                 <div className="scheduling-types__container">
                   <label
                     className="scheduling-types__label"
-                    for="online-type-course"
+                    htmlFor="online-type-course"
                   >
                     <input
                       type="radio"
@@ -476,7 +476,7 @@ const SchedulingRange = () => {
 
                   <label
                     className="scheduling-types__label"
-                    for="person-type-course"
+                    htmlFor="person-type-course"
                   >
                     <input
                       type="radio"
@@ -496,7 +496,7 @@ const SchedulingRange = () => {
 
                   <label
                     className="scheduling-types__label"
-                    for="both-type-course"
+                    htmlFor="both-type-course"
                   >
                     <input
                       type="radio"
@@ -537,19 +537,19 @@ const SchedulingRange = () => {
                   />
                 </div>
               </div>
-              <div class="col-12 col-lg-6 borderLeft">
-                <div class="available-course-time">
-                  <div class="available-course-heading">
-                    <div class="clock_img">
+              <div className="col-12 col-lg-6 borderLeft">
+                <div className="available-course-time">
+                  <div className="available-course-heading">
+                    <div className="clock_img">
                       <img src="/img/calendar.svg" />
                     </div>
-                    <div class="available-course-title">
-                      <h2 class="section-title"> Available Course Times</h2>
+                    <div className="available-course-title">
+                      <h2 className="section-title"> Available Course Times</h2>
                       <p>Based on the selected date range</p>
                     </div>
                   </div>
                   <div
-                    class="scheduling-modal__content-country-select"
+                    className="scheduling-modal__content-country-select"
                     data-select2-id="timezone"
                   >
                     <label data-select2-id="timezone">
@@ -567,7 +567,7 @@ const SchedulingRange = () => {
                     </label>
                   </div>
                   {mode !== COURSE_MODES.ONLINE.value && (
-                    <div class="scheduling-types__location ">
+                    <div className="scheduling-types__location ">
                       <ScheduleLocationFilter
                         handleLocationChange={handleLocationFilterChange}
                         value={locationFilter}
@@ -577,14 +577,14 @@ const SchedulingRange = () => {
                     </div>
                   )}
 
-                  <div class="date_selection">
-                    <h2 class="scheduling-modal__content-ranges-title">
+                  <div className="date_selection">
+                    <h2 className="scheduling-modal__content-ranges-title">
                       {selectedDates &&
                         selectedDates.length > 0 &&
                         formatDates(selectedDates)}
                     </h2>
 
-                    <ul class="scheduling-modal__content-options">
+                    <ul className="scheduling-modal__content-options">
                       {workshops?.map((workshop, index) => {
                         return (
                           <WorkshopListItem
@@ -604,7 +604,7 @@ const SchedulingRange = () => {
                     </ul>
                   </div>
 
-                  <div class="agreement_selection">
+                  <div className="agreement_selection">
                     {activeWorkshop && activeWorkshop.id && (
                       <StripeExpressCheckoutElement
                         workshop={activeWorkshop}
@@ -616,7 +616,7 @@ const SchedulingRange = () => {
                     {!activeWorkshop && (
                       <button
                         type="button"
-                        class="btn btn-continue tw-mt-5"
+                        className="btn btn-continue tw-mt-5"
                         disabled={!selectedWorkshopId}
                         onClick={goToPaymentModal}
                       >
@@ -661,8 +661,8 @@ const WorkshopListItem = ({
         value={selectedWorkshopId}
         name="scheduling-options"
       />
-      <div class="scheduling-modal__content-option">
-        <ul class="scheduling-modal__content-ranges-variants">
+      <div className="scheduling-modal__content-option">
+        <ul className="scheduling-modal__content-ranges-variants">
           {workshop?.timings &&
             workshop.timings.map((time, i) => {
               return (
@@ -703,14 +703,14 @@ const LocationSearchModal = ({
       <Modal.Body>
         <p>On which location would you prefer to schedule your courses?</p>
         <br />
-        <div class="location-search-field">
+        <div className="location-search-field">
           <ScheduleLocationFilter
             handleLocationChange={handleLocationFilterChange}
             value={locationFilter}
             containerClass="location-input"
             listClassName="result-list"
           />
-          <div class="miles-input">
+          <div className="miles-input">
             <Select2
               name="miles"
               id="miles"
@@ -726,7 +726,7 @@ const LocationSearchModal = ({
         <button
           type="button"
           data-dismiss="modal"
-          class="btn btn-primary find-courses"
+          className="btn btn-primary find-courses"
           onClick={handleModalToggle}
         >
           Find Courses

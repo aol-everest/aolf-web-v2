@@ -161,21 +161,21 @@ export const PriceCard = ({ workshop }) => {
     .join(", ");
 
   return (
-    <div class="container">
-      <div class="registration-widget">
-        <div class=" row register-content">
-          <div class="col discount-price">
+    <div className="container">
+      <div className="registration-widget">
+        <div className=" row register-content">
+          <div className="col discount-price">
             ${fee}&nbsp;
             {delfee && (
-              <span class="actual-price">
+              <span className="actual-price">
                 <s>${delfee}</s>
               </span>
             )}
           </div>
-          <div class="col dates">
-            <span class="title">Dates</span>
+          <div className="col dates">
+            <span className="title">Dates</span>
             <br />
-            <span class="content">
+            <span className="content">
               {dayjs
                 .utc(eventStartDate)
                 .isSame(dayjs.utc(eventEndDate), "month") &&
@@ -190,10 +190,10 @@ export const PriceCard = ({ workshop }) => {
                   .format("M/DD/YYYY")}`}
             </span>
           </div>
-          <div class="col location">
-            <span class="title">Location</span>
+          <div className="col location">
+            <span className="title">Location</span>
             <br />
-            <span class="content">
+            <span className="content">
               {mode === COURSE_MODES.ONLINE.name ? (
                 mode
               ) : (
@@ -217,17 +217,17 @@ export const PriceCard = ({ workshop }) => {
             </span>
           </div>
         </div>
-        <div class=" row register-content">
+        <div className=" row register-content">
           {timings &&
             timings.map((time) => {
               return (
-                <div class="col circle" key={time.startDate}>
-                  <div class="dates">
-                    <span class="title">
+                <div className="col circle" key={time.startDate}>
+                  <div className="dates">
+                    <span className="title">
                       {dayjs.utc(time.startDate).format("ddd, MMM DD")}
                     </span>
                     <br />
-                    <span class="content">
+                    <span className="content">
                       {tConvert(time.startTime)}-{tConvert(time.endTime)}
                       {` (${ABBRS[time.timeZone]})`}
                     </span>
@@ -236,38 +236,38 @@ export const PriceCard = ({ workshop }) => {
               );
             })}
         </div>
-        <div class=" row register-content">
-          <div class="col dates instructor">
-            <FaUser class="fa-solid orange" />
+        <div className=" row register-content">
+          <div className="col dates instructor">
+            <FaUser className="fa-solid orange" />
 
-            <div class="instructor-content">
-              <span class="title">Instructor</span>
+            <div className="instructor-content">
+              <span className="title">Instructor</span>
               <br />
-              <span class="content">{teachers}</span>
+              <span className="content">{teachers}</span>
             </div>
           </div>
-          <div class="col location contact">
-            <FaPhone class="fa-solid orange" />
-            <div class="contact-content">
-              <span class="title">Contact</span>
+          <div className="col location contact">
+            <FaPhone className="fa-solid orange" />
+            <div className="contact-content">
+              <span className="title">Contact</span>
               <br />
-              <span class="content">
+              <span className="content">
                 {email} | {phone1}
               </span>
             </div>
           </div>
         </div>
 
-        <div class=" row register-content no_border">
-          <div class="col-md-4">
-            <button class="register-button" onClick={handleRegister}>
+        <div className=" row register-content no_border">
+          <div className="col-md-4">
+            <button className="register-button" onClick={handleRegister}>
               Register Now <FaArrowRightLong />
             </button>
           </div>
-          <div class="col-md-8">
-            <div class="select-date-timezone">
-              <span class="title">Looking for another date?</span>
-              <div class="actions search-form d-flex align-items-center">
+          <div className="col-md-8">
+            <div className="select-date-timezone">
+              <span className="title">Looking for another date?</span>
+              <div className="actions search-form d-flex align-items-center">
                 <Popup
                   tabIndex="1"
                   value={filterStartDate}
@@ -313,7 +313,7 @@ export const PriceCard = ({ workshop }) => {
                   {({ closeHandler }) => (
                     <>
                       <li
-                        class="courses-filter__list-item"
+                        className="courses-filter__list-item"
                         onClick={closeHandler({
                           name: "Eastern",
                           value: "EST",
@@ -322,7 +322,7 @@ export const PriceCard = ({ workshop }) => {
                         Eastern
                       </li>
                       <li
-                        class="courses-filter__list-item"
+                        className="courses-filter__list-item"
                         onClick={closeHandler({
                           name: "Central",
                           value: "CST",
@@ -331,7 +331,7 @@ export const PriceCard = ({ workshop }) => {
                         Central
                       </li>
                       <li
-                        class="courses-filter__list-item"
+                        className="courses-filter__list-item"
                         onClick={closeHandler({
                           name: "Mountain",
                           value: "MST",
@@ -340,7 +340,7 @@ export const PriceCard = ({ workshop }) => {
                         Mountain
                       </li>
                       <li
-                        class="courses-filter__list-item"
+                        className="courses-filter__list-item"
                         onClick={closeHandler({
                           name: "Pacific",
                           value: "PST",
@@ -349,7 +349,7 @@ export const PriceCard = ({ workshop }) => {
                         Pacific
                       </li>
                       <li
-                        class="courses-filter__list-item"
+                        className="courses-filter__list-item"
                         onClick={closeHandler({
                           name: "Hawaii",
                           value: "HST",
@@ -360,16 +360,16 @@ export const PriceCard = ({ workshop }) => {
                     </>
                   )}
                 </Popup>
-                {/* <button class="select-button">
+                {/* <button className="select-button">
                 <FaCalendarDays /> Dates
               </button>
-              <button class="select-button">
+              <button className="select-button">
                 <FaClock /> Time Zone
               </button> */}
               </div>
             </div>
             {!isSearchDatesDisabled && (
-              <div class="text-right">
+              <div className="text-right">
                 <button
                   className="register-button mt-4"
                   onClick={handleSearchDates}

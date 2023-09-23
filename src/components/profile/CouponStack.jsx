@@ -109,24 +109,24 @@ const CouponMergeResultCmp = ({
     <div className="profile-update__form">
       <h6 className="profile-update__title">Redeem Advocate Coupons</h6>
 
-      <div class="advocate-reward mt-4 mb-4">
-        <div class="text-center">
-          <p class="advocate-reward__text mb-4">
+      <div className="advocate-reward mt-4 mb-4">
+        <div className="text-center">
+          <p className="advocate-reward__text mb-4">
             Your rewards code with a value of ${reedemableAmount} has been
             created for{" "}
             {COURSE_TYPES.find((c) => c.value === workshopType).label}. A
             confirmation email with your rewards code has been sent to
-            <span class="d-block">{user.profile.email}.</span>
+            <span className="d-block">{user.profile.email}.</span>
           </p>
         </div>
 
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
-          <p class="advocate-reward__label mb-4 mb-sm-0 !tw-w-fit">
+        <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+          <p className="advocate-reward__label mb-4 mb-sm-0 !tw-w-fit">
             {newCouponCode} (${reedemableAmount})
           </p>
 
           <button
-            class="advocate-reward__button align-self-end"
+            className="advocate-reward__button align-self-end"
             onClick={handleCopyCoupon}
           >
             Copy Code
@@ -222,7 +222,7 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
                   </Field>
                 </div>
 
-                <div class="volonteer-content__item_multiselect_body item-volonteer advocate-reward__select mt-4 mb-4">
+                <div className="volonteer-content__item_multiselect_body item-volonteer advocate-reward__select mt-4 mb-4">
                   <Dropdown
                     placeholder="Choose Course Type"
                     formikProps={formikProps}
@@ -233,8 +233,8 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
                   ></Dropdown>
                 </div>
 
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
-                  <p class="d-none d-sm-block advocate-reward__total">
+                <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+                  <p className="d-none d-sm-block advocate-reward__total">
                     {isSubmit && `Rewards Selected Total: [$${totalReward}]`}
                   </p>
                   <button
