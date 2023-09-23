@@ -53,7 +53,7 @@ export const ChangePasswordForm = ({
       </p>
       <div className="wcf-form__fields">
         <div className="wcf-input wcf-form__field">
-          <label for="log-in-password" className="wcf-input__label">
+          <label htmlFor="log-in-password" className="wcf-input__label">
             Code
           </label>
           <input
@@ -69,13 +69,13 @@ export const ChangePasswordForm = ({
             spellCheck="false"
           />
           {errors.code && (
-            <label for="log-in-email" class="wcf-select__error-message">
+            <label htmlFor="log-in-email" className="wcf-select__error-message">
               {errors.code.message}
             </label>
           )}
         </div>
         <div className="wcf-input wcf-form__field">
-          <label for="log-in-password" className="wcf-input__label">
+          <label htmlFor="log-in-password" className="wcf-input__label">
             New Password
           </label>
           <input
@@ -91,13 +91,13 @@ export const ChangePasswordForm = ({
             spellCheck="false"
           />
           {errors.password && (
-            <label for="log-in-email" class="wcf-select__error-message">
+            <label htmlFor="log-in-email" className="wcf-select__error-message">
               {errors.password.message}
             </label>
           )}
         </div>
         <div className="wcf-input wcf-form__field">
-          <label for="log-in-password" className="wcf-input__label">
+          <label htmlFor="log-in-password" className="wcf-input__label">
             Confirm Password
           </label>
           <input
@@ -113,7 +113,7 @@ export const ChangePasswordForm = ({
             spellCheck="false"
           />
           {errors.passwordConfirmation && (
-            <label for="log-in-email" class="wcf-select__error-message">
+            <label htmlFor="log-in-email" className="wcf-select__error-message">
               {errors.passwordConfirmation.message}
             </label>
           )}
@@ -128,7 +128,7 @@ export const ChangePasswordForm = ({
             role="status"
             aria-hidden="true"
           ></span>
-          <span class="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </button>
       )}
       {!loading && (

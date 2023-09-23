@@ -32,13 +32,13 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
       </p>
       <div className="order__card">
         <StyledInput
-          class="mt-0"
+          className="mt-0"
           placeholder="Title"
           formikProps={formikProps}
           formikKey="contactTitle"
           fullWidth
         ></StyledInput>
-        <Field name="contactHealthcareOrganisation" class="form-control">
+        <Field name="contactHealthcareOrganisation" className="form-control">
           {({ field }) => (
             <FieldWrapper
               formikKey={"contactHealthcareOrganisation"}
@@ -78,7 +78,7 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
         </Field>
         <StyledInput
           containerClass={classNames(Style.address, "mt-0")}
-          class={classNames(Style.address)}
+          className={classNames(Style.address)}
           placeholder="Degree/Qualifications"
           formikProps={formikProps}
           formikKey="contactDegree"

@@ -48,7 +48,7 @@ export const SKYBreathMeditationCombo = ({
 
             <div className="welcome__navigation">
               <button
-                class="welcome__btn-course btn-secondary"
+                className="welcome__btn-course btn-secondary"
                 onClick={handleSecondCourseRedirection}
               >
                 Second Course

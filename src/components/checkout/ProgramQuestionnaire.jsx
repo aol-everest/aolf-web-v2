@@ -69,7 +69,7 @@ const questionRender = (formikProps) => (question, index) => {
               dangerouslySetInnerHTML={{ __html: question.question }}
             ></label>
           )}
-          <Field name={key} class="form-control">
+          <Field name={key} className="form-control">
             {({ field }) => {
               return (
                 <Select
@@ -118,7 +118,7 @@ const questionRender = (formikProps) => (question, index) => {
               dangerouslySetInnerHTML={{ __html: question.question }}
             ></label>
           )}
-          <Field name={key} class="form-control">
+          <Field name={key} className="form-control">
             {({ field }) => (
               <Select
                 name={key}
@@ -163,7 +163,7 @@ const questionRender = (formikProps) => (question, index) => {
           )}
           <div className="form-check">
             <Field
-              class="form-check-input"
+              className="form-check-input"
               type="radio"
               name={key}
               value="Yes"
@@ -175,7 +175,7 @@ const questionRender = (formikProps) => (question, index) => {
           </div>
           <div className="form-check">
             <Field
-              class="form-check-input"
+              className="form-check-input"
               type="radio"
               name={key}
               value="No"
@@ -200,7 +200,7 @@ const questionRender = (formikProps) => (question, index) => {
           <div className="form-check form-check-inline checkbox">
             <div>
               <Field
-                class="form-check-input"
+                className="form-check-input"
                 name={key}
                 component={checkBoxQuestion}
                 id={key}

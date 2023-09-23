@@ -61,29 +61,31 @@ export const MobileCourseOptions = ({
             !isCourseOptionRequired && (
               <>
                 {isMeditationDeluxe && (
-                  <div class="reciept reciept--box d-none d-lg-block">
-                    <div class="reciept__header">
-                      <p class="reciept__item reciept__item_main font-weight-normal">
+                  <div className="reciept reciept--box d-none d-lg-block">
+                    <div className="reciept__header">
+                      <p className="reciept__item reciept__item_main font-weight-normal">
                         <span>
                           <img src="/img/ic-timer.svg" alt="timer" />
                           Limited Time Offer
                         </span>
                       </p>
-                      <ul class="reciept__item_list ">
+                      <ul className="reciept__item_list ">
                         <li>
-                          <p class="font-weight-normal">Gateways to Infinity</p>
-                          <p class="font-weight-bold">
-                            <span class="discount font-weight-bold">
+                          <p className="font-weight-normal">
+                            Gateways to Infinity
+                          </p>
+                          <p className="font-weight-bold">
+                            <span className="discount font-weight-bold">
                               [$590] [$90]
                             </span>{" "}
                             $0
                           </p>
                         </li>
                         <li>
-                          <p class="font-weight-normal">
+                          <p className="font-weight-normal">
                             {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                           </p>
-                          <p class="font-weight-bold">
+                          <p className="font-weight-bold">
                             {delfee && (
                               <span className="discount font-weight-bold">
                                 [${delfee}]
@@ -95,7 +97,7 @@ export const MobileCourseOptions = ({
                       </ul>
                     </div>
 
-                    <div class="reciept__details text-center">
+                    <div className="reciept__details text-center">
                       <a href="">
                         <img
                           src="/img/trustpilot-logo-mobile.png"
@@ -105,16 +107,16 @@ export const MobileCourseOptions = ({
                         />
                       </a>
 
-                      <p class="comments__quote comments__quote--max-width mt-4">
+                      <p className="comments__quote comments__quote--max-width mt-4">
                         “I used to suffer from anxiety and my health was greatly
                         affected by it. I feel so free and light now.”
-                        <span class="d-block mt-3 font-normal">
+                        <span className="d-block mt-3 font-normal">
                           - Millie I.
                         </span>
                       </p>
                     </div>
 
-                    <div class="reciept__more">
+                    <div className="reciept__more">
                       Additional Notes: Housing will be offsite. Please contact
                       the course coordinator for details, and to make
                       arrangements.
@@ -123,18 +125,18 @@ export const MobileCourseOptions = ({
                   </div>
                 )}
                 {gatewayToInfinity && (
-                  <div class="reciept reciept--box d-none d-lg-block">
-                    <div class="reciept__header">
-                      <p class="reciept__item reciept__item_main font-weight-normal">
+                  <div className="reciept reciept--box d-none d-lg-block">
+                    <div className="reciept__header">
+                      <p className="reciept__item reciept__item_main font-weight-normal">
                         <span>
                           <img src="/img/ic-timer.svg" alt="timer" />
                           Limited Time Offer
                         </span>
                       </p>
-                      <ul class="reciept__item_list ">
+                      <ul className="reciept__item_list ">
                         <li>
-                          <p class="font-weight-normal">Regular rate</p>
-                          <p class="font-weight-bold">
+                          <p className="font-weight-normal">Regular rate</p>
+                          <p className="font-weight-bold">
                             {delfee && (
                               <span className="discount font-weight-bold">
                                 [${delfee}]
@@ -146,7 +148,7 @@ export const MobileCourseOptions = ({
                       </ul>
                     </div>
 
-                    <div class="reciept__details text-center">
+                    <div className="reciept__details text-center">
                       <a href="">
                         <img
                           src="/img/trustpilot-logo-mobile.png"
@@ -156,16 +158,16 @@ export const MobileCourseOptions = ({
                         />
                       </a>
 
-                      <p class="comments__quote comments__quote--max-width mt-4">
+                      <p className="comments__quote comments__quote--max-width mt-4">
                         “I used to suffer from anxiety and my health was greatly
                         affected by it. I feel so free and light now.”
-                        <span class="d-block mt-3 font-normal">
+                        <span className="d-block mt-3 font-normal">
                           - Millie I.
                         </span>
                       </p>
                     </div>
 
-                    <div class="reciept__more">
+                    <div className="reciept__more">
                       Additional Notes: Housing will be offsite. Please contact
                       the course coordinator for details, and to make
                       arrangements.
@@ -505,7 +507,7 @@ export const MobileCourseOptions = ({
                         >
                           <span>{residentialAddOn.productName}</span>
                           {residentialAddOn.isFull && (
-                            <span class="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
+                            <span className="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
                               Full
                             </span>
                           )}
