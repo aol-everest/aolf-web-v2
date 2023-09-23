@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { COURSE_MODES, COURSE_TYPES } from "@constants";
 import { useQueryString } from "@hooks";
 import { pushRouteWithUTMQuery } from "@service";
@@ -111,6 +111,7 @@ const SchedulingRange = () => {
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isInitalLoad, setIsInitalLoad] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [courseTypeFilter] = useQueryString("courseType", {
     defaultValue: "SKY_BREATH_MEDITATION",
@@ -122,7 +123,7 @@ const SchedulingRange = () => {
     defaultValue: "EST",
   });
   const [milesFilter, setMilesFilter] = useQueryString("miles", {
-    defaultValue: "25",
+    defaultValue: "50",
   });
   const [locationFilter, setLocationFilter] = useQueryString("location", {
     parse: JSON.parse,
@@ -198,14 +199,16 @@ const SchedulingRange = () => {
         path: "workshopMonthCalendar",
         param,
       });
-      const defaultDate =
-        response.data.length > 0 ? response.data[0].allDates : [];
-      console.log(defaultDate);
-      if (fp?.current?.flatpickr && defaultDate.length > 0) {
-        fp.current.flatpickr.jumpToDate(defaultDate[0]);
-        setTimeout(() => {
-          fp.current.flatpickr.setDate(defaultDate, true);
-        }, 10);
+      if (isInitalLoad) {
+        const defaultDate =
+          response.data.length > 0 ? response.data[0].allDates : [];
+        if (fp?.current?.flatpickr && defaultDate.length > 0) {
+          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+          setTimeout(() => {
+            fp.current.flatpickr.setDate(defaultDate, true);
+          }, 10);
+        }
+        setIsInitalLoad(false);
       }
       return response.data;
     },
@@ -221,6 +224,20 @@ const SchedulingRange = () => {
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
   });
+
+  useEffect(() => {
+    console.log(parseInt(currentMonthYear.split("-")[1]));
+    fp.current.flatpickr.changeMonth(
+      parseInt(currentMonthYear.split("-")[1] - 1),
+      false,
+    );
+    setTimeout(() => {
+      fp.current.flatpickr.changeYear(
+        parseInt(currentMonthYear.split("-")[0]),
+        false,
+      );
+    }, 10);
+  }, []);
 
   const handleModalToggle = () => {
     setShowLocationModal(!showLocationModal);
@@ -346,11 +363,6 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(null);
   };
 
-  const handleMilesChange = (ev) => {
-    ev.preventDefault();
-    setMilesFilter(ev?.target?.value);
-  };
-
   const goToPaymentModal = () => {
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
@@ -387,8 +399,10 @@ const SchedulingRange = () => {
   };
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
+    console.log(selectedDates, dateStr);
+
     if (selectedDates.length > 0 && dateStr !== "update") {
-      const today = moment(selectedDates[selectedDates.length - 1]);
+      const today = moment(selectedDates[0]);
       let intervalSelected = [];
       for (const enableItem of dateAvailable) {
         const fromMoment = moment(enableItem.firstDate);
@@ -405,6 +419,7 @@ const SchedulingRange = () => {
       instance.selectedDates = [...intervalSelected];
 
       selectedDates = [...intervalSelected];
+      console.log(intervalSelected);
 
       instance.setDate(intervalSelected);
       setSelectedDates(
@@ -420,7 +435,11 @@ const SchedulingRange = () => {
   };
 
   const handleLocationFilterChange = (value) => {
-    setLocationFilter(JSON.stringify(value));
+    if (value && Object.keys(value).length > 0) {
+      setLocationFilter(JSON.stringify(value));
+    } else {
+      setLocationFilter(null);
+    }
   };
 
   return (
@@ -526,7 +545,7 @@ const SchedulingRange = () => {
                     options={{
                       allowInput: false,
                       inline: true,
-                      mode: "multiple",
+                      mode: "single",
                       enableTime: false,
                       monthSelectorType: "static",
                       dateFormat: "Y-m-d",
@@ -633,7 +652,6 @@ const SchedulingRange = () => {
           handleModalToggle={handleModalToggle}
           showLocationModal={showLocationModal}
           milesFilter={milesFilter}
-          handleMilesChange={handleMilesChange}
           locationFilter={locationFilter}
           handleLocationFilterChange={handleLocationFilterChange}
         />
@@ -687,7 +705,6 @@ const LocationSearchModal = ({
   handleModalToggle,
   showLocationModal,
   milesFilter,
-  handleMilesChange,
   locationFilter,
   handleLocationFilterChange,
 }) => {
@@ -710,18 +727,6 @@ const LocationSearchModal = ({
             containerClass="location-input"
             listClassName="result-list"
           />
-          <div className="miles-input">
-            <Select2
-              name="miles"
-              id="miles"
-              defaultValue={"25miles"}
-              multiple={false}
-              data={MILES}
-              onChange={handleMilesChange}
-              value={milesFilter}
-              options={{ minimumResultsForSearch: -1 }}
-            />
-          </div>
         </div>
         <button
           type="button"
