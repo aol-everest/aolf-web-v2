@@ -3613,10 +3613,10 @@ dashify@^2.0.0:
   resolved "https://registry.yarnpkg.com/dashify/-/dashify-2.0.0.tgz#fff270ca2868ca427fee571de35691d6e437a648"
   integrity sha512-hpA5C/YrPjucXypHPPc0oJ1l9Hf6wWbiOL7Ik42cxnsUOhWiCB/fylKbKqqJalW9FgkNQCw16YO8uW9Hs0Iy1A==
 
-dayjs@^1.11.9:
-  version "1.11.9"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.9.tgz#9ca491933fadd0a60a2c19f6c237c03517d71d1a"
-  integrity sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==
+dayjs@^1.11.10:
+  version "1.11.10"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.10.tgz#68acea85317a6e164457d6d6947564029a6a16a0"
+  integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
 
 debug@2.6.9:
   version "2.6.9"
@@ -5608,6 +5608,11 @@ is-unicode-supported@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/is-unicode-supported/-/is-unicode-supported-0.1.0.tgz#3f26c76a809593b52bfa2ecb5710ed2779b522a7"
   integrity sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==
+
+is-url@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/is-url/-/is-url-1.2.4.tgz#04a4df46d28c4cff3d73d01ff06abeb318a1aa52"
+  integrity sha512-ITvGim8FhRiYe4IQ5uHSkj7pVaPDrCTkNd3yq3cV7iZAcJdHTUMPMEHcqSOy9xZ9qFenQCvi+2wjH9a1nXqHww==
 
 is-utf8@^0.2.1:
   version "0.2.1"
@@ -7697,10 +7702,10 @@ react-select2-wrapper@^1.0.4-beta6:
     select2 "^4.0.0"
     shallow-equal-fuzzy "^0.0.2"
 
-react-select@^5.7.4:
-  version "5.7.4"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.7.4.tgz#d8cad96e7bc9d6c8e2709bdda8f4363c5dd7ea7d"
-  integrity sha512-NhuE56X+p9QDFh4BgeygHFIvJJszO1i1KSkg/JPcIJrbovyRtI+GuOEa4XzFCEpZRAEoEI8u/cAHK+jG/PgUzQ==
+react-select@^5.7.5:
+  version "5.7.5"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.7.5.tgz#d2d0f29994e0f06000147bfb2adf58324926c2fd"
+  integrity sha512-jgYZa2xgKP0DVn5GZk7tZwbRx7kaVz1VqU41S8z1KWmshRDhlrpKS0w80aS1RaK5bVIXpttgSou7XCjWw1ncKA==
   dependencies:
     "@babel/runtime" "^7.12.0"
     "@emotion/cache" "^11.4.0"

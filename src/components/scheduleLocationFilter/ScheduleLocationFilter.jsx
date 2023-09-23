@@ -5,6 +5,7 @@ export const ScheduleLocationFilter = ({
   handleLocationChange,
   value = {},
   containerClass = "",
+  listClassName = "",
 }) => {
   const removeCoupon = (e) => {
     if (e) e.preventDefault();
@@ -38,6 +39,7 @@ export const ScheduleLocationFilter = ({
           closeHandler={handleLocationFilterChange}
           placeholder="Filter by zip code or city"
           parentClass="scheduling-address"
+          listClassName={listClassName}
           value={value}
           isDefaultLocation
         />
