@@ -1,7 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
 import { MODAL_TYPES, COURSE_TYPES } from "@constants";
 import classNames from "classnames";
 import { useAuth, useGlobalModalContext } from "@contexts";
@@ -11,7 +10,6 @@ import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { CourseBottomCard } from "./CourseBottomCard";
 import { PriceCard } from "./PriceCard";
 import { Pagination, A11y } from "swiper";
 import { Accordion, Card, AccordionContext } from "react-bootstrap";
@@ -627,10 +625,6 @@ export const SKYSilentRetreat = ({ data }) => {
           </div>
         </div>
       </main>
-
-      <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
-      </HideOn>
     </>
   );
 };
