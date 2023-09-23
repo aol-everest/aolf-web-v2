@@ -95,13 +95,13 @@ export const SKYWithSahaj = ({ data }) => {
 
   return (
     <>
-      <main class="course-filter art-of-living-premium-course">
+      <main className="course-filter art-of-living-premium-course">
         <section className="samadhi-top-section">
           <div className="banner">
             <div className="container">
               <div className="courses-title">Courses</div>
               <div className="banner-title"> {title}</div>
-              <div class="banner-description">
+              <div className="banner-description">
                 Find new levels of calm and energy for life
               </div>
               {!sfid && (
@@ -117,36 +117,36 @@ export const SKYWithSahaj = ({ data }) => {
             </div>
           </div>
           {sfid && <PriceCard workshop={data} />}
-          <div class="container samadhi-featuers">
-            <div class="feature-box">
-              <div class="feature-icon">
+          <div className="container samadhi-featuers">
+            <div className="feature-box">
+              <div className="feature-icon">
                 <img src="/img/aolp-size.png" alt="Reduce" />
               </div>
-              <div class="feature-text">
+              <div className="feature-text">
                 Reduce stress, anxiety, and depression
               </div>
             </div>
-            <div class="feature-box">
-              <div class="feature-icon">
+            <div className="feature-box">
+              <div className="feature-icon">
                 <img src="/img/aolp-increase.png" alt="Enhance" />
               </div>
-              <div class="feature-text">Increase your energy levels</div>
+              <div className="feature-text">Increase your energy levels</div>
             </div>
-            <div class="feature-box">
-              <div class="feature-icon">
+            <div className="feature-box">
+              <div className="feature-icon">
                 <img src="/img/aolp-wellness.png" alt="Wellness" />
               </div>
-              <div class="feature-text">
+              <div className="feature-text">
                 Learn wellness practices that last a lifetime
               </div>
             </div>
           </div>
-          <div class="container content-video-area">
-            <div class="video-section-textbox">
-              <h2 class="section-title">
+          <div className="container content-video-area">
+            <div className="video-section-textbox">
+              <h2 className="section-title">
                 Discover Art of Living's Premium Course
               </h2>
-              <div class="discover_premium_course_text">
+              <div className="discover_premium_course_text">
                 <p>
                   This course combines two powerful experiences into one. You
                   will learn Sudarshan Kriya (SKY Breath Meditation), as taught
@@ -173,48 +173,48 @@ export const SKYWithSahaj = ({ data }) => {
               </p>
             </div>
           </div>
-          <div class="container samadhi-benefits-section">
-            <h2 class="section-title">
+          <div className="container samadhi-benefits-section">
+            <h2 className="section-title">
               <strong>Course</strong> Highlights
             </h2>
-            <div class="samadhi-benefits-wrapper row">
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box1">
-                  <div class="benefit-title">
+            <div className="samadhi-benefits-wrapper row">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box1">
+                  <div className="benefit-title">
                     <strong>Pranayama</strong>
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     Improve your energy levels and reduce stress through
                     breathing Exercises
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box2">
-                  <div class="benefit-title">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box2">
+                  <div className="benefit-title">
                     <strong>SKY Breath Meditation </strong>(Sudarshan Kriya)
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     Learn the most powerful breathing technique of our time
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box3 ">
-                  <div class="benefit-title">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box3 ">
+                  <div className="benefit-title">
                     <strong>5 Keys </strong>to Joyful Life
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     Simple toolkit to help you navigate life joyfully
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 py-1 px-1">
-                <div class="samadhi-benefit-box box4">
-                  <div class="benefit-title">
+              <div className="col-md-6 py-1 px-1">
+                <div className="samadhi-benefit-box box4">
+                  <div className="benefit-title">
                     <strong>Community</strong>
                   </div>
-                  <div class="benefit-text">
+                  <div className="benefit-text">
                     Connect with a community of like-minded people and a
                     certified instructor
                   </div>
@@ -224,53 +224,55 @@ export const SKYWithSahaj = ({ data }) => {
           </div>
         </section>
 
-        <section class="breadth-meditation sudarshan-kriya">
-          <div class="container">
-            <div class="row">
-              <div class="col-12 px-1 col-lg-12 text-center text-lg-center">
-                <h2 class="section-title">
+        <section className="breadth-meditation sudarshan-kriya">
+          <div className="container">
+            <div className="row">
+              <div className="col-12 px-1 col-lg-12 text-center text-lg-center">
+                <h2 className="section-title">
                   <strong>Impacts</strong> of Sudarshan Kriya
                 </h2>
-                <div class="section-description">
+                <div className="section-description">
                   Science-backed benefits of Sudarshan Kriya, shown in over 100
                   independent studies
                 </div>
               </div>
-              <div class="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
-                <div class="breadth-meditation_box box_1">
-                  <div class="breadth-meditation_logo">
+              <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
+                <div className="breadth-meditation_box box_1">
+                  <div className="breadth-meditation_logo">
                     <img src="/img/icon1.svg" alt="transforming lives" />
                   </div>
-                  <div class="breadth-meditation_content">
-                    <span class="title stats-1">+33% Immune Cell Count</span>
-                    <span class="content stats-desc">
+                  <div className="breadth-meditation_content">
+                    <span className="title stats-1">
+                      +33% Immune Cell Count
+                    </span>
+                    <span className="content stats-desc">
                       Increase in lymphocytes in 6 weeks & remained in the
                       normal range
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
-                <div class="breadth-meditation_box box_2">
-                  <div class="breadth-meditation_logo">
+              <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
+                <div className="breadth-meditation_box box_2">
+                  <div className="breadth-meditation_logo">
                     <img src="/img/icon2.svg" alt="transforming lives" />
                   </div>
-                  <div class="breadth-meditation_content">
-                    <span class="title stats-2">21% Life Satisfaction</span>
-                    <span class="content stats-desc">
+                  <div className="breadth-meditation_content">
+                    <span className="title stats-2">21% Life Satisfaction</span>
+                    <span className="content stats-desc">
                       Increase within 1 week
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
-                <div class="breadth-meditation_box box_3">
-                  <div class="breadth-meditation_logo">
+              <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
+                <div className="breadth-meditation_box box_3">
+                  <div className="breadth-meditation_logo">
                     <img src="/img/icon3.svg" alt="transforming lives" />
                   </div>
-                  <div class="breadth-meditation_content">
-                    <span class="title stats-3">-57% Stress Hormone</span>
-                    <span class="content stats-desc">
+                  <div className="breadth-meditation_content">
+                    <span className="title stats-3">-57% Stress Hormone</span>
+                    <span className="content stats-desc">
                       Decrease in serum cortisol in 2 weeks
                     </span>
                   </div>
@@ -285,20 +287,20 @@ export const SKYWithSahaj = ({ data }) => {
           <Swiper {...swiperOption} className="reviews-slider">
             <SwiperSlide>
               <div className="review-box">
-                <div class="review-title">
+                <div className="review-title">
                   ...very, very powerful...such a sense of calm
                 </div>
-                <div class="review-text">
+                <div className="review-text">
                   It was very, very powerful. I gained such a sense of calm,
                   more than I ever could have imagined.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/max-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Max Goldberg</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Max Goldberg</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -307,21 +309,23 @@ export const SKYWithSahaj = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">relaxed, refreshed, and happier</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">
+                  relaxed, refreshed, and happier
+                </div>
+                <div className="review-text">
                   It helped me to put into practice the valuable wisdom which I
                   had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
                   course. I came away relaxed, refreshed and happier than I had
                   felt for a long time.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/julie-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Julie Madeley</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Julie Madeley</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -330,20 +334,20 @@ export const SKYWithSahaj = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">Felt more balanced</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">Felt more balanced</div>
+                <div className="review-text">
                   I've been on quite a few silent retreats in the past and this
                   felt more balanced, nourishing and comfortable than any other
                   retreat I'd been on.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/michelle-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Michelle Garisson</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Michelle Garisson</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -352,21 +356,21 @@ export const SKYWithSahaj = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">
+              <div className="review-box">
+                <div className="review-title">
                   extremely relaxing, yet energizing experience
                 </div>
-                <div class="review-text">
+                <div className="review-text">
                   The meditations are deep! It was an extremely relaxing yet
                   energizing experience.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/vinita-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Vinita D.</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Vinita D.</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -375,18 +379,18 @@ export const SKYWithSahaj = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">wonderful, peaceful retreat</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">wonderful, peaceful retreat</div>
+                <div className="review-text">
                   A wonderful, peaceful retreat ... extremely joyful and easy.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/aarti-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Aarti R.</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Aarti R.</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -395,20 +399,20 @@ export const SKYWithSahaj = ({ data }) => {
             </SwiperSlide>
 
             <SwiperSlide>
-              <div class="review-box">
-                <div class="review-title">I feel more like myself</div>
-                <div class="review-text">
+              <div className="review-box">
+                <div className="review-title">I feel more like myself</div>
+                <div className="review-text">
                   I feel more like myself after the Silence Retreat. My life
                   goes smoother after it and I feel the difference for a good
                   3-6 months.
                 </div>
-                <div class="review-author">
-                  <div class="reviewer-photo">
+                <div className="review-author">
+                  <div className="reviewer-photo">
                     <img src="/img/daniel-review.png" alt="reviewer" />
                   </div>
-                  <div class="reviewer-info">
-                    <div class="reviewer-name">Daniel M.</div>
-                    <div class="reviwer-position">
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Daniel M.</div>
+                    <div className="reviwer-position">
                       Silent Retreat participant
                     </div>
                   </div>
@@ -419,34 +423,36 @@ export const SKYWithSahaj = ({ data }) => {
           <div className="swiper-pagination"></div>
         </section>
 
-        <section class="container banner3">
-          <div class="aos-banner-third row">
-            <div class="banner-title">
+        <section className="container banner3">
+          <div className="aos-banner-third row">
+            <div className="banner-title">
               Unlock new levels of calm and energy for life with this 3-day
               online or in-person course starting at ${fee}
             </div>
-            <div class="col-sm-12 col-md-6 banner-text">
-              <ul class="first">
+            <div className="col-sm-12 col-md-6 banner-text">
+              <ul className="first">
                 <li>* SKY Breath Meditation</li>
                 <li>* Pranayama</li>
                 <li>* Personal Mantra</li>
               </ul>
             </div>
-            <div class="col-sm-12 col-md-6 banner-text">
-              <ul class="second">
+            <div className="col-sm-12 col-md-6 banner-text">
+              <ul className="second">
                 <li>* 5 Keys to Joyful Life</li>
                 <li>* 10.5 hrs Duration of the course</li>
               </ul>
             </div>
-            <div class="enrollment">
-              <div class="banner-text">
-                <div class="total-value">
+            <div className="enrollment">
+              <div className="banner-text">
+                <div className="total-value">
                   Total value -{" "}
-                  <span class="orginal-price">{delfee && `$${delfee}`}</span>{" "}
+                  <span className="orginal-price">
+                    {delfee && `$${delfee}`}
+                  </span>{" "}
                   <span>${fee}</span>
                 </div>
               </div>
-              <button class="enroll-btn">Enroll Now →</button>
+              <button className="enroll-btn">Enroll Now →</button>
             </div>
           </div>
         </section>
