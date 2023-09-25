@@ -399,7 +399,6 @@ const SchedulingRange = () => {
   };
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
-    console.log(selectedDates, dateStr);
     let isEventAvailable = false;
 
     if (selectedDates.length > 0 && dateStr !== "update") {
@@ -426,19 +425,12 @@ const SchedulingRange = () => {
         instance.selectedDates = [...intervalSelected];
 
         selectedDates = [...intervalSelected];
-        console.log(intervalSelected);
 
         instance.setDate(intervalSelected);
         setSelectedDates(
           intervalSelected.map((d) => moment(d).format("YYYY-MM-DD")),
         );
       }
-
-      /* const lastItem =
-        selectedDates?.length > 0
-          ? selectedDates[selectedDates?.length - 1]
-          : selectedDates[0];
-      handleDateChange(lastItem); */
     }
   };
 
@@ -538,10 +530,15 @@ const SchedulingRange = () => {
                   </label>
                 </div>
                 <div className="course_price">
-                  <h5>
-                    {mode !== COURSE_MODES_BOTH ? mode : ""} course price: $
-                    {workshopMaster.unitPrice}
-                  </h5>
+                  {mode === COURSE_MODES.IN_PERSON && (
+                    <h5>In-Person course price: ${workshopMaster.unitPrice}</h5>
+                  )}
+                  {mode === COURSE_MODES.ONLINE && (
+                    <h5>Online course price: ${workshopMaster.unitPrice}</h5>
+                  )}
+                  {mode === COURSE_MODES_BOTH && (
+                    <h5>Course price: ${workshopMaster.unitPrice}</h5>
+                  )}
                   <p>Select the start date for this 3-day course</p>
                 </div>
                 <div className="scheduling-modal__content-calendar">
