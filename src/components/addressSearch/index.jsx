@@ -124,7 +124,6 @@ export const AddressSearch = ({
                           <small>
                             {suggestion.formattedSuggestion.secondaryText}
                           </small>
-                          <p>{suggestion.description}</p>
                         </div>
                       </>
                     );
