@@ -400,6 +400,7 @@ const SchedulingRange = () => {
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
     console.log(selectedDates, dateStr);
+    let isEventAvailable = false;
 
     if (selectedDates.length > 0 && dateStr !== "update") {
       const today = moment(selectedDates[0]);
@@ -409,22 +410,29 @@ const SchedulingRange = () => {
         const toMoment = moment(
           enableItem.allDates[enableItem.allDates.length - 1],
         );
-        const isWithinRange = today.isSame(fromMoment, "date");
+        const isWithinRange = today.isBetween(
+          fromMoment,
+          toMoment,
+          "days",
+          "[]",
+        );
         if (isWithinRange) {
           intervalSelected = getDates(fromMoment, toMoment);
+          isEventAvailable = true;
           break; // Exit the loop when the condition is true
         }
       }
+      if (isEventAvailable) {
+        instance.selectedDates = [...intervalSelected];
 
-      instance.selectedDates = [...intervalSelected];
+        selectedDates = [...intervalSelected];
+        console.log(intervalSelected);
 
-      selectedDates = [...intervalSelected];
-      console.log(intervalSelected);
-
-      instance.setDate(intervalSelected);
-      setSelectedDates(
-        intervalSelected.map((d) => moment(d).format("YYYY-MM-DD")),
-      );
+        instance.setDate(intervalSelected);
+        setSelectedDates(
+          intervalSelected.map((d) => moment(d).format("YYYY-MM-DD")),
+        );
+      }
 
       /* const lastItem =
         selectedDates?.length > 0
