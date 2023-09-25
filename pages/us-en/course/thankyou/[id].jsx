@@ -131,6 +131,7 @@ const Thankyou = () => {
       category: "course_registration",
       name: "course_referral_popup",
       course_type: courseType,
+      referral: "course_checkout",
     });
     track(
       "'aol_purchase'",
@@ -316,6 +317,7 @@ const Thankyou = () => {
       screen_name: "course_referral_popup",
       event_target: "add_to_calendar_button",
       course_type: courseType,
+      referral: "course_checkout",
     });
   };
 
@@ -449,6 +451,7 @@ const Thankyou = () => {
       screen_name: "course_referral_popup",
       event_target: "ios_app_link",
       course_type: courseType,
+      referral: "course_checkout",
     });
   };
 
@@ -457,6 +460,7 @@ const Thankyou = () => {
       screen_name: "course_referral_popup",
       event_target: "android_app_link",
       course_type: courseType,
+      referral: "course_checkout",
     });
   };
 
