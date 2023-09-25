@@ -17,8 +17,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useContext } from "react";
+import { priceCalculation } from "@utils";
 
-export const SKYSilentRetreat = ({ data }) => {
+export const SKYWithSahaj = ({ data }) => {
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
@@ -90,16 +91,18 @@ export const SKYSilentRetreat = ({ data }) => {
     );
   };
 
+  const { fee, delfee } = priceCalculation({ workshop: data });
+
   return (
     <>
-      <main className="course-filter course-silence-retreat">
+      <main className="course-filter art-of-living-premium-course">
         <section className="samadhi-top-section">
           <div className="banner">
             <div className="container">
               <div className="courses-title">Courses</div>
               <div className="banner-title"> {title}</div>
               <div className="banner-description">
-                Renew your energy & focus for the whole year
+                Find new levels of calm and energy for life
               </div>
               {!sfid && (
                 <div className="hero-register-button-wrapper">
@@ -117,117 +120,103 @@ export const SKYSilentRetreat = ({ data }) => {
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/silence-retreat-icon-1.png" alt="Elevate" />
-              </div>
-              <div className="feature-text">Enjoy deep rest & rejuvenation</div>
-            </div>
-            <div className="feature-box">
-              <div className="feature-icon">
-                <img src="/img/silence-retreat-icon-2.png" alt="Enhance" />
+                <img src="/img/aolp-size.png" alt="Reduce" />
               </div>
               <div className="feature-text">
-                Find freedom from the mind’s chatter
+                Reduce stress, anxiety, and depression
               </div>
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/silence-retreat-icon-3.png" alt="Unlock" />
+                <img src="/img/aolp-increase.png" alt="Enhance" />
+              </div>
+              <div className="feature-text">Increase your energy levels</div>
+            </div>
+            <div className="feature-box">
+              <div className="feature-icon">
+                <img src="/img/aolp-wellness.png" alt="Wellness" />
               </div>
               <div className="feature-text">
-                Learn wellness practices to last a lifetime
+                Learn wellness practices that last a lifetime
               </div>
             </div>
           </div>
-          <div className="container content-video-container">
-            <div className="content-video-area">
-              <div className="video-section-textbox">
-                <h2 className="section-title">
-                  Why take 3-4 days out of your busy life for a Silent Retreat
-                </h2>
+          <div className="container content-video-area">
+            <div className="video-section-textbox">
+              <h2 className="section-title">
+                Discover Art of Living's Premium Course
+              </h2>
+              <div className="discover_premium_course_text">
                 <p>
-                  The Silent Retreat is a powerful mix of restorative breathing
-                  practices, yoga, deep wisdom, silence, and powerful guided
-                  meditations. It combines the Art of Living Part I and II
-                  courses into one transformative experience.
+                  This course combines two powerful experiences into one. You
+                  will learn Sudarshan Kriya (SKY Breath Meditation), as taught
+                  in the Art of Living Part I course, and also acquire a
+                  personal mantra, a charged sound that makes meditation easier,
+                  introduced in the Sahaj Samadhi Meditation course.
                 </p>
-                <p>
-                  Many people report remarkable shifts during the
-                  retreat—renewed perspective, fresh insight, a clearer mind.
-                  These few days also make the rest of your year more alive,
-                  productive, and full of energy. When you emerge, you feel
-                  centered and refreshed, ready to take on life with greater
-                  focus and joy.
-                </p>
+                <img src="/img/sky-sahaj.png" />
               </div>
-              <div className="video-wrapper">
-                <iframe
-                  width="519"
-                  height="291"
-                  src="https://player.vimeo.com/video/860926723?h=8bf163df0e&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                  frameBorder="0"
-                  title="Sahaj Samadhi"
-                ></iframe>
-              </div>
+              <p>
+                SKY Breath Meditation is an evidence-based breathwork practice
+                known to reduce stress and anxiety, with noticeable results in
+                just one week. This practice helps you let go of the past and
+                access a heightened state of awareness and relaxation, providing
+                you with a repeatable tool. Sahaj Samadhi Meditation takes this
+                further by deepening your experiences of rest and awareness,
+                freeing your mind from day-to-day worries.
+              </p>
+              <p>
+                The combination has a compounding effect that accelerates your
+                journey towards tranquility. In the end, you walk away with a
+                comprehensive toolkit of breathwork and meditation that mutually
+                enhance each other.
+              </p>
             </div>
-            <p>
-              You'll also learn the powerful breathing practice, Sudarshan Kriya
-              also known as {COURSE_TYPES.SKY_BREATH_MEDITATION.name} taught in
-              the Art of Living Part I course.
-            </p>
           </div>
-
           <div className="container samadhi-benefits-section">
             <h2 className="section-title">
-              <strong>Highlights</strong> of the Silent Retreat
+              <strong>Course</strong> Highlights
             </h2>
-            <div className="section-description">
-              Powerful breathing techniques and wisdom that can change your life
-            </div>
             <div className="samadhi-benefits-wrapper row">
               <div className="col-md-6 py-1 px-1">
                 <div className="samadhi-benefit-box box1">
                   <div className="benefit-title">
-                    <strong>Breathwork</strong>
-                    <br />
+                    <strong>Pranayama</strong>
                   </div>
                   <div className="benefit-text">
                     Improve your energy levels and reduce stress through
-                    breathing exercises
+                    breathing Exercises
                   </div>
                 </div>
               </div>
               <div className="col-md-6 py-1 px-1">
                 <div className="samadhi-benefit-box box2">
                   <div className="benefit-title">
-                    <strong>Sudarshan</strong> Kriya
+                    <strong>SKY Breath Meditation </strong>(Sudarshan Kriya)
                   </div>
                   <div className="benefit-text">
-                    Learn the most powerful breathing technique based on an
-                    ancient tradition
+                    Learn the most powerful breathing technique of our time
                   </div>
                 </div>
               </div>
               <div className="col-md-6 py-1 px-1">
                 <div className="samadhi-benefit-box box3 ">
                   <div className="benefit-title">
-                    <strong>Deep</strong> Meditations
+                    <strong>5 Keys </strong>to Joyful Life
                   </div>
                   <div className="benefit-text">
-                    <strong>Exclusive to this course</strong>—immerse in unique
-                    guided meditations crafted by Gurudev to release deep layers
-                    of stress and tension
+                    Simple toolkit to help you navigate life joyfully
                   </div>
                 </div>
               </div>
               <div className="col-md-6 py-1 px-1">
                 <div className="samadhi-benefit-box box4">
                   <div className="benefit-title">
-                    <strong>Silence</strong>
-                    <br />
+                    <strong>Community</strong>
                   </div>
                   <div className="benefit-text">
-                    Experience the extraordinary peace and rest that come from
-                    spending time in silence.
+                    Connect with a community of like-minded people and a
+                    certified instructor
                   </div>
                 </div>
               </div>
@@ -248,15 +237,13 @@ export const SKYSilentRetreat = ({ data }) => {
                 </div>
               </div>
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
-                <div className="breadth-meditation_box">
+                <div className="breadth-meditation_box box_1">
                   <div className="breadth-meditation_logo">
                     <img src="/img/icon1.svg" alt="transforming lives" />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-1">
-                      +33%
-                      <br />
-                      Immune Cell Count
+                      +33% Immune Cell Count
                     </span>
                     <span className="content stats-desc">
                       Increase in lymphocytes in 6 weeks & remained in the
@@ -266,16 +253,12 @@ export const SKYSilentRetreat = ({ data }) => {
                 </div>
               </div>
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
-                <div className="breadth-meditation_box">
+                <div className="breadth-meditation_box box_2">
                   <div className="breadth-meditation_logo">
                     <img src="/img/icon2.svg" alt="transforming lives" />
                   </div>
                   <div className="breadth-meditation_content">
-                    <span className="title stats-2">
-                      21%
-                      <br />
-                      Life Satisfaction
-                    </span>
+                    <span className="title stats-2">21% Life Satisfaction</span>
                     <span className="content stats-desc">
                       Increase within 1 week
                     </span>
@@ -283,108 +266,14 @@ export const SKYSilentRetreat = ({ data }) => {
                 </div>
               </div>
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
-                <div className="breadth-meditation_box">
+                <div className="breadth-meditation_box box_3">
                   <div className="breadth-meditation_logo">
                     <img src="/img/icon3.svg" alt="transforming lives" />
                   </div>
                   <div className="breadth-meditation_content">
-                    <span className="title stats-3">
-                      -57%
-                      <br />
-                      Stress Hormone
-                    </span>
+                    <span className="title stats-3">-57% Stress Hormone</span>
                     <span className="content stats-desc">
                       Decrease in serum cortisol in 2 weeks
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="container refreshing-silence">
-            <div className="row">
-              <div className="col-12 px-1">
-                <h2 className="section-title">
-                  Discover just how refreshing silence can be
-                </h2>
-              </div>
-              <div className="col-12 px-1 col-lg-8 text-left text-lg-left">
-                <p>
-                  Many people may find it challenging knowing how to quiet their
-                  mind. The Silent Retreat provides techniques and optimal
-                  conditions for sinking deep within and breaking free from
-                  mental chatter. Your whole experience is carefully guided and
-                  crafted to give you as relaxing and transformative an
-                  experience as possible.{" "}
-                </p>
-                <p className="desktopView">
-                  It’s no wonder that many retreat participants refer to it as
-                  the ideal vacation for body, mind, and spirit.
-                </p>
-              </div>
-              <div className="col-12 px-1 col-lg-4 text-left text-lg-left mobileColumn">
-                <p className="mobileView">
-                  It’s no wonder that many retreat participants refer to it as
-                  the ideal vacation for body, mind, and spirit.
-                </p>
-                <div className="body-mind-spirit"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="feature-section">
-          <div className="container">
-            <div className="feature_block">
-              <h2 className="section-title">
-                <strong>Art of Living</strong>
-                <br /> as seen in
-              </h2>
-            </div>
-            <div className="row">
-              <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
-                <div className="feature_box">
-                  <div className="feature_logo">
-                    <img src="/img/CNN.png" alt="transforming lives" />
-                  </div>
-                  <div className="feature-content">
-                    <span className="content">"Life Changing"</span>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
-                <div className="feature_box">
-                  <div className="feature_logo">
-                    <img src="/img/Yoga.png" alt="transforming lives" />
-                  </div>
-                  <div className="feature-content">
-                    <span className="content">
-                      "May be the fastest growing spiritual practice on the
-                      planet"
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
-                <div className="feature_box">
-                  <div className="feature_logo">
-                    <img src="/img/Harvard.png" alt="transforming lives" />
-                  </div>
-                  <div className="feature-content">
-                    <span className="content">
-                      "Show promise in providing relief for depression"
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
-                <div className="feature_box feature_box-no_border_line">
-                  <div className="feature_logo">
-                    <img src="/img/WP.png" alt="transforming lives" />
-                  </div>
-                  <div className="feature-content">
-                    <span className="content">
-                      "Like Fresh air to millions"
                     </span>
                   </div>
                 </div>
@@ -532,6 +421,40 @@ export const SKYSilentRetreat = ({ data }) => {
             </SwiperSlide>
           </Swiper>
           <div className="swiper-pagination"></div>
+        </section>
+
+        <section className="container banner3">
+          <div className="aos-banner-third row">
+            <div className="banner-title">
+              Unlock new levels of calm and energy for life with this 3-day
+              online or in-person course starting at ${fee}
+            </div>
+            <div className="col-sm-12 col-md-6 banner-text">
+              <ul className="first">
+                <li>* SKY Breath Meditation</li>
+                <li>* Pranayama</li>
+                <li>* Personal Mantra</li>
+              </ul>
+            </div>
+            <div className="col-sm-12 col-md-6 banner-text">
+              <ul className="second">
+                <li>* 5 Keys to Joyful Life</li>
+                <li>* 10.5 hrs Duration of the course</li>
+              </ul>
+            </div>
+            <div className="enrollment">
+              <div className="banner-text">
+                <div className="total-value">
+                  Total value -{" "}
+                  <span className="orginal-price">
+                    {delfee && `$${delfee}`}
+                  </span>{" "}
+                  <span>${fee}</span>
+                </div>
+              </div>
+              <button className="enroll-btn">Enroll Now →</button>
+            </div>
+          </div>
         </section>
 
         <section className="faq">

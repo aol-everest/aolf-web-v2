@@ -224,7 +224,7 @@ export const SKYBreathMeditation = ({ data }) => {
                       src="https://player.vimeo.com/video/854478087?h=0eaa68b0ef&wmode=opaque"
                       width="100%"
                       height="100%"
-                      frameborder="0"
+                      frameBorder="0"
                       allow="autoplay; fullscreen"
                       allowfullscreen
                     ></iframe>
@@ -501,7 +501,7 @@ export const SKYBreathMeditation = ({ data }) => {
               src="https://player.vimeo.com/video/428103610"
               width="100%"
               height="100%"
-              frameborder="0"
+              frameBorder="0"
               allow="autoplay; fullscreen"
               allowfullscreen
             ></iframe>

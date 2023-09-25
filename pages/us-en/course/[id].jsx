@@ -29,6 +29,9 @@ import "bootstrap-daterangepicker/daterangepicker.css";
 const SKYBreathMeditation = dynamic(() =>
   import("@components/courseDetails").then((mod) => mod.SKYBreathMeditation),
 );
+const SKYWithSahaj = dynamic(() =>
+  import("@components/courseDetails").then((mod) => mod.SKYWithSahaj),
+);
 const SahajSamadhi = dynamic(() =>
   import("@components/courseDetails").then((mod) => mod.SahajSamadhi),
 );
@@ -149,7 +152,8 @@ function CourseDetail() {
       !isSKYSilentRetreatType &&
       !isBlessingsCourse &&
       !isSKYCampusHappinessRetreat &&
-      !isSanyamCourse
+      !isSanyamCourse &&
+      !SKYWithSahaj
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -236,6 +240,11 @@ function CourseDetail() {
   const isSanyamCourse =
     COURSE_TYPES.SANYAM_COURSE.value.indexOf(data.productTypeId) >= 0;
 
+  const isSKYWithSahaj =
+    COURSE_TYPES.ART_OF_LIVING_PREMIUM_PROGRAM.value.indexOf(
+      data.productTypeId,
+    ) >= 0;
+
   const props = {
     data,
     swiperOption,
@@ -271,6 +280,9 @@ function CourseDetail() {
     }
     if (isSanyamCourse) {
       return <SanyamCourse {...props} />;
+    }
+    if (isSKYWithSahaj) {
+      return <SKYWithSahaj {...props} />;
     }
     return <ErrorPage statusCode={404} />;
   };

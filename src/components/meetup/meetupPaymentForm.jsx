@@ -424,8 +424,6 @@ export const MeetupPaymentForm = ({
     discountResponse,
   });
 
-  console.log(fee, delfee);
-
   const isRegularPrice = priceType === null || priceType === "regular";
 
   const toggleDetailMobileModal = () => {
