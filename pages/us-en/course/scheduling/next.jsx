@@ -512,7 +512,7 @@ const SchedulingRange = () => {
                 </div>
                 <div className="course_price">
                   <h5>
-                    {mode !== COURSE_MODES_BOTH ? mode : ""} course price: $
+                    {mode !== COURSE_MODES_BOTH ? mode : ""} Course price: $
                     {workshopMaster.unitPrice}
                   </h5>
                   <p>Select the start date for this 3-day course</p>
