@@ -403,6 +403,7 @@ const SchedulingPaymentForm = ({
           let filteredParams = {
             ctype: productTypeId,
             page: "ty",
+            referral: "course_scheduling_checkout",
             courseType,
             ...filterAllowedParams(router.query),
           };
@@ -429,6 +430,7 @@ const SchedulingPaymentForm = ({
               ctype: productTypeId,
               page: "ty",
               courseType,
+              referral: "course_scheduling_checkout",
             },
           });
         }
