@@ -225,19 +225,18 @@ const SchedulingRange = () => {
     });
   });
 
-  useEffect(() => {
-    console.log(parseInt(currentMonthYear.split("-")[1]));
-    fp.current.flatpickr.changeMonth(
-      parseInt(currentMonthYear.split("-")[1] - 1),
-      false,
-    );
-    setTimeout(() => {
-      fp.current.flatpickr.changeYear(
-        parseInt(currentMonthYear.split("-")[0]),
-        false,
-      );
-    }, 10);
-  }, []);
+  // useEffect(() => {
+  //   fp.current.flatpickr.changeMonth(
+  //     parseInt(currentMonthYear.split("-")[1] - 1),
+  //     false,
+  //   );
+  //   setTimeout(() => {
+  //     fp.current.flatpickr.changeYear(
+  //       parseInt(currentMonthYear.split("-")[0]),
+  //       false,
+  //     );
+  //   }, 10);
+  // }, []);
 
   const handleModalToggle = () => {
     setShowLocationModal(!showLocationModal);
@@ -460,13 +459,12 @@ const SchedulingRange = () => {
                   COURSE_TYPES.SKY_BREATH_MEDITATION?.name}
               </strong>
             </h2>
-            <div className="section-description">
-              <strong>
-                Join the 45 million individuals across 180 countries
-              </strong>{" "}
-              who have experienced the benefits of this distinctive 3-day course
-              (2.5 hours per day)
-            </div>
+            <div
+              className="section-description"
+              dangerouslySetInnerHTML={{
+                __html: workshopMaster.calenderViewDescription,
+              }}
+            ></div>
           </div>
           <div className="container calendar-course-type">
             <div className="calendar-benefits-wrapper row">
@@ -530,10 +528,10 @@ const SchedulingRange = () => {
                   </label>
                 </div>
                 <div className="course_price">
-                  {mode === COURSE_MODES.IN_PERSON && (
+                  {mode === COURSE_MODES.IN_PERSON.value && (
                     <h5>In-Person course price: ${workshopMaster.unitPrice}</h5>
                   )}
-                  {mode === COURSE_MODES.ONLINE && (
+                  {mode === COURSE_MODES.ONLINE.value && (
                     <h5>Online course price: ${workshopMaster.unitPrice}</h5>
                   )}
                   {mode === COURSE_MODES_BOTH && (

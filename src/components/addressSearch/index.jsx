@@ -80,7 +80,7 @@ export const AddressSearch = ({
           onChange={handleChange}
           onSelect={handleSelect}
           searchOptions={{
-            types: ["(cities)"],
+            types: ["(regions)"],
             componentRestrictions: { country: "us" },
           }}
         >
@@ -124,6 +124,7 @@ export const AddressSearch = ({
                           <small>
                             {suggestion.formattedSuggestion.secondaryText}
                           </small>
+                          <p>{suggestion.description}</p>
                         </div>
                       </>
                     );
