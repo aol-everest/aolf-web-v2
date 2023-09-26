@@ -464,45 +464,22 @@ export const SKYWithSahaj = ({ data }) => {
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="0">
-                    Who is it for?
+                    What is the duration of the SKY Breath Meditation workshop?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    For those who have not taken the Art of Living Part I Course
-                    or {COURSE_TYPES.SKY_BREATH_MEDITATION.name} workshop and
-                    would like to learn the tools and techniques to begin a
-                    meditation practice and experience the power of silence —
-                    gentle, light, and easy.
-                  </Card.Body>
-                </Accordion.Collapse>
-              </Card>
-              <Card>
-                <Card.Header>
-                  <ContextAwareToggle eventKey="1">
-                    What’s included in this course?
-                  </ContextAwareToggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="1">
-                  <Card.Body>
-                    The Silent Retreat course features:
-                    <ul style={{ listStyle: "inside" }}>
-                      <li>Daily Yoga</li>
-                      <li>Daily Meditation</li>
-                      <li>Wisdom Tools and Techniques</li>
-                      <li>Learning Sudarshan Kriya (SKY) and its benefits</li>
-                      <li>Contemplative Silence</li>
-                      <li>Mindful Guided Meditations</li>
-                      <li>Experience the 7-Levels of Your Existence</li>
-                      <li>Different Yoga Mudras</li>
-                    </ul>
+                    You can learn Sahaj Samadhi Meditation in 3 days with 2
+                    hours of live online sessions each day with a certified
+                    instructor.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="2">
-                    What’s the structure of the course?
+                    How is Sahaj Samadhi Meditation different from guided
+                    meditations?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="2">
@@ -520,7 +497,7 @@ export const SKYWithSahaj = ({ data }) => {
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="3">
-                    What’s the cost of the Silent Retreat Course?
+                    What is the duration of the SKY Breath Meditation workshop?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
