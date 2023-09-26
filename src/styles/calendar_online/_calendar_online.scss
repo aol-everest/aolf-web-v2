@@ -296,7 +296,7 @@
                 &.selected {
                   background-color: #ffd463;
                   border: 1px solid #fda24980;
-                  &::before {
+                  /* &::before {
                     background: #ffeab1;
                     border-radius: 24px;
                     border-bottom-right-radius: 24px;
@@ -325,6 +325,65 @@
                       border-bottom-left-radius: 24px;
                       left: -4px;
                     }
+                  } */
+                }
+                &.selected::before {
+                  position: absolute;
+                  content: '';
+                  background: #ffeab1;
+                  border-top-left-radius: 24px;
+                  border-bottom-left-radius: 24px;
+                  left: -4px;
+                  width: 60px;
+                  height: 50px;
+                  z-index: -1;
+                  @media screen and (max-width: 991px) {
+                    width: 75px;
+                    height: 38px;
+                  }
+                }
+                &.selected ~ .selected::before {
+                  position: absolute;
+                  content: '';
+                  background: #ffeab1;
+                  border-top-left-radius: 0;
+                  border-bottom-left-radius: 0;
+                  border-top-right-radius: 24px;
+                  border-bottom-right-radius: 24px;
+                  left: -24px;
+                  right: 0;
+                  width: 70px;
+                  height: 50px;
+                  z-index: -1;
+                  @media screen and (max-width: 991px) {
+                    width: 110px;
+                    left: -78px;
+                    height: 38px;
+                  }
+                  @media screen and (max-width: 767px) {
+                    width: 85px;
+                    left: -54px;
+                    height: 38px;
+                  }
+                  @media screen and (max-width: 520px) {
+                    width: 78px;
+                    left: -46px;
+                    height: 38px;
+                  }
+                  @media screen and (max-width: 520px) {
+                    width: 78px;
+                    left: -46px;
+                    height: 38px;
+                  }
+                  @media screen and (max-width: 520px) {
+                    width: 70px;
+                    left: -38px;
+                    height: 38px;
+                  }
+                  @media screen and (max-width: 385px) {
+                    width: 56px;
+                    left: -24px;
+                    height: 38px;
                   }
                 }
                 &.flatpickr-disabled {
