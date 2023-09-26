@@ -394,6 +394,7 @@ const SchedulingRange = () => {
     setActiveWorkshop(null);
     setSelectedWorkshopId(null);
     setSelectedDates([]);
+    fp.current.flatpickr.clear();
   };
 
   const onMonthChangeAction = (e, d, instance) => {

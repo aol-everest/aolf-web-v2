@@ -9,7 +9,7 @@ export const ScheduleLocationFilter = ({
 }) => {
   const removeCoupon = (e) => {
     if (e) e.preventDefault();
-    handleLocationChange({});
+    handleLocationChange(null);
   };
 
   const handleLocationFilterChange = (value) => () => {
