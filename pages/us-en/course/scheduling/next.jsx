@@ -111,7 +111,7 @@ const SchedulingRange = () => {
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [isInitalLoad, setIsInitalLoad] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [courseTypeFilter] = useQueryString("courseType", {
     defaultValue: "SKY_BREATH_MEDITATION",
@@ -212,7 +212,7 @@ const SchedulingRange = () => {
         path: "workshopMonthCalendar",
         param,
       });
-      if (isInitalLoad) {
+      if (isInitialLoad) {
         const defaultDate =
           response.data.length > 0 ? response.data[0].allDates : [];
         if (fp?.current?.flatpickr && defaultDate.length > 0) {
@@ -221,7 +221,7 @@ const SchedulingRange = () => {
             fp.current.flatpickr.setDate(defaultDate, true);
           }, 10);
         }
-        setIsInitalLoad(false);
+        setIsInitialLoad(false);
       }
       return response.data;
     },
@@ -421,16 +421,30 @@ const SchedulingRange = () => {
         const toMoment = moment(
           enableItem.allDates[enableItem.allDates.length - 1],
         );
-        const isWithinRange = today.isBetween(
-          fromMoment,
-          toMoment,
-          "days",
-          "[]",
-        );
+        const isWithinRange = today.isSame(fromMoment, "date");
         if (isWithinRange) {
           intervalSelected = getDates(fromMoment, toMoment);
           isEventAvailable = true;
           break; // Exit the loop when the condition is true
+        }
+      }
+      if (!isEventAvailable) {
+        for (const enableItem of dateAvailable) {
+          const fromMoment = moment(enableItem.firstDate);
+          const toMoment = moment(
+            enableItem.allDates[enableItem.allDates.length - 1],
+          );
+          const isWithinRange = today.isBetween(
+            fromMoment,
+            toMoment,
+            "days",
+            "[]",
+          );
+          if (isWithinRange) {
+            intervalSelected = getDates(fromMoment, toMoment);
+            isEventAvailable = true;
+            break; // Exit the loop when the condition is true
+          }
         }
       }
       if (isEventAvailable) {
