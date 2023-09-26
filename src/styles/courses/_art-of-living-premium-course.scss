@@ -4,10 +4,11 @@
   }
   @media screen and (max-width: 991px) {
     padding-top: 0 !important;
+    margin-top: 0 !important;
   }
   @media screen and (max-width: 767px) {
     .container {
-      max-width: 360px;
+      max-width: 540px;
     }
   }
 
@@ -24,7 +25,7 @@
       width: 100%;
       background: url(/img/art-of-living-premium-banner.jpg) no-repeat top left;
       padding: 60px 76px 50px 76px;
-      background-size: cover;
+      background-size: auto;
       background-position: center;
       .courses-title {
         display: none;
@@ -36,7 +37,7 @@
         font-size: 40px;
         line-height: 40px;
         font-weight: 600;
-        max-width: 480px;
+        max-width: 425px;
         margin-bottom: 40px;
       }
       &-description {
@@ -58,7 +59,7 @@
           center;
         height: 600px;
         padding: 36px 32px 10px;
-        background-size: cover;
+        background-size: auto;
         background-position: center bottom;
         &-title {
           font-size: 26px;
@@ -91,7 +92,7 @@
 
     .content-video-area {
       display: flex;
-      padding: 40px 76px;
+      padding: 70px 76px;
       .section-title {
         margin: 0 0 0 0;
         font-family: 'Work Sans';
@@ -177,13 +178,14 @@
     }
     @media screen and (max-width: 767px) {
       padding: 20px 0 0 20px;
+      flex-direction: column;
       .feature-box {
         flex-direction: column;
         padding: 0;
-        &:nth-child(2) {
-          padding-left: 20px;
-          padding-right: 20px;
-        }
+        flex-direction: row;
+        padding: 0;
+        width: 100%;
+        margin-bottom: 1rem;
       }
       .feature-text {
         font-size: 16px;
@@ -251,9 +253,9 @@
         .section-title {
           text-align: left;
           font-size: 26px;
-          padding-left: 20px;
+          padding-left: 0;
           padding-top: 40px;
-          height: 120px;
+          height: auto;
           padding-bottom: 25px;
           background: url(/img/sahaj-samadhi-benefit-moon.png) no-repeat right
             30px;
@@ -394,9 +396,9 @@
     }
     .stats-1 {
       /* background: linear-gradient( 0deg, #0997ac 0%, #9ee9ac 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent */
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent */
       color: #000000;
       font-size: 29px;
       line-height: 29px;
@@ -407,9 +409,9 @@
     }
     .stats-2 {
       /* background: linear-gradient( 0deg, #0bbafb 0%, #4285ec 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent; */
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent; */
       color: #000000;
       font-size: 29px;
       line-height: 29px;
@@ -420,9 +422,9 @@
     }
     .stats-3 {
       /* background: linear-gradient( 0deg, #f39459 0%, #6f5ea4 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent; */
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent; */
       color: #000000;
       font-size: 29px;
       line-height: 29px;
@@ -708,6 +710,9 @@
     .reviwer-position {
       color: #6f6f6f;
     }
+    .reviews-slider {
+      padding-bottom: 60px;
+    }
     .swiper-pagination {
       bottom: 0px;
     }
@@ -942,6 +947,11 @@
     padding-left: 10px;
     button {
       background: linear-gradient(90deg, #57bacd 9.51%, #0398b5 93.54%);
+      background: linear-gradient(
+        270deg,
+        #df7900 6%,
+        rgba(239, 183, 0, 0.6) 94.33%
+      );
       color: #fff;
       border: 0px;
       border-radius: 2rem;
