@@ -122,7 +122,7 @@ const SchedulingRange = () => {
   const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
     defaultValue: "EST",
   });
-  const [milesFilter, setMilesFilter] = useQueryString("miles", {
+  const [milesFilter] = useQueryString("miles", {
     defaultValue: "50",
   });
   const [locationFilter, setLocationFilter] = useQueryString("location", {
@@ -134,14 +134,27 @@ const SchedulingRange = () => {
   const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
-  const courseTypeValue =
-    findCourseTypeByKey(courseTypeFilter)?.value ||
-    COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+  // const courseTypeValue =
+  //   findCourseTypeByKey(courseTypeFilter)?.value ||
+  //   COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
 
-  const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
   const { data: workshopMaster = {} } = useQuery(
-    "workshopMaster",
+    ["workshopMaster", mode],
     async () => {
+      let ctypeId = null;
+      if (
+        findCourseTypeByKey(courseTypeFilter)?.subTypes &&
+        findCourseTypeByKey(courseTypeFilter)?.subTypes[mode]
+      ) {
+        ctypeId = findCourseTypeByKey(courseTypeFilter)?.subTypes[mode];
+      } else {
+        const courseTypeValue =
+          findCourseTypeByKey(courseTypeFilter)?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+        ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
+      }
+
       let param = {
         ctypeId,
       };
