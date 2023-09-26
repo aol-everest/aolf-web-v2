@@ -127,11 +127,19 @@ export const COURSE_TYPES = {
     name: "Silent Retreat",
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || "",
     code: "10305000",
+    subTypes: {
+      Online: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_ONLINE_CTYPE,
+      "In Person": process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_IN_PERSON_CTYPE,
+    },
   },
   ART_OF_LIVING_PREMIUM_PROGRAM: {
     name: "Art of Living Premium Program",
     value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || "",
     code: "10304000",
+    subTypes: {
+      Online: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_ONLINE_CTYPE,
+      "In Person": process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_IN_PERSON_CTYPE,
+    },
   },
   SKY_HAPPINESS_RETREAT: {
     name: "SKY Happiness Retreat",
