@@ -39,6 +39,7 @@
     text-align: center;
     display: flex;
     align-items: center;
+    background-position: 185px 0;
     .section-title {
       font-family: 'Lora';
       font-weight: 400;
@@ -92,6 +93,7 @@
           padding-bottom: 25px;
           background: url(/img/calendar-online-mobile.png) no-repeat right 30px;
           background-size: 200px;
+          background-position-y: top;
         }
 
         .section-description {
@@ -116,8 +118,17 @@
       font-weight: 600;
       line-height: 20px;
       text-align: left;
-      img {
-        margin-right: 8px;
+      display: flex;
+      align-items: center;
+      .calendar_img {
+        margin-right: 0.5rem;
+        img {
+          width: 45px;
+          margin-right: 8px;
+          @media screen and (max-width: 767px) {
+            width: 36px;
+          }
+        }
       }
     }
     .calendar-benefits-wrapper {
@@ -401,6 +412,11 @@
         align-items: center;
         .clock_img {
           margin-right: 1rem;
+          img {
+            @media screen and (max-width: 767px) {
+              width: 36px;
+            }
+          }
         }
         .available-course-title {
           .section-title {
