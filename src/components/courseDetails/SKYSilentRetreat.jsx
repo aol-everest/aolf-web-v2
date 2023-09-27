@@ -44,11 +44,11 @@ export const SKYSilentRetreat = ({ data }) => {
     },
   };
 
-  const { title, sfid, productTypeId } = data || {};
+  const { title, sfid, productTypeId, isGuestCheckoutEnabled } = data || {};
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated) {
+    if (authenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
