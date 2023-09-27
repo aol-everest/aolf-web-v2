@@ -30,8 +30,8 @@ export const SriSriYoga = ({ data, swiperOption }) => {
     setActiveSlider(index);
   };
 
-  const { title, workshopTotalHours, mode } = data || {};
-  const { fee, delfee, offering } = priceCalculation({ workshop: data });
+  const { title, mode } = data || {};
+  const { fee, delfee } = priceCalculation({ workshop: data });
 
   const activeSliderClass =
     activeSlider === 0
