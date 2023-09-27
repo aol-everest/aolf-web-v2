@@ -288,7 +288,80 @@ export const SKYWithSahaj = ({ data }) => {
             <SwiperSlide>
               <div className="review-box">
                 <div className="review-title">
-                  ...very, very powerful...such a sense of calm
+                  “The experience was warm, kind, and powerful.”
+                </div>
+                <div className="review-text">
+                  It truly felt like I was coming home. As I sat with myself and
+                  tuned in I could feel the empowerment and safety that lies
+                  within. Being able to reconnect with that is life changing.
+                </div>
+                <div className="review-author">
+                  <div className="reviewer-photo">
+                    <img src="/img/peter_review.png" alt="reviewer" />
+                  </div>
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Peter D., Los Angeles</div>
+                    <div className="reviwer-position">
+                      Art of Living Premium Participant
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div className="review-box">
+                <div className="review-title">
+                  “This was just what I was looking for.”
+                </div>
+                <div className="review-text">
+                  It gave me a routine that allows me to feel empowered and
+                  peaceful. So much gratitude.
+                </div>
+                <div className="review-author">
+                  <div className="reviewer-photo">
+                    <img src="/img/aryanne_review.png" alt="reviewer" />
+                  </div>
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">Aryanne D., Los Angeles</div>
+                    <div className="reviwer-position">
+                      Art of Living Premium Participant
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div className="review-box">
+                <div className="review-title">
+                  “The art or living retreat was truly life-changing for me,”
+                </div>
+                <div className="review-text">
+                  and I wholeheartedly recommend it to everyone. It was brimming
+                  with love and played a significant role in helping me find
+                  greater inner peace and balance.
+                </div>
+                <div className="review-author">
+                  <div className="reviewer-photo">
+                    <img src="/img/amanda_review.png" alt="reviewer" />
+                  </div>
+                  <div className="reviewer-info">
+                    <div className="reviewer-name">
+                      Amanda Oleander, Artist, Los Angeles
+                    </div>
+                    <div className="reviwer-position">
+                      Art of Living Premium Participant
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div className="review-box">
+                <div className="review-title">
+                  “...very, very powerful...such a sense of calm“
                 </div>
                 <div className="review-text">
                   It was very, very powerful. I gained such a sense of calm,
@@ -301,7 +374,7 @@ export const SKYWithSahaj = ({ data }) => {
                   <div className="reviewer-info">
                     <div className="reviewer-name">Max Goldberg</div>
                     <div className="reviwer-position">
-                      Silent Retreat participant
+                      Art of Living Premium Participant
                     </div>
                   </div>
                 </div>
@@ -311,7 +384,7 @@ export const SKYWithSahaj = ({ data }) => {
             <SwiperSlide>
               <div className="review-box">
                 <div className="review-title">
-                  relaxed, refreshed, and happier
+                  “relaxed, refreshed, and happier“
                 </div>
                 <div className="review-text">
                   It helped me to put into practice the valuable wisdom which I
@@ -326,7 +399,7 @@ export const SKYWithSahaj = ({ data }) => {
                   <div className="reviewer-info">
                     <div className="reviewer-name">Julie Madeley</div>
                     <div className="reviwer-position">
-                      Silent Retreat participant
+                      Art of Living Premium Participant
                     </div>
                   </div>
                 </div>
@@ -335,7 +408,7 @@ export const SKYWithSahaj = ({ data }) => {
 
             <SwiperSlide>
               <div className="review-box">
-                <div className="review-title">Felt more balanced</div>
+                <div className="review-title">“felt more balanced”</div>
                 <div className="review-text">
                   I've been on quite a few silent retreats in the past and this
                   felt more balanced, nourishing and comfortable than any other
@@ -343,12 +416,12 @@ export const SKYWithSahaj = ({ data }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/michelle-review.png" alt="reviewer" />
+                    <img src="/img/michelle_review.png" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Michelle Garisson</div>
                     <div className="reviwer-position">
-                      Silent Retreat participant
+                      Art of Living Premium Participant
                     </div>
                   </div>
                 </div>
@@ -357,21 +430,19 @@ export const SKYWithSahaj = ({ data }) => {
 
             <SwiperSlide>
               <div className="review-box">
-                <div className="review-title">
-                  extremely relaxing, yet energizing experience
-                </div>
+                <div className="review-title">Calmness and peace</div>
                 <div className="review-text">
-                  The meditations are deep! It was an extremely relaxing yet
-                  energizing experience.
+                  I am enjoying the calmness and peace that comes with Sahaj
+                  Samadhi meditation.
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/vinita-review.png" alt="reviewer" />
+                    <img src="/img/lewis_review.png" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
-                    <div className="reviewer-name">Vinita D.</div>
+                    <div className="reviewer-name">Dr. Lewis</div>
                     <div className="reviwer-position">
-                      Silent Retreat participant
+                      Art of Living Premium Participant
                     </div>
                   </div>
                 </div>
@@ -380,18 +451,20 @@ export const SKYWithSahaj = ({ data }) => {
 
             <SwiperSlide>
               <div className="review-box">
-                <div className="review-title">wonderful, peaceful retreat</div>
+                <div className="review-title">Reservoir of energy</div>
                 <div className="review-text">
-                  A wonderful, peaceful retreat ... extremely joyful and easy.
+                  Sahaj Samadhi allows me to tap into a reservoir of energy,
+                  which leaves me rejuvenated and revitalized, like a new
+                  person.
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/aarti-review.png" alt="reviewer" />
+                    <img src="/img/brian_review.png" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
-                    <div className="reviewer-name">Aarti R.</div>
+                    <div className="reviewer-name">Brian</div>
                     <div className="reviwer-position">
-                      Silent Retreat participant
+                      Art of Living Premium Participant
                     </div>
                   </div>
                 </div>
@@ -400,20 +473,19 @@ export const SKYWithSahaj = ({ data }) => {
 
             <SwiperSlide>
               <div className="review-box">
-                <div className="review-title">I feel more like myself</div>
+                <div className="review-title">Happy</div>
                 <div className="review-text">
-                  I feel more like myself after the Silence Retreat. My life
-                  goes smoother after it and I feel the difference for a good
-                  3-6 months.
+                  I got so happy for no reason. I hadn’t experienced that in a
+                  long time.
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/daniel-review.png" alt="reviewer" />
+                    <img src="/img/philip_review.png" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
-                    <div className="reviewer-name">Daniel M.</div>
+                    <div className="reviewer-name">Phillip</div>
                     <div className="reviwer-position">
-                      Silent Retreat participant
+                      Art of Living Premium Participant
                     </div>
                   </div>
                 </div>
@@ -464,14 +536,19 @@ export const SKYWithSahaj = ({ data }) => {
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="0">
-                    What is the duration of the SKY Breath Meditation workshop?
+                    What are the benefits of Sudarshan Kriya™?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    You can learn Sahaj Samadhi Meditation in 3 days with 2
-                    hours of live online sessions each day with a certified
-                    instructor.
+                    Sudarshan Kriya™ taught in the Art of Living Part I course
+                    has been researched in over 100 independent studies and
+                    shown significant mind and body benefits. It lowers stress
+                    levels, improves mental clarity, enhances emotional
+                    well-being, contributes to better sleep, raises energy
+                    levels, and provides a greater sense of inner peace. The
+                    physical benefits include boosting immunity, heart health,
+                    and more.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
@@ -485,11 +562,20 @@ export const SKYWithSahaj = ({ data }) => {
                 <Accordion.Collapse eventKey="2">
                   <Card.Body>
                     <p>
-                      You'll spend the first full day of the program learning
-                      breathing techniques and other tools to manage and calm
-                      the mind, which includes different processes. You'll enter
-                      into silence on day two. You'll have ample opportunities
-                      for questions during designated talking periods.
+                      Guided meditations help you meditate with verbal
+                      instructions and music. They help you relax and unwind by
+                      providing a soothing and peaceful ambience. On the other
+                      hand, Sahaj Samadhi Meditation is a mantra-based
+                      meditation technique. The mantra is a charged, subtle
+                      sound that takes you to deeper states of consciousness.
+                      Guided meditations require, well, guidance, but once you
+                      learn Sahaj Samadhi Meditation, you can meditate on your
+                      own with this technique. It needs 20 minutes of your time,
+                      and a quiet corner where you can sit comfortably. With
+                      regular practice, you will feel more at peace and start
+                      noticing the improvements in your physical health, mental
+                      acumen, increased awareness, and sharpened intuitive
+                      skills.
                     </p>
                   </Card.Body>
                 </Accordion.Collapse>
@@ -497,14 +583,15 @@ export const SKYWithSahaj = ({ data }) => {
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="3">
-                    What is the duration of the SKY Breath Meditation workshop?
+                    What’s the duration of the Art of Living Premium course?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
                   <Card.Body>
                     <p>
-                      Silent Retreat course is available in two formats: an
-                      online course for $495 and an in-person course for $695.
+                      The duration of the Art of Living Premium course is 3 days
+                      with 3.5 hours of live online or in-person sessions each
+                      day with a certified instructor.
                     </p>
                   </Card.Body>
                 </Accordion.Collapse>
