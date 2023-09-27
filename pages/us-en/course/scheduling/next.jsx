@@ -594,7 +594,7 @@ const SchedulingRange = () => {
                 <div className="available-course-time">
                   <div className="available-course-heading">
                     <div className="clock_img">
-                      <img src="/img/calendar.svg" />
+                      <img src="/img/calendar-time.svg" />
                     </div>
                     <div className="available-course-title">
                       <h2 className="section-title"> Available Course Times</h2>
