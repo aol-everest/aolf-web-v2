@@ -107,6 +107,11 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
         isUnauthorized: true,
       });
 
+      filteredParams = {
+        ...filteredParams,
+        referral: "course_search_scheduling",
+      };
+
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       }

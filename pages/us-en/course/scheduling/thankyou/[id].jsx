@@ -106,7 +106,7 @@ const Thankyou = () => {
       name: "course_registration_thank_you",
       payment_intent: paymentIntent,
       course_type: courseType,
-      referral: "course_scheduling_checkout",
+      referral: "course_search_scheduling",
     });
   });
 
