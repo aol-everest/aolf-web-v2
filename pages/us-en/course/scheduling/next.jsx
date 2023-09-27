@@ -542,7 +542,7 @@ const SchedulingRange = () => {
                     </span>
                   </label>
 
-                  <label
+                  {/* <label
                     className="scheduling-types__label"
                     htmlFor="both-type-course"
                   >
@@ -556,7 +556,7 @@ const SchedulingRange = () => {
                       onChange={() => handleSelectMode(COURSE_MODES_BOTH)}
                     />
                     <span className="scheduling-types__background">Both</span>
-                  </label>
+                  </label> */}
                 </div>
                 <div className="course_price">
                   {mode === COURSE_MODES.IN_PERSON.value && (
