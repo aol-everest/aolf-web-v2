@@ -67,34 +67,37 @@ const MILES = [
 ];
 
 function formatDateWithMonth(dateString) {
-  const options = { month: "short", day: "numeric" };
-  return new Date(dateString).toLocaleDateString("en-US", options);
+  return moment(dateString).format("MMM D");
 }
 
 function formatDateOnly(dateString) {
-  const options = { day: "numeric" };
-  return new Date(dateString).toLocaleDateString("en-US", options);
+  return moment(dateString).format("D");
 }
 
+/**
+ * Formats an array of dates into a human-readable string.
+ * @param {string[]} dates - The array of date strings to format.
+ * @returns {string} - The formatted date string.
+ */
 function formatDates(dates) {
-  const numDates = dates.length;
+  const dateCount = dates.length;
 
-  if (numDates === 0) {
+  if (dateCount === 0) {
     return "";
-  } else if (numDates === 1) {
+  } else if (dateCount === 1) {
     return formatDateWithMonth(dates[0]);
   } else {
     const [firstDate, ...rest] = dates;
-    const lastDate = new Date(dates[numDates - 1]);
-    const numDays = numDates;
+    const lastDate = moment(dates[dateCount - 1]);
+    const numDays = dateCount;
     const formattedDates = [
       formatDateWithMonth(firstDate),
       ...rest.map((date) => formatDateOnly(date)),
     ];
 
     // Check if the dates span across multiple months
-    if (new Date(firstDate).getMonth() !== lastDate.getMonth()) {
-      const lastDateFormatted = formatDateWithMonth(dates[numDates - 1]);
+    if (!moment(firstDate).isSame(lastDate, "month")) {
+      const lastDateFormatted = formatDateWithMonth(dates[dateCount - 1]);
       return `${formattedDates
         .slice(0, -1)
         .join(", ")} & ${lastDateFormatted} (${numDays} days)`;
@@ -707,8 +710,9 @@ const WorkshopListItem = ({
       <input
         type="radio"
         id={`time-range-${index + 1}`}
-        value={selectedWorkshopId}
+        value={workshop.id}
         name="scheduling-options"
+        checked={selectedWorkshopId === workshop.id}
       />
       <div className="scheduling-modal__content-option">
         <ul className="scheduling-modal__content-ranges-variants">
