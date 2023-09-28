@@ -754,16 +754,7 @@ const LocationSearchModal = ({
       className="location-search bd-example-modal-lg"
       dialogClassName="modal-dialog modal-dialog-centered modal-lg"
     >
-      <Modal.Header>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
-      </Modal.Header>
+      <Modal.Header closeButton></Modal.Header>
       <Modal.Body>
         <p>On which location would you prefer to schedule your courses?</p>
         <br />
