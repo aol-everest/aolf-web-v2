@@ -783,5 +783,6 @@ const LocationSearchModal = ({
 };
 
 SchedulingRange.noHeader = true;
+SchedulingRange.hideFooter = true;
 
 export default SchedulingRange;

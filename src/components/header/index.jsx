@@ -112,6 +112,10 @@ const AOL_MENU = [
           },
         ],
       },
+      {
+        name: "All Courses",
+        link: "/us-en/course",
+      },
     ],
   },
   {
@@ -378,6 +382,75 @@ export const Header = () => {
     setNavExpanded(!navExpanded);
   };
 
+  const renderMenu = (menu) => {
+    if (!menu) {
+      return null;
+    }
+    if (menu.submenu) {
+      return (
+        <>
+          {menu.submenu.map((submenu) => {
+            return (
+              <NavDropdown.Item
+                href={submenu.link}
+                key={submenu.name}
+                as={Link}
+              >
+                {submenu.name}
+              </NavDropdown.Item>
+            );
+          })}
+        </>
+      );
+    }
+    if (menu.subHeading) {
+      return (
+        <>
+          {menu.subHeading?.map((subMenu) => {
+            return (
+              <>
+                {subMenu?.items && (
+                  <>
+                    {subMenu.name && (
+                      <h6
+                        className="dropdown-header pt-2rem"
+                        key={subMenu.name}
+                      >
+                        {subMenu.name}
+                      </h6>
+                    )}
+                    {subMenu?.items.map((menuItem) => {
+                      return (
+                        <NavDropdown.Item
+                          href={menuItem.link}
+                          key={menuItem.name}
+                          as={Link}
+                        >
+                          {menuItem.name}
+                        </NavDropdown.Item>
+                      );
+                    })}
+                  </>
+                )}
+                {subMenu?.link && (
+                  <NavDropdown.Item
+                    href={subMenu.link}
+                    key={subMenu.name}
+                    as={Link}
+                    className="pt25"
+                  >
+                    {subMenu.name}
+                  </NavDropdown.Item>
+                )}
+              </>
+            );
+          })}
+        </>
+      );
+    }
+    return null;
+  };
+
   return (
     <header className="header header-v2">
       <div className="header__container container">
@@ -424,41 +497,7 @@ export const Header = () => {
                     as="li"
                     renderMenuOnMount
                   >
-                    {menu.submenu
-                      ? menu.submenu.map((submenu) => {
-                          return (
-                            <NavDropdown.Item
-                              href={submenu.link}
-                              key={submenu.name}
-                              as={Link}
-                            >
-                              {submenu.name}
-                            </NavDropdown.Item>
-                          );
-                        })
-                      : menu.subHeading?.map((subMenu) => {
-                          return (
-                            <>
-                              <h6
-                                className="dropdown-header pt-2rem"
-                                key={subMenu.name}
-                              >
-                                {subMenu.name}
-                              </h6>
-                              {subMenu?.items.map((menuItem) => {
-                                return (
-                                  <NavDropdown.Item
-                                    href={menuItem.link}
-                                    key={menuItem.name}
-                                    as={Link}
-                                  >
-                                    {menuItem.name}
-                                  </NavDropdown.Item>
-                                );
-                              })}
-                            </>
-                          );
-                        })}
+                    {renderMenu(menu)}
                   </NavDropdown>
                 );
               })}
