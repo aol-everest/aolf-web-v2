@@ -543,6 +543,16 @@
               border-radius: 0px 8px 8px 0px;
               padding: 15px 30px 15px 15px;
               border-left: 1px solid #ff920080;
+              .location {
+                font-family: 'Work Sans';
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 20px;
+                text-align: left;
+                display: flex;
+                align-items: center;
+                color: #31364e;
+              }
               .scheduling-modal__content-ranges-variants {
                 .scheduling-modal__content-ranges-row {
                   font-family: Work Sans;

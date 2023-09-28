@@ -652,6 +652,7 @@ const SchedulingRange = () => {
                             index={index}
                             selectedWorkshopId={selectedWorkshopId}
                             handleWorkshopSelect={handleWorkshopSelect}
+                            mode={mode}
                           />
                         );
                       })}
@@ -705,6 +706,7 @@ const WorkshopListItem = ({
   index,
   selectedWorkshopId,
   handleWorkshopSelect,
+  mode,
 }) => {
   return (
     <li
@@ -721,6 +723,11 @@ const WorkshopListItem = ({
         checked={selectedWorkshopId === workshop.id}
       />
       <div className="scheduling-modal__content-option">
+        {mode === COURSE_MODES.IN_PERSON.value && (
+          <span className="location">
+            Location: {workshop?.city}, {workshop?.state}
+          </span>
+        )}
         <ul className="scheduling-modal__content-ranges-variants">
           {workshop?.timings &&
             workshop.timings.map((time, i) => {
@@ -745,7 +752,6 @@ const WorkshopListItem = ({
 const LocationSearchModal = ({
   handleModalToggle,
   showLocationModal,
-  milesFilter,
   locationFilter,
   handleLocationFilterChange,
 }) => {
