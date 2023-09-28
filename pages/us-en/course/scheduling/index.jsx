@@ -216,13 +216,16 @@ const SchedulingRange = () => {
         param,
       });
       if (isInitialLoad) {
+        console.log("isInitialLoad");
         const defaultDate =
           response.data.length > 0 ? response.data[0].allDates : [];
+        console.log(defaultDate, fp?.current?.flatpickr);
         if (fp?.current?.flatpickr && defaultDate.length > 0) {
-          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
           setTimeout(() => {
             fp.current.flatpickr.setDate(defaultDate, true);
-          }, 10);
+          }, 100);
+
+          // fp.current.flatpickr.jumpToDate(defaultDate[0], true);
         }
         setIsInitialLoad(false);
       }
