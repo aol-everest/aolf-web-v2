@@ -686,90 +686,35 @@
   }
 }
 .location-search {
-  .modal-header {
-    margin-bottom: 1rem;
-    .close {
-      right: 18px;
-      background-color: #d4d4d4;
-      top: 20px;
-      color: #ffffff;
+  .modal-dialog {
+    .modal-header {
+      margin-bottom: 1rem;
+      .close {
+        right: 18px;
+        background-color: #d4d4d4;
+        top: 20px;
+        color: #ffffff;
+      }
     }
-  }
-  .modal-body {
-    p {
-      font-family: 'Work Sans';
-      font-size: 20px;
-      font-weight: 400;
-      line-height: 26px;
-      text-align: center;
-    }
-    .location-search-field {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: space-evenly;
-      .smart-input {
-        height: 100%;
-        input {
+    .modal-body {
+      p {
+        font-family: 'Work Sans';
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 26px;
+        text-align: center;
+      }
+      .location-search-field {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-evenly;
+        .smart-input {
           height: 100%;
+          input {
+            height: 100%;
+          }
         }
-      }
-      input {
-        border-radius: 8px;
-        border: 1px solid rgba(255, 146, 0, 0.5019607843);
-        font-family: Work Sans;
-        font-size: 14px;
-        font-weight: 600;
-        background: #fff9ed;
-        padding: 13px 15px;
-        transition: all 0.3s ease-in-out;
-        width: 100% !important;
-        margin: 0px;
-      }
-      select {
-        border-radius: 8px;
-        border: 1px solid rgba(255, 146, 0, 0.5019607843);
-        font-family: Work Sans;
-        font-size: 14px;
-        font-weight: 600;
-        background: #fff9ed;
-        padding: 13px 15px;
-        transition: all 0.3s ease-in-out;
-        width: 48%;
-      }
-      .select2-selection--single {
-        border-radius: 8px !important;
-        border: 1px solid rgba(255, 146, 0, 0.5019607843);
-        background: #fff9ed;
-        position: relative;
-        padding: 16px;
-        height: 100%;
-        .select2-selection__rendered {
-          font-family: 'Work Sans';
-          font-size: 14px;
-          font-weight: 600;
-          padding-left: 0;
-          color: #000;
-          line-height: 24px;
-        }
-        .select2-selection__arrow {
-          top: 50%;
-          transform: translate(0, -50%);
-        }
-      }
-      .miles-input,
-      .location-input {
-        width: 48%;
-        position: relative;
-        .select2 {
-          width: 100% !important;
-        }
-        .result-list {
-          position: absolute;
-          top: 58px;
-          background-color: #fff;
-          width: 100%;
-        }
-        .schedule-location-input {
+        input {
           border-radius: 8px;
           border: 1px solid rgba(255, 146, 0, 0.5019607843);
           font-family: Work Sans;
@@ -780,48 +725,105 @@
           transition: all 0.3s ease-in-out;
           width: 100% !important;
           margin: 0px;
-          display: block;
-          .schedule-location-value {
-            padding: 5px;
-            display: inline-block;
+        }
+        select {
+          border-radius: 8px;
+          border: 1px solid rgba(255, 146, 0, 0.5019607843);
+          font-family: Work Sans;
+          font-size: 14px;
+          font-weight: 600;
+          background: #fff9ed;
+          padding: 13px 15px;
+          transition: all 0.3s ease-in-out;
+          width: 48%;
+        }
+        .select2-selection--single {
+          border-radius: 8px !important;
+          border: 1px solid rgba(255, 146, 0, 0.5019607843);
+          background: #fff9ed;
+          position: relative;
+          padding: 16px;
+          height: 100%;
+          .select2-selection__rendered {
+            font-family: 'Work Sans';
+            font-size: 14px;
+            font-weight: 600;
+            padding-left: 0;
+            color: #000;
+            line-height: 24px;
           }
-          .react-tag-remove {
-            color: rgba(255, 146, 0, 1);
-            text-decoration: none;
-            padding-right: 10px;
-            right: 0px;
+          .select2-selection__arrow {
+            top: 50%;
+            transform: translate(0, -50%);
+          }
+        }
+        .miles-input,
+        .location-input {
+          width: 48%;
+          position: relative;
+          .select2 {
+            width: 100% !important;
+          }
+          .result-list {
             position: absolute;
-            top: 6px;
-            font-size: 29px;
+            top: 58px;
+            background-color: #fff;
+            width: 100%;
+          }
+          .schedule-location-input {
+            border-radius: 8px;
+            border: 1px solid rgba(255, 146, 0, 0.5019607843);
+            font-family: Work Sans;
+            font-size: 14px;
+            font-weight: 600;
+            background: #fff9ed;
+            padding: 13px 15px;
+            transition: all 0.3s ease-in-out;
+            width: 100% !important;
+            margin: 0px;
+            display: block;
+            .schedule-location-value {
+              padding: 5px;
+              display: inline-block;
+            }
+            .react-tag-remove {
+              color: rgba(255, 146, 0, 1);
+              text-decoration: none;
+              padding-right: 10px;
+              right: 0px;
+              position: absolute;
+              top: 6px;
+              font-size: 29px;
+            }
           }
         }
       }
-    }
-    .find-courses {
-      border-radius: 8px;
-      background: #fda249;
-      padding: 13px 97px;
-      margin: 2.4rem auto 0;
-      display: flex;
-    }
-  }
-  @media screen and (max-width: 767px) {
-    .modal-dialog {
-      height: auto;
-      p {
-        margin-top: 20px;
+      .find-courses {
+        border-radius: 8px;
+        background: #fda249;
+        padding: 13px 97px;
+        margin: 2.4rem auto 0;
+        display: flex;
       }
     }
-    .modal-body {
-      .location-search-field {
-        padding: 0 20px;
-        flex-direction: column;
-        input,
-        select,
-        .miles-input,
-        .location-input {
-          width: 100%;
-          margin-bottom: 10px;
+    @media screen and (max-width: 767px) {
+      .modal-dialog {
+        height: auto;
+        p {
+          margin-top: 20px;
+        }
+      }
+      .modal-body {
+        .location-search-field {
+          padding: 0 20px;
+          flex-direction: column;
+          input,
+          select,
+          .miles-input,
+          .location-input {
+            width: 100%;
+            margin-bottom: 10px;
+          }
         }
       }
     }

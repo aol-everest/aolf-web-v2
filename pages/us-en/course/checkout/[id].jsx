@@ -500,7 +500,12 @@ const Checkout = () => {
                 </span>
               </p>
             ) : (
-              <p className="order__detail">{workshop?.description || ""}</p>
+              <p
+                className="order__detail-description"
+                dangerouslySetInnerHTML={{
+                  __html: workshop?.description,
+                }}
+              ></p>
             )}
 
             {workshop.isCorporateEvent && (
