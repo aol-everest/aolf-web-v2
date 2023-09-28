@@ -725,7 +725,16 @@ const WorkshopListItem = ({
       <div className="scheduling-modal__content-option">
         {mode === COURSE_MODES.IN_PERSON.value && (
           <span className="location">
-            Location: {workshop?.city}, {workshop?.state}
+            {!workshop.isLocationEmpty && (
+              <>
+                Location: {workshop?.locationCity}, {workshop?.locationProvince}
+              </>
+            )}
+            {workshop.isLocationEmpty && (
+              <>
+                Location: {workshop?.city}, {workshop?.state}
+              </>
+            )}
           </span>
         )}
         <ul className="scheduling-modal__content-ranges-variants">
