@@ -123,7 +123,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "kill-port": "^2.0.1",
-    "lint-staged": "^13.3.0",
+    "lint-staged": "^14.0.1",
     "postcss": "^8.4.29",
     "prettier": "^3.0.3",
     "tailwindcss": "^3.3.3"
