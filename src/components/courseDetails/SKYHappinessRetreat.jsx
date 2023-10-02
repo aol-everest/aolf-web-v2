@@ -38,10 +38,7 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
     },
   };
 
-  const { title, workshopTotalHours, mode } = data || {};
-  const { fee, delfee, offering } = priceCalculation({ workshop: data });
-
-  const inPersonCourse = mode === COURSE_MODES.IN_PERSON.name;
+  const { title, mode } = data || {};
 
   return (
     <>

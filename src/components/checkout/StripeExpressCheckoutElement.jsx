@@ -18,7 +18,11 @@ import { useRouter } from "next/router";
 import Style from "./StripeExpressCheckoutElement.module.scss";
 import { BiErrorCircle } from "react-icons/bi";
 
-export const StripeExpressCheckoutElement = ({ workshop }) => {
+export const StripeExpressCheckoutElement = ({
+  workshop,
+  goToPaymentModal,
+  selectedWorkshopId,
+}) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const { fee } = priceCalculation({
     workshop,
@@ -30,13 +34,18 @@ export const StripeExpressCheckoutElement = ({ workshop }) => {
     appearance: {
       theme: "stripe",
       variables: {
-        borderRadius: "36px",
+        borderRadius: "8px",
+        height: "62.5px",
       },
     },
   };
   return (
     <Elements stripe={stripePromise} options={elementsOptions}>
-      <CheckoutPage workshop={workshop} />
+      <CheckoutPage
+        workshop={workshop}
+        goToPaymentModal={goToPaymentModal}
+        selectedWorkshopId={selectedWorkshopId}
+      />
     </Elements>
   );
 };
@@ -53,7 +62,7 @@ const options = {
   paymentMethodOrder: ["apple_pay", "google_pay"],
 };
 
-const CheckoutPage = ({ workshop }) => {
+const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -97,6 +106,11 @@ const CheckoutPage = ({ workshop }) => {
         },
         isUnauthorized: true,
       });
+
+      filteredParams = {
+        ...filteredParams,
+        referral: "course_search_scheduling",
+      };
 
       if (status === 400 || isError) {
         throw new Error(errorMessage);
@@ -194,8 +208,7 @@ const CheckoutPage = ({ workshop }) => {
                 <div className={Style.pay_message}>
                   <BiErrorCircle />
                   {"  "}
-                  To proceed using Apple or Google Pay, kindly acknowledge the
-                  agreements above.
+                  To proceed, kindly acknowledge the agreements above.
                 </div>
               )}
 
@@ -213,6 +226,14 @@ const CheckoutPage = ({ workshop }) => {
                   onConfirm={onConfirm}
                   onClick={expressCheckoutElementOnClick}
                 />
+                <button
+                  type="button"
+                  className="btn btn-continue tw-mt-5"
+                  disabled={!selectedWorkshopId}
+                  onClick={goToPaymentModal}
+                >
+                  Continue
+                </button>
               </div>
             </>
           );

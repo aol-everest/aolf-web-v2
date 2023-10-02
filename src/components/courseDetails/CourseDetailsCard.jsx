@@ -122,13 +122,13 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
   return (
     <div className={[`course-details ${inPersonCourse ? "in-person" : ""}`]}>
-      <p class="course-details__cost">
+      <p className="course-details__cost">
         ${fee} {delfee && <span>${delfee}</span>}
       </p>
 
-      <div class="course-details__place">
-        <div class="top left course-details__cell">
-          <p class="course-details__table-text">
+      <div className="course-details__place">
+        <div className="top left course-details__cell">
+          <p className="course-details__table-text">
             DATES
             <span>
               {dayjs
@@ -147,8 +147,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </p>
         </div>
 
-        <div class="top right course-details__cell">
-          <p class="course-details__table-text">
+        <div className="top right course-details__cell">
+          <p className="course-details__table-text">
             LOCATION
             <span>
               {mode === COURSE_MODES.ONLINE.name ? (
@@ -175,11 +175,11 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </p>
         </div>
 
-        <div class="bottom full course-details__cell course-details__times">
+        <div className="bottom full course-details__cell course-details__times">
           {timings &&
             timings.map((time) => {
               return (
-                <p class="course-details__time" key={time.startDate}>
+                <p className="course-details__time" key={time.startDate}>
                   <span>{dayjs.utc(time.startDate).format("ddd, MMM DD")}</span>
                   {tConvert(time.startTime)}-{tConvert(time.endTime)}
                   {` (${ABBRS[time.timeZone]})`}
@@ -189,9 +189,9 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         </div>
       </div>
 
-      <div class="course-details__instructor">
-        <div class="top full course-details__cell">
-          <p class="course-details__table-text">
+      <div className="course-details__instructor">
+        <div className="top full course-details__cell">
+          <p className="course-details__table-text">
             INSTRUCTORS
             {primaryTeacherName && <span>{primaryTeacherName}</span>}
             {coTeacher1Name && <span>{coTeacher1Name}</span>}
@@ -199,8 +199,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </p>
         </div>
 
-        <div class="bottom left course-details__cell">
-          <p class="course-details__table-text small">
+        <div className="bottom left course-details__cell">
+          <p className="course-details__table-text small">
             EMAIL
             <a href={`mailto:${email}`}>
               <span>{email}</span>
@@ -208,8 +208,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </p>
         </div>
 
-        <div class="bottom right course-details__cell">
-          <p class="course-details__table-text small">
+        <div className="bottom right course-details__cell">
+          <p className="course-details__table-text small">
             PHONE
             <a href={`tel:${phone1}`}>
               <span>{phone1}</span>
@@ -220,7 +220,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
       <button
         type="button"
-        class="btn-secondary justify-content-center"
+        className="btn-secondary justify-content-center"
         onClick={handleRegister}
       >
         Reserve
@@ -228,9 +228,9 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
       <hr style={{ margin: 0 }} />
 
-      <p class="course-details__text">Looking for another date?</p>
+      <p className="course-details__text">Looking for another date?</p>
 
-      <div id="courses-filters" class="course-details__buttons">
+      <div id="courses-filters" className="course-details__buttons">
         <Popup
           tabIndex="1"
           value={filterStartDate}
@@ -274,7 +274,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           {({ closeHandler }) => (
             <>
               <li
-                class="courses-filter__list-item"
+                className="courses-filter__list-item"
                 onClick={closeHandler({
                   name: "Eastern",
                   value: "EST",
@@ -283,7 +283,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
                 Eastern
               </li>
               <li
-                class="courses-filter__list-item"
+                className="courses-filter__list-item"
                 onClick={closeHandler({
                   name: "Central",
                   value: "CST",
@@ -292,7 +292,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
                 Central
               </li>
               <li
-                class="courses-filter__list-item"
+                className="courses-filter__list-item"
                 onClick={closeHandler({
                   name: "Mountain",
                   value: "MST",
@@ -301,7 +301,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
                 Mountain
               </li>
               <li
-                class="courses-filter__list-item"
+                className="courses-filter__list-item"
                 onClick={closeHandler({
                   name: "Pacific",
                   value: "PST",
@@ -310,7 +310,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
                 Pacific
               </li>
               <li
-                class="courses-filter__list-item"
+                className="courses-filter__list-item"
                 onClick={closeHandler({
                   name: "Hawaii",
                   value: "HST",

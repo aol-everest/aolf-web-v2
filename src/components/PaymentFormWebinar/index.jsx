@@ -936,7 +936,7 @@ export const PaymentFormWebinar = ({
                     )}
                   </div>
 
-                  <div class="order__complete d-none d-lg-flex">
+                  <div className="order__complete d-none d-lg-flex">
                     <div className="order__security security">
                       <img src="/img/ic-lock.svg" alt="lock" />
                       <p className="security__info">
@@ -948,11 +948,11 @@ export const PaymentFormWebinar = ({
                   </div>
                 </form>
               </div>
-              <div class="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-lg-0 offset-lg-1">
+              <div className="col-xl-4 col-lg-5 col-12 mt-0 mt-6 p-lg-0 offset-lg-1">
                 <div className="reciept reciept--box  d-lg-block">
-                  <div class="reciept__header reciept__header_v1 full-padding ">
-                    <div class="row justify-content-between no-gutters pt-3">
-                      <div class="col-12 col-lg-12 select-box mb-3 mb-lg-0">
+                  <div className="reciept__header reciept__header_v1 full-padding ">
+                    <div className="row justify-content-between no-gutters pt-3">
+                      <div className="col-12 col-lg-12 select-box mb-3 mb-lg-0">
                         <div tabIndex="1" className="select-box__current">
                           <span className="select-box__placeholder">
                             Choose Dates
@@ -980,7 +980,7 @@ export const PaymentFormWebinar = ({
                                   id="option1"
                                   value={selectedWorkshopId}
                                   name="choose-date"
-                                  class="select-box__input"
+                                  className="select-box__input"
                                   checked={selectedWorkshopId === option.sfid}
                                 />
                                 <span className="select-box__input-text">
@@ -990,7 +990,7 @@ export const PaymentFormWebinar = ({
                             );
                           })}
                         </div>
-                        <ul class="select-box__list">
+                        <ul className="select-box__list">
                           {workshops.map((option) => {
                             const dateValue =
                               dayjs
@@ -1036,30 +1036,30 @@ export const PaymentFormWebinar = ({
                     </div>
                   </div>
                   {workshops.length === 0 ? (
-                    <div class="reciept__details ">
-                      <div class="course pb-3">
-                        <div class="course__info course__info--width info">
-                          <h2 class="info__title">No Webinars Found</h2>
+                    <div className="reciept__details ">
+                      <div className="course pb-3">
+                        <div className="course__info course__info--width info">
+                          <h2 className="info__title">No Webinars Found</h2>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div class="reciept__details ">
-                      <div class="course pb-3">
-                        <div class="d-none d-lg-block course__photo course__photo--min-width tw-relative tw-h-[98px] tw-min-w-[98px]">
+                    <div className="reciept__details ">
+                      <div className="course pb-3">
+                        <div className="d-none d-lg-block course__photo course__photo--min-width tw-relative tw-h-[98px] tw-min-w-[98px]">
                           <img
                             src={"/img/card-2.png"}
                             alt="course-photo"
                             layout="fill"
                           />
                         </div>
-                        <div class="course__info course__info--width info">
-                          <h2 class="info__title">Your course:</h2>
-                          <ul class="info__list info__list--classic">
+                        <div className="course__info course__info--width info">
+                          <h2 className="info__title">Your course:</h2>
+                          <ul className="info__list info__list--classic">
                             <li>Total: {premiumRate?.unitPrice || 0}$</li>
                           </ul>
-                          <h2 class="info__title mt-3">You get:</h2>
-                          <ul class="info__list info__list--classic">
+                          <h2 className="info__title mt-3">You get:</h2>
+                          <ul className="info__list info__list--classic">
                             <li>
                               {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
                               On-Demand Video Access
@@ -1067,8 +1067,8 @@ export const PaymentFormWebinar = ({
                             <li>Plus 2 LIVE online sessions</li>
                           </ul>
 
-                          <h2 class="info__title mt-3">BONUSES</h2>
-                          <ul class="info__list info__list--classic ">
+                          <h2 className="info__title mt-3">BONUSES</h2>
+                          <ul className="info__list info__list--classic ">
                             <li>3 LIVE follow-up-sessions</li>
                             <li>
                               3 months free access to the online yoga studio
@@ -1098,7 +1098,7 @@ export const PaymentFormWebinar = ({
                   screen="DESKTOP"
                 />
 
-                <div class="order__complete d-block d-lg-none">
+                <div className="order__complete d-block d-lg-none">
                   <div className="order__security security">
                     <img src="/img/ic-lock.svg" alt="lock" />
                     <p className="security__info">

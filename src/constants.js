@@ -53,7 +53,7 @@ export const PAYMENT_MODES = {
 export const COURSE_MODES = {
   ONLINE: {
     name: "Online",
-    value: "online",
+    value: "Online",
   },
   IN_PERSON: {
     name: "In Person",
@@ -88,6 +88,11 @@ export const COURSE_TYPES = {
     name: "Art of Living Part I",
     value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || "",
     code: "10101000",
+    subTypes: {
+      Online: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_ONLINE_CTYPE,
+      "In Person":
+        process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_IN_PERSON_CTYPE,
+    },
   },
   SILENT_RETREAT: {
     name: "Art of Living Part II",
@@ -97,6 +102,10 @@ export const COURSE_TYPES = {
     name: "Sahaj Samadhi Meditation",
     value: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE || "",
     code: "10102000",
+    subTypes: {
+      Online: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_ONLINE_CTYPE,
+      "In Person": process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_IN_PERSON_CTYPE,
+    },
   },
   SRI_SRI_YOGA_MEDITATION: {
     name: "Sri Sri Yoga",
@@ -118,11 +127,19 @@ export const COURSE_TYPES = {
     name: "Silent Retreat",
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || "",
     code: "10305000",
+    subTypes: {
+      Online: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_ONLINE_CTYPE,
+      "In Person": process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_IN_PERSON_CTYPE,
+    },
   },
   ART_OF_LIVING_PREMIUM_PROGRAM: {
     name: "Art of Living Premium Program",
     value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || "",
     code: "10304000",
+    subTypes: {
+      Online: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_ONLINE_CTYPE,
+      "In Person": process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_IN_PERSON_CTYPE,
+    },
   },
   SKY_HAPPINESS_RETREAT: {
     name: "SKY Happiness Retreat",

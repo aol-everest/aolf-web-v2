@@ -37,7 +37,7 @@ export const ResetPasswordForm = ({
       </p>
       <div className="wcf-form__fields">
         <div className="wcf-input wcf-form__field">
-          <label for="log-in-email" className="wcf-input__label">
+          <label htmlFor="log-in-email" className="wcf-input__label">
             Email
           </label>
           <input
@@ -50,7 +50,7 @@ export const ResetPasswordForm = ({
             {...register("username")}
           />
           {errors.username && (
-            <label for="log-in-email" class="wcf-select__error-message">
+            <label htmlFor="log-in-email" className="wcf-select__error-message">
               {errors.username.message}
             </label>
           )}
@@ -65,7 +65,7 @@ export const ResetPasswordForm = ({
             role="status"
             aria-hidden="true"
           ></span>
-          <span class="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </button>
       )}
       {!loading && (

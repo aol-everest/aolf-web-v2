@@ -233,6 +233,7 @@ const Checkout = () => {
         ctype: workshop.productTypeId,
         comboId: comboProductSfid,
         page: "ty",
+        referral: "course_checkout",
         type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
         campaignid,
         mbsy,
@@ -245,6 +246,7 @@ const Checkout = () => {
       ctype: workshop.productTypeId,
       comboId: comboProductSfid,
       page: "ty",
+      referral: "course_checkout",
       type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
       campaignid,
       mbsy,
@@ -498,7 +500,12 @@ const Checkout = () => {
                 </span>
               </p>
             ) : (
-              <p className="order__detail">{workshop?.description || ""}</p>
+              <p
+                className="order__detail-description"
+                dangerouslySetInnerHTML={{
+                  __html: workshop?.description,
+                }}
+              ></p>
             )}
 
             {workshop.isCorporateEvent && (

@@ -106,6 +106,7 @@ const Thankyou = () => {
       name: "course_registration_thank_you",
       payment_intent: paymentIntent,
       course_type: courseType,
+      referral: "course_search_scheduling",
     });
   });
 
@@ -208,6 +209,7 @@ const Thankyou = () => {
       event_target: "add_to_calendar_button",
       course_type: courseType,
       payment_intent: paymentIntent,
+      referral: "course_scheduling_checkout",
     });
   };
 
@@ -308,6 +310,7 @@ const Thankyou = () => {
       event_target: "ios_app_link",
       course_type: courseType,
       payment_intent: paymentIntent,
+      referral: "course_scheduling_checkout",
     });
   };
 
@@ -317,6 +320,7 @@ const Thankyou = () => {
       event_target: "android_app_link",
       course_type: courseType,
       payment_intent: paymentIntent,
+      referral: "course_scheduling_checkout",
     });
   };
 

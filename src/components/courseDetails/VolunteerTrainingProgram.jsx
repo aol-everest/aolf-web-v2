@@ -785,7 +785,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                             >
                               {content.label}
                               <span
-                                class={classNames(Style.accordianIcon, {
+                                className={classNames(Style.accordianIcon, {
                                   "tw-rotate-45 tw-transform": showContent,
                                 })}
                               />

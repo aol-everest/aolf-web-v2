@@ -16,6 +16,7 @@ export const AddressSearch = ({
   closeHandler,
   placeholder,
   parentClass = "",
+  listClassName = "",
   isDefaultLocation = false,
 }) => {
   const [address, setAddress] = useState("");
@@ -79,7 +80,7 @@ export const AddressSearch = ({
           onChange={handleChange}
           onSelect={handleSelect}
           searchOptions={{
-            types: ["(cities)"],
+            types: ["(regions)"],
             componentRestrictions: { country: "us" },
           }}
         >
@@ -98,8 +99,9 @@ export const AddressSearch = ({
                   placeholder,
                 })}
               />
+
               {suggestions.length > 0 && (
-                <div style={{ zIndex: 9 }}>
+                <div style={{ zIndex: 9 }} className={listClassName}>
                   {suggestions.map((suggestion) => {
                     const className = suggestion.active
                       ? "suggestion-item--active smart-input--list-item"

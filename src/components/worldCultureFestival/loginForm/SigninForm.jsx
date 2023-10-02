@@ -40,7 +40,7 @@ export const SigninForm = ({
     <form className="wcf-form" id="log-in-form" onSubmit={handleSubmit(signIn)}>
       <div className="wcf-form__fields">
         <div className="wcf-input wcf-form__field">
-          <label for="log-in-email" className="wcf-input__label">
+          <label htmlFor="log-in-email" className="wcf-input__label">
             Email
           </label>
           <input
@@ -53,14 +53,14 @@ export const SigninForm = ({
             {...register("username")}
           />
           {errors.username && (
-            <label for="log-in-email" class="wcf-select__error-message">
+            <label htmlFor="log-in-email" className="wcf-select__error-message">
               {errors.username.message}
             </label>
           )}
         </div>
 
         <div className="wcf-input wcf-form__field">
-          <label for="log-in-password" className="wcf-input__label">
+          <label htmlFor="log-in-password" className="wcf-input__label">
             Password
           </label>
           <input
@@ -79,7 +79,10 @@ export const SigninForm = ({
             <img src="/img/Eye.png" />
           </button>
           {errors.password && (
-            <label for="welcome-sessions" class="wcf-select__error-message">
+            <label
+              htmlFor="welcome-sessions"
+              className="wcf-select__error-message"
+            >
               {errors.password.message}
             </label>
           )}
@@ -98,7 +101,7 @@ export const SigninForm = ({
             role="status"
             aria-hidden="true"
           ></span>
-          <span class="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </button>
       )}
       {!loading && (
@@ -107,8 +110,8 @@ export const SigninForm = ({
         </button>
       )}
 
-      <p class="wcf-body-small wcf-form__note">
-        <a class="wcf-link" href="#" onClick={forgotPassword}>
+      <p className="wcf-body-small wcf-form__note">
+        <a className="wcf-link" href="#" onClick={forgotPassword}>
           Forgot your password?
         </a>
       </p>

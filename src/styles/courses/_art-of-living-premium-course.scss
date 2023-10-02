@@ -1,0 +1,965 @@
+.art-of-living-premium-course {
+  &.course-filter {
+    padding-top: 0;
+  }
+  @media screen and (max-width: 991px) {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  @media screen and (max-width: 767px) {
+    .container {
+      max-width: 540px;
+    }
+  }
+
+  .samadhi-top-section {
+    background: url(/img/samadhi-page-bg.png) repeat-x top left;
+    @media screen and (max-width: 991px) {
+      background-color: #fffbf0;
+    }
+    @media screen and (max-width: 767px) {
+      background: #fffbf0;
+    }
+    .banner {
+      height: 402px;
+      width: 100%;
+      background: url(/img/art-of-living-premium-banner.jpg) no-repeat top left;
+      padding: 60px 76px 50px 76px;
+      background-size: auto;
+      background-position: center;
+      .courses-title {
+        display: none;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      &-title {
+        font-size: 40px;
+        line-height: 40px;
+        font-weight: 600;
+        max-width: 425px;
+        margin-bottom: 40px;
+      }
+      &-description {
+        font-size: 18px;
+        line-height: 22px;
+        max-width: 550px;
+      }
+      @media screen and (max-width: 991px) {
+        background-position: bottom center;
+        height: 300px;
+        padding-left: 0;
+        &-title {
+          font-size: 35px;
+          line-height: 35px;
+        }
+      }
+      @media screen and (max-width: 767px) {
+        background: url(/img/art-of-living-premium-mobile.png) no-repeat bottom
+          center;
+        height: 600px;
+        padding: 36px 32px 10px;
+        background-size: auto;
+        background-position: center bottom;
+        &-title {
+          font-size: 26px;
+          line-height: 30px;
+          margin-bottom: 30px;
+        }
+        .courses-title {
+          display: block;
+          margin-bottom: 24px;
+        }
+      }
+      .hero-register-button-wrapper {
+        margin-top: 50px;
+        margin-bottom: 20px;
+        .hero-register-button {
+          background: linear-gradient(90deg, #57bacd 9.51%, #0398b5 93.54%);
+          color: #fff;
+          border: 0px;
+          border-radius: 2rem;
+          padding: 1rem 4rem;
+        }
+        @media only screen and (max-width: 768px) {
+          text-align: center;
+          margin-top: 30px;
+          .hero-register-button {
+          }
+        }
+      }
+    }
+
+    .content-video-area {
+      display: flex;
+      padding: 70px 76px;
+      .section-title {
+        margin: 0 0 0 0;
+        font-family: 'Work Sans';
+        font-size: 36px;
+        line-height: 36px;
+        font-weight: 600;
+        max-width: 650px;
+        margin-bottom: 40px;
+        @media screen and (max-width: 767px) {
+          font-size: 26px;
+          line-height: 30px;
+          margin-bottom: 15px;
+          margin-top: 40px;
+        }
+      }
+      .discover_premium_course_text {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+        img {
+          height: 100px;
+          width: 342px;
+          margin: 0 auto;
+          margin-left: 48px;
+          @media screen and (max-width: 767px) {
+            width: 232.85px;
+            height: 68px;
+            margin-left: 0;
+            margin: 0 auto;
+          }
+        }
+        @media screen and (max-width: 991px) {
+          flex-direction: column;
+        }
+      }
+      p {
+        font-size: 18px;
+        line-height: 24px;
+        margin: 15px 0;
+      }
+      .video-wrapper {
+        padding: 50px 0 0 60px;
+      }
+      @media screen and (max-width: 991px) {
+        padding: 40px 0px;
+      }
+      @media screen and (max-width: 767px) {
+        flex-direction: column;
+        padding: 20px 20px;
+        .video-wrapper {
+          padding: 0;
+          iframe {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  .samadhi-featuers {
+    display: flex;
+    padding: 40px 76px 10px;
+    .feature-box {
+      display: flex;
+      justify-items: center;
+      align-items: center;
+      flex-grow: 1;
+    }
+    .feature-icon {
+      width: 88px;
+    }
+    .feature-text {
+      font-size: 18px;
+      line-height: 18px;
+      font-weight: 600;
+      max-width: 200px;
+    }
+    @media screen and (max-width: 991px) {
+      padding: 30px 0;
+      .feature-box {
+        padding-right: 20px;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      padding: 20px 0 0 20px;
+      flex-direction: column;
+      .feature-box {
+        flex-direction: column;
+        padding: 0;
+        flex-direction: row;
+        padding: 0;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      .feature-text {
+        font-size: 16px;
+        padding-top: 25px;
+      }
+    }
+  }
+  .samadhi-benefits-section {
+    padding: 60px 40px 0;
+    background: url(/img/sahaj-samadhi-benefit-moon.png) no-repeat top right;
+    text-align: center;
+    .section-title {
+      font-family: 'Work Sans';
+      font-weight: 400;
+      text-transform: uppercase;
+      font-size: 36px;
+      line-height: 30px;
+      margin-bottom: 20px;
+    }
+    .section-description {
+      font-size: 18px;
+      line-height: 22px;
+    }
+    .samadhi-benefits-wrapper {
+      padding-top: 40px;
+    }
+    .samadhi-benefit-box {
+      height: 420px;
+      display: flex;
+      padding: 20px 65px 60px;
+      flex-direction: column;
+      &.box1 {
+        background: url(/img/aolp-ch-1.jpg) no-repeat top right;
+      }
+      &.box2 {
+        background: url(/img/aolp-ch-2.jpg) no-repeat top right;
+      }
+      &.box3 {
+        background: url(/img/aolp-ch-3.jpg) no-repeat top right;
+      }
+      &.box4 {
+        background: url(/img/aolp-ch-4.jpg) no-repeat top right;
+      }
+      .benefit-title {
+        margin-top: auto;
+        font-family: 'Lora';
+        font-size: 32px;
+        line-height: 32px;
+        margin-bottom: 22px;
+      }
+    }
+    @media screen and (max-width: 991px) {
+      padding: 40px 0 0 0;
+    }
+    @media screen and (max-width: 767px) {
+      &.container {
+        width: 100%;
+        background: white;
+        max-width: 100%;
+        padding-top: 0;
+        & > * {
+          max-width: 360px;
+          margin: auto;
+        }
+        .section-title {
+          text-align: left;
+          font-size: 26px;
+          padding-left: 0;
+          padding-top: 40px;
+          height: auto;
+          padding-bottom: 25px;
+          background: url(/img/sahaj-samadhi-benefit-moon.png) no-repeat right
+            30px;
+          background-size: 200px;
+        }
+        .section-description {
+          display: none;
+        }
+      }
+      .samadhi-benefit-box {
+        height: 400px;
+        text-align: left;
+        padding: 24px;
+        background-size: cover !important;
+        background-position: top center !important;
+        .benefit-title {
+          font-size: 28px;
+          line-height: 30px;
+        }
+        .benefit-text {
+          font-size: 16px;
+          line-height: 20px;
+        }
+      }
+      .samadhi-benefits-wrapper {
+        padding-top: 0px;
+      }
+    }
+  }
+
+  .sudarshan-kriya {
+    padding-top: 112px;
+    background: url(/img/samadhi-carousel-bg.png) repeat-x top left;
+    background: #ffffff;
+    padding-bottom: 50px;
+    position: relative;
+    .container {
+      @media screen and (max-width: 767px) {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        & > * {
+          max-width: 100%;
+          padding: 0 15px;
+          margin: auto;
+        }
+      }
+    }
+    .section-title {
+      font-family: 'Work Sans';
+      font-weight: 400;
+      text-transform: uppercase;
+      font-size: 36px;
+      line-height: 30px;
+      margin-bottom: 20px;
+      @media only screen and (max-width: 768px) {
+        text-align: left;
+        font-size: 26px;
+      }
+    }
+    .refreshing-silence {
+      padding-top: 112px;
+      .section-title {
+        text-align: center;
+        font-family: 'Work Sans';
+        font-size: 36px;
+        font-weight: 600;
+        line-height: 30px;
+        text-align: center;
+        margin-bottom: 70px;
+        text-transform: inherit;
+        width: 100%;
+        @media only screen and (max-width: 768px) {
+          text-align: left;
+          font-size: 28px;
+          line-height: 30px;
+          padding-left: 0;
+          margin-bottom: 40px;
+        }
+      }
+      p {
+        font-family: 'Work Sans', sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 24px;
+        margin: 25px 25px 25px 0px;
+        @media only screen and (max-width: 768px) {
+          margin: 0 10px 25px 0;
+        }
+      }
+      .body-mind-spirit {
+        background-image: url(/img/Body_mind_spirit.png);
+        background-size: contain;
+        width: 100%;
+        height: 200px;
+        background-repeat: no-repeat;
+        @media only screen and (max-width: 991px) {
+          height: 120px;
+        }
+        @media only screen and (max-width: 768px) {
+          background-size: cover;
+          height: 95px;
+        }
+      }
+      .desktopView {
+        display: inherit;
+        @media only screen and (max-width: 991px) {
+          display: none;
+        }
+      }
+      .mobileColumn {
+        @media only screen and (max-width: 991px) {
+          display: flex;
+          align-items: center;
+        }
+        img {
+          @media only screen and (max-width: 991px) {
+            height: fit-content;
+            width: 100%;
+            overflow: hidden;
+          }
+        }
+      }
+      .mobileView {
+        display: none;
+        @media only screen and (max-width: 991px) {
+          display: inherit;
+        }
+      }
+    }
+    .section-description {
+      font-size: 18px;
+      line-height: 22px;
+      @media only screen and (max-width: 768px) {
+        text-align: left;
+        margin-bottom: 25px;
+      }
+    }
+    .stats-1 {
+      /* background: linear-gradient( 0deg, #0997ac 0%, #9ee9ac 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent */
+      color: #000000;
+      font-size: 29px;
+      line-height: 29px;
+      @media only screen and (max-width: 991px) {
+        font-size: 24px;
+        font-weight: 600;
+      }
+    }
+    .stats-2 {
+      /* background: linear-gradient( 0deg, #0bbafb 0%, #4285ec 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent; */
+      color: #000000;
+      font-size: 29px;
+      line-height: 29px;
+      @media only screen and (max-width: 991px) {
+        font-size: 24px;
+        font-weight: 600;
+      }
+    }
+    .stats-3 {
+      /* background: linear-gradient( 0deg, #f39459 0%, #6f5ea4 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent; */
+      color: #000000;
+      font-size: 29px;
+      line-height: 29px;
+      @media only screen and (max-width: 768px) {
+        font-size: 24px;
+        font-weight: 600;
+      }
+    }
+    .stats-desc {
+      font-size: 21px;
+      line-height: 25px;
+      color: #000;
+      padding-top: 35px;
+      letter-spacing: -0.5px;
+      display: inline-block;
+      @media screen and (max-width: 768px) {
+        padding-top: 0;
+      }
+    }
+    @media only screen and (max-width: 768px) {
+      background: url(/img/sudarshan-kriya-mobile-bg.png) repeat-x top left;
+      background-size: 800px 1000px;
+      background: #ffffff;
+    }
+  }
+  .breadth-meditation {
+    .breadth-meditation_content {
+      .title {
+        height: 70px;
+        display: block;
+      }
+      .stats-desc {
+        height: 100px;
+        display: block;
+        padding-top: 16px;
+        @media only screen and (max-width: 991px) {
+          padding-top: 20px;
+          height: 150px;
+        }
+        @media only screen and (max-width: 768px) {
+          padding-top: 0;
+          height: auto;
+        }
+      }
+    }
+    .breadth-meditation__block {
+      margin-bottom: 2rem;
+      .breadth-meditation__title {
+        margin-bottom: 1.5rem;
+      }
+      @media only screen and (max-width: 768px) {
+        .breadth-meditation__title {
+          margin: 0 1rem;
+        }
+      }
+      .breadth-meditation_content {
+        margin: 60px 30px;
+        font-size: 24px;
+        .title {
+          height: 100px;
+          display: block;
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        .breadth-meditation_content {
+          margin: 15px 15px;
+          font-size: 1rem;
+          text-align: center;
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        .comments__video {
+          margin: 1rem auto;
+        }
+      }
+    }
+    .breadth-meditation_box {
+      display: flex;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      padding: 20px 20px 30px 20px;
+      margin: 30px 0px;
+      min-height: 215px;
+      align-items: flex-start;
+      justify-content: flex-start;
+      &.box_1 {
+        background: #e7f9f8;
+      }
+      &.box_2 {
+        background: #f4fbff;
+      }
+      &.box_3 {
+        background: #f4f1fb;
+      }
+      .breadth-meditation_logo {
+        margin-right: 1rem;
+        img {
+          width: 57px;
+          padding-top: 10px;
+          @media only screen and (max-width: 991px) {
+            width: 35px;
+          }
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        margin-bottom: 0;
+        padding: 20px;
+        min-height: auto;
+        border-radius: 0;
+        margin: 8px 0;
+      }
+    }
+    .register-button {
+      background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+      color: #fff;
+      border: 0px;
+      border-radius: 2rem;
+      padding: 1rem 4rem;
+      margin-top: 2rem;
+    }
+    @media only screen and (max-width: 768px) {
+      .register-button {
+        width: 100%;
+      }
+    }
+    @media only screen and (max-width: 768px) {
+      .breadth-meditation__title {
+        margin-top: 2rem;
+        padding: 0 45px 45px;
+      }
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .breadth-meditation {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+  }
+
+  .faq {
+    padding: 50px 0;
+    .section-title {
+      font-family: 'Work Sans', sans-serif;
+      text-align: center;
+      font-size: 36px;
+      line-height: 30px;
+      font-weight: 600;
+    }
+    .card {
+      border: none;
+      background: none;
+      border-radius: 0;
+      border-bottom: #dcdcdc 1px solid;
+      padding: 20px 0;
+      @media screen and (max-width: 767px) {
+        padding: 0px 0;
+      }
+      &:last-child {
+        border: none;
+      }
+      &-header {
+        background: none;
+        padding: 30px 0;
+        border: none;
+        button.btn {
+          padding: 0 50px 0 0;
+          display: block;
+          width: 100%;
+          text-align: left;
+          position: relative;
+          font-size: 24px;
+          line-height: 22px;
+          font-weight: 600;
+          color: #000000;
+          &:focus,
+          &:hover {
+            text-decoration: none;
+          }
+          &::before {
+            content: '+';
+            font-size: 26px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 0px;
+            right: 0;
+            transform: rotate(45deg);
+          }
+          &.collapsed::before {
+            transform: rotate(0);
+          }
+          @media screen and (max-width: 767px) {
+            font-size: 18px;
+            line-height: 22px;
+          }
+        }
+      }
+      &-body {
+        font-size: 20px;
+        line-height: 24px;
+        padding: 0;
+        @media screen and (max-width: 767px) {
+          font-size: 16px;
+          line-height: 20px;
+          padding-bottom: 20px;
+        }
+      }
+    }
+    @media screen and (max-width: 767px) {
+      .section-title {
+        text-align: left;
+        font-size: 28px;
+        line-height: 30px;
+      }
+      button.btn {
+        font-size: 18px;
+        line-height: 22px;
+      }
+    }
+  }
+
+  .section-sahaj-reviews {
+    padding-top: 112px;
+    background: url(/img/samadhi-carousel-bg.png) repeat-x top left;
+    padding-bottom: 90px;
+    position: relative;
+    .section-title {
+      font-family: 'Work Sans';
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 30px;
+      text-align: center;
+      margin-bottom: 70px;
+    }
+    .swiper-wrapper {
+      display: flex;
+    }
+    .swiper-slide {
+      align-self: stretch;
+      height: auto;
+    }
+    .review-box {
+      background: white;
+      border-bottom: #faa826 8px solid;
+      padding: 30px;
+      height: 100%;
+    }
+    .review-title {
+      font-family: 'Lora';
+      font-size: 36px;
+      font-weight: 400;
+      line-height: 30px;
+      font-style: italic;
+      padding: 0 50px 30px 0;
+      background: url(/img/review-quote-brown.png) no-repeat top right;
+    }
+    .review-text {
+      font-family: 'Lora';
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 24px;
+    }
+    .review-author {
+      display: flex;
+      padding-top: 25px;
+      align-items: center;
+      img {
+        height: 55px;
+        width: 55px;
+        border-radius: 100%;
+      }
+    }
+    .reviewer-photo {
+      margin-right: 20px;
+    }
+    .reviewer-info {
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .reviewer-name {
+      font-weight: 600;
+    }
+    .reviwer-position {
+      color: #6f6f6f;
+    }
+    .reviews-slider {
+      padding-bottom: 60px;
+    }
+    .swiper-pagination {
+      bottom: 0px;
+    }
+    .reviews-slider {
+      padding-bottom: 60px;
+    }
+    @media screen and (max-width: 767px) {
+      padding-top: 0;
+      .swiper-slide {
+        padding: 0 20px;
+      }
+      .section-title {
+        font-size: 28px;
+        line-height: 30px;
+        padding: 0 30px;
+        text-align: left;
+        margin-bottom: 36px;
+      }
+      .review-box {
+        padding: 20px;
+      }
+      .review-title {
+        font-size: 28px;
+        line-height: 30px;
+      }
+      .review-text {
+        font-size: 16px;
+        line-height: 20px;
+      }
+      .review-author {
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+  }
+  .container {
+    &.banner2,
+    &.banner3 {
+      padding: 0;
+    }
+  }
+  .aos-banner-second {
+    background: url(/img/aos-banner-2.jpg) no-repeat top left;
+    height: 400px;
+    padding: 94px 0 0 77px;
+    margin: 20px 15px;
+    .guru-quote {
+      font-size: 42px;
+      line-height: 42px;
+      color: #fdf4e1;
+      width: 564px;
+      font-family: 'Lora';
+    }
+    .quote-author {
+      font-size: 24px;
+      line-height: 24px;
+      color: #fdf4e1;
+      width: 564px;
+      font-family: 'Lora';
+      padding-top: 37px;
+    }
+    @media screen and (max-width: 767px) {
+      margin-top: 10px;
+      margin-left: 0;
+      margin-right: 0;
+      background: url(/img/aos-quote-banner-mobile.png) no-repeat bottom left;
+      height: 428px;
+      padding: 32px 40px;
+      .guru-quote {
+        font-size: 26px;
+        line-height: 24px;
+        width: auto;
+        text-align: center;
+      }
+      .quote-author {
+        font-size: 16px;
+        line-height: 24px;
+        text-align: center;
+        width: auto;
+        padding-top: 10px;
+      }
+    }
+  }
+  .aos-banner-third {
+    background: url(/img/aos-banner-4.jpg) no-repeat top left;
+    height: 400px;
+    padding: 70px 90px 0 90px;
+    margin: 20px 15px;
+    .banner-title {
+      font-size: 32px;
+      line-height: 36px;
+      font-weight: 600;
+      font-family: 'Lora';
+    }
+    .banner-text {
+      font-size: 18px;
+      line-height: 22px;
+      padding-top: 20px;
+      margin-bottom: 40px;
+      .total-value {
+        font-family: 'Work Sans';
+        font-weight: 600;
+        font-size: 28px;
+        .orginal-price {
+          text-decoration: line-through;
+        }
+        @media screen and (max-width: 767px) {
+          font-size: 24px;
+          margin-bottom: 25px;
+        }
+      }
+    }
+    .enrollment {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      width: 100%;
+      @media screen and (max-width: 767px) {
+        flex-direction: column;
+      }
+    }
+    .enroll-btn {
+      width: 300px;
+      height: 62px;
+      background: linear-gradient(
+        270deg,
+        #df7900 6%,
+        rgba(239, 183, 0, 0.6) 94.33%
+      );
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      line-height: 22px;
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+    @media screen and (max-width: 1199px) {
+      background-repeat: repeat-x;
+      background-position: -220px 0;
+      padding: 75px 50px 0 50px;
+    }
+    @media screen and (max-width: 767px) {
+      margin-top: 10px;
+      margin-left: 0;
+      margin-right: 0;
+      padding: 39px 26px 20px;
+      min-height: 370px;
+      background: url(/img/aos-banner-4-mobile.png) no-repeat top right;
+      background-size: 480px 480px;
+      height: 480px;
+      .banner-title {
+        font-size: 26px;
+        line-height: 30px;
+        font-weight: 600;
+      }
+      .banner-text {
+        font-size: 16px;
+        line-height: 20px;
+        margin-bottom: 0px;
+        letter-spacing: -0.5px;
+        padding-top: 0;
+        ul.first {
+          padding-top: 20px;
+        }
+        ul.second {
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+  .registration-widget {
+    .circle:before {
+      background-color: #ff8400;
+    }
+    .fa-solid,
+    .fa-solid:before {
+      color: #ff8400;
+    }
+    .register-button {
+      background: linear-gradient(
+        270deg,
+        #df7900 6%,
+        rgba(239, 183, 0, 0.6) 94.33%
+      );
+
+      .fa-solid:before {
+        color: #ffffff;
+      }
+    }
+  }
+  .float-bar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    padding: 10px 0;
+    z-index: 10;
+  }
+  .float-wrapper {
+    max-width: 1125px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @media screen and (max-width: 768px) {
+      max-width: 320px;
+    }
+  }
+  .bar-left {
+    text-align: right;
+    padding-right: 10px;
+    @media screen and (max-width: 767px) {
+      width: 50%;
+      padding-right: 0px;
+    }
+    .bar-title {
+      font-family: 'museo_sans500';
+      font-size: 24px;
+      line-height: normal;
+      @media screen and (max-width: 767px) {
+        font-size: 16px;
+        line-height: 17px;
+        text-align: left;
+        padding: 8px 0 0 10px;
+      }
+    }
+  }
+  .bar-right {
+    text-align: left;
+    padding-left: 10px;
+    button {
+      background: linear-gradient(90deg, #57bacd 9.51%, #0398b5 93.54%);
+      background: linear-gradient(
+        270deg,
+        #df7900 6%,
+        rgba(239, 183, 0, 0.6) 94.33%
+      );
+      color: #fff;
+      border: 0px;
+      border-radius: 2rem;
+      padding: 1rem 4rem;
+      white-space: nowrap;
+      @media screen and (max-width: 767px) {
+        padding: 10px 20px;
+      }
+    }
+  }
+}

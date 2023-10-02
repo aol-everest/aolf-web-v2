@@ -167,7 +167,7 @@ export const SahajSamadhi = ({ data }) => {
                 width="519"
                 height="291"
                 src="https://player.vimeo.com/video/860926723?h=8bf163df0e&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                frameborder="0"
+                frameBorder="0"
                 title="Sahaj Samadhi"
               ></iframe>
             </div>
