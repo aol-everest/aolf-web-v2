@@ -483,7 +483,7 @@ export const Header = () => {
                 if (menu.link) {
                   return (
                     <Nav.Item as="li" key={menu.name}>
-                      <Nav.Link href="#home" as={Link}>
+                      <Nav.Link href={menu.link} as={Link}>
                         {menu.icon || ""}
                         {menu.name}
                       </Nav.Link>
