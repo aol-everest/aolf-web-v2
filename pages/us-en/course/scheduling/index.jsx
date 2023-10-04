@@ -216,10 +216,8 @@ const SchedulingRange = () => {
         param,
       });
       if (isInitialLoad) {
-        console.log("isInitialLoad");
         const defaultDate =
           response.data.length > 0 ? response.data[0].allDates : [];
-        console.log(defaultDate, fp?.current?.flatpickr);
         if (fp?.current?.flatpickr && defaultDate.length > 0) {
           setTimeout(() => {
             fp.current.flatpickr.setDate(defaultDate, true);
@@ -397,6 +395,16 @@ const SchedulingRange = () => {
       setShowLocationModal(true);
     }
     setMode(value);
+    resetCalender();
+    if (
+      value === COURSE_MODES.ONLINE.value ||
+      (value !== COURSE_MODES.ONLINE.value && locationFilter)
+    ) {
+      setIsInitialLoad(true);
+    }
+  };
+
+  const resetCalender = () => {
     setActiveWorkshop(null);
     setSelectedWorkshopId(null);
     setSelectedDates([]);
@@ -468,6 +476,8 @@ const SchedulingRange = () => {
   };
 
   const handleLocationFilterChange = (value) => {
+    resetCalender();
+    setIsInitialLoad(true);
     if (value && Object.keys(value).length > 0) {
       setLocationFilter(JSON.stringify(value));
     } else {
