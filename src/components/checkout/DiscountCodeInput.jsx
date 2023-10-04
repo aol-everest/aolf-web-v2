@@ -17,6 +17,8 @@ export const DiscountCodeInput = ({
   setUser,
   userId = null,
   isBackendRequest = false,
+  inputClass = "discount-code",
+  tagClass = "",
   ...rest
 }) => {
   const [showTag, setShowTag] = useState(false);
@@ -171,7 +173,7 @@ export const DiscountCodeInput = ({
               value={formikProps.values[formikKey]}
               name={formikKey}
               onChange={onChangeAction}
-              className="discount-code"
+              className={inputClass}
               onBlur={applyCoupon}
               onKeyDown={onKeyDown}
             />
@@ -180,7 +182,7 @@ export const DiscountCodeInput = ({
         )}
         {showTag && (
           <>
-            <div className="react-tag-container">
+            <div className={`${tagClass} react-tag-container`}>
               <span
                 className={classNames("badge", "react-tag", {
                   "badge-light": status === 0,

@@ -1,0 +1,154 @@
+import React, { useState } from "react";
+import {
+  useStripe,
+  useElements,
+  ExpressCheckoutElement,
+  Elements,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { api, priceCalculation } from "@utils";
+import { useGlobalAlertContext } from "@contexts";
+import { ALERT_TYPES } from "@constants";
+import queryString from "query-string";
+import { removeNull } from "@utils/utmParam";
+import { useRouter } from "next/router";
+
+export const StripeExpressCheckoutTicket = ({ workshop }) => {
+  const stripePromise = loadStripe(workshop.publishableKey);
+  const { fee } = priceCalculation({
+    workshop,
+  });
+  const elementsOptions = {
+    mode: "payment",
+    amount: fee * 100,
+    currency: "usd",
+    appearance: {
+      theme: "stripe",
+      variables: {
+        borderRadius: "8px",
+        height: "62.5px",
+      },
+    },
+  };
+  return (
+    <Elements stripe={stripePromise} options={elementsOptions}>
+      <CheckoutPage workshop={workshop} />
+    </Elements>
+  );
+};
+
+const options = {
+  buttonType: {
+    applePay: "buy",
+    googlePay: "buy",
+  },
+  wallets: {
+    applePay: "always",
+    googlePay: "always",
+  },
+  paymentMethodOrder: ["apple_pay", "google_pay"],
+};
+
+const CheckoutPage = ({ workshop }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { showAlert } = useGlobalAlertContext();
+
+  const onConfirm = async (event) => {
+    if (loading) {
+      return null;
+    }
+    if (!stripe || !elements) {
+      // Stripe.js hasn't yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      throw submitError;
+    }
+    try {
+      // Create the PaymentIntent and obtain clientSecret
+      let filteredParams = {
+        ctype: workshop.productTypeId,
+        ...router.query,
+      };
+      filteredParams = removeNull(filteredParams);
+
+      const {
+        stripeIntentObj,
+        status,
+        data,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: "createIntentForExpressCheckout",
+        body: {
+          workshopId: workshop.id,
+          utmParams: filteredParams,
+        },
+        isUnauthorized: true,
+      });
+
+      filteredParams = {
+        ...filteredParams,
+        referral: "course_search_scheduling",
+      };
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+
+      const returnUrl = `${
+        window.location.origin
+      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
+        filteredParams,
+      )}`;
+
+      // Confirm the PaymentIntent using the details collected by the Express Checkout Element
+      const { error } = await stripe.confirmPayment({
+        // `elements` instance used to create the Express Checkout Element
+        elements,
+        // `clientSecret` from the created PaymentIntent
+        clientSecret: stripeIntentObj.client_secret,
+        confirmParams: {
+          return_url: returnUrl,
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+    }
+  };
+
+  const expressCheckoutElementOnClick = ({ resolve }) => {
+    const options = {
+      emailRequired: true,
+      phoneNumberRequired: true,
+      billingAddressRequired: true,
+    };
+    resolve(options);
+  };
+
+  return (
+    <div>
+      <ExpressCheckoutElement
+        options={options}
+        onConfirm={onConfirm}
+        onClick={expressCheckoutElementOnClick}
+      />
+    </div>
+  );
+};
