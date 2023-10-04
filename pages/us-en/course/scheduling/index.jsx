@@ -668,7 +668,8 @@ const SchedulingRange = () => {
                       })}
                       {workshops.length === 0 && (
                         <li className="scheduling-modal__content-option scheduling-no-data">
-                          No Workshop Found
+                          Workshop not found. Please choose the next available
+                          date.
                         </li>
                       )}
                     </ul>
