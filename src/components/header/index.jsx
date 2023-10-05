@@ -122,7 +122,7 @@ const AOL_MENU = [
     name: "App",
     link: "/us-en/lp/journey-app",
   },
-  {
+  /* {
     name: "Events",
     submenu: [
       {
@@ -138,7 +138,7 @@ const AOL_MENU = [
         link: "https://www.artofliving.org/us-en/program/196004",
       },
     ],
-  },
+  }, */
   {
     name: "About Us",
     submenu: [
@@ -318,7 +318,7 @@ const IAHV_MENU = [
       },
     ],
   },
-  {
+  /* {
     name: "Events",
     submenu: [
       {
@@ -330,7 +330,7 @@ const IAHV_MENU = [
         link: "/us-en/lp/sixthsensetour",
       },
     ],
-  },
+  }, */
 ];
 
 const ResourcesMenuItem = {
