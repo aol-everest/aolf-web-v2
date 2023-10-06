@@ -26,6 +26,164 @@
   font-size: 16px;
   font-weight: 300;
   line-height: 24px;
+
+  .form-control-input {
+    position: relative;
+    padding-left: 62px;
+    outline: none;
+    border: none;
+    &.open {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    &.invalid-number {
+      border: 1px solid #d79f9f;
+      background-color: #faf0f0;
+      border-left-color: #cacaca;
+      &:focus {
+        border: 1px solid #d79f9f;
+        border-left-color: #cacaca;
+        background-color: #faf0f0;
+      }
+    }
+  }
+  .flag-dropdown {
+    position: absolute;
+    top: 10px;
+    bottom: 0;
+    padding: 0;
+    border-radius: 0;
+    border-right-color: transparent;
+    padding: 5px 10px 5px 5px;
+    border-radius: 0;
+    color: #2b2b2b;
+    &:hover,
+    &:focus {
+      cursor: pointer;
+    }
+    &.invalid-number {
+      border-color: #d79f9f;
+    }
+    &.open {
+      z-index: 2;
+      border-radius: 0;
+      .selected-flag {
+        border-radius: 0;
+      }
+    }
+  }
+  input[disabled] {
+    & + .flag-dropdown {
+      &:hover {
+        cursor: default;
+        .selected-flag {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+  .selected-flag {
+    outline: none;
+    position: relative;
+    width: 38px;
+    height: 100%;
+    padding: 0px;
+
+    .flag {
+      position: absolute;
+      top: 50%;
+    }
+    .arrow {
+      position: relative;
+      top: 50%;
+      margin-top: -15px;
+      left: 30px;
+      width: 8px;
+      height: 8px;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 11px solid #000;
+      &.up {
+        border-top: none;
+        border-bottom: 11px solid #000;
+      }
+    }
+  }
+
+  .country-list {
+    outline: none;
+    z-index: 1;
+    list-style: none;
+    position: absolute;
+    padding: 0;
+    margin: 6px 0 10px -4px;
+    width: 385px;
+    max-height: 200px;
+    overflow-y: scroll;
+    font-family: 'PoppinsRegular', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000000;
+    border-radius: 0;
+    border: none;
+    box-shadow: 0px 1px 2px rgb(0 0 0 / 30%);
+    padding: 8px 0 0;
+    background-color: #ffffff;
+    .flag {
+      display: inline-block;
+    }
+    .divider {
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+    .country {
+      padding: 7px 9px;
+      .dial-code {
+        color: #6b6b6b;
+      }
+      &:hover {
+        background-color: #f1f1f1;
+      }
+      &.highlight {
+        background-color: #f1f1f1;
+      }
+    }
+    .flag {
+      margin-right: 7px;
+      margin-top: 2px;
+    }
+    .country-name {
+      margin-right: 6px;
+    }
+    .search {
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      padding: 10px 0 6px 10px;
+    }
+    .search-emoji {
+      font-size: 15px;
+    }
+    .search-box {
+      border: 1px solid #cacaca;
+      border-radius: 3px;
+      font-size: 15px;
+      line-height: 15px;
+      margin-left: 6px;
+      padding: 3px 8px 5px;
+      outline: none;
+    }
+    .no-entries-message {
+      padding: 7px 10px 11px;
+      opacity: 0.7;
+    }
+  }
+  @media screen and (max-width: 991px) {
+    .country-list {
+      width: 315px;
+    }
+  }
 }
 .tickets-modal__input:not(.with-placeholder)::placeholder {
   color: #fff;
@@ -267,8 +425,11 @@
 }
 .tickets-modal__language {
   position: relative;
-  width: 150px;
   margin: 24px 0 32px auto;
+  span {
+    color: red;
+    font-size: 12px;
+  }
 }
 .tickets-modal__language-value {
   display: flex;

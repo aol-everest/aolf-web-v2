@@ -20,6 +20,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { api } from "@utils";
+import { TicketPhoneInput } from "@components/ticketPhoneInput";
 
 export default function TicketCheckout() {
   const router = useRouter();
@@ -126,7 +127,7 @@ const TicketCheckoutForm = () => {
       firstName: first_name || "",
       lastName: last_name || "",
       email: email || "",
-      confirmEmail: email || "",
+      contactPhone: "",
     };
   };
 
@@ -162,6 +163,14 @@ const TicketCheckoutForm = () => {
         productType: "ticketed_event",
         productSfId: productId,
       };
+      const tickets = selectedTickets.filter((item) => {
+        return {
+          pricingTier: item.ruleId,
+          numberOfTickets: item.quantity,
+        };
+      });
+
+      console.log("tickets", tickets);
 
       let payLoad = {
         shoppingRequest: {
@@ -176,6 +185,7 @@ const TicketCheckoutForm = () => {
           isStripeIntentPayment: true,
           isPaypalPayment: false,
         },
+        tickets,
       };
       if (isPaypal) {
         payLoad.shoppingRequest.isPaypalPayment = true;
@@ -203,7 +213,7 @@ const TicketCheckoutForm = () => {
         data,
         paypalObj,
       } = await api.post({
-        path: "createAndPayOrder?org=AOL",
+        path: "createAndPayOrder",
         body: payLoad,
         isUnauthorized: true,
       });
@@ -253,6 +263,38 @@ const TicketCheckoutForm = () => {
     }
   };
 
+  const formikOnChange = (values) => {
+    if (!stripe || !elements) {
+      return;
+    }
+    let finalPrice = totalPrice;
+    // if (values.comboDetailId && values.comboDetailId !== workshop.id) {
+    //   const selectedBundle = workshop.availableBundles.find(
+    //     (b) => b.comboProductSfid === values.comboDetailId,
+    //   );
+    //   if (selectedBundle) {
+    //     finalPrice = selectedBundle.comboUnitPrice;
+    //   }
+    // }
+    if (finalPrice > 0) {
+      elements.update({
+        amount: finalPrice * 100,
+      });
+    }
+    const paymentElement = elements.getElement(PaymentElement);
+    if (paymentElement) {
+      paymentElement.update({
+        defaultValues: {
+          billingDetails: {
+            email: values.email,
+            name: (values.firstName || "") + (values.lastName || ""),
+            phone: values.contactPhone,
+          },
+        },
+      });
+    }
+  };
+
   const handlePaymentSelect = (ev) => {
     setSelectedPaymentType(ev.target.name);
   };
@@ -267,9 +309,7 @@ const TicketCheckoutForm = () => {
         email: Yup.string()
           .email("Email is invalid!")
           .required("Email is required!"),
-        confirmEmail: Yup.string()
-          .required("Confirm Email is required!")
-          .oneOf([Yup.ref("email")], "Emails must match"),
+        contactPhone: Yup.string().required("Phone is required"),
       })}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
         await completeEnrollmentAction(values, resetForm);
@@ -278,6 +318,7 @@ const TicketCheckoutForm = () => {
       {(formikProps) => {
         const { values, handleChange, handleBlur, handleSubmit, resetForm } =
           formikProps;
+        formikOnChange(values);
 
         return (
           <form
@@ -379,24 +420,16 @@ const TicketCheckoutForm = () => {
                         </label>
 
                         <label
-                          className="tickets-modal__input-label"
+                          className="tickets-modal__input-label scheduling-modal__content-wrapper-form-list-row"
                           htmlFor="confirmEmail"
                         >
-                          <input
-                            className="tickets-modal__input"
-                            type="text"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.confirmEmail}
-                            name="confirmEmail"
-                            id="confirmEmail"
-                            required
-                            placeholder="email@example.com"
+                          <TicketPhoneInput
+                            formikProps={formikProps}
+                            formikKey="contactPhone"
+                            label="Mobile Number"
+                            placeholder="Mobile Number"
+                            type="tel"
                           />
-                          <span className="tickets-modal__input-placeholder">
-                            Confirm email{" "}
-                            <span className="tickets-modal--accent">*</span>
-                          </span>
                         </label>
                       </div>
 

@@ -13,6 +13,7 @@ import { useLocalStorage } from "react-use";
 import { StripeExpressCheckoutElement } from "@components/checkout/StripeExpressCheckoutElement";
 import { ExpressCheckoutElement } from "@stripe/react-stripe-js";
 import { StripeExpressCheckoutTicket } from "@components/checkout/StripeExpressCheckoutTicket";
+import { Loader } from "@components/loader";
 
 dayjs.extend(utc);
 
@@ -22,11 +23,13 @@ export default function TicketedEvent() {
   const [selectedTickets, setSelectedTickets] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalSelectedTicketQuantity, setTotalSelectedTicketQuantity] =
+    useState(0);
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const formRef = useRef();
 
-  const { data: workshop } = useQuery(
+  const { data: workshop, isLoading } = useQuery(
     "getTicketedEvent",
     async () => {
       const response = await api.get({
@@ -52,14 +55,18 @@ export default function TicketedEvent() {
     pricingTiers,
     id: productId,
     addOnProducts,
+    maxTicketsWithOneOrder,
   } = workshop || {};
 
   useEffect(() => {
     let totalPrice = 0;
+    let totalTicketQuantity = 0;
     selectedTickets.map((item) => {
-      totalPrice = totalPrice + item.price;
+      totalPrice = (totalPrice + item.price) * item.quantity;
+      totalTicketQuantity = totalTicketQuantity + item.quantity;
     });
     setTotalPrice(totalPrice);
+    setTotalSelectedTicketQuantity(totalTicketQuantity);
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
@@ -106,14 +113,12 @@ export default function TicketedEvent() {
     });
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/ticketed-event/checkout/${workshopId}`,
-      query: {
-        selectedTickets: selectedTickets,
-        delfee: delfee,
-        totalPrice: totalPrice,
-        page: "ticketed-event/checkout",
-      },
     });
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <Formik
@@ -207,7 +212,8 @@ export default function TicketedEvent() {
                                   data-product={`product-${index + 1}`}
                                   type="button"
                                   disabled={
-                                    selectedValue?.quantity >= item.maxQuantity
+                                    totalSelectedTicketQuantity >=
+                                    maxTicketsWithOneOrder
                                   }
                                   onClick={(e) =>
                                     handleTicketSelect(e, "add", item)
@@ -231,7 +237,11 @@ export default function TicketedEvent() {
                       })}
                     </div>
 
-                    <div className="tickets-modal__language" />
+                    <div className="tickets-modal__language">
+                      <span>
+                        * Max {maxTicketsWithOneOrder} tickets allowed per order
+                      </span>
+                    </div>
 
                     <div className="tickets-modal__footer">
                       {workshop && (
@@ -274,7 +284,9 @@ export default function TicketedEvent() {
                           key={item.ruleId}
                         >
                           x{item?.quantity} {item.pricingTierName}{" "}
-                          <span>${item.price.toFixed(2)}</span>
+                          <span>
+                            ${(item.price * item?.quantity).toFixed(2)}
+                          </span>
                         </p>
                       );
                     })}

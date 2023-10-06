@@ -150,6 +150,7 @@ export const DiscountCodeInput = ({
     setStatus(0);
     applyDiscount(null);
     formikProps.values[formikKey] = "";
+    formikProps.setFieldError(formikKey, null);
     if (clearCoupon) {
       clearCoupon();
     }
