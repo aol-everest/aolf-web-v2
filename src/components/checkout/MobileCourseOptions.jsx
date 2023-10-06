@@ -9,7 +9,6 @@ export const MobileCourseOptions = ({
   fee,
   delfee,
   hasGroupedAddOnProducts,
-  totalFee,
   formikProps,
   userSubscriptions,
   openSubscriptionPaywallPage,
@@ -22,6 +21,7 @@ export const MobileCourseOptions = ({
   values,
   onComboDetailChange,
   isCourseOptionRequired,
+  onAccommodationChange,
 }) => {
   const {
     premiumRate,
@@ -489,10 +489,7 @@ export const MobileCourseOptions = ({
                       <li
                         key={residentialAddOn.productSfid}
                         onClick={() =>
-                          this.handleAccommodationChange(
-                            formikProps,
-                            residentialAddOn,
-                          )
+                          onAccommodationChange(formikProps, residentialAddOn)
                         }
                         className={
                           residentialAddOn.isFull &&
