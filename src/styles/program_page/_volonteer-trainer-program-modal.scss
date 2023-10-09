@@ -10,7 +10,7 @@
   transition: opacity 0.25s, visibility 0.25s;
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -80,7 +80,7 @@
 
       &:before,
       &:after {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
@@ -201,7 +201,7 @@
   }
 
   & .select2-selection {
-    font-family: "Work Sans", sans-serif;
+    font-family: 'Work Sans', sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: 18px;
@@ -370,10 +370,6 @@
 }
 
 @media (max-width: 768px) {
-  .volonteer-modal {
-    z-index: 10;
-  }
-
   .volonteer-modal__body {
     position: absolute;
     top: 0;
@@ -385,6 +381,8 @@
     height: 100vh;
     padding: 50px 20px;
     overflow-y: auto;
+    max-height: unset;
+    padding-top: 0;
   }
 
   .volonteer-header {
@@ -403,6 +401,7 @@
 
   .volonteer-modal__wrapper {
     overflow: hidden;
+    max-height: unset;
   }
 
   .item-volonteer__label {
