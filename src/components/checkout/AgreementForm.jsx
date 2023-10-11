@@ -1,4 +1,5 @@
 import Link from "@components/linkWithUTM";
+import { orgConfig } from "@org";
 import classNames from "classnames";
 import { Field } from "formik";
 import React, { useEffect } from "react";
@@ -39,6 +40,8 @@ export const AgreementForm = ({
     }
   }, [questionnaireArray]);
 
+  const isIahv = orgConfig.name === "IAHV";
+
   if (screen !== "MOBILE") {
     return (
       <>
@@ -63,7 +66,9 @@ export const AgreementForm = ({
               <Link
                 prefetch={false}
                 href={
-                  isCorporateEvent
+                  isIahv
+                    ? "https://members.us.iahv.org/policy/ppa-course"
+                    : isCorporateEvent
                     ? "/policy/ppa-corporate"
                     : "/policy/ppa-course"
                 }
@@ -189,7 +194,9 @@ export const AgreementForm = ({
             <Link
               prefetch={false}
               href={
-                isCorporateEvent
+                isIahv
+                  ? "https://members.us.iahv.org/policy/ppa-course"
+                  : isCorporateEvent
                   ? "/policy/ppa-corporate"
                   : "/policy/ppa-course"
               }

@@ -1,4 +1,5 @@
 import Link from "@components/linkWithUTM";
+import { orgConfig } from "@org";
 import classNames from "classnames";
 import { Field } from "formik";
 import React, { useEffect } from "react";
@@ -38,6 +39,8 @@ export const ScheduleAgreementForm = ({
     }
   }, [questionnaireArray]);
 
+  const isIahv = orgConfig.name === "IAHV";
+
   return (
     <>
       <p className="scheduling-modal__content-wrapper-form-checkbox">
@@ -61,7 +64,9 @@ export const ScheduleAgreementForm = ({
             <Link
               prefetch={false}
               href={
-                isCorporateEvent
+                isIahv
+                  ? "https://members.us.iahv.org/policy/ppa-course"
+                  : isCorporateEvent
                   ? "/policy/ppa-corporate"
                   : "/policy/ppa-course"
               }
