@@ -281,6 +281,8 @@ export const MembershipCheckoutStripe = ({
     setShowDetailMobileModal((showDetailMobileModal) => !showDetailMobileModal);
   };
 
+  const isIahv = orgConfig.name === "IAHV";
+
   return (
     <Formik
       initialValues={{
@@ -419,10 +421,20 @@ export const MembershipCheckoutStripe = ({
                     <label htmlFor="ppaAgreement"></label>
                     <p className="agreement__text">
                       I agree to the{" "}
-                      <Link href="/policy/ppa-course" target="_blank">
-                        Program Participant agreement including privacy and
-                        cancellation policy.
-                      </Link>
+                      {isIahv ? (
+                        <Link
+                          href="https://members.us.iahv.org/policy/ppa-course"
+                          target="_blank"
+                        >
+                          Program Participant agreement including privacy and
+                          cancellation policy.
+                        </Link>
+                      ) : (
+                        <Link href="/policy/ppa-course" target="_blank">
+                          Program Participant agreement including privacy and
+                          cancellation policy.
+                        </Link>
+                      )}
                     </p>
                   </div>
                   {formikProps.errors.ppaAgreement &&
@@ -523,10 +535,20 @@ export const MembershipCheckoutStripe = ({
                   <label htmlFor="ppaAgreement"></label>
                   <p className="agreement__text">
                     I agree to the{" "}
-                    <Link href="/policy/ppa-course" target="_blank">
-                      Program Participant agreement including privacy and
-                      cancellation policy.
-                    </Link>
+                    {isIahv ? (
+                      <Link
+                        href="https://members.us.iahv.org/policy/ppa-course"
+                        target="_blank"
+                      >
+                        Program Participant agreement including privacy and
+                        cancellation policy.
+                      </Link>
+                    ) : (
+                      <Link href="/policy/ppa-course" target="_blank">
+                        Program Participant agreement including privacy and
+                        cancellation policy.
+                      </Link>
+                    )}
                   </p>
                 </div>
                 {formikProps.errors.ppaAgreement &&
