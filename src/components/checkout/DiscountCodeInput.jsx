@@ -19,6 +19,8 @@ export const DiscountCodeInput = ({
   isBackendRequest = false,
   inputClass = "discount-code",
   tagClass = "",
+  isTicketDiscount = false,
+  selectedTickets = [],
   ...rest
 }) => {
   const [showTag, setShowTag] = useState(false);
@@ -51,15 +53,6 @@ export const DiscountCodeInput = ({
 
     try {
       let plan = formikProps.values.plan;
-      // const {
-      //   token: accessToken,
-      //   product = plan,
-      //   addOnProducts = [],
-      //   productType = "workshop",
-      //   applyDiscount,
-      //   setUser,
-      //   userId,
-      // } = this.props;
 
       let AddOnProductIds = formikProps.values.selectedAddOn
         ? [formikProps.values.selectedAddOn]
@@ -91,6 +84,12 @@ export const DiscountCodeInput = ({
       if (isBackendRequest) {
         const userEmail = formikProps.values["email"];
         payLoad = { ...payLoad, isBackendRequest: true, email: userEmail };
+      }
+      if (isTicketDiscount) {
+        payLoad.shoppingRequest = {
+          ...payLoad.shoppingRequest,
+          tickets: selectedTickets,
+        };
       }
       let results = await api.post({
         path: "applyCoupon",
@@ -156,6 +155,13 @@ export const DiscountCodeInput = ({
     }
   };
 
+  const isFieldDisabled = () => {
+    if (isTicketDiscount && selectedTickets.length == 0) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <FieldWrapper
       label={label}
@@ -177,6 +183,7 @@ export const DiscountCodeInput = ({
               className={inputClass}
               onBlur={applyCoupon}
               onKeyDown={onKeyDown}
+              disabled={isFieldDisabled()}
             />
             {loading && <span className="loader-inline"></span>}
           </>

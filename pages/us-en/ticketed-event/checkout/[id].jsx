@@ -19,12 +19,13 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { api } from "@utils";
+import { Auth, api } from "@utils";
 import { TicketPhoneInput } from "@components/ticketPhoneInput";
+import { pushRouteWithUTMQuery } from "@service";
 
 export default function TicketCheckout() {
   const router = useRouter();
-  const { track, page } = useAnalytics();
+  const { track } = useAnalytics();
 
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -104,17 +105,24 @@ export default function TicketCheckout() {
   );
 }
 
-const TicketCheckoutForm = () => {
+const TicketCheckoutForm = ({ router }) => {
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
-  const { user } = useAuth();
+  const { user, authenticated: isUserLoggedIn, setUser } = useAuth();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
+
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
   const [value] = useLocalStorage("ticket-events");
-  const { selectedTickets, delfee, totalPrice, workshop, discountResponse } =
-    value;
+  const {
+    selectedTickets,
+    delfee,
+    totalPrice,
+    workshop,
+    discountResponse,
+    totalDiscount,
+  } = value;
 
   const { first_name, last_name, email } = user?.profile || {};
 
@@ -163,14 +171,6 @@ const TicketCheckoutForm = () => {
         productType: "ticketed_event",
         productSfId: productId,
       };
-      const tickets = selectedTickets.filter((item) => {
-        return {
-          pricingTier: item.ruleId,
-          numberOfTickets: item.quantity,
-        };
-      });
-
-      console.log("tickets", tickets);
 
       let payLoad = {
         shoppingRequest: {
@@ -184,8 +184,8 @@ const TicketCheckoutForm = () => {
           products,
           isStripeIntentPayment: true,
           isPaypalPayment: false,
+          tickets: selectedTickets,
         },
-        tickets,
       };
       if (isPaypal) {
         payLoad.shoppingRequest.isPaypalPayment = true;
@@ -299,6 +299,15 @@ const TicketCheckoutForm = () => {
     setSelectedPaymentType(ev.target.name);
   };
 
+  const logout = async (event) => {
+    await Auth.logout();
+    setUser(null);
+    // pushRouteWithUTMQuery(
+    //   router,
+    //   `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+    // );
+  };
+
   return (
     <Formik
       enableReinitialize
@@ -339,16 +348,30 @@ const TicketCheckoutForm = () => {
                       </h3>
 
                       <p className="tickets-modal__billing-login">
-                        <span className="tickets-modal__billing-login_main">
-                          <a
-                            href="#"
-                            className="tickets-modal--accent"
-                            onClick={login}
-                          >
-                            Login{" "}
-                          </a>
-                          for a faster experience
-                        </span>
+                        {isUserLoggedIn ? (
+                          <span className="tickets-modal__billing-login_main">
+                            This is not your account?{" "}
+                            <a
+                              href="#"
+                              className="tickets-modal--accent"
+                              onClick={logout}
+                            >
+                              Logout
+                            </a>
+                          </span>
+                        ) : (
+                          <span className="tickets-modal__billing-login_main">
+                            <a
+                              href="#"
+                              className="tickets-modal--accent"
+                              onClick={login}
+                            >
+                              Login{" "}
+                            </a>
+                            for a faster experience
+                          </span>
+                        )}
+
                         <span className="tickets-modal__billing-login_required">
                           <span className="tickets-modal--accent">*</span>{" "}
                           Required
@@ -642,9 +665,9 @@ const TicketCheckoutForm = () => {
                       return (
                         <p
                           className="tickets-modal__cart-product"
-                          key={item.ruleId}
+                          key={item.pricingTierId}
                         >
-                          x{item?.quantity} {item.pricingTierName}{" "}
+                          x{item?.numberOfTickets} {item.pricingTierName}{" "}
                           <span>${item.price.toFixed(2)}</span>
                         </p>
                       );
@@ -652,8 +675,15 @@ const TicketCheckoutForm = () => {
 
                     <p className="tickets-modal__cart-subtotal">
                       Subtotal
-                      <span>${(parseInt(totalPrice) - delfee).toFixed(2)}</span>
+                      <span>${parseInt(totalPrice).toFixed(2)}</span>
                     </p>
+
+                    {totalDiscount > 0 && (
+                      <p className="tickets-modal__cart-discount">
+                        Discount(-)
+                        <span>${parseInt(totalDiscount).toFixed(2)}</span>
+                      </p>
+                    )}
 
                     <p className="tickets-modal__cart-total">
                       Total

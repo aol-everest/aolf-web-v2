@@ -44,7 +44,6 @@ export const TicketPhoneInput = ({
       onBlur: formikProps.handleBlur(formikKey),
     };
   }
-  console.log("formikProps.errors", formikProps.errors);
 
   return (
     <>

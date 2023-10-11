@@ -10,14 +10,12 @@ import { ABBRS } from "@constants";
 import { DiscountCodeInput } from "@components/checkout";
 import { pushRouteWithUTMQuery } from "@service";
 import { useLocalStorage } from "react-use";
-import { StripeExpressCheckoutElement } from "@components/checkout/StripeExpressCheckoutElement";
-import { ExpressCheckoutElement } from "@stripe/react-stripe-js";
 import { StripeExpressCheckoutTicket } from "@components/checkout/StripeExpressCheckoutTicket";
 import { Loader } from "@components/loader";
 
 dayjs.extend(utc);
 
-export default function TicketedEvent() {
+function TicketedEvent() {
   const router = useRouter();
   const [, setValue] = useLocalStorage("ticket-events", {}, { raw: true });
   const [selectedTickets, setSelectedTickets] = useState([]);
@@ -62,28 +60,28 @@ export default function TicketedEvent() {
     let totalPrice = 0;
     let totalTicketQuantity = 0;
     selectedTickets.map((item) => {
-      totalPrice = (totalPrice + item.price) * item.quantity;
-      totalTicketQuantity = totalTicketQuantity + item.quantity;
+      totalPrice = (totalPrice + item.price) * item.numberOfTickets;
+      totalTicketQuantity = totalTicketQuantity + item.numberOfTickets;
     });
     setTotalPrice(totalPrice);
     setTotalSelectedTicketQuantity(totalTicketQuantity);
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
-    setSelectedIds((prevState) => [...prevState, item.ruleId]);
-    const selectedTicketsCopy = !selectedIds.includes(item.ruleId)
+    setSelectedIds((prevState) => [...prevState, item.pricingTierId]);
+    const selectedTicketsCopy = !selectedIds.includes(item.pricingTierId)
       ? [...selectedTickets, item]
       : [...selectedTickets];
 
     const filteredItems = [];
     selectedTicketsCopy.forEach((newItem) => {
-      if (newItem.ruleId === item.ruleId) {
+      if (newItem.pricingTierId === item.pricingTierId) {
         if (type === "add") {
-          newItem.quantity = (newItem.quantity || 0) + 1;
+          newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
           filteredItems.push(newItem);
         } else {
-          newItem.quantity = newItem.quantity - 1;
-          if (newItem.quantity) {
+          newItem.numberOfTickets = newItem.numberOfTickets - 1;
+          if (newItem.numberOfTickets) {
             filteredItems.push(newItem);
           }
         }
@@ -98,18 +96,16 @@ export default function TicketedEvent() {
     setDiscountResponse(discount);
   };
 
-  const { delfee } = priceCalculation({
-    workshop,
-    discount: discountResponse,
-  });
+  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
 
   const handleTicketCheckout = (values) => {
     setValue({
       selectedTickets: selectedTickets,
-      delfee: delfee,
+      delfee: totalOrderAmountNew,
       discountResponse: discountResponse,
       totalPrice: totalPrice,
       workshop: workshop,
+      totalDiscount: totalDiscount,
     });
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/ticketed-event/checkout/${workshopId}`,
@@ -162,6 +158,9 @@ export default function TicketedEvent() {
                           addOnProducts={addOnProducts}
                           inputClass="tickets-modal__input"
                           tagClass="tickets-modal__input ticket-discount"
+                          isTicketDiscount
+                          selectedTickets={selectedTickets}
+                          productType="ticketed_event"
                         ></DiscountCodeInput>
                       </div>
                     </div>
@@ -169,12 +168,13 @@ export default function TicketedEvent() {
                     <div className="tickets-modal__list">
                       {pricingTiers?.map((item, index) => {
                         const selectedValue = selectedTickets.find(
-                          (ticket) => ticket.ruleId === item.ruleId,
+                          (ticket) =>
+                            ticket.pricingTierId === item.pricingTierId,
                         );
                         return (
                           <div
                             className="tickets-modal__card"
-                            key={item.ruleId}
+                            key={item.pricingTierId}
                           >
                             <div className="tickets-modal__card-head">
                               <h3 className="tickets-modal__card-name">
@@ -189,7 +189,7 @@ export default function TicketedEvent() {
                                   type="button"
                                   disabled={
                                     !selectedValue ||
-                                    selectedValue?.quantity === 0
+                                    selectedValue?.numberOfTickets === 0
                                   }
                                   onClick={(e) =>
                                     handleTicketSelect(e, "remove", item)
@@ -200,9 +200,9 @@ export default function TicketedEvent() {
                                 <input
                                   className="tickets-modal__counter-input"
                                   type="number"
-                                  name={item.ruleId}
-                                  id={item.ruleId}
-                                  value={selectedValue?.quantity || 0}
+                                  name={item.pricingTierId}
+                                  id={item.pricingTierId}
+                                  value={selectedValue?.numberOfTickets || 0}
                                   min="0"
                                   onChange={handleTicketSelect}
                                 />
@@ -281,11 +281,11 @@ export default function TicketedEvent() {
                       return (
                         <p
                           className="tickets-modal__cart-product"
-                          key={item.ruleId}
+                          key={item.pricingTierId}
                         >
-                          x{item?.quantity} {item.pricingTierName}{" "}
+                          x{item?.numberOfTickets} {item.pricingTierName}{" "}
                           <span>
-                            ${(item.price * item?.quantity).toFixed(2)}
+                            ${(item.price * item?.numberOfTickets).toFixed(2)}
                           </span>
                         </p>
                       );
@@ -293,12 +293,20 @@ export default function TicketedEvent() {
 
                     <p className="tickets-modal__cart-subtotal">
                       Subtotal
-                      <span>${(parseInt(totalPrice) - delfee).toFixed(2)}</span>
+                      <span>${parseInt(totalPrice).toFixed(2)}</span>
                     </p>
+                    {totalDiscount > 0 && (
+                      <p className="tickets-modal__cart-discount">
+                        Discount(-)
+                        <span>${parseInt(totalDiscount).toFixed(2)}</span>
+                      </p>
+                    )}
 
                     <p className="tickets-modal__cart-total">
                       Total
-                      <span>${(parseInt(totalPrice) - delfee).toFixed(2)}</span>
+                      <span>
+                        ${(parseInt(totalPrice) - totalDiscount).toFixed(2)}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -310,3 +318,7 @@ export default function TicketedEvent() {
     </Formik>
   );
 }
+
+TicketedEvent.hideFooter = true;
+
+export default TicketedEvent;

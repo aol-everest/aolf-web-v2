@@ -16,6 +16,9 @@
 .tickets-modal input[type='number'] {
   -moz-appearance: textfield;
 }
+.tickets-modal input::placeholder {
+  color: #000;
+}
 .tickets-modal__input {
   width: 100%;
   padding: 15px 20px;
@@ -419,6 +422,10 @@
 }
 .tickets-modal__counter-button {
   background: #fef5ec;
+  &:disabled {
+    cursor: not-allowed;
+    color: #b8b8b8;
+  }
 }
 .tickets-modal__counter-input {
   text-align: center;
@@ -591,6 +598,7 @@
   width: 100%;
   height: 100%;
 }
+
 .tickets-modal__distribution-checkbox {
   display: block;
   width: 24px;
@@ -787,6 +795,7 @@
 }
 .tickets-modal__cart-product,
 .tickets-modal__cart-subtotal,
+.tickets-modal__cart-discount,
 .tickets-modal__cart-total {
   display: flex;
   align-items: center;
@@ -817,6 +826,25 @@
   line-height: 24px;
   text-transform: uppercase;
 }
+.tickets-modal__cart-discount {
+  position: relative;
+  padding: 24px 0;
+  color: #262627;
+  font-family: Work Sans;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  text-transform: uppercase;
+  padding-top: 0;
+}
+.tickets-modal__cart-discount::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0.5px;
+  background-color: rgba(252, 162, 72, 0.4);
+}
 .tickets-modal__cart-subtotal::after,
 .tickets-modal__cart-subtotal::before {
   content: '';
@@ -830,6 +858,9 @@
   top: 0;
 }
 .tickets-modal__cart-subtotal::after {
+  bottom: 0;
+}
+.tickets-modal__cart-discount::after {
   bottom: 0;
 }
 .tickets-modal__cart-total {
