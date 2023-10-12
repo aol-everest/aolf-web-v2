@@ -15,6 +15,9 @@ import {
   FaUser,
   FaPhone,
   FaSearchengin,
+  FaRegClock,
+  FaRegIdCard,
+  FaCommentDots,
 } from "react-icons/fa6";
 
 dayjs.extend(utc);
@@ -73,6 +76,9 @@ export const PriceCard = ({ workshop }) => {
     coTeacher2Name,
     email,
     phone1,
+    description,
+    notes,
+    preRequisiteCondition,
   } = workshop || {};
 
   const isSKYType =
@@ -257,6 +263,35 @@ export const PriceCard = ({ workshop }) => {
             </div>
           </div>
         </div>
+        {(description || notes) && (
+          <div className=" row register-content">
+            <div className="col dates notes">
+              <i>
+                <FaCommentDots className="fa-solid orange" />
+              </i>
+              <div className="instructor-content">
+                <span className="title">Notes</span>
+                <br />
+                {description && (
+                  <span
+                    className="content"
+                    dangerouslySetInnerHTML={{
+                      __html: description,
+                    }}
+                  ></span>
+                )}
+                {notes && (
+                  <span
+                    className="content"
+                    dangerouslySetInnerHTML={{
+                      __html: notes,
+                    }}
+                  ></span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className=" row register-content no_border">
           <div className="col-md-4">
@@ -380,6 +415,28 @@ export const PriceCard = ({ workshop }) => {
             )}
           </div>
         </div>
+        {(earlyBirdFeeIncreasing ||
+          (preRequisiteCondition && preRequisiteCondition.length > 0)) && (
+          <div class="early-bird-banner">
+            {earlyBirdFeeIncreasing && (
+              <p>
+                <FaRegClock className="fa" /> <strong>Register now</strong> to
+                save ${earlyBirdFeeIncreasing.increasingFee}; price will
+                increase on{" "}
+                {dayjs
+                  .utc(earlyBirdFeeIncreasing.increasingByDate)
+                  .format("MMM D, YYYY")}
+                .
+              </p>
+            )}
+            {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+              <p>
+                <FaRegIdCard className="fa" /> <strong>Eligibility:</strong>{" "}
+                Completion of {preRequisiteCondition}
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

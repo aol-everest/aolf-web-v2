@@ -20,12 +20,17 @@
       background: #fffbf0;
     }
     .banner {
-      height: 402px;
+      height: 280px;
       width: 100%;
       background: url(/img/art-of-silence-banner.jpg) no-repeat top left;
       padding: 60px 76px 50px 76px;
       background-size: auto;
       background-position: center;
+      .container {
+        @media screen and (min-width: 992px) {
+          padding-left: 76px;
+        }
+      }
       .courses-title {
         display: none;
         font-size: 16px;
@@ -469,6 +474,27 @@
       .fa-solid:before {
         color: #ffffff;
       }
+    }
+    .notes {
+      .content {
+        /* Track */
+        &::-webkit-scrollbar-track {
+          background: #ecf6fe;
+        }
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+          background: #57bacd;
+          border-radius: 4px;
+        }
+
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+          background: #0398b5;
+        }
+      }
+    }
+    .early-bird-banner {
+      background: #0398b530;
     }
   }
   .float-bar {
