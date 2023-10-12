@@ -78,8 +78,17 @@ export const PriceCard = ({ workshop }) => {
     phone1,
     description,
     notes,
-    preRequisiteCondition,
+    preRequisite,
+    aosCountRequisite,
   } = workshop || {};
+
+  const aosCount =
+    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : "";
+
+  const preRequisiteCondition = preRequisite
+    .join(", ")
+    .replace(/,(?=[^,]+$)/, " and")
+    .replace("Silent Retreat", `${aosCount} Silent Retreat`);
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
