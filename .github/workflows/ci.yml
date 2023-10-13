@@ -63,7 +63,7 @@ jobs:
   build:
     name: 🧰 Build project
     runs-on: ubuntu-latest
-    # needs: test
+    needs: validate
     strategy:
       matrix:
         node-version: [18.x]
