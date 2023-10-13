@@ -9,6 +9,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  SENTRY_AUTH_TOKEN: b189999a330d495e96a38b375d50bca76d261577149c4a3eafe9731135e2e63a
+  SENTRY_ENVIRONMENT: dev
+  NEXT_PUBLIC_ORGANIZATION_NAME: AOL
+
 jobs:
   validate:
     name: ✅ Validate project
