@@ -1,11 +1,11 @@
-import { api } from "@utils";
-import Router from "next/router";
-import { useEffect, useState } from "react";
+import { api } from '@utils';
+import Router from 'next/router';
+import { useEffect, useState } from 'react';
 
 export function useUser({ redirectTo = false, redirectIfFound = false } = {}) {
   const [user, setUser] = useState(false);
   const [mutateUser, setMutateUser] = useState(false);
-  api("/profile").then(({ data: user, mutate: mutateUser }) => {
+  api('/profile').then(({ data: user, mutate: mutateUser }) => {
     setUser(user);
     setMutateUser(mutateUser);
   });

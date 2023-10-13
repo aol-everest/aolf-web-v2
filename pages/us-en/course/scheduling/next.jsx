@@ -1,45 +1,45 @@
-import React, { useCallback, useRef } from "react";
-import { COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useQueryString } from "@hooks";
-import { pushRouteWithUTMQuery } from "@service";
-import { api, tConvert, findCourseTypeByKey } from "@utils";
-import dayjs from "dayjs";
-import { sortBy, values } from "lodash";
-import moment from "moment";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import Flatpickr from "react-flatpickr";
-import Select2 from "react-select2-wrapper";
-import { useQuery } from "react-query";
-import { StripeExpressCheckoutElement } from "@components/checkout/StripeExpressCheckoutElement";
-import "flatpickr/dist/flatpickr.min.css";
-import { ScheduleLocationFilter } from "@components/scheduleLocationFilter/ScheduleLocationFilter";
-import { useEffectOnce } from "react-use";
-import { useAnalytics } from "use-analytics";
+import React, { useCallback, useRef } from 'react';
+import { COURSE_MODES, COURSE_TYPES } from '@constants';
+import { useQueryString } from '@hooks';
+import { pushRouteWithUTMQuery } from '@service';
+import { api, tConvert, findCourseTypeByKey } from '@utils';
+import dayjs from 'dayjs';
+import { sortBy, values } from 'lodash';
+import moment from 'moment';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Flatpickr from 'react-flatpickr';
+import Select2 from 'react-select2-wrapper';
+import { useQuery } from 'react-query';
+import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
+import 'flatpickr/dist/flatpickr.min.css';
+import { ScheduleLocationFilter } from '@components/scheduleLocationFilter/ScheduleLocationFilter';
+import { useEffectOnce } from 'react-use';
+import { useAnalytics } from 'use-analytics';
 
-var advancedFormat = require("dayjs/plugin/advancedFormat");
+var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
 const timezones = [
   {
-    timezone: "US/Eastern",
-    text: "Eastern Time - US & Canada",
-    id: "EST",
+    timezone: 'US/Eastern',
+    text: 'Eastern Time - US & Canada',
+    id: 'EST',
   },
   {
-    timezone: "US/Central",
-    text: "Central Time - US & Canada",
-    id: "CST",
+    timezone: 'US/Central',
+    text: 'Central Time - US & Canada',
+    id: 'CST',
   },
   {
-    timezone: "US/Mountain",
-    text: "Mountain Time - US & Canada",
-    id: "MST",
+    timezone: 'US/Mountain',
+    text: 'Mountain Time - US & Canada',
+    id: 'MST',
   },
   {
-    timezone: "America/Los_Angeles",
-    text: "Pacific Time - US & Canada",
-    id: "PST",
+    timezone: 'America/Los_Angeles',
+    text: 'Pacific Time - US & Canada',
+    id: 'PST',
   },
 ];
 
@@ -48,37 +48,37 @@ const SchedulingRange = () => {
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [courseTypeFilter] = useQueryString("courseType", {
-    defaultValue: "SKY_BREATH_MEDITATION",
+  const [courseTypeFilter] = useQueryString('courseType', {
+    defaultValue: 'SKY_BREATH_MEDITATION',
   });
-  const [mode, setMode] = useQueryString("mode", {
+  const [mode, setMode] = useQueryString('mode', {
     defaultValue: COURSE_MODES.ONLINE.value,
   });
-  const [timezoneFilter, setTimezoneFilter] = useQueryString("timezone", {
-    defaultValue: "EST",
+  const [timezoneFilter, setTimezoneFilter] = useQueryString('timezone', {
+    defaultValue: 'EST',
   });
-  const [locationFilter, setLocationFilter] = useQueryString("location", {
+  const [locationFilter, setLocationFilter] = useQueryString('location', {
     parse: JSON.parse,
   });
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
-  const [currentMonthYear, setCurrentMonthYear] = useQueryString("ym", {
+  const [currentMonthYear, setCurrentMonthYear] = useQueryString('ym', {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
   const courseTypeValue =
     findCourseTypeByKey(courseTypeFilter)?.value ||
     COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
 
-  const ctypeId = courseTypeValue ? courseTypeValue.split(";")[0] : undefined;
+  const ctypeId = courseTypeValue ? courseTypeValue.split(';')[0] : undefined;
   const { data: workshopMaster = {} } = useQuery(
-    "workshopMaster",
+    'workshopMaster',
     async () => {
       let param = {
         ctypeId,
       };
       const response = await api.get({
-        path: "workshopMaster",
+        path: 'workshopMaster',
         param,
       });
       return response.data;
@@ -95,7 +95,7 @@ const SchedulingRange = () => {
     error,
   } = useQuery(
     [
-      "workshopMonthCalendar",
+      'workshopMonthCalendar',
       currentMonthYear,
       courseTypeFilter,
       timezoneFilter,
@@ -124,7 +124,7 @@ const SchedulingRange = () => {
         }
       }
       const response = await api.get({
-        path: "workshopMonthCalendar",
+        path: 'workshopMonthCalendar',
         param,
       });
       const defaultDate =
@@ -144,8 +144,8 @@ const SchedulingRange = () => {
 
   useEffectOnce(() => {
     page({
-      category: "course_registration",
-      name: "course_search_scheduling",
+      category: 'course_registration',
+      name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
   });
@@ -155,10 +155,10 @@ const SchedulingRange = () => {
       let timings = obj.timings;
       timings = sortBy(timings, (obj) => new Date(obj.startDate));
       let timing_Str = timings.reduce((acc1, obj) => {
-        acc1 += "" + obj.startDate + "" + obj.startTime;
+        acc1 += '' + obj.startDate + '' + obj.startTime;
         return acc1;
-      }, "");
-      timing_Str = obj.mode + "_" + timing_Str;
+      }, '');
+      timing_Str = obj.mode + '_' + timing_Str;
       acc = { ...acc, [timing_Str]: obj.id };
       return acc;
     }, {});
@@ -173,7 +173,7 @@ const SchedulingRange = () => {
   });
 
   const { data: workshops = [] } = useQuery(
-    ["workshops", selectedDates, timezoneFilter, mode, locationFilter],
+    ['workshops', selectedDates, timezoneFilter, mode, locationFilter],
     async () => {
       let param = {
         timeZone: timezoneFilter,
@@ -198,7 +198,7 @@ const SchedulingRange = () => {
         param = { ...param, mode };
       }
       const response = await api.get({
-        path: "workshops",
+        path: 'workshops',
         param,
       });
       if (response?.data && selectedDates?.length > 0) {
@@ -209,17 +209,17 @@ const SchedulingRange = () => {
 
         setTimeout(() => {
           const timeContainer = document.querySelector(
-            ".scheduling-modal__content-option",
+            '.scheduling-modal__content-option',
           );
           if (timeContainer) {
             timeContainer.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
+              behavior: 'smooth',
+              block: 'center',
             });
           }
         }, 100);
-        track("click_calendar", {
-          screen_name: "course_search_scheduling",
+        track('click_calendar', {
+          screen_name: 'course_search_scheduling',
           course_type:
             courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
           location_type: mode,
@@ -233,10 +233,10 @@ const SchedulingRange = () => {
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
     const response = await await api.get({
-      path: "workshopDetail",
+      path: 'workshopDetail',
       param: {
         id: workshopId,
-        rp: "checkout",
+        rp: 'checkout',
       },
       isUnauthorized: true,
     });
@@ -296,7 +296,7 @@ const SchedulingRange = () => {
   };
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
-    if (selectedDates.length > 0 && dateStr !== "update") {
+    if (selectedDates.length > 0 && dateStr !== 'update') {
       const today = moment(selectedDates[selectedDates.length - 1]);
       let intervalSelected = [];
       for (const enableItem of instance.config._enable) {
@@ -305,8 +305,8 @@ const SchedulingRange = () => {
         const isWithinRange = today.isBetween(
           fromMoment,
           toMoment,
-          "days",
-          "[]",
+          'days',
+          '[]',
         );
 
         if (isWithinRange) {
@@ -320,7 +320,7 @@ const SchedulingRange = () => {
 
       instance.setDate(intervalSelected);
       setSelectedDates(
-        intervalSelected.map((d) => moment(d).format("YYYY-MM-DD")),
+        intervalSelected.map((d) => moment(d).format('YYYY-MM-DD')),
       );
 
       /* const lastItem =
@@ -378,11 +378,11 @@ const SchedulingRange = () => {
                     options={{
                       allowInput: false,
                       inline: true,
-                      mode: "multiple",
+                      mode: 'multiple',
                       enableTime: false,
-                      monthSelectorType: "static",
-                      dateFormat: "Y-m-d",
-                      minDate: "today",
+                      monthSelectorType: 'static',
+                      dateFormat: 'Y-m-d',
+                      minDate: 'today',
                       enable: enableDates || [],
                     }}
                     onMonthChange={onMonthChangeAction}
@@ -395,7 +395,7 @@ const SchedulingRange = () => {
                     name="timezone"
                     id="timezone"
                     className="timezone"
-                    defaultValue={"EST"}
+                    defaultValue={'EST'}
                     multiple={false}
                     data={timezones}
                     onChange={handleTimezoneChange}
@@ -458,9 +458,9 @@ const SchedulingRange = () => {
                       className="scheduling-types__input"
                       id="both-type-course"
                       name="type-course"
-                      value={""}
+                      value={''}
                       checked={!mode}
-                      onChange={() => handleSelectMode("")}
+                      onChange={() => handleSelectMode('')}
                     />
                     <span className="scheduling-types__background">Both</span>
                   </label>
@@ -495,24 +495,24 @@ const SchedulingRange = () => {
                             htmlFor={`time-range-${index + 1}`}
                           >
                             <span>
-                              {workshop.mode}:{" "}
+                              {workshop.mode}:{' '}
                               {dayjs
                                 .utc(workshop.eventStartDate)
-                                .format("MMM DD")}{" "}
-                              -{" "}
+                                .format('MMM DD')}{' '}
+                              -{' '}
                               {dayjs
                                 .utc(workshop.eventEndDate)
-                                .format("MMM DD")}
+                                .format('MMM DD')}
                             </span>
                           </label>
                           {workshop.mode !== COURSE_MODES.ONLINE.name && (
                             <p>
-                              Location:{" "}
-                              {`${workshop.locationStreet || ""} ${
-                                workshop.locationCity || ""
+                              Location:{' '}
+                              {`${workshop.locationStreet || ''} ${
+                                workshop.locationCity || ''
                               },
-                              ${workshop.locationProvince || ""} ${
-                                workshop.locationPostalCode || ""
+                              ${workshop.locationProvince || ''} ${
+                                workshop.locationPostalCode || ''
                               }`}
                             </p>
                           )}
@@ -528,10 +528,10 @@ const SchedulingRange = () => {
                                     <div className="scheduling-modal__content-ranges-row-date">
                                       {dayjs
                                         .utc(time.startDate)
-                                        .format("ddd, D")}
+                                        .format('ddd, D')}
                                     </div>
                                     <div className="scheduling-modal__content-ranges-row-time">
-                                      {tConvert(time.startTime, true)} -{" "}
+                                      {tConvert(time.startTime, true)} -{' '}
                                       {tConvert(time.endTime, true)}
                                     </div>
                                   </li>

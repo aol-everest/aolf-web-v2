@@ -1,11 +1,11 @@
-import { Loader } from "@components";
-import { ABBRS, COURSE_MODES } from "@constants";
-import { pushRouteWithUTMQuery } from "@service";
-import { tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useRouter } from "next/router";
+import { Loader } from '@components';
+import { ABBRS, COURSE_MODES } from '@constants';
+import { pushRouteWithUTMQuery } from '@service';
+import { tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
 
 dayjs.extend(utc);
 
@@ -46,7 +46,7 @@ export const MeetupEnroll = ({
       pathname: `/us-en/membership/${freeWithSubscription?.subscriptionMasterId}`,
       query: {
         mid: selectedMeetup.sfid,
-        page: "checkout",
+        page: 'checkout',
       },
     });
   };
@@ -84,7 +84,7 @@ export const MeetupEnroll = ({
               )}
 
               <p className="date">
-                {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
+                {`${dayjs.utc(meetupStartDate).format('MMMM DD')}, `}
                 {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
               </p>
               <ul>
@@ -94,19 +94,19 @@ export const MeetupEnroll = ({
                   <li>
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${
-                        locationStreet || ""
+                        locationStreet || ''
                       }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
                       target="_blank"
                       rel="noreferrer"
                     >
                       {locationStreet && <span>{locationStreet}</span>}
                       <span>
-                        {" "}
-                        {locationCity || ""}
-                        {", "}
-                        {locationProvince || ""} {locationPostalCode || ""}
+                        {' '}
+                        {locationCity || ''}
+                        {', '}
+                        {locationProvince || ''} {locationPostalCode || ''}
                       </span>
-                    </a>{" "}
+                    </a>{' '}
                   </li>
                 ) : (
                   <li>Livestreaming from {centerName} </li>
@@ -117,7 +117,7 @@ export const MeetupEnroll = ({
             <div className="card-wrapper">
               <>
                 {isSubscriptionOfferingUsed && (
-                  <div className={classNames("card full card-preffered")}>
+                  <div className={classNames('card full card-preffered')}>
                     <div className="card-body">
                       <p className="card-title">For members</p>
                       <p className="card-text">
@@ -126,7 +126,7 @@ export const MeetupEnroll = ({
                           <>
                             {listPrice !== unitPrice && (
                               <>
-                                <span className="prev-price">${listPrice}</span>{" "}
+                                <span className="prev-price">${listPrice}</span>{' '}
                                 ${unitPrice}
                               </>
                             )}
@@ -157,8 +157,8 @@ export const MeetupEnroll = ({
                   <div
                     className={classNames(
                       freeWithSubscription?.subscriptionName
-                        ? "card"
-                        : "card full",
+                        ? 'card'
+                        : 'card full',
                     )}
                   >
                     <div className="card-body">
@@ -169,7 +169,7 @@ export const MeetupEnroll = ({
                           <>
                             {listPrice !== unitPrice && (
                               <>
-                                <span className="prev-price">${listPrice}</span>{" "}
+                                <span className="prev-price">${listPrice}</span>{' '}
                                 ${unitPrice}
                               </>
                             )}
@@ -179,7 +179,7 @@ export const MeetupEnroll = ({
                       </p>
                       <button
                         className={
-                          !freeWithSubscription ? "btn btn-preffered" : "btn"
+                          !freeWithSubscription ? 'btn btn-preffered' : 'btn'
                         }
                         onClick={checkoutMeetup}
                       >

@@ -1,16 +1,16 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { object, ref, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { object, ref, string } from 'yup';
 
 const schema = object().shape({
   password: string()
-    .required("Password is required")
-    .min(8, "Must Contain 8 Characters"),
+    .required('Password is required')
+    .min(8, 'Must Contain 8 Characters'),
   passwordConfirmation: string().oneOf(
-    [ref("password"), null],
-    "Passwords must match",
+    [ref('password'), null],
+    'Passwords must match',
   ),
 });
 
@@ -34,7 +34,7 @@ export const NewPasswordForm = ({
         You have to change your password. Please enter your new password below.
       </p>
       <input
-        {...register("password")}
+        {...register('password')}
         type="password"
         placeholder="Password"
         className={classNames({ validate: errors.password })}
@@ -47,7 +47,7 @@ export const NewPasswordForm = ({
         <p className="validation-input">{errors.password.message}</p>
       )}
       <input
-        {...register("passwordConfirmation")}
+        {...register('passwordConfirmation')}
         type="password"
         placeholder="Confirm Password"
         className={classNames({ validate: errors.password })}

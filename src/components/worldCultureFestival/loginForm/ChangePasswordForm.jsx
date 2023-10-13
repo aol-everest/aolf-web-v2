@@ -1,27 +1,27 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { number, object, ref, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { number, object, ref, string } from 'yup';
 
 const schema = object().shape({
   password: string()
-    .required("Password is required")
-    .min(8, "Must Contain 8 Characters"),
+    .required('Password is required')
+    .min(8, 'Must Contain 8 Characters'),
   passwordConfirmation: string().oneOf(
-    [ref("password"), null],
-    "Passwords must match",
+    [ref('password'), null],
+    'Passwords must match',
   ),
   code: number()
-    .positive("Verification code is invalid")
-    .integer("Verification code is invalid")
-    .typeError("Verification code is invalid")
+    .positive('Verification code is invalid')
+    .integer('Verification code is invalid')
+    .typeError('Verification code is invalid')
     .test(
-      "len",
-      "Must be exactly 6 characters",
+      'len',
+      'Must be exactly 6 characters',
       (val) => val.toString().length === 6,
     )
-    .required("Verification code is required")
+    .required('Verification code is required')
     .nullable(),
 });
 
@@ -58,8 +58,8 @@ export const ChangePasswordForm = ({
           </label>
           <input
             type="text"
-            {...register("code")}
-            className={classNames("wcf-input__field", {
+            {...register('code')}
+            className={classNames('wcf-input__field', {
               error: errors.code,
             })}
             placeholder="Code"
@@ -80,11 +80,11 @@ export const ChangePasswordForm = ({
           </label>
           <input
             type="password"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.password,
             })}
             placeholder="Enter your new password"
-            {...register("password")}
+            {...register('password')}
             autoComplete="new-password"
             aria-invalid="false"
             aria-haspopup="false"
@@ -102,11 +102,11 @@ export const ChangePasswordForm = ({
           </label>
           <input
             type="password"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.passwordConfirmation,
             })}
             placeholder="Confirm your Password"
-            {...register("passwordConfirmation")}
+            {...register('passwordConfirmation')}
             autoComplete="new-password"
             aria-invalid="false"
             aria-haspopup="false"

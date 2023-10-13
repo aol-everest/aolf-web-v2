@@ -101,7 +101,7 @@
     &:after,
     &:before {
       background: #fff;
-      content: "";
+      content: '';
       height: 120px;
       position: absolute;
       transform: rotate(45deg);
@@ -211,7 +211,7 @@
       animation: pulseWarning 2s linear infinite;
       background-color: #fff;
       border-radius: 50%;
-      content: "";
+      content: '';
       display: inline-block;
       height: 100%;
       opacity: 0;
@@ -222,7 +222,7 @@
     &:after {
       background-color: #fff;
       border-radius: 50%;
-      content: "";
+      content: '';
       display: block;
       height: 100%;
       position: absolute;

@@ -36,7 +36,7 @@
 
     &:after,
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       border-radius: 3px;
       width: 16px;
@@ -52,7 +52,7 @@
     }
 
     &:after {
-      background: url("/img/ic-tick-blue.svg");
+      background: url('/img/ic-tick-blue.svg');
       background-size: contain;
       transition: opacity $wcf-transition-effect;
       opacity: 0;

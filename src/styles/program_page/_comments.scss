@@ -64,7 +64,9 @@
   }
 
   &__name {
-    font-family: Work Sans, sans-serif;
+    font-family:
+      Work Sans,
+      sans-serif;
     font-size: 16px;
     font-weight: 600;
     line-height: 1.25;
@@ -159,7 +161,7 @@
     right: 190px;
 
     &:after {
-      content: url("/img/ic-arrow-rigth.svg");
+      content: url('/img/ic-arrow-rigth.svg');
     }
   }
 
@@ -167,7 +169,7 @@
     left: 40px;
 
     &:after {
-      content: url("/img/ic-arrow-left.svg");
+      content: url('/img/ic-arrow-left.svg');
     }
   }
 

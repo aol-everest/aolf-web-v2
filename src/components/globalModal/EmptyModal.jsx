@@ -1,4 +1,4 @@
-import { useGlobalModalContext } from "@contexts";
+import { useGlobalModalContext } from '@contexts';
 
 export const EmptyModal = () => {
   const { hideModal, store } = useGlobalModalContext();

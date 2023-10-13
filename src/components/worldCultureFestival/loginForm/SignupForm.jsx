@@ -1,29 +1,29 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { object, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { object, string } from 'yup';
 
 const schema = object().shape({
   username: string()
-    .email("This type of email does not exist. Please enter a valid one.")
-    .required("Email is required"),
+    .email('This type of email does not exist. Please enter a valid one.')
+    .required('Email is required'),
   password: string()
-    .required("Password is required")
-    .min(8, "Must Contain 8 Characters"),
-  firstName: string().required("First Name is required"),
-  lastName: string().required("Last Name is required"),
+    .required('Password is required')
+    .min(8, 'Must Contain 8 Characters'),
+  firstName: string().required('First Name is required'),
+  lastName: string().required('Last Name is required'),
 });
 
 export const SignupForm = ({ signUp, showMessage, message, loading }) => {
-  const [passwordType, setPasswordType] = useState("password");
+  const [passwordType, setPasswordType] = useState('password');
   const togglePassword = () => {
-    if (passwordType === "password") {
-      setPasswordType("text");
+    if (passwordType === 'password') {
+      setPasswordType('text');
       return;
     }
-    setPasswordType("password");
+    setPasswordType('password');
   };
   const {
     register,
@@ -48,11 +48,11 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           <input
             type="email"
             id="sign-up-email"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.username,
             })}
             placeholder="Enter your email"
-            {...register("username")}
+            {...register('username')}
           />
           {errors.username && (
             <label
@@ -70,11 +70,11 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           </label>
           <input
             type={passwordType}
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.password,
             })}
             placeholder="Enter your password"
-            {...register("password")}
+            {...register('password')}
           />
           <button
             type="button"
@@ -100,11 +100,11 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           <input
             type="text"
             id="sign-up-first-name"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.firstName,
             })}
             placeholder="Enter your first name"
-            {...register("firstName")}
+            {...register('firstName')}
           />
           {errors.firstName && (
             <label
@@ -123,11 +123,11 @@ export const SignupForm = ({ signUp, showMessage, message, loading }) => {
           <input
             type="text"
             id="sign-up-last-name"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.lastName,
             })}
             placeholder="Enter your last name"
-            {...register("lastName")}
+            {...register('lastName')}
           />
           {errors.lastName && (
             <label

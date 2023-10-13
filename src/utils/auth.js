@@ -1,12 +1,12 @@
-import { CognitoAuth } from "amazon-cognito-auth-js/dist/amazon-cognito-auth";
+import { CognitoAuth } from 'amazon-cognito-auth-js/dist/amazon-cognito-auth';
 import {
   AuthenticationDetails,
   CognitoRefreshToken,
   CognitoUser,
   CognitoUserAttribute,
-} from "amazon-cognito-identity-js";
-import { api } from "./api";
-import UserPool from "./userPool";
+} from 'amazon-cognito-identity-js';
+import { api } from './api';
+import UserPool from './userPool';
 
 export const createCognitoAuth = () => {
   const config = {
@@ -14,11 +14,11 @@ export const createCognitoAuth = () => {
     ClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
     AppWebDomain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
     TokenScopesArray: [
-      "email",
-      "phone",
-      "profile",
-      "aws.cognito.signin.user.admin",
-      "openid",
+      'email',
+      'phone',
+      'profile',
+      'aws.cognito.signin.user.admin',
+      'openid',
     ],
     RedirectUriSignIn: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
     RedirectUriSignOut: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT,
@@ -36,8 +36,8 @@ export const parseCognitoWebResponse = (href) => {
     auth.userhandler = {
       onSuccess: (result) => resolve(result),
       onFailure: (err) => {
-        console.error("Failure parsing Cognito web response:", err);
-        reject(new Error("Failure parsing Cognito web response: " + err));
+        console.error('Failure parsing Cognito web response:', err);
+        reject(new Error('Failure parsing Cognito web response: ' + err));
       },
     };
 
@@ -48,7 +48,7 @@ export const parseCognitoWebResponse = (href) => {
 export const authenticateUser = (email, password) => {
   return new Promise((resolve, reject) => {
     const cognitoUser = getUser(email);
-    cognitoUser.setAuthenticationFlowType("USER_PASSWORD_AUTH");
+    cognitoUser.setAuthenticationFlowType('USER_PASSWORD_AUTH');
     const authDetails = new AuthenticationDetails({
       Username: email,
       Password: password,
@@ -60,7 +60,7 @@ export const authenticateUser = (email, password) => {
       },
 
       onFailure: (err) => {
-        console.error("onFailure:", err);
+        console.error('onFailure:', err);
         reject(err);
       },
 
@@ -75,7 +75,7 @@ export const changePassword = ({ email, oldPassword, newPassword }) => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const cognitoUser = getUser(email);
-    cognitoUser.setAuthenticationFlowType("USER_PASSWORD_AUTH");
+    cognitoUser.setAuthenticationFlowType('USER_PASSWORD_AUTH');
     const authDetails = new AuthenticationDetails({
       Username: email,
       Password: oldPassword,
@@ -90,7 +90,7 @@ export const changePassword = ({ email, oldPassword, newPassword }) => {
           },
 
           onFailure: (err) => {
-            console.error("onFailure:", err);
+            console.error('onFailure:', err);
             reject(err);
           },
 
@@ -105,7 +105,7 @@ export const changePassword = ({ email, oldPassword, newPassword }) => {
     }
     cognitoUser.changePassword(oldPassword, newPassword, (err, data) => {
       if (err) {
-        console.error("onFailure:", err);
+        console.error('onFailure:', err);
         reject(new Error(err));
       } else {
         // console.log("onSuccess:", data);
@@ -132,7 +132,7 @@ export const changeNewPassword = ({ email, password, newPassword }) => {
             reject(new Error(`Something is wrong. Try again.`));
           },
           onFailure: (err) => {
-            console.error("onFailure:", err);
+            console.error('onFailure:', err);
             reject(err);
           },
 
@@ -151,7 +151,7 @@ export const changeNewPassword = ({ email, password, newPassword }) => {
         resolve(data);
       },
       onFailure: (err) => {
-        console.error("onFailure:", err);
+        console.error('onFailure:', err);
         reject(err);
       },
     });
@@ -160,7 +160,7 @@ export const changeNewPassword = ({ email, password, newPassword }) => {
 
 export const fetchUserProfile = async (access_token) => {
   return await api.get({
-    path: "profile",
+    path: 'profile',
     token: access_token,
   });
 };
@@ -169,7 +169,7 @@ export const getSession = async () => {
   return await new Promise((resolve, reject) => {
     const cognitoUser = UserPool.getCurrentUser();
     if (!cognitoUser) {
-      reject("Could not retrieve current user");
+      reject('Could not retrieve current user');
       return;
     }
 
@@ -220,12 +220,12 @@ export const signup = ({ email, password, firstName, lastName }) => {
     const attributeList = [];
 
     const dataFirstName = {
-      Name: "given_name",
+      Name: 'given_name',
       Value: firstName,
     };
 
     const dataLastName = {
-      Name: "family_name",
+      Name: 'family_name',
       Value: lastName,
     };
 
@@ -247,7 +247,7 @@ const getUser = (email) => {
 
 export const resendTemporaryPassword = async (email) => {
   await api.post({
-    path: "resend-temporary-password",
+    path: 'resend-temporary-password',
     body: { email },
   });
 };
@@ -265,7 +265,7 @@ export const sendCode = ({ email }) => {
           resolve(data);
         },
         onFailure: (err) => {
-          console.error("onFailure:", err);
+          console.error('onFailure:', err);
           reject(err);
         },
         inputVerificationCode: (data) => {
@@ -285,7 +285,7 @@ export const resetPassword = ({ email, code, password }) => {
         resolve(data);
       },
       onFailure: (err) => {
-        console.error("onFailure:", err);
+        console.error('onFailure:', err);
         reject(err);
       },
     });
@@ -335,7 +335,7 @@ const reFetchProfile = async () => {
     console.error(ex);
     await logout();
   }
-  throw new Error("Something is wrong. Try again.");
+  throw new Error('Something is wrong. Try again.');
 };
 
 export const Auth = {

@@ -1,14 +1,14 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { object, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { object, string } from 'yup';
 
 const schema = object().shape({
   username: string()
-    .email("This type of email does not exist. Please enter a valid one.")
-    .required("Email is required"),
-  password: string().required("Password is required"),
+    .email('This type of email does not exist. Please enter a valid one.')
+    .required('Email is required'),
+  password: string().required('Password is required'),
 });
 
 export const SigninForm = ({
@@ -33,7 +33,7 @@ export const SigninForm = ({
       onSubmit={handleSubmit(signIn)}
     >
       <input
-        {...register("username")}
+        {...register('username')}
         type="email"
         placeholder="Email"
         className={classNames({ validate: errors.username })}
@@ -42,7 +42,7 @@ export const SigninForm = ({
         <p className="validation-input">{errors.username.message}</p>
       )}
       <input
-        {...register("password")}
+        {...register('password')}
         type="password"
         placeholder="Password"
         className={classNames({ validate: errors.password })}

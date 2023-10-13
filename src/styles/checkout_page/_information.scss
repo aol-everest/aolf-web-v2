@@ -1,6 +1,6 @@
 .additional-information {
   padding-top: 80px;
-  background: no-repeat url("/img/checkout-bg.png");
+  background: no-repeat url('/img/checkout-bg.png');
   background-size: cover;
 
   .information__blcok {
@@ -12,7 +12,9 @@
     height: 100%;
 
     .information__tile {
-      font-family: Work Sans, sans-serif;
+      font-family:
+        Work Sans,
+        sans-serif;
       text-transform: uppercase;
       font-size: 16px;
       font-weight: 600;
@@ -36,7 +38,9 @@
     }
 
     &__title {
-      font-family: Work Sans, sans-serif;
+      font-family:
+        Work Sans,
+        sans-serif;
       text-align: center;
       text-transform: uppercase;
       font-size: 16px;

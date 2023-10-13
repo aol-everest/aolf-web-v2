@@ -1,8 +1,8 @@
-import { COURSE_TYPES } from "@constants";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { Link } from "react-scroll";
+import { COURSE_TYPES } from '@constants';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { Link } from 'react-scroll';
 
 dayjs.extend(utc);
 
@@ -16,7 +16,7 @@ export const CourseBottomCard = ({ workshop, onRegister = null }) => {
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
   return (
-    <div className={classNames("course-bottom-card show")}>
+    <div className={classNames('course-bottom-card show')}>
       <div className="container">
         <div className="course-bottom-card__container">
           <div className="course-bottom-card__info-block">
@@ -54,9 +54,9 @@ export const CourseBottomCard = ({ workshop, onRegister = null }) => {
               <img src="/img/rectangle.png" alt="img" />
             </div>
             <div className="course-bottom-card__info">
-              <p>{`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+              <p>{`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                 .utc(eventEndDate)
-                .format("DD, YYYY")}`}</p>
+                .format('DD, YYYY')}`}</p>
               <div>
                 <h6 className="course-bottom-card__info-course-name">
                   {title}

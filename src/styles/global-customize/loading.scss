@@ -22,7 +22,7 @@
 
   .dot-flashing::before,
   .dot-flashing::after {
-    content: "";
+    content: '';
     display: inline-block;
     position: absolute;
     top: 0;
@@ -637,7 +637,7 @@ $hovershadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       &:before {
         border: 2px solid $color;
         box-sizing: content-box;
-        content: "";
+        content: '';
         height: 0;
         left: 50%;
         position: absolute;
@@ -659,7 +659,7 @@ $hovershadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         &:before {
           border: 3px solid $color;
           box-sizing: content-box;
-          content: "";
+          content: '';
           height: 14px;
           left: 50%;
           position: absolute;
@@ -681,7 +681,7 @@ $hovershadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         &:after,
         &:before {
           box-sizing: content-box;
-          content: "";
+          content: '';
           height: 10px;
           position: absolute;
           top: 13px;

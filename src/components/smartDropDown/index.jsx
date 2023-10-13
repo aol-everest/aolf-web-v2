@@ -1,7 +1,7 @@
-import classNames from "classnames";
-import { useState } from "react";
+import classNames from 'classnames';
+import { useState } from 'react';
 export const SmartDropDown = (props) => {
-  const { buttonText, children, value, containerClass = "" } = props;
+  const { buttonText, children, value, containerClass = '' } = props;
   const [visible, setVisibility] = useState(false);
 
   function handleDropdownClick(event) {
@@ -29,7 +29,7 @@ export const SmartDropDown = (props) => {
       >
         {buttonText}
       </button>
-      <ul className={classNames("dropdown-menu", { show: visible })}>
+      <ul className={classNames('dropdown-menu', { show: visible })}>
         {visible &&
           children({
             props,

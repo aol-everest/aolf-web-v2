@@ -1,5 +1,5 @@
-import { COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import classNames from "classnames";
+import { COURSE_TYPES, MEMBERSHIP_TYPES } from '@constants';
+import classNames from 'classnames';
 
 export const PostCostDetailsCard = ({
   workshop,
@@ -72,16 +72,16 @@ export const PostCostDetailsCard = ({
                           name="payment-type"
                           id="payment-lg-regular"
                           defaultChecked
-                          checked={formikProps.values.priceType === "regular"}
+                          checked={formikProps.values.priceType === 'regular'}
                           value="regular"
-                          onChange={formikProps.handleChange("priceType")}
+                          onChange={formikProps.handleChange('priceType')}
                         />
                         <label htmlFor="payment-lg-regular">
                           <span>Regular rate</span>
                           <span>
                             {delfee && (
                               <span className="discount">${delfee}</span>
-                            )}{" "}
+                            )}{' '}
                             ${fee}
                           </span>
                         </label>
@@ -93,9 +93,9 @@ export const PostCostDetailsCard = ({
                             type="radio"
                             name="priceType"
                             id="payment-lg-premium"
-                            checked={formikProps.values.priceType === "premium"}
+                            checked={formikProps.values.priceType === 'premium'}
                             value="premium"
-                            onChange={formikProps.handleChange("priceType")}
+                            onChange={formikProps.handleChange('priceType')}
                           />
                           <label htmlFor="payment-lg-premium">
                             <span>Premium/Journey+ rate:</span>
@@ -107,7 +107,7 @@ export const PostCostDetailsCard = ({
                                   <span className="discount">
                                     ${delfee || premiumRate.listPrice}
                                   </span>
-                                )}{" "}
+                                )}{' '}
                               ${premiumRate.unitPrice}
                             </span>
                           </label>
@@ -183,7 +183,7 @@ export const PostCostDetailsCard = ({
                           <span>
                             <span className="discount">
                               ${discount.oldPrice}
-                            </span>{" "}
+                            </span>{' '}
                             ${discount.newPrice}
                           </span>
                         )}
@@ -196,7 +196,7 @@ export const PostCostDetailsCard = ({
                                 <span className="discount">
                                   ${delfee || premiumRate.listPrice}
                                 </span>
-                              )}{" "}
+                              )}{' '}
                             ${premiumRate.unitPrice}
                           </span>
                         )}
@@ -260,7 +260,7 @@ export const PostCostDetailsCard = ({
                           Limited Time Offer: ${fee}
                         </h1>
                         <p className="price">
-                          Regular Course Fee:{" "}
+                          Regular Course Fee:{' '}
                           <span className="discount">${delfee}</span>
                         </p>
                       </>
@@ -324,11 +324,11 @@ export const PostCostDetailsCard = ({
           {hasGroupedAddOnProducts && (
             <>
               <h6 className="room__board__title mt-4">
-                Room &amp; Board {isOfflineExpense && "*"}
+                Room &amp; Board {isOfflineExpense && '*'}
               </h6>
               <div
-                className={classNames("select-room select-room_rounded", {
-                  "no-valid":
+                className={classNames('select-room select-room_rounded', {
+                  'no-valid':
                     formikProps.errors.accommodation &&
                     formikProps.touched.accommodation,
                 })}
@@ -337,7 +337,7 @@ export const PostCostDetailsCard = ({
                   <span className="select-room__placeholder">
                     Select Room &amp; Board
                   </span>
-                  {groupedAddOnProducts["Residential Add On"].map(
+                  {groupedAddOnProducts['Residential Add On'].map(
                     (residentialAddOn) => {
                       return (
                         <div
@@ -352,7 +352,7 @@ export const PostCostDetailsCard = ({
                             className="select-room__input"
                           />
                           <span className="select-room__input-text">
-                            {residentialAddOn.productName}{" "}
+                            {residentialAddOn.productName}{' '}
                             <span className="price">
                               $
                               {residentialAddOn.unitPrice +
@@ -365,7 +365,7 @@ export const PostCostDetailsCard = ({
                   )}
                 </div>
                 <ul className="select-room__list">
-                  {groupedAddOnProducts["Residential Add On"].map(
+                  {groupedAddOnProducts['Residential Add On'].map(
                     (residentialAddOn) => {
                       return (
                         <li
@@ -375,7 +375,7 @@ export const PostCostDetailsCard = ({
                           }
                           className={
                             residentialAddOn.isFull &&
-                            "tw-pointer-events-none tw-opacity-60"
+                            'tw-pointer-events-none tw-opacity-60'
                           }
                         >
                           <label

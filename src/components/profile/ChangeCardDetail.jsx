@@ -1,25 +1,25 @@
-import { useAuth } from "@contexts";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { api } from "@utils";
-import { useState } from "react";
+import { useAuth } from '@contexts';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { api } from '@utils';
+import { useState } from 'react';
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
@@ -45,7 +45,7 @@ export const ChangeCardDetail = ({ updateCompleteAction }) => {
         tokenizeCC: token,
       };
       const { status, error: errorMessage } = await api.post({
-        path: "updateProfile",
+        path: 'updateProfile',
         body: payload,
       });
 

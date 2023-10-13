@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Playfair+Display:400,700,900");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Playfair+Display:400,700,900');
 
 .activate-body {
   background: #fff url(/img/body-bg.png) no-repeat left top -50px / 1840px auto;
@@ -261,7 +261,7 @@
   }
 
   .custom_check label::before {
-    content: "";
+    content: '';
     margin-right: 10px;
     display: inline-block;
     vertical-align: text-top;
@@ -272,7 +272,7 @@
     border-radius: 5px;
   }
 
-  .custom_check [type="checkbox"]:checked + label:before {
+  .custom_check [type='checkbox']:checked + label:before {
     background: #fff url(/img/checked-icon.png) no-repeat center center / 18px
       auto;
   }
@@ -879,7 +879,7 @@
     -webkit-tap-highlight-color: transparent;
     transform: translate3d(0, 0, 0);
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       top: -7px;
       left: -9px;

@@ -1,17 +1,17 @@
-import { api } from "@utils";
-import { useState } from "react";
-import { useQuery } from "react-query";
-import { COURSE_TYPES } from "@constants";
+import { api } from '@utils';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import { COURSE_TYPES } from '@constants';
 
 export const PastCourses = ({ isMobile }) => {
   const [pastWorkshops, setPastWorkshops] = useState([]);
   const [workshopOrderAsc, setWorkshopOrderAsc] = useState(true);
 
   const { data = [], isSuccess } = useQuery(
-    "userPastCourses",
+    'userPastCourses',
     async () => {
       const response = await api.get({
-        path: "getUserPastCourses",
+        path: 'getUserPastCourses',
       });
       const updatedResponse = response.pastWorkshops.sort((a, b) => {
         return (
@@ -33,13 +33,13 @@ export const PastCourses = ({ isMobile }) => {
   };
 
   const skyBreathMeditationCount = pastWorkshops.filter((item) => {
-    return item.courseType === "sky";
+    return item.courseType === 'sky';
   }).length;
   const SilentRetreatCount = pastWorkshops.filter((item) => {
-    return item.courseType === "silent";
+    return item.courseType === 'silent';
   }).length;
   const SahajSamadhiCount = pastWorkshops.filter((item) => {
-    return item.courseType === "sahaj";
+    return item.courseType === 'sahaj';
   }).length;
 
   if (!isMobile) {
@@ -90,7 +90,7 @@ export const PastCourses = ({ isMobile }) => {
                   <button
                     type="button"
                     className="table__sort-button tw-flex"
-                    data-order={workshopOrderAsc ? "asc" : "desc"}
+                    data-order={workshopOrderAsc ? 'asc' : 'desc'}
                     onClick={handleOrderChange}
                   >
                     <span className="table__sort-button__text">Start Date</span>

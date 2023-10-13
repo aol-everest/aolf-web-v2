@@ -1,30 +1,30 @@
-import { PageLoading } from "@components";
-import { PaymentFormWebinar } from "@components/PaymentFormWebinar";
+import { PageLoading } from '@components';
+import { PaymentFormWebinar } from '@components/PaymentFormWebinar';
 import {
   ALERT_TYPES,
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
   COURSE_TYPES,
-} from "@constants";
+} from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
-import { withAuth } from "@hoc";
-import { useQueryString } from "@hooks";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from "@service";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { api } from "@utils";
-import dayjs from "dayjs";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { useAnalytics } from "use-analytics";
+} from '@contexts';
+import { withAuth } from '@hoc';
+import { useQueryString } from '@hooks';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { api } from '@utils';
+import dayjs from 'dayjs';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { useAnalytics } from 'use-analytics';
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -34,24 +34,24 @@ const RetreatPrerequisiteWarning = ({
     <>
       <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
-        the {title}, which is{" "}
+        the {title}, which is{' '}
         <strong>
           {firstPreRequisiteFailedReason &&
           firstPreRequisiteFailedReason.totalCount <
             firstPreRequisiteFailedReason.requiredCount &&
           firstPreRequisiteFailedReason.requiredCount > 1
             ? firstPreRequisiteFailedReason.requiredCount
-            : ""}{" "}
+            : ''}{' '}
           {firstPreRequisiteFailedReason && firstPreRequisiteFailedReason.type}
         </strong>
         .
       </p>
       <p className="course-join-card__text">
-        If our records are not accurate, please contact customer service at{" "}
+        If our records are not accurate, please contact customer service at{' '}
         <a href={`tel:${orgConfig.contactNumberLink}`}>
           {orgConfig.contactNumber}
-        </a>{" "}
-        or email us at{" "}
+        </a>{' '}
+        or email us at{' '}
         <a href="mailto:app.support@us.artofliving.org">
           app.support@us.artofliving.org
         </a>
@@ -63,7 +63,7 @@ const RetreatPrerequisiteWarning = ({
 
 const validateStudentEmail = (email) => {
   const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
-  const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+  const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
   return isStudentEmail;
 };
 
@@ -77,13 +77,13 @@ const WebinarSkyCheckout = () => {
     isError,
     error,
   } = useQuery(
-    "workshops",
+    'workshops',
     async () => {
       const response = await api.get({
-        path: "workshops",
+        path: 'workshops',
         param: {
           ctype: process.env.NEXT_PUBLIC_WEBINAR_SKY_CTYPE,
-          org: "AOL",
+          org: 'AOL',
         },
       });
       return response.data;
@@ -93,14 +93,14 @@ const WebinarSkyCheckout = () => {
     },
   );
 
-  const [mbsy_source] = useQueryString("mbsy_source");
-  const [campaignid] = useQueryString("campaignid");
-  const [mbsy] = useQueryString("mbsy");
+  const [mbsy_source] = useQueryString('mbsy_source');
+  const [campaignid] = useQueryString('campaignid');
+  const [mbsy] = useQueryString('mbsy');
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
+  const [selectedWorkshopId, setSelectedWorkshopId] = useState('');
   const [workshop, setSelectedWorkshop] = useState({});
   const { track } = useAnalytics();
 
@@ -129,23 +129,23 @@ const WebinarSkyCheckout = () => {
         id: name,
         name: title,
         courseId: courseId,
-        category: "workshop",
+        category: 'workshop',
         ctype: productTypeId,
-        variant: "N/A",
-        brand: "Art of Living Foundation",
+        variant: 'N/A',
+        brand: 'Art of Living Foundation',
         quantity: 1,
-        currencyCode: "USD",
+        currencyCode: 'USD',
         price: unitPrice,
       },
     ];
-    track("eec.checkout", {
+    track('eec.checkout', {
       page: `Art of Living ${title} workshop registration page`,
-      viewType: "workshop",
+      viewType: 'workshop',
       title: title,
       ctype: productTypeId,
       amount: unitPrice,
-      requestType: "Detail",
-      hitType: "paymentpage",
+      requestType: 'Detail',
+      hitType: 'paymentpage',
       user: user.profile.id,
       ecommerce: {
         checkout: {
@@ -165,8 +165,8 @@ const WebinarSkyCheckout = () => {
     const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
     if (!isPreRequisiteCompleted && isPreRequisiteCompleted !== undefined) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-        className: "retreat-prerequisite-big",
-        title: "Retreat Prerequisite",
+        className: 'retreat-prerequisite-big',
+        title: 'Retreat Prerequisite',
         closeModalAction: closeRetreatPrerequisiteWarning,
         footer: () => {
           return (
@@ -174,7 +174,7 @@ const WebinarSkyCheckout = () => {
               className="btn-secondary"
               onClick={closeRetreatPrerequisiteWarning}
             >
-              Discover{" "}
+              Discover{' '}
               {firstPreRequisiteFailedReason &&
                 firstPreRequisiteFailedReason.type}
             </button>
@@ -193,10 +193,10 @@ const WebinarSkyCheckout = () => {
   useEffect(() => {
     const getWorshopDetails = async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           id: selectedWorkshopId,
-          rp: "checkout",
+          rp: 'checkout',
         },
       });
       if (response?.data) {
@@ -212,9 +212,9 @@ const WebinarSkyCheckout = () => {
     if (e) e.preventDefault();
     hideAlert();
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en/course",
+      pathname: '/us-en/course',
       query: {
-        courseType: "SKY_BREATH_MEDITATION",
+        courseType: 'SKY_BREATH_MEDITATION',
       },
     });
   };
@@ -224,9 +224,9 @@ const WebinarSkyCheckout = () => {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
-        comboId: "",
-        page: "ty",
-        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+        comboId: '',
+        page: 'ty',
+        type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
         campaignid,
         mbsy,
       },
@@ -266,7 +266,7 @@ const WebinarSkyCheckout = () => {
     setLoading(true);
     try {
       await api.post({
-        path: "verify-email",
+        path: 'verify-email',
         body: {
           email: email,
         },
@@ -276,7 +276,7 @@ const WebinarSkyCheckout = () => {
     }
     setLoading(false);
     showModal(MODAL_TYPES.EMPTY_MODAL, {
-      title: "Verification code sent.",
+      title: 'Verification code sent.',
       children: (handleModalToggle) => (
         <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
           <div className=" modal-dialog modal-dialog-centered active">
@@ -306,7 +306,7 @@ const WebinarSkyCheckout = () => {
     workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||
       (isStudentVerified &&
-        dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
+        dayjs(new Date()).diff(dayjs(studentVerificationDate), 'y', true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
   return (
@@ -319,7 +319,7 @@ const WebinarSkyCheckout = () => {
             <img src="/img/ic-timer-white.svg" alt="timer" />
             <span>
               Register soon. Course fee will go up by $
-              {workshop.earlyBirdFeeIncreasing.increasingFee} on{" "}
+              {workshop.earlyBirdFeeIncreasing.increasingFee} on{' '}
               {workshop.earlyBirdFeeIncreasing.increasingBy}
             </span>
           </aside>
@@ -327,14 +327,14 @@ const WebinarSkyCheckout = () => {
         {showVerifyStudentStatus && (
           <aside className="tw-relative tw-whitespace-normal tw-text-center">
             <span>
-              We notice that you might be a student. Please{" "}
+              We notice that you might be a student. Please{' '}
               <a
                 className="tw-text-blue-900"
                 onClick={handleVerifyStudentEmail}
                 rel="noreferrer"
               >
-                {" "}
-                verify your student status{" "}
+                {' '}
+                verify your student status{' '}
               </a>
               to get discounted Student rates.
             </span>
@@ -372,7 +372,7 @@ const WebinarSkyCheckout = () => {
               fonts={[
                 {
                   cssSrc:
-                    "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                    'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
                 },
               ]}
             >

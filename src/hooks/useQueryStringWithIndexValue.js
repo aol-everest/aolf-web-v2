@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import useQueryString from "./useQueryString";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import useQueryString from './useQueryString';
 
 function useQueryStringWithIndexValue(key, initialIndex, values) {
   const computedValues = useMemo(

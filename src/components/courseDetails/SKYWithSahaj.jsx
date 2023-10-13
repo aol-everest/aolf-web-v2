@@ -1,23 +1,23 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { MODAL_TYPES, COURSE_TYPES } from "@constants";
-import classNames from "classnames";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { PriceCard } from "./PriceCard";
-import { Pagination, A11y } from "swiper";
-import { Accordion, Card, AccordionContext } from "react-bootstrap";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import { useContext } from "react";
-import { priceCalculation } from "@utils";
+import { MODAL_TYPES, COURSE_TYPES } from '@constants';
+import classNames from 'classnames';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { FaArrowRightLong } from 'react-icons/fa6';
+import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { PriceCard } from './PriceCard';
+import { Pagination, A11y } from 'swiper';
+import { Accordion, Card, AccordionContext } from 'react-bootstrap';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import { useContext } from 'react';
+import { priceCalculation } from '@utils';
 
 export const SKYWithSahaj = ({ data }) => {
   const { authenticated = false } = useAuth();
@@ -54,7 +54,7 @@ export const SKYWithSahaj = ({ data }) => {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -62,7 +62,7 @@ export const SKYWithSahaj = ({ data }) => {
         navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: "SIGNUP_MODE",
+        defaultView: 'SIGNUP_MODE',
       });
     }
   };
@@ -80,7 +80,7 @@ export const SKYWithSahaj = ({ data }) => {
     return (
       <h5 className="mb-0">
         <button
-          className={classNames("btn btn-link", {
+          className={classNames('btn btn-link', {
             collapsed: !isCurrentEventKey,
           })}
           onClick={decoratedOnClick}
@@ -388,7 +388,7 @@ export const SKYWithSahaj = ({ data }) => {
                 </div>
                 <div className="review-text">
                   It helped me to put into practice the valuable wisdom which I
-                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
+                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{' '}
                   course. I came away relaxed, refreshed and happier than I had
                   felt for a long time.
                 </div>
@@ -517,10 +517,10 @@ export const SKYWithSahaj = ({ data }) => {
             <div className="enrollment">
               <div className="banner-text">
                 <div className="total-value">
-                  Total value -{" "}
+                  Total value -{' '}
                   <span className="orginal-price">
                     {delfee && `$${delfee}`}
-                  </span>{" "}
+                  </span>{' '}
                   <span>${fee}</span>
                 </div>
               </div>

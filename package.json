@@ -20,10 +20,10 @@
     "lint": "next lint",
     "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons",
     "eslint": "./node_modules/.bin/eslint --fix \"./**/*.{js,jsx}\"",
-    "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss}\"",
-    "prepare": "husky install",
+    "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss,md,yml,yaml}\"",
+    "prepare": "is-ci || husky install",
     "commit": "cz",
-    "check:format": "prettier --check .",
+    "check:format": "prettier --check '**/*.{js,jsx,json,css,scss,md,yml,yaml}'",
     "check:lint": "eslint . --ext .js,.jsx --color",
     "check:spelling": "cspell \"{README.md,TODO.md,.github/*.md,src/**/*.js,src/**/*.jsx}\"",
     "fix:format": "prettier --check --write --ignore-unknown .",
@@ -82,7 +82,7 @@
     "react-html-parser": "^2.0.2",
     "react-icons": "^4.11.0",
     "react-image-crop": "^10.1.8",
-    "react-lines-ellipsis": "^0.15.3",
+    "react-lines-ellipsis": "^0.15.4",
     "react-phone-input-2": "^2.15.1",
     "react-places-autocomplete": "^7.3.0",
     "react-popper": "^2.3.0",
@@ -99,7 +99,7 @@
     "react-use": "^17.4.0",
     "reactstrap": "^8.10.1",
     "remove-markdown": "^0.5.0",
-    "sass": "^1.67.0",
+    "sass": "^1.69.3",
     "select2": "^4.1.0-rc.0",
     "slick-carousel": "^1.8.1",
     "swiper": "^9.4.1",
@@ -114,13 +114,14 @@
     "@svgr/cli": "^8.1.0",
     "autoprefixer": "^10.4.15",
     "cross-env": "^7.0.3",
+    "cspell": "^7.3.7",
     "cssnano": "^6.0.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.49.0",
     "eslint-config-next": "^13.5.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-no-inline-styles": "^1.0.5",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.1",
     "husky": "^8.0.3",
     "kill-port": "^2.0.1",
     "lint-staged": "^14.0.1",
@@ -136,10 +137,7 @@
     "*.json,.{eslintrc,prettierrc}": [
       "prettier --ignore-path .eslintignore --parser json --write"
     ],
-    "*.{css,scss}": [
-      "prettier --ignore-path .eslintignore --single-quote --write"
-    ],
-    "*.{html,md,yml}": [
+    "*.{css,scss,html,md,yml}": [
       "prettier --ignore-path .eslintignore --single-quote --write"
     ]
   },

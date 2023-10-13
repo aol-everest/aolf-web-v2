@@ -1,6 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Loader } from "@components";
+import { Loader } from '@components';
 import {
   AgreementForm,
   BillingInfoForm,
@@ -14,53 +14,53 @@ import {
   PreCostDetailsCard,
   ProgramQuestionnaire,
   UserInfoForm,
-} from "@components/checkout";
+} from '@components/checkout';
 import {
   ALERT_TYPES,
   MODAL_TYPES,
   PAYMENT_MODES,
   PAYMENT_TYPES,
-} from "@constants";
+} from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
-import { useQueryString } from "@hooks";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { pushRouteWithUTMQuery } from "@service";
+} from '@contexts';
+import { useQueryString } from '@hooks';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { pushRouteWithUTMQuery } from '@service';
 import {
   CardElement,
   PaymentElement,
   useElements,
   useStripe,
-} from "@stripe/react-stripe-js";
-import { Auth, api, isEmpty, priceCalculation } from "@utils";
-import { filterAllowedParams, removeNull } from "@utils/utmParam";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { useEffect, useState } from "react";
-import * as Yup from "yup";
-import "yup-phone";
+} from '@stripe/react-stripe-js';
+import { Auth, api, isEmpty, priceCalculation } from '@utils';
+import { filterAllowedParams, removeNull } from '@utils/utmParam';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { useEffect, useState } from 'react';
+import * as Yup from 'yup';
+import 'yup-phone';
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
@@ -92,7 +92,7 @@ export const PaymentForm = ({
   const { setUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
-  const [discount] = useQueryString("discountCode");
+  const [discount] = useQueryString('discountCode');
   const [discountResponse, setDiscountResponse] = useState(null);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
   const [enrollFormValues, setEnrollFormValues] = useState(null);
@@ -135,7 +135,7 @@ export const PaymentForm = ({
       pathname: `/us-en/membership/${id}`,
       query: {
         cid: workshop.id,
-        page: "checkout",
+        page: 'checkout',
       },
     });
   };
@@ -177,7 +177,7 @@ export const PaymentForm = ({
       error: errorMessage,
       isError,
     } = await api.post({
-      path: "paypalBuyAcknowledgement",
+      path: 'paypalBuyAcknowledgement',
       body: { orderID: paypalData.orderID },
     });
 
@@ -232,7 +232,7 @@ export const PaymentForm = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -268,15 +268,15 @@ export const PaymentForm = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -285,7 +285,7 @@ export const PaymentForm = ({
 
       let payLoad = {
         shoppingRequest: {
-          couponCode: showCouponCodeField ? couponCode : "",
+          couponCode: showCouponCodeField ? couponCode : '',
           contactAddress: {
             contactPhone,
             contactAddress,
@@ -346,7 +346,7 @@ export const PaymentForm = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
 
@@ -420,7 +420,7 @@ export const PaymentForm = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -456,15 +456,15 @@ export const PaymentForm = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -473,7 +473,7 @@ export const PaymentForm = ({
 
       let payLoad = {
         shoppingRequest: {
-          couponCode: showCouponCodeField ? couponCode : "",
+          couponCode: showCouponCodeField ? couponCode : '',
           contactAddress: {
             contactPhone,
             contactAddress,
@@ -530,7 +530,7 @@ export const PaymentForm = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
       setLoading(false);
@@ -595,7 +595,7 @@ export const PaymentForm = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -606,12 +606,12 @@ export const PaymentForm = ({
       let tokenizeCC = null;
       if (
         !isCCNotRequired &&
-        (paymentMethod.type !== "card" || isChangingCard || !isLoggedUser) &&
+        (paymentMethod.type !== 'card' || isChangingCard || !isLoggedUser) &&
         isCreditCardRequired !== false
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile?.name ? profile.name : firstName + " " + lastName,
+          name: profile?.name ? profile.name : firstName + ' ' + lastName,
         });
         let { error, token } = createTokenRespone;
         if (error) {
@@ -648,15 +648,15 @@ export const PaymentForm = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -742,7 +742,7 @@ export const PaymentForm = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
 
@@ -832,12 +832,12 @@ export const PaymentForm = ({
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
     !isEmpty(groupedAddOnProducts) &&
-    "Residential Add On" in groupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].length > 0;
+    'Residential Add On' in groupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].length > 0;
 
   const residentialAddOnRequired =
     hasGroupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].some(
+    groupedAddOnProducts['Residential Add On'].some(
       (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
     );
 
@@ -854,13 +854,13 @@ export const PaymentForm = ({
   let UpdatedFeeAfterCredits;
   if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
     usableCredit.availableCredit === 1
   ) {
     UpdatedFeeAfterCredits = 0;
   } else if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
+    usableCredit.creditMeasureUnit === 'Amount'
   ) {
     if (usableCredit.availableCredit > fee) {
       UpdatedFeeAfterCredits = 0;
@@ -889,14 +889,14 @@ export const PaymentForm = ({
   };
 
   const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
-    formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
+    formikProps.setFieldValue('comboDetailId', comboDetailProductSfid);
     handleCouseSelection(comboDetailProductSfid);
     const { isInstalmentAllowed, id } = workshop;
     if (isInstalmentAllowed && id === comboDetailProductSfid) {
       setShowCouponCodeField(true);
     } else {
       setShowCouponCodeField(false);
-      formikProps.setFieldValue("paymentOption", PAYMENT_TYPES.FULL);
+      formikProps.setFieldValue('paymentOption', PAYMENT_TYPES.FULL);
     }
 
     // Added logic to remove paypal option for bundle
@@ -906,12 +906,12 @@ export const PaymentForm = ({
       );
 
       const isBundlePaypalAvailable = selectedBundle
-        ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
+        ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
         : false;
 
       if (!isBundlePaypalAvailable) {
         formikProps.setFieldValue(
-          "paymentMode",
+          'paymentMode',
           PAYMENT_MODES.STRIPE_PAYMENT_MODE,
         );
       }
@@ -919,17 +919,17 @@ export const PaymentForm = ({
   };
 
   const handlePaymentOptionChange = (formikProps, paymentOption) => {
-    formikProps.setFieldValue("paymentOption", paymentOption);
+    formikProps.setFieldValue('paymentOption', paymentOption);
     if (paymentOption === PAYMENT_TYPES.LATER) {
       formikProps.setFieldValue(
-        "paymentMode",
+        'paymentMode',
         PAYMENT_MODES.STRIPE_PAYMENT_MODE,
       );
     }
   };
 
   const handleAccommodationChange = (formikProps, value) => {
-    formikProps.setFieldValue("accommodation", value);
+    formikProps.setFieldValue('accommodation', value);
   };
 
   const toggleCouponCodeFieldAction = (e) => {
@@ -938,43 +938,43 @@ export const PaymentForm = ({
   };
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("First Name is required"),
-    lastName: Yup.string().required("Last Name is required"),
-    email: Yup.string().required("Email is required").email(),
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last Name is required'),
+    email: Yup.string().required('Email is required').email(),
     contactPhone: Yup.string()
-      .label("Phone")
-      .required("Phone is required")
-      .phone(null, false, "Phone is invalid")
+      .label('Phone')
+      .required('Phone is required')
+      .phone(null, false, 'Phone is invalid')
       .nullable(),
-    contactAddress: Yup.string().required("Address is required"),
-    contactCity: Yup.string().required("City is required"),
-    contactState: Yup.string().required("State is required"),
+    contactAddress: Yup.string().required('Address is required'),
+    contactCity: Yup.string().required('City is required'),
+    contactState: Yup.string().required('State is required'),
     contactZip: Yup.string()
-      .required("Zip is required!")
+      .required('Zip is required!')
       //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-      .min(2, "Zip is invalid")
-      .max(10, "Zip is invalid"),
+      .min(2, 'Zip is invalid')
+      .max(10, 'Zip is invalid'),
     ppaAgreement: Yup.boolean()
-      .label("Terms")
+      .label('Terms')
       .test(
-        "is-true",
-        "Please check the box in order to continue.",
+        'is-true',
+        'Please check the box in order to continue.',
         (value) => value === true,
       ),
     accommodation: isAccommodationRequired
-      ? Yup.object().required("Room & Board is required!")
+      ? Yup.object().required('Room & Board is required!')
       : Yup.mixed().notRequired(),
     paymentMode: isCCNotRequired
       ? Yup.mixed().notRequired()
-      : Yup.string().required("Payment mode is required!"),
+      : Yup.string().required('Payment mode is required!'),
   });
 
   const paymentElementOptions = {
     defaultValues: {
       billingDetails: {
-        email: email || "",
-        name: (first_name || "") + (last_name || ""),
-        phone: personMobilePhone || "",
+        email: email || '',
+        name: (first_name || '') + (last_name || ''),
+        phone: personMobilePhone || '',
       },
     },
   };
@@ -1003,7 +1003,7 @@ export const PaymentForm = ({
         defaultValues: {
           billingDetails: {
             email: values.email,
-            name: (values.firstName || "") + (values.lastName || ""),
+            name: (values.firstName || '') + (values.lastName || ''),
             phone: values.contactPhone,
           },
         },
@@ -1015,24 +1015,24 @@ export const PaymentForm = ({
     <>
       <Formik
         initialValues={{
-          firstName: first_name || "",
-          lastName: last_name || "",
-          email: email || "",
-          contactPhone: personMobilePhone || "",
-          contactAddress: personMailingStreet || "",
-          contactCity: personMailingCity || "",
-          contactState: personMailingState || "",
-          contactZip: personMailingPostalCode || "",
-          couponCode: discount ? discount : "",
+          firstName: first_name || '',
+          lastName: last_name || '',
+          email: email || '',
+          contactPhone: personMobilePhone || '',
+          contactAddress: personMailingStreet || '',
+          contactCity: personMailingCity || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
+          couponCode: discount ? discount : '',
           questionnaire: questionnaire,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
           paymentMode:
-            otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") >= 0
-              ? ""
+            otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') >= 0
+              ? ''
               : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
           accommodation: null,
-          priceType: "regular",
+          priceType: 'regular',
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
@@ -1076,7 +1076,7 @@ export const PaymentForm = ({
             0,
           );
           const isRegularPrice =
-            values.priceType === null || values.priceType === "regular";
+            values.priceType === null || values.priceType === 'regular';
           const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
 
           const totalFee =
@@ -1091,7 +1091,7 @@ export const PaymentForm = ({
 
           let isOfflineExpense;
           if (hasGroupedAddOnProducts && expenseAddOn) {
-            isOfflineExpense = expenseAddOn.paymentMode === "In Person";
+            isOfflineExpense = expenseAddOn.paymentMode === 'In Person';
           } else if (expenseAddOn && !expenseAddOn.isAddOnSelectionRequired) {
             isOfflineExpense = values[expenseAddOn.productName] || false;
           } else if (!expenseAddOn) {
@@ -1105,7 +1105,7 @@ export const PaymentForm = ({
           );
 
           const isBundlePaypalAvailable = selectedBundle
-            ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
+            ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
             : false;
 
           return (
@@ -1117,7 +1117,7 @@ export const PaymentForm = ({
                     <h2 className="details__title">Account Details:</h2>
                     {isLoggedUser && (
                       <p className="details__content">
-                        This is not your account?{" "}
+                        This is not your account?{' '}
                         <a href="#" className="link" onClick={logout}>
                           Logout
                         </a>
@@ -1125,7 +1125,7 @@ export const PaymentForm = ({
                     )}
                     {!isLoggedUser && (
                       <p className="details__content">
-                        Already have an Account?{" "}
+                        Already have an Account?{' '}
                         <a href="#" className="link" onClick={login}>
                           Login
                         </a>
@@ -1250,19 +1250,19 @@ export const PaymentForm = ({
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                               debug: true,
-                              currency: "USD",
-                              intent: "capture",
-                              components: "buttons",
+                              currency: 'USD',
+                              intent: 'capture',
+                              components: 'buttons',
                             }}
                           >
                             <PayPalButtons
                               style={{
-                                layout: "horizontal",
-                                color: "blue",
-                                shape: "pill",
+                                layout: 'horizontal',
+                                color: 'blue',
+                                shape: 'pill',
                                 height: 40,
                                 tagline: false,
-                                label: "pay",
+                                label: 'pay',
                               }}
                               fundingSource="paypal"
                               forceReRender={[formikProps.values]}

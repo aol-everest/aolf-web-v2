@@ -1,17 +1,17 @@
-import { ABBRS } from "@constants";
-import { tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import { ABBRS } from '@constants';
+import { tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
 export const MeetupTile = ({ data, openEnrollAction }) => {
   const getMeetupImage = () => {
     switch (data.meetupType) {
-      case "Short SKY Meditation Meetup":
+      case 'Short SKY Meditation Meetup':
         return <img src="/img/filter-card-1@2x.png" alt="bg" />;
-      case "Guided Meditation Meetup":
+      case 'Guided Meditation Meetup':
         return <img src="/img/filter-card-2@2x.png" alt="bg" />;
       default:
         return <img src="/img/filter-card-1@2x.png" alt="bg" />;
@@ -31,7 +31,7 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
     locationProvince,
     locationCity,
   } = data || {};
-  const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, "")} Min`;
+  const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, '')} Min`;
   return (
     <div className="col-6 col-lg-3 col-md-4">
       <div
@@ -41,7 +41,7 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
       >
         {getMeetupImage()}
         <div className="course_data">
-          {`${dayjs.utc(meetupStartDate).format("MMM DD")}, `}
+          {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
           {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
           {`${updateMeetupDuration}`}
         </div>
@@ -49,15 +49,15 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
         <div className="course_info">
           <div className="course_status">
             {isOnlineMeetup ? (
-              "Live Streaming from" + " " + centerName
+              'Live Streaming from' + ' ' + centerName
             ) : (
               <>
                 {locationCity ? (
                   <span>
-                    {" "}
-                    {locationCity || ""}
-                    {locationProvince && ", "}
-                    {locationProvince || ""}
+                    {' '}
+                    {locationCity || ''}
+                    {locationProvince && ', '}
+                    {locationProvince || ''}
                   </span>
                 ) : (
                   centerName
@@ -70,8 +70,8 @@ export const MeetupTile = ({ data, openEnrollAction }) => {
         </div>
         <div className="course_complete_registration">already registered</div>
         <div
-          className={classNames("course_detail_box", {
-            "d-none": isPurchased || isEventFull,
+          className={classNames('course_detail_box', {
+            'd-none': isPurchased || isEventFull,
           })}
         >
           <div className="course_detail_btn_box">

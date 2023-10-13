@@ -1,27 +1,27 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { number, object, ref, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { number, object, ref, string } from 'yup';
 
 const schema = object().shape({
   password: string()
-    .required("Password is required")
-    .min(8, "Must Contain 8 Characters"),
+    .required('Password is required')
+    .min(8, 'Must Contain 8 Characters'),
   passwordConfirmation: string().oneOf(
-    [ref("password"), null],
-    "Passwords must match",
+    [ref('password'), null],
+    'Passwords must match',
   ),
   code: number()
-    .positive("Verification code is invalid")
-    .integer("Verification code is invalid")
-    .typeError("Verification code is invalid")
+    .positive('Verification code is invalid')
+    .integer('Verification code is invalid')
+    .typeError('Verification code is invalid')
     .test(
-      "len",
-      "Must be exactly 6 characters",
+      'len',
+      'Must be exactly 6 characters',
       (val) => val.toString().length === 6,
     )
-    .required("Verification code is required")
+    .required('Verification code is required')
     .nullable(),
 });
 
@@ -52,7 +52,7 @@ export const ChangePasswordForm = ({
       </p>
       <input
         type="text"
-        {...register("code")}
+        {...register('code')}
         className={classNames({ validate: errors.code })}
         placeholder="Code"
         autoComplete="off"
@@ -62,7 +62,7 @@ export const ChangePasswordForm = ({
       />
       {errors.code && <p className="validation-input">{errors.code.message}</p>}
       <input
-        {...register("password")}
+        {...register('password')}
         type="password"
         placeholder="New Password"
         className={classNames({ validate: errors.password })}
@@ -75,7 +75,7 @@ export const ChangePasswordForm = ({
         <p className="validation-input">{errors.password.message}</p>
       )}
       <input
-        {...register("passwordConfirmation")}
+        {...register('passwordConfirmation')}
         type="password"
         placeholder="Confirm Password"
         className={classNames({ validate: errors.passwordConfirmation })}

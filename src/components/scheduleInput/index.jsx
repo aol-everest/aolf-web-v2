@@ -1,10 +1,10 @@
-import classNames from "classnames";
+import classNames from 'classnames';
 
 export const ScheduleInput = ({
   children,
   label,
   fullWidth,
-  containerClass = "",
+  containerClass = '',
   formikProps,
   formikKey,
   isReadOnly = false,
@@ -48,15 +48,15 @@ export const ScheduleInput = ({
     <li
       className={classNames(`${containerClass}`, {
         error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
-        "validate-error":
+        'validate-error':
           formikProps.errors[formikKey] && formikProps.touched[formikKey],
       })}
     >
       <input
         className={
           formikProps.errors[formikKey] && formikProps.touched[formikKey]
-            ? "text-input text-input-error"
-            : "text-input"
+            ? 'text-input text-input-error'
+            : 'text-input'
         }
         type="text"
         id={formikKey}
@@ -69,7 +69,7 @@ export const ScheduleInput = ({
       <label className="label-placeholder-style required">{label}</label>
 
       {tooltip && (
-        <div className={classNames("input-tooltip", { active: showTooltip })}>
+        <div className={classNames('input-tooltip', { active: showTooltip })}>
           <div className="tooltip-arrow"></div>
           {tooltip}
         </div>

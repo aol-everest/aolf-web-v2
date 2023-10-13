@@ -1,11 +1,11 @@
-import { ABBRS, COURSE_MODES, COURSE_TYPES, MODAL_TYPES } from "@constants";
-import { useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { tConvert } from "@utils";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useRouter } from "next/router";
-import queryString from "query-string";
+import { ABBRS, COURSE_MODES, COURSE_TYPES, MODAL_TYPES } from '@constants';
+import { useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { tConvert } from '@utils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
 
 dayjs.extend(utc);
 
@@ -38,7 +38,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -90,7 +90,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -153,10 +153,10 @@ export const WorkshopTile = ({ data, authenticated }) => {
           <span className="course-card__type">
             {locationCity ? (
               <span>
-                {" "}
-                {locationCity || ""}
-                {locationProvince && ", "}
-                {locationProvince || ""}
+                {' '}
+                {locationCity || ''}
+                {locationProvince && ', '}
+                {locationProvince || ''}
               </span>
             ) : (
               centerName
@@ -171,27 +171,27 @@ export const WorkshopTile = ({ data, authenticated }) => {
           dangerouslySetInnerHTML={{ __html: title }}
         ></span>
         <span className="course-card__others">
-          {primaryTeacherName} {extraTeachers ? `${extraTeachers} more` : ""}
+          {primaryTeacherName} {extraTeachers ? `${extraTeachers} more` : ''}
         </span>
       </h3>
 
       <p className="course-card__date">
-        {dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), "month") && (
+        {dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'month') && (
           <>
-            {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+            {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
               .utc(eventEndDate)
-              .format("DD, YYYY")}`}
-            {" " + ABBRS[eventTimeZone]}
+              .format('DD, YYYY')}`}
+            {' ' + ABBRS[eventTimeZone]}
           </>
         )}
         {!dayjs
           .utc(eventStartDate)
-          .isSame(dayjs.utc(eventEndDate), "month") && (
+          .isSame(dayjs.utc(eventEndDate), 'month') && (
           <>
-            {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+            {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
               .utc(eventEndDate)
-              .format("MMMM DD, YYYY")}`}
-            {" " + ABBRS[eventTimeZone]}
+              .format('MMMM DD, YYYY')}`}
+            {' ' + ABBRS[eventTimeZone]}
           </>
         )}
       </p>
@@ -201,7 +201,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
           timings.map((time, i) => {
             return (
               <p className="course-card__time" key={i}>
-                <span>{dayjs.utc(time.startDate).format("ddd")}</span>
+                <span>{dayjs.utc(time.startDate).format('ddd')}</span>
                 {`${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
                   ABBRS[time.timeZone]
                 }`}

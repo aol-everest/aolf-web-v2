@@ -1,26 +1,26 @@
-import Axios from "axios";
-import queryString from "query-string";
-import { Auth } from "./auth";
+import Axios from 'axios';
+import queryString from 'query-string';
+import { Auth } from './auth';
 
 class HTTPError extends Error {
   constructor(message, statusCode, stack = null) {
     super(message);
     this.statusCode = statusCode;
-    this.name = "HTTPError";
+    this.name = 'HTTPError';
     this.stack = stack;
   }
 }
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
   ? process.env.NEXT_PUBLIC_SERVER_URL
-  : "http://localhost:3000";
+  : 'http://localhost:3000';
 const ORG_NAME = process.env.NEXT_PUBLIC_ORGANIZATION_NAME;
 
 const axiosClient = Axios.create({
   baseURL: SERVER_URL,
   headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
 });
 
@@ -63,7 +63,7 @@ export const api = {
     const qs = generateQueryString(param);
     try {
       const result = await axiosClient.get(`${path}?${qs}`, {
-        responseType: "blob",
+        responseType: 'blob',
         ...rest,
       });
       return result.data;
@@ -97,7 +97,7 @@ export const api = {
     try {
       const result = await axiosClient.post(`${path}?${qs}`, body, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
         ...rest,
       });
@@ -117,7 +117,7 @@ export const api = {
     try {
       const result = await axiosClient.put(`${path}?${qs}`, body, {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         ...rest,
       });

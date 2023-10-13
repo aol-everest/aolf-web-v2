@@ -1,13 +1,13 @@
-import { MEMBERSHIP_TYPES, MODAL_TYPES } from "@constants";
-import { useGlobalModalContext } from "@contexts";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { api } from "@utils";
-import dayjs from "dayjs";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
+import { MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
+import { useGlobalModalContext } from '@contexts';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import { api } from '@utils';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 
 export const ProfileHeader = ({
   subscriptions = [],
@@ -16,10 +16,10 @@ export const ProfileHeader = ({
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { data: subsciptionCategories = [] } = useQuery(
-    "subsciption",
+    'subsciption',
     async () => {
       const response = await api.get({
-        path: "subsciption",
+        path: 'subsciption',
       });
       return response.data;
     },
@@ -101,12 +101,12 @@ export const ProfileHeader = ({
           showModal(MODAL_TYPES.CUSTOM_MODAL, {
             title: `Your ${modalSubscription.name} Membership`,
             children: modalBody,
-            className: "course-details-card",
+            className: 'course-details-card',
             footer: () => {
               return (
                 <div className="course-details-card__footer">
                   {userSubscriptions[subscriptionId]
-                    .subscriptionBuyingChannel !== "WEB" && (
+                    .subscriptionBuyingChannel !== 'WEB' && (
                     <a
                       data-tip
                       data-htmlFor="Popover1"
@@ -117,7 +117,7 @@ export const ProfileHeader = ({
                     </a>
                   )}
                   {userSubscriptions[subscriptionId]
-                    .subscriptionBuyingChannel === "WEB" && (
+                    .subscriptionBuyingChannel === 'WEB' && (
                     <a
                       href="#"
                       className="link link_gray"
@@ -129,20 +129,20 @@ export const ProfileHeader = ({
                     </a>
                   )}
                   <Tooltip anchorId="Popover1">
-                    {modalSubscription.subscriptionBuyingChannel === "WEB" && (
+                    {modalSubscription.subscriptionBuyingChannel === 'WEB' && (
                       <div className="tw-max-w-[210px] tw-text-left">
-                        Please contact customer service at{" "}
+                        Please contact customer service at{' '}
                         <a href={`tel:${orgConfig.contactNumberLink}`}>
                           {orgConfig.contactNumber}
-                        </a>{" "}
-                        or{" "}
+                        </a>{' '}
+                        or{' '}
                         <a href="mailto:app.support@us.artofliving.org">
                           app.support@us.artofliving.org
-                        </a>{" "}
+                        </a>{' '}
                         to cancel your membership
                       </div>
                     )}
-                    {modalSubscription.subscriptionBuyingChannel !== "WEB" && (
+                    {modalSubscription.subscriptionBuyingChannel !== 'WEB' && (
                       <div className="tw-max-w-[210px] tw-text-left">
                         Our records indicate that you signed up for the digital
                         membership from the Journey Mobile App. To cancel your
@@ -159,7 +159,7 @@ export const ProfileHeader = ({
           showModal(MODAL_TYPES.CUSTOM_MODAL, {
             title: `Unlock ${modalSubscription.name}`,
             children: modalBody,
-            className: "course-join-card",
+            className: 'course-join-card',
             footer: () => {
               return (
                 <div className="course-join-card__footer">
@@ -194,9 +194,9 @@ export const ProfileHeader = ({
       >
         <strong>{subscription.name} member </strong>
         <span className="profile-header__course-date">
-          since{" "}
-          {dayjs(subscription.subscriptionStartDate).format("MMMM DD, YYYY")}
-        </span>{" "}
+          since{' '}
+          {dayjs(subscription.subscriptionStartDate).format('MMMM DD, YYYY')}
+        </span>{' '}
         {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
           subscription.subscriptionMasterSfid && (
           <a
@@ -252,10 +252,10 @@ const subscriptionBuyBtnPanel = (
     let message = null;
     if (userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
       message =
-        "Take your journey deeper with a special offering for silent retreats.";
+        'Take your journey deeper with a special offering for silent retreats.';
     } else {
       message =
-        "Take your journey deeper with two options for additional content and support";
+        'Take your journey deeper with two options for additional content and support';
     }
     if (message) {
       result = <div className="profile-header__course">{message}</div>;

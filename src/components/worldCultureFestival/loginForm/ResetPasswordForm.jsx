@@ -1,13 +1,13 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { object, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { object, string } from 'yup';
 
 const schema = object().shape({
   username: string()
-    .email("This type of email does not exist. Please enter a valid one.")
-    .required("Email is required"),
+    .email('This type of email does not exist. Please enter a valid one.')
+    .required('Email is required'),
 });
 
 export const ResetPasswordForm = ({
@@ -43,11 +43,11 @@ export const ResetPasswordForm = ({
           <input
             type="email"
             id="log-in-email"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.username,
             })}
             placeholder="Enter your email"
-            {...register("username")}
+            {...register('username')}
           />
           {errors.username && (
             <label htmlFor="log-in-email" className="wcf-select__error-message">

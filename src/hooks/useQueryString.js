@@ -1,12 +1,12 @@
-import { useRouter } from "next/router";
-import React from "react";
+import { useRouter } from 'next/router';
+import React from 'react';
 
 // Implementation --------------------------------------------------------------
 
 export function useQueryString(
   key,
   {
-    history = "replace",
+    history = 'replace',
     parse = (x) => x,
     serialize = (x) => `${x}`,
     defaultValue,
@@ -18,12 +18,12 @@ export function useQueryString(
   // immutable as long as `history` stays the same.
   // It reduces the amount of reactivity needed to update the state.
   const updateUrl = React.useMemo(
-    () => (history === "push" ? router.push : router.replace),
+    () => (history === 'push' ? router.push : router.replace),
     [history],
   );
 
   const getValue = React.useCallback(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       // Not available in an SSR context
       return null;
     }
@@ -41,7 +41,7 @@ export function useQueryString(
   const update = React.useCallback(
     (stateUpdater) => {
       const isUpdaterFunction = (input) => {
-        return typeof input === "function";
+        return typeof input === 'function';
       };
 
       // Resolve the new value based on old value & updater

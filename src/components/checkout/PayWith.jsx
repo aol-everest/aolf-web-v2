@@ -1,8 +1,8 @@
-import classNames from "classnames";
-import { Field } from "formik";
+import classNames from 'classnames';
+import { Field } from 'formik';
 
-const PAYPAL_PAYMENT_MODE = "PAYPAL_PAYMENT_MODE";
-const STRIPE_PAYMENT_MODE = "STRIPE_PAYMENT_MODE";
+const PAYPAL_PAYMENT_MODE = 'PAYPAL_PAYMENT_MODE';
+const STRIPE_PAYMENT_MODE = 'STRIPE_PAYMENT_MODE';
 export const PayWith = ({
   formikProps,
   otherPaymentOptions,
@@ -11,10 +11,10 @@ export const PayWith = ({
 }) => {
   return (
     <div
-      className={classNames("input-block order__card__payment", {
+      className={classNames('input-block order__card__payment', {
         error:
           formikProps.errors.paymentMode && formikProps.touched.paymentMode,
-        "validate-error":
+        'validate-error':
           formikProps.errors.paymentMode && formikProps.touched.paymentMode,
       })}
     >
@@ -38,8 +38,8 @@ export const PayWith = ({
           </div>
           {((!isBundleSelected &&
             otherPaymentOptions &&
-            otherPaymentOptions.indexOf("Paypal") > -1 &&
-            formikProps.values.paymentOption !== "LATER") ||
+            otherPaymentOptions.indexOf('Paypal') > -1 &&
+            formikProps.values.paymentOption !== 'LATER') ||
             (isBundleSelected && isBundlePaypalAvailable)) && (
             <div className="select-box__value">
               <Field
@@ -70,8 +70,8 @@ export const PayWith = ({
           </li>
           {((!isBundleSelected &&
             otherPaymentOptions &&
-            otherPaymentOptions.indexOf("Paypal") > -1 &&
-            formikProps.values.paymentOption !== "LATER") ||
+            otherPaymentOptions.indexOf('Paypal') > -1 &&
+            formikProps.values.paymentOption !== 'LATER') ||
             (isBundleSelected && isBundlePaypalAvailable)) && (
             <li>
               <label

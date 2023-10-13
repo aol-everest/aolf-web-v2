@@ -1,9 +1,9 @@
-import { gsap } from "gsap";
-import { useEffect, useRef } from "react";
+import { gsap } from 'gsap';
+import { useEffect, useRef } from 'react';
 
 export const FadeInAnimation = ({
   children,
-  wrapperElement = "div",
+  wrapperElement = 'div',
   direction = null,
   delay = 0,
   ...props
@@ -13,16 +13,16 @@ export const FadeInAnimation = ({
   const distance = 200;
   let fadeDirection;
   switch (direction) {
-    case "left":
+    case 'left':
       fadeDirection = { x: -distance };
       break;
-    case "right":
+    case 'right':
       fadeDirection = { x: distance };
       break;
-    case "up":
+    case 'up':
       fadeDirection = { y: distance };
       break;
-    case "down":
+    case 'down':
       fadeDirection = { y: -distance };
       break;
     default:

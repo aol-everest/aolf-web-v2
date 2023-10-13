@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { GlobalBannerContext, useGlobalBannerContext } from "@contexts";
-import { CgClose } from "react-icons/cg";
-import { MdFeedback } from "react-icons/md";
+import { GlobalBannerContext, useGlobalBannerContext } from '@contexts';
+import { CgClose } from 'react-icons/cg';
+import { MdFeedback } from 'react-icons/md';
 
 export const GlobalBottomBanner = ({ children, ...props }) => {
   const [store, setStore] = useState();

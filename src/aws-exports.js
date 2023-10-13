@@ -16,28 +16,28 @@ const awsConfig = {
     mandatorySignIn: false,
     cookieStorage: {
       domain: process.env.NEXT_PUBLIC_AMPLIFY_COOKIE_DOMAIN,
-      path: "/",
+      path: '/',
       expires: 10,
-      sameSite: "strict",
+      sameSite: 'strict',
       secure: true,
     },
 
     oauth: {
       domain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
       scope: [
-        "aws.cognito.signin.user.admin",
-        "email",
-        "openid",
-        "phone",
-        "profile",
+        'aws.cognito.signin.user.admin',
+        'email',
+        'openid',
+        'phone',
+        'profile',
       ],
       redirectSignIn: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
       redirectSignOut: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT,
-      responseType: "code",
+      responseType: 'code',
     },
-    federationTarget: "COGNITO_USER_POOLS",
+    federationTarget: 'COGNITO_USER_POOLS',
   },
-  federationTarget: "COGNITO_USER_POOLS",
+  federationTarget: 'COGNITO_USER_POOLS',
 };
 
 export default awsConfig;

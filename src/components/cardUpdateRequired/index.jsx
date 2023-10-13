@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
-import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { api } from "@utils";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { ALERT_TYPES, MEMBERSHIP_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { api } from '@utils';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
 
 export const CardUpdateRequiredModal = (allSubscriptions) => {
   return (
@@ -13,7 +13,7 @@ export const CardUpdateRequiredModal = (allSubscriptions) => {
       details in your profile and continue with the Digital Membership at $
       {allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value] &&
         allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
-          .activeSubscriptions[0].price}{" "}
+          .activeSubscriptions[0].price}{' '}
       per month.
     </center>
   );
@@ -24,10 +24,10 @@ export const CardUpdateRequired = () => {
   const { showAlert } = useGlobalAlertContext();
 
   const { data: subsciptionCategories = [] } = useQuery(
-    "subsciption",
+    'subsciption',
     async () => {
       const response = await api.get({
-        path: "subsciption",
+        path: 'subsciption',
       });
       return response.data;
     },
@@ -49,7 +49,7 @@ export const CardUpdateRequired = () => {
     );
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       children: <CardUpdateRequiredModal allSubscriptions={allSubscriptions} />,
-      title: "Action required",
+      title: 'Action required',
     });
   }, [router.isReady, subsciptionCategories]);
 

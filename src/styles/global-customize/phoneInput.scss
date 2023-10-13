@@ -7,11 +7,18 @@
     -moz-border-radius: 50%;
     border-radius: 50%;
 
-    -webkit-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999,
+    -webkit-box-shadow:
+      0 0 0 3px #fff,
+      0 0 0 4px #999,
       0 2px 5px 4px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999,
+    -moz-box-shadow:
+      0 0 0 3px #fff,
+      0 0 0 4px #999,
       0 2px 5px 4px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      0 0 0 3px #fff,
+      0 0 0 4px #999,
+      0 2px 5px 4px rgba(0, 0, 0, 0.2);
   }
 }
 .wcf-form {
@@ -27,7 +34,9 @@
       height: 12px;
       border-radius: 50%;
       position: relative;
-      box-shadow: 0 0 0 1px white, 0 0 3px 1px #b3b3b3;
+      box-shadow:
+        0 0 0 1px white,
+        0 0 3px 1px #b3b3b3;
     }
 
     span.icon:before,
@@ -81,7 +90,9 @@
       border: 1px solid #d7d7d7;
       color: #2b2b2b;
       box-shadow: 0px 1px 2px rgb(0 0 0 / 8%);
-      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      transition:
+        border-color 0.3s ease-in-out,
+        box-shadow 0.3s ease-in-out;
       &:hover,
       &:focus {
         cursor: pointer;

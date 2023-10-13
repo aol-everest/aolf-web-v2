@@ -1,7 +1,8 @@
-import Link from "@components/linkWithUTM";
-import classNames from "classnames";
-import { Field } from "formik";
-import React, { useEffect } from "react";
+import Link from '@components/linkWithUTM';
+import { orgConfig } from '@org';
+import classNames from 'classnames';
+import { Field } from 'formik';
+import React, { useEffect } from 'react';
 
 export const ScheduleAgreementForm = ({
   formikProps,
@@ -19,12 +20,12 @@ export const ScheduleAgreementForm = ({
       if (match) {
         result =
           result ||
-          (match.answerShouldBe !== "Yes" && ques.value) ||
-          (match.answerShouldBe === "Yes" && !ques.value);
+          (match.answerShouldBe !== 'Yes' && ques.value) ||
+          (match.answerShouldBe === 'Yes' && !ques.value);
       }
     });
     if (result) {
-      error = "Please check the box in order to continue.";
+      error = 'Please check the box in order to continue.';
     }
     return error;
   };
@@ -34,36 +35,40 @@ export const ScheduleAgreementForm = ({
       formikProps?.values?.questionnaire?.length === 0 &&
       complianceQuestionnaire?.length > 0
     ) {
-      formikProps.setFieldValue("questionnaire", questionnaireArray);
+      formikProps.setFieldValue('questionnaire', questionnaireArray);
     }
   }, [questionnaireArray]);
+
+  const isIahv = orgConfig.name === 'IAHV';
 
   return (
     <>
       <p className="scheduling-modal__content-wrapper-form-checkbox">
         <input
           type="checkbox"
-          className={classNames("", {
+          className={classNames('', {
             error:
               formikProps.errors.ppaAgreement &&
               formikProps.touched.ppaAgreement,
           })}
           id="privacy"
           checked={formikProps.values.ppaAgreement}
-          onChange={formikProps.handleChange("ppaAgreement")}
+          onChange={formikProps.handleChange('ppaAgreement')}
           value={formikProps.values.ppaAgreement}
           name="ppaAgreement"
         />
 
         <label htmlFor="privacy">
           <span className="agreement__text">
-            I agree to the{" "}
+            I agree to the{' '}
             <Link
               prefetch={false}
               href={
-                isCorporateEvent
-                  ? "/policy/ppa-corporate"
-                  : "/policy/ppa-course"
+                isIahv
+                  ? 'https://members.us.iahv.org/policy/ppa-course'
+                  : isCorporateEvent
+                  ? '/policy/ppa-corporate'
+                  : '/policy/ppa-course'
               }
               legacyBehavior
             >
@@ -106,7 +111,7 @@ export const ScheduleAgreementForm = ({
                       type="checkbox"
                       id="health"
                       name="health"
-                      className={classNames("", {
+                      className={classNames('', {
                         error:
                           formikProps.errors.questionnaire &&
                           formikProps.touched.questionnaire,
@@ -126,7 +131,7 @@ export const ScheduleAgreementForm = ({
                           currentValue.value = !currentValue.value;
                           const nextValue = [...otherValues, currentValue];
 
-                          form.setFieldValue("questionnaire", nextValue);
+                          form.setFieldValue('questionnaire', nextValue);
                         }
                       }}
                     />

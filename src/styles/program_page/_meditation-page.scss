@@ -1,6 +1,6 @@
 .top-column {
   &.meditation-page {
-    background-image: url("/img/meditation-page-first@2x.png");
+    background-image: url('/img/meditation-page-first@2x.png');
     background-position-y: 100%;
     box-shadow: none;
     padding: 119px 150px 190px 150px;
@@ -41,7 +41,7 @@
       }
     }
     &.insight-collection {
-      background-image: url("/img/bg-insight-collection.png");
+      background-image: url('/img/bg-insight-collection.png');
       margin-top: 0;
       padding: 91px 150px 100px 150px;
       @media screen and (max-width: 1024px) {
@@ -199,12 +199,12 @@
           }
           &:hover {
             img {
-              content: url("/img/ic-play-hover.svg");
+              content: url('/img/ic-play-hover.svg');
             }
           }
           &:active {
             img {
-              content: url("/img/ic-play-active.svg");
+              content: url('/img/ic-play-active.svg');
             }
           }
         }
@@ -249,7 +249,7 @@
               max-width: 100%;
               transition: all 0.15s ease-out;
               &:after {
-                content: "";
+                content: '';
                 display: flex;
                 position: absolute;
                 box-sizing: border-box;
@@ -301,7 +301,7 @@
         }
       }
       &.insight-collection2 {
-        background-image: url("/img/bg-insight-collection2.png");
+        background-image: url('/img/bg-insight-collection2.png');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: top;
@@ -332,37 +332,37 @@
                 font-weight: 500;
                 line-height: 40px;
                 padding-left: 55px;
-                font-family: "Work Sans";
+                font-family: 'Work Sans';
                 &:hover,
                 &:focus {
                   text-decoration: none;
                 }
-                &[aria-expanded="true"] {
-                  background: url("/img/ic-minus.svg");
+                &[aria-expanded='true'] {
+                  background: url('/img/ic-minus.svg');
                   background-repeat: no-repeat;
                   background-position: left;
                   &:hover {
-                    background: url("/img/ic-minus-hover.svg");
+                    background: url('/img/ic-minus-hover.svg');
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                   &:active {
-                    background: url("/img/ic-minus-focus.svg");
+                    background: url('/img/ic-minus-focus.svg');
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                 }
-                &[aria-expanded="false"] {
-                  background: url("/img/ic-plus.svg");
+                &[aria-expanded='false'] {
+                  background: url('/img/ic-plus.svg');
                   background-repeat: no-repeat;
                   background-position: left;
                   &:hover {
-                    background: url("/img/ic-plus-hover.svg");
+                    background: url('/img/ic-plus-hover.svg');
                     background-repeat: no-repeat;
                     background-position: left;
                   }
                   &:active {
-                    background: url("/img/ic-plus-focus.svg");
+                    background: url('/img/ic-plus-focus.svg');
                     background-repeat: no-repeat;
                     background-position: left;
                   }
@@ -379,7 +379,7 @@
                   position: relative;
                   font-size: 16px;
                   &:after {
-                    content: "";
+                    content: '';
                     width: 4px;
                     height: 4px;
                     background-color: #3d8be8;
@@ -421,8 +421,8 @@
               position: relative;
               padding-left: 30px;
               &:after {
-                content: "";
-                background-image: url("/img/ic-video.svg");
+                content: '';
+                background-image: url('/img/ic-video.svg');
                 width: 24px;
                 height: 24px;
                 position: absolute;
@@ -441,7 +441,7 @@
         .title-modules {
           font-size: 28px;
           line-height: 40px;
-          font-family: "Lora";
+          font-family: 'Lora';
           margin-bottom: 25px;
           margin: 100px 0 25px;
         }
@@ -528,7 +528,7 @@
         }
       }
       &.insight-collection3 {
-        background-image: url("/img/bg-insight-collection2.png");
+        background-image: url('/img/bg-insight-collection2.png');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center 20%;
@@ -822,7 +822,7 @@
         cursor: pointer;
         position: relative;
         &:after {
-          content: "";
+          content: '';
           position: absolute;
           top: 0;
           left: 0;
@@ -978,9 +978,11 @@
 }
 
 .sleep-collection {
-  background-image: url("/img/bg-sleep-header.png"),
-    url("/img/bg-sleep-footer.png");
-  background-position: center top, center bottom;
+  background-image: url('/img/bg-sleep-header.png'),
+    url('/img/bg-sleep-footer.png');
+  background-position:
+    center top,
+    center bottom;
   background-repeat: no-repeat, no-repeat;
   background-size: contain;
   .top-column {
@@ -1042,7 +1044,7 @@
   }
   .upcoming_course_card {
     .course-like {
-      background-image: url("/img/ic-heart.svg");
+      background-image: url('/img/ic-heart.svg');
       position: absolute;
       right: 20px;
       top: 20px;
@@ -1051,7 +1053,7 @@
       border-radius: 4px;
       background-color: rgba(255, 255, 255, 0.6);
       &.liked {
-        background-image: url("/img/ic-heart-filled.svg");
+        background-image: url('/img/ic-heart-filled.svg');
       }
     }
     .course_info {
@@ -1116,7 +1118,7 @@
 }
 
 .audioplayer-bar::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 5px;
   width: 100%;
@@ -1148,7 +1150,7 @@
 .audioplayer-bar-played::after {
   display: flex;
   position: absolute;
-  content: "";
+  content: '';
   box-sizing: border-box;
   top: -9px;
   right: -1px;
@@ -1188,7 +1190,7 @@
 
 .audioplayer-volume-button a:before,
 .audioplayer-volume-button a:after {
-  content: "";
+  content: '';
   position: absolute;
 }
 
@@ -1301,7 +1303,7 @@
 
   &::before,
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     transform: translate(-50%);
     left: 50%;

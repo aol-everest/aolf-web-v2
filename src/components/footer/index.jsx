@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-import Link from "@components/linkWithUTM";
-import { orgConfig } from "@org";
+import Link from '@components/linkWithUTM';
+import { orgConfig } from '@org';
 
 export function Footer() {
-  if (orgConfig.name === "HB") {
+  if (orgConfig.name === 'HB') {
     return (
       <footer className="footer footer_courses">
         <nav className="footer-navbar">

@@ -1,6 +1,6 @@
 .life-time {
   padding: 100px 0;
-  background-image: url("/img/life-time-bg.png");
+  background-image: url('/img/life-time-bg.png');
   background-size: cover;
 
   &__block {
@@ -21,7 +21,7 @@
   }
 
   &.silent-retreat {
-    background-image: url("/img/energy-focus-bg.png");
+    background-image: url('/img/energy-focus-bg.png');
     background-position-y: 80%;
 
     .life-time__title {

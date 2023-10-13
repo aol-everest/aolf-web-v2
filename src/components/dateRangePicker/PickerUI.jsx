@@ -1,5 +1,5 @@
-import React from "react";
-import { getDefaultState, interval } from "./utils";
+import React from 'react';
+import { getDefaultState, interval } from './utils';
 
 export default class PickerUI extends React.Component {
   state = getDefaultState();
@@ -39,8 +39,8 @@ export default class PickerUI extends React.Component {
   dateLabel = () => {
     const { startDate, endDate } = this.state;
     return startDate && endDate
-      ? `${startDate.format("DD/MM/YYYY")} - ${endDate.format("DD/MM/YYYY")}`
-      : "";
+      ? `${startDate.format('DD/MM/YYYY')} - ${endDate.format('DD/MM/YYYY')}`
+      : '';
   };
 
   render() {

@@ -4,7 +4,7 @@
 
   thead th,
   tbody td {
-    font-family: "Work Sans", sans-serif;
+    font-family: 'Work Sans', sans-serif;
     border-top: none;
     border-bottom: 1px solid $border-color;
 
@@ -66,14 +66,14 @@
       }
     }
 
-    &[data-order="asc"],
-    &[data-order="desc"] {
+    &[data-order='asc'],
+    &[data-order='desc'] {
       .table__sort-button__icon {
         opacity: 1;
       }
     }
 
-    &[data-order="asc"] {
+    &[data-order='asc'] {
       .table__sort-button__icon {
         transform: rotate(-180deg);
       }

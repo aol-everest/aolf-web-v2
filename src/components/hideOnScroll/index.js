@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const getOffsetTop = (el) => {
   const rect = el?.getBoundingClientRect(),
@@ -19,11 +19,11 @@ export class HideOn extends React.Component {
 
   componentDidMount() {
     this.props.showOnPageInit && this.listenToScroll();
-    window.addEventListener("scroll", this.listenToScroll);
+    window.addEventListener('scroll', this.listenToScroll);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.listenToScroll);
+    window.removeEventListener('scroll', this.listenToScroll);
   }
 
   listenToScroll = () => {

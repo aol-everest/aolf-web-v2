@@ -18,11 +18,11 @@
     "browser": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "next", "plugin:prettier/recommended"],
+  "extends": ["eslint:recommended", "next", "prettier"],
   "rules": {
     "no-inline-styles/no-inline-styles": 2,
     "@next/next/no-img-element": "off",
-    "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
+    // "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
     "react/react-in-jsx-scope": "off",
     // "no-unused-vars": [
     //   "warn",

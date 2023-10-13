@@ -1,26 +1,26 @@
 export {
   GlobalAlertContext,
   useGlobalAlertContext,
-} from "./GlobalAlertContext";
+} from './GlobalAlertContext';
 export {
   GlobalAudioPlayerContext,
   useGlobalAudioPlayerContext,
-} from "./GlobalAudioPlayerContext";
+} from './GlobalAudioPlayerContext';
 export {
   GlobalBannerContext,
   useGlobalBannerContext,
-} from "./GlobalBannerContext";
+} from './GlobalBannerContext';
 export {
   GlobalLoadingContext,
   useGlobalLoadingContext,
-} from "./GlobalLoadingContext";
+} from './GlobalLoadingContext';
 export {
   GlobalModalContext,
   useGlobalModalContext,
-} from "./GlobalModalContext";
+} from './GlobalModalContext';
 export {
   GlobalVideoPlayerContext,
   useGlobalVideoPlayerContext,
-} from "./GlobalVideoPlayerContext";
+} from './GlobalVideoPlayerContext';
 
-export { AuthProvider, useAuth } from "./auth.context";
+export { AuthProvider, useAuth } from './auth.context';

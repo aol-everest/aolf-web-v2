@@ -1,15 +1,15 @@
-import { ABBRS, COURSE_TYPES } from "@constants";
-import { tConvert } from "@utils";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useEmblaCarousel } from "embla-carousel/react";
+import { ABBRS, COURSE_TYPES } from '@constants';
+import { tConvert } from '@utils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useEmblaCarousel } from 'embla-carousel/react';
 
 dayjs.extend(utc);
 
 export const EventList = ({ isMobile, workshops }) => {
   const [emblaRef] = useEmblaCarousel({
     loop: false,
-    align: "center",
+    align: 'center',
   });
   if (isMobile) {
     return (
@@ -55,17 +55,17 @@ const renderEventMobile = (workshop) => {
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
   let imageSrc = null;
-  if (eventType === "Meetup") {
-    const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");
+  if (eventType === 'Meetup') {
+    const updateMeetupDuration = meetupDuration.replace(/Minutes/g, 'Min');
     switch (meetupType) {
-      case "Short SKY Meditation Meetup":
-        imageSrc = "/img/filter-card-1@2x.png";
+      case 'Short SKY Meditation Meetup':
+        imageSrc = '/img/filter-card-1@2x.png';
         break;
-      case "Guided Meditation Meetup":
-        imageSrc = "/img/filter-card-2@2x.png";
+      case 'Guided Meditation Meetup':
+        imageSrc = '/img/filter-card-2@2x.png';
         break;
       default:
-        imageSrc = "/img/filter-card-1@2x.png";
+        imageSrc = '/img/filter-card-1@2x.png';
         break;
     }
     return (
@@ -77,7 +77,7 @@ const renderEventMobile = (workshop) => {
             className="profile-body_mobile__course-img"
           />
           <div className="profile-body_mobile__course-date">
-            {`${dayjs.utc(meetupStartDate).format("MMM DD")}, `}
+            {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
             {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
             {`${updateMeetupDuration}`}
           </div>
@@ -123,20 +123,20 @@ const renderEventMobile = (workshop) => {
           )}
           {dayjs
             .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), 'month') && (
             <div className="profile-body_mobile__course-date">
-              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+              {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                 .utc(eventEndDate)
-                .format("DD, YYYY")}`}
+                .format('DD, YYYY')}`}
             </div>
           )}
           {!dayjs
             .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), 'month') && (
             <div className="profile-body_mobile__course-date">
-              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+              {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                 .utc(eventEndDate)
-                .format("MMMM DD, YYYY")}`}
+                .format('MMMM DD, YYYY')}`}
             </div>
           )}
           <div className="profile-body_mobile__course-detail">
@@ -187,17 +187,17 @@ const renderEvent = (workshop) => {
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
-  if (eventType === "Meetup") {
-    const updateMeetupDuration = meetupDuration.replace(/Minutes/g, "Min");
+  if (eventType === 'Meetup') {
+    const updateMeetupDuration = meetupDuration.replace(/Minutes/g, 'Min');
     switch (meetupType) {
-      case "Short SKY Meditation Meetup":
-        imageSrc = "/img/filter-card-1@2x.png";
+      case 'Short SKY Meditation Meetup':
+        imageSrc = '/img/filter-card-1@2x.png';
         break;
-      case "Guided Meditation Meetup":
-        imageSrc = "/img/filter-card-2@2x.png";
+      case 'Guided Meditation Meetup':
+        imageSrc = '/img/filter-card-2@2x.png';
         break;
       default:
-        imageSrc = "/img/filter-card-1@2x.png";
+        imageSrc = '/img/filter-card-1@2x.png';
         break;
     }
     return (
@@ -205,7 +205,7 @@ const renderEvent = (workshop) => {
         <div className="profile-body__card !tw-bg-transparent">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           <div className="profile-body__card-date">
-            {`${dayjs.utc(meetupStartDate).format("MMM DD")}, `}
+            {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
             {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
             {`${updateMeetupDuration}`}
           </div>
@@ -219,13 +219,13 @@ const renderEvent = (workshop) => {
     );
   } else {
     if (isSilentRetreatType) {
-      imageSrc = "/img/course-card-4.png";
+      imageSrc = '/img/course-card-4.png';
     } else if (isSKYType) {
-      imageSrc = "/img/course-card-2.png";
+      imageSrc = '/img/course-card-2.png';
     } else if (isSahajSamadhiMeditationType) {
-      imageSrc = "/img/course-card-5.png";
+      imageSrc = '/img/course-card-5.png';
     } else {
-      imageSrc = "/img/course-card-1.png";
+      imageSrc = '/img/course-card-1.png';
     }
     return (
       <div className="col-6 col-lg-3 col-md-4" key={sfid}>
@@ -233,20 +233,20 @@ const renderEvent = (workshop) => {
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           {dayjs
             .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), 'month') && (
             <div className="profile-body__card-date">
-              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+              {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                 .utc(eventEndDate)
-                .format("DD, YYYY")}`}
+                .format('DD, YYYY')}`}
             </div>
           )}
           {!dayjs
             .utc(eventStartDate)
-            .isSame(dayjs.utc(eventEndDate), "month") && (
+            .isSame(dayjs.utc(eventEndDate), 'month') && (
             <div className="profile-body__card-date">
-              {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+              {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                 .utc(eventEndDate)
-                .format("MMMM DD, YYYY")}`}
+                .format('MMMM DD, YYYY')}`}
             </div>
           )}
           <div className="course_info">

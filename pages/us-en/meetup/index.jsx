@@ -5,11 +5,11 @@ import {
   Popup,
   SmartDropDown,
   SmartInput,
-} from "@components";
-import { LinkedCalendar } from "@components/dateRangePicker";
-import { MeetupEnroll } from "@components/meetup/meetupEnroll";
-import { MeetupTile } from "@components/meetup/meetupTile";
-import { MeetupType } from "@components/meetup/meetupType";
+} from '@components';
+import { LinkedCalendar } from '@components/dateRangePicker';
+import { MeetupEnroll } from '@components/meetup/meetupEnroll';
+import { MeetupTile } from '@components/meetup/meetupTile';
+import { MeetupType } from '@components/meetup/meetupType';
 import {
   ALERT_TYPES,
   COURSE_TYPES,
@@ -17,53 +17,53 @@ import {
   MEMBERSHIP_TYPES,
   MODAL_TYPES,
   TIME_ZONE,
-} from "@constants";
+} from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
+} from '@contexts';
 import {
   useGeolocation,
   useIntersectionObserver,
   useQueryString,
-} from "@hooks";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { api, stringToBoolean } from "@utils";
-import { filterAllowedParams } from "@utils/utmParam";
-import "bootstrap-daterangepicker/daterangepicker.css";
-import classNames from "classnames";
-import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import ContentLoader from "react-content-loader";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { useUIDSeed } from "react-uid";
-import Style from "./Meetup.module.scss";
+} from '@hooks';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import { api, stringToBoolean } from '@utils';
+import { filterAllowedParams } from '@utils/utmParam';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import classNames from 'classnames';
+import { NextSeo } from 'next-seo';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { useInfiniteQuery, useQuery } from 'react-query';
+import { useUIDSeed } from 'react-uid';
+import Style from './Meetup.module.scss';
 
 const DATE_PICKER_CONFIG = {
-  opens: "center",
-  drops: "down",
+  opens: 'center',
+  drops: 'down',
   showDropdowns: false,
   showISOWeekNumbers: false,
   showWeekNumbers: false,
   locale: {
-    cancelLabel: "Clear",
-    daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+    cancelLabel: 'Clear',
+    daysOfWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     monthNames: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ],
   },
   autoApply: true,
@@ -71,7 +71,7 @@ const DATE_PICKER_CONFIG = {
 
 async function queryInstructor({ queryKey: [_, term] }) {
   const response = await api.get({
-    path: "cf/teachers",
+    path: 'cf/teachers',
     param: {
       query: term,
     },
@@ -84,19 +84,19 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
     <>
       <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
-        the {meetup.meetupTitle}, which is{" "}
+        the {meetup.meetupTitle}, which is{' '}
         <strong>{COURSE_TYPES.SKY_BREATH_MEDITATION.name}</strong>.
       </p>
       <p className="course-join-card__text">
-        If our records are not accurate, please contact customer service at{" "}
+        If our records are not accurate, please contact customer service at{' '}
         <a href={`tel:${orgConfig.contactNumberLink}`}>
           {orgConfig.contactNumber}
-        </a>{" "}
-        or email us at{" "}
+        </a>{' '}
+        or email us at{' '}
         <a href="mailto:app.support@us.artofliving.org">
           app.support@us.artofliving.org
         </a>
-        . We will be happy to help you so you can sign up for the{" "}
+        . We will be happy to help you so you can sign up for the{' '}
         {meetup.meetupTitle}.
       </p>
     </>
@@ -110,28 +110,28 @@ const Meetup = () => {
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { latitude, longitude, error: geoLocationError } = useGeolocation();
-  const [privateEvent] = useQueryString("private-event", {
+  const [privateEvent] = useQueryString('private-event', {
     defaultValue: false,
     parse: stringToBoolean,
   });
-  const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
-    defaultValue: "ONLINE",
+  const [activeFilterType, setActiveFilterType] = useQueryString('mode', {
+    defaultValue: 'ONLINE',
   });
-  const [locationFilter, setLocationFilter] = useQueryString("location", {
+  const [locationFilter, setLocationFilter] = useQueryString('location', {
     parse: JSON.parse,
   });
-  const [meetupTypeFilter, setMeetupTypeFilter] = useQueryString("meetupType");
+  const [meetupTypeFilter, setMeetupTypeFilter] = useQueryString('meetupType');
   const [filterStartEndDate, setFilterStartEndDate] =
-    useQueryString("startEndDate");
-  const [timeZoneFilter, setTimeZoneFilter] = useQueryString("timeZone");
-  const [timesOfDayFilter, setTimesOfDayFilter] = useQueryString("timesOfDay");
-  const [instructorFilter, setInstructorFilter] = useQueryString("instructor", {
+    useQueryString('startEndDate');
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone');
+  const [timesOfDayFilter, setTimesOfDayFilter] = useQueryString('timesOfDay');
+  const [instructorFilter, setInstructorFilter] = useQueryString('instructor', {
     parse: JSON.parse,
   });
 
   const [showTimeZoneDropdown, setShowTimeZoneDropdown] = useState(false);
 
-  const [searchKey, setSearchKey] = useState("");
+  const [searchKey, setSearchKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -141,10 +141,10 @@ const Meetup = () => {
   };
 
   const { data: allMeetupMaster = [] } = useQuery(
-    "allMeetupMaster",
+    'allMeetupMaster',
     async () => {
       const response = await api.get({
-        path: "getAllMeetupMaster",
+        path: 'getAllMeetupMaster',
       });
       return response;
     },
@@ -162,7 +162,7 @@ const Meetup = () => {
     setActiveFilterType(newType);
   };
 
-  let instructorResult = useQuery(["instructor", searchKey], queryInstructor, {
+  let instructorResult = useQuery(['instructor', searchKey], queryInstructor, {
     // only fetch search terms longer than 2 characters
     enabled: searchKey.length > 0,
     // refresh cache after 10 seconds (watch the network tab!)
@@ -181,20 +181,20 @@ const Meetup = () => {
 
   const onFilterChange = (field) => (value) => {
     switch (field) {
-      case "meetupTypeFilter":
+      case 'meetupTypeFilter':
         setMeetupTypeFilter(value);
         break;
-      case "locationFilter":
+      case 'locationFilter':
         if (value) {
           setLocationFilter(JSON.stringify(value));
         } else {
           setLocationFilter(null);
         }
         break;
-      case "timesOfDayFilter":
+      case 'timesOfDayFilter':
         setTimesOfDayFilter(value);
         break;
-      case "timeZoneFilter":
+      case 'timeZoneFilter':
         if (value) {
           setTimeZoneFilter(value);
         } else {
@@ -204,7 +204,7 @@ const Meetup = () => {
           }, 0);
         }
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         if (value) {
           setInstructorFilter(JSON.stringify(value));
         } else {
@@ -217,23 +217,23 @@ const Meetup = () => {
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
-      case "meetupTypeFilter":
+      case 'meetupTypeFilter':
         setMeetupTypeFilter(value);
         break;
-      case "locationFilter":
+      case 'locationFilter':
         if (value) {
           setLocationFilter(JSON.stringify(value));
         } else {
           setLocationFilter(null);
         }
         break;
-      case "timesOfDayFilter":
+      case 'timesOfDayFilter':
         setTimesOfDayFilter(value);
         break;
-      case "timeZoneFilter":
+      case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         if (value) {
           setInstructorFilter(JSON.stringify(value));
         } else {
@@ -246,22 +246,22 @@ const Meetup = () => {
   const onFilterClearEvent = (field) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
-      case "meetupTypeFilter":
+      case 'meetupTypeFilter':
         setMeetupTypeFilter(null);
         break;
-      case "locationFilter":
+      case 'locationFilter':
         setLocationFilter(null);
         break;
-      case "timesOfDayFilter":
+      case 'timesOfDayFilter':
         setTimesOfDayFilter(null);
         break;
-      case "timeZoneFilter":
+      case 'timeZoneFilter':
         setTimeZoneFilter(null);
         setTimeout(() => {
           setTimesOfDayFilter(null);
         }, 0);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         setInstructorFilter(null);
         break;
     }
@@ -271,7 +271,7 @@ const Meetup = () => {
     const { startDate, endDate } = date || {};
     setFilterStartEndDate(
       startDate
-        ? startDate.format("YYYY-MM-DD") + "|" + endDate.format("YYYY-MM-DD")
+        ? startDate.format('YYYY-MM-DD') + '|' + endDate.format('YYYY-MM-DD')
         : null,
     );
   };
@@ -280,9 +280,9 @@ const Meetup = () => {
     if (e) e.preventDefault();
     hideAlert();
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en",
+      pathname: '/us-en',
       query: {
-        courseType: "SKY_BREATH_MEDITATION",
+        courseType: 'SKY_BREATH_MEDITATION',
       },
     });
   };
@@ -304,7 +304,7 @@ const Meetup = () => {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
       return;
@@ -345,7 +345,7 @@ const Meetup = () => {
         let payLoad = {
           shoppingRequest: {
             tokenizeCC: null,
-            couponCode: "",
+            couponCode: '',
             contactAddress: {
               contactPhone: personMobilePhone,
               contactAddress: personMailingStreet,
@@ -359,7 +359,7 @@ const Meetup = () => {
               billingZip: personMailingPostalCode,
             },
             products: {
-              productType: "meetup",
+              productType: 'meetup',
               productSfId: sfid,
               AddOnProductIds: [],
             },
@@ -384,7 +384,7 @@ const Meetup = () => {
           error: errorMessage,
           isError,
         } = await api.post({
-          path: "createAndPayOrder",
+          path: 'createAndPayOrder',
           body: payLoad,
         });
         setLoading(false);
@@ -409,7 +409,7 @@ const Meetup = () => {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     }
@@ -423,7 +423,7 @@ const Meetup = () => {
       query: {
         cid: selectedMeetup.sfid,
         ctype: selectedMeetup.productTypeId,
-        type: "local",
+        type: 'local',
       },
     });
   };
@@ -435,8 +435,8 @@ const Meetup = () => {
     } else {
       if (!user.profile.isMandatoryWorkshopAttended) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-          className: "retreat-prerequisite-big meditation-digital-membership",
-          title: "Retreat Prerequisite",
+          className: 'retreat-prerequisite-big meditation-digital-membership',
+          title: 'Retreat Prerequisite',
           closeModalAction: closeRetreatPrerequisiteWarning,
           footer: () => {
             return (
@@ -454,7 +454,7 @@ const Meetup = () => {
       } else {
         try {
           const { data } = await api.get({
-            path: "meetupDetail",
+            path: 'meetupDetail',
             param: {
               id: selectedMeetup.sfid,
             },
@@ -494,7 +494,7 @@ const Meetup = () => {
     hasNextPage,
   } = useInfiniteQuery(
     [
-      "meetups",
+      'meetups',
       {
         privateEvent,
         meetupTypeFilter,
@@ -542,7 +542,7 @@ const Meetup = () => {
         };
       }
       if (filterStartEndDate) {
-        const [startDate, endDate] = filterStartEndDate.split("|");
+        const [startDate, endDate] = filterStartEndDate.split('|');
         param = {
           ...param,
           sdate: startDate,
@@ -565,7 +565,7 @@ const Meetup = () => {
       }
 
       const res = await api.get({
-        path: "meetups",
+        path: 'meetups',
         param,
       });
       return res;
@@ -624,16 +624,16 @@ const Meetup = () => {
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={activeFilterType === "ONLINE"}
-                  onClick={toggleActiveFilter("ONLINE")}
+                  data-swicth-active={activeFilterType === 'ONLINE'}
+                  onClick={toggleActiveFilter('ONLINE')}
                 >
                   Online
                 </a>
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={activeFilterType === "IN_PERSON"}
-                  onClick={toggleActiveFilter("IN_PERSON")}
+                  data-swicth-active={activeFilterType === 'IN_PERSON'}
+                  onClick={toggleActiveFilter('IN_PERSON')}
                 >
                   In Person
                 </a>
@@ -643,9 +643,9 @@ const Meetup = () => {
                 tabIndex="1"
                 value={locationFilter}
                 buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : "Location"
+                  locationFilter ? `${locationFilter.locationName}` : 'Location'
                 }
-                closeEvent={onFilterChange("locationFilter")}
+                closeEvent={onFilterChange('locationFilter')}
               >
                 {({ closeHandler }) => (
                   <AddressSearch
@@ -660,9 +660,9 @@ const Meetup = () => {
                 buttonText={
                   meetupTypeFilter && meetupMasters[meetupTypeFilter]
                     ? meetupMasters[meetupTypeFilter].name
-                    : "Meetup Type"
+                    : 'Meetup Type'
                 }
-                closeEvent={onFilterChange("meetupTypeFilter")}
+                closeEvent={onFilterChange('meetupTypeFilter')}
               >
                 {({ closeHandler }) => (
                   <MeetupType
@@ -678,8 +678,8 @@ const Meetup = () => {
                 value={filterStartEndDate}
                 buttonText={
                   filterStartEndDate
-                    ? filterStartEndDate.split("|").join(" - ")
-                    : "Dates"
+                    ? filterStartEndDate.split('|').join(' - ')
+                    : 'Dates'
                 }
                 closeEvent={onDatesChange}
               >
@@ -700,13 +700,13 @@ const Meetup = () => {
                 value={timeZoneFilter || timesOfDayFilter}
                 buttonText={`${
                   TIME_ZONE[timeZoneFilter]
-                    ? TIME_ZONE[timeZoneFilter].name + ", "
-                    : ""
+                    ? TIME_ZONE[timeZoneFilter].name + ', '
+                    : ''
                 }
-                        ${timesOfDayFilter ? timesOfDayFilter : ""}${
-                  timeZoneFilter || timesOfDayFilter ? "" : "Time"
-                }`}
-                closeEvent={onFilterChange("timeZoneFilter")}
+                        ${timesOfDayFilter ? timesOfDayFilter : ''}${
+                          timeZoneFilter || timesOfDayFilter ? '' : 'Time'
+                        }`}
+                closeEvent={onFilterChange('timeZoneFilter')}
               >
                 {({ closeHandler }) => (
                   <>
@@ -718,13 +718,13 @@ const Meetup = () => {
                           type="checkbox"
                           checked={
                             timesOfDayFilter
-                              ? timesOfDayFilter === "Morning"
+                              ? timesOfDayFilter === 'Morning'
                               : false
                           }
                           name="morning"
                           id="morning"
                           onClick={() =>
-                            onFilterChange("timesOfDayFilter")("Morning")
+                            onFilterChange('timesOfDayFilter')('Morning')
                           }
                         />
                         <label className="checkbox-text" htmlFor="morning">
@@ -739,11 +739,11 @@ const Meetup = () => {
                           id="afternoon"
                           checked={
                             timesOfDayFilter
-                              ? timesOfDayFilter === "Afternoon"
+                              ? timesOfDayFilter === 'Afternoon'
                               : false
                           }
                           onClick={() =>
-                            onFilterChange("timesOfDayFilter")("Afternoon")
+                            onFilterChange('timesOfDayFilter')('Afternoon')
                           }
                         />
                         <label className="checkbox-text" htmlFor="afternoon">
@@ -758,11 +758,11 @@ const Meetup = () => {
                           id="evening"
                           checked={
                             timesOfDayFilter
-                              ? timesOfDayFilter === "Evening"
+                              ? timesOfDayFilter === 'Evening'
                               : false
                           }
                           onClick={() =>
-                            onFilterChange("timesOfDayFilter")("Evening")
+                            onFilterChange('timesOfDayFilter')('Evening')
                           }
                         />
                         <label className="checkbox-text" htmlFor="evening">
@@ -783,12 +783,12 @@ const Meetup = () => {
                       >
                         {TIME_ZONE[timeZoneFilter]
                           ? TIME_ZONE[timeZoneFilter].name
-                          : "Select time zone"}
+                          : 'Select time zone'}
                       </button>
                       <ul
                         className="dropdown-menu"
                         aria-labelledby="dropdownTimeButton"
-                        style={showTimeZoneDropdown ? { display: "block" } : {}}
+                        style={showTimeZoneDropdown ? { display: 'block' } : {}}
                       >
                         <li
                           className="dropdown-item text-left"
@@ -829,9 +829,9 @@ const Meetup = () => {
                 tabIndex="5"
                 value={instructorFilter ? instructorFilter.label : null}
                 buttonText={
-                  instructorFilter ? instructorFilter.label : "Instructor"
+                  instructorFilter ? instructorFilter.label : 'Instructor'
                 }
-                closeEvent={onFilterChange("instructorFilter")}
+                closeEvent={onFilterChange('instructorFilter')}
               >
                 {({ closeHandler }) => (
                   <SmartInput
@@ -857,7 +857,7 @@ const Meetup = () => {
                   <span
                     id="filter-count"
                     className={classNames({
-                      "filter-count--show": filterCount > 0,
+                      'filter-count--show': filterCount > 0,
                     })}
                   >
                     {filterCount}
@@ -866,8 +866,8 @@ const Meetup = () => {
               </div>
             </div>
             <div
-              className={classNames("filter--box", {
-                "d-none": !showFilterModal,
+              className={classNames('filter--box', {
+                'd-none': !showFilterModal,
               })}
             >
               <div
@@ -877,16 +877,16 @@ const Meetup = () => {
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={activeFilterType === "ONLINE"}
-                  onClick={toggleActiveFilter("ONLINE")}
+                  data-swicth-active={activeFilterType === 'ONLINE'}
+                  onClick={toggleActiveFilter('ONLINE')}
                 >
                   Online
                 </a>
                 <a
                   className="btn"
                   href="#"
-                  data-swicth-active={activeFilterType === "IN_PERSON"}
-                  onClick={toggleActiveFilter("IN_PERSON")}
+                  data-swicth-active={activeFilterType === 'IN_PERSON'}
+                  onClick={toggleActiveFilter('IN_PERSON')}
                 >
                   In Person
                 </a>
@@ -895,13 +895,13 @@ const Meetup = () => {
               <MobileFilterModal
                 modalTitle="Location"
                 buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : "Location"
+                  locationFilter ? `${locationFilter.locationName}` : 'Location'
                 }
-                clearEvent={onFilterClearEvent("locationFilter")}
+                clearEvent={onFilterClearEvent('locationFilter')}
               >
                 <div className="dropdown">
                   <AddressSearch
-                    closeHandler={onFilterChange("locationFilter")}
+                    closeHandler={onFilterChange('locationFilter')}
                     placeholder="Search"
                   />
                 </div>
@@ -912,9 +912,9 @@ const Meetup = () => {
                 buttonText={
                   meetupTypeFilter && meetupMasters[meetupTypeFilter]
                     ? meetupMasters[meetupTypeFilter].name
-                    : "Meetup Type"
+                    : 'Meetup Type'
                 }
-                clearEvent={onFilterClearEvent("meetupTypeFilter")}
+                clearEvent={onFilterClearEvent('meetupTypeFilter')}
               >
                 <div className="dropdown">
                   <SmartDropDown
@@ -922,9 +922,9 @@ const Meetup = () => {
                     buttonText={
                       meetupTypeFilter && meetupMasters[meetupTypeFilter]
                         ? meetupMasters[meetupTypeFilter].name
-                        : "Select Meetup"
+                        : 'Select Meetup'
                     }
-                    closeEvent={onFilterChange("meetupTypeFilter")}
+                    closeEvent={onFilterChange('meetupTypeFilter')}
                   >
                     {({ closeHandler }) => (
                       <MeetupType
@@ -941,8 +941,8 @@ const Meetup = () => {
                 modalTitle="Dates"
                 buttonText={
                   filterStartEndDate
-                    ? filterStartEndDate.split("|").join(" - ")
-                    : "Dates"
+                    ? filterStartEndDate.split('|').join(' - ')
+                    : 'Dates'
                 }
                 clearEvent={onDatesChange}
               >
@@ -950,8 +950,8 @@ const Meetup = () => {
                   value={filterStartEndDate}
                   buttonText={
                     filterStartEndDate
-                      ? filterStartEndDate.split("|").join(" - ")
-                      : "Select Dates"
+                      ? filterStartEndDate.split('|').join(' - ')
+                      : 'Select Dates'
                   }
                   closeEvent={onDatesChange}
                 >
@@ -968,13 +968,13 @@ const Meetup = () => {
                 modalTitle="Time"
                 buttonText={`${
                   TIME_ZONE[timeZoneFilter]
-                    ? TIME_ZONE[timeZoneFilter].name + ", "
-                    : ""
+                    ? TIME_ZONE[timeZoneFilter].name + ', '
+                    : ''
                 }
-                        ${timesOfDayFilter ? timesOfDayFilter : ""}${
-                  timeZoneFilter || timesOfDayFilter ? "" : "Time"
-                }`}
-                clearEvent={onFilterClearEvent("timeZoneFilter")}
+                        ${timesOfDayFilter ? timesOfDayFilter : ''}${
+                          timeZoneFilter || timesOfDayFilter ? '' : 'Time'
+                        }`}
+                clearEvent={onFilterClearEvent('timeZoneFilter')}
               >
                 <div className="dropdown">
                   <h2>Time range</h2>
@@ -987,11 +987,11 @@ const Meetup = () => {
                         id="morning"
                         checked={
                           timesOfDayFilter
-                            ? timesOfDayFilter === "Morning"
+                            ? timesOfDayFilter === 'Morning'
                             : false
                         }
-                        onClick={onFilterChangeEvent("timesOfDayFilter")(
-                          "Morning",
+                        onClick={onFilterChangeEvent('timesOfDayFilter')(
+                          'Morning',
                         )}
                       />
                       <label className="checkbox-text" htmlFor="morning">
@@ -1006,11 +1006,11 @@ const Meetup = () => {
                         id="afternoon"
                         checked={
                           timesOfDayFilter
-                            ? timesOfDayFilter === "Afternoon"
+                            ? timesOfDayFilter === 'Afternoon'
                             : false
                         }
-                        onClick={onFilterChangeEvent("timesOfDayFilter")(
-                          "Afternoon",
+                        onClick={onFilterChangeEvent('timesOfDayFilter')(
+                          'Afternoon',
                         )}
                       />
                       <label className="checkbox-text" htmlFor="afternoon">
@@ -1025,11 +1025,11 @@ const Meetup = () => {
                         id="evening"
                         checked={
                           timesOfDayFilter
-                            ? timesOfDayFilter === "Evening"
+                            ? timesOfDayFilter === 'Evening'
                             : false
                         }
-                        onClick={onFilterChangeEvent("timesOfDayFilter")(
-                          "Evening",
+                        onClick={onFilterChangeEvent('timesOfDayFilter')(
+                          'Evening',
                         )}
                       />
                       <label className="checkbox-text" htmlFor="evening">
@@ -1043,9 +1043,9 @@ const Meetup = () => {
                     buttonText={
                       timeZoneFilter && TIME_ZONE[timeZoneFilter]
                         ? TIME_ZONE[timeZoneFilter].name
-                        : "Select Timezone"
+                        : 'Select Timezone'
                     }
-                    closeEvent={onFilterChange("timeZoneFilter")}
+                    closeEvent={onFilterChange('timeZoneFilter')}
                   >
                     {({ closeHandler }) => (
                       <>
@@ -1088,9 +1088,9 @@ const Meetup = () => {
               <MobileFilterModal
                 modalTitle="Instructor"
                 buttonText={
-                  instructorFilter ? instructorFilter.label : "Instructor"
+                  instructorFilter ? instructorFilter.label : 'Instructor'
                 }
-                clearEvent={onFilterClearEvent("instructorFilter")}
+                clearEvent={onFilterClearEvent('instructorFilter')}
               >
                 <SmartInput
                   containerClassName="smart-input-mobile"
@@ -1098,7 +1098,7 @@ const Meetup = () => {
                   value={searchKey}
                   onSearchKeyChange={(value) => setSearchKey(value)}
                   dataList={instructorList}
-                  closeHandler={onFilterChangeEvent("instructorFilter")}
+                  closeHandler={onFilterChangeEvent('instructorFilter')}
                 ></SmartInput>
               </MobileFilterModal>
             </div>
@@ -1164,7 +1164,7 @@ const Meetup = () => {
             <div ref={loadMoreRef} className="col-12">
               {isFetchingNextPage && (
                 <div className="row">
-                  {" "}
+                  {' '}
                   <div className="col-6 col-lg-3 col-md-4">
                     <div className="upcoming_course_card meetup_course_card">
                       <ContentLoader viewBox="0 0 80 120">
@@ -1241,7 +1241,7 @@ const Meetup = () => {
           )}
         </div>
       </section>
-      {activeFilterType === "ONLINE" &&
+      {activeFilterType === 'ONLINE' &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1260,7 +1260,7 @@ const Meetup = () => {
             </div>
           </section>
         )}
-      {activeFilterType === "IN_PERSON" &&
+      {activeFilterType === 'IN_PERSON' &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1269,15 +1269,15 @@ const Meetup = () => {
               <div className="row">
                 <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
                   <h1 className="happines_title">
-                    Currently there are no {COURSE_MODES[activeFilterType].name}{" "}
+                    Currently there are no {COURSE_MODES[activeFilterType].name}{' '}
                     meetups available.
                   </h1>
                   <p className="happines_subtitle">
-                    Please check out our{" "}
+                    Please check out our{' '}
                     <a
                       href="#"
                       className="link v2"
-                      onClick={toggleActiveFilter("ONLINE")}
+                      onClick={toggleActiveFilter('ONLINE')}
                     >
                       online offerings
                     </a>

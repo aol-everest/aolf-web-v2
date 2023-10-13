@@ -1,15 +1,15 @@
-import { PageLoading } from "@components";
-import { useAuth } from "@contexts";
-import { withAuth } from "@hoc";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { api } from "@utils";
-import classNames from "classnames";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { useQuery } from "react-query";
-import Style from "./MembershipCancellation.module.scss";
+import { PageLoading } from '@components';
+import { useAuth } from '@contexts';
+import { withAuth } from '@hoc';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import { api } from '@utils';
+import classNames from 'classnames';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import Style from './MembershipCancellation.module.scss';
 
 /* export async function getServerSideProps({ req, resolvedUrl, query }) {
   const { Auth } = withSSRContext({ req });
@@ -72,10 +72,10 @@ const MembershipCancellation = () => {
     isError: apiError,
     error,
   } = useQuery(
-    "cancelSubscription",
+    'cancelSubscription',
     async () => {
       const response = await api.get({
-        path: "cancelSubscriptionStep1",
+        path: 'cancelSubscriptionStep1',
         param: {
           id: subscriptionId,
         },
@@ -149,7 +149,7 @@ const MembershipCancellation = () => {
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "cancelSubscriptionStep2",
+        path: 'cancelSubscriptionStep2',
         body: {
           id: subscriptionId,
           amountDue: totalAmountWillBeDeducted,
@@ -181,7 +181,7 @@ const MembershipCancellation = () => {
     <main>
       <section
         className={classNames(
-          "journey-cancellation !tw-px-0 !tw-pb-[117px] !tw-pt-[108px]",
+          'journey-cancellation !tw-px-0 !tw-pb-[117px] !tw-pt-[108px]',
           Style.journeyCancellation,
         )}
       >
@@ -194,10 +194,10 @@ const MembershipCancellation = () => {
                 </h1>
                 <p className="journey-cancellation__card-text">
                   We are sorry to see you go. Is there anything we could do to
-                  support your journey? Please reach out to our team at{" "}
+                  support your journey? Please reach out to our team at{' '}
                   <a href={`tel:${orgConfig.contactNumberLink}`}>
                     {orgConfig.contactNumber}
-                  </a>{" "}
+                  </a>{' '}
                   or
                 </p>
                 <p className="journey-cancellation__card-text">
@@ -228,7 +228,7 @@ const MembershipCancellation = () => {
                       </li>
                       <li className="journey-cancellation__card-details-item">
                         <span>
-                          You will be charged{" "}
+                          You will be charged{' '}
                           <strong>${totalAmountWillBeDeducted}</strong>
                         </span>
                       </li>
@@ -307,10 +307,10 @@ const MembershipCancellation = () => {
                 </h1>
                 <p className="journey-cancellation_mobile__text">
                   We are sorry to see you go. Is there anything we could do to
-                  support your journey? Please reach out to our team at{" "}
+                  support your journey? Please reach out to our team at{' '}
                   <a href={`tel:${orgConfig.contactNumberLink}`}>
                     {orgConfig.contactNumber}
-                  </a>{" "}
+                  </a>{' '}
                   or
                 </p>
                 <p className="journey-cancellation_mobile__text">
@@ -342,7 +342,7 @@ const MembershipCancellation = () => {
                       </li>
                       <li className="journey-cancellation_mobile__details-item">
                         <span>
-                          You will be charged{" "}
+                          You will be charged{' '}
                           <strong>${totalAmountWillBeDeducted}</strong>
                         </span>
                       </li>

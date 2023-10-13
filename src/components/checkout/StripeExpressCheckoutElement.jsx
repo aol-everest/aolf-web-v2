@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   useStripe,
   useElements,
   ExpressCheckoutElement,
   Elements,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { api, priceCalculation } from "@utils";
-import { useGlobalAlertContext } from "@contexts";
-import { ALERT_TYPES } from "@constants";
-import queryString from "query-string";
-import { filterAllowedParams, removeNull } from "@utils/utmParam";
-import { useRouter } from "next/router";
-import Style from "./StripeExpressCheckoutElement.module.scss";
-import { BiErrorCircle } from "react-icons/bi";
+} from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { api, priceCalculation } from '@utils';
+import { useGlobalAlertContext } from '@contexts';
+import { ALERT_TYPES } from '@constants';
+import queryString from 'query-string';
+import { filterAllowedParams, removeNull } from '@utils/utmParam';
+import { useRouter } from 'next/router';
+import Style from './StripeExpressCheckoutElement.module.scss';
+import { BiErrorCircle } from 'react-icons/bi';
 
 export const StripeExpressCheckoutElement = ({
   workshop,
@@ -28,14 +28,14 @@ export const StripeExpressCheckoutElement = ({
     workshop,
   });
   const elementsOptions = {
-    mode: "payment",
+    mode: 'payment',
     amount: fee * 100,
-    currency: "usd",
+    currency: 'usd',
     appearance: {
-      theme: "stripe",
+      theme: 'stripe',
       variables: {
-        borderRadius: "8px",
-        height: "62.5px",
+        borderRadius: '8px',
+        height: '62.5px',
       },
     },
   };
@@ -52,14 +52,14 @@ export const StripeExpressCheckoutElement = ({
 
 const options = {
   buttonType: {
-    applePay: "buy",
-    googlePay: "buy",
+    applePay: 'buy',
+    googlePay: 'buy',
   },
   wallets: {
-    applePay: "always",
-    googlePay: "always",
+    applePay: 'always',
+    googlePay: 'always',
   },
-  paymentMethodOrder: ["apple_pay", "google_pay"],
+  paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
 const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
@@ -99,7 +99,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createIntentForExpressCheckout",
+        path: 'createIntentForExpressCheckout',
         body: {
           workshopId: workshop.id,
           utmParams: filteredParams,
@@ -109,7 +109,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
 
       filteredParams = {
         ...filteredParams,
-        referral: "course_search_scheduling",
+        referral: 'course_search_scheduling',
       };
 
       if (status === 400 || isError) {
@@ -177,10 +177,10 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
         }}
         validationSchema={Yup.object().shape({
           ppaAgreement: Yup.boolean()
-            .label("Terms")
+            .label('Terms')
             .test(
-              "is-true",
-              "Please check the box in order to continue.",
+              'is-true',
+              'Please check the box in order to continue.',
               (value) => value === true,
             ),
         })}
@@ -207,7 +207,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
               {!hidePayMessage && showMessage && (
                 <div className={Style.pay_message}>
                   <BiErrorCircle />
-                  {"  "}
+                  {'  '}
                   To proceed, kindly acknowledge the agreements above.
                 </div>
               )}
@@ -217,7 +217,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                   className={
                     !formikProps.isValid || !formikProps.dirty
                       ? Style.express_checkout_block
-                      : ""
+                      : ''
                   }
                   onClick={dummyValidationMessage}
                 ></div>

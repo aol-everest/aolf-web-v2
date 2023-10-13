@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { COURSE_TYPES } from "@constants";
-import { pushRouteWithUTMQuery } from "@service";
-import { priceCalculation } from "@utils";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { Element, Link } from "react-scroll";
-import { CourseBottomCard } from "./CourseBottomCard";
-import Style from "./CourseDetails.module.scss";
-import CourseDetailsCard from "./CourseDetailsCard";
+import { COURSE_TYPES } from '@constants';
+import { pushRouteWithUTMQuery } from '@service';
+import { priceCalculation } from '@utils';
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { Element, Link } from 'react-scroll';
+import { CourseBottomCard } from './CourseBottomCard';
+import Style from './CourseDetails.module.scss';
+import CourseDetailsCard from './CourseDetailsCard';
 
 export const SriSriYoga = ({ data, swiperOption }) => {
   const [activeSlider, setActiveSlider] = useState(0);
@@ -21,7 +21,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
       pathname: `/us-en/course/checkout/${data.sfid}`,
       query: {
         ctype: data.productTypeId,
-        page: "c-o",
+        page: 'c-o',
       },
     });
   };
@@ -174,7 +174,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                 </h2>
                 <p className="program-description__content-text">
                   Stretch out the kinks, begin a new empowering healthy habit,
-                  gain personal insight, deepen your practice, get strong.{" "}
+                  gain personal insight, deepen your practice, get strong.{' '}
                 </p>
               </div>
               <div className="col-lg-6">
@@ -300,7 +300,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                   </h6>
                   <p className="program-experience__item-text">
                     Gain practical, life-enhancing yogic wisdom and insight into
-                    your mind-body well-being for greater health and vitality.{" "}
+                    your mind-body well-being for greater health and vitality.{' '}
                   </p>
                 </div>
                 <div className="program-experience__item">
@@ -328,7 +328,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
             <div className="program-reviews__slider">
               <div
                 className={classNames(
-                  "swiper-wrapper program-reviews__slider-wrapper",
+                  'swiper-wrapper program-reviews__slider-wrapper',
                   activeSliderClass,
                 )}
               >
@@ -407,8 +407,8 @@ export const SriSriYoga = ({ data, swiperOption }) => {
               </div>
               <div className="program-reviews__slider-pagination swiper-pagination-clickable swiper-pagination-bullets">
                 <span
-                  className={classNames("swiper-pagination-bullet", {
-                    "swiper-pagination-bullet-active": activeSlider === 0,
+                  className={classNames('swiper-pagination-bullet', {
+                    'swiper-pagination-bullet-active': activeSlider === 0,
                   })}
                   tabIndex="0"
                   role="button"
@@ -416,8 +416,8 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                   onClick={() => handleSliderBulletClick(0)}
                 ></span>
                 <span
-                  className={classNames("swiper-pagination-bullet", {
-                    "swiper-pagination-bullet-active": activeSlider === 1,
+                  className={classNames('swiper-pagination-bullet', {
+                    'swiper-pagination-bullet-active': activeSlider === 1,
                   })}
                   tabIndex="1"
                   role="button"
@@ -425,8 +425,8 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                   onClick={() => handleSliderBulletClick(1)}
                 ></span>
                 <span
-                  className={classNames("swiper-pagination-bullet", {
-                    "swiper-pagination-bullet-active": activeSlider === 2,
+                  className={classNames('swiper-pagination-bullet', {
+                    'swiper-pagination-bullet-active': activeSlider === 2,
                   })}
                   tabIndex="2"
                   role="button"
@@ -488,7 +488,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                       Discover a supportive, inclusive yoga practice that meets
                       you, just as you are. You’ll explore your own comfortable
                       edge of stretch and strength to suit your body. And emerge
-                      with deeper self-awareness and insight.{" "}
+                      with deeper self-awareness and insight.{' '}
                     </p>
                   </div>
                 </div>

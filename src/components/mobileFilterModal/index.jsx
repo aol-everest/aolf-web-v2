@@ -1,17 +1,17 @@
-import classNames from "classnames";
-import { useState } from "react";
+import classNames from 'classnames';
+import { useState } from 'react';
 
 export const MobileFilterModal = (props) => {
   const [isHidden, setIsHidden] = useState(true);
 
   const showModal = () => {
     setIsHidden(false);
-    document.body.classList.add("overflow-hidden");
+    document.body.classList.add('overflow-hidden');
   };
 
   const hideModal = () => {
     setIsHidden(true);
-    document.body.classList.remove("overflow-hidden");
+    document.body.classList.remove('overflow-hidden');
   };
 
   const clearAction = () => {
@@ -19,7 +19,7 @@ export const MobileFilterModal = (props) => {
       props.clearEvent();
     }
     setIsHidden(true);
-    document.body.classList.remove("overflow-hidden");
+    document.body.classList.remove('overflow-hidden');
   };
 
   const { modalTitle, buttonText, children } = props;
@@ -34,7 +34,7 @@ export const MobileFilterModal = (props) => {
         </a>
       </div>
       <div
-        className={classNames("mobile-modal-v1 mobile-modal", {
+        className={classNames('mobile-modal-v1 mobile-modal', {
           active: !isHidden,
         })}
       >

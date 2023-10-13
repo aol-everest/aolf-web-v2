@@ -1,10 +1,10 @@
-import { PageLoading } from "@components";
-import { ALERT_TYPES } from "@constants";
-import { useAuth, useGlobalAlertContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { Auth } from "@utils";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { PageLoading } from '@components';
+import { ALERT_TYPES } from '@constants';
+import { useAuth, useGlobalAlertContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { Auth } from '@utils';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -39,20 +39,20 @@ function Token() {
       const urlSearchParams = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(urlSearchParams.entries());
       if (!params.code) {
-        throw new Error("Failure parsing Cognito web response. No code found.");
+        throw new Error('Failure parsing Cognito web response. No code found.');
       }
-      const state = new URLSearchParams(location.search).get("state");
+      const state = new URLSearchParams(location.search).get('state');
       await Auth.parseCognitoWebResponse(window.location.href);
       const userInfo = await Auth.reFetchProfile();
       setUser(userInfo);
 
-      pushRouteWithUTMQuery(router, state || "/");
+      pushRouteWithUTMQuery(router, state || '/');
     } catch (error) {
       console.log(error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: error.message,
         closeModalAction: () => {
-          pushRouteWithUTMQuery(router, "/");
+          pushRouteWithUTMQuery(router, '/');
         },
       });
     }

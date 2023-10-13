@@ -1,22 +1,22 @@
-import { SHARE_SITES } from "@constants";
+import { SHARE_SITES } from '@constants';
 /**
  * Converts Date String with UTC timezone to date consumable by calendar
  * apps. Changes +00:00 to Z.
  * @param {string} Date in YYYYMMDDTHHmmssZ format
  * @returns {string} Date with +00:00 replaceed with Z
  */
-export const formatDate = (date) => date && date.replace("+00:00", "Z");
+export const formatDate = (date) => date && date.replace('+00:00', 'Z');
 
 export const formatDuration = (duration) => {
-  if (typeof duration === "string") return duration;
-  const parts = duration && duration.toString().split(".");
+  if (typeof duration === 'string') return duration;
+  const parts = duration && duration.toString().split('.');
   if (parts && parts.length < 2) {
-    parts.push("00");
+    parts.push('00');
   }
 
   return (
     parts &&
-    parts.map((part) => (part.length === 2 ? part : `0${part}`)).join("")
+    parts.map((part) => (part.length === 2 ? part : `0${part}`)).join('')
   );
 };
 
@@ -86,34 +86,34 @@ const yahooShareUrl = ({
  * @returns {array} ICS Content
  */
 const buildShareFile = ({
-  description = "",
-  ctz = "",
+  description = '',
+  ctz = '',
   endDatetime,
-  location = "",
+  location = '',
   startDatetime,
-  timezone = "",
-  title = "",
+  timezone = '',
+  title = '',
 }) => {
   let content = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "BEGIN:VEVENT",
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'BEGIN:VEVENT',
     `URL:${document.URL}`,
-    "METHOD:PUBLISH",
+    'METHOD:PUBLISH',
     // TODO: Will need to parse the date without Z for ics
     // This means I'll probably have to require a date lib - luxon most likely or datefns
-    timezone === ""
+    timezone === ''
       ? `DTSTART:${startDatetime}`
       : `DTSTART;TZID=${timezone}:${startDatetime}`,
-    timezone === ""
+    timezone === ''
       ? `DTEND:${endDatetime}`
       : `DTEND;TZID=${timezone}:${endDatetime}`,
     `SUMMARY:${title}`,
     `DESCRIPTION:${description}`,
     `LOCATION:${location}`,
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\n");
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\n');
 
   return isMobile()
     ? encodeURI(`data:text/calendar;charset=utf8,${content}`)
@@ -133,13 +133,13 @@ const buildShareFile = ({
  */
 export const buildShareUrl = (
   {
-    description = "",
+    description = '',
     duration,
     endDatetime,
-    location = "",
+    location = '',
     startDatetime,
-    timezone = "",
-    title = "",
+    timezone = '',
+    title = '',
   },
   type,
 ) => {

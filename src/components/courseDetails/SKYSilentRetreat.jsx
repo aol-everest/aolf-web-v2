@@ -1,22 +1,22 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { MODAL_TYPES, COURSE_TYPES } from "@constants";
-import classNames from "classnames";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { PriceCard } from "./PriceCard";
-import { Pagination, A11y } from "swiper";
-import { Accordion, Card, AccordionContext } from "react-bootstrap";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import { useContext } from "react";
+import { MODAL_TYPES, COURSE_TYPES } from '@constants';
+import classNames from 'classnames';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { FaArrowRightLong } from 'react-icons/fa6';
+import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { PriceCard } from './PriceCard';
+import { Pagination, A11y } from 'swiper';
+import { Accordion, Card, AccordionContext } from 'react-bootstrap';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import { useContext } from 'react';
 
 export const SKYSilentRetreat = ({ data }) => {
   const { authenticated = false } = useAuth();
@@ -53,7 +53,7 @@ export const SKYSilentRetreat = ({ data }) => {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -61,7 +61,7 @@ export const SKYSilentRetreat = ({ data }) => {
         navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: "SIGNUP_MODE",
+        defaultView: 'SIGNUP_MODE',
       });
     }
   };
@@ -79,7 +79,7 @@ export const SKYSilentRetreat = ({ data }) => {
     return (
       <h5 className="mb-0">
         <button
-          className={classNames("btn btn-link", {
+          className={classNames('btn btn-link', {
             collapsed: !isCurrentEventKey,
           })}
           onClick={decoratedOnClick}
@@ -315,7 +315,7 @@ export const SKYSilentRetreat = ({ data }) => {
                   conditions for sinking deep within and breaking free from
                   mental chatter. Your whole experience is carefully guided and
                   crafted to give you as relaxing and transformative an
-                  experience as possible.{" "}
+                  experience as possible.{' '}
                 </p>
                 <p className="desktopView">
                   It’s no wonder that many retreat participants refer to it as
@@ -426,7 +426,7 @@ export const SKYSilentRetreat = ({ data }) => {
                 </div>
                 <div className="review-text">
                   It helped me to put into practice the valuable wisdom which I
-                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
+                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{' '}
                   course. I came away relaxed, refreshed and happier than I had
                   felt for a long time.
                 </div>
@@ -563,7 +563,7 @@ export const SKYSilentRetreat = ({ data }) => {
                 <Accordion.Collapse eventKey="1">
                   <Card.Body>
                     The Silent Retreat course features:
-                    <ul style={{ listStyle: "inside" }}>
+                    <ul style={{ listStyle: 'inside' }}>
                       <li>Daily Yoga</li>
                       <li>Daily Meditation</li>
                       <li>Wisdom Tools and Techniques</li>

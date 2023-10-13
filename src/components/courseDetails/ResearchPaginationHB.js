@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const researchImgItems = [
   {
     image: {
-      gray: "/img/yale-news-gray.png",
-      color: "/img/yale-news-color.png",
+      gray: '/img/yale-news-gray.png',
+      color: '/img/yale-news-color.png',
     },
     quote:
       '"To improve students’ mental health, Yale study finds, teach them to breathe"',
-    link: "https://news.yale.edu/2020/07/27/improve-students-mental-health-yale-study-finds-teach-them-breathe",
+    link: 'https://news.yale.edu/2020/07/27/improve-students-mental-health-yale-study-finds-teach-them-breathe',
   },
   {
     image: {
-      gray: "/img/stanford-news-gray.png",
-      color: "/img/stanford-news-color.png",
+      gray: '/img/stanford-news-gray.png',
+      color: '/img/stanford-news-color.png',
     },
     quote: '"Stanford scholar helps veterans recover from war trauma"',
-    link: "https://news.stanford.edu/news/2014/september/meditation-helps-ptsd-090514.html",
+    link: 'https://news.stanford.edu/news/2014/september/meditation-helps-ptsd-090514.html',
   },
   {
     image: {
-      gray: "/img/harvard-medical-school-gray.png",
-      color: "/img/harvard-medical-school-color.png",
+      gray: '/img/harvard-medical-school-gray.png',
+      color: '/img/harvard-medical-school-color.png',
     },
     quote: '"Be Kind and Unwind"',
-    link: "https://hms.harvard.edu/news/be-kind-unwind",
+    link: 'https://hms.harvard.edu/news/be-kind-unwind',
   },
 ];
 

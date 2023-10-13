@@ -1,15 +1,15 @@
-import { PageLoading } from "@components";
-import { api, isSSR } from "@utils";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { A11y, Navigation, Scrollbar } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { PageLoading } from '@components';
+import { api, isSSR } from '@utils';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { A11y, Navigation, Scrollbar } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import "swiper/css";
-import "swiper/css/a11y";
-import "swiper/css/navigation";
-import "swiper/css/scrollbar";
+import 'swiper/css';
+import 'swiper/css/a11y';
+import 'swiper/css/navigation';
+import 'swiper/css/scrollbar';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -53,10 +53,10 @@ function Journey() {
   const router = useRouter();
   const { id: challengeSfid } = router.query;
   const { data, isLoading, isError, error } = useQuery(
-    "journeyBySfid",
+    'journeyBySfid',
     async () => {
       const response = await api.get({
-        path: "journeyBySfid",
+        path: 'journeyBySfid',
         param: {
           challengeSfid,
         },
@@ -106,8 +106,8 @@ function Journey() {
       },
     },
   };
-  if (typeof window !== "undefined") {
-    if (window.matchMedia("(max-width: 768px)").matches) {
+  if (typeof window !== 'undefined') {
+    if (window.matchMedia('(max-width: 768px)').matches) {
       swiperOption = {
         ...swiperOption,
         navigation: false,

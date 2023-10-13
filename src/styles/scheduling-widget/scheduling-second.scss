@@ -144,7 +144,9 @@
   border-radius: 28px;
   background-color: transparent;
 
-  transition: color 300ms ease, border-color 300ms ease;
+  transition:
+    color 300ms ease,
+    border-color 300ms ease;
 
   &:focus,
   &:active {

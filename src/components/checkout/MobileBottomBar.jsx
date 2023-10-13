@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
@@ -22,21 +22,21 @@ export const MobileBottomBar = ({ workshop, toggleDetailMobileModal }) => {
                 <p className="course-card__date">
                   {dayjs
                     .utc(eventStartDate)
-                    .isSame(dayjs.utc(eventEndDate), "month") && (
+                    .isSame(dayjs.utc(eventEndDate), 'month') && (
                     <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                       .utc(eventStartDate)
-                      .format("MMMM DD")}-${dayjs
+                      .format('MMMM DD')}-${dayjs
                       .utc(eventEndDate)
-                      .format("DD, YYYY")}`}</li>
+                      .format('DD, YYYY')}`}</li>
                   )}
                   {!dayjs
                     .utc(eventStartDate)
-                    .isSame(dayjs.utc(eventEndDate), "month") && (
+                    .isSame(dayjs.utc(eventEndDate), 'month') && (
                     <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                       .utc(eventStartDate)
-                      .format("MMMM DD")}-${dayjs
+                      .format('MMMM DD')}-${dayjs
                       .utc(eventEndDate)
-                      .format("MMMM DD, YYYY")}`}</li>
+                      .format('MMMM DD, YYYY')}`}</li>
                   )}
                 </p>
               )}

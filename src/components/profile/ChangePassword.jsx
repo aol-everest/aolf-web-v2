@@ -1,9 +1,9 @@
-import { useAuth } from "@contexts";
-import { Auth } from "@utils";
-import classNames from "classnames";
-import { Formik } from "formik";
-import { useState } from "react";
-import * as Yup from "yup";
+import { useAuth } from '@contexts';
+import { Auth } from '@utils';
+import classNames from 'classnames';
+import { Formik } from 'formik';
+import { useState } from 'react';
+import * as Yup from 'yup';
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
   const { user } = useAuth();
@@ -38,20 +38,20 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
       <Formik
         enableReinitialize
         initialValues={{
-          oldPassword: "",
-          password: "",
-          passwordConfirmation: "",
+          oldPassword: '',
+          password: '',
+          passwordConfirmation: '',
         }}
         validationSchema={Yup.object().shape({
           oldPassword: Yup.string()
-            .required("Password is required")
-            .min(8, "Must Contain 8 Characters"),
+            .required('Password is required')
+            .min(8, 'Must Contain 8 Characters'),
           password: Yup.string()
-            .required("Password is required")
-            .min(8, "Must Contain 8 Characters"),
+            .required('Password is required')
+            .min(8, 'Must Contain 8 Characters'),
           passwordConfirmation: Yup.string()
-            .required("Password is required")
-            .oneOf([Yup.ref("password"), null], "Passwords must match"),
+            .required('Password is required')
+            .oneOf([Yup.ref('password'), null], 'Passwords must match'),
         })}
         onSubmit={async (values, { resetForm, setStatus }) => {
           await submitAction(values);
@@ -81,13 +81,13 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                 {showSuccessMessage && (
                   <div className="success-message-cp">
                     <i className="fas fa-check-circle"></i>
-                    {"  "}Your password has been changed successfully
+                    {'  '}Your password has been changed successfully
                   </div>
                 )}
                 <div className="input-block w-100">
                   <input
                     type="password"
-                    className={classNames("mt-0 w-100", {
+                    className={classNames('mt-0 w-100', {
                       validate: errors.oldPassword && touched.oldPassword,
                     })}
                     placeholder="Old Password"
@@ -105,7 +105,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                   <input
                     placeholder="New Password"
                     type="password"
-                    className={classNames("w-100", {
+                    className={classNames('w-100', {
                       validate: errors.password && touched.password,
                     })}
                     onChange={handleChange}
@@ -120,7 +120,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                 <div className="input-block w-100">
                   <input
                     type="password"
-                    className={classNames("w-100", {
+                    className={classNames('w-100', {
                       validate:
                         errors.passwordConfirmation &&
                         touched.passwordConfirmation,

@@ -1,4 +1,4 @@
-import { api } from "@utils";
+import { api } from '@utils';
 
 export const updateUserActivity = async ({ contentSfid, subContentSfid }) => {
   const payLoad = {
@@ -7,7 +7,7 @@ export const updateUserActivity = async ({ contentSfid, subContentSfid }) => {
   };
 
   return await api.post({
-    path: "updateUserActivity",
+    path: 'updateUserActivity',
     body: payLoad,
   });
 };

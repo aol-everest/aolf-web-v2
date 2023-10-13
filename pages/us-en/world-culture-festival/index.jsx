@@ -1,35 +1,35 @@
 /* eslint-disable react/no-unescaped-entities */
-import { FormikWizard } from "@components";
+import { FormikWizard } from '@components';
 import {
   StepAuth,
   StepContactDetail,
   StepWelcome,
-} from "@components/worldCultureFestival";
-import { ALERT_TYPES } from "@constants";
-import { useAuth, useGlobalAlertContext } from "@contexts";
-import { useQueryString } from "@hooks";
-import { api } from "@utils";
-import startsWith from "lodash.startswith";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
-import { useAnalytics } from "use-analytics";
-import * as Yup from "yup";
-import "yup-phone";
+} from '@components/worldCultureFestival';
+import { ALERT_TYPES } from '@constants';
+import { useAuth, useGlobalAlertContext } from '@contexts';
+import { useQueryString } from '@hooks';
+import { api } from '@utils';
+import startsWith from 'lodash.startswith';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+import { useAnalytics } from 'use-analytics';
+import * as Yup from 'yup';
+import 'yup-phone';
 
 const encodeFormData = (data) => {
   return Object.keys(data)
-    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-    .join("&");
+    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
 };
 
 const INITIAL_VALUES = {
   ticketCount: 1,
   sessionsAttending: [],
-  country: "US",
-  phoneCountry: "US",
-  state: "",
-  phoneNumber: "",
+  country: 'US',
+  phoneCountry: 'US',
+  state: '',
+  phoneNumber: '',
   agreement: true,
 };
 
@@ -54,16 +54,16 @@ function WorldCultureFestival() {
   const [loading, setLoading] = useState(false);
   const { authenticated, user } = useAuth();
   const { showAlert } = useGlobalAlertContext();
-  const [activeStep] = useQueryString("s", {
+  const [activeStep] = useQueryString('s', {
     defaultValue: 0,
     parse: parseInt,
   });
-  const [ticketCount] = useQueryString("t", {
+  const [ticketCount] = useQueryString('t', {
     defaultValue: 1,
     parse: parseInt,
   });
-  const [sessionsAttending] = useQueryString("sa", {
-    defaultValue: ["Full"],
+  const [sessionsAttending] = useQueryString('sa', {
+    defaultValue: ['Full'],
     parse: JSON.parse,
   });
 
@@ -73,36 +73,36 @@ function WorldCultureFestival() {
       ...formInitialValue,
       country: user.profile.personMailingCountry
         ? user.profile.personMailingCountry.toUpperCase()
-        : "US",
+        : 'US',
       phoneCountry: user.profile.personMailingCountry
         ? user.profile.personMailingCountry.toUpperCase()
-        : "US",
+        : 'US',
       state: user.profile.personMailingState,
       phoneNumber: user.profile.personMobilePhone,
     };
   }
   if (
-    formInitialValue.country === "" ||
-    formInitialValue.country === "USA" ||
-    formInitialValue.country === "UNITED STATES OF AMERICA"
+    formInitialValue.country === '' ||
+    formInitialValue.country === 'USA' ||
+    formInitialValue.country === 'UNITED STATES OF AMERICA'
   ) {
-    formInitialValue.country = "US";
-    formInitialValue.phoneCountry = "US";
+    formInitialValue.country = 'US';
+    formInitialValue.phoneCountry = 'US';
   }
 
   if (
-    !startsWith(formInitialValue.phoneNumber, "+") &&
-    formInitialValue.country === "US" &&
-    !startsWith(formInitialValue.phoneNumber, "+1")
+    !startsWith(formInitialValue.phoneNumber, '+') &&
+    formInitialValue.country === 'US' &&
+    !startsWith(formInitialValue.phoneNumber, '+1')
   ) {
-    formInitialValue.phoneNumber = "+1" + formInitialValue.phoneNumber;
+    formInitialValue.phoneNumber = '+1' + formInitialValue.phoneNumber;
   }
 
   const handleSubmit = useCallback(async (values) => {
     setLoading(true);
     try {
-      track("attempted_purchase_ticket", {
-        screen_name: "wcf_registration_get_tickets_page",
+      track('attempted_purchase_ticket', {
+        screen_name: 'wcf_registration_get_tickets_page',
         sessions_attending_arr: JSON.stringify(values.sessionsAttending),
         number_of_tickets: values.ticketCount,
         utm_parameters: JSON.stringify(router.query),
@@ -121,7 +121,7 @@ function WorldCultureFestival() {
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "wcfAttendee",
+        path: 'wcfAttendee',
         body: {
           sessionsNames: sessionsAttending,
           ticketQuantity: ticketCount,
@@ -138,14 +138,14 @@ function WorldCultureFestival() {
 
       const params = encodeFormData({ sessionsAttending, ticketCount });
       window.location.href =
-        "https://event.us.artofliving.org/us-en/wcf-confirmation?" + params;
+        'https://event.us.artofliving.org/us-en/wcf-confirmation?' + params;
       setLoading(false);
     } catch (ex) {
       console.error(ex);
       const data = ex.response?.data;
       const { message, statusCode } = data || {};
-      track("failed_purchase_ticket", {
-        screen_name: "wcf_registration_get_tickets_page",
+      track('failed_purchase_ticket', {
+        screen_name: 'wcf_registration_get_tickets_page',
         sessions_attending_arr: JSON.stringify(values.sessionsAttending),
         number_of_tickets: values.ticketCount,
         utm_parameters: JSON.stringify(router.query),
@@ -181,14 +181,14 @@ function WorldCultureFestival() {
             component: StepWelcome,
             validationSchema: Yup.object().shape({
               ticketCount: Yup.number()
-                .label("No of Tickets")
+                .label('No of Tickets')
                 .integer()
                 .min(1)
                 .max(6)
                 .required(),
               sessionsAttending: Yup.array()
-                .label("Sessions Attending")
-                .min(1, "Sessions Attending is required"),
+                .label('Sessions Attending')
+                .min(1, 'Sessions Attending is required'),
             }),
           },
           {
@@ -198,25 +198,25 @@ function WorldCultureFestival() {
             component: StepContactDetail,
             validationSchema: Yup.object().shape({
               country: Yup.string()
-                .label("Country")
-                .required("Country is required")
+                .label('Country')
+                .required('Country is required')
                 .nullable(),
               state: Yup.string()
-                .label("State")
-                .when("country", {
-                  is: (country) => country === "US",
-                  then: Yup.string().required("State is required").nullable(),
+                .label('State')
+                .when('country', {
+                  is: (country) => country === 'US',
+                  then: Yup.string().required('State is required').nullable(),
                   otherwise: Yup.string().nullable(),
                 }),
               phoneNumber: Yup.string()
-                .label("Phone number")
-                .when("phoneCountry", {
-                  is: (country) => country === "US",
+                .label('Phone number')
+                .when('phoneCountry', {
+                  is: (country) => country === 'US',
                   then: Yup.string()
-                    .phone("US", true, "Please enter a valid phone number")
+                    .phone('US', true, 'Please enter a valid phone number')
                     .nullable(),
                   otherwise: Yup.string()
-                    .phone(null, false, "Please enter a valid phone number")
+                    .phone(null, false, 'Please enter a valid phone number')
                     .nullable(),
                 }),
             }),

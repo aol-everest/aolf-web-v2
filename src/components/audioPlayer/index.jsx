@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useGlobalAudioPlayerContext } from "@contexts";
-import { useEffect, useRef, useState } from "react";
+import { useGlobalAudioPlayerContext } from '@contexts';
+import { useEffect, useRef, useState } from 'react';
 // import AudioControls from "./AudioControls";
 // import Backdrop from "./Backdrop";
 // import "./styles.css";
@@ -10,8 +10,8 @@ import { useEffect, useRef, useState } from "react";
  * https://letsbuildui.dev/articles/building-an-audio-player-with-react-hooks
  */
 
-import { isSSR } from "@utils";
-import classNames from "classnames";
+import { isSSR } from '@utils';
+import classNames from 'classnames';
 
 const AudioPlayer = () => {
   // State
@@ -32,7 +32,7 @@ const AudioPlayer = () => {
   if (isSSR) {
     return null;
   }
-  const isTouch = "ontouchstart" in window;
+  const isTouch = 'ontouchstart' in window;
   // Refs
   const audioRef = useRef(new Audio(audioSrc));
   const intervalRef = useRef();
@@ -44,24 +44,24 @@ const AudioPlayer = () => {
 
   const currentPercentage = duration
     ? `${(trackProgress / duration) * 100}%`
-    : "0%";
+    : '0%';
 
   const secondsToTime = (secs) => {
     if (!secs) {
-      return "00:00";
+      return '00:00';
     }
     var hours = Math.floor(secs / 3600),
       minutes = Math.floor((secs % 3600) / 60),
       seconds = Math.ceil((secs % 3600) % 60);
     return (
       (hours == 0
-        ? ""
+        ? ''
         : hours > 0 && hours.toString().length < 2
-        ? "0" + hours + ":"
-        : hours + ":") +
-      (minutes.toString().length < 2 ? "0" + minutes : minutes) +
-      ":" +
-      (seconds.toString().length < 2 ? "0" + seconds : seconds)
+        ? '0' + hours + ':'
+        : hours + ':') +
+      (minutes.toString().length < 2 ? '0' + minutes : minutes) +
+      ':' +
+      (seconds.toString().length < 2 ? '0' + seconds : seconds)
     );
   };
 
@@ -270,8 +270,8 @@ const AudioPlayer = () => {
       {!isFullPlayer && (
         <div id="player" className="visible !tw-bottom-0 tw-z-50">
           <div
-            className={classNames("audioplayer", {
-              "audioplayer-playing": isPlaying,
+            className={classNames('audioplayer', {
+              'audioplayer-playing': isPlaying,
             })}
           >
             <div

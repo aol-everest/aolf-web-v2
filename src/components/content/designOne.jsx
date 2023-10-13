@@ -1,20 +1,20 @@
-import { MobileFilterModal, Popup, SmartDropDown } from "@components";
-import Link from "@components/linkWithUTM";
-import { DURATION } from "@constants";
-import { pushRouteWithUTMQuery } from "@service";
-import { api } from "@utils";
-import classNames from "classnames";
-import { uniqBy } from "lodash";
-import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { MobileFilterModal, Popup, SmartDropDown } from '@components';
+import Link from '@components/linkWithUTM';
+import { DURATION } from '@constants';
+import { pushRouteWithUTMQuery } from '@service';
+import { api } from '@utils';
+import classNames from 'classnames';
+import { uniqBy } from 'lodash';
+import { NextSeo } from 'next-seo';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const timeConvert = (data) => {
   const minutes = data % 60;
   const hours = (data - minutes) / 60;
 
-  return String(hours).padStart(2, 0) + ":" + String(minutes).padStart(2, 0);
+  return String(hours).padStart(2, 0) + ':' + String(minutes).padStart(2, 0);
 };
 
 export const DesignOne = ({
@@ -39,10 +39,10 @@ export const DesignOne = ({
 }) => {
   const router = useRouter();
   const { data: randomMeditate = {} } = useQuery(
-    "randomMeditation",
+    'randomMeditation',
     async () => {
       const response = await api.get({
-        path: "randomMeditation",
+        path: 'randomMeditation',
       });
       return response.data;
     },
@@ -52,10 +52,10 @@ export const DesignOne = ({
   );
 
   const { data: dailyPractice = [] } = useQuery(
-    "dailyPractice",
+    'dailyPractice',
     async () => {
       const response = await api.get({
-        path: "dailyPractice",
+        path: 'dailyPractice',
       });
       return response.data;
     },
@@ -91,7 +91,7 @@ export const DesignOne = ({
     };
   });
 
-  favouriteContentOnly = uniqBy(favouriteContentOnly, "sfid");
+  favouriteContentOnly = uniqBy(favouriteContentOnly, 'sfid');
 
   let listingFolders = contentFolders.filter(
     (folder) => folder.isListingFolder,
@@ -102,7 +102,7 @@ export const DesignOne = ({
 
   const popularFolder = listingFolders.find(
     (folder) =>
-      folder.title && folder.title.toLowerCase().indexOf("popular") > -1,
+      folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
   );
 
   if (popularFolder) {
@@ -124,9 +124,9 @@ export const DesignOne = ({
 
   const findACourseAction = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en",
+      pathname: '/us-en',
       query: {
-        courseType: "SKY_BREATH_MEDITATION",
+        courseType: 'SKY_BREATH_MEDITATION',
       },
     });
   };
@@ -175,7 +175,7 @@ export const DesignOne = ({
                   <span
                     id="filter-count"
                     className={classNames({
-                      "filter-count--show": filterCount > 0,
+                      'filter-count--show': filterCount > 0,
                     })}
                   >
                     {filterCount}
@@ -184,22 +184,22 @@ export const DesignOne = ({
               </div>
             </div>
             <div
-              className={classNames("filter--box", {
-                "d-none": !showFilterModal,
+              className={classNames('filter--box', {
+                'd-none': !showFilterModal,
               })}
             >
               <div className="browse-category mb-3">
                 <div className="buttons-wrapper">
                   <MobileFilterModal
                     modalTitle="topic"
-                    buttonText={topic ? topic : "Topic"}
-                    clearEvent={onFilterClearEvent("topic")}
+                    buttonText={topic ? topic : 'Topic'}
+                    clearEvent={onFilterClearEvent('topic')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
                         value={topic}
-                        buttonText={topic ? topic : "Topic"}
-                        closeEvent={onFilterChange("topic")}
+                        buttonText={topic ? topic : 'Topic'}
+                        closeEvent={onFilterChange('topic')}
                       >
                         {({ closeHandler }) => (
                           <>
@@ -221,34 +221,34 @@ export const DesignOne = ({
 
                   <MobileFilterModal
                     modalTitle="duration"
-                    buttonText={duration ? DURATION[duration].name : "Duration"}
-                    clearEvent={onFilterClearEvent("duration")}
+                    buttonText={duration ? DURATION[duration].name : 'Duration'}
+                    clearEvent={onFilterClearEvent('duration')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
                         value={duration}
                         buttonText={
-                          duration ? DURATION[duration].name : "Duration"
+                          duration ? DURATION[duration].name : 'Duration'
                         }
-                        closeEvent={onFilterChange("duration")}
+                        closeEvent={onFilterChange('duration')}
                       >
                         {({ closeHandler }) => (
                           <>
                             <li
                               className="dropdown-item"
-                              onClick={closeHandler("MINUTES_5")}
+                              onClick={closeHandler('MINUTES_5')}
                             >
                               {DURATION.MINUTES_5.name}
                             </li>
                             <li
                               className="dropdown-item"
-                              onClick={closeHandler("MINUTES_10")}
+                              onClick={closeHandler('MINUTES_10')}
                             >
                               {DURATION.MINUTES_10.name}
                             </li>
                             <li
                               className="dropdown-item"
-                              onClick={closeHandler("MINUTES_20")}
+                              onClick={closeHandler('MINUTES_20')}
                             >
                               {DURATION.MINUTES_20.name}
                             </li>
@@ -260,13 +260,13 @@ export const DesignOne = ({
 
                   <MobileFilterModal
                     modalTitle="Instructor"
-                    buttonText={instructor ? instructor : "Instructor"}
-                    clearEvent={onFilterClearEvent("instructor")}
+                    buttonText={instructor ? instructor : 'Instructor'}
+                    clearEvent={onFilterClearEvent('instructor')}
                   >
                     <SmartDropDown
                       value={instructor}
-                      buttonText={instructor ? instructor : "Instructor"}
-                      closeEvent={onFilterChange("instructor")}
+                      buttonText={instructor ? instructor : 'Instructor'}
+                      closeEvent={onFilterChange('instructor')}
                     >
                       {({ closeHandler }) => (
                         <>
@@ -288,7 +288,7 @@ export const DesignOne = ({
                   </MobileFilterModal>
                   <div className="btn_box_primary btn-modal_dropdown full-btn mt-3 search">
                     <a className="btn" href="#" onClick={findMeditation}>
-                      Search{" "}
+                      Search{' '}
                     </a>
                   </div>
                 </div>
@@ -308,14 +308,14 @@ export const DesignOne = ({
               >
                 <div
                   className={classNames(
-                    "card image-card image-card-1 contentCard",
+                    'card image-card image-card-1 contentCard',
                   )}
                   data-play-meditation
                   style={{
                     background: `url(${
                       meditate.coverImage
                         ? meditate.coverImage.url
-                        : "/img/card-1a.png"
+                        : '/img/card-1a.png'
                     }) no-repeat center/cover`,
                   }}
                 >
@@ -325,8 +325,8 @@ export const DesignOne = ({
                     </span>
                     {!meditate.accessible && (
                       <span className="lock">
-                        {" "}
-                        <img src="/img/ic-lock.png" />{" "}
+                        {' '}
+                        <img src="/img/ic-lock.png" />{' '}
                       </span>
                     )}
                   </div>
@@ -335,8 +335,8 @@ export const DesignOne = ({
                       onClick={markFavorite(meditate)}
                       className={
                         meditate.isFavorite
-                          ? "course-like liked"
-                          : "course-like"
+                          ? 'course-like liked'
+                          : 'course-like'
                       }
                     ></div>
                   )}
@@ -385,7 +385,7 @@ export const DesignOne = ({
         popularFolder.content.length > 0 && (
           <section className="browse-category most-popular">
             <p className="title-slider">
-              Most Popular{" "}
+              Most Popular{' '}
               <Link
                 prefetch={false}
                 href={`/us-en/library/search`}
@@ -408,7 +408,7 @@ export const DesignOne = ({
                       background: `url(${
                         meditate.coverImage
                           ? meditate.coverImage.url
-                          : "/img/card-1a.png"
+                          : '/img/card-1a.png'
                       }) no-repeat center/cover`,
                     }}
                   >
@@ -427,8 +427,8 @@ export const DesignOne = ({
                         onClick={markFavorite(meditate)}
                         className={
                           meditate.isFavorite
-                            ? "course-like liked"
-                            : "course-like"
+                            ? 'course-like liked'
+                            : 'course-like'
                         }
                       ></div>
                     )}
@@ -450,8 +450,8 @@ export const DesignOne = ({
           <Popup
             tabIndex="1"
             value={topic}
-            buttonText={topic ? topic : "Topic"}
-            closeEvent={onFilterChange("topic")}
+            buttonText={topic ? topic : 'Topic'}
+            closeEvent={onFilterChange('topic')}
           >
             {({ closeHandler }) => (
               <>
@@ -472,26 +472,26 @@ export const DesignOne = ({
           <Popup
             tabIndex="2"
             value={duration}
-            buttonText={duration ? DURATION[duration].name : "Duration"}
-            closeEvent={onFilterChange("duration")}
+            buttonText={duration ? DURATION[duration].name : 'Duration'}
+            closeEvent={onFilterChange('duration')}
           >
             {({ closeHandler }) => (
               <>
                 <li
                   className="courses-filter__list-item"
-                  onClick={closeHandler("MINUTES_5")}
+                  onClick={closeHandler('MINUTES_5')}
                 >
                   {DURATION.MINUTES_5.name}
                 </li>
                 <li
                   className="courses-filter__list-item"
-                  onClick={closeHandler("MINUTES_10")}
+                  onClick={closeHandler('MINUTES_10')}
                 >
                   {DURATION.MINUTES_10.name}
                 </li>
                 <li
                   className="courses-filter__list-item"
-                  onClick={closeHandler("MINUTES_20")}
+                  onClick={closeHandler('MINUTES_20')}
                 >
                   {DURATION.MINUTES_20.name}
                 </li>
@@ -501,8 +501,8 @@ export const DesignOne = ({
           <Popup
             tabIndex="3"
             value={instructor}
-            buttonText={instructor ? instructor : "Instructor"}
-            closeEvent={onFilterChange("instructor")}
+            buttonText={instructor ? instructor : 'Instructor'}
+            closeEvent={onFilterChange('instructor')}
           >
             {({ closeHandler }) => (
               <>
@@ -572,14 +572,14 @@ export const DesignOne = ({
                   >
                     <div
                       className={classNames(
-                        "card image-card image-card-1 contentCard",
+                        'card image-card image-card-1 contentCard',
                       )}
                       data-play-meditation
                       style={{
                         background: `url(${
                           meditate.coverImage
                             ? meditate.coverImage.url
-                            : "/img/card-1a.png"
+                            : '/img/card-1a.png'
                         }) no-repeat center/cover`,
                       }}
                     >
@@ -589,8 +589,8 @@ export const DesignOne = ({
                         </span>
                         {!meditate.accessible && (
                           <span className="lock">
-                            {" "}
-                            <img src="/img/ic-lock.png" />{" "}
+                            {' '}
+                            <img src="/img/ic-lock.png" />{' '}
                           </span>
                         )}
                       </div>
@@ -599,8 +599,8 @@ export const DesignOne = ({
                           onClick={markFavorite(meditate)}
                           className={
                             meditate.isFavorite
-                              ? "course-like liked"
-                              : "course-like"
+                              ? 'course-like liked'
+                              : 'course-like'
                           }
                         ></div>
                       )}
@@ -634,14 +634,14 @@ export const DesignOne = ({
                   >
                     <div
                       className={classNames(
-                        "card image-card image-card-1 contentCard",
+                        'card image-card image-card-1 contentCard',
                       )}
                       data-play-meditation
                       style={{
                         background: `url(${
                           meditate.coverImage
                             ? meditate.coverImage.url
-                            : "/img/card-1a.png"
+                            : '/img/card-1a.png'
                         }) no-repeat center/cover`,
                       }}
                     >
@@ -651,8 +651,8 @@ export const DesignOne = ({
                         </span>
                         {!meditate.accessible && (
                           <span className="lock">
-                            {" "}
-                            <img src="/img/ic-lock.png" />{" "}
+                            {' '}
+                            <img src="/img/ic-lock.png" />{' '}
                           </span>
                         )}
                       </div>
@@ -792,7 +792,7 @@ export const DesignOne = ({
               the secrets of meditation and your own breath.
             </p>
             <button
-              onClick={() => window.open("https://aolf.me/intro", "_self")}
+              onClick={() => window.open('https://aolf.me/intro', '_self')}
               className="btn"
             >
               Register Today
@@ -801,7 +801,7 @@ export const DesignOne = ({
           <div className="card yellow">
             <h5 className="card-title">Search Live Meditation Courses</h5>
             <p className="card-text">
-              Learn to meditate live online with a certified{" "}
+              Learn to meditate live online with a certified{' '}
               <br className="mob-none" /> instructor
             </p>
             <button className="btn" onClick={findACourseAction}>

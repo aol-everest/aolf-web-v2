@@ -1,10 +1,10 @@
-import { pushRouteWithUTMQuery } from "@service";
-import { api } from "@utils";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
-import Style from "./Corporate-email-verify.module.scss";
+import { pushRouteWithUTMQuery } from '@service';
+import { api } from '@utils';
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { FaCheckCircle, FaMinusCircle } from 'react-icons/fa';
+import Style from './Corporate-email-verify.module.scss';
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -34,7 +34,7 @@ function Token() {
     async function fetchData() {
       try {
         const { error, isError } = await api.get({
-          path: "verifyCorporateAccount",
+          path: 'verifyCorporateAccount',
           param: { key: router.query.activate },
         });
         if (isError) {
@@ -52,12 +52,12 @@ function Token() {
     if (router.query.activate) {
       fetchData();
     } else {
-      setMessage("Activation code missing");
+      setMessage('Activation code missing');
     }
   }, [router.isReady]);
 
   const handleModalToggle = () => {
-    pushRouteWithUTMQuery(router, "/us-en/course");
+    pushRouteWithUTMQuery(router, '/us-en/course');
   };
 
   return (
@@ -66,7 +66,7 @@ function Token() {
         <div className="modal-window__header">
           <button
             className={classNames(
-              "modal-window__close modal-window__close_mobile",
+              'modal-window__close modal-window__close_mobile',
               Style.mobileClose,
             )}
             onClick={handleModalToggle}

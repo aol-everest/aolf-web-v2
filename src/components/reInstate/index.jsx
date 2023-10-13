@@ -1,11 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { UpdateCC } from "./UpdateCC";
+import { ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { UpdateCC } from './UpdateCC';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -41,10 +41,10 @@ export const ReInstateModal = ({ subscription }) => {
           <>
             {!enableEditCC && (
               <span>
-                Your membership has become delinquent, please{" "}
+                Your membership has become delinquent, please{' '}
                 <a href="#" onClick={enableEditCCAction}>
                   click here
-                </a>{" "}
+                </a>{' '}
                 to update you cc information and reinstate your membership.
               </span>
             )}
@@ -65,7 +65,7 @@ export const ReInstateModal = ({ subscription }) => {
                 fonts={[
                   {
                     cssSrc:
-                      "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                      'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
                   },
                 ]}
               >
@@ -97,7 +97,7 @@ export const ReInstate = ({ subscription }) => {
     if (!router.isReady || !subscription) return;
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       children: <ReInstateModal subscription={subscription} />,
-      title: "Action required",
+      title: 'Action required',
     });
   }, [router.isReady, subscription]);
 

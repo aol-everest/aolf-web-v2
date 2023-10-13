@@ -1,6 +1,6 @@
-import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from "@constants";
-import classNames from "classnames";
-import { Field } from "formik";
+import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from '@constants';
+import classNames from 'classnames';
+import { Field } from 'formik';
 
 export const MobileCourseOptions = ({
   expenseAddOn,
@@ -77,7 +77,7 @@ export const MobileCourseOptions = ({
                           <p className="font-weight-bold">
                             <span className="discount font-weight-bold">
                               [$590] [$90]
-                            </span>{" "}
+                            </span>{' '}
                             $0
                           </p>
                         </li>
@@ -90,7 +90,7 @@ export const MobileCourseOptions = ({
                               <span className="discount font-weight-bold">
                                 [${delfee}]
                               </span>
-                            )}{" "}
+                            )}{' '}
                             ${fee}
                           </p>
                         </li>
@@ -141,7 +141,7 @@ export const MobileCourseOptions = ({
                               <span className="discount font-weight-bold">
                                 [${delfee}]
                               </span>
-                            )}{" "}
+                            )}{' '}
                             ${fee}
                           </p>
                         </li>
@@ -199,15 +199,15 @@ export const MobileCourseOptions = ({
                             name="priceType"
                             id="payment-lg-regular-card"
                             value="regular"
-                            checked={formikProps.values.priceType === "regular"}
-                            onChange={formikProps.handleChange("priceType")}
+                            checked={formikProps.values.priceType === 'regular'}
+                            onChange={formikProps.handleChange('priceType')}
                           />
                           <label htmlFor="payment-lg-regular-card">
                             <span>Regular rate</span>
                             <span>
                               {delfee && (
                                 <span className="discount">${delfee}</span>
-                              )}{" "}
+                              )}{' '}
                               ${fee}
                             </span>
                           </label>
@@ -220,10 +220,10 @@ export const MobileCourseOptions = ({
                               name="priceType"
                               id="payment-lg-premium-card"
                               checked={
-                                formikProps.values.priceType === "premium"
+                                formikProps.values.priceType === 'premium'
                               }
                               value="premium"
-                              onChange={formikProps.handleChange("priceType")}
+                              onChange={formikProps.handleChange('priceType')}
                             />
                             <label htmlFor="payment-lg-premium-card">
                               <span>Premium/Journey+ rate:</span>
@@ -235,7 +235,7 @@ export const MobileCourseOptions = ({
                                     <span className="discount">
                                       ${delfee || premiumRate.listPrice}
                                     </span>
-                                  )}{" "}
+                                  )}{' '}
                                 ${premiumRate.unitPrice}
                               </span>
                             </label>
@@ -311,7 +311,7 @@ export const MobileCourseOptions = ({
                             <span>
                               <span className="discount">
                                 ${discount.oldPrice}
-                              </span>{" "}
+                              </span>{' '}
                               ${discount.newPrice}
                             </span>
                           )}
@@ -324,7 +324,7 @@ export const MobileCourseOptions = ({
                                   <span className="discount">
                                     ${delfee || premiumRate.listPrice}
                                   </span>
-                                )}{" "}
+                                )}{' '}
                               ${premiumRate.unitPrice}
                             </span>
                           )}
@@ -387,7 +387,7 @@ export const MobileCourseOptions = ({
                             Limited Time Offer: ${fee}
                           </h1>
                           <p className="price">
-                            Regular Course Fee:{" "}
+                            Regular Course Fee:{' '}
                             <span className="discount">${delfee}</span>
                           </p>
                         </>
@@ -442,11 +442,11 @@ export const MobileCourseOptions = ({
         {hasGroupedAddOnProducts && (
           <div className="order__card__payment d-block d-lg-none">
             <h6 className="order__card__payment-title">
-              Room &amp; Board {isOfflineExpense && "*"}
+              Room &amp; Board {isOfflineExpense && '*'}
             </h6>
             <div
-              className={classNames("select-room", {
-                "no-valid":
+              className={classNames('select-room', {
+                'no-valid':
                   formikProps.errors.accommodation &&
                   formikProps.touched.accommodation,
               })}
@@ -455,7 +455,7 @@ export const MobileCourseOptions = ({
                 <span className="select-room__placeholder">
                   Select Room &amp; Board
                 </span>
-                {groupedAddOnProducts["Residential Add On"].map(
+                {groupedAddOnProducts['Residential Add On'].map(
                   (residentialAddOn) => {
                     return (
                       <div
@@ -470,7 +470,7 @@ export const MobileCourseOptions = ({
                           className="select-room__input"
                         />
                         <span className="select-room__input-text">
-                          {residentialAddOn.productName}{" "}
+                          {residentialAddOn.productName}{' '}
                           <span className="price">
                             $
                             {residentialAddOn.unitPrice +
@@ -483,7 +483,7 @@ export const MobileCourseOptions = ({
                 )}
               </div>
               <ul className="select-room__list">
-                {groupedAddOnProducts["Residential Add On"].map(
+                {groupedAddOnProducts['Residential Add On'].map(
                   (residentialAddOn) => {
                     return (
                       <li
@@ -493,7 +493,7 @@ export const MobileCourseOptions = ({
                         }
                         className={
                           residentialAddOn.isFull &&
-                          "tw-pointer-events-none tw-opacity-60"
+                          'tw-pointer-events-none tw-opacity-60'
                         }
                       >
                         <label
@@ -533,7 +533,7 @@ export const MobileCourseOptions = ({
           <h6 className="order__card__payment-title">Payment Options</h6>
           <div className="order__card__payment-option">
             <Field
-              className={classNames("form-check-input radio", {
+              className={classNames('form-check-input radio', {
                 error:
                   formikProps.errors.paymentOption &&
                   formikProps.touched.paymentOption,
@@ -552,7 +552,7 @@ export const MobileCourseOptions = ({
           </div>
           <div className="order__card__payment-option">
             <Field
-              className={classNames("form-check-input radio", {
+              className={classNames('form-check-input radio', {
                 error:
                   formikProps.errors.paymentOption &&
                   formikProps.touched.paymentOption,
@@ -630,13 +630,13 @@ export const MobileCourseOptions = ({
                           <span className="discount">
                             ${availableBundle.comboListPrice}
                           </span>
-                        )}{" "}
+                        )}{' '}
                         ${availableBundle.comboUnitPrice}
                       </span>
                     </label>
                   </div>
                   <div className="reciept__payment-tooltip">
-                    {availableBundle.comboDescription || ""}
+                    {availableBundle.comboDescription || ''}
                   </div>
                 </>
               );

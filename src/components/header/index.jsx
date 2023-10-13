@@ -1,126 +1,126 @@
 /* eslint-disable react/display-name */
-import Link from "@components/linkWithUTM";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import React, { useState } from "react";
-import Style from "./Header.module.scss";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import Link from '@components/linkWithUTM';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import React, { useState } from 'react';
+import Style from './Header.module.scss';
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
-import { CONTENT_FOLDER_IDS, MODAL_TYPES } from "@constants";
+import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
 
 const HB_MENU = [
   {
-    name: "Courses",
-    link: "/us-en/course",
+    name: 'Courses',
+    link: '/us-en/course',
   },
   {
-    name: "Services",
+    name: 'Services',
     submenu: [
       {
-        name: "Institutions",
-        link: "https://healingbreaths.org/institutions/",
+        name: 'Institutions',
+        link: 'https://healingbreaths.org/institutions/',
       },
       {
-        name: "Professionals",
-        link: "https://healingbreaths.org/healthcare-professionals/",
+        name: 'Professionals',
+        link: 'https://healingbreaths.org/healthcare-professionals/',
       },
     ],
   },
   {
-    name: "The Science",
+    name: 'The Science',
     link: `https://healingbreaths.org/the-science/`,
   },
   {
-    name: "Experiences",
+    name: 'Experiences',
     link: `https://healingbreaths.org/experiences/`,
   },
   {
-    name: "Insights",
+    name: 'Insights',
     submenu: [
       {
-        name: "Stories",
-        link: "https://healingbreaths.org/stories/",
+        name: 'Stories',
+        link: 'https://healingbreaths.org/stories/',
       },
       {
-        name: "Infographics and E-books",
-        link: "https://healingbreaths.org/infographics-and-e-books/",
+        name: 'Infographics and E-books',
+        link: 'https://healingbreaths.org/infographics-and-e-books/',
       },
     ],
   },
   {
-    name: "Who We Are",
+    name: 'Who We Are',
     submenu: [
       {
-        name: "About Us",
-        link: "https://healingbreaths.org/about-us/",
+        name: 'About Us',
+        link: 'https://healingbreaths.org/about-us/',
       },
     ],
   },
   {
-    name: "News",
-    link: "https://healingbreaths.org/news/",
+    name: 'News',
+    link: 'https://healingbreaths.org/news/',
   },
 ];
 
 const AOL_MENU = [
   {
-    name: "Gurudev",
-    link: "/us-en/lp/gurudev",
+    name: 'Gurudev',
+    link: '/us-en/lp/gurudev',
   },
   {
-    name: "Courses",
+    name: 'Courses',
     subHeading: [
       {
         name: "Beginner's Courses",
         items: [
           {
-            name: "Art Of Living Part I",
-            link: "https://event.us.artofliving.org/us-en/online-course-2",
+            name: 'Art Of Living Part I',
+            link: 'https://event.us.artofliving.org/us-en/online-course-2',
           },
           {
-            name: "Sahaj Meditation Meditation",
+            name: 'Sahaj Meditation Meditation',
             link: `https://event.us.artofliving.org/us-en/sahajsamadhi`,
           },
           {
-            name: "Sri Sri Yoga Foundation Program ",
-            link: "/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431",
+            name: 'Sri Sri Yoga Foundation Program ',
+            link: '/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431',
           },
         ],
       },
       {
-        name: "Advanced Courses",
+        name: 'Advanced Courses',
         items: [
           {
-            name: "Art Of Living Part II",
-            link: "https://event.us.artofliving.org/us-en/artoflivingpart2",
+            name: 'Art Of Living Part II',
+            link: 'https://event.us.artofliving.org/us-en/artoflivingpart2',
           },
           {
-            name: "Blessings",
-            link: "/us-en/lp/blessings-course",
+            name: 'Blessings',
+            link: '/us-en/lp/blessings-course',
           },
           {
-            name: "Chakra Kriya",
-            link: "/us-en/lp/chakra-kriya",
+            name: 'Chakra Kriya',
+            link: '/us-en/lp/chakra-kriya',
           },
           {
-            name: "Sanyam",
-            link: "/us-en/lp/sanyam",
+            name: 'Sanyam',
+            link: '/us-en/lp/sanyam',
           },
         ],
       },
       {
-        name: "All Courses",
-        link: "/us-en/course",
+        name: 'All Courses',
+        link: '/us-en/course',
       },
     ],
   },
   {
-    name: "App",
-    link: "/us-en/lp/journey-app",
+    name: 'App',
+    link: '/us-en/lp/journey-app',
   },
   /* {
     name: "Events",
@@ -140,39 +140,39 @@ const AOL_MENU = [
     ],
   }, */
   {
-    name: "About Us",
+    name: 'About Us',
     submenu: [
       {
-        name: "Art of Living",
-        link: "https://www.artofliving.org/us-en/about-us",
+        name: 'Art of Living',
+        link: 'https://www.artofliving.org/us-en/about-us',
       },
       {
-        name: "Service Projects",
-        link: "https://www.artofliving.org/us-en/service-projects-overview",
+        name: 'Service Projects',
+        link: 'https://www.artofliving.org/us-en/service-projects-overview',
       },
       {
-        name: "Research",
-        link: "https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya",
+        name: 'Research',
+        link: 'https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya',
       },
       {
-        name: "Retreat Center",
-        link: "/us-en/lp/theartoflivingretreatcenter",
+        name: 'Retreat Center',
+        link: '/us-en/lp/theartoflivingretreatcenter',
       },
       {
-        name: "Blog",
-        link: "https://www.artofliving.org/us-en/blog",
+        name: 'Blog',
+        link: 'https://www.artofliving.org/us-en/blog',
       },
       {
-        name: "Press & Media",
-        link: "https://www.artofliving.org/us-en/media-coverage?search=",
+        name: 'Press & Media',
+        link: 'https://www.artofliving.org/us-en/media-coverage?search=',
       },
       {
-        name: "Testimonials",
-        link: "https://www.artofliving.org/us-en/testimonials/search",
+        name: 'Testimonials',
+        link: 'https://www.artofliving.org/us-en/testimonials/search',
       },
       {
-        name: "Contact Us",
-        link: "https://www.artofliving.org/us-en/contact-us",
+        name: 'Contact Us',
+        link: 'https://www.artofliving.org/us-en/contact-us',
       },
     ],
   },
@@ -180,141 +180,141 @@ const AOL_MENU = [
 
 const IAHV_MENU = [
   {
-    name: "Courses",
+    name: 'Courses',
     submenu: [
       {
-        name: "Join A Free Intro",
-        link: "/us-en/lp/introtalks-hq?id=a388X000000ZHkzQAG&utm_source=organic&utm_medium=website&utm_campaign=menu",
+        name: 'Join A Free Intro',
+        link: '/us-en/lp/introtalks-hq?id=a388X000000ZHkzQAG&utm_source=organic&utm_medium=website&utm_campaign=menu',
       },
       {
-        name: "Overview",
-        link: "https://www.artofliving.org/us-en/courses",
+        name: 'Overview',
+        link: 'https://www.artofliving.org/us-en/courses',
       },
       {
-        name: "Sahaj Meditation",
+        name: 'Sahaj Meditation',
         link: `https://www.artofliving.org/us-en/sahaj-samadhi-meditation`,
         // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
       },
       {
-        name: "Silent Retreat",
-        link: "https://www.artofliving.org/us-en/silence-retreat",
+        name: 'Silent Retreat',
+        link: 'https://www.artofliving.org/us-en/silence-retreat',
         // link: `/us-en?courseType=SILENT_RETREAT`,
       },
       {
-        name: "Advanced Courses",
-        link: "/us-en/lp/advanced-courses",
+        name: 'Advanced Courses',
+        link: '/us-en/lp/advanced-courses',
       },
       {
-        name: "Healthcare Providers",
-        link: "https://www.healingbreaths.org/",
+        name: 'Healthcare Providers',
+        link: 'https://www.healingbreaths.org/',
       },
       {
-        name: "Yoga Course",
-        link: "/us-en/lp/online-foundation-program/",
+        name: 'Yoga Course',
+        link: '/us-en/lp/online-foundation-program/',
       },
       {
-        name: "College Courses",
-        link: "https://www.skycampushappiness.org/",
+        name: 'College Courses',
+        link: 'https://www.skycampushappiness.org/',
       },
       {
-        name: "Destination Retreats",
-        link: "https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/",
+        name: 'Destination Retreats',
+        link: 'https://artoflivingretreatcenter.org/category/meditation/meditation-mindfulness/',
       },
       {
-        name: "All Courses",
-        link: "/us-en/course",
+        name: 'All Courses',
+        link: '/us-en/course',
       },
     ],
   },
   {
-    name: "Meditate",
+    name: 'Meditate',
     submenu: [
       {
-        name: "Guided meditations",
+        name: 'Guided meditations',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
       },
       {
-        name: "Live meetups",
-        link: "/us-en/meetup",
+        name: 'Live meetups',
+        link: '/us-en/meetup',
       },
     ],
   },
   {
-    name: "Resources",
+    name: 'Resources',
     submenu: [
       {
-        name: "Journey App",
-        link: "/us-en/lp/journey-app",
+        name: 'Journey App',
+        link: '/us-en/lp/journey-app',
       },
       {
-        name: "Blog",
-        link: "https://www.artofliving.org/us-en/blog",
+        name: 'Blog',
+        link: 'https://www.artofliving.org/us-en/blog',
       },
       {
-        name: "Wisdom Snippets",
+        name: 'Wisdom Snippets',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
       },
       {
-        name: "Better Sleep",
-        link: "https://www.artofliving.org/us-en/blog/start-sleeping-restfully-all-night-using-this-meditation-sleep-guide",
+        name: 'Better Sleep',
+        link: 'https://www.artofliving.org/us-en/blog/start-sleeping-restfully-all-night-using-this-meditation-sleep-guide',
       },
       {
-        name: "Breathwork",
-        link: "https://www.artofliving.org/us-en/yoga/breathing-techniques/yoga-and-pranayama",
+        name: 'Breathwork',
+        link: 'https://www.artofliving.org/us-en/yoga/breathing-techniques/yoga-and-pranayama',
       },
       {
-        name: "Yoga",
-        link: "https://www.artofliving.org/us-en/yoga",
+        name: 'Yoga',
+        link: 'https://www.artofliving.org/us-en/yoga',
       },
       {
-        name: "Meditation for Beginners",
-        link: "https://www.artofliving.org/us-en/8-tips-get-started-meditation",
-      },
-    ],
-  },
-  {
-    name: "About",
-    submenu: [
-      {
-        name: "Art of Living",
-        link: "https://www.artofliving.org/us-en/about-us",
-      },
-      {
-        name: "Founder",
-        link: "/us-en/lp/gurudev",
-      },
-      {
-        name: "Humanitarian Work",
-        link: "https://www.artofliving.org/us-en/service-projects-overview",
-      },
-      {
-        name: "Experiences & Reviews",
-        link: "https://www.artofliving.org/us-en/testimonials/search",
-      },
-      {
-        name: "Research",
-        link: "https://www.artofliving.org/us-en/research-sudarshan-kriya",
-      },
-      {
-        name: "Press & Media",
-        link: "https://www.artofliving.org/us-en/media-coverage",
-      },
-      {
-        name: "Retreat Center",
-        link: "/us-en/lp/theartoflivingretreatcenter",
+        name: 'Meditation for Beginners',
+        link: 'https://www.artofliving.org/us-en/8-tips-get-started-meditation',
       },
     ],
   },
   {
-    name: "Contact",
+    name: 'About',
     submenu: [
       {
-        name: "Contact & Support",
-        link: "https://www.artofliving.org/us-en/contact-us",
+        name: 'Art of Living',
+        link: 'https://www.artofliving.org/us-en/about-us',
       },
       {
-        name: "Donate",
-        link: "https://aolf.kindful.com/",
+        name: 'Founder',
+        link: '/us-en/lp/gurudev',
+      },
+      {
+        name: 'Humanitarian Work',
+        link: 'https://www.artofliving.org/us-en/service-projects-overview',
+      },
+      {
+        name: 'Experiences & Reviews',
+        link: 'https://www.artofliving.org/us-en/testimonials/search',
+      },
+      {
+        name: 'Research',
+        link: 'https://www.artofliving.org/us-en/research-sudarshan-kriya',
+      },
+      {
+        name: 'Press & Media',
+        link: 'https://www.artofliving.org/us-en/media-coverage',
+      },
+      {
+        name: 'Retreat Center',
+        link: '/us-en/lp/theartoflivingretreatcenter',
+      },
+    ],
+  },
+  {
+    name: 'Contact',
+    submenu: [
+      {
+        name: 'Contact & Support',
+        link: 'https://www.artofliving.org/us-en/contact-us',
+      },
+      {
+        name: 'Donate',
+        link: 'https://aolf.kindful.com/',
       },
     ],
   },
@@ -334,27 +334,27 @@ const IAHV_MENU = [
 ];
 
 const ResourcesMenuItem = {
-  name: "Resources",
+  name: 'Resources',
   submenu: [
     {
-      name: "Meditations",
+      name: 'Meditations',
       link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
     },
     {
-      name: "Wisdom",
+      name: 'Wisdom',
       link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
     },
     {
-      name: "Meetups",
-      link: "/us-en/meetup",
+      name: 'Meetups',
+      link: '/us-en/meetup',
     },
   ],
 };
 
 const MENU =
-  orgConfig.name === "AOL"
+  orgConfig.name === 'AOL'
     ? AOL_MENU
-    : orgConfig.name === "IAHV"
+    : orgConfig.name === 'IAHV'
     ? IAHV_MENU
     : HB_MENU;
 
@@ -369,12 +369,12 @@ export const Header = () => {
     first_name,
     last_name,
   } = user?.profile || {};
-  let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
-  initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
+  let initials = `${first_name || ''} ${last_name || ''}`.match(/\b\w/g) || [];
+  initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
 
   const loginAction = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL, {
-      navigateTo: "/us-en/profile?" + queryString.stringify(router.query),
+      navigateTo: '/us-en/profile?' + queryString.stringify(router.query),
     });
   };
 
@@ -484,7 +484,7 @@ export const Header = () => {
                   return (
                     <Nav.Item as="li" key={menu.name}>
                       <Nav.Link href={menu.link} as={Link}>
-                        {menu.icon || ""}
+                        {menu.icon || ''}
                         {menu.name}
                       </Nav.Link>
                     </Nav.Item>
@@ -501,7 +501,7 @@ export const Header = () => {
                   </NavDropdown>
                 );
               })}
-              {orgConfig.name === "AOL" && (
+              {orgConfig.name === 'AOL' && (
                 <NavDropdown
                   title={ResourcesMenuItem.name}
                   as="li"
@@ -530,7 +530,7 @@ export const Header = () => {
           </Navbar.Collapse>
         </Navbar>
         <div className="user-profile-link">
-          {orgConfig.name === "AOL" && (
+          {orgConfig.name === 'AOL' && (
             <Navbar expand="lg" className="resourceNav desktopView">
               <Nav className="mr-auto" as="ul">
                 <NavDropdown
@@ -561,7 +561,7 @@ export const Header = () => {
                   src="/img/donate.svg"
                   alt="Donate"
                   className="donate__image"
-                />{" "}
+                />{' '}
                 Donation
               </a>
             </Link>

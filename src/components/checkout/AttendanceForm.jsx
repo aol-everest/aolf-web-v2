@@ -1,15 +1,15 @@
-import classNames from "classnames";
-import { Field } from "formik";
-import { Fragment } from "react";
-import Select from "react-select";
-import Style from "./AttendanceForm.module.scss";
-import { FieldWrapper } from "./FieldWrapper";
-import { InputDropDown } from "./InputDropDown";
-import { StyledInput } from "./StyledInput";
+import classNames from 'classnames';
+import { Field } from 'formik';
+import { Fragment } from 'react';
+import Select from 'react-select';
+import Style from './AttendanceForm.module.scss';
+import { FieldWrapper } from './FieldWrapper';
+import { InputDropDown } from './InputDropDown';
+import { StyledInput } from './StyledInput';
 
 export const AttendanceForm = ({ formikProps, corporates }) => {
   const onPopupChangeEvent = (formikProps, field) => (value) => {
-    formikProps.setFieldValue(field, value?.name || "");
+    formikProps.setFieldValue(field, value?.name || '');
   };
 
   const corporateOptions = corporates?.map((corporate) => {
@@ -41,7 +41,7 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
         <Field name="contactHealthcareOrganisation" className="form-control">
           {({ field }) => (
             <FieldWrapper
-              formikKey={"contactHealthcareOrganisation"}
+              formikKey={'contactHealthcareOrganisation'}
               formikProps={formikProps}
               fullWidth
             >
@@ -52,8 +52,8 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
                   control: (styles) => ({
                     ...styles,
                     flex: 1,
-                    justifyContent: "start",
-                    width: "250px",
+                    justifyContent: 'start',
+                    width: '250px',
                   }),
                 }}
                 {...field}
@@ -62,13 +62,13 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
                     ? corporateOptions.find(
                         (option) => option.value === field.value,
                       )
-                    : ""
+                    : ''
                 }
                 onChange={(option) => {
                   if (option) {
                     setFieldValue(field.name, option.value);
                   } else {
-                    setFieldValue(field.name, "");
+                    setFieldValue(field.name, '');
                   }
                 }}
                 placeholder="Healthcare Organization"
@@ -77,7 +77,7 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
           )}
         </Field>
         <StyledInput
-          containerClass={classNames(Style.address, "mt-0")}
+          containerClass={classNames(Style.address, 'mt-0')}
           className={classNames(Style.address)}
           placeholder="Degree/Qualifications"
           formikProps={formikProps}
@@ -85,67 +85,67 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
           fullWidth
         ></StyledInput>
         <div className="d-flex w-50 justify-content-start">
-          <FieldWrapper formikKey={"claimingType"} formikProps={formikProps}>
+          <FieldWrapper formikKey={'claimingType'} formikProps={formikProps}>
             <InputDropDown
               placeholder="CE Claiming type"
               formikProps={formikProps}
               formikKey="claimingType"
-              closeEvent={onPopupChangeEvent(formikProps, "claimingType")}
+              closeEvent={onPopupChangeEvent(formikProps, 'claimingType')}
             >
               {({ closeHandler }) => (
                 <>
                   <li
                     onClick={closeHandler({
-                      name: "Physician - MD",
-                      value: "Physician - MD",
+                      name: 'Physician - MD',
+                      value: 'Physician - MD',
                     })}
                   >
                     Physician - MD
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Physician - DO",
-                      value: "Physician - DO",
+                      name: 'Physician - DO',
+                      value: 'Physician - DO',
                     })}
                   >
                     Physician - DO
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Physician Assistant",
-                      value: "Physician Assistant",
+                      name: 'Physician Assistant',
+                      value: 'Physician Assistant',
                     })}
                   >
                     Physician Assistant
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Physical Therapist",
-                      value: "Physical Therapist",
+                      name: 'Physical Therapist',
+                      value: 'Physical Therapist',
                     })}
                   >
                     Physical Therapist
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Nurse",
-                      value: "Nurse",
+                      name: 'Nurse',
+                      value: 'Nurse',
                     })}
                   >
                     Nurse
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Dentist",
-                      value: "Dentist",
+                      name: 'Dentist',
+                      value: 'Dentist',
                     })}
                   >
                     Dentist
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Other",
-                      value: "Other",
+                      name: 'Other',
+                      value: 'Other',
                     })}
                   >
                     Other
@@ -155,7 +155,7 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
             </InputDropDown>
           </FieldWrapper>
         </div>
-        {formikProps.values["claimingType"] === "Other" && (
+        {formikProps.values['claimingType'] === 'Other' && (
           <StyledInput
             placeholder="Specify details (Other)"
             formikProps={formikProps}
@@ -165,7 +165,7 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
         )}
         <div className="d-flex justify-content-start mt-lg-0">
           <FieldWrapper
-            formikKey={"certificateOfAttendance"}
+            formikKey={'certificateOfAttendance'}
             formikProps={formikProps}
           >
             <InputDropDown
@@ -174,23 +174,23 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
               formikKey="certificateOfAttendance"
               closeEvent={onPopupChangeEvent(
                 formikProps,
-                "certificateOfAttendance",
+                'certificateOfAttendance',
               )}
             >
               {({ closeHandler }) => (
                 <>
                   <li
                     onClick={closeHandler({
-                      name: "CE Credits",
-                      value: "CE Credits",
+                      name: 'CE Credits',
+                      value: 'CE Credits',
                     })}
                   >
                     CE Credits
                   </li>
                   <li
                     onClick={closeHandler({
-                      name: "Certificate of Attendance",
-                      value: "Certificate of Attendance",
+                      name: 'Certificate of Attendance',
+                      value: 'Certificate of Attendance',
                     })}
                   >
                     Certificate of Attendance

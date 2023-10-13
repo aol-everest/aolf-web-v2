@@ -1,12 +1,12 @@
-import { useAuth } from "@contexts";
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { api } from "@utils";
-import classNames from "classnames";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaCheckCircle } from "react-icons/fa";
-import { object, string } from "yup";
+import { useAuth } from '@contexts';
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { api } from '@utils';
+import classNames from 'classnames';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FaCheckCircle } from 'react-icons/fa';
+import { object, string } from 'yup';
 
 const ChangeEmailStep = ({
   onSubmit,
@@ -21,8 +21,8 @@ const ChangeEmailStep = ({
         [existingEmail, null],
         `${existingEmail} is already your email address`,
       )
-      .required("Email is required")
-      .email("Email is invalid"),
+      .required('Email is required')
+      .email('Email is invalid'),
   });
   const {
     register,
@@ -35,8 +35,8 @@ const ChangeEmailStep = ({
   return (
     <form className="active show" onSubmit={handleSubmit(onSubmit)}>
       <div
-        className={classNames("success-message-container-cp", {
-          "d-none": !showSuccessMessage,
+        className={classNames('success-message-container-cp', {
+          'd-none': !showSuccessMessage,
         })}
       >
         <div className="success-message tw-text-center">
@@ -61,8 +61,8 @@ const ChangeEmailStep = ({
           <div className="col-sm-10">
             <input
               type="text"
-              {...register("username")}
-              className={classNames("tw-w-full", { validate: errors.username })}
+              {...register('username')}
+              className={classNames('tw-w-full', { validate: errors.username })}
               placeholder="Enter new email"
             />
             {errors.username && (
@@ -102,7 +102,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
       setSubmittedEmail(username);
 
       await api.post({
-        path: "change-email",
+        path: 'change-email',
         body: {
           newEmail: username,
         },
@@ -110,7 +110,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
 
       // await Auth.currentAuthenticatedUser({ bypassCache: true });
       setShowSuccessMessage(true);
-      setMessage("");
+      setMessage('');
       setShowMessage(false);
     } catch (ex) {
       const data = ex.response?.data;
@@ -137,7 +137,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
 
       await Auth.currentAuthenticatedUser({ bypassCache: true }); */
       // setStep("change-email");
-      setMessage("");
+      setMessage('');
       setShowMessage(false);
     } catch (ex) {
       const data = ex.response?.data;

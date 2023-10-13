@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - qa
+      - dev
+  pull_request:
+  workflow_dispatch:
+
+env:
+  SENTRY_AUTH_TOKEN: b189999a330d495e96a38b375d50bca76d261577149c4a3eafe9731135e2e63a
+  SENTRY_ENVIRONMENT: dev
+  NEXT_PUBLIC_ORGANIZATION_NAME: AOL
+  NEXT_PUBLIC_COGNITO_CLIENT_ID: 6nti52m34ndg15fo2u0v1e37cf
+  NEXT_PUBLIC_COGNITO_USERPOOL: us-east-2_jR9xZuvHa
+
+jobs:
+  validate:
+    name: ✅ Validate project
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: ⬇️ Checkout project
+        uses: actions/checkout@v3
+
+      - name: 🟢 Setup NodeJS ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+
+      - name: 📥 Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 💅 Check format
+        run: yarn check:format
+
+      - name: 📑 Check lint
+        run: yarn check:lint
+
+  # test:
+  #   name: 🧑‍🔬 Test project
+  #   runs-on: ubuntu-latest
+  #   needs: validate
+  #   strategy:
+  #     matrix:
+  #       node-version: [18.x]
+
+  #   steps:
+  #     - name: ⬇️ Checkout project
+  #       uses: actions/checkout@v3
+
+  #     - name: 🟢 Setup NodeJS ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #         cache: yarn
+
+  #     - name: 📥 Install dependencies
+  #       run: yarn install --frozen-lockfile
+
+  #     - name: 🧪 Run the tests
+  #       run: yarn test:coverage
+
+  build:
+    name: 🧰 Build project
+    runs-on: ubuntu-latest
+    needs: validate
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: ⬇️ Checkout project
+        uses: actions/checkout@v3
+
+      - name: 🟢 Setup NodeJS ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+
+      - name: 📥 Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: ⚒️ Build project
+        run: yarn build

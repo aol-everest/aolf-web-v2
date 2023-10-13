@@ -1,13 +1,14 @@
-import Link from "@components/linkWithUTM";
-import classNames from "classnames";
-import { Field } from "formik";
-import React, { useEffect } from "react";
+import Link from '@components/linkWithUTM';
+import { orgConfig } from '@org';
+import classNames from 'classnames';
+import { Field } from 'formik';
+import React, { useEffect } from 'react';
 
 export const AgreementForm = ({
   formikProps,
   complianceQuestionnaire = [],
   isCorporateEvent,
-  screen = "MOBILE",
+  screen = 'MOBILE',
   questionnaireArray,
 }) => {
   const validateQuestionnaire = (complianceQuestionnaire) => (value) => {
@@ -20,12 +21,12 @@ export const AgreementForm = ({
       if (match) {
         result =
           result ||
-          (match.answerShouldBe !== "Yes" && ques.value) ||
-          (match.answerShouldBe === "Yes" && !ques.value);
+          (match.answerShouldBe !== 'Yes' && ques.value) ||
+          (match.answerShouldBe === 'Yes' && !ques.value);
       }
     });
     if (result) {
-      error = "Please check the box in order to continue.";
+      error = 'Please check the box in order to continue.';
     }
     return error;
   };
@@ -35,37 +36,41 @@ export const AgreementForm = ({
       formikProps?.values?.questionnaire?.length === 0 &&
       complianceQuestionnaire?.length > 0
     ) {
-      formikProps.setFieldValue("questionnaire", questionnaireArray);
+      formikProps.setFieldValue('questionnaire', questionnaireArray);
     }
   }, [questionnaireArray]);
 
-  if (screen !== "MOBILE") {
+  const isIahv = orgConfig.name === 'IAHV';
+
+  if (screen !== 'MOBILE') {
     return (
       <>
         <div className="agreement mt-4 d-none d-lg-block">
           <div className="agreement__group agreement__group_important agreement__group_important_desktop">
             <input
               type="checkbox"
-              className={classNames("custom-checkbox", {
+              className={classNames('custom-checkbox', {
                 error:
                   formikProps.errors.ppaAgreement &&
                   formikProps.touched.ppaAgreement,
               })}
               placeholder=" "
               checked={formikProps.values.ppaAgreement}
-              onChange={formikProps.handleChange("ppaAgreement")}
+              onChange={formikProps.handleChange('ppaAgreement')}
               value={formikProps.values.ppaAgreement}
               name="ppaAgreement"
             />
             <label htmlFor="program"></label>
             <p className="agreement__text">
-              I agree to the{" "}
+              I agree to the{' '}
               <Link
                 prefetch={false}
                 href={
-                  isCorporateEvent
-                    ? "/policy/ppa-corporate"
-                    : "/policy/ppa-course"
+                  isIahv
+                    ? 'https://members.us.iahv.org/policy/ppa-course'
+                    : isCorporateEvent
+                    ? '/policy/ppa-corporate'
+                    : '/policy/ppa-course'
                 }
                 legacyBehavior
               >
@@ -103,7 +108,7 @@ export const AgreementForm = ({
                     return (
                       <input
                         type="checkbox"
-                        className={classNames("custom-checkbox", {
+                        className={classNames('custom-checkbox', {
                           error:
                             formikProps.errors.questionnaire &&
                             formikProps.touched.questionnaire,
@@ -123,7 +128,7 @@ export const AgreementForm = ({
                             currentValue.value = !currentValue.value;
                             const nextValue = [...otherValues, currentValue];
 
-                            form.setFieldValue("questionnaire", nextValue);
+                            form.setFieldValue('questionnaire', nextValue);
                           }
                         }}
                       />
@@ -155,7 +160,7 @@ export const AgreementForm = ({
               <p className="health-confirmation__text">
                 <br />
                 <br />
-                For any health related questions, please contact us at{" "}
+                For any health related questions, please contact us at{' '}
                 <a href="mailto:healthinfo@us.artofliving.org">
                   healthinfo@us.artofliving.org
                 </a>
@@ -172,26 +177,28 @@ export const AgreementForm = ({
         <div className="agreement__group">
           <input
             type="checkbox"
-            className={classNames("custom-checkbox", {
+            className={classNames('custom-checkbox', {
               error:
                 formikProps.errors.ppaAgreement &&
                 formikProps.touched.ppaAgreement,
             })}
             placeholder=" "
             checked={formikProps.values.ppaAgreement}
-            onChange={formikProps.handleChange("ppaAgreement")}
+            onChange={formikProps.handleChange('ppaAgreement')}
             value={formikProps.values.ppaAgreement}
             name="ppaAgreement"
           />
           <label htmlFor="ppaAgreement"></label>
           <p className="agreement__text">
-            I agree to the{" "}
+            I agree to the{' '}
             <Link
               prefetch={false}
               href={
-                isCorporateEvent
-                  ? "/policy/ppa-corporate"
-                  : "/policy/ppa-course"
+                isIahv
+                  ? 'https://members.us.iahv.org/policy/ppa-course'
+                  : isCorporateEvent
+                  ? '/policy/ppa-corporate'
+                  : '/policy/ppa-course'
               }
               legacyBehavior
             >
@@ -226,7 +233,7 @@ export const AgreementForm = ({
                       return (
                         <input
                           type="checkbox"
-                          className={classNames("custom-checkbox", {
+                          className={classNames('custom-checkbox', {
                             error:
                               formikProps.errors.questionnaire &&
                               formikProps.touched.questionnaire,
@@ -246,7 +253,7 @@ export const AgreementForm = ({
                               currentValue.value = !currentValue.value;
                               const nextValue = [...otherValues, currentValue];
 
-                              form.setFieldValue("questionnaire", nextValue);
+                              form.setFieldValue('questionnaire', nextValue);
                             }
                           }}
                         />
@@ -277,7 +284,7 @@ export const AgreementForm = ({
             <div className="agreement__group tw-mt-3 tw-pl-3">
               <p className="agreement__text">
                 For any health related questions, please contact the health info
-                desk at{" "}
+                desk at{' '}
                 <a href={`mailto:healthinfo@us.artofliving.org`}>
                   healthinfo@us.artofliving.org
                 </a>

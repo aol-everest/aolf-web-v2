@@ -1,11 +1,11 @@
-import PhoneInput from "@components/phoneInputCmp";
-import classNames from "classnames";
+import PhoneInput from '@components/phoneInputCmp';
+import classNames from 'classnames';
 
 export const SchedulePhoneInput = ({
   children,
   label,
   fullWidth,
-  containerClass = "",
+  containerClass = '',
   formikProps,
   formikKey,
   isReadOnly = false,
@@ -49,7 +49,7 @@ export const SchedulePhoneInput = ({
     <li
       className={classNames(`${containerClass}`, {
         error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
-        "validate-error":
+        'validate-error':
           formikProps.errors[formikKey] && formikProps.touched[formikKey],
       })}
     >
@@ -58,8 +58,8 @@ export const SchedulePhoneInput = ({
         country="us"
         inputClass={
           formikProps.errors?.contactPhone
-            ? "text-input text-input-error"
-            : "text-input"
+            ? 'text-input text-input-error'
+            : 'text-input'
         }
         containerClass="input-block"
         countryCodeEditable={true}
@@ -71,7 +71,7 @@ export const SchedulePhoneInput = ({
       />
 
       {tooltip && (
-        <div className={classNames("input-tooltip", { active: showTooltip })}>
+        <div className={classNames('input-tooltip', { active: showTooltip })}>
           <div className="tooltip-arrow"></div>
           {tooltip}
         </div>

@@ -1,11 +1,11 @@
-import classNames from "classnames";
-import { AddressSearch } from "..";
+import classNames from 'classnames';
+import { AddressSearch } from '..';
 
 export const ScheduleLocationFilter = ({
   handleLocationChange,
   value = {},
-  containerClass = "",
-  listClassName = "",
+  containerClass = '',
+  listClassName = '',
 }) => {
   const removeCoupon = (e) => {
     if (e) e.preventDefault();
@@ -20,14 +20,14 @@ export const ScheduleLocationFilter = ({
     <label className={classNames(`${containerClass}`, {})}>
       {value?.locationName ? (
         <span
-          className={classNames("schedule-location-input scheduling-address")}
+          className={classNames('schedule-location-input scheduling-address')}
         >
-          <span className={classNames("schedule-location-value")}>
+          <span className={classNames('schedule-location-value')}>
             {value.locationName}
           </span>
           {value.locationName && (
             <a
-              className={classNames("react-tag-remove")}
+              className={classNames('react-tag-remove')}
               onClick={removeCoupon}
             >
               ×

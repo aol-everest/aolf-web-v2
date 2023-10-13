@@ -1,6 +1,6 @@
-import VideoPlayer from "@components/videoPlayer";
-import { GlobalVideoPlayerContext } from "@contexts";
-import { useState } from "react";
+import VideoPlayer from '@components/videoPlayer';
+import { GlobalVideoPlayerContext } from '@contexts';
+import { useState } from 'react';
 
 export const GlobalVideoPlayer = ({ children }) => {
   const [store, setStore] = useState();

@@ -1,6 +1,6 @@
-import { useAuth } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { useRouter } from "next/router";
+import { useAuth } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
 
 export const withAuth = (Component = null, options = {}) => {
   const AuthenticatedRoute = (props) => {
@@ -12,14 +12,14 @@ export const withAuth = (Component = null, options = {}) => {
           return <Component {...props} />;
         } else {
           pushRouteWithUTMQuery(router, {
-            pathname: "/unauthorized",
+            pathname: '/unauthorized',
           });
         }
       }
       return <Component {...props} />;
     }
     pushRouteWithUTMQuery(router, {
-      pathname: options.pathAfterFailure || "/login",
+      pathname: options.pathAfterFailure || '/login',
       query: {
         next: router.asPath,
       },

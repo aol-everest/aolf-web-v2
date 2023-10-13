@@ -4,57 +4,57 @@ import {
   Popup,
   SmartDropDown,
   SmartInput,
-} from "@components";
-import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from "@constants";
-import { useAuth } from "@contexts";
-import { useIntersectionObserver, useQueryString } from "@hooks";
-import { orgConfig } from "@org";
-import { api, stringToBoolean } from "@utils";
-import classNames from "classnames";
-import { NextSeo } from "next-seo";
-import dynamic from "next/dynamic";
-import React, { useEffect, useState } from "react";
-import ContentLoader from "react-content-loader";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { useUIDSeed } from "react-uid";
-import { useAnalytics } from "use-analytics";
-import { useEffectOnce } from "react-use";
+} from '@components';
+import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
+import { useAuth } from '@contexts';
+import { useIntersectionObserver, useQueryString } from '@hooks';
+import { orgConfig } from '@org';
+import { api, stringToBoolean } from '@utils';
+import classNames from 'classnames';
+import { NextSeo } from 'next-seo';
+import dynamic from 'next/dynamic';
+import React, { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { useInfiniteQuery, useQuery } from 'react-query';
+import { useUIDSeed } from 'react-uid';
+import { useAnalytics } from 'use-analytics';
+import { useEffectOnce } from 'react-use';
 
-import "bootstrap-daterangepicker/daterangepicker.css";
-import Style from "./Course.module.scss";
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import Style from './Course.module.scss';
 
 const WorkshopTile = dynamic(() =>
-  import("@components/course/workshopTile").then((mod) => mod.WorkshopTile),
+  import('@components/course/workshopTile').then((mod) => mod.WorkshopTile),
 );
 const LinkedCalendar = dynamic(() =>
-  import("@components/dateRangePicker").then((mod) => mod.LinkedCalendar),
+  import('@components/dateRangePicker').then((mod) => mod.LinkedCalendar),
 );
 const AddressSearch = dynamic(() =>
-  import("@components").then((mod) => mod.AddressSearch),
+  import('@components').then((mod) => mod.AddressSearch),
 );
 
 const DATE_PICKER_CONFIG = {
-  opens: "center",
-  drops: "down",
+  opens: 'center',
+  drops: 'down',
   showDropdowns: false,
   showISOWeekNumbers: false,
   showWeekNumbers: false,
   locale: {
-    cancelLabel: "Clear",
-    daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+    cancelLabel: 'Clear',
+    daysOfWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     monthNames: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ],
   },
   autoApply: true,
@@ -155,7 +155,7 @@ const DATE_PICKER_CONFIG = {
 
 async function queryInstructor({ queryKey: [_, term] }) {
   const response = await api.get({
-    path: "cf/teachers",
+    path: 'cf/teachers',
     param: {
       query: term,
     },
@@ -166,39 +166,39 @@ async function queryInstructor({ queryKey: [_, term] }) {
 const Course = () => {
   const seed = useUIDSeed();
   const { authenticated } = useAuth();
-  const [activeFilterType, setActiveFilterType] = useQueryString("mode", {
-    defaultValue: "ONLINE",
+  const [activeFilterType, setActiveFilterType] = useQueryString('mode', {
+    defaultValue: 'ONLINE',
   });
-  const [onlyWeekend, setOnlyWeekend] = useQueryString("onlyWeekend", {
+  const [onlyWeekend, setOnlyWeekend] = useQueryString('onlyWeekend', {
     defaultValue: false,
     parse: stringToBoolean,
   });
-  const [otherCType] = useQueryString("other-ctype", {
+  const [otherCType] = useQueryString('other-ctype', {
     defaultValue: false,
     parse: stringToBoolean,
   });
-  const [institutionalCourses] = useQueryString("ic-type", {
+  const [institutionalCourses] = useQueryString('ic-type', {
     defaultValue: false,
     parse: stringToBoolean,
   });
-  const [privateEvent] = useQueryString("private-event", {
+  const [privateEvent] = useQueryString('private-event', {
     defaultValue: false,
     parse: stringToBoolean,
   });
-  const [locationFilter, setLocationFilter] = useQueryString("location", {
+  const [locationFilter, setLocationFilter] = useQueryString('location', {
     parse: JSON.parse,
   });
-  const [courseTypeFilter, setCourseTypeFilter] = useQueryString("courseType");
-  const [ctypesFilter, setCtypesFilter] = useQueryString("ctypes");
+  const [courseTypeFilter, setCourseTypeFilter] = useQueryString('courseType');
+  const [ctypesFilter, setCtypesFilter] = useQueryString('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
-    useQueryString("startEndDate");
-  const [timeZoneFilter, setTimeZoneFilter] = useQueryString("timeZone");
-  const [instructorFilter, setInstructorFilter] = useQueryString("instructor", {
+    useQueryString('startEndDate');
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone');
+  const [instructorFilter, setInstructorFilter] = useQueryString('instructor', {
     parse: JSON.parse,
   });
 
-  const [cityFilter] = useQueryString("city");
-  const [searchKey, setSearchKey] = useState("");
+  const [cityFilter] = useQueryString('city');
+  const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const toggleFilter = (e) => {
@@ -211,7 +211,7 @@ const Course = () => {
     setActiveFilterType(newType);
   };
 
-  let instructorResult = useQuery(["instructor", searchKey], queryInstructor, {
+  let instructorResult = useQuery(['instructor', searchKey], queryInstructor, {
     // only fetch search terms longer than 2 characters
     enabled: searchKey.length > 0,
     // refresh cache after 10 seconds (watch the network tab!)
@@ -226,27 +226,27 @@ const Course = () => {
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
-      case "courseTypeFilter":
+      case 'courseTypeFilter':
         setCtypesFilter(null);
         setCourseTypeFilter(value);
         break;
-      case "activeFilterType":
+      case 'activeFilterType':
         setActiveFilterType(value);
         break;
-      case "onlyWeekend":
+      case 'onlyWeekend':
         setOnlyWeekend(value);
         break;
-      case "locationFilter":
+      case 'locationFilter':
         if (value) {
           setLocationFilter(JSON.stringify(value));
         } else {
           setLocationFilter(null);
         }
         break;
-      case "timeZoneFilter":
+      case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         if (value) {
           setInstructorFilter(JSON.stringify(value));
         } else {
@@ -259,27 +259,27 @@ const Course = () => {
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
-      case "courseTypeFilter":
+      case 'courseTypeFilter':
         setCtypesFilter(null);
         setCourseTypeFilter(value);
         break;
-      case "activeFilterType":
+      case 'activeFilterType':
         setActiveFilterType(value);
         break;
-      case "onlyWeekend":
+      case 'onlyWeekend':
         setOnlyWeekend(value);
         break;
-      case "locationFilter":
+      case 'locationFilter':
         if (value) {
           setLocationFilter(JSON.stringify(value));
         } else {
           setLocationFilter(null);
         }
         break;
-      case "timeZoneFilter":
+      case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         if (value) {
           setInstructorFilter(JSON.stringify(value));
         } else {
@@ -292,22 +292,22 @@ const Course = () => {
   const onFilterClearEvent = (field) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
-      case "courseTypeFilter":
+      case 'courseTypeFilter':
         setCourseTypeFilter(null);
         break;
-      case "activeFilterType":
+      case 'activeFilterType':
         setActiveFilterType(null);
         break;
-      case "onlyWeekend":
+      case 'onlyWeekend':
         setOnlyWeekend(null);
         break;
-      case "locationFilter":
+      case 'locationFilter':
         setLocationFilter(null);
         break;
-      case "timeZoneFilter":
+      case 'timeZoneFilter':
         setTimeZoneFilter(null);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         setInstructorFilter(null);
         break;
     }
@@ -317,7 +317,7 @@ const Course = () => {
     const { startDate, endDate } = date || {};
     setFilterStartEndDate(
       startDate
-        ? startDate.format("YYYY-MM-DD") + "|" + endDate.format("YYYY-MM-DD")
+        ? startDate.format('YYYY-MM-DD') + '|' + endDate.format('YYYY-MM-DD')
         : null,
     );
   };
@@ -325,7 +325,7 @@ const Course = () => {
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
       [
-        "workshops",
+        'workshops',
         {
           privateEvent,
           otherCType,
@@ -382,7 +382,7 @@ const Course = () => {
           };
         }
         if (filterStartEndDate) {
-          const [startDate, endDate] = filterStartEndDate.split("|");
+          const [startDate, endDate] = filterStartEndDate.split('|');
           param = {
             ...param,
             sdate: startDate,
@@ -423,7 +423,7 @@ const Course = () => {
         }
 
         const res = await api.get({
-          path: "workshops",
+          path: 'workshops',
           param,
         });
         return res;
@@ -449,11 +449,11 @@ const Course = () => {
 
   useEffectOnce(() => {
     page({
-      category: "course_registration",
-      name: "course_search",
+      category: 'course_registration',
+      name: 'course_search',
     });
-    track("Product List Viewed", {
-      category: "Course",
+    track('Product List Viewed', {
+      category: 'Course',
     });
   });
 
@@ -478,7 +478,7 @@ const Course = () => {
     <main className="course-filter">
       <NextSeo title="Workshops" />
       <section className="courses">
-        {orgConfig.name !== "HB" && (
+        {orgConfig.name !== 'HB' && (
           <>
             <div className="container search_course_form d-lg-block d-none mb-2">
               <div className="row">
@@ -497,9 +497,9 @@ const Course = () => {
                     buttonText={
                       activeFilterType && COURSE_MODES[activeFilterType]
                         ? COURSE_MODES[activeFilterType].name
-                        : "Course Format"
+                        : 'Course Format'
                     }
-                    closeEvent={onFilterChange("activeFilterType")}
+                    closeEvent={onFilterChange('activeFilterType')}
                   >
                     {({ closeHandler }) => (
                       <>
@@ -518,16 +518,16 @@ const Course = () => {
                     )}
                   </Popup>
 
-                  {activeFilterType === "IN_PERSON" && (
+                  {activeFilterType === 'IN_PERSON' && (
                     <Popup
                       tabIndex="2"
                       value={locationFilter}
                       buttonText={
                         locationFilter
                           ? `${locationFilter.locationName}`
-                          : "Location"
+                          : 'Location'
                       }
-                      closeEvent={onFilterChange("locationFilter")}
+                      closeEvent={onFilterChange('locationFilter')}
                     >
                       {({ closeHandler }) => (
                         <AddressSearch
@@ -544,9 +544,9 @@ const Course = () => {
                     buttonText={
                       courseTypeFilter && COURSE_TYPES[courseTypeFilter]
                         ? COURSE_TYPES[courseTypeFilter].name
-                        : "Course Type"
+                        : 'Course Type'
                     }
-                    closeEvent={onFilterChange("courseTypeFilter")}
+                    closeEvent={onFilterChange('courseTypeFilter')}
                   >
                     {({ closeHandler }) => (
                       <>
@@ -591,8 +591,8 @@ const Course = () => {
                     value={filterStartEndDate}
                     buttonText={
                       filterStartEndDate
-                        ? filterStartEndDate.split("|").join(" - ")
-                        : "Dates"
+                        ? filterStartEndDate.split('|').join(' - ')
+                        : 'Dates'
                     }
                     closeEvent={onDatesChange}
                   >
@@ -612,7 +612,7 @@ const Course = () => {
                     tabIndex="2"
                     value={onlyWeekend}
                     buttonText="Weekend courses"
-                    closeEvent={onFilterChange("onlyWeekend")}
+                    closeEvent={onFilterChange('onlyWeekend')}
                     showList={false}
                   ></Popup>
 
@@ -622,9 +622,9 @@ const Course = () => {
                     buttonText={
                       timeZoneFilter && TIME_ZONE[timeZoneFilter]
                         ? TIME_ZONE[timeZoneFilter].name
-                        : "Time Zone"
+                        : 'Time Zone'
                     }
-                    closeEvent={onFilterChange("timeZoneFilter")}
+                    closeEvent={onFilterChange('timeZoneFilter')}
                   >
                     {({ closeHandler }) => (
                       <>
@@ -666,9 +666,9 @@ const Course = () => {
                     tabIndex="5"
                     value={instructorFilter ? instructorFilter.label : null}
                     buttonText={
-                      instructorFilter ? instructorFilter.label : "Instructor"
+                      instructorFilter ? instructorFilter.label : 'Instructor'
                     }
-                    closeEvent={onFilterChange("instructorFilter")}
+                    closeEvent={onFilterChange('instructorFilter')}
                   >
                     {({ closeHandler }) => (
                       <SmartInput
@@ -697,7 +697,7 @@ const Course = () => {
                       <span
                         id="filter-count"
                         className={classNames({
-                          "filter-count--show": filterCount > 0,
+                          'filter-count--show': filterCount > 0,
                         })}
                       >
                         {filterCount}
@@ -706,8 +706,8 @@ const Course = () => {
                   </div>
                 </div>
                 <div
-                  className={classNames("filter--box", {
-                    "d-none": !showFilterModal,
+                  className={classNames('filter--box', {
+                    'd-none': !showFilterModal,
                   })}
                 >
                   {/* <div
@@ -739,9 +739,9 @@ const Course = () => {
                     buttonText={
                       activeFilterType && COURSE_MODES[activeFilterType]
                         ? COURSE_MODES[activeFilterType].name
-                        : "Course Format"
+                        : 'Course Format'
                     }
-                    clearEvent={onFilterClearEvent("activeFilterType")}
+                    clearEvent={onFilterClearEvent('activeFilterType')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
@@ -749,9 +749,9 @@ const Course = () => {
                         buttonText={
                           activeFilterType && COURSE_MODES[activeFilterType]
                             ? COURSE_MODES[activeFilterType].name
-                            : "Select Course Format"
+                            : 'Select Course Format'
                         }
-                        closeEvent={onFilterChange("activeFilterType")}
+                        closeEvent={onFilterChange('activeFilterType')}
                       >
                         {({ closeHandler }) => (
                           <>
@@ -772,18 +772,18 @@ const Course = () => {
                     </div>
                   </MobileFilterModal>
 
-                  {activeFilterType === "IN_PERSON" && (
+                  {activeFilterType === 'IN_PERSON' && (
                     <MobileFilterModal
                       modalTitle="Location"
                       buttonText={
                         locationFilter
                           ? `${locationFilter.locationName}`
-                          : "Location"
+                          : 'Location'
                       }
-                      clearEvent={onFilterClearEvent("locationFilter")}
+                      clearEvent={onFilterClearEvent('locationFilter')}
                     >
                       <AddressSearch
-                        closeHandler={onFilterChange("locationFilter")}
+                        closeHandler={onFilterChange('locationFilter')}
                         placeholder="Search for Location"
                       />
                     </MobileFilterModal>
@@ -794,9 +794,9 @@ const Course = () => {
                     buttonText={
                       courseTypeFilter && COURSE_TYPES[courseTypeFilter]
                         ? COURSE_TYPES[courseTypeFilter].name
-                        : "Course Type"
+                        : 'Course Type'
                     }
-                    clearEvent={onFilterClearEvent("courseTypeFilter")}
+                    clearEvent={onFilterClearEvent('courseTypeFilter')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
@@ -804,9 +804,9 @@ const Course = () => {
                         buttonText={
                           courseTypeFilter && COURSE_TYPES[courseTypeFilter]
                             ? COURSE_TYPES[courseTypeFilter].name
-                            : "Select Course"
+                            : 'Select Course'
                         }
-                        closeEvent={onFilterChange("courseTypeFilter")}
+                        closeEvent={onFilterChange('courseTypeFilter')}
                       >
                         {({ closeHandler }) => (
                           <>
@@ -854,8 +854,8 @@ const Course = () => {
                     modalTitle="Dates"
                     buttonText={
                       filterStartEndDate
-                        ? filterStartEndDate.split("|").join(" - ")
-                        : "Dates"
+                        ? filterStartEndDate.split('|').join(' - ')
+                        : 'Dates'
                     }
                     clearEvent={onDatesChange}
                   >
@@ -863,8 +863,8 @@ const Course = () => {
                       value={filterStartEndDate}
                       buttonText={
                         filterStartEndDate
-                          ? filterStartEndDate.split("|").join(" - ")
-                          : "Select Dates"
+                          ? filterStartEndDate.split('|').join(' - ')
+                          : 'Select Dates'
                       }
                       closeEvent={onDatesChange}
                     >
@@ -880,15 +880,15 @@ const Course = () => {
                   <MobileFilterModal
                     modalTitle="Weekend Filter"
                     buttonText={
-                      onlyWeekend ? "Weekend Courses: Yes" : "Weekend courses"
+                      onlyWeekend ? 'Weekend Courses: Yes' : 'Weekend courses'
                     }
-                    closeEvent={onFilterChange("onlyWeekend")}
+                    closeEvent={onFilterChange('onlyWeekend')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
                         value={onlyWeekend}
-                        buttonText={onlyWeekend ? " Yes" : "No"}
-                        closeEvent={onFilterChange("onlyWeekend")}
+                        buttonText={onlyWeekend ? ' Yes' : 'No'}
+                        closeEvent={onFilterChange('onlyWeekend')}
                       >
                         {({ closeHandler }) => (
                           <>
@@ -915,9 +915,9 @@ const Course = () => {
                     buttonText={
                       timeZoneFilter && TIME_ZONE[timeZoneFilter]
                         ? TIME_ZONE[timeZoneFilter].name
-                        : "Timezone"
+                        : 'Timezone'
                     }
-                    clearEvent={onFilterClearEvent("timeZoneFilter")}
+                    clearEvent={onFilterClearEvent('timeZoneFilter')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
@@ -925,9 +925,9 @@ const Course = () => {
                         buttonText={
                           timeZoneFilter && TIME_ZONE[timeZoneFilter]
                             ? TIME_ZONE[timeZoneFilter].name
-                            : "Select Timezone"
+                            : 'Select Timezone'
                         }
-                        closeEvent={onFilterChange("timeZoneFilter")}
+                        closeEvent={onFilterChange('timeZoneFilter')}
                       >
                         {({ closeHandler }) => (
                           <>
@@ -970,9 +970,9 @@ const Course = () => {
                   <MobileFilterModal
                     modalTitle="Instructor"
                     buttonText={
-                      instructorFilter ? instructorFilter.label : "Instructor"
+                      instructorFilter ? instructorFilter.label : 'Instructor'
                     }
-                    clearEvent={onFilterClearEvent("instructorFilter")}
+                    clearEvent={onFilterClearEvent('instructorFilter')}
                   >
                     <SmartInput
                       containerClassName="smart-input-mobile"
@@ -980,7 +980,7 @@ const Course = () => {
                       value={searchKey}
                       onSearchKeyChange={(value) => setSearchKey(value)}
                       dataList={instructorList}
-                      closeHandler={onFilterChangeEvent("instructorFilter")}
+                      closeHandler={onFilterChangeEvent('instructorFilter')}
                     ></SmartInput>
                   </MobileFilterModal>
                 </div>
@@ -1100,7 +1100,7 @@ const Course = () => {
           )}
         </div>
       </section>
-      {activeFilterType === "ONLINE" &&
+      {activeFilterType === 'ONLINE' &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1119,7 +1119,7 @@ const Course = () => {
             </div>
           </section>
         )}
-      {activeFilterType === "IN_PERSON" &&
+      {activeFilterType === 'IN_PERSON' &&
         isSuccess &&
         data.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
@@ -1128,15 +1128,15 @@ const Course = () => {
               <div className="row">
                 <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
                   <h1 className="happines_title">
-                    Currently there are no {COURSE_MODES[activeFilterType].name}{" "}
+                    Currently there are no {COURSE_MODES[activeFilterType].name}{' '}
                     courses available.
                   </h1>
                   <p className="happines_subtitle">
-                    Please check out our{" "}
+                    Please check out our{' '}
                     <a
                       href="#"
                       className="link v2"
-                      onClick={toggleActiveFilter("ONLINE")}
+                      onClick={toggleActiveFilter('ONLINE')}
                     >
                       online offerings
                     </a>

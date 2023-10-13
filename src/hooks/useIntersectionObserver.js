@@ -1,10 +1,10 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export function useIntersectionObserver({
   enabled = true,
   onIntersect,
   root,
-  rootMargin = "0px",
+  rootMargin = '0px',
   target,
   threshold = 0.1,
 }) {

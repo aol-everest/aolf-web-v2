@@ -1,61 +1,61 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
-import { ABBRS, ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { priceCalculation, tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { Element, Link } from "react-scroll";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { CourseBottomCard } from "./CourseBottomCard";
-import Style from "./CourseDetails.module.scss";
-import { RegisterPanel } from "./RegisterPanel";
-import { ResearchFindingSource } from "./ResearchFindingSource";
+import { HideOn } from '@components';
+import { ABBRS, ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { priceCalculation, tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { Element, Link } from 'react-scroll';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { CourseBottomCard } from './CourseBottomCard';
+import Style from './CourseDetails.module.scss';
+import { RegisterPanel } from './RegisterPanel';
+import { ResearchFindingSource } from './ResearchFindingSource';
 
 dayjs.extend(utc);
 
 const faqContent = [
   {
-    label: "What will I learn in the Volunteer Training Program?",
+    label: 'What will I learn in the Volunteer Training Program?',
     content:
-      "You’ll expand your horizons with life-enhancing wisdom, self-development, and transformative practices to access deep inner strength and become a dynamic leader professionally, personally, and spiritually. You’ll also learn how to facilitate a one-hour meditation session, complete with social connection exercises, breathing techniques, mindful awareness, and guided meditations—plus, learn how to lead introductory talks. With these new skills, you’ll empower your life and community.",
+      'You’ll expand your horizons with life-enhancing wisdom, self-development, and transformative practices to access deep inner strength and become a dynamic leader professionally, personally, and spiritually. You’ll also learn how to facilitate a one-hour meditation session, complete with social connection exercises, breathing techniques, mindful awareness, and guided meditations—plus, learn how to lead introductory talks. With these new skills, you’ll empower your life and community.',
   },
   {
     label:
-      "Will I be able to teach SKY Breath Meditation after attending this program?",
+      'Will I be able to teach SKY Breath Meditation after attending this program?',
     content:
-      "The Volunteer Training Program (VTP) is the prerequisite to attending the Art of Living Teacher Training Program (TTP). Once you have completed both the VTP and TTP, you will be able to teach SKY Breath Meditation.",
+      'The Volunteer Training Program (VTP) is the prerequisite to attending the Art of Living Teacher Training Program (TTP). Once you have completed both the VTP and TTP, you will be able to teach SKY Breath Meditation.',
   },
   {
-    label: "Will I be ready to lead meditations after this course?",
+    label: 'Will I be ready to lead meditations after this course?',
     content:
-      "Yes! You’ll emerge as a confident meditation facilitator ready to lead the guided meditation taught in the Volunteer Training Program, complete with social connection exercises, breathing techniques, and mindful awareness.",
+      'Yes! You’ll emerge as a confident meditation facilitator ready to lead the guided meditation taught in the Volunteer Training Program, complete with social connection exercises, breathing techniques, and mindful awareness.',
   },
   {
-    label: "Do I have to attend all sessions?",
+    label: 'Do I have to attend all sessions?',
     content:
-      "Yes, it is mandatory to attend all program sessions to complete the training.",
+      'Yes, it is mandatory to attend all program sessions to complete the training.',
   },
   {
-    label: "Do I need to be meditating every day to join the training?",
+    label: 'Do I need to be meditating every day to join the training?',
     content:
-      "To maximize your experience of the program (and life!), we recommend a daily meditation practice, but it is not a requirement for the Volunteer Training Program.",
+      'To maximize your experience of the program (and life!), we recommend a daily meditation practice, but it is not a requirement for the Volunteer Training Program.',
   },
   {
     label:
-      "Are there any requirements I need to fulfill post-training or in years to come?",
+      'Are there any requirements I need to fulfill post-training or in years to come?',
     content:
-      "Following the training, it is recommended that you organize or volunteer to lead at least three introductory sessions and three meditations using the skills and support you gained from the Volunteer Training Program. It allows you to fully integrate your newly acquired skill set and continue to develop your newfound confidence.",
+      'Following the training, it is recommended that you organize or volunteer to lead at least three introductory sessions and three meditations using the skills and support you gained from the Volunteer Training Program. It allows you to fully integrate your newly acquired skill set and continue to develop your newfound confidence.',
   },
   {
-    label: "How will the program help with leadership skills?",
+    label: 'How will the program help with leadership skills?',
     content:
-      "One of the key skills of a leader is to inspire and connect with people while organizing and leading various projects—you will gain all these skills and be empowered with a wealth of experience and confidence too. The Volunteer Training Program is a course designed to enhance organizational skills while connecting with people at a deeper level. In addition, volunteering is a powerful demonstration of selfless action, which is an inspiring quality to have in any leader.",
+      'One of the key skills of a leader is to inspire and connect with people while organizing and leading various projects—you will gain all these skills and be empowered with a wealth of experience and confidence too. The Volunteer Training Program is a course designed to enhance organizational skills while connecting with people at a deeper level. In addition, volunteering is a powerful demonstration of selfless action, which is an inspiring quality to have in any leader.',
   },
 ];
 
@@ -67,9 +67,9 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
   const showResearchModal = (e) => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Success",
+      title: 'Success',
       children: <ResearchFindingSource />,
-      className: "research-detail-modal",
+      className: 'research-detail-modal',
       hideConfirm: true,
     });
   };
@@ -80,7 +80,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
       pathname: `/us-en/course/checkout/${data.sfid}`,
       query: {
         ctype: data.productTypeId,
-        page: "c-o",
+        page: 'c-o',
       },
     });
   };
@@ -101,7 +101,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
       delay: 2000,
     },
     pagination: {
-      el: ".research__list-pagination",
+      el: '.research__list-pagination',
       clickable: true,
     },
   };
@@ -182,21 +182,21 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                       </div>
                       {dayjs
                         .utc(eventStartDate)
-                        .isSame(dayjs.utc(eventEndDate), "month") && (
+                        .isSame(dayjs.utc(eventEndDate), 'month') && (
                         <div className="details-info__text">{`${dayjs
                           .utc(eventStartDate)
-                          .format("MMMM DD")}-${dayjs
+                          .format('MMMM DD')}-${dayjs
                           .utc(eventEndDate)
-                          .format("DD, YYYY")}`}</div>
+                          .format('DD, YYYY')}`}</div>
                       )}
                       {!dayjs
                         .utc(eventStartDate)
-                        .isSame(dayjs.utc(eventEndDate), "month") && (
+                        .isSame(dayjs.utc(eventEndDate), 'month') && (
                         <div className="details-info__text">{`${dayjs
                           .utc(eventStartDate)
-                          .format("MMMM DD")}-${dayjs
+                          .format('MMMM DD')}-${dayjs
                           .utc(eventEndDate)
-                          .format("MMMM DD, YYYY")}`}</div>
+                          .format('MMMM DD, YYYY')}`}</div>
                       )}
                     </div>
                     <div className="details-info__item">
@@ -210,7 +210,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                               <>
                                 {`${dayjs
                                   .utc(time.startDate)
-                                  .format("dd")}: ${tConvert(
+                                  .format('dd')}: ${tConvert(
                                   time.startTime,
                                 )}-${tConvert(time.endTime)} ${
                                   ABBRS[time.timeZone]
@@ -280,7 +280,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                         {!data.isLocationEmpty && (
                           <a
                             href={`https://www.google.com/maps/search/?api=1&query=${
-                              data?.locationStreet || ""
+                              data?.locationStreet || ''
                             }, ${data?.locationCity} ${
                               data?.locationProvince
                             } ${data?.locationPostalCode} ${
@@ -289,30 +289,30 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {data?.locationStreet || ""}
+                            {data?.locationStreet || ''}
                             {data?.locationStreet && <br />}
-                            {data?.locationCity || ""}
-                            {", "}
-                            {data?.locationProvince || ""}{" "}
-                            {data?.locationPostalCode || ""}
+                            {data?.locationCity || ''}
+                            {', '}
+                            {data?.locationProvince || ''}{' '}
+                            {data?.locationPostalCode || ''}
                           </a>
                         )}
                         {data.isLocationEmpty && (
                           <a
                             href={`https://www.google.com/maps/search/?api=1&query=${
-                              data?.streetAddress1 || ""
-                            },${data?.streetAddress2 || ""} ${data?.city} ${
+                              data?.streetAddress1 || ''
+                            },${data?.streetAddress2 || ''} ${data?.city} ${
                               data?.state
                             } ${data?.zip} ${data?.country}`}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {data?.streetAddress1 || ""}
-                            {data?.streetAddress2 || ""}
+                            {data?.streetAddress1 || ''}
+                            {data?.streetAddress2 || ''}
                             <br />
-                            {data?.city || ""}
-                            {", "}
-                            {data?.state || ""} {data?.zip || ""}
+                            {data?.city || ''}
+                            {', '}
+                            {data?.state || ''} {data?.zip || ''}
                           </a>
                         )}
                       </div>
@@ -406,10 +406,10 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                   Meet the confident, inspired YOU
                 </h2>
                 <p className="p1 program-meet__text">
-                  We all have a{" "}
+                  We all have a{' '}
                   <b>
                     <i>why</i>
-                  </b>{" "}
+                  </b>{' '}
                   — a reason, a motivation, a hope. Yet sometimes fear,
                   confidence, or skill level stand in the way. And that’s why
                   we’re here!
@@ -457,7 +457,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                   <p className="program-meet-card__text">
                     Gain the knowledge and confidence (whatever your current
                     fear level!) to become a dynamic speaker and the leader you
-                    were always meant to be!{" "}
+                    were always meant to be!{' '}
                   </p>
                 </div>
               </div>
@@ -786,14 +786,14 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                               {content.label}
                               <span
                                 className={classNames(Style.accordianIcon, {
-                                  "tw-rotate-45 tw-transform": showContent,
+                                  'tw-rotate-45 tw-transform': showContent,
                                 })}
                               />
                             </button>
                           </h2>
                         </div>
                         <div
-                          className={classNames("collapse", {
+                          className={classNames('collapse', {
                             show: showContent,
                           })}
                           aria-labelledby="headingOne"

@@ -1,46 +1,49 @@
-import { useState } from "react";
-import { COURSE_TYPES, COURSE_MODES, MODAL_TYPES, ABBRS } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { LinkedCalendar } from "@components/dateRangePicker";
-import { isEmpty, priceCalculation, tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { Popup } from "@components";
+import { useState } from 'react';
+import { COURSE_TYPES, COURSE_MODES, MODAL_TYPES, ABBRS } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { LinkedCalendar } from '@components/dateRangePicker';
+import { isEmpty, priceCalculation, tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { Popup } from '@components';
 import {
   FaArrowRightLong,
   FaUser,
   FaPhone,
   FaSearchengin,
-} from "react-icons/fa6";
+  FaRegClock,
+  FaRegIdCard,
+  FaCommentDots,
+} from 'react-icons/fa6';
 
 dayjs.extend(utc);
 
 const datePickerConfig = {
-  opens: "left",
-  drops: "down",
+  opens: 'left',
+  drops: 'down',
   showDropdowns: false,
   showISOWeekNumbers: false,
   showWeekNumbers: false,
   locale: {
-    cancelLabel: "Clear",
-    daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+    cancelLabel: 'Clear',
+    daysOfWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     monthNames: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ],
   },
   autoApply: true,
@@ -73,7 +76,19 @@ export const PriceCard = ({ workshop }) => {
     coTeacher2Name,
     email,
     phone1,
+    description,
+    notes,
+    preRequisite,
+    aosCountRequisite,
   } = workshop || {};
+
+  const aosCount =
+    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
+
+  const preRequisiteCondition = preRequisite
+    .join(', ')
+    .replace(/,(?=[^,]+$)/, ' and')
+    .replace('Silent Retreat', `${aosCount} Silent Retreat`);
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
@@ -99,12 +114,12 @@ export const PriceCard = ({ workshop }) => {
 
   const isSearchDatesDisabled = !filterStartDate;
 
-  let courseType = "SKY_BREATH_MEDITATION";
+  let courseType = 'SKY_BREATH_MEDITATION';
   if (isSilentRetreatType) {
-    courseType = "SILENT_RETREAT";
+    courseType = 'SILENT_RETREAT';
   }
   if (isSahajSamadhiMeditationType) {
-    courseType = "SAHAJ_SAMADHI_MEDITATION";
+    courseType = 'SAHAJ_SAMADHI_MEDITATION';
   }
 
   const handleSearchDates = () => {
@@ -120,7 +135,7 @@ export const PriceCard = ({ workshop }) => {
         query = { ...query, timeZone: timeZoneFilter.value };
       }
       pushRouteWithUTMQuery(router, {
-        pathname: "/us-en",
+        pathname: '/us-en',
         query,
       });
     }
@@ -133,7 +148,7 @@ export const PriceCard = ({ workshop }) => {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -141,15 +156,15 @@ export const PriceCard = ({ workshop }) => {
         navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: "SIGNUP_MODE",
+        defaultView: 'SIGNUP_MODE',
       });
     }
   };
 
   const onDatesChange = (date) => {
     const { startDate, endDate } = date || {};
-    setFilterStartDate(startDate ? startDate.format("YYYY-MM-DD") : null);
-    setFilterEndDate(endDate ? endDate.format("YYYY-MM-DD") : null);
+    setFilterStartDate(startDate ? startDate.format('YYYY-MM-DD') : null);
+    setFilterEndDate(endDate ? endDate.format('YYYY-MM-DD') : null);
   };
 
   const onFilterChange = (value) => {
@@ -157,8 +172,8 @@ export const PriceCard = ({ workshop }) => {
   };
 
   const teachers = [primaryTeacherName, coTeacher1Name, coTeacher2Name]
-    .filter((name) => name && name.trim() !== "")
-    .join(", ");
+    .filter((name) => name && name.trim() !== '')
+    .join(', ');
 
   return (
     <div className="container">
@@ -178,16 +193,16 @@ export const PriceCard = ({ workshop }) => {
             <span className="content">
               {dayjs
                 .utc(eventStartDate)
-                .isSame(dayjs.utc(eventEndDate), "month") &&
-                `${dayjs.utc(eventStartDate).format("M/D/YYYY")} - ${dayjs
+                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                `${dayjs.utc(eventStartDate).format('M/D/YYYY')} - ${dayjs
                   .utc(eventEndDate)
-                  .format("M/D/YYYY")}`}
+                  .format('M/D/YYYY')}`}
               {!dayjs
                 .utc(eventStartDate)
-                .isSame(dayjs.utc(eventEndDate), "month") &&
-                `${dayjs.utc(eventStartDate).format("M/DD/YYYY")} - ${dayjs
+                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                `${dayjs.utc(eventStartDate).format('M/DD/YYYY')} - ${dayjs
                   .utc(eventEndDate)
-                  .format("M/DD/YYYY")}`}
+                  .format('M/DD/YYYY')}`}
             </span>
           </div>
           <div className="col location">
@@ -199,19 +214,19 @@ export const PriceCard = ({ workshop }) => {
               ) : (
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${
-                    workshop.locationStreet || ""
+                    workshop.locationStreet || ''
                   }, ${workshop.locationCity} ${workshop.locationProvince} ${
                     workshop.locationPostalCode
                   } ${workshop.locationCountry}`}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {`${workshop.locationStreet || ""} ${
-                    workshop.locationCity || ""
+                  {`${workshop.locationStreet || ''} ${
+                    workshop.locationCity || ''
                   }
-                          ${workshop.locationProvince || ""} ${
-                    workshop.locationCountry || ""
-                  }`}
+                          ${workshop.locationProvince || ''} ${
+                            workshop.locationCountry || ''
+                          }`}
                 </a>
               )}
             </span>
@@ -224,7 +239,7 @@ export const PriceCard = ({ workshop }) => {
                 <div className="col circle" key={time.startDate}>
                   <div className="dates">
                     <span className="title">
-                      {dayjs.utc(time.startDate).format("ddd, MMM DD")}
+                      {dayjs.utc(time.startDate).format('ddd, MMM DD')}
                     </span>
                     <br />
                     <span className="content">
@@ -257,6 +272,35 @@ export const PriceCard = ({ workshop }) => {
             </div>
           </div>
         </div>
+        {(description || notes) && (
+          <div className=" row register-content">
+            <div className="col dates notes">
+              <i>
+                <FaCommentDots className="fa-solid orange" />
+              </i>
+              <div className="instructor-content">
+                <span className="title">Notes</span>
+                <br />
+                {description && (
+                  <span
+                    className="content"
+                    dangerouslySetInnerHTML={{
+                      __html: description,
+                    }}
+                  ></span>
+                )}
+                {notes && (
+                  <span
+                    className="content"
+                    dangerouslySetInnerHTML={{
+                      __html: notes,
+                    }}
+                  ></span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className=" row register-content no_border">
           <div className="col-md-4">
@@ -273,14 +317,14 @@ export const PriceCard = ({ workshop }) => {
                   value={filterStartDate}
                   buttonText={
                     filterStartDate
-                      ? filterStartDate + " - " + filterEndDate
-                      : "Dates"
+                      ? filterStartDate + ' - ' + filterEndDate
+                      : 'Dates'
                   }
                   closeEvent={onDatesChange}
                   containerClassName="course-details__popup_calendar"
                   parentClassName="tw-mr-[20px]"
                   buttonTextclassName={classNames({
-                    "select-button": true,
+                    'select-button': true,
                     active: filterStartDate !== null,
                   })}
                 >
@@ -299,14 +343,14 @@ export const PriceCard = ({ workshop }) => {
                   tabIndex="2"
                   value={timeZoneFilter}
                   buttonText={
-                    timeZoneFilter ? timeZoneFilter.name : "Time Zone"
+                    timeZoneFilter ? timeZoneFilter.name : 'Time Zone'
                   }
                   closeEvent={onFilterChange}
                   parentClassName={classNames({
-                    "hidden-border": true,
+                    'hidden-border': true,
                   })}
                   buttonTextclassName={classNames({
-                    "course-details__filter__button": true,
+                    'course-details__filter__button': true,
                     active: timeZoneFilter !== null,
                   })}
                 >
@@ -315,8 +359,8 @@ export const PriceCard = ({ workshop }) => {
                       <li
                         className="courses-filter__list-item"
                         onClick={closeHandler({
-                          name: "Eastern",
-                          value: "EST",
+                          name: 'Eastern',
+                          value: 'EST',
                         })}
                       >
                         Eastern
@@ -324,8 +368,8 @@ export const PriceCard = ({ workshop }) => {
                       <li
                         className="courses-filter__list-item"
                         onClick={closeHandler({
-                          name: "Central",
-                          value: "CST",
+                          name: 'Central',
+                          value: 'CST',
                         })}
                       >
                         Central
@@ -333,8 +377,8 @@ export const PriceCard = ({ workshop }) => {
                       <li
                         className="courses-filter__list-item"
                         onClick={closeHandler({
-                          name: "Mountain",
-                          value: "MST",
+                          name: 'Mountain',
+                          value: 'MST',
                         })}
                       >
                         Mountain
@@ -342,8 +386,8 @@ export const PriceCard = ({ workshop }) => {
                       <li
                         className="courses-filter__list-item"
                         onClick={closeHandler({
-                          name: "Pacific",
-                          value: "PST",
+                          name: 'Pacific',
+                          value: 'PST',
                         })}
                       >
                         Pacific
@@ -351,8 +395,8 @@ export const PriceCard = ({ workshop }) => {
                       <li
                         className="courses-filter__list-item"
                         onClick={closeHandler({
-                          name: "Hawaii",
-                          value: "HST",
+                          name: 'Hawaii',
+                          value: 'HST',
                         })}
                       >
                         Hawaii
@@ -380,6 +424,28 @@ export const PriceCard = ({ workshop }) => {
             )}
           </div>
         </div>
+        {(earlyBirdFeeIncreasing ||
+          (preRequisiteCondition && preRequisiteCondition.length > 0)) && (
+          <div class="early-bird-banner">
+            {earlyBirdFeeIncreasing && (
+              <p>
+                <FaRegClock className="fa" /> <strong>Register now</strong> to
+                save ${earlyBirdFeeIncreasing.increasingFee}; price will
+                increase on{' '}
+                {dayjs
+                  .utc(earlyBirdFeeIncreasing.increasingByDate)
+                  .format('MMM D, YYYY')}
+                .
+              </p>
+            )}
+            {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+              <p>
+                <FaRegIdCard className="fa" /> <strong>Eligibility:</strong>{' '}
+                Completion of {preRequisiteCondition}
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
-import classNames from "classnames";
-import PropTypes from "prop-types";
-import React from "react";
-import CalendarBody from "./CalendarBody";
-import CalendarHead from "./CalendarHead";
-import PickerUI from "./PickerUI";
-import { Table } from "./Table";
-import { dayjs } from "./utils";
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
+import CalendarBody from './CalendarBody';
+import CalendarHead from './CalendarHead';
+import PickerUI from './PickerUI';
+import { Table } from './Table';
+import { dayjs } from './utils';
 
 class UnlinkedCalendar extends React.Component {
   static propTypes = {
@@ -15,11 +15,11 @@ class UnlinkedCalendar extends React.Component {
 
   state = {
     leftCalendar: dayjs(),
-    rightCalendar: dayjs().add(1, "month"),
+    rightCalendar: dayjs().add(1, 'month'),
   };
 
   static defaultProps = {
-    position: "left",
+    position: 'left',
   };
   createProps = () => {
     const { leftCalendar, rightCalendar } = this.state;
@@ -60,7 +60,7 @@ class UnlinkedCalendar extends React.Component {
     const props = this.createProps();
     const { leftProps, rightProps } = props;
     const className = classNames({
-      "drp-calendar": true,
+      'drp-calendar': true,
       left: true,
     });
 
@@ -87,10 +87,10 @@ class UnlinkedCalendar extends React.Component {
     const { opens, children } = this.props;
     const className = classNames({
       [`opens${opens}`]: true,
-      "daterangepicker ltr show-calendar": true,
+      'daterangepicker ltr show-calendar': true,
     });
     return (
-      <div className={classNames(classNames, "tw-left-auto tw-block")}>
+      <div className={classNames(classNames, 'tw-left-auto tw-block')}>
         {this.renderTable()}
         {children}
       </div>

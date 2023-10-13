@@ -1,63 +1,63 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Loader } from "@components";
-import Link from "@components/linkWithUTM";
-import { ALERT_TYPES, MODAL_TYPES, COURSE_TYPES } from "@constants";
+import { Loader } from '@components';
+import Link from '@components/linkWithUTM';
+import { ALERT_TYPES, MODAL_TYPES, COURSE_TYPES } from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
-import { withAuth } from "@hoc";
-import { useQueryString } from "@hooks";
-import { pushRouteWithUTMQuery } from "@service";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { Auth } from "@utils";
-import classNames from "classnames";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { FaCamera } from "react-icons/fa";
+} from '@contexts';
+import { withAuth } from '@hoc';
+import { useQueryString } from '@hooks';
+import { pushRouteWithUTMQuery } from '@service';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { Auth } from '@utils';
+import classNames from 'classnames';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { FaCamera } from 'react-icons/fa';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
 
 const EventList = dynamic(() =>
-  import("@components/profile").then((mod) => mod.EventList),
+  import('@components/profile').then((mod) => mod.EventList),
 );
 const CouponStack = dynamic(() =>
-  import("@components/profile").then((mod) => mod.CouponStack),
+  import('@components/profile').then((mod) => mod.CouponStack),
 );
 const ChangePassword = dynamic(() =>
-  import("@components/profile").then((mod) => mod.ChangePassword),
+  import('@components/profile').then((mod) => mod.ChangePassword),
 );
 const ChangeProfile = dynamic(() =>
-  import("@components/profile").then((mod) => mod.ChangeProfile),
+  import('@components/profile').then((mod) => mod.ChangeProfile),
 );
 const PastCourses = dynamic(() =>
-  import("@components/profile").then((mod) => mod.PastCourses),
+  import('@components/profile').then((mod) => mod.PastCourses),
 );
 const ViewCardDetail = dynamic(() =>
-  import("@components/profile").then((mod) => mod.ViewCardDetail),
+  import('@components/profile').then((mod) => mod.ViewCardDetail),
 );
 const ProfilePicCrop = dynamic(() =>
-  import("@components/profile").then((mod) => mod.ProfilePicCrop),
+  import('@components/profile').then((mod) => mod.ProfilePicCrop),
 );
 const ProfileHeader = dynamic(() =>
-  import("@components/profile").then((mod) => mod.ProfileHeader),
+  import('@components/profile').then((mod) => mod.ProfileHeader),
 );
 
 const ChangeCardDetail = dynamic(() =>
-  import("@components/profile").then((mod) => mod.ChangeCardDetail),
+  import('@components/profile').then((mod) => mod.ChangeCardDetail),
 );
 
-const UPCOMING_EVENTS = "UPCOMING_EVENTS";
-const PAST_COURSES = "PAST_COURSES";
-const UPDATE_PROFILE = "UPDATE_PROFILE";
-const REFER_A_FRIEND = "REFER_A_FRIEND";
-const CARD_DETAILS = "CARD_DETAILS";
-const CHANGE_PASSWORD = "CHANGE_PASSWORD";
+const UPCOMING_EVENTS = 'UPCOMING_EVENTS';
+const PAST_COURSES = 'PAST_COURSES';
+const UPDATE_PROFILE = 'UPDATE_PROFILE';
+const REFER_A_FRIEND = 'REFER_A_FRIEND';
+const CARD_DETAILS = 'CARD_DETAILS';
+const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 
 const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Please contact the help desk
                 at (855) 202-4400 to resolve the issue and cancel your
@@ -102,11 +102,11 @@ const Profile = ({ tab }) => {
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
   const { user, setUser, reloadProfile, authenticated } = useAuth();
-  const [activeTab, setActiveTab] = useQueryString("tab", {
+  const [activeTab, setActiveTab] = useQueryString('tab', {
     defaultValue: tab || UPCOMING_EVENTS,
   });
   const [editCardDetail, setEditCardDetail] = useState(false);
-  const [request, setRequest] = useQueryString("request");
+  const [request, setRequest] = useQueryString('request');
   const router = useRouter();
 
   useEffect(() => {
@@ -133,8 +133,8 @@ const Profile = ({ tab }) => {
     },
     {},
   );
-  let initials = `${first_name || ""} ${last_name || ""}`.match(/\b\w/g) || [];
-  initials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
+  let initials = `${first_name || ''} ${last_name || ''}`.match(/\b\w/g) || [];
+  initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
 
   // const { data = {}, isSuccess } = useQuery(
   //   "userPastCourses",
@@ -164,19 +164,19 @@ const Profile = ({ tab }) => {
     await Auth.logout();
     setLoading(false);
     setUser(null);
-    pushRouteWithUTMQuery(router, "/us-en");
+    pushRouteWithUTMQuery(router, '/us-en');
   };
 
   const navigateToReferFriendPage = () => {
-    pushRouteWithUTMQuery(router, "/us-en/refer");
+    pushRouteWithUTMQuery(router, '/us-en/refer');
   };
 
   const handleOnSelectFile = (e) => {
     if (e.target.files.length) {
       const reader = new FileReader();
-      reader.addEventListener("load", () => {
+      reader.addEventListener('load', () => {
         showModal(MODAL_TYPES.EMPTY_MODAL, {
-          title: "Enrollment Completed Successfully.",
+          title: 'Enrollment Completed Successfully.',
           children: (handleModalToggle) => (
             <ProfilePicCrop
               src={reader.result}
@@ -219,7 +219,7 @@ const Profile = ({ tab }) => {
     <>
       {loading && <Loader />}
       <main className="profile">
-        {request === "1" && (
+        {request === '1' && (
           <aside className="profile__alert profile__alert_error">
             <div className="container-xl d-flex align-center">
               <span>
@@ -235,7 +235,7 @@ const Profile = ({ tab }) => {
             />
           </aside>
         )}
-        {request === "2" && (
+        {request === '2' && (
           <aside className="profile__alert">
             <div className="container-xl d-flex justify-content-center align-center">
               <span>
@@ -251,7 +251,7 @@ const Profile = ({ tab }) => {
             />
           </aside>
         )}
-        {request === "3" && (
+        {request === '3' && (
           <aside className="profile__alert">
             <div className="container-xl d-flex justify-content-center align-center">
               <span>
@@ -267,7 +267,7 @@ const Profile = ({ tab }) => {
             />
           </aside>
         )}
-        {request === "4" && (
+        {request === '4' && (
           <aside className="profile__alert">
             <div className="container-xl d-flex justify-content-center align-center">
               <span>
@@ -284,7 +284,7 @@ const Profile = ({ tab }) => {
           </aside>
         )}
 
-        {request === "5" && (
+        {request === '5' && (
           <aside className="profile__alert">
             <div className="container-xl d-flex justify-content-center align-center">
               <span>
@@ -317,7 +317,7 @@ const Profile = ({ tab }) => {
                     <img
                       src={profilePic}
                       className="rounded-circle profile-pic"
-                      onError={(i) => (i.target.style.display = "none")}
+                      onError={(i) => (i.target.style.display = 'none')}
                     />
                   )}
 
@@ -353,7 +353,7 @@ const Profile = ({ tab }) => {
             >
               <li className="nav-item" role="presentation">
                 <a
-                  className={classNames("profile-tab", {
+                  className={classNames('profile-tab', {
                     active: activeTab === UPCOMING_EVENTS,
                   })}
                   onClick={switchTab(UPCOMING_EVENTS)}
@@ -363,7 +363,7 @@ const Profile = ({ tab }) => {
               </li>
               <li className="nav-item" role="presentation">
                 <a
-                  className={classNames("profile-tab", {
+                  className={classNames('profile-tab', {
                     active: activeTab === PAST_COURSES,
                   })}
                   onClick={switchTab(PAST_COURSES)}
@@ -373,7 +373,7 @@ const Profile = ({ tab }) => {
               </li>
               <li className="nav-item" role="presentation">
                 <a
-                  className={classNames("profile-tab", {
+                  className={classNames('profile-tab', {
                     active: activeTab === UPDATE_PROFILE,
                   })}
                   onClick={switchTab(UPDATE_PROFILE)}
@@ -384,7 +384,7 @@ const Profile = ({ tab }) => {
               {process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL && (
                 <li className="nav-item" role="presentation">
                   <a
-                    className={classNames("profile-tab", {
+                    className={classNames('profile-tab', {
                       active: activeTab === REFER_A_FRIEND,
                     })}
                     onClick={switchTab(REFER_A_FRIEND)}
@@ -396,7 +396,7 @@ const Profile = ({ tab }) => {
 
               <li className="nav-item" role="presentation">
                 <a
-                  className={classNames("profile-tab", {
+                  className={classNames('profile-tab', {
                     active: activeTab === CARD_DETAILS,
                   })}
                   onClick={switchTab(CARD_DETAILS)}
@@ -406,7 +406,7 @@ const Profile = ({ tab }) => {
               </li>
               <li className="nav-item" role="presentation">
                 <a
-                  className={classNames("profile-tab", {
+                  className={classNames('profile-tab', {
                     active: activeTab === CHANGE_PASSWORD,
                   })}
                   onClick={switchTab(CHANGE_PASSWORD)}
@@ -422,16 +422,16 @@ const Profile = ({ tab }) => {
             </ul>
             <div className="tab-content" id="profile-tabContent">
               <div
-                className={classNames("tab-pane fade", {
+                className={classNames('tab-pane fade', {
                   active: activeTab === UPCOMING_EVENTS,
                   show: activeTab === UPCOMING_EVENTS,
                 })}
               >
                 <div
-                  className={classNames("row", {
-                    "profile-body__cards-container":
+                  className={classNames('row', {
+                    'profile-body__cards-container':
                       upcomingEvents.length !== 0,
-                    "profile-body__cards-empty cards-empty":
+                    'profile-body__cards-empty cards-empty':
                       upcomingEvents.length === 0,
                   })}
                 >
@@ -442,13 +442,13 @@ const Profile = ({ tab }) => {
                       </div>
                       <div className="cards-empty__text">
                         You don't have any events scheduled right now. Find an
-                        upcoming{" "}
+                        upcoming{' '}
                         <Link href="/us-en" prefetch={false} legacyBehavior>
                           <a href="#" className="link link_orange">
                             course
                           </a>
-                        </Link>{" "}
-                        or{" "}
+                        </Link>{' '}
+                        or{' '}
                         <Link
                           href="/us-en/meetup"
                           prefetch={false}
@@ -457,7 +457,7 @@ const Profile = ({ tab }) => {
                           <a href="#" className="link link_orange">
                             meetup
                           </a>
-                        </Link>{" "}
+                        </Link>{' '}
                         to join.
                       </div>
                     </>
@@ -466,7 +466,7 @@ const Profile = ({ tab }) => {
                 </div>
               </div>
               <div
-                className={classNames("tab-pane past-courses fade", {
+                className={classNames('tab-pane past-courses fade', {
                   active: activeTab === PAST_COURSES,
                   show: activeTab === PAST_COURSES,
                 })}
@@ -474,7 +474,7 @@ const Profile = ({ tab }) => {
                 <PastCourses />
               </div>
               <div
-                className={classNames("tab-pane profile-update fade", {
+                className={classNames('tab-pane profile-update fade', {
                   active: activeTab === UPDATE_PROFILE,
                   show: activeTab === UPDATE_PROFILE,
                 })}
@@ -485,7 +485,7 @@ const Profile = ({ tab }) => {
                 ></ChangeProfile>
               </div>
               <div
-                className={classNames("tab-pane profile-update fade", {
+                className={classNames('tab-pane profile-update fade', {
                   active: activeTab === REFER_A_FRIEND,
                   show: activeTab === REFER_A_FRIEND,
                 })}
@@ -496,7 +496,7 @@ const Profile = ({ tab }) => {
                   </h6>
                   <ol>
                     <li>
-                      Invite your friends to take the{" "}
+                      Invite your friends to take the{' '}
                       {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                       course
                     </li>
@@ -512,7 +512,7 @@ const Profile = ({ tab }) => {
                       You can use the credit towards Sahaj Samadhi Meditation™,
                       Silent Retreats, or to repeat your SKY course
                     </li>
-                  </ol>{" "}
+                  </ol>{' '}
                   <h6 className="course-details-card__subtitle">
                     How To Claim The Rewards
                   </h6>
@@ -540,7 +540,7 @@ const Profile = ({ tab }) => {
                 <div id="talkable-offer"></div>
               </div>
               <div
-                className={classNames("tab-pane fade", {
+                className={classNames('tab-pane fade', {
                   active: activeTab === CARD_DETAILS,
                   show: activeTab === CARD_DETAILS,
                 })}
@@ -557,7 +557,7 @@ const Profile = ({ tab }) => {
                     fonts={[
                       {
                         cssSrc:
-                          "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                          'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
                       },
                     ]}
                   >
@@ -568,7 +568,7 @@ const Profile = ({ tab }) => {
                 )}
               </div>
               <div
-                className={classNames("tab-pane fade", {
+                className={classNames('tab-pane fade', {
                   active: activeTab === CHANGE_PASSWORD,
                   show: activeTab === CHANGE_PASSWORD,
                 })}
@@ -588,7 +588,7 @@ const Profile = ({ tab }) => {
                 <div className="profile-body_mobile__card-header">
                   <h2 className="mb-0">
                     <button
-                      className={classNames("btn", {
+                      className={classNames('btn', {
                         collapsed: activeTab !== UPCOMING_EVENTS,
                       })}
                       type="button"
@@ -599,7 +599,7 @@ const Profile = ({ tab }) => {
                   </h2>
                 </div>
                 <div
-                  className={classNames("collapse", {
+                  className={classNames('collapse', {
                     show: activeTab === UPCOMING_EVENTS,
                   })}
                 >
@@ -611,13 +611,13 @@ const Profile = ({ tab }) => {
                         </div>
                         <div className="cards-empty__text">
                           You don't have any events scheduled right now. Find an
-                          upcoming{" "}
+                          upcoming{' '}
                           <Link href="/us-en" prefetch={false} legacyBehavior>
                             <a href="#" className="link link_orange">
                               course
                             </a>
-                          </Link>{" "}
-                          or{" "}
+                          </Link>{' '}
+                          or{' '}
                           <Link
                             href="/us-en/meetup"
                             prefetch={false}
@@ -626,7 +626,7 @@ const Profile = ({ tab }) => {
                             <a href="#" className="link link_orange">
                               meetup
                             </a>
-                          </Link>{" "}
+                          </Link>{' '}
                           to join.
                         </div>
                       </div>
@@ -639,7 +639,7 @@ const Profile = ({ tab }) => {
                 <div className="profile-body_mobile__card-header">
                   <h2 className="mb-0">
                     <button
-                      className={classNames("btn", {
+                      className={classNames('btn', {
                         collapsed: activeTab !== PAST_COURSES,
                       })}
                       type="button"
@@ -650,7 +650,7 @@ const Profile = ({ tab }) => {
                   </h2>
                 </div>
                 <div
-                  className={classNames("collapse", {
+                  className={classNames('collapse', {
                     show: activeTab === PAST_COURSES,
                   })}
                 >
@@ -663,7 +663,7 @@ const Profile = ({ tab }) => {
                 <div className="profile-body_mobile__card-header">
                   <h2 className="mb-0">
                     <button
-                      className={classNames("btn", {
+                      className={classNames('btn', {
                         collapsed: activeTab !== UPDATE_PROFILE,
                       })}
                       type="button"
@@ -674,7 +674,7 @@ const Profile = ({ tab }) => {
                   </h2>
                 </div>
                 <div
-                  className={classNames("collapse", {
+                  className={classNames('collapse', {
                     show: activeTab === UPDATE_PROFILE,
                   })}
                 >
@@ -692,7 +692,7 @@ const Profile = ({ tab }) => {
                   <div className="profile-body_mobile__card-header">
                     <h2 className="mb-0">
                       <button
-                        className={classNames("btn", {
+                        className={classNames('btn', {
                           collapsed: activeTab !== REFER_A_FRIEND,
                         })}
                         onClick={navigateToReferFriendPage}
@@ -703,7 +703,7 @@ const Profile = ({ tab }) => {
                     </h2>
                   </div>
                   <div
-                    className={classNames("collapse", {
+                    className={classNames('collapse', {
                       show: activeTab === REFER_A_FRIEND,
                     })}
                   >
@@ -716,7 +716,7 @@ const Profile = ({ tab }) => {
                 <div className="profile-body_mobile__card-header">
                   <h2 className="mb-0">
                     <button
-                      className={classNames("btn", {
+                      className={classNames('btn', {
                         collapsed: activeTab !== CARD_DETAILS,
                       })}
                       onClick={switchTab(CARD_DETAILS)}
@@ -727,7 +727,7 @@ const Profile = ({ tab }) => {
                   </h2>
                 </div>
                 <div
-                  className={classNames("collapse", {
+                  className={classNames('collapse', {
                     show: activeTab === CARD_DETAILS,
                   })}
                 >
@@ -745,7 +745,7 @@ const Profile = ({ tab }) => {
                         fonts={[
                           {
                             cssSrc:
-                              "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                              'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
                           },
                         ]}
                       >
@@ -761,7 +761,7 @@ const Profile = ({ tab }) => {
                 <div className="profile-body_mobile__card-header">
                   <h2 className="mb-0">
                     <button
-                      className={classNames("btn", {
+                      className={classNames('btn', {
                         collapsed: activeTab !== CHANGE_PASSWORD,
                       })}
                       type="button"
@@ -772,7 +772,7 @@ const Profile = ({ tab }) => {
                   </h2>
                 </div>
                 <div
-                  className={classNames("collapse", {
+                  className={classNames('collapse', {
                     show: activeTab === CHANGE_PASSWORD,
                   })}
                 >

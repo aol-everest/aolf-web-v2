@@ -1,21 +1,21 @@
 /* eslint-disable react/no-unescaped-entities */
-import { PageLoading } from "@components";
-import { MembershipCheckoutStripe } from "@components/membership/membershipCheckoutStripe";
-import { ALERT_TYPES, MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
-import { useAuth, useGlobalAlertContext } from "@contexts";
-import { withAuth } from "@hoc";
-import { useQueryString } from "@hooks";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { api } from "@utils";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useQuery } from "react-query";
-import { useAnalytics } from "use-analytics";
+import { PageLoading } from '@components';
+import { MembershipCheckoutStripe } from '@components/membership/membershipCheckoutStripe';
+import { ALERT_TYPES, MEMBERSHIP_TYPES, COURSE_TYPES } from '@constants';
+import { useAuth, useGlobalAlertContext } from '@contexts';
+import { withAuth } from '@hoc';
+import { useQueryString } from '@hooks';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { api } from '@utils';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { useAnalytics } from 'use-analytics';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -26,18 +26,18 @@ const RetreatPrerequisiteWarning = () => {
     <>
       <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
-        the Journey + membership, which is{" "}
+        the Journey + membership, which is{' '}
         <strong>{COURSE_TYPES.SKY_BREATH_MEDITATION.name}</strong> (formerly
-        known as the Happiness Program). In{" "}
+        known as the Happiness Program). In{' '}
         {COURSE_TYPES.SKY_BREATH_MEDITATION.name}, you'll learn a powerful
         breath meditation to effectively settle and calm the mind.
       </p>
       <p className="course-join-card__text">
-        If our records are not accurate, please contact customer service at{" "}
+        If our records are not accurate, please contact customer service at{' '}
         <a href={`tel:${orgConfig.contactNumberLink}`}>
           {orgConfig.contactNumber}
-        </a>{" "}
-        or email us at{" "}
+        </a>{' '}
+        or email us at{' '}
         <a href="mailto:app.support@us.artofliving.org">
           app.support@us.artofliving.org
         </a>
@@ -118,10 +118,10 @@ function MembershipCheckout() {
     isError,
     error,
   } = useQuery(
-    "subsciption",
+    'subsciption',
     async () => {
       const response = await api.get({
-        path: "subsciption",
+        path: 'subsciption',
         param: {
           id,
           system_default: 1,
@@ -130,7 +130,7 @@ function MembershipCheckout() {
       });
       const [result] = response.data;
       if (!result) {
-        throw new Error("No subscription found");
+        throw new Error('No subscription found');
       }
       return result;
     },
@@ -140,16 +140,16 @@ function MembershipCheckout() {
     },
   );
   const { track } = useAnalytics();
-  const [couponCode] = useQueryString("coupon");
-  const [offeringId] = useQueryString("ofid");
-  const [courseId] = useQueryString("cid", {
+  const [couponCode] = useQueryString('coupon');
+  const [offeringId] = useQueryString('ofid');
+  const [courseId] = useQueryString('cid', {
     defaultValue: cid,
   });
-  const [meetingId] = useQueryString("mid", {
+  const [meetingId] = useQueryString('mid', {
     defaultValue: mid,
   });
-  const [returnPage] = useQueryString("page", {
-    defaultValue: "detail",
+  const [returnPage] = useQueryString('page', {
+    defaultValue: 'detail',
   });
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
@@ -162,23 +162,23 @@ function MembershipCheckout() {
       (activeSubscription) => ({
         id: activeSubscription.sfid,
         name: activeSubscription.subscriptionName,
-        category: "subscription",
+        category: 'subscription',
         variant: activeSubscription.interval,
-        brand: "Art of Living Foundation",
+        brand: 'Art of Living Foundation',
         quantity: 1,
-        currencyCode: "USD",
+        currencyCode: 'USD',
         price: activeSubscription.price,
       }),
     );
 
-    track("eec.checkout", {
+    track('eec.checkout', {
       page: `Art of Living subscription page`,
-      viewType: "subscription",
+      viewType: 'subscription',
       title: activeSubscription.subscriptionName,
       ctype: activeSubscription.sfid,
       amount: activeSubscription.price,
-      requestType: "Detail",
-      hitType: "paymentpage",
+      requestType: 'Detail',
+      hitType: 'paymentpage',
       user: user.profile.id,
       ecommerce: {
         checkout: {
@@ -195,8 +195,8 @@ function MembershipCheckout() {
       !user.profile.isMandatoryWorkshopAttended
     ) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-        className: "retreat-prerequisite-big meditation-digital-membership",
-        title: "Retreat Prerequisite",
+        className: 'retreat-prerequisite-big meditation-digital-membership',
+        title: 'Retreat Prerequisite',
         closeModalAction: closeRetreatPrerequisiteWarning,
         footer: () => {
           return (
@@ -223,9 +223,9 @@ function MembershipCheckout() {
     if (e) e.preventDefault();
     hideAlert();
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en/course",
+      pathname: '/us-en/course',
       query: {
-        courseType: "SKY_BREATH_MEDITATION",
+        courseType: 'SKY_BREATH_MEDITATION',
       },
     });
   };
@@ -256,7 +256,7 @@ function MembershipCheckout() {
             fonts={[
               {
                 cssSrc:
-                  "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                  'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
               },
             ]}
           >

@@ -1,11 +1,11 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/no-unescaped-entities */
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext, useGlobalLoadingContext } from "@contexts";
-import { api } from "@utils";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import { ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext, useGlobalLoadingContext } from '@contexts';
+import { api } from '@utils';
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
 
 export const PendingAgreementModal = React.forwardRef((props, ref) => {
   const [isPPAgreementError, setIsPPAgreementError] = useState(false);
@@ -36,7 +36,7 @@ export const PendingAgreementModal = React.forwardRef((props, ref) => {
           <div className="agreement__group">
             <input
               type="checkbox"
-              className={classNames("custom-checkbox", {
+              className={classNames('custom-checkbox', {
                 error: isPPAgreementError,
               })}
               placeholder=" "
@@ -77,8 +77,8 @@ export const PendingAgreement = () => {
     if (!router.isReady) return;
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       children: <PendingAgreementModal ref={modalEl} />,
-      className: "retreat-prerequisite-big meditation-digital-membership",
-      title: "Action required",
+      className: 'retreat-prerequisite-big meditation-digital-membership',
+      title: 'Action required',
       footer: () => {
         return (
           <button className="btn-secondary v2" onClick={aggreePPModal}>
@@ -99,7 +99,7 @@ export const PendingAgreement = () => {
       showLoader();
       try {
         await api.post({
-          path: "markAllPendingHealthQuestionAgreement",
+          path: 'markAllPendingHealthQuestionAgreement',
           body: { yesForAllPending: true },
         });
       } catch (error) {

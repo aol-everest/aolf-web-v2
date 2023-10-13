@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
 
-const isFunction = (obj) => typeof obj === "function";
+const isFunction = (obj) => typeof obj === 'function';
 
 const useWizard = (activeStepIndex, steps, validateOnNext) => {
   const total = steps.length;

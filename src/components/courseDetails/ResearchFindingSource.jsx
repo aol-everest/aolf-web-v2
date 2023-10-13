@@ -1,11 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import classNames from "classnames";
-import { useState } from "react";
-import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
+import classNames from 'classnames';
+import { useState } from 'react';
+import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 
 export const ResearchFindingSource = () => {
-  const [selectedTab, setSelectedTab] = useState("detail");
+  const [selectedTab, setSelectedTab] = useState('detail');
 
   const toggleModalTab = (tab) => () => {
     setSelectedTab(tab);
@@ -16,16 +16,16 @@ export const ResearchFindingSource = () => {
       <Nav tabs>
         <NavItem>
           <NavLink
-            className={classNames({ active: selectedTab === "detail" })}
-            onClick={toggleModalTab("detail")}
+            className={classNames({ active: selectedTab === 'detail' })}
+            onClick={toggleModalTab('detail')}
           >
             RESEARCH ON SUDARSHAN KRIYA YOGA
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink
-            className={classNames({ active: selectedTab === "depression" })}
-            onClick={toggleModalTab("depression")}
+            className={classNames({ active: selectedTab === 'depression' })}
+            onClick={toggleModalTab('depression')}
           >
             RESEARCH ON SUDARSHAN KRIYA YOGA FOR DEPRESSION
           </NavLink>
@@ -33,11 +33,11 @@ export const ResearchFindingSource = () => {
       </Nav>
       <TabContent activeTab={selectedTab}>
         <TabPane tabId="1">
-          {selectedTab === "detail" ? (
+          {selectedTab === 'detail' ? (
             <>
               <>
                 <h3>
-                  Research on Sudarshan Kriya Yoga -{" "}
+                  Research on Sudarshan Kriya Yoga -{' '}
                   <em>Physical &amp; Mental Health benefits</em>
                 </h3>
                 <p>
@@ -93,7 +93,7 @@ export const ResearchFindingSource = () => {
                       <li>
                         Significant reductions in PTSD symptoms were found in
                         4-6 weeks and were sustained at 6 months[15] and one
-                        year, with no follow-up after 1 month{" "}
+                        year, with no follow-up after 1 month{' '}
                         <strong>[3, 15]</strong>.
                       </li>
                     </ul>
@@ -133,7 +133,7 @@ export const ResearchFindingSource = () => {
                     <strong>Reduced biochemical markers of stress: </strong>
                     <span className="font-normal">
                       cortisol<strong> [2, 33, 34],</strong> corticotrophin
-                      <strong> [2] </strong>blood lactate{" "}
+                      <strong> [2] </strong>blood lactate{' '}
                       <strong> [35],</strong>ACTH <strong> [2], </strong>and
                       plasma malondialdehyde (MDA)
                       <strong> [2, 36, 37]</strong>
@@ -165,7 +165,7 @@ export const ResearchFindingSource = () => {
                     </ul>
                   </li>
                   <li>
-                    Increased levels of antioxidant enzymes{" "}
+                    Increased levels of antioxidant enzymes{' '}
                     <strong>
                       (glutathione, catalase, and superoxide dismutase) [6, 35,
                       39]
@@ -184,7 +184,7 @@ export const ResearchFindingSource = () => {
                     <li>
                       <strong>
                         Improved immune cell counts in apparently healthy
-                        individuals [21, 25]{" "}
+                        individuals [21, 25]{' '}
                       </strong>
                       <ul className="signficance_subtitle">
                         <li>
@@ -196,14 +196,14 @@ export const ResearchFindingSource = () => {
                     <li>
                       <strong>
                         Improved immune cell counts in health compromised
-                        individuals seen in 12 weeks{" "}
+                        individuals seen in 12 weeks{' '}
                       </strong>
                       (Natural Killer Cells) <strong> [25]</strong>
                     </li>
                     <li>
                       <strong>
                         Rapid changes to gene (the building blocks of DNA)
-                        expression [39-41]{" "}
+                        expression [39-41]{' '}
                       </strong>
                       <ul className="signficance_subtitle">
                         <li>
@@ -234,20 +234,20 @@ export const ResearchFindingSource = () => {
                     <li>
                       <strong>
                         <strong>Reduced heart rate</strong> in both healthy and
-                        health compromised individuals{" "}
+                        health compromised individuals{' '}
                         <strong>[42-44][6]</strong>
                       </strong>
                     </li>
                     <li>
                       <strong>
                         <strong>
-                          <strong>Reduced blood pressure</strong>{" "}
+                          <strong>Reduced blood pressure</strong>{' '}
                         </strong>
                       </strong>
                       <ul className="signficance_subtitle">
                         <li>
                           <strong>
-                            In both healthy and health compromised individuals{" "}
+                            In both healthy and health compromised individuals{' '}
                             <strong>[6, 37, 42, 43]</strong>
                           </strong>
                         </li>
@@ -256,7 +256,7 @@ export const ResearchFindingSource = () => {
                     <li>
                       <strong>
                         Improved cholesterol and triglyceride (lipid) profiles:
-                        [36][6, 21]{" "}
+                        [36][6, 21]{' '}
                       </strong>
                       <ul className="signficance_subtitle">
                         <li>
@@ -267,16 +267,16 @@ export const ResearchFindingSource = () => {
                     </li>
                     <li>
                       <strong>
-                        improved respiratory function: [3, 43-46]{" "}
+                        improved respiratory function: [3, 43-46]{' '}
                       </strong>
                       <ul className="signficance_subtitle">
                         <li>
-                          respiration rate dropped by 5% in 1 week{" "}
-                          <strong>[3]</strong> and 15% in 12 weeks{" "}
+                          respiration rate dropped by 5% in 1 week{' '}
+                          <strong>[3]</strong> and 15% in 12 weeks{' '}
                           <strong> [45]</strong>
                         </li>
                         <li>
-                          increased lung (vital/forced vital) capacity{" "}
+                          increased lung (vital/forced vital) capacity{' '}
                           <strong>[43, 44, 46]</strong>
                         </li>
                       </ul>
@@ -312,63 +312,63 @@ export const ResearchFindingSource = () => {
                   <li>
                     Katzman, M.A., et al.,
                     <em>
-                      {" "}
+                      {' '}
                       A multicomponent yoga-based, breath intervention program
                       as an adjunctive treatment in patients suffering from
                       Generalized Anxiety Disorder with or without
                       comorbidities.
-                    </em>{" "}
+                    </em>{' '}
                     International journal of yoga, 2012. <strong>5</strong>
                     (1): p. 57.
                   </li>
                   <li>
-                    Vedamurthachar, A., et al.,{" "}
+                    Vedamurthachar, A., et al.,{' '}
                     <em>
                       Antidepressant efficacy and hormonal effects of Sudarshana
                       Kriya Yoga (SKY) in alcohol dependent individuals.
-                    </em>{" "}
+                    </em>{' '}
                     Journal of affective disorders, 2006. <strong>94</strong>
                     (1): p. 249-253.
                   </li>
                   <li>
-                    Seppälä, E.M., et al.,{" "}
+                    Seppälä, E.M., et al.,{' '}
                     <em>
                       Breathing‐Based Meditation Decreases Posttraumatic Stress
                       Disorder Symptoms in US Military Veterans: A Randomized
                       Controlled Longitudinal Study.
-                    </em>{" "}
+                    </em>{' '}
                     Journal of traumatic stress, 2014. <strong>27</strong>(4):
                     p. 397-405.
                   </li>
                   <li>
-                    Kjellgren, A., et al.,{" "}
+                    Kjellgren, A., et al.,{' '}
                     <em>
                       Wellness through a comprehensive yogic breathing program -
                       a controlled pilot trial.
-                    </em>{" "}
+                    </em>{' '}
                     BMC Complement Altern Med, 2007. <strong>7</strong>: p. 43.
                   </li>
                   <li>
-                    Sureka, P., et al.,{" "}
+                    Sureka, P., et al.,{' '}
                     <em>
                       Effect of Sudarshan Kriya on male prisoners with non
                       psychotic psychiatric disorders: A randomized control
                       trial.
-                    </em>{" "}
+                    </em>{' '}
                     Asian journal of psychiatry, 2014. <strong>12</strong>: p.
                     43-49.
                   </li>
                   <li>
-                    Agte, V.V. and S.A.{" "}
+                    Agte, V.V. and S.A.{' '}
                     <em>
                       Chiplonkar, Sudarshan kriya yoga for Improving Antioxidant
                       status and Reducing Anxiety in Adults.
-                    </em>{" "}
-                    Alternative &amp; Complementary Therapies, 2008.{" "}
+                    </em>{' '}
+                    Alternative &amp; Complementary Therapies, 2008.{' '}
                     <strong>14</strong>(2): p. 96-100.
                   </li>
                   <li>
-                    Narnolia, P.K., et al.,{" "}
+                    Narnolia, P.K., et al.,{' '}
                     <em>
                       Effect of Sudarshan Kriya Yoga on Cardiovascular
                       Parameters and Comorbid Anxiety in Patients of
@@ -376,42 +376,42 @@ export const ResearchFindingSource = () => {
                     </em>
                   </li>
                   <li>
-                    Doria, S., et al.,{" "}
+                    Doria, S., et al.,{' '}
                     <em>
                       Anti-anxiety efficacy of Sudarshan Kriya Yoga in general
                       anxiety disorder: a multicomponent, yoga based, breath
                       intervention program for patients suffering from
                       generalized anxiety disorder with or without
                       comorbidities.
-                    </em>{" "}
+                    </em>{' '}
                     Journal of affective disorders, 2015. <strong>184</strong>:
                     p. 310-317.
                   </li>
                   <li>
-                    Toschi-Dias, E., et al.,{" "}
+                    Toschi-Dias, E., et al.,{' '}
                     <em>
                       Sudarshan Kriya Yoga improves cardiac autonomic control in
                       patients with anxiety-depression disorders.
-                    </em>{" "}
+                    </em>{' '}
                     Journal of Affective Disorders, 2017. <strong>214</strong>:
                     p. 74-80.
                   </li>
                   <li>
-                    Sharma, A., et al.,{" "}
+                    Sharma, A., et al.,{' '}
                     <em>
                       A breathing-based meditation intervention for patients
                       with major depressive disorder following inadequate
                       response to antidepressants: a randomized pilot study
                     </em>
-                    . The Journal of clinical psychiatry, 2017.{" "}
+                    . The Journal of clinical psychiatry, 2017.{' '}
                     <strong>78</strong>(1): p. e59.
                   </li>
                   <li>
-                    Janakiramaiah, N., et al.,{" "}
+                    Janakiramaiah, N., et al.,{' '}
                     <em>
                       Antidepressant efficacy of Sudarshan Kriya Yoga (SKY) in
                       melancholia: a randomized comparison with
-                      electroconvulsive therapy (ECT) and imipramine.{" "}
+                      electroconvulsive therapy (ECT) and imipramine.{' '}
                     </em>
                     Journal of affective disorders, 2000. <strong>57</strong>
                     (1): p. 255-259.
@@ -420,177 +420,177 @@ export const ResearchFindingSource = () => {
                     Janakiramaiah, N., Gangadhar, B.N., Naga Venkatesha Murthy,,
                     S. P.J., T.K., Subbakrishna, D.K., Meti, B.L., Raju, T.R.,,
                     and A. Vedamurthachar, Therapeutic efficacy of Sudarshan
-                    Kriya Yoga (SKY) in dysthymic disorder. NIMHANS J., 1998.{" "}
+                    Kriya Yoga (SKY) in dysthymic disorder. NIMHANS J., 1998.{' '}
                     <strong>17</strong>: p. 21-28.
                   </li>
                   <li>
-                    Naga Venkatesha Murthy, P., et al.,{" "}
+                    Naga Venkatesha Murthy, P., et al.,{' '}
                     <em>
                       Normalization of P300 amplitude following treatment in
-                      dysthymia.{" "}
+                      dysthymia.{' '}
                     </em>
                     Biological Psychiatry, 1997. <strong>42</strong>(8): p.
                     740-743.
                   </li>
                   <li>
-                    Murthy, P.N.V., et al.,{" "}
+                    Murthy, P.N.V., et al.,{' '}
                     <em>
                       P300 amplitude and antidepressant response to Sudarshan
                       Kriya Yoga (SKY).
-                    </em>{" "}
+                    </em>{' '}
                     Journal of affective disorders, 1998. <strong>50</strong>
                     (1): p. 45-48.
                   </li>
                   <li>
-                    Descilo, T., et al.,{" "}
+                    Descilo, T., et al.,{' '}
                     <em>
                       Effects of a yoga breath intervention alone and in
                       combination with an exposure therapy for post-traumatic
                       stress disorder and depression in survivors of the 2004
                       South-East Asia tsunami.
-                    </em>{" "}
+                    </em>{' '}
                     Acta Psychiatr Scand, 2010.<strong> 121</strong>(4): p.
                     289-300.
                   </li>
                   <li>
-                    Martin, A.,{" "}
+                    Martin, A.,{' '}
                     <em>
                       Multi-component yoga breath program for Vietnam veteran
                       post traumatic stress disorder: randomized controlled
                       trial.
-                    </em>{" "}
+                    </em>{' '}
                     Journal of Traumatic Stress Disorders &amp; Treatment, 2013.
                   </li>
                   <li>
                     Kharya, C., et al.,
                     <em>
-                      {" "}
+                      {' '}
                       Effect of controlled breathing exercises on the
                       psychological status and the cardiac autonomic tone:
                       Sudarshan Kriya and Prana-Yoga.
-                    </em>{" "}
-                    Indian Journal of Physiology and Pharmacology, 2014.{" "}
+                    </em>{' '}
+                    Indian Journal of Physiology and Pharmacology, 2014.{' '}
                     <strong>58</strong>(3): p. 210-220.
                   </li>
                   <li>
-                    Goldstein, M.R., et al.,{" "}
+                    Goldstein, M.R., et al.,{' '}
                     <em>
                       Improvements in well-being and vagal tone following a
                       yogic breathing-based life skills workshop in young
-                      adults: Two open-trial pilot studies.{" "}
+                      adults: Two open-trial pilot studies.{' '}
                     </em>
                     International journal of yoga, 2016.<strong> 9</strong>
                     (1): p. 20.
                   </li>
                   <li>
-                    Carter, J., et al.,{" "}
+                    Carter, J., et al.,{' '}
                     <em>
                       Multi-component yoga breath program for Vietnam veteran
                       post traumatic stress disorder: randomized controlled
                       trial.
-                    </em>{" "}
+                    </em>{' '}
                     J Trauma Stress Disor Treat 2, 2013. 3: p. 2.
                   </li>
                   <li>
                     Walker III, J. and D. Pacik,
                     <em>
-                      {" "}
+                      {' '}
                       Controlled Rhythmic Yogic Breathing as Complementary
                       Treatment for Post-Traumatic Stress Disorder in Military
-                      Veterans: A Case Series.{" "}
+                      Veterans: A Case Series.{' '}
                     </em>
                     Medical acupuncture, 2017. <strong>29</strong>(4): p.
                     232-238.
                   </li>
                   <li>
-                    Subramanian, S., et al.,{" "}
+                    Subramanian, S., et al.,{' '}
                     <em>
                       Role of sudarshan kriya and pranayam on lipid profile and
                       blood cell parameters during exam stress: A randomized
-                      controlled trial.{" "}
+                      controlled trial.{' '}
                     </em>
                     International journal of yoga, 2012.<strong> 5</strong>
                     (1): p. 21.
                   </li>
                   <li>
-                    Chandra, S., et al.,{" "}
+                    Chandra, S., et al.,{' '}
                     <em>
                       Mental stress: neurophysiology and its regulation by
                       Sudarshan Kriya Yoga.
-                    </em>{" "}
+                    </em>{' '}
                     International journal of yoga, 2017. <strong>10</strong>
                     (2): p. 67.
                   </li>
                   <li>
-                    Kharya, C., et al.,{" "}
+                    Kharya, C., et al.,{' '}
                     <em>
                       Effect of controlled breathing exercises on the
                       psychological status and the cardiac autonomic tone:
-                      Sudarshan Kriya and Prana-Yoga.{" "}
+                      Sudarshan Kriya and Prana-Yoga.{' '}
                     </em>
                     Indian J Physiol Pharmacol, 2014. <strong>58</strong>(3): p.
                     210-220.
                   </li>
                   <li>
-                    Ghahremani, D.G., et al.,{" "}
+                    Ghahremani, D.G., et al.,{' '}
                     <em>
                       Effects of the Youth Empowerment Seminar on impulsive
-                      behavior in adolescents.{" "}
+                      behavior in adolescents.{' '}
                     </em>
                     Journal of Adolescent Health, 2013.
                   </li>
                   <li>
-                    Kochupillai, V., et al.,{" "}
+                    Kochupillai, V., et al.,{' '}
                     <em>
                       Effect of rhythmic breathing (Sudarshan Kriya and
                       Pranayam) on immune functions and tobacco addiction.
-                    </em>{" "}
-                    Annals of the New York Academy of Sciences, 2005.{" "}
+                    </em>{' '}
+                    Annals of the New York Academy of Sciences, 2005.{' '}
                     <strong>1056</strong>(1): p. 242-252.
                   </li>
                   <li>
-                    Gootjes, L., I.H. Franken, and J.W.{" "}
+                    Gootjes, L., I.H. Franken, and J.W.{' '}
                     <em>
                       Van Strien, Cognitive Emotion Regulation in Yogic
-                      Meditative Practitioners.{" "}
+                      Meditative Practitioners.{' '}
                     </em>
                     Journal of Psychophysiology, 2011. <strong>25</strong>(2):
                     p. 87-94.
                   </li>
                   <li>
-                    Katzman, M.A., et al.,{" "}
+                    Katzman, M.A., et al.,{' '}
                     <em>
                       A multicomponent yoga-based, breath intervention program
                       as an adjunctive treatment in patients suffering from
                       generalized anxiety disorder with or without
                       comorbidities.
-                    </em>{" "}
+                    </em>{' '}
                     Int J Yoga, 2012.<strong> 5</strong>(1): p. 57-65.
                   </li>
                   <li>
                     Newman, R., O. Yim, and D. Shaenfeld,
                     <em>
-                      {" "}
+                      {' '}
                       Gender and Ethnicity: Are they associated with Diffrential
                       Outcomes in a comprehensive Social-Emotional-Learning
-                      Program?{" "}
+                      Program?{' '}
                     </em>
                     under review.
                   </li>
                   <li>
-                    Jyotsna, V.P., et al.,{" "}
+                    Jyotsna, V.P., et al.,{' '}
                     <em>
                       Comprehensive yogic breathing program improves quality of
                       life in patients with diabetes.
-                    </em>{" "}
-                    Indian journal of endocrinology and metabolism, 2012.{" "}
+                    </em>{' '}
+                    Indian journal of endocrinology and metabolism, 2012.{' '}
                     <strong>16</strong>
                     (3): p. 423.
                   </li>
                   <li>
                     Warner, A. and K. Hall,
                     <em>
-                      {" "}
+                      {' '}
                       Psychological and Spiritual Well-being of Women with
                       Breast Cancer Participating in the Art of Living Program,
                       in Psychology of Cancer
@@ -601,15 +601,15 @@ export const ResearchFindingSource = () => {
                   <li>
                     Bhatia, M., et al.,
                     <em>
-                      {" "}
+                      {' '}
                       Electrophysiologic evaluation of Sudarshan Kriya: an EEG,
-                      BAER, P300 study.{" "}
+                      BAER, P300 study.{' '}
                     </em>
-                    Indian journal of physiology and pharmacology, 2003.{" "}
+                    Indian journal of physiology and pharmacology, 2003.{' '}
                     <strong>47</strong>(2): p. 157-163.
                   </li>
                   <li>
-                    Sulekha, S., et al.,{" "}
+                    Sulekha, S., et al.,{' '}
                     <em>
                       Evaluation of sleep architecture in practitioners of
                       Sudarshan Kriya yoga and Vipassana meditation*
@@ -618,81 +618,81 @@ export const ResearchFindingSource = () => {
                     (3): p. 207-214.
                   </li>
                   <li>
-                    Kumar, N., et al.,{" "}
+                    Kumar, N., et al.,{' '}
                     <em>
                       Randomized controlled trial in advance stage breast cancer
                       patients for the effectiveness on stress marker and pain
                       through Sudarshan Kriya and Pranayam.
-                    </em>{" "}
+                    </em>{' '}
                     Indian journal of palliative care, 2013. <strong>19</strong>
                     (3): p. 180.
                   </li>
                   <li>
-                    Mulla, Z.R. and Vedamuthachar,{" "}
+                    Mulla, Z.R. and Vedamuthachar,{' '}
                     <em>
                       Impact of a Sudarshan Kriya-based occupational stress
                       management intervention on physiological and psychological
-                      outcomes.{" "}
+                      outcomes.{' '}
                     </em>
                     Management and Labour Studies, 2014. <strong>39</strong>
                     (4): p. 381-395.
                   </li>
                   <li>
-                    Sharma, H., et al.,{" "}
+                    Sharma, H., et al.,{' '}
                     <em>
                       Sudarshan Kriya practitioners exhibit better antioxidant
                       status and lower blood lactate levels.
-                    </em>{" "}
+                    </em>{' '}
                     Biological Psychology, 2003. <strong>63</strong>(3): p.
                     281-291.
                   </li>
                   <li>
                     <em>
                       Agte, V.V. and K. Tarwadi, Sudarshan kriya yoga for
-                      treating type 2 diabetes: a preliminary study.{" "}
+                      treating type 2 diabetes: a preliminary study.{' '}
                     </em>
-                    Alternative &amp; Complementary Therapies, 2004.{" "}
+                    Alternative &amp; Complementary Therapies, 2004.{' '}
                     <strong>10</strong>(4): p. 220-222.
                   </li>
                   <li>
-                    Agte, V.V., M.U. Jahagirdar, and K.V. Tarwadi,{" "}
+                    Agte, V.V., M.U. Jahagirdar, and K.V. Tarwadi,{' '}
                     <em>
                       The effects of Sudarshan Kriya Yoga on some physiological
                       and biochemical parameters in mild hypertensive patients.
-                    </em>{" "}
+                    </em>{' '}
                     Indian J Physiol Pharmacol, 2011.<strong> 55</strong>(2): p.
                     183-187.
                   </li>
                   <li>
-                    Janakiramaiah, N., et al.,{" "}
+                    Janakiramaiah, N., et al.,{' '}
                     <em>
                       Therapeutic efficacy of Sudarshan Kriya Yoga (SKY) in
-                      dysthymic disorder.{" "}
+                      dysthymic disorder.{' '}
                     </em>
                     Nimhans Journal, 1998. 16(1): p. 21-28.
                   </li>
                   <li>
-                    Sharma, H., et al.,{" "}
+                    Sharma, H., et al.,{' '}
                     <em>
                       Gene expression profiling in practitioners of Sudarshan
-                      Kriya.{" "}
+                      Kriya.{' '}
                     </em>
                     Journal of psychosomatic research, 2008. 64(2): p. 213-218.
                   </li>
                   <li>
-                    Qu, S., et al.,{" "}
+                    Qu, S., et al.,{' '}
                     <em>
                       Rapid gene expression changes in peripheral blood
-                      lymphocytes upon practice of a comprehensive yoga program.{" "}
+                      lymphocytes upon practice of a comprehensive yoga program.{' '}
                     </em>
                     PLoS One, 2013. 8(4): p. e61910.
                   </li>
                   <li>
                     Ayyildiz, D. and K.Y. Arga, Hypothesis:
                     <em>
-                      {" "}
+                      {' '}
                       Are there molecular signatures of yoga practice in
-                      peripheral blood mononuclear cells?{" "}
+                      peripheral blood mononuclear cells?{' '}
                     </em>
                     Omics: a journal of integrative biology, 2017. 21(7): p.
                     426-428.
@@ -700,33 +700,33 @@ export const ResearchFindingSource = () => {
                   <li>
                     Somwanshi S. D., H.S.M., Adgaonkar B. D., Kolpe D. V.,
                     <em>
-                      {" "}
+                      {' '}
                       Effect of Sudarshankriya Yoga on Cardiorespiratory
                       Parameters. International Journal of Recent Trends in
                       Science And Technology, 2013. 8(1).
                     </em>
                   </li>
                   <li>
-                    Kale, J.S., R.R. Deshpande, and N.T. Katole,{" "}
+                    Kale, J.S., R.R. Deshpande, and N.T. Katole,{' '}
                     <em>
                       The effect of Sudarshan Kriya Yoga (SKY) on cardiovascular
                       and respiratory parameters.
-                    </em>{" "}
+                    </em>{' '}
                     Int J Med Sci Public Health, 2016. 5(10): p. 2091-4.
                   </li>
                   <li>
                     Bodi, S.G., et al.,
                     <em>
-                      {" "}
+                      {' '}
                       Improvement in lung function with a unique breathing
                       technique: Sudarshan kriya yoga (SKY).
-                    </em>{" "}
+                    </em>{' '}
                     Chest, 2008. 134(4): p. 144P.
                   </li>
                   <li>
                     Somwanshi, S., et al.,
                     <em>
-                      {" "}
+                      {' '}
                       Effect of Sudarshankriya Yoga on Cardiorespiratory
                       Parameters
                     </em>
@@ -734,11 +734,11 @@ export const ResearchFindingSource = () => {
                     p. 62-66.
                   </li>
                   <li>
-                    Chavhan, D.B.,{" "}
+                    Chavhan, D.B.,{' '}
                     <em>
                       The Effect Of Sudarshan Kriya and Bhastrika Pranayama on
                       Endurance Capacity in Kho-Kho Players
-                    </em>{" "}
+                    </em>{' '}
                     International Multidisciplinary Research Journal, 2103.
                     6(1).
                   </li>
@@ -754,19 +754,19 @@ export const ResearchFindingSource = () => {
                   please contact us at:
                 </p>
                 <p>
-                  For North and South America:{" "}
+                  For North and South America:{' '}
                   <a href="mailto:research@artofliving.org ">
-                    research@artofliving.org{" "}
+                    research@artofliving.org{' '}
                   </a>
                 </p>
                 <p>
-                  For Europe:{" "}
+                  For Europe:{' '}
                   <a href="mailto:research@aoluniversity.org">
                     research@aoluniversity.org
                   </a>
                 </p>
                 <p>
-                  For Asia:{" "}
+                  For Asia:{' '}
                   <a href="mailto:research@ssiar.org ">research@ssiar.org </a>
                 </p>
               </>
@@ -774,7 +774,7 @@ export const ResearchFindingSource = () => {
           ) : null}
         </TabPane>
         <TabPane tabId="2">
-          {selectedTab === "depression" ? (
+          {selectedTab === 'depression' ? (
             <>
               <>
                 <h4>
@@ -789,11 +789,11 @@ export const ResearchFindingSource = () => {
                   More than a dozen published studies have documented
                   significant relief from depression in individuals who learned
                   and practiced Sudarshan Kriya and accompanying breathing
-                  techniques (SKY).{" "}
+                  techniques (SKY).{' '}
                   <strong>
                     These studies have demonstrated a 67-73% success rate in
                     relief from depression, regardless of the severity of
-                    depression{" "}
+                    depression{' '}
                   </strong>
                   [1-6].
                 </p>
@@ -801,7 +801,7 @@ export const ResearchFindingSource = () => {
                   <strong>
                     These results are experienced rapidly, often within 3-4
                     weeks
-                  </strong>{" "}
+                  </strong>{' '}
                   [1, 2, 4, 5, 7, 8]. And unlike conventional treatments, there
                   is uniform rapid relief from depression with SKY practice,
                   regardless of how long a person has been suffering from

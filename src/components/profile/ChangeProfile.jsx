@@ -1,23 +1,23 @@
-import { Dropdown, StyledInput } from "@components/checkout";
-import { ChangeEmail } from "@components/profile";
+import { Dropdown, StyledInput } from '@components/checkout';
+import { ChangeEmail } from '@components/profile';
 import {
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
   US_STATES,
-} from "@constants";
-import { useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { api } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import { Field, Formik } from "formik";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
-import * as Yup from "yup";
-import "yup-phone";
-import PhoneInput from "./../phoneInputCmp";
-import Style from "./ChangeProfile.module.scss";
+} from '@constants';
+import { useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { api } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import { Field, Formik } from 'formik';
+import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
+import { FaRegEdit } from 'react-icons/fa';
+import * as Yup from 'yup';
+import 'yup-phone';
+import PhoneInput from './../phoneInputCmp';
+import Style from './ChangeProfile.module.scss';
 
 const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
   const onChangeAction = (value, data, event, formattedValue) => {
@@ -31,7 +31,7 @@ const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
       country="us"
       inputClass={classNames({
         validate: form.errors.contactPhone,
-        "w-100": isMobile,
+        'w-100': isMobile,
       })}
       countryCodeEditable={true}
       onChange={onChangeAction}
@@ -47,9 +47,9 @@ export const ChangeProfile = ({
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
   const router = useRouter();
-  const description = useRef("");
+  const description = useRef('');
 
-  const allowEmailEdit = profile.cognito.UserStatus !== "EXTERNAL_PROVIDER";
+  const allowEmailEdit = profile.cognito.UserStatus !== 'EXTERNAL_PROVIDER';
 
   const editEmailAction = (e) => {
     if (e) e.preventDefault();
@@ -70,7 +70,7 @@ export const ChangeProfile = ({
     setLoading(true);
     try {
       const { status, error: errorMessage } = await api.post({
-        path: "updateProfile",
+        path: 'updateProfile',
         body: {
           contactPhone,
           contactAddress,
@@ -97,7 +97,7 @@ export const ChangeProfile = ({
 
   const validateStudentEmail = (email) => {
     const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
-    const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+    const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
     return isStudentEmail;
   };
 
@@ -105,7 +105,7 @@ export const ChangeProfile = ({
     setLoading(true);
     try {
       await api.post({
-        path: "verify-email",
+        path: 'verify-email',
         body: {
           email: email,
         },
@@ -115,7 +115,7 @@ export const ChangeProfile = ({
     }
     setLoading(false);
     showModal(MODAL_TYPES.EMPTY_MODAL, {
-      title: "Verification code sent.",
+      title: 'Verification code sent.',
       children: (handleModalToggle) => (
         <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
           <div className=" modal-dialog modal-dialog-centered active">
@@ -174,11 +174,11 @@ export const ChangeProfile = ({
     try {
       const payload = {
         message: description.current,
-        origin: "Web",
+        origin: 'Web',
       };
 
       const { status, error: errorMessage } = await api.post({
-        path: "accountDeletionRequest",
+        path: 'accountDeletionRequest',
         body: payload,
       });
 
@@ -191,7 +191,7 @@ export const ChangeProfile = ({
       handleRequestResult(false, true);
     }
     setLoading(false);
-    description.current = "";
+    description.current = '';
     hideModal();
   };
 
@@ -200,11 +200,11 @@ export const ChangeProfile = ({
     try {
       const payload = {
         message: description.current,
-        origin: "Web",
+        origin: 'Web',
       };
 
       const { status, error: errorMessage } = await api.post({
-        path: "ccDeletionRequest",
+        path: 'ccDeletionRequest',
         body: payload,
       });
 
@@ -217,7 +217,7 @@ export const ChangeProfile = ({
       handleRequestResult(false, false, true);
     }
     setLoading(false);
-    description.current = "";
+    description.current = '';
     hideModal();
   };
 
@@ -226,10 +226,10 @@ export const ChangeProfile = ({
   };
 
   const handleRemoveInformation = () => {
-    description.current = "";
+    description.current = '';
     showModal(MODAL_TYPES.CUSTOM_MODAL, {
-      title: "Delete PII or Remove CC information",
-      className: "course-join-card",
+      title: 'Delete PII or Remove CC information',
+      className: 'course-join-card',
       children: (
         <>
           <div className="course-details-card__list">
@@ -281,14 +281,14 @@ export const ChangeProfile = ({
   } = profile;
 
   const isStudentFlowEnabled =
-    process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === "true";
+    process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === 'true';
 
   const showVerifyStudentStatus =
     isStudentFlowEnabled &&
     validateStudentEmail(email) &&
     (!isStudentVerified ||
       (isStudentVerified &&
-        dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
+        dayjs(new Date()).diff(dayjs(studentVerificationDate), 'y', true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
   return (
@@ -297,26 +297,26 @@ export const ChangeProfile = ({
       <Formik
         enableReinitialize
         initialValues={{
-          firstName: first_name || "",
-          lastName: last_name || "",
-          contactPhone: personMobilePhone || "",
-          contactAddress: personMailingStreet || "",
-          contactState: personMailingState || "",
-          contactZip: personMailingPostalCode || "",
+          firstName: first_name || '',
+          lastName: last_name || '',
+          contactPhone: personMobilePhone || '',
+          contactAddress: personMailingStreet || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
         }}
         validationSchema={Yup.object().shape({
           contactPhone: Yup.string()
-            .label("Phone")
-            .required("Phone is required")
-            .phone(null, false, "Phone is invalid")
+            .label('Phone')
+            .required('Phone is required')
+            .phone(null, false, 'Phone is invalid')
             .nullable(),
-          contactAddress: Yup.string().required("Address is required"),
-          contactState: Yup.string().required("State is required"),
+          contactAddress: Yup.string().required('Address is required'),
+          contactState: Yup.string().required('State is required'),
           contactZip: Yup.string()
-            .required("Zip is required!")
-            .matches(/^[0-9]+$/, { message: "Zip is invalid" })
-            .min(2, "Zip is invalid")
-            .max(10, "Zip is invalid"),
+            .required('Zip is required!')
+            .matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+            .min(2, 'Zip is invalid')
+            .max(10, 'Zip is invalid'),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           await submitAction(values);
@@ -340,22 +340,22 @@ export const ChangeProfile = ({
               {!isMobile && <h6 className="profile-update__title">Profile:</h6>}
               <div className="profile-update__card order__card">
                 <StyledInput
-                  containerClass={classNames(Style.address, "tw-mt-0")}
-                  className={classNames(Style.address, "tw-mt-0 !tw-w-full")}
+                  containerClass={classNames(Style.address, 'tw-mt-0')}
+                  className={classNames(Style.address, 'tw-mt-0 !tw-w-full')}
                   placeholder="Address"
                   formikProps={props}
                   formikKey="contactAddress"
                   fullWidth
                 ></StyledInput>
                 <Dropdown
-                  containerClass={classNames({ "w-100": isMobile })}
+                  containerClass={classNames({ 'w-100': isMobile })}
                   placeholder="State"
                   formikProps={props}
                   formikKey="contactState"
                   options={US_STATES}
                 ></Dropdown>
                 <StyledInput
-                  containerClass={classNames({ "w-100": isMobile })}
+                  containerClass={classNames({ 'w-100': isMobile })}
                   className="zip"
                   placeholder="Zip"
                   formikProps={props}
@@ -363,8 +363,8 @@ export const ChangeProfile = ({
                 ></StyledInput>
 
                 <div
-                  className={classNames("input-block", {
-                    "w-100": isMobile,
+                  className={classNames('input-block', {
+                    'w-100': isMobile,
                   })}
                 >
                   <input
@@ -372,7 +372,7 @@ export const ChangeProfile = ({
                     readOnly={true}
                     placeholder="First Name"
                     className={classNames({
-                      "w-100": isMobile,
+                      'w-100': isMobile,
                     })}
                     value={values.firstName}
                     name="firstName"
@@ -380,15 +380,15 @@ export const ChangeProfile = ({
                 </div>
 
                 <div
-                  className={classNames("input-block", {
-                    "w-100": isMobile,
+                  className={classNames('input-block', {
+                    'w-100': isMobile,
                   })}
                 >
                   <input
                     type="text"
                     readOnly={true}
                     className={classNames({
-                      "w-100": isMobile,
+                      'w-100': isMobile,
                     })}
                     placeholder="Last Name"
                     value={values.lastName}
@@ -398,9 +398,9 @@ export const ChangeProfile = ({
 
                 <div
                   className={classNames(
-                    "input-block inline-edit-input-container",
+                    'input-block inline-edit-input-container',
                     {
-                      "w-100": isMobile,
+                      'w-100': isMobile,
                     },
                   )}
                 >
@@ -408,7 +408,7 @@ export const ChangeProfile = ({
                     readOnly={true}
                     value={email}
                     className={classNames({
-                      "w-100": isMobile,
+                      'w-100': isMobile,
                     })}
                     type="email"
                     placeholder="Email"
@@ -420,8 +420,8 @@ export const ChangeProfile = ({
                   )}
                 </div>
                 <div
-                  className={classNames("input-block", {
-                    "w-100": isMobile,
+                  className={classNames('input-block', {
+                    'w-100': isMobile,
                   })}
                 >
                   <Field

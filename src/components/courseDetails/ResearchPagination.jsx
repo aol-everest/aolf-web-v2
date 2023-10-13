@@ -1,32 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const researchImgItems = [
   {
     image: {
-      gray: "/img/research-highlights-ijoy-gray.png",
-      color: "/img/research-highlights-ijoy-color.png",
+      gray: '/img/research-highlights-ijoy-gray.png',
+      color: '/img/research-highlights-ijoy-color.png',
     },
     quote: '"Improved immune cell counts within as<br /> little as 3 weeks"',
   },
   {
     image: {
-      gray: "/img/research-highlights-sabr-gray.png",
-      color: "/img/research-highlights-sabr-color.png",
+      gray: '/img/research-highlights-sabr-gray.png',
+      color: '/img/research-highlights-sabr-color.png',
     },
-    quote: "“3x more time spent in deep,<br />restful stages of sleep.”",
+    quote: '“3x more time spent in deep,<br />restful stages of sleep.”',
   },
   {
     image: {
-      gray: "/img/research-highlights-prevention-gray.png",
-      color: "/img/research-highlights-prevention-color.png",
+      gray: '/img/research-highlights-prevention-gray.png',
+      color: '/img/research-highlights-prevention-color.png',
     },
     quote:
       '"The Easy Breathing Technique That Can<br /> Lower Your Anxiety 44%"',
   },
   {
     image: {
-      gray: "/img/research-highlights-hhp-gray.png",
-      color: "/img/research-highlights-hhp-color.png",
+      gray: '/img/research-highlights-hhp-gray.png',
+      color: '/img/research-highlights-hhp-color.png',
     },
     quote: '"Shows promise in providing relief for<br /> depression"',
   },

@@ -1,11 +1,11 @@
-import classNames from "classnames";
-import { useState } from "react";
+import classNames from 'classnames';
+import { useState } from 'react';
 
 export const SmartInput = ({
   dataList,
-  containerClass = "smart-input",
-  inputclassName = "",
-  placeholder = "Search",
+  containerClass = 'smart-input',
+  inputclassName = '',
+  placeholder = 'Search',
   closeHandler,
   onSearchKeyChange,
   value,
@@ -37,7 +37,7 @@ export const SmartInput = ({
       <input
         placeholder={placeholder}
         type="text"
-        className={classNames("custom-input", inputclassName)}
+        className={classNames('custom-input', inputclassName)}
         value={searchKey}
         onChange={handleChange}
       />

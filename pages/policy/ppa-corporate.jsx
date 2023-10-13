@@ -3,7 +3,7 @@
 // import { api } from "@utils";
 // import { useGlobalAlertContext } from "@contexts";
 // import { ALERT_TYPES } from "@constants";
-import { NextSeo } from "next-seo";
+import { NextSeo } from 'next-seo';
 
 // const successMessage = () => {
 //   return (
@@ -59,15 +59,15 @@ const PPACorporate = () => {
               to as a “minor”), on behalf of such child or minor. By registering
               for or participating in a program, you accept and agree to be
               bound and abide by this Program Participation Agreement, as well
-              as our website{" "}
+              as our website{' '}
               <a
                 href="https://www.artofliving.org/us-en/terms-use"
                 target="_blank"
                 rel="noreferrer"
               >
                 Terms of Use
-              </a>{" "}
-              and our{" "}
+              </a>{' '}
+              and our{' '}
               <a
                 href="https://www.artofliving.org/us-en/privacy-policy"
                 target="_blank"

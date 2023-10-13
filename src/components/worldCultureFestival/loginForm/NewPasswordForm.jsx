@@ -1,16 +1,16 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { object, ref, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { object, ref, string } from 'yup';
 
 const schema = object().shape({
   password: string()
-    .required("Password is required")
-    .min(8, "Must Contain 8 Characters"),
+    .required('Password is required')
+    .min(8, 'Must Contain 8 Characters'),
   passwordConfirmation: string().oneOf(
-    [ref("password"), null],
-    "Passwords must match",
+    [ref('password'), null],
+    'Passwords must match',
   ),
 });
 
@@ -45,11 +45,11 @@ export const NewPasswordForm = ({
           </label>
           <input
             type="password"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.password,
             })}
             placeholder="Enter your new password"
-            {...register("password")}
+            {...register('password')}
             autoComplete="new-password"
             aria-invalid="false"
             aria-haspopup="false"
@@ -67,11 +67,11 @@ export const NewPasswordForm = ({
           </label>
           <input
             type="password"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.passwordConfirmation,
             })}
             placeholder="Confirm your Password"
-            {...register("passwordConfirmation")}
+            {...register('passwordConfirmation')}
             autoComplete="new-password"
             aria-invalid="false"
             aria-haspopup="false"

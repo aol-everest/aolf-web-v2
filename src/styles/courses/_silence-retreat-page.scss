@@ -493,6 +493,27 @@
           color: #ffffff;
         }
       }
+      .notes {
+        .content {
+          /* Track */
+          &::-webkit-scrollbar-track {
+            background: #e5e2f8;
+          }
+          /* Handle */
+          &::-webkit-scrollbar-thumb {
+            background: #3196e4;
+            border-radius: 4px;
+          }
+
+          /* Handle on hover */
+          &::-webkit-scrollbar-thumb:hover {
+            background: #3895dc;
+          }
+        }
+      }
+      .early-bird-banner {
+        background: #89c9fb;
+      }
     }
   }
   .float-bar {

@@ -1,18 +1,18 @@
-import classNames from "classnames";
-import MaskedInput from "react-text-mask";
-import { FieldWrapper } from "./FieldWrapper";
+import classNames from 'classnames';
+import MaskedInput from 'react-text-mask';
+import { FieldWrapper } from './FieldWrapper';
 
 const phoneNumberMask = [
-  "(",
+  '(',
   /[1-9]/,
   /\d/,
   /\d/,
-  ")",
-  " ",
+  ')',
+  ' ',
   /\d/,
   /\d/,
   /\d/,
-  "-",
+  '-',
   /\d/,
   /\d/,
   /\d/,
@@ -51,11 +51,11 @@ export const StyledInput = ({
   };
 
   const formatPhoneNumber = (phoneNumberString) => {
-    const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+    const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
     if (match) {
-      const intlCode = match[1] ? "+1 " : "";
-      return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
+      const intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
     }
     return phoneNumberString;
   };
@@ -89,8 +89,8 @@ export const StyledInput = ({
           {...inputProps}
           className={
             formikProps.errors[formikKey] && formikProps.touched[formikKey]
-              ? "text-input error"
-              : "text-input"
+              ? 'text-input error'
+              : 'text-input'
           }
           {...rest}
         />
@@ -106,7 +106,7 @@ export const StyledInput = ({
         />
       )}
       {tooltip && (
-        <div className={classNames("input-tooltip", { active: showTooltip })}>
+        <div className={classNames('input-tooltip', { active: showTooltip })}>
           <div className="tooltip-arrow"></div>
           {tooltip}
         </div>

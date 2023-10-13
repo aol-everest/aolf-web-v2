@@ -20,7 +20,9 @@ h3 {
 h4,
 h5,
 h6 {
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   line-height: 1.33;
 }
 
@@ -40,7 +42,9 @@ h6 {
 
 .p1,
 .p2 {
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   line-height: 1.5;
 }
 
@@ -53,19 +57,25 @@ h6 {
 }
 
 .p3 {
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   font-size: 16px;
   line-height: 1.375;
 }
 
 .p4 {
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   font-size: 12px;
   line-height: 1.16;
 }
 
 .caption {
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   font-size: 16px;
   line-height: 1.38;
   letter-spacing: 0.3px;
@@ -116,7 +126,9 @@ h6 {
 .h4,
 .h5,
 .h6 {
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
 }
 
 .h4 {
@@ -141,7 +153,9 @@ h6 {
 .p5,
 .p6 {
   color: $text-color;
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   font-weight: 400;
 
   &_m {
@@ -180,7 +194,9 @@ h6 {
 
 .caption {
   color: $text-color;
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   font-weight: 600;
   font-size: 20px;
   line-height: 22px;
@@ -206,7 +222,7 @@ h6 {
   }
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     height: 1px;
     bottom: 3px;

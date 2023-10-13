@@ -1,5 +1,5 @@
-import _rawCountries from "./rawCountries";
-import _rawTerritories from "./rawTerritories";
+import _rawCountries from './rawCountries';
+import _rawTerritories from './rawTerritories';
 
 function getMask(
   prefix,
@@ -9,9 +9,9 @@ function getMask(
   alwaysDefaultMask,
 ) {
   if (!predefinedMask || alwaysDefaultMask) {
-    return prefix + "".padEnd(dialCode.length, ".") + " " + defaultMask;
+    return prefix + ''.padEnd(dialCode.length, '.') + ' ' + defaultMask;
   } else {
-    return prefix + "".padEnd(dialCode.length, ".") + " " + predefinedMask;
+    return prefix + ''.padEnd(dialCode.length, '.') + ' ' + predefinedMask;
   }
 }
 
@@ -66,7 +66,7 @@ function initCountries(
         countryItem.mainCode = true;
         if (
           enableAllCodes ||
-          (enableAreaCodes.constructor.name === "Array" &&
+          (enableAreaCodes.constructor.name === 'Array' &&
             enableAreaCodes.includes(country[2]))
         ) {
           countryItem.hasAreaCodes = true;
@@ -192,12 +192,12 @@ export default class CountryData {
         this.getFilteredCountryList(
           onlyCountries,
           initializedCountries,
-          preserveOrder.includes("onlyCountries"),
+          preserveOrder.includes('onlyCountries'),
         ),
         excludeCountries,
       ),
       localization,
-      preserveOrder.includes("onlyCountries"),
+      preserveOrder.includes('onlyCountries'),
     );
 
     this.preferredCountries =
@@ -207,10 +207,10 @@ export default class CountryData {
             this.getFilteredCountryList(
               preferredCountries,
               initializedCountries,
-              preserveOrder.includes("preferredCountries"),
+              preserveOrder.includes('preferredCountries'),
             ),
             localization,
-            preserveOrder.includes("preferredCountries"),
+            preserveOrder.includes('preferredCountries'),
           );
 
     // apply filters to hiddenAreaCodes
@@ -221,7 +221,7 @@ export default class CountryData {
   }
 
   filterRegions = (regions, countries) => {
-    if (typeof regions === "string") {
+    if (typeof regions === 'string') {
       const region = regions;
       return countries.filter((country) => {
         return country.regions.some((element) => {

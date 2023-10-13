@@ -1,4 +1,4 @@
-import { COURSE_TYPES } from "@constants";
+import { COURSE_TYPES } from '@constants';
 
 export const priceCalculation = ({
   workshop,

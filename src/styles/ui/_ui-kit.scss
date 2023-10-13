@@ -4,7 +4,9 @@ body {
 }
 
 body {
-  font-family: Work Sans, sans-serif;
+  font-family:
+    Work Sans,
+    sans-serif;
   color: $text-color;
   position: relative;
 }
@@ -182,7 +184,7 @@ p {
   }
 
   .tooltip-arrow::after {
-    content: "";
+    content: '';
     display: block;
     border-top: $grey-border;
     border-left: $grey-border;
@@ -323,7 +325,7 @@ p {
 
   // Box.
   & + label:before {
-    content: "";
+    content: '';
     margin-right: 10px;
     display: inline-block;
     vertical-align: text-top;
@@ -366,12 +368,12 @@ p {
 
   // Disabled box.
   &:checked:disabled + label::after {
-    content: url("/img/ic-tick-disabled.svg");
+    content: url('/img/ic-tick-disabled.svg');
   }
 
   // Checkmark. Could be replaced with an image
   &:checked + label:after {
-    content: url("/img/ic-tick.svg");
+    content: url('/img/ic-tick.svg');
     position: absolute;
     left: 50%;
     top: 58%;
@@ -404,7 +406,7 @@ p {
 
   // Circle.
   & + label:before {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     top: 0;
@@ -445,7 +447,7 @@ p {
 
   // Radio mark. Could be replaced with an image
   &:checked + label:after {
-    content: "";
+    content: '';
     position: absolute;
     left: 5px;
     top: 5px;
@@ -539,7 +541,7 @@ p {
     }
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       z-index: 2;
       top: 50%;
@@ -734,14 +736,14 @@ p {
   &__header {
     padding: 40px 20px 20px 20px;
     color: white;
-    background-image: url("/img/image.png");
+    background-image: url('/img/image.png');
     background-position-y: 100%;
     background-size: cover;
     position: relative;
     overflow: hidden;
 
     &_silent {
-      background-image: url("/img/silent-retreat-checkout-bg@2x.png");
+      background-image: url('/img/silent-retreat-checkout-bg@2x.png');
       background-position-y: 50%;
     }
 
@@ -930,7 +932,7 @@ p {
         }
 
         .custom-checkbox:checked + label:after {
-          content: url("/img/ic-tick-blue.svg");
+          content: url('/img/ic-tick-blue.svg');
         }
       }
 
@@ -1243,7 +1245,7 @@ p {
               transition: all 0.3s ease-in-out;
 
               &::after {
-                content: "";
+                content: '';
                 position: absolute;
                 top: 95%;
                 left: 50%;

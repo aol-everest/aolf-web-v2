@@ -1,12 +1,12 @@
-import { orgConfig } from "./src/organization-config";
+import { orgConfig } from './src/organization-config';
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   titleTemplate: `${orgConfig.title} | %s`,
   defaultTitle: orgConfig.title,
   description: orgConfig.seo.description,
   openGraph: {
-    type: "website",
-    locale: "en_US",
+    type: 'website',
+    locale: 'en_US',
     url: orgConfig.seo.url,
     site_name: orgConfig.title,
     title: orgConfig.title,
@@ -21,8 +21,8 @@ export default {
     ],
   },
   twitter: {
-    handle: "@ArtofLiving",
-    site: "@ArtofLiving",
-    cardType: "summary_large_image",
+    handle: '@ArtofLiving',
+    site: '@ArtofLiving',
+    cardType: 'summary_large_image',
   },
 };

@@ -1,16 +1,16 @@
-import classNames from "classnames";
+import classNames from 'classnames';
 export const FieldWrapper = ({
   children,
   label,
   formikProps,
   formikKey,
   fullWidth,
-  containerClass = "",
+  containerClass = '',
 }) => (
   <div
     className={classNames(`input-block ${containerClass}`, {
       error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
-      "validate-error":
+      'validate-error':
         formikProps.errors[formikKey] && formikProps.touched[formikKey],
     })}
   >

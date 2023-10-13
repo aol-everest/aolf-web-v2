@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
-import React from "react";
-import { cellMapper } from "./Cell";
-import { TBody, Tr } from "./Table";
-import { dates, unitType } from "./utils";
+import PropTypes from 'prop-types';
+import React from 'react';
+import { cellMapper } from './Cell';
+import { TBody, Tr } from './Table';
+import { dates, unitType } from './utils';
 
 export default class CalendarBody extends React.Component {
   static propTypes = {
@@ -28,22 +28,22 @@ export default class CalendarBody extends React.Component {
       onDayClick,
       onDayMouseEnter,
     } = this.props;
-    const startOfMonth = calendar.startOf("month");
-    const startOfWeek = startOfMonth.startOf("week");
-    const endOfMonth = calendar.endOf("month");
-    const endOfWeek = endOfMonth.endOf("week");
+    const startOfMonth = calendar.startOf('month');
+    const startOfWeek = startOfMonth.startOf('week');
+    const endOfMonth = calendar.endOf('month');
+    const endOfWeek = endOfMonth.endOf('week');
     const data = [];
     let s = startOfWeek.clone();
 
     for (; s <= endOfWeek; ) {
       data.push(s);
-      s = s.add(1, "day");
+      s = s.add(1, 'day');
     }
     if (data.length < 42) {
       let fill = data.length;
       for (; fill < 42; fill++) {
         data.push(s);
-        s = s.add(1, "day");
+        s = s.add(1, 'day');
       }
     }
     const resolvedData = [];

@@ -56,7 +56,7 @@
       position: relative;
 
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         height: 1px;
         bottom: 1px;
@@ -106,7 +106,7 @@
     }
 
     &__title {
-      font: 28px/38px "Lora";
+      font: 28px/38px 'Lora';
       font-weight: 700;
       margin-bottom: 8px;
     }
@@ -168,7 +168,8 @@
   .sidebar-schedule {
     flex: 0 0 372px;
     width: 372px;
-    box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03),
+    box-shadow:
+      0 27px 80px rgba(7, 14, 61, 0.03),
       0 10px 29.2px rgba(7, 14, 61, 0.02),
       0 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887),
       0px 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113),
@@ -177,7 +178,7 @@
     padding: 32px 40px;
 
     &__title {
-      font: 24px/32px "Lora";
+      font: 24px/32px 'Lora';
       font-weight: 700;
       margin-bottom: 20px;
     }
@@ -250,7 +251,8 @@
       position: relative;
 
       background: $white;
-      box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03),
+      box-shadow:
+        0 27px 80px rgba(7, 14, 61, 0.03),
         0 9.8px 29.2px rgba(7, 14, 61, 0.02),
         0 4.7px 14.17px rgba(7, 14, 61, 0.016),
         0 2.34px 6.9px rgba(7, 14, 61, 0.013),
@@ -263,7 +265,7 @@
       position: absolute;
       top: 4px;
       right: 1px;
-      font: 24px/1px "Lora";
+      font: 24px/1px 'Lora';
       font-weight: 700;
     }
 
@@ -294,7 +296,7 @@
     background-repeat: no-repeat !important;
 
     &__title {
-      font: 700 28px/38px "Lora";
+      font: 700 28px/38px 'Lora';
       margin: 0;
     }
 
@@ -318,7 +320,7 @@
       color: #ffffff;
       text-decoration: none;
 
-      font-family: "Metropolis";
+      font-family: 'Metropolis';
       font-weight: 500;
     }
 
@@ -475,7 +477,7 @@
       padding: 60px 0 230px;
 
       &__title {
-        font: 28px/38px "Lora";
+        font: 28px/38px 'Lora';
         font-weight: 700;
         margin-bottom: 32px;
       }

@@ -1,5 +1,5 @@
-import classNames from "classnames";
-import { useState } from "react";
+import classNames from 'classnames';
+import { useState } from 'react';
 
 export const Comment = ({ children, shortText, fullText }) => {
   const [isHidden, setIsHidden] = useState(true);
@@ -12,15 +12,15 @@ export const Comment = ({ children, shortText, fullText }) => {
     <>
       {children}
       <div className="comments__text">
-        <p className={classNames("short", { "d-none": !isHidden })}>
+        <p className={classNames('short', { 'd-none': !isHidden })}>
           {shortText}
         </p>
-        <p className={classNames("full", { "d-none": isHidden })}>{fullText}</p>
+        <p className={classNames('full', { 'd-none': isHidden })}>{fullText}</p>
       </div>
       {fullText && (
         <button
-          className={classNames("comments__link link", {
-            "d-none": !isHidden,
+          className={classNames('comments__link link', {
+            'd-none': !isHidden,
           })}
           onClick={showFull}
         >

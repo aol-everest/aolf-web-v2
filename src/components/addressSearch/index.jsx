@@ -1,10 +1,10 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { Loader } from "@googlemaps/js-api-loader";
-import { useEffect, useRef, useState } from "react";
+import { Loader } from '@googlemaps/js-api-loader';
+import { useEffect, useRef, useState } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
-} from "react-places-autocomplete";
+} from 'react-places-autocomplete';
 
 // const scriptOptions = {
 //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
@@ -15,11 +15,11 @@ export const AddressSearch = ({
   filter,
   closeHandler,
   placeholder,
-  parentClass = "",
-  listClassName = "",
+  parentClass = '',
+  listClassName = '',
   isDefaultLocation = false,
 }) => {
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [isGeocoding, setIsGeocoding] = useState(false);
@@ -29,8 +29,8 @@ export const AddressSearch = ({
   useEffect(() => {
     const loader = new Loader({
       apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
-      version: "weekly",
-      libraries: ["places"],
+      version: 'weekly',
+      libraries: ['places'],
     });
     loader.load().then(() => {
       setIsLoading(false);
@@ -80,8 +80,8 @@ export const AddressSearch = ({
           onChange={handleChange}
           onSelect={handleSelect}
           searchOptions={{
-            types: ["(regions)"],
-            componentRestrictions: { country: "us" },
+            types: ['(regions)'],
+            componentRestrictions: { country: 'us' },
           }}
         >
           {({
@@ -104,12 +104,12 @@ export const AddressSearch = ({
                 <div style={{ zIndex: 9 }} className={listClassName}>
                   {suggestions.map((suggestion) => {
                     const className = suggestion.active
-                      ? "suggestion-item--active smart-input--list-item"
-                      : "suggestion-item smart-input--list-item";
+                      ? 'suggestion-item--active smart-input--list-item'
+                      : 'suggestion-item smart-input--list-item';
                     // inline style for demonstration purpose
                     const style = suggestion.active
-                      ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                      : { backgroundColor: "#ffffff", cursor: "pointer" };
+                      ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                      : { backgroundColor: '#ffffff', cursor: 'pointer' };
                     return (
                       <>
                         <div
@@ -120,7 +120,7 @@ export const AddressSearch = ({
                         >
                           <strong>
                             {suggestion.formattedSuggestion.mainText}
-                          </strong>{" "}
+                          </strong>{' '}
                           <small>
                             {suggestion.formattedSuggestion.secondaryText}
                           </small>

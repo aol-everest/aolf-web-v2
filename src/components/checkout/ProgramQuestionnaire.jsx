@@ -1,8 +1,8 @@
-import { COURSE_TYPES } from "@constants";
-import classNames from "classnames";
-import { Field, Formik } from "formik";
-import Select from "react-select";
-import * as Yup from "yup";
+import { COURSE_TYPES } from '@constants';
+import classNames from 'classnames';
+import { Field, Formik } from 'formik';
+import Select from 'react-select';
+import * as Yup from 'yup';
 
 const checkBoxQuestion = ({
   formikProps,
@@ -16,9 +16,9 @@ const checkBoxQuestion = ({
   const handleChange = (e) => {
     const { checked } = e.target;
     if (checked) {
-      formikProps.setFieldValue(id, "Yes");
+      formikProps.setFieldValue(id, 'Yes');
     } else {
-      formikProps.setFieldValue(id, "No");
+      formikProps.setFieldValue(id, 'No');
     }
   };
   return (
@@ -30,7 +30,7 @@ const checkBoxQuestion = ({
       id={id}
       {...field}
       {...props}
-      checked={field.value === "Yes"}
+      checked={field.value === 'Yes'}
       onChange={handleChange}
     />
   );
@@ -50,15 +50,15 @@ const questionRender = (formikProps) => (question, index) => {
   } = formikProps;
   const options = question.options__c
     ? question.options__c
-        .split(";")
+        .split(';')
         .map((option) => ({ value: option, label: option }))
     : [];
-  const key = "q-" + index;
+  const key = 'q-' + index;
   switch (question.questiontype__c) {
-    case "Multi Select Picklist":
+    case 'Multi Select Picklist':
       return (
         <div
-          className={classNames("volonteer-content__item item-volonteer", {
+          className={classNames('volonteer-content__item item-volonteer', {
             required: question.is_required__c,
           })}
         >
@@ -80,20 +80,20 @@ const questionRender = (formikProps) => (question, index) => {
                   value={
                     options
                       ? options.find((option) => option.value === field.value)
-                      : ""
+                      : ''
                   }
                   onChange={(option) => {
                     if (option) {
                       setFieldValue(
                         field.name,
-                        option.map((o) => o.value).join(";"),
+                        option.map((o) => o.value).join(';'),
                       );
                     } else {
-                      setFieldValue(field.name, "");
+                      setFieldValue(field.name, '');
                     }
                   }}
                   className={classNames({
-                    "is-invalid": errors[key] && formikProps.touched[key],
+                    'is-invalid': errors[key] && formikProps.touched[key],
                   })}
                 />
               );
@@ -104,10 +104,10 @@ const questionRender = (formikProps) => (question, index) => {
           )}
         </div>
       );
-    case "Picklist":
+    case 'Picklist':
       return (
         <div
-          className={classNames("volonteer-content__item item-volonteer", {
+          className={classNames('volonteer-content__item item-volonteer', {
             required: question.is_required__c,
           })}
         >
@@ -127,17 +127,17 @@ const questionRender = (formikProps) => (question, index) => {
                 value={
                   options
                     ? options.find((option) => option.value === field.value)
-                    : ""
+                    : ''
                 }
                 onChange={(option) => {
                   if (option) {
                     setFieldValue(field.name, option.value);
                   } else {
-                    setFieldValue(field.name, "");
+                    setFieldValue(field.name, '');
                   }
                 }}
                 className={classNames({
-                  "is-invalid": errors[key] && formikProps.touched[key],
+                  'is-invalid': errors[key] && formikProps.touched[key],
                 })}
               />
             )}
@@ -147,10 +147,10 @@ const questionRender = (formikProps) => (question, index) => {
           )}
         </div>
       );
-    case "Yes/No":
+    case 'Yes/No':
       return (
         <div
-          className={classNames("volonteer-content__item item-volonteer", {
+          className={classNames('volonteer-content__item item-volonteer', {
             required: question.is_required__c,
           })}
         >
@@ -190,10 +190,10 @@ const questionRender = (formikProps) => (question, index) => {
           )}
         </div>
       );
-    case "Boolean":
+    case 'Boolean':
       return (
         <div
-          className={classNames("volonteer-content__item item-volonteer", {
+          className={classNames('volonteer-content__item item-volonteer', {
             required: question.is_required__c,
           })}
         >
@@ -220,10 +220,10 @@ const questionRender = (formikProps) => (question, index) => {
           </div>
         </div>
       );
-    case "Text":
+    case 'Text':
       return (
         <div
-          className={classNames("volonteer-content__item item-volonteer", {
+          className={classNames('volonteer-content__item item-volonteer', {
             required: question.is_required__c,
           })}
         >
@@ -240,8 +240,8 @@ const questionRender = (formikProps) => (question, index) => {
                 type="text"
                 {...field}
                 onChange={handleChange}
-                className={classNames("form-control", {
-                  "is-invalid": errors[key] && formikProps.touched[key],
+                className={classNames('form-control', {
+                  'is-invalid': errors[key] && formikProps.touched[key],
                 })}
               />
             )}
@@ -251,10 +251,10 @@ const questionRender = (formikProps) => (question, index) => {
           )}
         </div>
       );
-    case "Number":
+    case 'Number':
       return (
         <div
-          className={classNames("volonteer-content__item item-volonteer", {
+          className={classNames('volonteer-content__item item-volonteer', {
             required: question.is_required__c,
           })}
         >
@@ -271,8 +271,8 @@ const questionRender = (formikProps) => (question, index) => {
                 type="number"
                 {...field}
                 onChange={handleChange}
-                className={classNames("form-control", {
-                  "is-invalid": errors[key] && formikProps.touched[key],
+                className={classNames('form-control', {
+                  'is-invalid': errors[key] && formikProps.touched[key],
                 })}
               />
             )}
@@ -293,21 +293,21 @@ export const ProgramQuestionnaire = ({
   productTypeId = null,
 }) => {
   const questionMap = questions.reduce((acc, question, index) => {
-    acc = { ...acc, ["q-" + index]: question };
+    acc = { ...acc, ['q-' + index]: question };
     return acc;
   }, {});
 
   const initialValues = questions.reduce((acc, question, index) => {
-    acc = { ...acc, ["q-" + index]: "" };
+    acc = { ...acc, ['q-' + index]: '' };
     return acc;
   }, {});
 
   const validation = questions.reduce((acc, question, index) => {
     let field = Yup.string();
     if (question.is_required__c) {
-      field = Yup.string().required("Question is required");
+      field = Yup.string().required('Question is required');
     }
-    acc = { ...acc, ["q-" + index]: field };
+    acc = { ...acc, ['q-' + index]: field };
     return acc;
   }, {});
 
@@ -319,9 +319,9 @@ export const ProgramQuestionnaire = ({
         ...acc,
         {
           QuestionId: questionMap[key].questionSfid,
-          Question: (questionMap[key].question || "").replace(
+          Question: (questionMap[key].question || '').replace(
             /(<([^>]+)>)/gi,
-            "",
+            '',
           ),
           Response: value,
         },
@@ -343,7 +343,7 @@ export const ProgramQuestionnaire = ({
       {(formikProps) => {
         return (
           <form onSubmit={formikProps.handleSubmit}>
-            <div className={classNames("volonteer-modal _active-modal")}>
+            <div className={classNames('volonteer-modal _active-modal')}>
               <div className="volonteer-modal__body tw-max-h-[682px]">
                 <div className="volonteer-modal__wrapper tw-max-h-[682px]">
                   <button

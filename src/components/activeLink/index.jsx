@@ -1,6 +1,6 @@
-import Link from "@components/linkWithUTM";
-import { useRouter } from "next/router";
-import React, { Children } from "react";
+import Link from '@components/linkWithUTM';
+import { useRouter } from 'next/router';
+import React, { Children } from 'react';
 
 export const ActiveLink = ({
   children,
@@ -11,7 +11,7 @@ export const ActiveLink = ({
 }) => {
   const { asPath } = useRouter();
   const child = Children.only(children);
-  const childClassName = child.props.className || "";
+  const childClassName = child.props.className || '';
 
   // pages/index.js will be matched via props.href
   // pages/about.js will be matched via props.href

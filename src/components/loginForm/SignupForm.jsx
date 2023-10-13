@@ -1,19 +1,19 @@
-import Link from "@components/linkWithUTM";
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useForm } from "react-hook-form";
-import { object, string } from "yup";
+import Link from '@components/linkWithUTM';
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { object, string } from 'yup';
 
 const schema = object().shape({
   username: string()
-    .email("This type of email does not exist. Please enter a valid one.")
-    .required("Email is required"),
+    .email('This type of email does not exist. Please enter a valid one.')
+    .required('Email is required'),
   password: string()
-    .required("Password is required")
-    .min(8, "Must Contain 8 Characters"),
-  firstName: string().required("First Name is required"),
-  lastName: string().required("Last Name is required"),
+    .required('Password is required')
+    .min(8, 'Must Contain 8 Characters'),
+  firstName: string().required('First Name is required'),
+  lastName: string().required('Last Name is required'),
 });
 
 export const SignupForm = ({ signUp, showMessage, message }) => {
@@ -33,7 +33,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
       onSubmit={handleSubmit(signUp)}
     >
       <input
-        {...register("username")}
+        {...register('username')}
         type="email"
         className={classNames({ validate: errors.username })}
         placeholder="Email"
@@ -42,7 +42,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         <p className="validation-input">{errors.username.message}</p>
       )}
       <input
-        {...register("password")}
+        {...register('password')}
         type="password"
         placeholder="Password"
         className={classNames({ validate: errors.password })}
@@ -51,7 +51,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         <p className="validation-input">{errors.password.message}</p>
       )}
       <input
-        {...register("firstName")}
+        {...register('firstName')}
         type="text"
         placeholder="First Name"
         className={classNames({ validate: errors.firstName })}
@@ -60,7 +60,7 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
         <p className="validation-input">{errors.firstName.message}</p>
       )}
       <input
-        {...register("lastName")}
+        {...register('lastName')}
         type="text"
         placeholder="Last Name"
         className={classNames({ validate: errors.lastName })}
@@ -70,13 +70,13 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
       )}
       <div className="checkbox-wrapper">
         <p className="checkbox-text">
-          By signing up, I agree to{" "}
+          By signing up, I agree to{' '}
           <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
             <a target="_blank" className="link">
               Terms of Service
             </a>
-          </Link>{" "}
-          and{" "}
+          </Link>{' '}
+          and{' '}
           <a
             href="https://www.artofliving.org/us-en/privacy-policy"
             target="_blank"

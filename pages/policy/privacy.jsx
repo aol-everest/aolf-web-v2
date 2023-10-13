@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { NextSeo } from "next-seo";
+import { NextSeo } from 'next-seo';
 
 const PrivacyPolicy = () => {
   return (
@@ -94,7 +94,7 @@ const PrivacyPolicy = () => {
                   verification of legal guardian or parental consent, we will
                   delete that information. If you believe that we might have any
                   information from or about a child under age 18, please contact
-                  us at{" "}
+                  us at{' '}
                   <a href="mailto:transaction.support@artofliving.org">
                     transaction.support@artofliving.org
                   </a>
@@ -312,7 +312,7 @@ const PrivacyPolicy = () => {
                   </li>
                   <li>
                     You may restrict your internet browser’s use of Cookies. For
-                    more information, see our{" "}
+                    more information, see our{' '}
                     <a
                       href="https://www.artofliving.org/cookie-policy"
                       target="_blank"
@@ -406,7 +406,7 @@ const PrivacyPolicy = () => {
                 <ol type="a">
                   <li>
                     If you have any questions about our website or this Privacy
-                    Policy, please contact us by email at{" "}
+                    Policy, please contact us by email at{' '}
                     <a href="mailto:transaction.support@artofliving.org">
                       transaction.support@artofliving.org
                     </a>

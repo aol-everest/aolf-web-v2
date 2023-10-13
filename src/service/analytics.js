@@ -1,8 +1,8 @@
-import googleTagManager from "@analytics/google-tag-manager";
-import onRouteChange from "@analytics/router-utils";
-import segmentPlugin from "@analytics/segment";
-import Analytics from "analytics";
-import clevertapPlugin from "./clevertapPlugin";
+import googleTagManager from '@analytics/google-tag-manager';
+import onRouteChange from '@analytics/router-utils';
+import segmentPlugin from '@analytics/segment';
+import Analytics from 'analytics';
+import clevertapPlugin from './clevertapPlugin';
 
 let plugins = [];
 
@@ -26,7 +26,7 @@ if (process.env.NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID) {
   plugins = [...plugins, clevertapPlugin()];
 }
 export const analytics = Analytics({
-  app: "AOLF-Members-App",
+  app: 'AOLF-Members-App',
   debug: true,
   plugins,
 });

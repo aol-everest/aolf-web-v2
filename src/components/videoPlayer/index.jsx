@@ -1,9 +1,9 @@
-import { useGlobalVideoPlayerContext } from "@contexts";
-import classNames from "classnames";
-import "node_modules/video-react/dist/video-react.css";
-import { useRef, useState } from "react";
-import HTMLEllipsis from "react-lines-ellipsis/lib/html";
-import * as RemoveMarkdown from "remove-markdown";
+import { useGlobalVideoPlayerContext } from '@contexts';
+import classNames from 'classnames';
+import 'node_modules/video-react/dist/video-react.css';
+import { useRef, useState } from 'react';
+import HTMLEllipsis from 'react-lines-ellipsis/lib/html';
+import * as RemoveMarkdown from 'remove-markdown';
 import {
   BigPlayButton,
   ControlBar,
@@ -17,7 +17,7 @@ import {
   ReplayControl,
   TimeDivider,
   VolumeMenuButton,
-} from "video-react";
+} from 'video-react';
 
 const VideoPlayer = () => {
   const { hideVideoPlayer, store } = useGlobalVideoPlayerContext();
@@ -44,11 +44,11 @@ const VideoPlayer = () => {
   const {
     title,
     artist,
-    image = "http://html5videoformatconverter.com/data/images/screen.jpg",
+    image = 'http://html5videoformatconverter.com/data/images/screen.jpg',
     audioSrc,
-    description = "",
+    description = '',
   } = track || {};
-  const desc = description ? RemoveMarkdown(description) : "";
+  const desc = description ? RemoveMarkdown(description) : '';
 
   const handleModalToggle = () => {
     hideVideoPlayer();
@@ -135,10 +135,10 @@ const VideoPlayer = () => {
                 <div className="video-details">
                   <img
                     src={
-                      isPlaying ? "/img/ic-pause-40.svg" : "/img/ic-play-40.svg"
+                      isPlaying ? '/img/ic-pause-40.svg' : '/img/ic-play-40.svg'
                     }
                     alt=""
-                    className={classNames("video-play", {
+                    className={classNames('video-play', {
                       play: !isPlaying,
                       pause: isPlaying,
                     })}

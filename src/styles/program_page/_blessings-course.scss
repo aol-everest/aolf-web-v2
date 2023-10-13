@@ -17,7 +17,7 @@
 
     &-list li:before {
       display: inline-block;
-      content: "";
+      content: '';
       max-width: 20px;
       background-size: contain;
       width: 100%;
@@ -151,7 +151,7 @@
 
   &__description {
     color: rgb(96, 98, 112);
-    font-family: "Work Sans";
+    font-family: 'Work Sans';
   }
 
   .description {
@@ -200,7 +200,7 @@
 
   &__name {
     font-size: 18px;
-    font-family: "Work Sans";
+    font-family: 'Work Sans';
     font-weight: bolder;
   }
 
@@ -291,14 +291,14 @@
   }
 
   &__name {
-    font-family: "Work Sans";
+    font-family: 'Work Sans';
     font-size: 20px;
     color: rgb(43, 43, 43);
     font-weight: bolder;
   }
 
   &__text {
-    font-family: "Work Sans";
+    font-family: 'Work Sans';
     font-size: 14px;
     color: rgb(43, 43, 43);
     max-width: 150px;

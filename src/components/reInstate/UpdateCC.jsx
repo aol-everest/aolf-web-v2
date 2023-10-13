@@ -1,26 +1,26 @@
-import { useAuth } from "@contexts";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { api } from "@utils";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useAuth } from '@contexts';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { api } from '@utils';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
@@ -38,7 +38,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
       setLoading(true);
       try {
         const response = await api.get({
-          path: "pendingSubscriptionInvoices",
+          path: 'pendingSubscriptionInvoices',
           param: {
             stripeSubscriptionId: subscription.stripeSubscriptionId,
           },
@@ -81,7 +81,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
         error: pendingSubscriptionInvoicesErrorMessage,
         data,
       } = await api.get({
-        path: "pendingSubscriptionInvoices",
+        path: 'pendingSubscriptionInvoices',
         param: {
           stripeSubscriptionId: subscription.stripeSubscriptionId,
         },
@@ -92,7 +92,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
       }
 
       const { status, error: errorMessage } = await api.post({
-        path: "reinstateSubscription",
+        path: 'reinstateSubscription',
         body: {
           stripeSubscriptionId: subscription.stripeSubscriptionId,
           amount_remaining: data.totalPendingAmount,

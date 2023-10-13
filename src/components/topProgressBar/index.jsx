@@ -1,6 +1,6 @@
-import Router from "next/router";
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+import Router from 'next/router';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 let timer;
 let state;
@@ -10,11 +10,11 @@ const delay = 250;
 let loader = {};
 
 function load() {
-  if (state === "loading") {
+  if (state === 'loading') {
     return;
   }
 
-  state = "loading";
+  state = 'loading';
   if (loader.showLoader) {
     loader.showLoader();
   }
@@ -29,7 +29,7 @@ function stop() {
   //   return;
   // }
 
-  state = "stop";
+  state = 'stop';
 
   clearTimeout(timer);
   if (loader.hideLoader) {
@@ -38,18 +38,18 @@ function stop() {
   NProgress.done();
 }
 
-Router.events.on("routeChangeStart", load);
-Router.events.on("routeChangeComplete", (url) => {
+Router.events.on('routeChangeStart', load);
+Router.events.on('routeChangeComplete', (url) => {
   if (window.analytics) {
     window.analytics.page(url);
   }
   stop();
 });
-Router.events.on("routeChangeError", stop);
+Router.events.on('routeChangeError', stop);
 
 NProgress.configure({
   minimum: 0.3,
-  easing: "ease",
+  easing: 'ease',
   speed: 800,
   showSpinner: false,
 });

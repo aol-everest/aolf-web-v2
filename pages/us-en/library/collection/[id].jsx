@@ -1,25 +1,25 @@
-import { PageLoading } from "@components";
-import { MODAL_TYPES } from "@constants";
+import { PageLoading } from '@components';
+import { MODAL_TYPES } from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
   useGlobalModalContext,
   useGlobalVideoPlayerContext,
-} from "@contexts";
-import { useQueryString } from "@hooks";
+} from '@contexts';
+import { useQueryString } from '@hooks';
 import {
   markFavoriteEvent,
   meditatePlayEvent,
   pushRouteWithUTMQuery,
-} from "@service";
-import { api } from "@utils";
-import "bootstrap-daterangepicker/daterangepicker.css";
-import classNames from "classnames";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+} from '@service';
+import { api } from '@utils';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import classNames from 'classnames';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -90,7 +90,7 @@ function Tile({
     const minutes = data % 60;
     const hours = (data - minutes) / 60;
 
-    return String(hours).padStart(2, 0) + ":" + String(minutes).padStart(2, 0);
+    return String(hours).padStart(2, 0) + ':' + String(minutes).padStart(2, 0);
   };
 
   return (
@@ -101,7 +101,7 @@ function Tile({
         data-complete="false"
       >
         <img
-          src={coverImage ? coverImage.url : "/img/card-1.png"}
+          src={coverImage ? coverImage.url : '/img/card-1.png'}
           alt="bg"
           layout="fill"
         />
@@ -114,7 +114,7 @@ function Tile({
         )}
         {accessible && (
           <div
-            className={classNames("course-like", {
+            className={classNames('course-like', {
               liked: isFavorite || isFavoriteContent,
             })}
             onClick={markFavorite}
@@ -133,7 +133,7 @@ function Tile({
 function Collection() {
   const router = useRouter();
   const { user, authenticated } = useAuth();
-  const [folderName] = useQueryString("folderName");
+  const [folderName] = useQueryString('folderName');
   const { id: folderId } = router.query;
   const {
     data: rootFolder,
@@ -141,17 +141,17 @@ function Collection() {
     isError,
     error,
   } = useQuery(
-    "library",
+    'library',
     async () => {
       const response = await api.get({
-        path: "library",
+        path: 'library',
         param: {
           folderId,
         },
       });
       const [rootFolder] = response.data.folder;
       if (!rootFolder) {
-        throw new Error("No library found. Invalid Folder Id.");
+        throw new Error('No library found. Invalid Folder Id.');
       }
       return rootFolder;
     },
@@ -167,10 +167,10 @@ function Collection() {
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
 
   const { data: subsciptionCategories = [] } = useQuery(
-    "subsciption",
+    'subsciption',
     async () => {
       const response = await api.get({
-        path: "subsciption",
+        path: 'subsciption',
       });
       return response.data;
     },
@@ -181,10 +181,10 @@ function Collection() {
 
   const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
     useQuery(
-      "favouriteContents",
+      'favouriteContents',
       async () => {
         const response = await api.get({
-          path: "getFavouriteContents",
+          path: 'getFavouriteContents',
         });
 
         return response.data;

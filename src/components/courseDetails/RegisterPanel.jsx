@@ -1,12 +1,12 @@
-import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { isEmpty, priceCalculation } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useRouter } from "next/router";
-import queryString from "query-string";
+import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { isEmpty, priceCalculation } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
 
 dayjs.extend(utc);
 
@@ -62,7 +62,7 @@ export const RegisterPanel = ({ workshop }) => {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -70,7 +70,7 @@ export const RegisterPanel = ({ workshop }) => {
         navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: "SIGNUP_MODE",
+        defaultView: 'SIGNUP_MODE',
       });
     }
   };
@@ -79,7 +79,7 @@ export const RegisterPanel = ({ workshop }) => {
     if (e) e.preventDefault();
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/membership/${id}`,
-      query: { cid: sfid, page: "detail" },
+      query: { cid: sfid, page: 'detail' },
     });
   };
 
@@ -99,13 +99,13 @@ export const RegisterPanel = ({ workshop }) => {
   let UpdatedFeeAfterCredits;
   if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
     usableCredit.availableCredit === 1
   ) {
     UpdatedFeeAfterCredits = 0;
   } else if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
+    usableCredit.creditMeasureUnit === 'Amount'
   ) {
     if (usableCredit.availableCredit > fee) {
       UpdatedFeeAfterCredits = 0;
@@ -119,12 +119,12 @@ export const RegisterPanel = ({ workshop }) => {
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
 
   const aosCount =
-    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : "";
+    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
 
   const preRequisiteCondition = preRequisite
-    .join(", ")
-    .replace(/,(?=[^,]+$)/, " and")
-    .replace("Silent Retreat", `${aosCount} Silent Retreat`);
+    .join(', ')
+    .replace(/,(?=[^,]+$)/, ' and')
+    .replace('Silent Retreat', `${aosCount} Silent Retreat`);
 
   if (isSahajSamadhiMeditationType) {
     return (
@@ -140,15 +140,15 @@ export const RegisterPanel = ({ workshop }) => {
             </h2>
             {delfee && (
               <p>
-                Regular course fee:{" "}
+                Regular course fee:{' '}
                 <span className="discount"> ${delfee} </span>
               </p>
             )}
           </div>
         </div>
         <div
-          className={classNames("bottom-box justify-content-md-center", {
-            "!tw-ml-0": !preRequisiteCondition,
+          className={classNames('bottom-box justify-content-md-center', {
+            '!tw-ml-0': !preRequisiteCondition,
           })}
         >
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
@@ -159,8 +159,8 @@ export const RegisterPanel = ({ workshop }) => {
             )}
           </div>
           <button
-            className={classNames("btn-secondary v2", {
-              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
+            className={classNames('btn-secondary v2', {
+              'max-[770px]:tw-mt-[10px]': preRequisiteCondition,
             })}
             onClick={handleRegister}
           >
@@ -185,8 +185,8 @@ export const RegisterPanel = ({ workshop }) => {
           )}
         </div>
         <div
-          className={classNames("bottom-box justify-content-md-center", {
-            "!tw-ml-0": !preRequisiteCondition,
+          className={classNames('bottom-box justify-content-md-center', {
+            '!tw-ml-0': !preRequisiteCondition,
           })}
         >
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
@@ -197,8 +197,8 @@ export const RegisterPanel = ({ workshop }) => {
             )}
           </div>
           <button
-            className={classNames("btn-secondary v2", {
-              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
+            className={classNames('btn-secondary v2', {
+              'max-[770px]:tw-mt-[10px]': preRequisiteCondition,
             })}
             onClick={handleRegister}
           >
@@ -238,7 +238,7 @@ export const RegisterPanel = ({ workshop }) => {
           {(delfee ||
             (standardPriceBook && standardPriceBook.unitPrice != null)) && (
             <p>
-              Regular course fee:{" "}
+              Regular course fee:{' '}
               <span>
                 $
                 {standardPriceBook && standardPriceBook.unitPrice != null
@@ -254,8 +254,8 @@ export const RegisterPanel = ({ workshop }) => {
           )}
         </div>
         <div
-          className={classNames("bottom-box justify-content-md-center", {
-            "!tw-ml-0": !preRequisiteCondition,
+          className={classNames('bottom-box justify-content-md-center', {
+            '!tw-ml-0': !preRequisiteCondition,
           })}
         >
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
@@ -266,8 +266,8 @@ export const RegisterPanel = ({ workshop }) => {
             )}
           </div>
           <button
-            className={classNames("btn-secondary v2", {
-              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
+            className={classNames('btn-secondary v2', {
+              'max-[770px]:tw-mt-[10px]': preRequisiteCondition,
             })}
             onClick={handleRegister}
           >
@@ -283,7 +283,7 @@ export const RegisterPanel = ({ workshop }) => {
         <div className="offer__banner offer__banner--sanyam-bg banner-offer">
           <h5 className="banner-offer__title meditation-title_blue">
             <span className="meditation-title_blue--block">
-              Eligibility: {preRequisiteCondition}{" "}
+              Eligibility: {preRequisiteCondition}{' '}
             </span>
             are prerequisites to enroll in the Sanyam Course.
           </h5>
@@ -334,9 +334,9 @@ export const RegisterPanel = ({ workshop }) => {
           )}
         </div>
         <div
-          className={classNames("bottom-box", {
-            "justify-content-md-center": !earlyBirdFeeIncreasing,
-            "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
+          className={classNames('bottom-box', {
+            'justify-content-md-center': !earlyBirdFeeIncreasing,
+            '!tw-ml-0': !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
@@ -345,10 +345,10 @@ export const RegisterPanel = ({ workshop }) => {
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
                   Register soon. Course fee will go up by $
-                  {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                  {earlyBirdFeeIncreasing.increasingFee} on{' '}
                   {dayjs
                     .utc(earlyBirdFeeIncreasing.increasingByDate)
-                    .format("MMM D, YYYY")}
+                    .format('MMM D, YYYY')}
                 </p>
               </div>
             ) : (
@@ -361,8 +361,8 @@ export const RegisterPanel = ({ workshop }) => {
             )}
           </div>
           <button
-            className={classNames("btn-secondary", {
-              "max-[770px]:tw-mt-[10px]": preRequisiteCondition,
+            className={classNames('btn-secondary', {
+              'max-[770px]:tw-mt-[10px]': preRequisiteCondition,
             })}
             onClick={handleRegister}
           >
@@ -380,14 +380,14 @@ export const RegisterPanel = ({ workshop }) => {
           <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
           {premiumRate && premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
-              Premium/Journey+ rate:{" "}
+              Premium/Journey+ rate:{' '}
               {premiumRate &&
                 premiumRate.listPrice &&
                 premiumRate.listPrice !== premiumRate.unitPrice && (
                   <span className="discount">
                     ${delfee || premiumRate.listPrice}
                   </span>
-                )}{" "}
+                )}{' '}
               ${premiumRate && premiumRate.unitPrice}
             </h5>
           )}
@@ -403,9 +403,9 @@ export const RegisterPanel = ({ workshop }) => {
           )}
         </div>
         <div
-          className={classNames("bottom-box", {
-            "justify-content-md-center": !earlyBirdFeeIncreasing,
-            "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
+          className={classNames('bottom-box', {
+            'justify-content-md-center': !earlyBirdFeeIncreasing,
+            '!tw-ml-0': !earlyBirdFeeIncreasing && !preRequisiteCondition,
           })}
         >
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
@@ -414,10 +414,10 @@ export const RegisterPanel = ({ workshop }) => {
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
                   Register soon. Course fee will go up by $
-                  {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                  {earlyBirdFeeIncreasing.increasingFee} on{' '}
                   {dayjs
                     .utc(earlyBirdFeeIncreasing.increasingByDate)
-                    .format("MMM D, YYYY")}
+                    .format('MMM D, YYYY')}
                 </p>
               </div>
             ) : (
@@ -430,8 +430,8 @@ export const RegisterPanel = ({ workshop }) => {
             )}
           </div>
           <button
-            className={classNames("btn-secondary", {
-              "max-[770px]:tw-mt-[10px]":
+            className={classNames('btn-secondary', {
+              'max-[770px]:tw-mt-[10px]':
                 earlyBirdFeeIncreasing || preRequisiteCondition,
             })}
             onClick={handleRegister}
@@ -448,21 +448,21 @@ export const RegisterPanel = ({ workshop }) => {
       <div>
         <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
         <h5 className="powerful__block-title_5">
-          Regular rate: {delfee && <span className="discount">${delfee}</span>}{" "}
+          Regular rate: {delfee && <span className="discount">${delfee}</span>}{' '}
           ${fee}
         </h5>
         {!isUsableCreditAvailable &&
           premiumRate &&
           premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
-              Premium/Journey+ rate:{" "}
+              Premium/Journey+ rate:{' '}
               {premiumRate &&
                 premiumRate.listPrice &&
                 premiumRate.listPrice !== premiumRate.unitPrice && (
                   <span className="discount">
                     ${delfee || premiumRate.listPrice}
                   </span>
-                )}{" "}
+                )}{' '}
               ${premiumRate && premiumRate.unitPrice}
             </h5>
           )}
@@ -478,9 +478,9 @@ export const RegisterPanel = ({ workshop }) => {
         )}
       </div>
       <div
-        className={classNames("bottom-box", {
-          "justify-content-md-center": !earlyBirdFeeIncreasing,
-          "!tw-ml-0": !earlyBirdFeeIncreasing && !preRequisiteCondition,
+        className={classNames('bottom-box', {
+          'justify-content-md-center': !earlyBirdFeeIncreasing,
+          '!tw-ml-0': !earlyBirdFeeIncreasing && !preRequisiteCondition,
         })}
       >
         <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
@@ -489,10 +489,10 @@ export const RegisterPanel = ({ workshop }) => {
               <img src="/img/ic-timer-orange.svg" alt="timer" />
               <p className="!tw-mt-1 !tw-text-sm">
                 Register soon. Course fee will go up by $
-                {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                {earlyBirdFeeIncreasing.increasingFee} on{' '}
                 {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)
-                  .format("MMM D, YYYY")}
+                  .format('MMM D, YYYY')}
               </p>
             </div>
           ) : (
@@ -511,7 +511,7 @@ export const RegisterPanel = ({ workshop }) => {
           {!isUsableCreditAvailable && (
             <button
               className={`btn-secondary tw-mr-[25px] ${
-                earlyBirdFeeIncreasing ? "tw-mt-2" : ""
+                earlyBirdFeeIncreasing ? 'tw-mt-2' : ''
               }`}
               onClick={purchaseMembershipAction(
                 MEMBERSHIP_TYPES.JOURNEY_PLUS.value,

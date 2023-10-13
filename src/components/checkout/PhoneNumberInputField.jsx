@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import PhoneInput from "./../phoneInputCmp";
-import { FieldWrapper } from "./FieldWrapper";
+import classNames from 'classnames';
+import PhoneInput from './../phoneInputCmp';
+import { FieldWrapper } from './FieldWrapper';
 
 export const PhoneNumberInputField = ({
   label,
@@ -29,14 +29,14 @@ export const PhoneNumberInputField = ({
         {...props}
         placeholder="Phone No"
         country="us"
-        inputClass={form.errors[field.name] ? "text-input error" : "text-input"}
+        inputClass={form.errors[field.name] ? 'text-input error' : 'text-input'}
         containerClass="input-block"
         countryCodeEditable={true}
         onChange={onChangeAction}
         onFocus={onFocusAction}
       />
       {tooltip && (
-        <div className={classNames("input-tooltip", { active: showTooltip })}>
+        <div className={classNames('input-tooltip', { active: showTooltip })}>
           <div className="tooltip-arrow"></div>
           {tooltip}
         </div>
