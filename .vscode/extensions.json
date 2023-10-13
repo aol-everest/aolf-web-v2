@@ -1,0 +1,12 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=827846
+  // for the documentation about the extensions.json format
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "irongeek.vscode-env",
+    "editorconfig.editorconf",
+    "nativebase.nativebase-v3-vscode-extension",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
