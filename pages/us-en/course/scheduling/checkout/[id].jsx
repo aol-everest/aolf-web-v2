@@ -645,8 +645,8 @@ const SchedulingPaymentForm = ({
                           >
                             {`${locationStreet || ''} ${locationCity || ''},
                           ${locationProvince || ''} ${
-                              locationPostalCode || ''
-                            }`}
+                            locationPostalCode || ''
+                          }`}
                           </a>
                         )}
                       </p>

@@ -704,8 +704,8 @@ const Meetup = () => {
                     : ''
                 }
                         ${timesOfDayFilter ? timesOfDayFilter : ''}${
-                  timeZoneFilter || timesOfDayFilter ? '' : 'Time'
-                }`}
+                          timeZoneFilter || timesOfDayFilter ? '' : 'Time'
+                        }`}
                 closeEvent={onFilterChange('timeZoneFilter')}
               >
                 {({ closeHandler }) => (
@@ -972,8 +972,8 @@ const Meetup = () => {
                     : ''
                 }
                         ${timesOfDayFilter ? timesOfDayFilter : ''}${
-                  timeZoneFilter || timesOfDayFilter ? '' : 'Time'
-                }`}
+                          timeZoneFilter || timesOfDayFilter ? '' : 'Time'
+                        }`}
                 clearEvent={onFilterClearEvent('timeZoneFilter')}
               >
                 <div className="dropdown">

@@ -20,7 +20,8 @@
     color: $wcf-dark-grey;
     background-color: $wcf-light;
     box-shadow: $wcf-shadow;
-    transition: border-color $wcf-transition-effect,
+    transition:
+      border-color $wcf-transition-effect,
       box-shadow $wcf-transition-effect;
 
     &:focus {

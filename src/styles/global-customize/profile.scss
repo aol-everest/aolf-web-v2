@@ -130,7 +130,9 @@
     .camera-icon {
       visibility: hidden;
       opacity: 0;
-      transition: visibility 0s, opacity 0.5s linear;
+      transition:
+        visibility 0s,
+        opacity 0.5s linear;
       position: absolute;
       font-size: 40px;
       width: 100%;

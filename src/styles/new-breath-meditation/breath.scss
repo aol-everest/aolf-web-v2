@@ -168,7 +168,8 @@
   .sidebar-schedule {
     flex: 0 0 372px;
     width: 372px;
-    box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03),
+    box-shadow:
+      0 27px 80px rgba(7, 14, 61, 0.03),
       0 10px 29.2px rgba(7, 14, 61, 0.02),
       0 4.78464px 14.1767px rgba(7, 14, 61, 0.0166887),
       0px 2.34552px 6.94968px rgba(7, 14, 61, 0.0133113),
@@ -250,7 +251,8 @@
       position: relative;
 
       background: $white;
-      box-shadow: 0 27px 80px rgba(7, 14, 61, 0.03),
+      box-shadow:
+        0 27px 80px rgba(7, 14, 61, 0.03),
         0 9.8px 29.2px rgba(7, 14, 61, 0.02),
         0 4.7px 14.17px rgba(7, 14, 61, 0.016),
         0 2.34px 6.9px rgba(7, 14, 61, 0.013),

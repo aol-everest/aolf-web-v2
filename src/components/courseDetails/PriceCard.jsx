@@ -225,8 +225,8 @@ export const PriceCard = ({ workshop }) => {
                     workshop.locationCity || ''
                   }
                           ${workshop.locationProvince || ''} ${
-                    workshop.locationCountry || ''
-                  }`}
+                            workshop.locationCountry || ''
+                          }`}
                 </a>
               )}
             </span>
