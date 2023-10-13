@@ -15,6 +15,7 @@ NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE=814483
 NEXT_PUBLIC_TALKABLE_INSTANCE_URL=ddfd
 NEXT_PUBLIC_ALLOW_GUEST_LOGIN_CTYPE=811569;12371;999649;12415;8115691;8115692;8115693
 ```
+
 4. Create .env.test file with the below content inside the root folder of the project.
 
 ```
@@ -45,7 +46,7 @@ NEXT_PUBLIC_AMPLIFY_COOKIE_DOMAIN=localhost
 NEXT_PUBLIC_ORGANIZATION_NAME=AOL
 NEXT_PUBLIC_INSTITUTIONAL_CTYPE=1007138
 NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID=865-58W-ZK6Z
-``` 
+```
 
 5. Open the terminal or gitbash in the project folder path.
 6. Change the current working branch to qa using the below git command.
@@ -78,6 +79,7 @@ yarn install
 ```
 yarn develop:qa
 ```
+
 ![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.13.18%20PM.png?raw=true)
 
 11. If changes look good in the local test then stop the local development server using the cmd+c key and add changes to the git qa branch using the below commands
@@ -86,22 +88,29 @@ yarn develop:qa
 git add .
 yarn commit
 ```
+
 ![](https://github.com/aol-everest/aolf-web-v2/blob/main/screenshots/Screenshot%202023-09-11%20at%2011.14.31%20PM.png?raw=true)
 
 12. This will ask you some questions about your changes before running the LINT fix.
 13. If you receive any LINT errors you need to fix them and redo Step 11.
-14. After a successful commit push changes to qa 
+14. After a successful commit push changes to qa
+
 ```
 git push qa
 ```
+
 14. Wait for 15 minutes and then test changes on the QA instance
+
 ```
 https://qa.members.us.artofliving.org
 ```
+
 15. After a successful test result on qa move changes to the main branch
+
 ```
 git checkout main
 git merge qa -m “Merge changes to main”
 git push main
 ```
+
 16. Wait for 15 minutes and then review changes in the production environment.
