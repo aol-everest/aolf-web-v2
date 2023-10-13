@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
-import classNames from "classnames";
-import { Field } from "formik";
-import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
-import Select2 from "react-select2-wrapper";
-import { useAnalytics } from "use-analytics";
+import classNames from 'classnames';
+import { Field } from 'formik';
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
+import Select2 from 'react-select2-wrapper';
+import { useAnalytics } from 'use-analytics';
 
 const NoOfTicketInput = ({ field, form, ...props }) => {
   const selectComp = useRef(null);
@@ -22,14 +22,14 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
       {...field}
       {...props}
       data={[
-        { text: "1 (one)", id: 1 },
-        { text: "2 (two)", id: 2 },
-        { text: "3 (three)", id: 3 },
-        { text: "4 (four)", id: 4 },
+        { text: '1 (one)', id: 1 },
+        { text: '2 (two)', id: 2 },
+        { text: '3 (three)', id: 3 },
+        { text: '4 (four)', id: 4 },
       ]}
       options={{
-        placeholder: "1 (one)",
-        dropdownParent: "#wcfSelect",
+        placeholder: '1 (one)',
+        dropdownParent: '#wcfSelect',
       }}
       onChange={onChangeAction}
     />
@@ -37,7 +37,7 @@ const NoOfTicketInput = ({ field, form, ...props }) => {
 };
 
 function formatSessionsOption(state) {
-  if (!state.id || state.id === "Full") return state.text;
+  if (!state.id || state.id === 'Full') return state.text;
 
   const txt = state.text.slice(0, 4);
 
@@ -51,12 +51,12 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
     const selectedItem = e.params.data.id;
     if (selectComp && selectComp.current && selectComp.current.el) {
       const val = selectComp.current.el.val();
-      if (selectedItem === "Full") {
-        form.setFieldValue(field.name, ["Full"]);
-      } else if (val.length > 1 && val.find((v) => v === "Full")) {
+      if (selectedItem === 'Full') {
+        form.setFieldValue(field.name, ['Full']);
+      } else if (val.length > 1 && val.find((v) => v === 'Full')) {
         form.setFieldValue(
           field.name,
-          val.filter((v) => v !== "Full"),
+          val.filter((v) => v !== 'Full'),
         );
       } else {
         form.setFieldValue(field.name, val);
@@ -80,28 +80,28 @@ const WelcomeSessionsInput = ({ field, form, ...props }) => {
       multiple
       data={[
         {
-          children: [{ text: "Full 3-Day pass", id: "Full" }],
+          children: [{ text: 'Full 3-Day pass', id: 'Full' }],
         },
         {
           children: [
             {
-              text: "Fri. (evening Sep 29 2023)",
-              id: "Friday",
+              text: 'Fri. (evening Sep 29 2023)',
+              id: 'Friday',
             },
             {
-              text: "Sat. (evening Sep 30 2023)",
-              id: "Saturday",
+              text: 'Sat. (evening Sep 30 2023)',
+              id: 'Saturday',
             },
             {
-              text: "Sun. (evening Oct 1 2023)",
-              id: "Sunday",
+              text: 'Sun. (evening Oct 1 2023)',
+              id: 'Sunday',
             },
           ],
         },
       ]}
       options={{
-        placeholder: "Choose the session",
-        dropdownParent: "#wcfSelect",
+        placeholder: 'Choose the session',
+        dropdownParent: '#wcfSelect',
         templateSelection: formatSessionsOption,
         escapeMarkup: function (m) {
           return m;
@@ -119,16 +119,16 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
   const { track } = useAnalytics();
   useEffect(() => {
     if (!router.isReady) return;
-    track("view_screen", {
-      screen_name: "wcf_registration_landing",
+    track('view_screen', {
+      screen_name: 'wcf_registration_landing',
       utm_parameters: JSON.stringify(router.query),
     });
   }, [router.isReady]);
 
   const onNextAction = () => {
-    track("click_button", {
-      screen_name: "wcf_registration_landing",
-      event_target: "next_button",
+    track('click_button', {
+      screen_name: 'wcf_registration_landing',
+      event_target: 'next_button',
       sessions_attending_arr: JSON.stringify(values.sessionsAttending),
       number_of_tickets: values.ticketCount,
       utm_parameters: JSON.stringify(router.query),
@@ -157,7 +157,7 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
                 </label>
 
                 <div
-                  className={classNames("wcf-select__field", {
+                  className={classNames('wcf-select__field', {
                     error: errors.ticketCount,
                   })}
                 >
@@ -186,7 +186,7 @@ export function StepWelcome({ errors, handleNext, values, ...props }) {
                 </label>
 
                 <div
-                  className={classNames("wcf-select__field", {
+                  className={classNames('wcf-select__field', {
                     error: errors.sessionsAttending,
                   })}
                 >

@@ -1,21 +1,21 @@
 /* eslint-disable react/no-unescaped-entities */
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
-import { PriceCard } from "./PriceCard";
-import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
-import Link from "next/link";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
+import { PriceCard } from './PriceCard';
+import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { FaArrowRightLong } from 'react-icons/fa6';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import Link from 'next/link';
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 const swiperOption = {
   modules: [Pagination, A11y],
@@ -53,7 +53,7 @@ export const SilentRetreat = ({ data }) => {
           pathname: `/us-en/course/checkout/${sfid}`,
           query: {
             ctype: productTypeId,
-            page: "c-o",
+            page: 'c-o',
           },
         });
       } else {
@@ -61,14 +61,14 @@ export const SilentRetreat = ({ data }) => {
           navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
             router.query,
           )}`,
-          defaultView: "SIGNUP_MODE",
+          defaultView: 'SIGNUP_MODE',
         });
       }
     } else {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/scheduling`,
         query: {
-          courseType: "SILENT_RETREAT",
+          courseType: 'SILENT_RETREAT',
         },
       });
     }
@@ -134,7 +134,7 @@ export const SilentRetreat = ({ data }) => {
                 The Part II course builds on your Part I experience* with a
                 unique blend of advanced breathwork, signature guided
                 meditations, daily yoga, and profound insights into the mind.
-                This is all designed to{" "}
+                This is all designed to{' '}
                 <strong>
                   provide an optimal environment to break free from a busy mind
                 </strong>
@@ -151,11 +151,11 @@ export const SilentRetreat = ({ data }) => {
               <p>
                 *You can take the Part II Course only after completing the Part
                 I course. If you would like to do a silent retreat and have not
-                yet done Part I, please visit{" "}
+                yet done Part I, please visit{' '}
                 <Link href="/us-en/course?courseType=SKY_BREATH_MEDITATION">
                   this page
                 </Link>
-                .{" "}
+                .{' '}
               </p>
             </div>
             <div className="video-wrapper">
@@ -281,7 +281,7 @@ export const SilentRetreat = ({ data }) => {
                 </div>
                 <div className="review-text">
                   It helped me to put into practice the valuable wisdom which I
-                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
+                  had picked up on the {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{' '}
                   course. I came away relaxed, refreshed and happier than I had
                   felt for a long time.
                 </div>

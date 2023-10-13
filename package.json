@@ -20,10 +20,10 @@
     "lint": "next lint",
     "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons",
     "eslint": "./node_modules/.bin/eslint --fix \"./**/*.{js,jsx}\"",
-    "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss}\"",
+    "prettify": "./node_modules/.bin/prettier --write \"./**/*.{js,jsx,json,css,scss,md,yml,yaml}\"",
     "prepare": "husky install",
     "commit": "cz",
-    "check:format": "prettier --check .",
+    "check:format": "prettier --check '**/*.{js,jsx,json,css,scss,md,yml,yaml}'",
     "check:lint": "eslint . --ext .js,.jsx --color",
     "check:spelling": "cspell \"{README.md,TODO.md,.github/*.md,src/**/*.js,src/**/*.jsx}\"",
     "fix:format": "prettier --check --write --ignore-unknown .",
@@ -136,10 +136,7 @@
     "*.json,.{eslintrc,prettierrc}": [
       "prettier --ignore-path .eslintignore --parser json --write"
     ],
-    "*.{css,scss}": [
-      "prettier --ignore-path .eslintignore --single-quote --write"
-    ],
-    "*.{html,md,yml}": [
+    "*.{css,scss,html,md,yml}": [
       "prettier --ignore-path .eslintignore --single-quote --write"
     ]
   },

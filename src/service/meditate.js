@@ -1,10 +1,10 @@
 import {
   PurchaseMembershipModal,
   RetreatPrerequisiteWarning,
-} from "@components";
-import { ALERT_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { updateUserActivity } from "@service";
-import { api } from "@utils";
+} from '@components';
+import { ALERT_TYPES, MEMBERSHIP_TYPES } from '@constants';
+import { updateUserActivity } from '@service';
+import { api } from '@utils';
 export const markFavoriteEvent = async ({ meditate, refetch }) => {
   try {
     const data = {
@@ -12,7 +12,7 @@ export const markFavoriteEvent = async ({ meditate, refetch }) => {
       removeFavourite: meditate.isFavorite ? true : false,
     };
     await api.post({
-      path: "markFavourite",
+      path: 'markFavourite',
       body: data,
     });
     if (refetch) refetch({ refetchPage: (page, index) => index === 0 });
@@ -43,8 +43,8 @@ export const meditatePlayEvent = async ({
       );
       if (allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-          className: "retreat-prerequisite-big meditation-digital-membership",
-          title: "Go deeper with the Digital Membership",
+          className: 'retreat-prerequisite-big meditation-digital-membership',
+          title: 'Go deeper with the Digital Membership',
           footer: () => {
             return (
               <button
@@ -68,7 +68,7 @@ export const meditatePlayEvent = async ({
       }
     } else {
       const results = await api.get({
-        path: "meditationDetail",
+        path: 'meditationDetail',
         param: { id: meditate.sfid },
       });
       const { data, status, workshopPrerequisiteMessage = [] } = results;
@@ -90,8 +90,8 @@ export const meditatePlayEvent = async ({
       if (data) {
         const meditateDetails = { ...meditate, ...data };
         if (
-          meditateDetails.contentType === "Audio" ||
-          meditateDetails.contentType === "audio/x-m4a"
+          meditateDetails.contentType === 'Audio' ||
+          meditateDetails.contentType === 'audio/x-m4a'
         ) {
           showPlayer({
             track: {
@@ -101,7 +101,7 @@ export const meditatePlayEvent = async ({
               audioSrc: meditateDetails.track?.url,
             },
           });
-        } else if (meditateDetails.contentType === "Video") {
+        } else if (meditateDetails.contentType === 'Video') {
           hidePlayer();
           showVideoPlayer({
             track: {

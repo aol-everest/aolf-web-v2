@@ -1,45 +1,45 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Loader } from "@components";
-import { DiscountCodeInput, Dropdown } from "@components/checkout";
-import { ABBRS, ALERT_TYPES, MODAL_TYPES, US_STATES } from "@constants";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { api, isEmpty, tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { Field, Formik } from "formik";
-import { useState } from "react";
-import * as Yup from "yup";
-import "yup-phone";
-import Style from "./BackendPaymentForm.module.scss";
-import { EmailField } from "./EmailField";
-import { PriceCalculationComponent } from "./PriceCalculationComponent";
-import { Radiobox } from "./Radiobox";
+import { Loader } from '@components';
+import { DiscountCodeInput, Dropdown } from '@components/checkout';
+import { ABBRS, ALERT_TYPES, MODAL_TYPES, US_STATES } from '@constants';
+import { useGlobalAlertContext, useGlobalModalContext } from '@contexts';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { api, isEmpty, tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import { Field, Formik } from 'formik';
+import { useState } from 'react';
+import * as Yup from 'yup';
+import 'yup-phone';
+import Style from './BackendPaymentForm.module.scss';
+import { EmailField } from './EmailField';
+import { PriceCalculationComponent } from './PriceCalculationComponent';
+import { Radiobox } from './Radiobox';
 
 dayjs.extend(isSameOrBefore);
 
-const PARTIAL = "partial";
-const FULL = "";
-const INSTALMENT = "instalment";
+const PARTIAL = 'partial';
+const FULL = '';
+const INSTALMENT = 'instalment';
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
@@ -84,34 +84,34 @@ export const BackendPaymentForm = ({
   const setFormInitialValues = () => {
     const secondPaymentDate = dayjs(
       workshop.remainPartialPaymentDateCap || workshop.eventStartDate,
-    ).format("YYYY-MM-DD");
+    ).format('YYYY-MM-DD');
     return {
-      firstName: "",
-      lastName: "",
-      email: "",
-      confirmEmail: "",
-      password: "",
-      contactPhone: "",
-      contactAddress: "",
-      contactCity: "",
-      contactState: "",
-      contactZip: "",
-      billingPhone: "",
-      billingAddress: "",
-      billingCity: "",
-      billingState: "",
-      billingZip: "",
-      couponCode: couponCode ? couponCode : "",
+      firstName: '',
+      lastName: '',
+      email: '',
+      confirmEmail: '',
+      password: '',
+      contactPhone: '',
+      contactAddress: '',
+      contactCity: '',
+      contactState: '',
+      contactZip: '',
+      billingPhone: '',
+      billingAddress: '',
+      billingCity: '',
+      billingState: '',
+      billingZip: '',
+      couponCode: couponCode ? couponCode : '',
       selectedPaymentOption: FULL,
       isChequePayment: false,
       isFirstChequePayment: false,
       isSecondChequePayment: false,
-      chequeNumber: "",
-      chequeRoutingNumber: "",
-      firstChequeNumber: "",
-      firstChequeRoutingNumber: "",
-      secondChequeNumber: "",
-      secondChequeRoutingNumber: "",
+      chequeNumber: '',
+      chequeRoutingNumber: '',
+      firstChequeNumber: '',
+      firstChequeRoutingNumber: '',
+      secondChequeNumber: '',
+      secondChequeRoutingNumber: '',
       secondPaymentDate,
       firstPaymentAmount: workshop.minimumPartialPayment || 0,
     };
@@ -132,19 +132,19 @@ export const BackendPaymentForm = ({
       const payload = setFormInitialValues();
       form.setValues({
         ...payload,
-        firstName: first_name || "",
-        lastName: last_name || "",
+        firstName: first_name || '',
+        lastName: last_name || '',
         email,
-        contactPhone: personMobilePhone || "",
-        contactAddress: personMailingStreet || "",
-        contactCity: personMailingCity || "",
-        contactState: personMailingState || "",
-        contactZip: personMailingPostalCode || "",
-        billingPhone: "",
-        billingAddress: "",
-        billingCity: "",
-        billingState: "",
-        billingZip: "",
+        contactPhone: personMobilePhone || '',
+        contactAddress: personMailingStreet || '',
+        contactCity: personMailingCity || '',
+        contactState: personMailingState || '',
+        contactZip: personMailingPostalCode || '',
+        billingPhone: '',
+        billingAddress: '',
+        billingCity: '',
+        billingState: '',
+        billingZip: '',
       });
       if (!user) {
         _cardElement.clear();
@@ -158,11 +158,11 @@ export const BackendPaymentForm = ({
   };
 
   const formatPhoneNumber = (phoneNumberString) => {
-    const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+    const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
     const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
     if (match) {
-      const intlCode = match[1] ? "+1 " : "";
-      return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
+      const intlCode = match[1] ? '+1 ' : '';
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
     }
     return phoneNumberString;
   };
@@ -275,7 +275,7 @@ export const BackendPaymentForm = ({
         ) {
           const cardElement = elements.getElement(CardElement);
           let createTokenRespone = await stripe.createToken(cardElement, {
-            name: profile.name ? profile.name : firstName + " " + lastName,
+            name: profile.name ? profile.name : firstName + ' ' + lastName,
           });
           let { error, token } = createTokenRespone;
           if (error) {
@@ -312,15 +312,15 @@ export const BackendPaymentForm = ({
 
         const products = isRegularOrder
           ? {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
             }
           : {
-              productType: "bundle",
+              productType: 'bundle',
               productSfId: values.comboDetailId,
               childProduct: {
-                productType: "workshop",
+                productType: 'workshop',
                 productSfId: productId,
                 AddOnProductIds: AddOnProductIds,
               },
@@ -364,7 +364,7 @@ export const BackendPaymentForm = ({
           case FULL:
             shoppingRequest = {
               ...shoppingRequest,
-              couponCode: showCouponCodeField ? couponCode : "",
+              couponCode: showCouponCodeField ? couponCode : '',
             };
             if (isChequePayment) {
               shoppingRequest = {
@@ -468,7 +468,7 @@ export const BackendPaymentForm = ({
           error: errorMessage,
           isError,
         } = await api.post({
-          path: "createAndPayOrder",
+          path: 'createAndPayOrder',
           body: payLoad,
         });
 
@@ -479,7 +479,7 @@ export const BackendPaymentForm = ({
         } else if (data) {
           setUser(null);
           showModal(MODAL_TYPES.EMPTY_MODAL, {
-            title: "Enrollment Completed Successfully.",
+            title: 'Enrollment Completed Successfully.',
             children: (handleModalToggle) =>
               onEnrollmentComplete(
                 data,
@@ -524,8 +524,8 @@ export const BackendPaymentForm = ({
     const hasGroupedAddOnProducts =
       groupedAddOnProducts &&
       !isEmpty(groupedAddOnProducts) &&
-      "Residential Add On" in groupedAddOnProducts &&
-      groupedAddOnProducts["Residential Add On"].length > 0;
+      'Residential Add On' in groupedAddOnProducts &&
+      groupedAddOnProducts['Residential Add On'].length > 0;
 
     const addOnFee = addOnProducts.reduce(
       (
@@ -566,9 +566,9 @@ export const BackendPaymentForm = ({
   };
 
   const handleAccommodationChange = (formikProps, value) => {
-    formikProps.setFieldValue("accommodation", value);
+    formikProps.setFieldValue('accommodation', value);
     const { values } = formikProps;
-    values["accommodation"] = value;
+    values['accommodation'] = value;
     updateCourseAddOnFee(values);
   };
 
@@ -584,7 +584,7 @@ export const BackendPaymentForm = ({
     comboDetailProductSfid,
     selectedComboBundle,
   ) => {
-    formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
+    formikProps.setFieldValue('comboDetailId', comboDetailProductSfid);
     toggleCouponCodeFieldAction();
     const { values } = formikProps;
     if (comboDetailProductSfid === id) {
@@ -596,7 +596,7 @@ export const BackendPaymentForm = ({
       selectedComboBundle?.minimumPartialPaymentOnBundle ||
       useWorkshop?.minimumPartialPayment ||
       1;
-    values["firstPaymentAmount"] = updatedPartialPaymentValue;
+    values['firstPaymentAmount'] = updatedPartialPaymentValue;
     setSelectedComboBundle(selectedComboBundle);
   };
 
@@ -658,13 +658,13 @@ export const BackendPaymentForm = ({
   let UpdatedFeeAfterCredits;
   if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
     usableCredit.availableCredit === 1
   ) {
     UpdatedFeeAfterCredits = 0;
   } else if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
+    usableCredit.creditMeasureUnit === 'Amount'
   ) {
     if (usableCredit.availableCredit > unitPrice) {
       UpdatedFeeAfterCredits = 0;
@@ -678,12 +678,12 @@ export const BackendPaymentForm = ({
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
     !isEmpty(groupedAddOnProducts) &&
-    "Residential Add On" in groupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].length > 0;
+    'Residential Add On' in groupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].length > 0;
 
   const residentialAddOnRequired =
     hasGroupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].some(
+    groupedAddOnProducts['Residential Add On'].some(
       (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
     );
 
@@ -709,7 +709,7 @@ export const BackendPaymentForm = ({
                         <div key={time.startDate}>
                           {`${dayjs
                             .utc(time.startDate)
-                            .format("dd")}: ${tConvert(
+                            .format('dd')}: ${tConvert(
                             time.startTime,
                           )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
                         </div>
@@ -756,7 +756,7 @@ export const BackendPaymentForm = ({
                 {earlyBirdFeeIncreasing && (
                   <p>
                     Register soon. Course fee will go up by $
-                    {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                    {earlyBirdFeeIncreasing.increasingFee} on{' '}
                     {earlyBirdFeeIncreasing.increasingBy}
                   </p>
                 )}
@@ -768,7 +768,7 @@ export const BackendPaymentForm = ({
               </div>
               <div className="col-sm-12 col-md-6 rightBlk">
                 <p>
-                  Contact: {contactName},{" "}
+                  Contact: {contactName},{' '}
                   <a href={`tel:${phone1}`}>{phone1},</a>
                 </p>
                 <p>
@@ -783,7 +783,7 @@ export const BackendPaymentForm = ({
                       <div className="col-sm-12">
                         <img
                           className="img"
-                          src={primaryTeacherPic || "/img/user.png"}
+                          src={primaryTeacherPic || '/img/user.png'}
                         />
                         <a href="#" className="name">
                           {primaryTeacherName}
@@ -792,10 +792,10 @@ export const BackendPaymentForm = ({
                     )}
                     {coTeacher1Name && (
                       <div className="col-sm-12">
-                        {"  "}
+                        {'  '}
                         <img
                           className="img"
-                          src={coTeacher1Pic || "/img/user.png"}
+                          src={coTeacher1Pic || '/img/user.png'}
                         />
                         <a href="#" className="name">
                           {coTeacher1Name}
@@ -804,10 +804,10 @@ export const BackendPaymentForm = ({
                     )}
                     {coTeacher2Name && (
                       <div className="col-sm-12">
-                        {"  "}
+                        {'  '}
                         <img
                           className="img"
-                          src={coTeacher2Pic || "/img/user.png"}
+                          src={coTeacher2Pic || '/img/user.png'}
                         />
                         <a href="#" className="name">
                           {coTeacher2Name}
@@ -827,77 +827,77 @@ export const BackendPaymentForm = ({
           enableReinitialize
           initialValues={setFormInitialValues()}
           validationSchema={Yup.object().shape({
-            firstName: Yup.string().required("First Name is required!"),
-            lastName: Yup.string().required("Last Name is required!"),
+            firstName: Yup.string().required('First Name is required!'),
+            lastName: Yup.string().required('Last Name is required!'),
             email: Yup.string()
-              .email("Email is invalid!")
-              .required("Email is required!"),
+              .email('Email is invalid!')
+              .required('Email is required!'),
             confirmEmail: Yup.string()
-              .required("Confirm Email is required!")
-              .oneOf([Yup.ref("email")], "Emails must match"),
-            contactPhone: Yup.string().required("Phone is required!"),
-            contactAddress: Yup.string().required("Address is required!"),
-            contactCity: Yup.string().required("City is required!"),
-            contactState: Yup.string().required("State is required!"),
+              .required('Confirm Email is required!')
+              .oneOf([Yup.ref('email')], 'Emails must match'),
+            contactPhone: Yup.string().required('Phone is required!'),
+            contactAddress: Yup.string().required('Address is required!'),
+            contactCity: Yup.string().required('City is required!'),
+            contactState: Yup.string().required('State is required!'),
             contactZip: Yup.string()
-              .required("Zip is required!")
+              .required('Zip is required!')
               //.matches(/^[0-9]+$/, { message: 'Zip is invalid!' })
-              .min(2, "Zip is invalid!")
-              .max(10, "Zip is invalid!"),
+              .min(2, 'Zip is invalid!')
+              .max(10, 'Zip is invalid!'),
             billingZip: Yup.string()
               //.matches(/^[0-9]+$/, { message: 'Zip is invalid!' })
-              .min(2, "Zip is invalid!")
-              .max(10, "Zip is invalid!"),
+              .min(2, 'Zip is invalid!')
+              .max(10, 'Zip is invalid!'),
             chequeNumber: Yup.string().when(
-              ["isChequePayment", "selectedPaymentOption"],
+              ['isChequePayment', 'selectedPaymentOption'],
               {
                 is: (isChequePayment, selectedPaymentOption) =>
                   isChequePayment && selectedPaymentOption !== PARTIAL,
-                then: Yup.string().required("Check number is required!"),
+                then: Yup.string().required('Check number is required!'),
               },
             ),
             chequeRoutingNumber: Yup.string().when(
-              ["isChequePayment", "selectedPaymentOption"],
+              ['isChequePayment', 'selectedPaymentOption'],
               {
                 is: (isChequePayment, selectedPaymentOption) =>
                   isChequePayment && selectedPaymentOption !== PARTIAL,
-                then: Yup.string().required("Routing number is required!"),
+                then: Yup.string().required('Routing number is required!'),
               },
             ),
             firstChequeNumber: Yup.string().when(
-              ["isFirstChequePayment", "selectedPaymentOption"],
+              ['isFirstChequePayment', 'selectedPaymentOption'],
               {
                 is: (isFirstChequePayment, selectedPaymentOption) =>
                   isFirstChequePayment && selectedPaymentOption === PARTIAL,
-                then: Yup.string().required("Check number is required!"),
+                then: Yup.string().required('Check number is required!'),
               },
             ),
             firstChequeRoutingNumber: Yup.string().when(
-              ["isFirstChequePayment", "selectedPaymentOption"],
+              ['isFirstChequePayment', 'selectedPaymentOption'],
               {
                 is: (isFirstChequePayment, selectedPaymentOption) =>
                   isFirstChequePayment && selectedPaymentOption === PARTIAL,
-                then: Yup.string().required("Routing number is required!"),
+                then: Yup.string().required('Routing number is required!'),
               },
             ),
             secondChequeNumber: Yup.string().when(
-              ["isSecondChequePayment", "selectedPaymentOption"],
+              ['isSecondChequePayment', 'selectedPaymentOption'],
               {
                 is: (isSecondChequePayment, selectedPaymentOption) =>
                   isSecondChequePayment && selectedPaymentOption === PARTIAL,
-                then: Yup.string().required("Check number is required!"),
+                then: Yup.string().required('Check number is required!'),
               },
             ),
             secondChequeRoutingNumber: Yup.string().when(
-              ["isSecondChequePayment", "selectedPaymentOption"],
+              ['isSecondChequePayment', 'selectedPaymentOption'],
               {
                 is: (isSecondChequePayment, selectedPaymentOption) =>
                   isSecondChequePayment && selectedPaymentOption === PARTIAL,
-                then: Yup.string().required("Routing number is required!"),
+                then: Yup.string().required('Routing number is required!'),
               },
             ),
             secondPaymentDate: Yup.string().when(
-              ["isSecondChequePayment", "selectedPaymentOption"],
+              ['isSecondChequePayment', 'selectedPaymentOption'],
               {
                 is: (isSecondChequePayment, selectedPaymentOption) => {
                   return (
@@ -905,20 +905,20 @@ export const BackendPaymentForm = ({
                   );
                 },
                 then: Yup.string()
-                  .required("Payment date is required!")
+                  .required('Payment date is required!')
                   .test({
-                    name: "max",
+                    name: 'max',
                     exclusive: true,
                     params: { eventStartDate },
                     message: `Payment date must be on or before ${dayjs(
                       selectedComboBundle?.remainPartialPaymentDateCap ||
                         remainPartialPaymentDateCap ||
                         eventStartDate,
-                    ).format("MM/DD/YYYY")}`,
+                    ).format('MM/DD/YYYY')}`,
                     test: (value) => {
                       return dayjs(value, [
-                        "MM-DD-YYYY",
-                        "YYYY-MM-DD",
+                        'MM-DD-YYYY',
+                        'YYYY-MM-DD',
                       ]).isSameOrBefore(
                         dayjs(
                           selectedComboBundle?.remainPartialPaymentDateCap ||
@@ -929,26 +929,26 @@ export const BackendPaymentForm = ({
                     },
                   })
                   .test({
-                    name: "min",
+                    name: 'min',
                     exclusive: true,
                     params: { eventStartDate },
                     message: `Payment date must be after today`,
                     test: (value) => {
-                      return dayjs(value, ["MM-DD-YYYY", "YYYY-MM-DD"]).isAfter(
+                      return dayjs(value, ['MM-DD-YYYY', 'YYYY-MM-DD']).isAfter(
                         dayjs(new Date()),
                       );
                     },
                   }),
               },
             ),
-            firstPaymentAmount: Yup.number().when("selectedPaymentOption", {
+            firstPaymentAmount: Yup.number().when('selectedPaymentOption', {
               is: (selectedPaymentOption) => {
                 return selectedPaymentOption === PARTIAL;
               },
               then: Yup.number()
-                .required("Amount is required!")
+                .required('Amount is required!')
                 .test({
-                  name: "min",
+                  name: 'min',
                   exclusive: true,
                   params: { eventStartDate },
                   message: `Amount should not be less then ${
@@ -967,7 +967,7 @@ export const BackendPaymentForm = ({
                 }),
             }),
             accommodation: isAccommodationRequired
-              ? Yup.object().required("Room & Board is required!")
+              ? Yup.object().required('Room & Board is required!')
               : Yup.mixed().notRequired(),
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -991,7 +991,7 @@ export const BackendPaymentForm = ({
 
             let isOfflineExpense;
             if (hasGroupedAddOnProducts && expenseAddOn) {
-              isOfflineExpense = expenseAddOn.paymentMode === "In Person";
+              isOfflineExpense = expenseAddOn.paymentMode === 'In Person';
             } else if (expenseAddOn && !expenseAddOn.isAddOnSelectionRequired) {
               isOfflineExpense = values[expenseAddOn.productName] || false;
             } else if (!expenseAddOn) {
@@ -1012,8 +1012,8 @@ export const BackendPaymentForm = ({
                   </div>
                   <div className="col-sm-6">
                     <div
-                      className={classNames("input-group inputLabel_place", {
-                        "text-input-error":
+                      className={classNames('input-group inputLabel_place', {
+                        'text-input-error':
                           errors.firstName && touched.firstName,
                       })}
                     >
@@ -1031,15 +1031,15 @@ export const BackendPaymentForm = ({
                       <label htmlFor="firstName">
                         {errors.firstName && touched.firstName
                           ? errors.firstName
-                          : "First Name"}
+                          : 'First Name'}
                       </label>
                     </div>
                   </div>
 
                   <div className="col-sm-6">
                     <div
-                      className={classNames("input-group inputLabel_place", {
-                        "text-input-error": errors.lastName && touched.lastName,
+                      className={classNames('input-group inputLabel_place', {
+                        'text-input-error': errors.lastName && touched.lastName,
                       })}
                     >
                       <input
@@ -1056,7 +1056,7 @@ export const BackendPaymentForm = ({
                       <label htmlFor="lastName">
                         {errors.lastName && touched.lastName
                           ? errors.lastName
-                          : "Last Name"}
+                          : 'Last Name'}
                       </label>
                     </div>
                   </div>
@@ -1080,8 +1080,8 @@ export const BackendPaymentForm = ({
                   </div>
                   <div className="col-sm-12">
                     <div
-                      className={classNames("input-group aol_intGroup", {
-                        "text-input-error":
+                      className={classNames('input-group aol_intGroup', {
+                        'text-input-error':
                           errors.confirmEmail && touched.confirmEmail,
                       })}
                     >
@@ -1106,7 +1106,7 @@ export const BackendPaymentForm = ({
                       <label htmlFor="confirmEmail">
                         {errors.confirmEmail && touched.confirmEmail
                           ? errors.confirmEmail
-                          : "Confirm Email"}
+                          : 'Confirm Email'}
                       </label>
                     </div>
 
@@ -1189,7 +1189,7 @@ export const BackendPaymentForm = ({
                                 </label>
                               </div>
                               <div className="reciept__payment-tooltip">
-                                {availableBundle.comboDescription || ""}
+                                {availableBundle.comboDescription || ''}
                               </div>
                             </>
                           );
@@ -1264,18 +1264,18 @@ export const BackendPaymentForm = ({
                       {hasGroupedAddOnProducts && (
                         <div className="col-sm-12">
                           <h6
-                            className={classNames("tw-px-[10px] tw-py-0", {
-                              "group-error": errors.selectedAddOn,
+                            className={classNames('tw-px-[10px] tw-py-0', {
+                              'group-error': errors.selectedAddOn,
                             })}
                           >
-                            <i className="fas fa-cart-plus" /> Room &amp; Board{" "}
-                            {isOfflineExpense && "*"}
+                            <i className="fas fa-cart-plus" /> Room &amp; Board{' '}
+                            {isOfflineExpense && '*'}
                           </h6>
                           <div
                             className={classNames(
-                              "select-room select-room_rounded",
+                              'select-room select-room_rounded',
                               {
-                                "no-valid":
+                                'no-valid':
                                   errors.accommodation && touched.accommodation,
                               },
                             )}
@@ -1284,7 +1284,7 @@ export const BackendPaymentForm = ({
                               <span className="select-room__placeholder">
                                 Select Room &amp; Board
                               </span>
-                              {groupedAddOnProducts["Residential Add On"].map(
+                              {groupedAddOnProducts['Residential Add On'].map(
                                 (residentialAddOn) => {
                                   return (
                                     <div
@@ -1299,7 +1299,7 @@ export const BackendPaymentForm = ({
                                         className="select-room__input"
                                       />
                                       <span className="select-room__input-text">
-                                        {residentialAddOn.productName}{" "}
+                                        {residentialAddOn.productName}{' '}
                                         <span className="price">
                                           $
                                           {residentialAddOn.unitPrice +
@@ -1312,7 +1312,7 @@ export const BackendPaymentForm = ({
                               )}
                             </div>
                             <ul className="select-room__list">
-                              {groupedAddOnProducts["Residential Add On"].map(
+                              {groupedAddOnProducts['Residential Add On'].map(
                                 (residentialAddOn) => {
                                   return (
                                     <li
@@ -1325,7 +1325,7 @@ export const BackendPaymentForm = ({
                                       }
                                       className={
                                         residentialAddOn.isFull &&
-                                        "tw-pointer-events-none tw-opacity-60"
+                                        'tw-pointer-events-none tw-opacity-60'
                                       }
                                     >
                                       <label
@@ -1369,8 +1369,8 @@ export const BackendPaymentForm = ({
                   </div>
                   <div className="col-sm-6">
                     <div
-                      className={classNames("input-group inputLabel_place", {
-                        "text-input-error":
+                      className={classNames('input-group inputLabel_place', {
+                        'text-input-error':
                           errors.contactPhone && touched.contactPhone,
                       })}
                     >
@@ -1389,15 +1389,15 @@ export const BackendPaymentForm = ({
                       <label htmlFor="contactPhone">
                         {errors.contactPhone && touched.contactPhone
                           ? errors.contactPhone
-                          : "Phone"}
+                          : 'Phone'}
                       </label>
                     </div>
                   </div>
 
                   <div className="col-sm-6">
                     <div
-                      className={classNames("input-group inputLabel_place", {
-                        "text-input-error":
+                      className={classNames('input-group inputLabel_place', {
+                        'text-input-error':
                           errors.contactAddress && touched.contactAddress,
                       })}
                     >
@@ -1415,15 +1415,15 @@ export const BackendPaymentForm = ({
                       <label htmlFor="contactAddress">
                         {errors.contactAddress && touched.contactAddress
                           ? errors.contactAddress
-                          : "Address"}
+                          : 'Address'}
                       </label>
                     </div>
                   </div>
 
                   <div className="col-sm-6">
                     <div
-                      className={classNames("input-group inputLabel_place", {
-                        "text-input-error":
+                      className={classNames('input-group inputLabel_place', {
+                        'text-input-error':
                           errors.contactCity && touched.contactCity,
                       })}
                     >
@@ -1441,7 +1441,7 @@ export const BackendPaymentForm = ({
                       <label htmlFor="contactCity">
                         {errors.contactCity && touched.contactCity
                           ? errors.contactCity
-                          : "City"}
+                          : 'City'}
                       </label>
                     </div>
                   </div>
@@ -1451,8 +1451,8 @@ export const BackendPaymentForm = ({
                       {({ field, form }) => {
                         return (
                           <div
-                            className={classNames("tw-mt-[32px]", {
-                              "text-input-error":
+                            className={classNames('tw-mt-[32px]', {
+                              'text-input-error':
                                 errors.contactState && touched.contactState,
                             })}
                           >
@@ -1470,8 +1470,8 @@ export const BackendPaymentForm = ({
 
                   <div className="col-sm-6">
                     <div
-                      className={classNames("input-group inputLabel_place", {
-                        "text-input-error":
+                      className={classNames('input-group inputLabel_place', {
+                        'text-input-error':
                           errors.contactZip && touched.contactZip,
                       })}
                     >
@@ -1489,7 +1489,7 @@ export const BackendPaymentForm = ({
                       <label htmlFor="contactZip">
                         {errors.contactZip && touched.contactZip
                           ? errors.contactZip
-                          : "Zip Code"}
+                          : 'Zip Code'}
                       </label>
                     </div>
                   </div>
@@ -1538,9 +1538,9 @@ export const BackendPaymentForm = ({
                       <div className="col-sm-6">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error":
+                              'text-input-error':
                                 errors.billingPhone && touched.billingPhone,
                             },
                           )}
@@ -1559,7 +1559,7 @@ export const BackendPaymentForm = ({
                           <label htmlFor="billingPhone">
                             {errors.billingPhone && touched.billingPhone
                               ? errors.billingPhone
-                              : "Phone"}
+                              : 'Phone'}
                           </label>
                         </div>
                       </div>
@@ -1567,9 +1567,9 @@ export const BackendPaymentForm = ({
                       <div className="col-sm-6">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error":
+                              'text-input-error':
                                 errors.billingAddress && touched.billingAddress,
                             },
                           )}
@@ -1588,7 +1588,7 @@ export const BackendPaymentForm = ({
                           <label htmlFor="billingAddress">
                             {errors.billingAddress && touched.billingAddress
                               ? errors.billingAddress
-                              : "Address"}
+                              : 'Address'}
                           </label>
                         </div>
                       </div>
@@ -1596,9 +1596,9 @@ export const BackendPaymentForm = ({
                       <div className="col-sm-6">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error":
+                              'text-input-error':
                                 errors.billingCity && touched.billingCity,
                             },
                           )}
@@ -1617,7 +1617,7 @@ export const BackendPaymentForm = ({
                           <label htmlFor="billingCity">
                             {errors.billingCity && touched.billingCity
                               ? errors.billingCity
-                              : "City"}
+                              : 'City'}
                           </label>
                         </div>
                       </div>
@@ -1627,8 +1627,8 @@ export const BackendPaymentForm = ({
                           {({ field, form }) => {
                             return (
                               <div
-                                className={classNames("tw-mt-[32px]", {
-                                  "text-input-error tw-mt-20":
+                                className={classNames('tw-mt-[32px]', {
+                                  'text-input-error tw-mt-20':
                                     errors.billingState && touched.billingState,
                                 })}
                               >
@@ -1648,9 +1648,9 @@ export const BackendPaymentForm = ({
                       <div className="col-sm-6">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error":
+                              'text-input-error':
                                 errors.billingZip && touched.billingZip,
                             },
                           )}
@@ -1669,7 +1669,7 @@ export const BackendPaymentForm = ({
                           <label htmlFor="billingZip">
                             {errors.billingZip && touched.billingZip
                               ? errors.billingZip
-                              : "Zip Code"}
+                              : 'Zip Code'}
                           </label>
                         </div>
                       </div>
@@ -1683,7 +1683,7 @@ export const BackendPaymentForm = ({
                     <p>
                       <Radiobox
                         name="selectedPaymentOption"
-                        group={"selectedPaymentOption"}
+                        group={'selectedPaymentOption'}
                         value={FULL}
                         dtype={1}
                         action={paymentOptionChangeAction}
@@ -1694,7 +1694,7 @@ export const BackendPaymentForm = ({
                       <p>
                         <Radiobox
                           name="selectedPaymentOption"
-                          group={"selectedPaymentOption"}
+                          group={'selectedPaymentOption'}
                           value={INSTALMENT}
                           dtype={1}
                           action={paymentOptionChangeAction}
@@ -1706,7 +1706,7 @@ export const BackendPaymentForm = ({
                       <p>
                         <Radiobox
                           name="selectedPaymentOption"
-                          group={"selectedPaymentOption"}
+                          group={'selectedPaymentOption'}
                           value={PARTIAL}
                           dtype={1}
                           action={paymentOptionChangeAction}
@@ -1719,7 +1719,7 @@ export const BackendPaymentForm = ({
                         <p>
                           <Radiobox
                             name="selectedPaymentOption"
-                            group={"selectedPaymentOption"}
+                            group={'selectedPaymentOption'}
                             value={PARTIAL}
                             dtype={1}
                             action={paymentOptionChangeAction}
@@ -1774,9 +1774,9 @@ export const BackendPaymentForm = ({
                             <div className="col-sm-6">
                               <div
                                 className={classNames(
-                                  "input-group inputLabel_place",
+                                  'input-group inputLabel_place',
                                   {
-                                    "text-input-error":
+                                    'text-input-error':
                                       errors.chequeNumber &&
                                       touched.chequeNumber,
                                   },
@@ -1796,7 +1796,7 @@ export const BackendPaymentForm = ({
                                 <label htmlFor="chequeNumber">
                                   {errors.chequeNumber && touched.chequeNumber
                                     ? errors.chequeNumber
-                                    : "Check Number"}
+                                    : 'Check Number'}
                                 </label>
                               </div>
                             </div>
@@ -1804,9 +1804,9 @@ export const BackendPaymentForm = ({
                             <div className="col-sm-6">
                               <div
                                 className={classNames(
-                                  "input-group inputLabel_place",
+                                  'input-group inputLabel_place',
                                   {
-                                    "text-input-error":
+                                    'text-input-error':
                                       errors.chequeRoutingNumber &&
                                       touched.chequeRoutingNumber,
                                   },
@@ -1827,7 +1827,7 @@ export const BackendPaymentForm = ({
                                   {errors.chequeRoutingNumber &&
                                   touched.chequeRoutingNumber
                                     ? errors.chequeRoutingNumber
-                                    : "Check Routing Number"}
+                                    : 'Check Routing Number'}
                                 </label>
                               </div>
                             </div>
@@ -1873,9 +1873,9 @@ export const BackendPaymentForm = ({
                       <div className="col-sm-12">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error":
+                              'text-input-error':
                                 errors.firstPaymentAmount &&
                                 touched.firstPaymentAmount,
                             },
@@ -1900,7 +1900,7 @@ export const BackendPaymentForm = ({
                             {errors.firstPaymentAmount &&
                             touched.firstPaymentAmount
                               ? errors.firstPaymentAmount
-                              : "First Payment Amount"}
+                              : 'First Payment Amount'}
                           </label>
                         </div>
                       </div>
@@ -1909,9 +1909,9 @@ export const BackendPaymentForm = ({
                           <div className="col-sm-6">
                             <div
                               className={classNames(
-                                "input-group inputLabel_place",
+                                'input-group inputLabel_place',
                                 {
-                                  "text-input-error":
+                                  'text-input-error':
                                     errors.firstChequeNumber &&
                                     touched.firstChequeNumber,
                                 },
@@ -1932,7 +1932,7 @@ export const BackendPaymentForm = ({
                                 {errors.firstChequeNumber &&
                                 touched.firstChequeNumber
                                   ? errors.firstChequeNumber
-                                  : "Check Number"}
+                                  : 'Check Number'}
                               </label>
                             </div>
                           </div>
@@ -1940,9 +1940,9 @@ export const BackendPaymentForm = ({
                           <div className="col-sm-6">
                             <div
                               className={classNames(
-                                "input-group inputLabel_place",
+                                'input-group inputLabel_place',
                                 {
-                                  "text-input-error":
+                                  'text-input-error':
                                     errors.firstChequeRoutingNumber &&
                                     touched.firstChequeRoutingNumber,
                                 },
@@ -1963,7 +1963,7 @@ export const BackendPaymentForm = ({
                                 {errors.firstChequeRoutingNumber &&
                                 touched.firstChequeRoutingNumber
                                   ? errors.firstChequeRoutingNumber
-                                  : "Check Routing Number"}
+                                  : 'Check Routing Number'}
                               </label>
                             </div>
                           </div>
@@ -1997,9 +1997,9 @@ export const BackendPaymentForm = ({
                         <div className="col-sm-12">
                           <div
                             className={classNames(
-                              "input-group inputLabel_place",
+                              'input-group inputLabel_place',
                               {
-                                "text-input-error":
+                                'text-input-error':
                                   errors.secondPaymentDate &&
                                   touched.secondPaymentDate,
                               },
@@ -2014,7 +2014,7 @@ export const BackendPaymentForm = ({
                               onBlur={handleBlur}
                               value={values.secondPaymentDate}
                               name="secondPaymentDate"
-                              min={new Date().toISOString().split("T")[0]}
+                              min={new Date().toISOString().split('T')[0]}
                               max={
                                 new Date(
                                   selectedComboBundle?.remainPartialPaymentDateCap ||
@@ -2022,7 +2022,7 @@ export const BackendPaymentForm = ({
                                     eventStartDate,
                                 )
                                   .toISOString()
-                                  .split("T")[0]
+                                  .split('T')[0]
                               }
                               disabled={loading}
                             />
@@ -2030,7 +2030,7 @@ export const BackendPaymentForm = ({
                               {errors.secondPaymentDate &&
                               touched.secondPaymentDate
                                 ? errors.secondPaymentDate
-                                : "Payment Date"}
+                                : 'Payment Date'}
                             </label>
                           </div>
                         </div>
@@ -2040,9 +2040,9 @@ export const BackendPaymentForm = ({
                           <div className="col-sm-6">
                             <div
                               className={classNames(
-                                "input-group inputLabel_place",
+                                'input-group inputLabel_place',
                                 {
-                                  "text-input-error":
+                                  'text-input-error':
                                     errors.secondChequeNumber &&
                                     touched.secondChequeNumber,
                                 },
@@ -2063,7 +2063,7 @@ export const BackendPaymentForm = ({
                                 {errors.secondChequeNumber &&
                                 touched.secondChequeNumber
                                   ? errors.secondChequeNumber
-                                  : "Check Number"}
+                                  : 'Check Number'}
                               </label>
                             </div>
                           </div>
@@ -2071,9 +2071,9 @@ export const BackendPaymentForm = ({
                           <div className="col-sm-6">
                             <div
                               className={classNames(
-                                "input-group inputLabel_place",
+                                'input-group inputLabel_place',
                                 {
-                                  "text-input-error":
+                                  'text-input-error':
                                     errors.secondChequeRoutingNumber &&
                                     touched.secondChequeRoutingNumber,
                                 },
@@ -2094,7 +2094,7 @@ export const BackendPaymentForm = ({
                                 {errors.secondChequeRoutingNumber &&
                                 touched.secondChequeRoutingNumber
                                   ? errors.secondChequeRoutingNumber
-                                  : "Check Routing Number"}
+                                  : 'Check Routing Number'}
                               </label>
                             </div>
                           </div>

@@ -1,8 +1,8 @@
-import { MODAL_TYPES } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { MODAL_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -37,7 +37,7 @@ function Login() {
 
   useEffect(() => {
     if (!router.isReady && authenticated) return;
-    const navigateTo = router.query.next || "/";
+    const navigateTo = router.query.next || '/';
     if (authenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: navigateTo,
@@ -47,7 +47,7 @@ function Login() {
       showModal(MODAL_TYPES.LOGIN_MODAL, {
         navigateTo,
         closeModalAction: () => {
-          pushRouteWithUTMQuery(router, "/us-en/course");
+          pushRouteWithUTMQuery(router, '/us-en/course');
         },
       });
     }

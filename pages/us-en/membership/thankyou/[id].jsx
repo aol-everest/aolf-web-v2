@@ -1,17 +1,17 @@
-import { PageLoading } from "@components";
-import { CONTENT_FOLDER_IDS, COURSE_TYPES, MEMBERSHIP_TYPES } from "@constants";
-import { useAuth } from "@contexts";
-import { withAuth } from "@hoc";
-import { useQueryString } from "@hooks";
-import { pushRouteWithUTMQuery } from "@service";
-import { api, tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { PageLoading } from '@components';
+import { CONTENT_FOLDER_IDS, COURSE_TYPES, MEMBERSHIP_TYPES } from '@constants';
+import { useAuth } from '@contexts';
+import { withAuth } from '@hoc';
+import { useQueryString } from '@hooks';
+import { pushRouteWithUTMQuery } from '@service';
+import { api, tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
 
 dayjs.extend(utc);
 
@@ -82,10 +82,10 @@ const MembershipThankyou = () => {
     isError,
     error,
   } = useQuery(
-    "getSubscriptionOrderDetails",
+    'getSubscriptionOrderDetails',
     async () => {
       const response = await api.get({
-        path: "getSubscriptionOrderDetails",
+        path: 'getSubscriptionOrderDetails',
         param: {
           oid: id,
         },
@@ -102,20 +102,20 @@ const MembershipThankyou = () => {
     reloadProfile();
   }, [authenticated, order]);
 
-  const [courseId] = useQueryString("cid");
-  const [meetupId] = useQueryString("mid");
-  const [page] = useQueryString("page", {
-    defaultValue: "detail",
+  const [courseId] = useQueryString('cid');
+  const [meetupId] = useQueryString('mid');
+  const [page] = useQueryString('page', {
+    defaultValue: 'detail',
   });
-  const [courseCType] = useQueryString("ctype");
+  const [courseCType] = useQueryString('ctype');
   const { afterBuyMessageBody, afterBuyMessageHeader, subscriptionMasterSfid } =
     order || {};
 
   const { data: workshopDetail = [] } = useQuery(
-    "workshopDetail",
+    'workshopDetail',
     async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           id: courseId,
         },
@@ -129,10 +129,10 @@ const MembershipThankyou = () => {
   );
 
   const { data: meetupDetail = [] } = useQuery(
-    "meetupDetail",
+    'meetupDetail',
     async () => {
       const response = await api.get({
-        path: "meetupDetail",
+        path: 'meetupDetail',
         param: {
           id: meetupId,
         },
@@ -149,16 +149,16 @@ const MembershipThankyou = () => {
 
   const searchSilentRetreatsAction = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en",
+      pathname: '/us-en',
       query: {
-        courseType: "SILENT_RETREAT",
+        courseType: 'SILENT_RETREAT',
       },
     });
   };
 
   const finishRegistrationAction = () => {
     if (courseId) {
-      if (page === "detail") {
+      if (page === 'detail') {
         pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/${courseId}`,
         });
@@ -166,7 +166,7 @@ const MembershipThankyou = () => {
         pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/checkout/${courseId}`,
           query: {
-            page: "c-o",
+            page: 'c-o',
           },
         });
       }
@@ -174,7 +174,7 @@ const MembershipThankyou = () => {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${meetupId}`,
         query: {
-          page: "c-o",
+          page: 'c-o',
         },
       });
     }
@@ -187,18 +187,18 @@ const MembershipThankyou = () => {
   };
 
   const getEventImage = () => {
-    if (courseDetail.eventType === "Meetup") {
+    if (courseDetail.eventType === 'Meetup') {
       switch (courseDetail.meetupType) {
-        case "Short SKY Meditation Meetup":
+        case 'Short SKY Meditation Meetup':
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
-        case "Guided Meditation Meetup":
+        case 'Guided Meditation Meetup':
           return (
             <img src="/img/Sahaj_meetup_desktop.png" alt="card" layout="fill" />
           );
         default:
           return <img src="/img/SKY_Meetup_desktop.png" alt="card" />;
       }
-    } else if (courseDetail.eventType === "Workshop") {
+    } else if (courseDetail.eventType === 'Workshop') {
       if (
         `${COURSE_TYPES.SILENT_RETREAT.value}`.indexOf(
           courseDetail.productTypeId,
@@ -226,15 +226,15 @@ const MembershipThankyou = () => {
 
   const handleiOSAppClick = () => {
     window.open(
-      "https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1",
-      "_blank",
+      'https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1',
+      '_blank',
     );
   };
 
   const handleAndroidAppClick = () => {
     window.open(
-      "https://play.google.com/store/apps/details?id=com.aol.app",
-      "_blank",
+      'https://play.google.com/store/apps/details?id=com.aol.app',
+      '_blank',
     );
   };
 
@@ -264,11 +264,11 @@ const MembershipThankyou = () => {
       <section
         className={
           isDigitalMembership
-            ? "congratulations"
-            : classNames("journey-confirmation", {
-                "journey-confirmation_v2":
+            ? 'congratulations'
+            : classNames('journey-confirmation', {
+                'journey-confirmation_v2':
                   courseId === null && meetupId === null,
-                "journey-confirmation_v1": !!courseId || !!meetupId,
+                'journey-confirmation_v1': !!courseId || !!meetupId,
               })
         }
       >
@@ -276,9 +276,9 @@ const MembershipThankyou = () => {
           <div className="row">
             <div
               className={classNames({
-                "col-12 col-md-10 mx-auto":
+                'col-12 col-md-10 mx-auto':
                   courseId === null && meetupId === null,
-                "col-11 mx-auto": !!courseId || !!meetupId,
+                'col-11 mx-auto': !!courseId || !!meetupId,
               })}
             >
               {afterBuyMessageHeader && (
@@ -290,23 +290,23 @@ const MembershipThankyou = () => {
               <div
                 className={
                   isDigitalMembership
-                    ? "congratulations__card mx-auto"
-                    : "journey-confirmation__card mx-auto"
+                    ? 'congratulations__card mx-auto'
+                    : 'journey-confirmation__card mx-auto'
                 }
               >
                 <div
                   className={
                     isDigitalMembership
-                      ? "congratulations__info"
-                      : "journey-confirmation__info"
+                      ? 'congratulations__info'
+                      : 'journey-confirmation__info'
                   }
                 >
                   {!courseId && !meetupId && afterBuyMessageBody && (
                     <p
                       className={
                         isDigitalMembership
-                          ? "congratulations__info-text congratulations__info-text_left"
-                          : "journey-confirmation__info-text"
+                          ? 'congratulations__info-text congratulations__info-text_left'
+                          : 'journey-confirmation__info-text'
                       }
                       dangerouslySetInnerHTML={{ __html: afterBuyMessageBody }}
                     ></p>
@@ -315,11 +315,11 @@ const MembershipThankyou = () => {
                     <p
                       className={
                         isDigitalMembership
-                          ? "congratulations__info-text congratulations__info-text_left"
-                          : "journey-confirmation__info-text"
+                          ? 'congratulations__info-text congratulations__info-text_left'
+                          : 'journey-confirmation__info-text'
                       }
                     >
-                      You’re just one step away from completing your{" "}
+                      You’re just one step away from completing your{' '}
                       {workshopDetail.title} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
@@ -328,11 +328,11 @@ const MembershipThankyou = () => {
                     <p
                       className={
                         isDigitalMembership
-                          ? "congratulations__info-text congratulations__info-text_left"
-                          : "journey-confirmation__info-text"
+                          ? 'congratulations__info-text congratulations__info-text_left'
+                          : 'journey-confirmation__info-text'
                       }
                     >
-                      You’re just one step away from completing your{" "}
+                      You’re just one step away from completing your{' '}
                       {courseDetail.meetupTitle} registration. If you are not
                       automatically redirected, please click the button below.
                     </p>
@@ -340,8 +340,8 @@ const MembershipThankyou = () => {
                   <div
                     className={
                       isDigitalMembership
-                        ? "congratulations__info_bottom"
-                        : "journey-confirmation__info_bottom"
+                        ? 'congratulations__info_bottom'
+                        : 'journey-confirmation__info_bottom'
                     }
                   >
                     {subscriptionMasterSfid ===
@@ -423,20 +423,20 @@ const MembershipThankyou = () => {
                   <div className="journey-confirmation__image">
                     {dayjs
                       .utc(eventStartDate)
-                      .isSame(dayjs.utc(eventEndDate), "month") && (
+                      .isSame(dayjs.utc(eventEndDate), 'month') && (
                       <span className="journey-confirmation__date">
-                        {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                        {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                           .utc(eventEndDate)
-                          .format("DD, YYYY")}`}
+                          .format('DD, YYYY')}`}
                       </span>
                     )}
                     {!dayjs
                       .utc(eventStartDate)
-                      .isSame(dayjs.utc(eventEndDate), "month") && (
+                      .isSame(dayjs.utc(eventEndDate), 'month') && (
                       <span className="journey-confirmation__date">
-                        {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                        {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                           .utc(eventEndDate)
-                          .format("MMMM DD, YYYY")}`}
+                          .format('MMMM DD, YYYY')}`}
                       </span>
                     )}
                     <img src="/img/journey-card-img-v2.png" alt="card" />
@@ -456,7 +456,7 @@ const MembershipThankyou = () => {
                 {meetupId && (
                   <div className="journey-confirmation__image">
                     <span className="journey-confirmation__date">
-                      {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
+                      {`${dayjs.utc(meetupStartDate).format('MMMM DD')}, `}
                       {`${tConvert(meetupStartTime)}`}
                     </span>
                     {getEventImage()}
@@ -508,27 +508,27 @@ const MembershipThankyou = () => {
               <>
                 {dayjs
                   .utc(eventStartDate)
-                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  .isSame(dayjs.utc(eventEndDate), 'month') && (
                   <span className="journey-confirmation_mobile__date">
-                    {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                    {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                       .utc(eventEndDate)
-                      .format("DD, YYYY")}`}
+                      .format('DD, YYYY')}`}
                   </span>
                 )}
                 {!dayjs
                   .utc(eventStartDate)
-                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  .isSame(dayjs.utc(eventEndDate), 'month') && (
                   <span className="journey-confirmation_mobile__date">
-                    {`${dayjs.utc(eventStartDate).format("MMMM DD")}-${dayjs
+                    {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
                       .utc(eventEndDate)
-                      .format("MMMM DD, YYYY")}`}
+                      .format('MMMM DD, YYYY')}`}
                   </span>
                 )}
               </>
             )}
             {meetupId && (
               <span className="journey-confirmation_mobile__date">
-                {`${dayjs.utc(meetupStartDate).format("MMMM DD")}, `}
+                {`${dayjs.utc(meetupStartDate).format('MMMM DD')}, `}
                 {`${tConvert(meetupStartTime)}`}
               </span>
             )}

@@ -1,16 +1,16 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { Popup } from "@components";
-import { LinkedCalendar } from "@components/dateRangePicker";
-import { ABBRS, COURSE_MODES, MODAL_TYPES } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { priceCalculation, tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import queryString from "query-string";
+import { Popup } from '@components';
+import { LinkedCalendar } from '@components/dateRangePicker';
+import { ABBRS, COURSE_MODES, MODAL_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { priceCalculation, tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import queryString from 'query-string';
 
 dayjs.extend(utc);
 
@@ -28,13 +28,13 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
 
   const onDatesChange = (date) => {
     const { startDate, endDate } = date || {};
-    setFilterStartDate(startDate ? startDate.format("YYYY-MM-DD") : null);
-    setFilterEndDate(endDate ? endDate.format("YYYY-MM-DD") : null);
+    setFilterStartDate(startDate ? startDate.format('YYYY-MM-DD') : null);
+    setFilterEndDate(endDate ? endDate.format('YYYY-MM-DD') : null);
   };
 
   const handleSearchDates = () => {
     if (!isSearchDatesDisabled) {
-      let query = { courseType: "SKY_BREATH_MEDITATION" };
+      let query = { courseType: 'SKY_BREATH_MEDITATION' };
       if (filterStartDate) {
         query = {
           ...query,
@@ -45,7 +45,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         query = { ...query, timeZone: timeZoneFilter.value };
       }
       pushRouteWithUTMQuery(router, {
-        pathname: "/us-en",
+        pathname: '/us-en',
         query,
       });
     }
@@ -70,27 +70,27 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
   } = workshop || {};
 
   const datePickerConfig = {
-    opens: "left",
-    drops: "down",
+    opens: 'left',
+    drops: 'down',
     showDropdowns: false,
     showISOWeekNumbers: false,
     showWeekNumbers: false,
     locale: {
-      cancelLabel: "Clear",
-      daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+      cancelLabel: 'Clear',
+      daysOfWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
       monthNames: [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
       ],
     },
     autoApply: true,
@@ -107,7 +107,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -115,13 +115,13 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: "SIGNUP_MODE",
+        defaultView: 'SIGNUP_MODE',
       });
     }
   };
 
   return (
-    <div className={[`course-details ${inPersonCourse ? "in-person" : ""}`]}>
+    <div className={[`course-details ${inPersonCourse ? 'in-person' : ''}`]}>
       <p className="course-details__cost">
         ${fee} {delfee && <span>${delfee}</span>}
       </p>
@@ -133,16 +133,16 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
             <span>
               {dayjs
                 .utc(eventStartDate)
-                .isSame(dayjs.utc(eventEndDate), "month") &&
-                `${dayjs.utc(eventStartDate).format("M/D/YYYY")} - ${dayjs
+                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                `${dayjs.utc(eventStartDate).format('M/D/YYYY')} - ${dayjs
                   .utc(eventEndDate)
-                  .format("M/D/YYYY")}`}
+                  .format('M/D/YYYY')}`}
               {!dayjs
                 .utc(eventStartDate)
-                .isSame(dayjs.utc(eventEndDate), "month") &&
-                `${dayjs.utc(eventStartDate).format("M/DD/YYYY")} - ${dayjs
+                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                `${dayjs.utc(eventStartDate).format('M/DD/YYYY')} - ${dayjs
                   .utc(eventEndDate)
-                  .format("M/DD/YYYY")}`}
+                  .format('M/DD/YYYY')}`}
             </span>
           </p>
         </div>
@@ -156,18 +156,18 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               ) : (
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${
-                    workshop.locationStreet || ""
+                    workshop.locationStreet || ''
                   }, ${workshop.locationCity} ${workshop.locationProvince} ${
                     workshop.locationPostalCode
                   } ${workshop.locationCountry}`}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {`${workshop.locationStreet || ""} ${
-                    workshop.locationCity || ""
+                  {`${workshop.locationStreet || ''} ${
+                    workshop.locationCity || ''
                   }
-                          ${workshop.locationProvince || ""} ${
-                    workshop.locationCountry || ""
+                          ${workshop.locationProvince || ''} ${
+                    workshop.locationCountry || ''
                   }`}
                 </a>
               )}
@@ -180,7 +180,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
             timings.map((time) => {
               return (
                 <p className="course-details__time" key={time.startDate}>
-                  <span>{dayjs.utc(time.startDate).format("ddd, MMM DD")}</span>
+                  <span>{dayjs.utc(time.startDate).format('ddd, MMM DD')}</span>
                   {tConvert(time.startTime)}-{tConvert(time.endTime)}
                   {` (${ABBRS[time.timeZone]})`}
                 </p>
@@ -235,15 +235,15 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           tabIndex="1"
           value={filterStartDate}
           buttonText={
-            filterStartDate ? filterStartDate + " - " + filterEndDate : "Dates"
+            filterStartDate ? filterStartDate + ' - ' + filterEndDate : 'Dates'
           }
           closeEvent={onDatesChange}
           containerClassName="course-details__popup_calendar"
           parentClassName={classNames({
-            "hidden-border": true,
+            'hidden-border': true,
           })}
           buttonTextclassName={classNames({
-            "course-details__filter__button": true,
+            'course-details__filter__button': true,
             active: filterStartDate !== null,
           })}
         >
@@ -261,13 +261,13 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         <Popup
           tabIndex="2"
           value={timeZoneFilter}
-          buttonText={timeZoneFilter ? timeZoneFilter.name : "Time Zone"}
+          buttonText={timeZoneFilter ? timeZoneFilter.name : 'Time Zone'}
           closeEvent={onFilterChange}
           parentClassName={classNames({
-            "hidden-border": true,
+            'hidden-border': true,
           })}
           buttonTextclassName={classNames({
-            "course-details__filter__button": true,
+            'course-details__filter__button': true,
             active: timeZoneFilter !== null,
           })}
         >
@@ -276,8 +276,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               <li
                 className="courses-filter__list-item"
                 onClick={closeHandler({
-                  name: "Eastern",
-                  value: "EST",
+                  name: 'Eastern',
+                  value: 'EST',
                 })}
               >
                 Eastern
@@ -285,8 +285,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               <li
                 className="courses-filter__list-item"
                 onClick={closeHandler({
-                  name: "Central",
-                  value: "CST",
+                  name: 'Central',
+                  value: 'CST',
                 })}
               >
                 Central
@@ -294,8 +294,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               <li
                 className="courses-filter__list-item"
                 onClick={closeHandler({
-                  name: "Mountain",
-                  value: "MST",
+                  name: 'Mountain',
+                  value: 'MST',
                 })}
               >
                 Mountain
@@ -303,8 +303,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               <li
                 className="courses-filter__list-item"
                 onClick={closeHandler({
-                  name: "Pacific",
-                  value: "PST",
+                  name: 'Pacific',
+                  value: 'PST',
                 })}
               >
                 Pacific
@@ -312,8 +312,8 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
               <li
                 className="courses-filter__list-item"
                 onClick={closeHandler({
-                  name: "Hawaii",
-                  value: "HST",
+                  name: 'Hawaii',
+                  value: 'HST',
                 })}
               >
                 Hawaii
@@ -327,7 +327,7 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
         <div className="course-details__submit">
           <button
             type="button"
-            className={classNames("course-details__search", {
+            className={classNames('course-details__search', {
               disabled: isSearchDatesDisabled,
             })}
             onClick={handleSearchDates}

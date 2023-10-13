@@ -1,22 +1,22 @@
 /* eslint-disable react/no-unescaped-entities */
-import classNames from "classnames";
-import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
-import { Accordion, Card, AccordionContext } from "react-bootstrap";
-import { PriceCard } from "./PriceCard";
-import { useContext } from "react";
-import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { priceCalculation } from "@utils";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+import classNames from 'classnames';
+import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
+import { Accordion, Card, AccordionContext } from 'react-bootstrap';
+import { PriceCard } from './PriceCard';
+import { useContext } from 'react';
+import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { FaArrowRightLong } from 'react-icons/fa6';
+import { priceCalculation } from '@utils';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 const swiperOption = {
   modules: [Pagination, A11y],
@@ -53,7 +53,7 @@ export const SahajSamadhi = ({ data }) => {
           pathname: `/us-en/course/checkout/${sfid}`,
           query: {
             ctype: productTypeId,
-            page: "c-o",
+            page: 'c-o',
           },
         });
       } else {
@@ -61,7 +61,7 @@ export const SahajSamadhi = ({ data }) => {
           navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
             router.query,
           )}`,
-          defaultView: "SIGNUP_MODE",
+          defaultView: 'SIGNUP_MODE',
         });
       }
     } else {
@@ -87,7 +87,7 @@ export const SahajSamadhi = ({ data }) => {
     return (
       <h5 className="mb-0">
         <button
-          className={classNames("btn btn-link", {
+          className={classNames('btn btn-link', {
             collapsed: !isCurrentEventKey,
           })}
           onClick={decoratedOnClick}
@@ -153,7 +153,7 @@ export const SahajSamadhi = ({ data }) => {
                 Sahaj translates to "effortless," and Samadhi signifies a state
                 of profound meditation. In simple terms, it's a technique to
                 effortlessly enjoy deep meditation, as well as the profound rest
-                and wealth of other benefits that meditation provides.{" "}
+                and wealth of other benefits that meditation provides.{' '}
               </p>
               <p>
                 You'll receive a personalized mantra, a charged sound, that

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useGlobalBannerContext } from "@contexts";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useGlobalBannerContext } from '@contexts';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export const SurveyRequest = ({ surveyInvite }) => {
   const router = useRouter();
@@ -14,7 +14,7 @@ export const SurveyRequest = ({ surveyInvite }) => {
     showBanner({
       children: (
         <>
-          Share Your Feedback about the Journey App{" "}
+          Share Your Feedback about the Journey App{' '}
           <a
             target="_blank"
             href={shortLink}

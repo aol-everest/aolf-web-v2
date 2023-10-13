@@ -1,16 +1,16 @@
-import { PageLoading } from "@components";
-import { MeetupPaymentForm } from "@components/meetup/meetupPaymentForm";
-import { useAuth } from "@contexts";
-import { withAuth } from "@hoc";
-import { useQueryString } from "@hooks";
-import { replaceRouteWithUTMQuery } from "@service";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { api } from "@utils";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { PageLoading } from '@components';
+import { MeetupPaymentForm } from '@components/meetup/meetupPaymentForm';
+import { useAuth } from '@contexts';
+import { withAuth } from '@hoc';
+import { useQueryString } from '@hooks';
+import { replaceRouteWithUTMQuery } from '@service';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { api } from '@utils';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -72,10 +72,10 @@ const Checkout = () => {
     isError,
     error,
   } = useQuery(
-    "meetupDetail",
+    'meetupDetail',
     async () => {
       const response = await api.get({
-        path: "meetupDetail",
+        path: 'meetupDetail',
         param: {
           id: workshopId,
         },
@@ -87,17 +87,17 @@ const Checkout = () => {
     },
   );
 
-  const [mbsy_source] = useQueryString("mbsy_source");
-  const [campaignid] = useQueryString("campaignid");
-  const [mbsy] = useQueryString("mbsy");
+  const [mbsy_source] = useQueryString('mbsy_source');
+  const [campaignid] = useQueryString('campaignid');
+  const [mbsy] = useQueryString('mbsy');
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/meetup/thankyou/${attendeeId}`,
       query: {
         ctype: meetup.productTypeId,
-        page: "ty",
-        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+        page: 'ty',
+        type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
         campaignid,
         mbsy,
       },
@@ -120,7 +120,7 @@ const Checkout = () => {
               fonts={[
                 {
                   cssSrc:
-                    "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                    'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
                 },
               ]}
             >

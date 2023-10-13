@@ -1,23 +1,23 @@
-import { Radiobox } from "@components/backendPaymentForm/Radiobox";
-import { BackendRegisterationDetail } from "@components/backendRegisterationDetail";
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { replaceRouteWithUTMQuery } from "@service";
-import { api } from "@utils";
-import classNames from "classnames";
-import { Formik } from "formik";
-import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { Radiobox } from '@components/backendPaymentForm/Radiobox';
+import { BackendRegisterationDetail } from '@components/backendRegisterationDetail';
+import { ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { replaceRouteWithUTMQuery } from '@service';
+import { api } from '@utils';
+import classNames from 'classnames';
+import { Formik } from 'formik';
+import { NextSeo } from 'next-seo';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
-import Style from "./Complete.module.scss";
+import Style from './Complete.module.scss';
 
 export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
 
   const { data, attendeeRecord } = await api.get({
-    path: "getWorkshopByAttendee",
+    path: 'getWorkshopByAttendee',
     param: {
       aid: id,
       skipcheck: 1,
@@ -54,13 +54,13 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
         const complianceQuestionnaire = questionnaire.reduce(
           (res, current) => ({
             ...res,
-            [current.key]: current.value ? "Yes" : "No",
+            [current.key]: current.value ? 'Yes' : 'No',
           }),
           {},
         );
 
         const results = await api.post({
-          path: "completeRegisteration",
+          path: 'completeRegisteration',
           body: {
             complianceQuestionnaire,
             password,
@@ -70,7 +70,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
 
         const { status } = results;
 
-        if (status === "error" || status === 400) {
+        if (status === 'error' || status === 400) {
           throw new Error(results.message);
         }
         setInlineLoading(false);
@@ -79,7 +79,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
           pathname: `/us-en/course/thankyou/${attendeeRecord.sfid}`,
           query: {
             ctype: productTypeId,
-            page: "ty",
+            page: 'ty',
           },
         });
       }
@@ -103,8 +103,8 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
       if (match) {
         showAlternativeSearch =
           showAlternativeSearch ||
-          (match.answerShouldBe !== "Yes" && ques.value) ||
-          (match.answerShouldBe === "Yes" && !ques.value);
+          (match.answerShouldBe !== 'Yes' && ques.value) ||
+          (match.answerShouldBe === 'Yes' && !ques.value);
       }
     });
 
@@ -112,7 +112,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
   };
 
   const getPriceView = () => {
-    return <p>Fee: ${ammountPaid || "0"}</p>;
+    return <p>Fee: ${ammountPaid || '0'}</p>;
   };
 
   const questionnaire = complianceQuestionnaire
@@ -135,7 +135,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
           noimageindex: true,
           noarchive: true,
           maxSnippet: -1,
-          maxImagePreview: "none",
+          maxImagePreview: 'none',
           maxVideoPreview: -1,
         }}
       />
@@ -153,7 +153,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                 lastName: last_name,
                 email: personemail,
                 questionnaire: questionnaire,
-                agreement: "agreement",
+                agreement: 'agreement',
               }}
               onSubmit={async (values, { setSubmitting }) => {
                 await completeRegisterationStep2(values);
@@ -175,9 +175,9 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                       <div className="col-sm-6">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error":
+                              'text-input-error':
                                 errors.firstName && touched.firstName,
                             },
                           )}
@@ -194,7 +194,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                           <label htmlFor="firstName">
                             {errors.firstName && touched.firstName
                               ? errors.firstName
-                              : "First Name"}
+                              : 'First Name'}
                           </label>
                         </div>
                       </div>
@@ -202,9 +202,9 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                       <div className="col-sm-6">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error":
+                              'text-input-error':
                                 errors.lastName && touched.lastName,
                             },
                           )}
@@ -221,16 +221,16 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                           <label htmlFor="lastName">
                             {errors.lastName && touched.lastName
                               ? errors.lastName
-                              : "Last Name"}
+                              : 'Last Name'}
                           </label>
                         </div>
                       </div>
                       <div className="col-sm-12">
                         <div
                           className={classNames(
-                            "input-group inputLabel_place",
+                            'input-group inputLabel_place',
                             {
-                              "text-input-error": errors.email && touched.email,
+                              'text-input-error': errors.email && touched.email,
                             },
                           )}
                         >
@@ -246,7 +246,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                           <label htmlFor="email">
                             {errors.email && touched.email
                               ? errors.email
-                              : "Email"}
+                              : 'Email'}
                           </label>
                         </div>
                       </div>
@@ -265,7 +265,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                                       name="questionnaire"
                                       value={compliance.questionSfid}
                                     />
-                                    {"   "}
+                                    {'   '}
                                     <div
                                       className={Style.wrapNote}
                                       dangerouslySetInnerHTML={{
@@ -277,7 +277,7 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                               ))}
                               <p className="alrtCondi tw-mt-4">
                                 For any health related questions, please contact
-                                us at{" "}
+                                us at{' '}
                                 <a href="mailto:healthinfo@us.artofliving.org">
                                   healthinfo@us.artofliving.org.
                                 </a>
@@ -304,10 +304,10 @@ const BackEndCheckoutComplete = ({ workshop = {}, attendeeRecord = {} }) => {
                           <p className={Style.agreementNote}>
                             <Radiobox
                               name="agreement"
-                              value={"agreement"}
+                              value={'agreement'}
                               dtype={1}
                             />
-                            I agree to{" "}
+                            I agree to{' '}
                             <a href="/us/ts-cs" target="_blank">
                               Program Participant agreement including privacy
                               policy

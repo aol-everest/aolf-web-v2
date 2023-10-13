@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
-import { usePopper } from "react-popper";
+import classNames from 'classnames';
+import { useEffect, useRef, useState } from 'react';
+import { usePopper } from 'react-popper';
 
 export const Popup = (props) => {
   const {
@@ -8,10 +8,10 @@ export const Popup = (props) => {
     tabindex,
     children,
     value,
-    containerClassName = "",
+    containerClassName = '',
     showId,
-    parentClassName = "",
-    buttonTextclassName = "",
+    parentClassName = '',
+    buttonTextclassName = '',
     showList = true,
   } = props;
 
@@ -24,17 +24,17 @@ export const Popup = (props) => {
     referenceRef.current,
     popperRef.current,
     {
-      placement: "bottom",
+      placement: 'bottom',
       modifiers: [
         {
-          name: "arrow",
+          name: 'arrow',
           enabled: true,
           options: {
             element: arrowRef.current,
           },
         },
         {
-          name: "offset",
+          name: 'offset',
           enabled: true,
           options: {
             offset: [0, 10],
@@ -45,9 +45,9 @@ export const Popup = (props) => {
   );
   useEffect(() => {
     // listen for clicks and close dropdown on body
-    document.addEventListener("mousedown", handleDocumentClick);
+    document.addEventListener('mousedown', handleDocumentClick);
     return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
+      document.removeEventListener('mousedown', handleDocumentClick);
     };
   }, []);
 
@@ -83,9 +83,9 @@ export const Popup = (props) => {
       <div
         ref={referenceRef}
         tabIndex={tabindex}
-        className={classNames("courses-filter", parentClassName, {
+        className={classNames('courses-filter', parentClassName, {
           active: visible,
-          "with-selected": value,
+          'with-selected': value,
         })}
       >
         {value && (
@@ -124,9 +124,9 @@ export const Popup = (props) => {
         {showList && (
           <div className="courses-filter__wrapper-list">
             <ul
-              id={showId ? "time-tooltip" : ""}
+              id={showId ? 'time-tooltip' : ''}
               className={classNames(
-                "courses-filter__list",
+                'courses-filter__list',
                 containerClassName,
                 {
                   active: visible,

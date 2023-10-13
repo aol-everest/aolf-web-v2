@@ -1,38 +1,38 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import { AddToCalendarModal, PageLoading } from "@components";
+import { AddToCalendarModal, PageLoading } from '@components';
 import {
   InPersonGenericCourse,
   OnlineCourse,
   SKYBreathMeditation,
   SahajSamadhi,
   SilentRetreat,
-} from "@components/coursethankYouDetails";
-import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { api, calculateBusinessDays, tConvert } from "@utils";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import utc from "dayjs/plugin/utc";
-import moment from "moment";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { useQueryString } from "@hooks";
-import { useEffectOnce } from "react-use";
-import { useAnalytics } from "use-analytics";
+} from '@components/coursethankYouDetails';
+import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import { api, calculateBusinessDays, tConvert } from '@utils';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import utc from 'dayjs/plugin/utc';
+import moment from 'moment';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { useQueryString } from '@hooks';
+import { useEffectOnce } from 'react-use';
+import { useAnalytics } from 'use-analytics';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 
 const renderVideo = (productTypeId) => {
   switch (productTypeId) {
-    case "811570":
-    case "1001309":
-    case "1008432":
+    case '811570':
+    case '1001309':
+    case '1008432':
       return (
         <iframe
           src="https://player.vimeo.com/video/432237531"
@@ -43,7 +43,7 @@ const renderVideo = (productTypeId) => {
           allowFullScreen
         ></iframe>
       );
-    case "811569":
+    case '811569':
       return (
         <iframe
           src="https://player.vimeo.com/video/411549679"
@@ -54,7 +54,7 @@ const renderVideo = (productTypeId) => {
           allowFullScreen
         ></iframe>
       );
-    case "999649":
+    case '999649':
       return (
         <img
           src="/img/SahajSamadhi.png"
@@ -73,8 +73,8 @@ const Thankyou = () => {
   const router = useRouter();
   const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const [paymentIntent] = useQueryString("payment_intent");
-  const [courseType] = useQueryString("courseType");
+  const [paymentIntent] = useQueryString('payment_intent');
+  const [courseType] = useQueryString('courseType');
   const { id: workshopId } = router.query;
   const {
     data: workshop,
@@ -82,13 +82,13 @@ const Thankyou = () => {
     isError,
     error,
   } = useQuery(
-    "workshopDetail",
+    'workshopDetail',
     async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           id: workshopId,
-          rp: "checkout",
+          rp: 'checkout',
         },
         isUnauthorized: true,
       });
@@ -102,11 +102,11 @@ const Thankyou = () => {
 
   useEffectOnce(() => {
     page({
-      category: "course_registration",
-      name: "course_registration_thank_you",
+      category: 'course_registration',
+      name: 'course_registration_thank_you',
       payment_intent: paymentIntent,
       course_type: courseType,
-      referral: "course_search_scheduling",
+      referral: 'course_search_scheduling',
     });
   });
 
@@ -164,39 +164,39 @@ const Thankyou = () => {
 
   let startDatetime = null;
   if (eventStartDateTimeGMT) {
-    startDatetime = moment.utc(`${eventStartDateTimeGMT || ""}`);
+    startDatetime = moment.utc(`${eventStartDateTimeGMT || ''}`);
   } else if (eventStartDate) {
     startDatetime = moment.utc(
-      `${eventStartDate || ""} ${eventStartTime || ""}`,
+      `${eventStartDate || ''} ${eventStartTime || ''}`,
     );
   } else {
-    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`);
+    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ''}`);
   }
   let endDatetime = null;
   if (eventendDateTimeGMT) {
-    endDatetime = moment.utc(`${eventendDateTimeGMT || ""}`);
+    endDatetime = moment.utc(`${eventendDateTimeGMT || ''}`);
   } else if (eventEndDate) {
-    endDatetime = moment.utc(`${eventEndDate || ""} ${eventEndTime || ""}`);
+    endDatetime = moment.utc(`${eventEndDate || ''} ${eventEndTime || ''}`);
   } else {
-    endDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`).add(2, "hours");
+    endDatetime = moment.utc(`${meetupStartDateTimeGMT || ''}`).add(2, 'hours');
   }
 
   const event = {
-    timezone: "Etc/GMT",
+    timezone: 'Etc/GMT',
     description: newTitle,
     duration,
-    endDatetime: endDatetime.format("YYYYMMDDTHHmmss"),
-    location: `${streetAddress1 || ""} ${streetAddress2 || ""} ${city || ""} ${
-      country || ""
+    endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
+    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
+      country || ''
     }`,
-    startDatetime: startDatetime.format("YYYYMMDDTHHmmss"),
+    startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
 
   const addToCalendarAction = (e) => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Add to Calendar",
+      title: 'Add to Calendar',
 
       children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
@@ -204,19 +204,19 @@ const Thankyou = () => {
       },
     });
 
-    track("click_button", {
-      screen_name: "course_registration_thank_you",
-      event_target: "add_to_calendar_button",
+    track('click_button', {
+      screen_name: 'course_registration_thank_you',
+      event_target: 'add_to_calendar_button',
       course_type: courseType,
       payment_intent: paymentIntent,
-      referral: "course_scheduling_checkout",
+      referral: 'course_scheduling_checkout',
     });
   };
 
   const showTiming = (timeZone, option) => {
     let weekdayTiming = (
       <p className="program_card_subtitle c_text c_timing">
-        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{" "}
+        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{' '}
         {option.weekendStartTime &&
           calculateBusinessDays(
             dayjs.utc(option.startDate),
@@ -226,7 +226,7 @@ const Thankyou = () => {
     );
     let weekendTiming = option.weekendStartTime && (
       <p className="program_card_subtitle c_text c_timing">
-        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{" "}
+        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{' '}
         {
           calculateBusinessDays(
             dayjs.utc(option.startDate),
@@ -260,9 +260,9 @@ const Thankyou = () => {
       return (
         <>
           <p className="program_card_subtitle c_text">
-            {dayjs.utc(selectedTimeSlot.startDate).format("MMM D") +
-              " - " +
-              dayjs.utc(selectedTimeSlot.endDate).format("D, YYYY")}
+            {dayjs.utc(selectedTimeSlot.startDate).format('MMM D') +
+              ' - ' +
+              dayjs.utc(selectedTimeSlot.endDate).format('D, YYYY')}
           </p>
           <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
         </>
@@ -289,8 +289,8 @@ const Thankyou = () => {
 
   const handleSecondCourseRedirection = () => {
     const secondCourseType = isSKYType
-      ? "SAHAJ_SAMADHI_MEDITATION"
-      : "SKY_BREATH_MEDITATION";
+      ? 'SAHAJ_SAMADHI_MEDITATION'
+      : 'SKY_BREATH_MEDITATION';
 
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course`,
@@ -305,22 +305,22 @@ const Thankyou = () => {
   };
 
   const iosAppDownloadAction = () => {
-    track("click_button", {
-      screen_name: "course_registration_thank_you",
-      event_target: "ios_app_link",
+    track('click_button', {
+      screen_name: 'course_registration_thank_you',
+      event_target: 'ios_app_link',
       course_type: courseType,
       payment_intent: paymentIntent,
-      referral: "course_scheduling_checkout",
+      referral: 'course_scheduling_checkout',
     });
   };
 
   const androidAppDownloadAction = () => {
-    track("click_button", {
-      screen_name: "course_registration_thank_you",
-      event_target: "android_app_link",
+    track('click_button', {
+      screen_name: 'course_registration_thank_you',
+      event_target: 'android_app_link',
       course_type: courseType,
       payment_intent: paymentIntent,
-      referral: "course_scheduling_checkout",
+      referral: 'course_scheduling_checkout',
     });
   };
 
@@ -336,7 +336,7 @@ const Thankyou = () => {
             noimageindex: true,
             noarchive: true,
             maxSnippet: -1,
-            maxImagePreview: "none",
+            maxImagePreview: 'none',
             maxVideoPreview: -1,
           }}
         />
@@ -353,13 +353,13 @@ const Thankyou = () => {
                         {title}
                       </h1>
                       <p className="get-started__text">
-                        You're registered for the {title}{" "}
+                        You're registered for the {title}{' '}
                         {!isGenericWorkshop &&
                           !isMeditationDeluxe &&
                           !gatewayToInfinity && (
                             <>
-                              {" "}
-                              from {formattedStartDateOnly} -{" "}
+                              {' '}
+                              from {formattedStartDateOnly} -{' '}
                               {formattedEndDateOnly}
                             </>
                           )}
@@ -381,11 +381,11 @@ const Thankyou = () => {
                         your {title}.
                       </p>
                     </div>
-                    {orgConfig.name !== "HB" && (
+                    {orgConfig.name !== 'HB' && (
                       <>
                         <p className="get-started__text">
                           <br />
-                          To get started, download the app.{" "}
+                          To get started, download the app.{' '}
                           {isGenericWorkshop && (
                             <>
                               <span>
@@ -484,11 +484,11 @@ const Thankyou = () => {
                   !isMeditationDeluxe &&
                   !gatewayToInfinity && (
                     <p>
-                      {dayjs.utc(eventStartDate).format("MMMM D") +
-                        " - " +
-                        dayjs.utc(eventEndDate).format("MMMM D") +
-                        ", " +
-                        dayjs.utc(eventEndDate).format("YYYY")}
+                      {dayjs.utc(eventStartDate).format('MMMM D') +
+                        ' - ' +
+                        dayjs.utc(eventEndDate).format('MMMM D') +
+                        ', ' +
+                        dayjs.utc(eventEndDate).format('YYYY')}
                     </p>
                   )}
                 <div>

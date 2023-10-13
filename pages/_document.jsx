@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-css-tags */
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { orgConfig } from "@org";
-import Document, { Head, Html, Main, NextScript } from "next/document";
+import { orgConfig } from '@org';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 class CustomDocument extends Document {
   static async getInitialProps(ctx) {
@@ -55,7 +55,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           ></link>
           <meta name="msapplication-TileColor" content="#da532c"></meta>
           <meta name="theme-color" content="#da532c"></meta>
-          <meta name="referrer" content={"strict-origin"} />
+          <meta name="referrer" content={'strict-origin'} />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta
             name="apple-mobile-web-app-status-bar-style"
@@ -112,7 +112,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
               height="0"
               width="0"
-              style={{ display: "none", visibility: "hidden" }}
+              style={{ display: 'none', visibility: 'hidden' }}
             ></iframe>
           </noscript>
         </body>

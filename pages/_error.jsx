@@ -1,5 +1,5 @@
-import * as Sentry from "@sentry/nextjs";
-import NextErrorComponent from "next/error";
+import * as Sentry from '@sentry/nextjs';
+import NextErrorComponent from 'next/error';
 
 const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
   if (!hasGetInitialPropsRun && err) {
@@ -18,7 +18,7 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
           <h2 className="not-found-sub-heading">
             {statusCode
               ? `An error ${statusCode} occurred on server`
-              : "An error occurred on client"}
+              : 'An error occurred on client'}
           </h2>
         </div>
         <div className="tw-mt-2 tw-text-left tw-text-xs tw-text-red-400">

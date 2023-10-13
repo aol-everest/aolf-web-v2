@@ -1,7 +1,7 @@
-import { Field } from "formik";
-import { Fragment } from "react";
-import { PhoneNumberInputField } from "./PhoneNumberInputField";
-import { StyledInput } from "./StyledInput";
+import { Field } from 'formik';
+import { Fragment } from 'react';
+import { PhoneNumberInputField } from './PhoneNumberInputField';
+import { StyledInput } from './StyledInput';
 
 export const UserInfoForm = ({
   formikProps,
@@ -45,7 +45,7 @@ export const UserInfoForm = ({
         component={PhoneNumberInputField}
         tip={
           isHBCheckout
-            ? "This number will be used to send reminder texts"
+            ? 'This number will be used to send reminder texts'
             : null
         }
       />

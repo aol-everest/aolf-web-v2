@@ -1,11 +1,11 @@
-import { secondsToHms } from "@utils";
-import { useState } from "react";
-import HTMLEllipsis from "react-lines-ellipsis/lib/html";
-import * as RemoveMarkdown from "remove-markdown";
+import { secondsToHms } from '@utils';
+import { useState } from 'react';
+import HTMLEllipsis from 'react-lines-ellipsis/lib/html';
+import * as RemoveMarkdown from 'remove-markdown';
 
 export const ChapterItem = ({ chapter, playChapterAction }) => {
   const [showFull, setShowFull] = useState(false);
-  const desc = chapter.description ? RemoveMarkdown(chapter.description) : "";
+  const desc = chapter.description ? RemoveMarkdown(chapter.description) : '';
 
   const readMoreAction = () => {
     setShowFull(true);
@@ -32,7 +32,7 @@ export const ChapterItem = ({ chapter, playChapterAction }) => {
         </div>
         <div className="insight-item-details">
           <p className="card-duration">
-            <img src="/img/ic-video.svg" alt="" />{" "}
+            <img src="/img/ic-video.svg" alt="" />{' '}
             {Math.floor(chapter.duration / 60)} mins
           </p>
           <h5 className="card-title">{chapter.title}</h5>
@@ -76,7 +76,7 @@ export const ChapterItem = ({ chapter, playChapterAction }) => {
         </div>
         <div className="insight-item-details">
           <p className="card-duration">
-            <img src="/img/ic-video.svg" alt="" />{" "}
+            <img src="/img/ic-video.svg" alt="" />{' '}
             {secondsToHms(chapter.duration)}
           </p>
           <h5 className="card-title">{chapter.title}</h5>
@@ -115,7 +115,7 @@ export const ChapterItem = ({ chapter, playChapterAction }) => {
       </div>
       <div className="insight-item-details">
         <p className="card-duration">
-          <img src="/img/ic-video.svg" alt="" />{" "}
+          <img src="/img/ic-video.svg" alt="" />{' '}
           {Math.floor(chapter.duration / 60)} mins
         </p>
         <h5 className="card-title">{chapter.title}</h5>

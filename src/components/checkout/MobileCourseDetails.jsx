@@ -3,11 +3,11 @@ import {
   COURSE_MODES,
   COURSE_TYPES,
   MEMBERSHIP_TYPES,
-} from "@constants";
-import { tConvert } from "@utils";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+} from '@constants';
+import { tConvert } from '@utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
@@ -48,7 +48,7 @@ const CourseFeeRender = ({
                     <span className="discount">
                       ${delfee || premiumRate.listPrice}
                     </span>
-                  )}{" "}
+                  )}{' '}
                 ${premiumRate.unitPrice}
               </span>
             </h3>
@@ -178,7 +178,7 @@ export const MobileCourseDetails = ({
     primaryTeacherEmail,
   } = workshop || {};
 
-  const day = meetupStartDateTime && meetupStartDateTime.split(",")[0];
+  const day = meetupStartDateTime && meetupStartDateTime.split(',')[0];
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
@@ -188,28 +188,28 @@ export const MobileCourseDetails = ({
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
   let modalStyle = {
-    backgroundPositionY: "-12px",
-    color: "#000000",
+    backgroundPositionY: '-12px',
+    color: '#000000',
   };
   if (isSilentRetreatType) {
     modalStyle = {
       ...modalStyle,
-      backgroundImage: "url(/img/course-card-4.png)",
+      backgroundImage: 'url(/img/course-card-4.png)',
     };
   } else if (isSahajSamadhiMeditationType) {
     modalStyle = {
       ...modalStyle,
-      backgroundImage: "url(/img/course-card-5.png)",
+      backgroundImage: 'url(/img/course-card-5.png)',
     };
   } else if (isSKYType) {
     modalStyle = {
       ...modalStyle,
-      backgroundImage: "url(/img/course-card-2.png)",
+      backgroundImage: 'url(/img/course-card-2.png)',
     };
   }
 
   return (
-    <div className={classNames("mobile-modal active show")}>
+    <div className={classNames('mobile-modal active show')}>
       <div className="mobile-modal__header" style={{ ...modalStyle }}>
         <div className="close-modal" onClick={closeDetailAction}>
           <div className="close-line"></div>
@@ -231,28 +231,28 @@ export const MobileCourseDetails = ({
         {!isGenericWorkshop && (
           <>
             <div className="course-detail">
-              Your course:{" "}
+              Your course:{' '}
               {meetupStartDate && dayjs.utc(meetupStartDate) ? (
-                <span>{`${dayjs.utc(meetupStartDate).format("MMMM DD")}, ${dayjs
+                <span>{`${dayjs.utc(meetupStartDate).format('MMMM DD')}, ${dayjs
                   .utc(meetupStartDate)
-                  .format("YYYY")}`}</span>
+                  .format('YYYY')}`}</span>
               ) : (
                 <>
                   {dayjs
                     .utc(eventStartDate)
-                    .isSame(dayjs.utc(eventEndDate), "month") && (
+                    .isSame(dayjs.utc(eventEndDate), 'month') && (
                     <span>{`${dayjs
                       .utc(eventStartDate)
-                      .format("MMMM DD")}`}</span>
+                      .format('MMMM DD')}`}</span>
                   )}
                   {!dayjs
                     .utc(eventStartDate)
-                    .isSame(dayjs.utc(eventEndDate), "month") && (
+                    .isSame(dayjs.utc(eventEndDate), 'month') && (
                     <span>{`${dayjs
                       .utc(eventStartDate)
-                      .format("MMMM DD")}-${dayjs
+                      .format('MMMM DD')}-${dayjs
                       .utc(eventEndDate)
-                      .format("MMMM DD, YYYY")}`}</span>
+                      .format('MMMM DD, YYYY')}`}</span>
                   )}
                 </>
               )}
@@ -265,7 +265,7 @@ export const MobileCourseDetails = ({
                   return (
                     <>
                       <span>
-                        {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
+                        {`${dayjs.utc(time.startDate).format('dd')}: ${tConvert(
                           time.startTime,
                         )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
                       </span>
@@ -296,7 +296,7 @@ export const MobileCourseDetails = ({
                 Location:
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${
-                    workshop.locationStreet || ""
+                    workshop.locationStreet || ''
                   }, ${workshop.locationCity} ${workshop.locationProvince} ${
                     workshop.locationPostalCode
                   } ${workshop.locationCountry}`}
@@ -307,10 +307,10 @@ export const MobileCourseDetails = ({
                     <span>{workshop.locationStreet}</span>
                   )}
                   <span>
-                    {workshop.locationCity || ""}
-                    {", "}
-                    {workshop.locationProvince || ""}{" "}
-                    {workshop.locationPostalCode || ""}
+                    {workshop.locationCity || ''}
+                    {', '}
+                    {workshop.locationProvince || ''}{' '}
+                    {workshop.locationPostalCode || ''}
                   </span>
                 </a>
               </div>
@@ -320,8 +320,8 @@ export const MobileCourseDetails = ({
                 Location:
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${
-                    workshop.streetAddress1 || ""
-                  },${workshop.streetAddress2 || ""} ${workshop.city} ${
+                    workshop.streetAddress1 || ''
+                  },${workshop.streetAddress2 || ''} ${workshop.city} ${
                     workshop.state
                   } ${workshop.zip} ${workshop.country}`}
                   target="_blank"
@@ -334,9 +334,9 @@ export const MobileCourseDetails = ({
                     <span>{workshop.streetAddress2}</span>
                   )}
                   <span>
-                    {workshop.city || ""}
-                    {", "}
-                    {workshop.state || ""} {workshop.zip || ""}
+                    {workshop.city || ''}
+                    {', '}
+                    {workshop.state || ''} {workshop.zip || ''}
                   </span>
                 </a>
               </div>
@@ -382,7 +382,7 @@ export const MobileCourseDetails = ({
         <div className="course-more word-wrap">
           {notes && (
             <>
-              Additional Notes:{" "}
+              Additional Notes:{' '}
               <span dangerouslySetInnerHTML={{ __html: notes }}></span>
             </>
           )}

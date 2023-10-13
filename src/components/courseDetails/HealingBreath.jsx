@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
-import { COURSE_TYPES, MODAL_TYPES } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { Link } from "react-scroll";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { CourseBottomCard } from "./CourseBottomCard";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { ResearchPaginationHB } from "./ResearchPaginationHB";
+import { HideOn } from '@components';
+import { COURSE_TYPES, MODAL_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { Link } from 'react-scroll';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { CourseBottomCard } from './CourseBottomCard';
+import CourseDetailsCard from './CourseDetailsCard';
+import { ResearchPaginationHB } from './ResearchPaginationHB';
 
 export const HealingBreath = ({ data, swiperOption }) => {
   const { authenticated = false } = useAuth();
@@ -26,7 +26,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     } else {
@@ -34,7 +34,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
         navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: "SIGNUP_MODE",
+        defaultView: 'SIGNUP_MODE',
       });
     }
   };
@@ -47,7 +47,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
       delay: 2000,
     },
     pagination: {
-      el: ".research__list-pagination",
+      el: '.research__list-pagination',
       clickable: true,
     },
   };
@@ -467,7 +467,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   className="research__quote"
                   onClick={() =>
                     window.open(
-                      "https://news.yale.edu/2020/07/27/improve-students-mental-health-yale-study-finds-teach-them-breathe",
+                      'https://news.yale.edu/2020/07/27/improve-students-mental-health-yale-study-finds-teach-them-breathe',
                     )
                   }
                 >
@@ -482,7 +482,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                   className="research__quote"
                   onClick={() =>
                     window.open(
-                      "https://news.stanford.edu/news/2014/september/meditation-helps-ptsd-090514.html",
+                      'https://news.stanford.edu/news/2014/september/meditation-helps-ptsd-090514.html',
                     )
                   }
                 >
@@ -496,7 +496,7 @@ export const HealingBreath = ({ data, swiperOption }) => {
                 <p
                   className="research__quote"
                   onClick={() =>
-                    window.open("https://hms.harvard.edu/news/be-kind-unwind")
+                    window.open('https://hms.harvard.edu/news/be-kind-unwind')
                   }
                 >
                   "Be Kind and Unwind"

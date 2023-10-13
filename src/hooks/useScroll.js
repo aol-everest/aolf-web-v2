@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const isValidFunction = (func) => {
-  return func && typeof func === "function";
+  return func && typeof func === 'function';
 };
 
 export function useScroll({ onScroll, onScrollUp, onScrollDown }) {
   const [scroll, setScroll] = useState(
-    typeof window === "undefined" || !window.document
-      ? { x: 0, y: 0, direction: "" }
+    typeof window === 'undefined' || !window.document
+      ? { x: 0, y: 0, direction: '' }
       : {
           x: document.body.getBoundingClientRect().left,
           y: -document.body.getBoundingClientRect().top,
-          direction: "",
+          direction: '',
         },
   );
 
@@ -19,21 +19,21 @@ export function useScroll({ onScroll, onScrollUp, onScrollDown }) {
     const handleScroll = () => {
       setScroll((prevScroll) => {
         const rect =
-          typeof window === "undefined" || !window.document
+          typeof window === 'undefined' || !window.document
             ? { left: 0, top: 0 }
             : document.body.getBoundingClientRect();
         const x = rect.left;
         const y = -rect.top;
-        const direction = prevScroll.y > y ? "up" : "down";
+        const direction = prevScroll.y > y ? 'up' : 'down';
         const newScroll = { x, y, direction };
 
         if (isValidFunction(onScroll)) {
           onScroll(newScroll);
         }
-        if (direction === "up" && isValidFunction(onScrollUp)) {
+        if (direction === 'up' && isValidFunction(onScrollUp)) {
           onScrollUp(newScroll);
         }
-        if (direction === "down" && isValidFunction(onScrollDown)) {
+        if (direction === 'down' && isValidFunction(onScrollDown)) {
           onScrollDown(newScroll);
         }
 
@@ -41,10 +41,10 @@ export function useScroll({ onScroll, onScrollUp, onScrollDown }) {
       });
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, [onScroll, onScrollDown, onScrollUp]);
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const defaultSettings = {
   enableHighAccuracy: false,
@@ -26,7 +26,7 @@ export const useGeolocation = (watch = false, settings = defaultSettings) => {
 
   useEffect(() => {
     if (!navigator || !navigator.geolocation) {
-      setError("Geolocation is not supported");
+      setError('Geolocation is not supported');
       return;
     }
 

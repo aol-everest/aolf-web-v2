@@ -1,1 +1,1 @@
-export { withAuth } from "./withAuth";
+export { withAuth } from './withAuth';

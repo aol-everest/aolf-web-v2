@@ -1,15 +1,15 @@
-import { Loader } from "@components";
-import { Dropdown } from "@components/checkout/Dropdown";
-import { ALERT_TYPES } from "@constants";
-import { useAuth, useGlobalAlertContext } from "@contexts";
-import { api } from "@utils";
-import classNames from "classnames";
-import { Field, Formik } from "formik";
-import ErrorPage from "next/error";
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { WithContext as ReactTags } from "react-tag-input";
-import * as Yup from "yup";
+import { Loader } from '@components';
+import { Dropdown } from '@components/checkout/Dropdown';
+import { ALERT_TYPES } from '@constants';
+import { useAuth, useGlobalAlertContext } from '@contexts';
+import { api } from '@utils';
+import classNames from 'classnames';
+import { Field, Formik } from 'formik';
+import ErrorPage from 'next/error';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { WithContext as ReactTags } from 'react-tag-input';
+import * as Yup from 'yup';
 
 const KeyCodes = {
   TAB: 9,
@@ -20,16 +20,16 @@ const KeyCodes = {
 
 const COURSE_TYPES = [
   {
-    label: "Silent Retreat",
-    value: "SILENT_RETREAT",
+    label: 'Silent Retreat',
+    value: 'SILENT_RETREAT',
   },
   {
-    label: "Sahaj Samadhi",
-    value: "SAHAJ_SAMADHI_MEDITATION",
+    label: 'Sahaj Samadhi',
+    value: 'SAHAJ_SAMADHI_MEDITATION',
   },
   {
-    label: "SKY Breath Meditation",
-    value: "SKY_BREATH_MEDITATION",
+    label: 'SKY Breath Meditation',
+    value: 'SKY_BREATH_MEDITATION',
   },
 ];
 
@@ -55,7 +55,7 @@ const CouponMergeCmp = ({
             if (coupon.isValid) {
               return (
                 <li key={coupon.id}>
-                  Coupon <span className="tw-font-semibold">{coupon.id}</span>{" "}
+                  Coupon <span className="tw-font-semibold">{coupon.id}</span>{' '}
                   is valid for a ${coupon.amount} value.
                 </li>
               );
@@ -64,7 +64,7 @@ const CouponMergeCmp = ({
               <li
                 key={coupon.id}
                 className={classNames({
-                  "tw-text-orange-600": !coupon.isValid,
+                  'tw-text-orange-600': !coupon.isValid,
                 })}
               >
                 Coupon <span className="tw-font-semibold">{coupon.id}</span> is
@@ -113,7 +113,7 @@ const CouponMergeResultCmp = ({
         <div className="text-center">
           <p className="advocate-reward__text mb-4">
             Your rewards code with a value of ${reedemableAmount} has been
-            created for{" "}
+            created for{' '}
             {COURSE_TYPES.find((c) => c.value === workshopType).label}. A
             confirmation email with your rewards code has been sent to
             <span className="d-block">{user.profile.email}.</span>
@@ -142,10 +142,10 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
     <Formik
       initialValues={{
         couponCodes,
-        courseType: "SILENT_RETREAT",
+        courseType: 'SILENT_RETREAT',
       }}
       validationSchema={Yup.object({
-        couponCodes: Yup.array().min(1, "Must have at least 1 coupon"),
+        couponCodes: Yup.array().min(1, 'Must have at least 1 coupon'),
       })}
       enableReinitialize={true}
       onSubmit={async (
@@ -159,19 +159,19 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
         const { values, resetForm } = formikProps;
         const handleCouponSelection = (e, field, form, couponCode) => {
           if (e.target.checked) {
-            form.setFieldValue("couponCodes", [...field.value, couponCode]);
+            form.setFieldValue('couponCodes', [...field.value, couponCode]);
           } else {
             const updatedCoupons = field.value.filter(
               (tag, index) => tag.id !== couponCode.id,
             );
-            form.setFieldValue("couponCodes", [...updatedCoupons]);
+            form.setFieldValue('couponCodes', [...updatedCoupons]);
           }
         };
 
         const { couponCodes: addedCoupons, courseType } = values;
         const isSubmit = addedCoupons.length > 0 && courseType;
         const totalReward =
-          isSubmit && addedCoupons.reduce((a, b) => a + (b["amount"] || 0), 0);
+          isSubmit && addedCoupons.reduce((a, b) => a + (b['amount'] || 0), 0);
 
         const handleSubmit = async (e) => {
           e.preventDefault();
@@ -239,9 +239,9 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
                   </p>
                   <button
                     className={classNames(
-                      "advocate-reward__button align-self-end",
+                      'advocate-reward__button align-self-end',
                       {
-                        "advocate-reward__button--disabled": !isSubmit,
+                        'advocate-reward__button--disabled': !isSubmit,
                       },
                     )}
                     disabled={!isSubmit}
@@ -268,10 +268,10 @@ export const CouponStack = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const { status, data, isLoading, isError, error } = useQuery(
-    "myTalkableCoupons",
+    'myTalkableCoupons',
     async () => {
       const response = await api.get({
-        path: "myTalkableCoupons",
+        path: 'myTalkableCoupons',
       });
       return response;
     },
@@ -282,7 +282,7 @@ export const CouponStack = () => {
 
   useEffect(() => {
     if (
-      status === "success" &&
+      status === 'success' &&
       data.validCoupons &&
       data.validCoupons.length > 0
     ) {
@@ -290,7 +290,7 @@ export const CouponStack = () => {
         return {
           id: coupon.couponCode,
           text: `${coupon.couponCode} ($${coupon.amount})`,
-          className: "success",
+          className: 'success',
           isValid: true,
           amount: coupon.amount,
         };
@@ -306,13 +306,13 @@ export const CouponStack = () => {
     setLoading(true);
     try {
       const result = await api.post({
-        path: "validateCouponsAndGetReedemableAmount",
+        path: 'validateCouponsAndGetReedemableAmount',
         body: {
           couponCodes: couponCodes
             .map((currentValue) => {
               return currentValue.id;
             })
-            .join(","), //"VYAB-4I4F,O4UC-FUWV-8O4W,YAH9-4QNR,YAH9-4QNR",
+            .join(','), //"VYAB-4I4F,O4UC-FUWV-8O4W,YAH9-4QNR,YAH9-4QNR",
           workshopType: courseType,
         },
       });
@@ -324,7 +324,7 @@ export const CouponStack = () => {
           return {
             id: coupon.couponCode,
             text: `${coupon.couponCode} ($${coupon.amount})`,
-            className: coupon.isValid ? "success" : "error",
+            className: coupon.isValid ? 'success' : 'error',
             isValid: coupon.isValid,
             amount: coupon.amount,
           };
@@ -350,22 +350,22 @@ export const CouponStack = () => {
   const mergeAction = async (values, resetForm) => {
     const { couponCodes, courseType } = values;
     const reedemableAmount = couponCodes.reduce(
-      (a, b) => a + (b["amount"] || 0),
+      (a, b) => a + (b['amount'] || 0),
       0,
     );
     setLoading(true);
     try {
       if (reedemableAmount <= 0) {
-        throw new Error("Must have at least 1 valid coupon.");
+        throw new Error('Must have at least 1 valid coupon.');
       }
       const result = await api.post({
-        path: "mergeCoupons",
+        path: 'mergeCoupons',
         body: {
           couponCodes: couponCodes
             .map((currentValue) => {
               return currentValue.id;
             })
-            .join(","), //"VYAB-4I4F,O4UC-FUWV-8O4W,YAH9-4QNR,YAH9-4QNR",
+            .join(','), //"VYAB-4I4F,O4UC-FUWV-8O4W,YAH9-4QNR,YAH9-4QNR",
           workshopType: courseType,
           reedemableAmount,
         },

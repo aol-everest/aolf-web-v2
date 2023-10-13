@@ -32,8 +32,8 @@ const Sitemap = () => {};
 
 export const getServerSideProps = ({ res }) => {
   const baseUrl = {
-    development: "http://localhost:3000",
-    production: "https://mydomain.com",
+    development: 'http://localhost:3000',
+    production: 'https://mydomain.com',
   }[process.env.NODE_ENV];
 
   // const pages = getAllFiles("pages")
@@ -157,7 +157,7 @@ export const getServerSideProps = ({ res }) => {
     </urlset>
   `;
 
-  res.setHeader("Content-Type", "text/xml");
+  res.setHeader('Content-Type', 'text/xml');
   res.write(sitemap);
   res.end();
 

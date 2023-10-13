@@ -2,7 +2,7 @@
   min-height: 900px;
   background-color: #f7f5f4;
   padding: 122px 0 100px 0;
-  background-image: url("/img/how-it-works-bg.png");
+  background-image: url('/img/how-it-works-bg.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position-y: center;
@@ -76,7 +76,7 @@
   }
 
   &.silent-retreat {
-    background-image: url("/img/how-refreshing-silent.png");
+    background-image: url('/img/how-refreshing-silent.png');
 
     .silent-retreat__title {
       font-size: 30px;
@@ -110,7 +110,7 @@
   }
 
   &_alt {
-    background-image: url("/img/how-it-works-bg-alt.jpg");
+    background-image: url('/img/how-it-works-bg-alt.jpg');
   }
 }
 

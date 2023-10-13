@@ -12,26 +12,26 @@ import {
   PreCostDetailsCard,
   ProgramQuestionnaire,
   UserInfoForm,
-} from "@components/checkout";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+} from '@components/checkout';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import {
   CardElement,
   PaymentElement,
   useElements,
   useStripe,
-} from "@stripe/react-stripe-js";
-import { Auth, isEmpty } from "@utils";
-import { filterAllowedParams, removeNull } from "@utils/utmParam";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import queryString from "query-string";
-import { useEffect, useState } from "react";
-import * as Yup from "yup";
-import "yup-phone";
+} from '@stripe/react-stripe-js';
+import { Auth, isEmpty } from '@utils';
+import { filterAllowedParams, removeNull } from '@utils/utmParam';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import { useEffect, useState } from 'react';
+import * as Yup from 'yup';
+import 'yup-phone';
 
-import { Loader } from "@components";
+import { Loader } from '@components';
 import {
   ABBRS,
   COURSE_MODES,
@@ -40,34 +40,34 @@ import {
   MODAL_TYPES,
   PAYMENT_MODES,
   PAYMENT_TYPES,
-} from "@constants";
+} from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
-import { useQueryString } from "@hooks";
-import { pushRouteWithUTMQuery } from "@service";
-import { api, priceCalculation, tConvert } from "@utils";
-import Style from "./PaymentFormGeneric.module.scss";
+} from '@contexts';
+import { useQueryString } from '@hooks';
+import { pushRouteWithUTMQuery } from '@service';
+import { api, priceCalculation, tConvert } from '@utils';
+import Style from './PaymentFormGeneric.module.scss';
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
@@ -89,7 +89,7 @@ export const PaymentFormGeneric = ({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
-  const [discount] = useQueryString("discountCode");
+  const [discount] = useQueryString('discountCode');
   const [discountResponse, setDiscountResponse] = useState(null);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
   const [enrollFormValues, setEnrollFormValues] = useState(null);
@@ -132,7 +132,7 @@ export const PaymentFormGeneric = ({
       pathname: `/us-en/membership/${id}`,
       query: {
         cid: workshop.id,
-        page: "checkout",
+        page: 'checkout',
       },
     });
   };
@@ -150,7 +150,7 @@ export const PaymentFormGeneric = ({
       error: errorMessage,
       isError,
     } = await api.post({
-      path: "paypalBuyAcknowledgement",
+      path: 'paypalBuyAcknowledgement',
       body: { orderID: paypalData.orderID },
     });
 
@@ -197,7 +197,7 @@ export const PaymentFormGeneric = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -233,15 +233,15 @@ export const PaymentFormGeneric = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -250,7 +250,7 @@ export const PaymentFormGeneric = ({
 
       let payLoad = {
         shoppingRequest: {
-          couponCode: showCouponCodeField ? couponCode : "",
+          couponCode: showCouponCodeField ? couponCode : '',
           contactAddress: {
             contactPhone,
             contactAddress,
@@ -307,7 +307,7 @@ export const PaymentFormGeneric = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
       setLoading(false);
@@ -385,7 +385,7 @@ export const PaymentFormGeneric = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -421,15 +421,15 @@ export const PaymentFormGeneric = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -438,7 +438,7 @@ export const PaymentFormGeneric = ({
 
       let payLoad = {
         shoppingRequest: {
-          couponCode: showCouponCodeField ? couponCode : "",
+          couponCode: showCouponCodeField ? couponCode : '',
           contactAddress: {
             contactPhone,
             contactAddress,
@@ -496,7 +496,7 @@ export const PaymentFormGeneric = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
 
@@ -587,7 +587,7 @@ export const PaymentFormGeneric = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -598,12 +598,12 @@ export const PaymentFormGeneric = ({
       let tokenizeCC = null;
       if (
         !isCCNotRequired &&
-        (paymentMethod.type !== "card" || isChangingCard || !isLoggedUser) &&
+        (paymentMethod.type !== 'card' || isChangingCard || !isLoggedUser) &&
         isCreditCardRequired !== false
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile?.name ? profile.name : firstName + " " + lastName,
+          name: profile?.name ? profile.name : firstName + ' ' + lastName,
         });
         let { error, token } = createTokenRespone;
         if (error) {
@@ -640,15 +640,15 @@ export const PaymentFormGeneric = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -734,7 +734,7 @@ export const PaymentFormGeneric = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
 
@@ -839,12 +839,12 @@ export const PaymentFormGeneric = ({
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
     !isEmpty(groupedAddOnProducts) &&
-    "Residential Add On" in groupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].length > 0;
+    'Residential Add On' in groupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].length > 0;
 
   const residentialAddOnRequired =
     hasGroupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].some(
+    groupedAddOnProducts['Residential Add On'].some(
       (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
     );
 
@@ -861,13 +861,13 @@ export const PaymentFormGeneric = ({
   let UpdatedFeeAfterCredits;
   if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
     usableCredit.availableCredit === 1
   ) {
     UpdatedFeeAfterCredits = 0;
   } else if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
+    usableCredit.creditMeasureUnit === 'Amount'
   ) {
     if (usableCredit.availableCredit > fee) {
       UpdatedFeeAfterCredits = 0;
@@ -901,14 +901,14 @@ export const PaymentFormGeneric = ({
   };
 
   const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
-    formikProps.setFieldValue("comboDetailId", comboDetailProductSfid);
+    formikProps.setFieldValue('comboDetailId', comboDetailProductSfid);
     const { isInstalmentAllowed, id } = workshop;
     handleCouseSelection(comboDetailProductSfid);
     if (isInstalmentAllowed && id === comboDetailProductSfid) {
       setShowCouponCodeField(true);
     } else {
       setShowCouponCodeField(false);
-      formikProps.setFieldValue("paymentOption", PAYMENT_TYPES.FULL);
+      formikProps.setFieldValue('paymentOption', PAYMENT_TYPES.FULL);
     }
 
     // Added logic to remove paypal option for bundle
@@ -918,12 +918,12 @@ export const PaymentFormGeneric = ({
       );
 
       const isBundlePaypalAvailable = selectedBundle
-        ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
+        ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
         : false;
 
       if (!isBundlePaypalAvailable) {
         formikProps.setFieldValue(
-          "paymentMode",
+          'paymentMode',
           PAYMENT_MODES.STRIPE_PAYMENT_MODE,
         );
       }
@@ -931,17 +931,17 @@ export const PaymentFormGeneric = ({
   };
 
   const handlePaymentOptionChange = (formikProps, paymentOption) => {
-    formikProps.setFieldValue("paymentOption", paymentOption);
+    formikProps.setFieldValue('paymentOption', paymentOption);
     if (paymentOption === PAYMENT_TYPES.LATER) {
       formikProps.setFieldValue(
-        "paymentMode",
+        'paymentMode',
         PAYMENT_MODES.STRIPE_PAYMENT_MODE,
       );
     }
   };
 
   const handleAccommodationChange = (formikProps, value) => {
-    formikProps.setFieldValue("accommodation", value);
+    formikProps.setFieldValue('accommodation', value);
   };
 
   const toggleCouponCodeFieldAction = (e) => {
@@ -952,9 +952,9 @@ export const PaymentFormGeneric = ({
   const paymentElementOptions = {
     defaultValues: {
       billingDetails: {
-        email: email || "",
-        name: (first_name || "") + (last_name || ""),
-        phone: personMobilePhone || "",
+        email: email || '',
+        name: (first_name || '') + (last_name || ''),
+        phone: personMobilePhone || '',
       },
     },
   };
@@ -983,7 +983,7 @@ export const PaymentFormGeneric = ({
         defaultValues: {
           billingDetails: {
             email: values.email,
-            name: (values.firstName || "") + (values.lastName || ""),
+            name: (values.firstName || '') + (values.lastName || ''),
             phone: values.contactPhone,
           },
         },
@@ -995,55 +995,55 @@ export const PaymentFormGeneric = ({
     <>
       <Formik
         initialValues={{
-          firstName: first_name || "",
-          lastName: last_name || "",
-          email: email || "",
-          contactPhone: personMobilePhone || "",
-          contactAddress: personMailingStreet || "",
-          contactCity: personMailingCity || "",
-          contactState: personMailingState || "",
-          contactZip: personMailingPostalCode || "",
-          couponCode: discount ? discount : "",
+          firstName: first_name || '',
+          lastName: last_name || '',
+          email: email || '',
+          contactPhone: personMobilePhone || '',
+          contactAddress: personMailingStreet || '',
+          contactCity: personMailingCity || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
+          couponCode: discount ? discount : '',
           questionnaire: questionnaire,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
           paymentMode:
-            otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") > -1
-              ? ""
+            otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') > -1
+              ? ''
               : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
           accommodation: null,
-          priceType: "regular",
+          priceType: 'regular',
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required("First Name is required"),
-          lastName: Yup.string().required("Last Name is required"),
-          email: Yup.string().required("Email is required").email(),
+          firstName: Yup.string().required('First Name is required'),
+          lastName: Yup.string().required('Last Name is required'),
+          email: Yup.string().required('Email is required').email(),
           contactPhone: Yup.string()
-            .label("Phone")
-            .required("Phone is required")
-            .phone(null, false, "Phone is invalid")
+            .label('Phone')
+            .required('Phone is required')
+            .phone(null, false, 'Phone is invalid')
             .nullable(),
-          contactAddress: Yup.string().required("Address is required"),
-          contactCity: Yup.string().required("City is required"),
-          contactState: Yup.string().required("State is required"),
+          contactAddress: Yup.string().required('Address is required'),
+          contactCity: Yup.string().required('City is required'),
+          contactState: Yup.string().required('State is required'),
           contactZip: Yup.string()
-            .required("Zip is required!")
+            .required('Zip is required!')
             //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-            .min(2, "Zip is invalid")
-            .max(10, "Zip is invalid"),
+            .min(2, 'Zip is invalid')
+            .max(10, 'Zip is invalid'),
           ppaAgreement: Yup.boolean()
-            .label("Terms")
+            .label('Terms')
             .test(
-              "is-true",
-              "Please check the box in order to continue.",
+              'is-true',
+              'Please check the box in order to continue.',
               (value) => value === true,
             ),
           accommodation: isAccommodationRequired
-            ? Yup.object().required("Room & Board is required!")
+            ? Yup.object().required('Room & Board is required!')
             : Yup.mixed().notRequired(),
           paymentMode: isCCNotRequired
             ? Yup.mixed().notRequired()
-            : Yup.string().required("Payment mode is required!"),
+            : Yup.string().required('Payment mode is required!'),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
@@ -1087,7 +1087,7 @@ export const PaymentFormGeneric = ({
           );
 
           const isRegularPrice =
-            values.priceType === null || values.priceType === "regular";
+            values.priceType === null || values.priceType === 'regular';
           const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
 
           const totalFee =
@@ -1102,7 +1102,7 @@ export const PaymentFormGeneric = ({
 
           let isOfflineExpense;
           if (hasGroupedAddOnProducts && expenseAddOn) {
-            isOfflineExpense = expenseAddOn.paymentMode === "In Person";
+            isOfflineExpense = expenseAddOn.paymentMode === 'In Person';
           } else if (expenseAddOn && !expenseAddOn.isAddOnSelectionRequired) {
             isOfflineExpense = values[expenseAddOn.productName] || false;
           } else if (!expenseAddOn) {
@@ -1116,7 +1116,7 @@ export const PaymentFormGeneric = ({
           );
 
           const isBundlePaypalAvailable = selectedBundle
-            ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
+            ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
             : false;
 
           return (
@@ -1128,7 +1128,7 @@ export const PaymentFormGeneric = ({
                     <h2 className="details__title">Account Details:</h2>
                     {isLoggedUser && (
                       <p className="details__content">
-                        This is not your account?{" "}
+                        This is not your account?{' '}
                         <a href="#" className="link" onClick={logout}>
                           Logout
                         </a>
@@ -1136,7 +1136,7 @@ export const PaymentFormGeneric = ({
                     )}
                     {!isLoggedUser && (
                       <p className="details__content">
-                        Already have an Account?{" "}
+                        Already have an Account?{' '}
                         <a href="#" className="link" onClick={login}>
                           Login
                         </a>
@@ -1263,17 +1263,17 @@ export const PaymentFormGeneric = ({
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                               debug: true,
-                              currency: "USD",
+                              currency: 'USD',
                             }}
                           >
                             <PayPalButtons
                               style={{
-                                layout: "horizontal",
-                                color: "blue",
-                                shape: "pill",
+                                layout: 'horizontal',
+                                color: 'blue',
+                                shape: 'pill',
                                 height: 40,
                                 tagline: false,
-                                label: "pay",
+                                label: 'pay',
                               }}
                               fundingSource="paypal"
                               forceReRender={[formikProps.values]}
@@ -1406,7 +1406,7 @@ export const PaymentFormGeneric = ({
                           <div className="row tw-pl-3 tw-pr-3">
                             <div
                               className={classNames(
-                                "col-12",
+                                'col-12',
                                 Style.datetime_box,
                               )}
                             >
@@ -1416,7 +1416,7 @@ export const PaymentFormGeneric = ({
                             </div>
                             <div
                               className={classNames(
-                                "col-12",
+                                'col-12',
                                 Style.datetime_box,
                               )}
                             >
@@ -1427,7 +1427,7 @@ export const PaymentFormGeneric = ({
                                     <div key={index}>
                                       {`${dayjs
                                         .utc(time.startDate)
-                                        .format("dd")}: ${tConvert(
+                                        .format('dd')}: ${tConvert(
                                         time.startTime,
                                       )}-${tConvert(time.endTime)} ${
                                         ABBRS[time.timeZone]
@@ -1438,7 +1438,7 @@ export const PaymentFormGeneric = ({
                             </div>
                             <div
                               className={classNames(
-                                "col-12",
+                                'col-12',
                                 Style.datetime_box,
                               )}
                             >
@@ -1451,7 +1451,7 @@ export const PaymentFormGeneric = ({
                                     <ul>
                                       <a
                                         href={`https://www.google.com/maps/search/?api=1&query=${
-                                          workshop.locationStreet || ""
+                                          workshop.locationStreet || ''
                                         }, ${workshop.locationCity} ${
                                           workshop.locationProvince
                                         } ${workshop.locationPostalCode} ${
@@ -1466,10 +1466,10 @@ export const PaymentFormGeneric = ({
                                           </li>
                                         )}
                                         <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                                          {workshop.locationCity || ""}
-                                          {", "}
-                                          {workshop.locationProvince || ""}{" "}
-                                          {workshop.locationPostalCode || ""}
+                                          {workshop.locationCity || ''}
+                                          {', '}
+                                          {workshop.locationProvince || ''}{' '}
+                                          {workshop.locationPostalCode || ''}
                                         </li>
                                       </a>
                                     </ul>
@@ -1478,8 +1478,8 @@ export const PaymentFormGeneric = ({
                                     <ul>
                                       <a
                                         href={`https://www.google.com/maps/search/?api=1&query=${
-                                          workshop.streetAddress1 || ""
-                                        },${workshop.streetAddress2 || ""} ${
+                                          workshop.streetAddress1 || ''
+                                        },${workshop.streetAddress2 || ''} ${
                                           workshop.city
                                         } ${workshop.state} ${workshop.zip} ${
                                           workshop.country
@@ -1498,10 +1498,10 @@ export const PaymentFormGeneric = ({
                                           </li>
                                         )}
                                         <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                                          {workshop.city || ""}
-                                          {", "}
-                                          {workshop.state || ""}{" "}
-                                          {workshop.zip || ""}
+                                          {workshop.city || ''}
+                                          {', '}
+                                          {workshop.state || ''}{' '}
+                                          {workshop.zip || ''}
                                         </li>
                                       </a>
                                     </ul>
@@ -1524,7 +1524,7 @@ export const PaymentFormGeneric = ({
                           </div>
 
                           <div
-                            className={classNames("col-12", Style.datetime_box)}
+                            className={classNames('col-12', Style.datetime_box)}
                           >
                             <h6>Teacher:</h6>
                             {primaryTeacherName && (
@@ -1532,9 +1532,9 @@ export const PaymentFormGeneric = ({
                                 <img
                                   className={classNames(
                                     Style.img,
-                                    "rounded-circle",
+                                    'rounded-circle',
                                   )}
-                                  src={primaryTeacherPic || "/img/user.png"}
+                                  src={primaryTeacherPic || '/img/user.png'}
                                 />
                                 {primaryTeacherName}
                               </div>
@@ -1544,9 +1544,9 @@ export const PaymentFormGeneric = ({
                                 <img
                                   className={classNames(
                                     Style.img,
-                                    "rounded-circle",
+                                    'rounded-circle',
                                   )}
-                                  src={coTeacher1Pic || "/img/user.png"}
+                                  src={coTeacher1Pic || '/img/user.png'}
                                 />
                                 {coTeacher1Name}
                               </div>
@@ -1556,21 +1556,21 @@ export const PaymentFormGeneric = ({
                                 <img
                                   className={classNames(
                                     Style.img,
-                                    "rounded-circle",
+                                    'rounded-circle',
                                   )}
-                                  src={coTeacher2Pic || "/img/user.png"}
+                                  src={coTeacher2Pic || '/img/user.png'}
                                 />
                                 {coTeacher2Name}
                               </div>
                             )}
                           </div>
                           <div
-                            className={classNames("col-12", Style.datetime_box)}
+                            className={classNames('col-12', Style.datetime_box)}
                           >
                             <h6>Contact:</h6>
                             {contactName && (
                               <div>
-                                {contactName},{" "}
+                                {contactName},{' '}
                                 <div>
                                   <a href={`tel:${phone1}`}>{phone1}</a>
                                 </div>

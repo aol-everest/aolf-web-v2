@@ -1,14 +1,14 @@
-import { PageLoading } from "@components";
-import { BackendPaymentForm } from "@components/backendPaymentForm";
-import { useAuth } from "@contexts";
-import { withAuth } from "@hoc";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { api } from "@utils";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { PageLoading } from '@components';
+import { BackendPaymentForm } from '@components/backendPaymentForm';
+import { useAuth } from '@contexts';
+import { withAuth } from '@hoc';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { api } from '@utils';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
@@ -23,13 +23,13 @@ const BackEndCheckout = () => {
     isError,
     error,
   } = useQuery(
-    "bcWorkshopDetail",
+    'bcWorkshopDetail',
     async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           id: workshopId,
-          isBackendRegistration: "1",
+          isBackendRegistration: '1',
         },
       });
       return response.data;
@@ -53,7 +53,7 @@ const BackEndCheckout = () => {
           noimageindex: true,
           noarchive: true,
           maxSnippet: -1,
-          maxImagePreview: "none",
+          maxImagePreview: 'none',
           maxVideoPreview: -1,
         }}
       />
@@ -64,7 +64,7 @@ const BackEndCheckout = () => {
             fonts={[
               {
                 cssSrc:
-                  "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                  'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
               },
             ]}
           >
@@ -82,5 +82,5 @@ const BackEndCheckout = () => {
 BackEndCheckout.hideHeader = false;
 
 export default withAuth(BackEndCheckout, {
-  role: ["Teacher", "Organizer", "Assistant Teacher"],
+  role: ['Teacher', 'Organizer', 'Assistant Teacher'],
 });

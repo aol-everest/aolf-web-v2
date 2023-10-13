@@ -1,25 +1,25 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   getMonthNamesForLocale,
   getNavigatorLanguage,
   interval,
-} from "./index";
+} from './index';
 export function getDefaultState() {
   const calendar = dayjs();
-  const startOfWeek = calendar.startOf("week");
-  const endOfWeek = calendar.endOf("week");
+  const startOfWeek = calendar.startOf('week');
+  const endOfWeek = calendar.endOf('week');
   const startDate = calendar.clone();
-  const endDate = calendar.clone().add(1, "month");
+  const endDate = calendar.clone().add(1, 'month');
   const range = endDate || startDate;
-  const minDate = calendar.clone().subtract(5, "year");
-  const maxDate = calendar.clone().add(5, "year");
+  const minDate = calendar.clone().subtract(5, 'year');
+  const maxDate = calendar.clone().add(5, 'year');
   const maxSpan = { years: 5 };
   const autoApply = false;
   const singleDatePicker = false;
   const showDropdowns = true;
   const closedOrOpen = interval.CLOSED;
-  const minYear = calendar.clone().subtract(70, "year").format("YYYY");
-  const maxYear = calendar.clone().add(70, "year").format("YYYY");
+  const minYear = calendar.clone().subtract(70, 'year').format('YYYY');
+  const maxYear = calendar.clone().add(70, 'year').format('YYYY');
   const showWeekNumbers = true;
   const showISOWeekNumbers = false;
   const showCustomRangeLabel = true;
@@ -29,19 +29,19 @@ export function getDefaultState() {
   const timePickerSeconds = false;
   const alwaysShowCalendars = false;
   const ranges = {};
-  const opens = "left";
-  const drops = "down";
-  const buttonClasses = "btn btn-sm";
-  const applyButtonClasses = "btn-primary";
-  const cancelButtonClasses = "btn-default";
+  const opens = 'left';
+  const drops = 'down';
+  const buttonClasses = 'btn btn-sm';
+  const applyButtonClasses = 'btn-primary';
+  const cancelButtonClasses = 'btn-default';
   const isInvalidDate = () => false;
   const isCustomDate = () => [];
-  const weekLabel = "W";
+  const weekLabel = 'W';
   const linkedCalendars = true;
   const weekNames = [];
   for (let s = startOfWeek; s <= endOfWeek; ) {
-    weekNames.push(s.format("dd"));
-    s = s.add(1, "day");
+    weekNames.push(s.format('dd'));
+    s = s.add(1, 'day');
   }
   const language = getNavigatorLanguage();
   const monthNames = getMonthNamesForLocale(language);

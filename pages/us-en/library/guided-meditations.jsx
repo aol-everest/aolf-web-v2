@@ -1,44 +1,44 @@
-import { api, isSSR } from "@utils";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { useQuery } from "react-query";
+import { api, isSSR } from '@utils';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
 // import { DesignOne, DesignTwo } from "@components/content";
-import { Loader, PageLoading } from "@components";
-import { CONTENT_FOLDER_IDS, MODAL_TYPES } from "@constants";
+import { Loader, PageLoading } from '@components';
+import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
   useGlobalModalContext,
   useGlobalVideoPlayerContext,
-} from "@contexts";
-import { useQueryString } from "@hooks";
+} from '@contexts';
+import { useQueryString } from '@hooks';
 import {
   markFavoriteEvent,
   meditatePlayEvent,
   pushRouteWithUTMQuery,
-} from "@service";
-import ErrorPage from "next/error";
-import { A11y, Navigation, Scrollbar } from "swiper";
+} from '@service';
+import ErrorPage from 'next/error';
+import { A11y, Navigation, Scrollbar } from 'swiper';
 
-import "swiper/css";
-import "swiper/css/a11y";
-import "swiper/css/navigation";
-import "swiper/css/scrollbar";
+import 'swiper/css';
+import 'swiper/css/a11y';
+import 'swiper/css/navigation';
+import 'swiper/css/scrollbar';
 
 const DesignOne = dynamic(() =>
-  import("@components/content").then((mod) => mod.DesignOne),
+  import('@components/content').then((mod) => mod.DesignOne),
 );
 const DesignTwo = dynamic(() =>
-  import("@components/content").then((mod) => mod.DesignTwo),
+  import('@components/content').then((mod) => mod.DesignTwo),
 );
 
 const CATEGORY_IMAGES = [
-  "/img/card-1a.png",
-  "/img/card-2a.png",
-  "/img/card-6.png",
-  "/img/card-4a.png",
+  '/img/card-1a.png',
+  '/img/card-2a.png',
+  '/img/card-6.png',
+  '/img/card-4a.png',
 ];
 
 export default function GuidedMeditations() {
@@ -52,17 +52,17 @@ export default function GuidedMeditations() {
     isError,
     error,
   } = useQuery(
-    ["library", folderId],
+    ['library', folderId],
     async () => {
       const response = await api.get({
-        path: "library",
+        path: 'library',
         param: {
           folderId,
         },
       });
       const [rootFolder] = response.data.folder;
       if (!rootFolder) {
-        throw new Error("No library found. Invalid Folder Id.");
+        throw new Error('No library found. Invalid Folder Id.');
       }
       return rootFolder;
     },
@@ -79,17 +79,17 @@ export default function GuidedMeditations() {
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [topic, setTopic] = useQueryString("topic");
-  const [duration, setDuration] = useQueryString("duration");
-  const [instructor, setInstructor] = useQueryString("instructor");
+  const [topic, setTopic] = useQueryString('topic');
+  const [duration, setDuration] = useQueryString('duration');
+  const [instructor, setInstructor] = useQueryString('instructor');
   const [loading, setLoading] = useState(false);
 
   const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
     useQuery(
-      "favouriteContents",
+      'favouriteContents',
       async () => {
         const response = await api.get({
-          path: "getFavouriteContents",
+          path: 'getFavouriteContents',
         });
         return response.data;
       },
@@ -100,10 +100,10 @@ export default function GuidedMeditations() {
     );
 
   const { data: meditationCategory = [], isSuccess } = useQuery(
-    "meditationCategory",
+    'meditationCategory',
     async () => {
       const response = await api.get({
-        path: "meditationCategory",
+        path: 'meditationCategory',
       });
       return response.data;
     },
@@ -113,10 +113,10 @@ export default function GuidedMeditations() {
   );
 
   const { data: subsciptionCategories = [] } = useQuery(
-    "subsciption",
+    'subsciption',
     async () => {
       const response = await api.get({
-        path: "subsciption",
+        path: 'subsciption',
       });
       return response.data;
     },
@@ -126,12 +126,12 @@ export default function GuidedMeditations() {
   );
 
   const { data: instructorList = [] } = useQuery(
-    "instructorList",
+    'instructorList',
     async () => {
       const response = await api.get({
-        path: "getAllContentTeachers",
+        path: 'getAllContentTeachers',
         param: {
-          deviceType: "web",
+          deviceType: 'web',
         },
       });
       return response;
@@ -156,13 +156,13 @@ export default function GuidedMeditations() {
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
-      case "topic":
+      case 'topic':
         setTopic(value);
         break;
-      case "duration":
+      case 'duration':
         setDuration(value);
         break;
-      case "instructor":
+      case 'instructor':
         setInstructor(value);
         break;
     }
@@ -170,13 +170,13 @@ export default function GuidedMeditations() {
 
   const onFilterClearEvent = (field) => async () => {
     switch (field) {
-      case "topic":
+      case 'topic':
         setTopic(null);
         break;
-      case "duration":
+      case 'duration':
         setDuration(null);
         break;
-      case "instructor":
+      case 'instructor':
         setInstructor(null);
         break;
     }
@@ -204,7 +204,7 @@ export default function GuidedMeditations() {
     if (e) e.preventDefault();
     if (!authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
-    } else if (meditate.accessible && meditate.type === "Course") {
+    } else if (meditate.accessible && meditate.type === 'Course') {
       pushRouteWithUTMQuery(router, `/us-en/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
@@ -234,7 +234,7 @@ export default function GuidedMeditations() {
       query = { ...query, instructor };
     }
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en/library/search",
+      pathname: '/us-en/library/search',
       query,
     });
   };
@@ -279,8 +279,8 @@ export default function GuidedMeditations() {
     },
   };
 
-  if (typeof window !== "undefined") {
-    if (window.matchMedia("(max-width: 768px)").matches) {
+  if (typeof window !== 'undefined') {
+    if (window.matchMedia('(max-width: 768px)').matches) {
       swiperOption = {
         ...swiperOption,
         navigation: false,
@@ -313,14 +313,14 @@ export default function GuidedMeditations() {
   };
 
   switch (rootFolder.screenDesign) {
-    case "Design 1":
+    case 'Design 1':
       return (
         <>
           {loading && <Loader />}
           <DesignOne data={rootFolder} {...params} />
         </>
       );
-    case "Design 2":
+    case 'Design 2':
       return (
         <>
           {loading && <Loader />}

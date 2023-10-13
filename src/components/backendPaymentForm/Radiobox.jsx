@@ -1,4 +1,4 @@
-import { Field } from "formik";
+import { Field } from 'formik';
 
 export function Radiobox({
   name,
@@ -9,7 +9,7 @@ export function Radiobox({
   value,
   ...rest
 }) {
-  const id = `toggle_${Math.random().toString().replace(/0\./, "")}`;
+  const id = `toggle_${Math.random().toString().replace(/0\./, '')}`;
   return (
     <Field name={name}>
       {({ field, form }) => {
@@ -26,7 +26,7 @@ export function Radiobox({
                   value={value}
                   onChange={() => {
                     if (field.value === value) {
-                      form.setFieldValue(name, "");
+                      form.setFieldValue(name, '');
 
                       if (action) {
                         action(null);

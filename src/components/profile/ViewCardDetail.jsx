@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import classNames from 'classnames';
 
 export const ViewCardDetail = ({
   isMobile,
@@ -22,7 +22,7 @@ export const ViewCardDetail = ({
             className="mt-0 w-100"
             type="text"
             placeholder="Card Number"
-            value={`**** **** **** ${cardLast4Digit || "****"}`}
+            value={`**** **** **** ${cardLast4Digit || '****'}`}
             readOnly
           />
         </div>
@@ -33,7 +33,7 @@ export const ViewCardDetail = ({
             value="**/**"
             readOnly
             className={classNames({
-              "w-100": isMobile,
+              'w-100': isMobile,
             })}
           />
         </div>
@@ -44,7 +44,7 @@ export const ViewCardDetail = ({
             value="****"
             readOnly
             className={classNames({
-              "w-100": isMobile,
+              'w-100': isMobile,
             })}
           />
         </div>

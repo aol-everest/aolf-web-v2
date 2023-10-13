@@ -1,4 +1,4 @@
-import { Footer, Header, NoHeader, WCFHeader } from "@components";
+import { Footer, Header, NoHeader, WCFHeader } from '@components';
 
 export const Layout = ({
   hideHeader = false,

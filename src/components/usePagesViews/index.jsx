@@ -1,7 +1,7 @@
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 export const missingGtagMsg =
-  "Gtag is missing. Add the `GoogleAnalytics` component to the `Head` component inside `_document.js`.";
+  'Gtag is missing. Add the `GoogleAnalytics` component to the `Head` component inside `_document.js`.';
 
 function pageView({ title, location, path, sendPageView }) {
   const gaMeasurementId = process.env.NEXT_PUBLIC_GTM_ID;
@@ -33,7 +33,7 @@ function pageView({ title, location, path, sendPageView }) {
     pageViewOptions.send_page_view = sendPageView;
   }
 
-  window.gtag("config", gaMeasurementId, pageViewOptions);
+  window.gtag('config', gaMeasurementId, pageViewOptions);
 }
 
 export const UsePagesViews = () => {
@@ -48,10 +48,10 @@ export const UsePagesViews = () => {
       pageView({ path: url.toString() });
     };
 
-    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on('routeChangeComplete', handleRouteChange);
 
     return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
+      router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router.events]);
   return null;

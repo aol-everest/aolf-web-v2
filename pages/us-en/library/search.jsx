@@ -1,28 +1,28 @@
-import { MobileFilterModal, Popup, SmartDropDown } from "@components";
-import { MeditationTile } from "@components/meditation/meditationTile";
-import { DURATION, MODAL_TYPES } from "@constants";
+import { MobileFilterModal, Popup, SmartDropDown } from '@components';
+import { MeditationTile } from '@components/meditation/meditationTile';
+import { DURATION, MODAL_TYPES } from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
   useGlobalModalContext,
   useGlobalVideoPlayerContext,
-} from "@contexts";
-import { useIntersectionObserver, useQueryString } from "@hooks";
+} from '@contexts';
+import { useIntersectionObserver, useQueryString } from '@hooks';
 import {
   markFavoriteEvent,
   meditatePlayEvent,
   pushRouteWithUTMQuery,
-} from "@service";
-import { api } from "@utils";
-import "bootstrap-daterangepicker/daterangepicker.css";
-import classNames from "classnames";
-import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import ContentLoader from "react-content-loader";
-import { useInfiniteQuery, useQuery } from "react-query";
-import { useUIDSeed } from "react-uid";
+} from '@service';
+import { api } from '@utils';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import classNames from 'classnames';
+import { NextSeo } from 'next-seo';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import ContentLoader from 'react-content-loader';
+import { useInfiniteQuery, useQuery } from 'react-query';
+import { useUIDSeed } from 'react-uid';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -100,20 +100,20 @@ const LibrarySearch = () => {
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
-  const [topic, setTopic] = useQueryString("topic");
-  const [folderName] = useQueryString("folderName");
-  const [duration, setDuration] = useQueryString("duration");
-  const [instructor, setInstructor] = useQueryString("instructor");
+  const [topic, setTopic] = useQueryString('topic');
+  const [folderName] = useQueryString('folderName');
+  const [duration, setDuration] = useQueryString('duration');
+  const [instructor, setInstructor] = useQueryString('instructor');
   const { user, authenticated } = useAuth();
   const router = useRouter();
 
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const { data: meditationCategory = [] } = useQuery(
-    "meditationCategory",
+    'meditationCategory',
     async () => {
       const response = await api.get({
-        path: "meditationCategory",
+        path: 'meditationCategory',
       });
       return response.data;
     },
@@ -123,12 +123,12 @@ const LibrarySearch = () => {
   );
 
   const { data: instructorList = [] } = useQuery(
-    "instructorList",
+    'instructorList',
     async () => {
       const response = await api.get({
-        path: "getAllContentTeachers",
+        path: 'getAllContentTeachers',
         param: {
-          deviceType: "web",
+          deviceType: 'web',
         },
       });
       return response;
@@ -139,10 +139,10 @@ const LibrarySearch = () => {
   );
 
   const { data: subsciptionCategories = [] } = useQuery(
-    "subsciption",
+    'subsciption',
     async () => {
       const response = await api.get({
-        path: "subsciption",
+        path: 'subsciption',
       });
       return response.data;
     },
@@ -153,10 +153,10 @@ const LibrarySearch = () => {
 
   const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
     useQuery(
-      "favouriteContents",
+      'favouriteContents',
       async () => {
         const response = await api.get({
-          path: "getFavouriteContents",
+          path: 'getFavouriteContents',
         });
         return response.data;
       },
@@ -203,13 +203,13 @@ const LibrarySearch = () => {
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
-      case "topicFilter":
+      case 'topicFilter':
         setTopic(value);
         break;
-      case "durationFilter":
+      case 'durationFilter':
         setDuration(value);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         setInstructor(value);
         break;
     }
@@ -217,13 +217,13 @@ const LibrarySearch = () => {
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     switch (field) {
-      case "topicFilter":
+      case 'topicFilter':
         setTopic(value);
         break;
-      case "durationFilter":
+      case 'durationFilter':
         setDuration(value);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         setInstructor(value);
         break;
     }
@@ -231,13 +231,13 @@ const LibrarySearch = () => {
 
   const onFilterClearEvent = (field) => async () => {
     switch (field) {
-      case "topicFilter":
+      case 'topicFilter':
         setTopic(null);
         break;
-      case "durationFilter":
+      case 'durationFilter':
         setDuration(null);
         break;
-      case "instructorFilter":
+      case 'instructorFilter':
         setInstructor(null);
         break;
     }
@@ -254,7 +254,7 @@ const LibrarySearch = () => {
     refetch,
   } = useInfiniteQuery(
     [
-      "meditations",
+      'meditations',
       {
         topic,
         duration,
@@ -266,7 +266,7 @@ const LibrarySearch = () => {
       let param = {
         page: pageParam,
         size: 12,
-        deviceType: "Web",
+        deviceType: 'Web',
       };
 
       if (folderName) {
@@ -296,7 +296,7 @@ const LibrarySearch = () => {
       }
 
       const res = await api.get({
-        path: "library/search",
+        path: 'library/search',
         param,
       });
       return res;
@@ -346,8 +346,8 @@ const LibrarySearch = () => {
                 <Popup
                   tabIndex="1"
                   value={topic}
-                  buttonText={topic ? topic : "Topic"}
-                  closeEvent={onFilterChange("topicFilter")}
+                  buttonText={topic ? topic : 'Topic'}
+                  closeEvent={onFilterChange('topicFilter')}
                 >
                   {({ closeHandler }) => (
                     <>
@@ -368,26 +368,26 @@ const LibrarySearch = () => {
                 <Popup
                   tabIndex="2"
                   value={duration}
-                  buttonText={duration ? DURATION[duration].name : "Duration"}
-                  closeEvent={onFilterChange("durationFilter")}
+                  buttonText={duration ? DURATION[duration].name : 'Duration'}
+                  closeEvent={onFilterChange('durationFilter')}
                 >
                   {({ closeHandler }) => (
                     <>
                       <li
                         className="courses-filter__list-item"
-                        onClick={closeHandler("MINUTES_5")}
+                        onClick={closeHandler('MINUTES_5')}
                       >
                         {DURATION.MINUTES_5.name}
                       </li>
                       <li
                         className="courses-filter__list-item"
-                        onClick={closeHandler("MINUTES_10")}
+                        onClick={closeHandler('MINUTES_10')}
                       >
                         {DURATION.MINUTES_10.name}
                       </li>
                       <li
                         className="courses-filter__list-item"
-                        onClick={closeHandler("MINUTES_20")}
+                        onClick={closeHandler('MINUTES_20')}
                       >
                         {DURATION.MINUTES_20.name}
                       </li>
@@ -397,8 +397,8 @@ const LibrarySearch = () => {
                 <Popup
                   tabIndex="3"
                   value={instructor}
-                  buttonText={instructor ? instructor : "Instructor"}
-                  closeEvent={onFilterChange("instructorFilter")}
+                  buttonText={instructor ? instructor : 'Instructor'}
+                  closeEvent={onFilterChange('instructorFilter')}
                 >
                   {({ closeHandler }) => (
                     <>
@@ -433,7 +433,7 @@ const LibrarySearch = () => {
                   <span
                     id="filter-count"
                     className={classNames({
-                      "filter-count--show": filterCount > 0,
+                      'filter-count--show': filterCount > 0,
                     })}
                   >
                     {filterCount}
@@ -442,20 +442,20 @@ const LibrarySearch = () => {
               </div>
             </div>
             <div
-              className={classNames("filter--box", {
-                "d-none": !showFilterModal,
+              className={classNames('filter--box', {
+                'd-none': !showFilterModal,
               })}
             >
               <MobileFilterModal
                 modalTitle="Topic"
-                buttonText={topic ? topic : "Topic"}
-                clearEvent={onFilterClearEvent("topicFilter")}
+                buttonText={topic ? topic : 'Topic'}
+                clearEvent={onFilterClearEvent('topicFilter')}
               >
                 <div className="dropdown">
                   <SmartDropDown
                     value={topic}
-                    buttonText={topic ? topic : "Select Topic"}
-                    closeEvent={onFilterChange("topicFilter")}
+                    buttonText={topic ? topic : 'Select Topic'}
+                    closeEvent={onFilterChange('topicFilter')}
                   >
                     {({ closeHandler }) => (
                       <>
@@ -477,32 +477,32 @@ const LibrarySearch = () => {
 
               <MobileFilterModal
                 modalTitle="Duration"
-                buttonText={duration ? DURATION[duration].name : "Duration"}
-                clearEvent={onFilterClearEvent("durationFilter")}
+                buttonText={duration ? DURATION[duration].name : 'Duration'}
+                clearEvent={onFilterClearEvent('durationFilter')}
               >
                 <div className="dropdown">
                   <SmartDropDown
                     value={duration}
-                    buttonText={duration ? DURATION[duration].name : "Duration"}
-                    closeEvent={onFilterChange("durationFilter")}
+                    buttonText={duration ? DURATION[duration].name : 'Duration'}
+                    closeEvent={onFilterChange('durationFilter')}
                   >
                     {({ closeHandler }) => (
                       <>
                         <li
                           className="topic-dropdown"
-                          onClick={closeHandler("MINUTES_5")}
+                          onClick={closeHandler('MINUTES_5')}
                         >
                           {DURATION.MINUTES_5.name}
                         </li>
                         <li
                           className="topic-dropdown"
-                          onClick={closeHandler("MINUTES_10")}
+                          onClick={closeHandler('MINUTES_10')}
                         >
                           {DURATION.MINUTES_10.name}
                         </li>
                         <li
                           className="topic-dropdown"
-                          onClick={closeHandler("MINUTES_20")}
+                          onClick={closeHandler('MINUTES_20')}
                         >
                           {DURATION.MINUTES_20.name}
                         </li>
@@ -514,14 +514,14 @@ const LibrarySearch = () => {
 
               <MobileFilterModal
                 modalTitle="Course Type"
-                buttonText={instructor ? instructor : "Instructor"}
-                clearEvent={onFilterClearEvent("instructorFilter")}
+                buttonText={instructor ? instructor : 'Instructor'}
+                clearEvent={onFilterClearEvent('instructorFilter')}
               >
                 <div className="dropdown">
                   <SmartDropDown
                     value={instructor}
-                    buttonText={instructor ? instructor : "Select Instructor"}
-                    closeEvent={onFilterChange("instructorFilter")}
+                    buttonText={instructor ? instructor : 'Select Instructor'}
+                    closeEvent={onFilterChange('instructorFilter')}
                   >
                     {({ closeHandler }) => (
                       <>
@@ -566,7 +566,7 @@ const LibrarySearch = () => {
             <div ref={loadMoreRef} className="col-12">
               {isFetchingNextPage && (
                 <div className="row">
-                  {" "}
+                  {' '}
                   <div className="col-6 col-lg-3 col-md-4">
                     <div className="upcoming_course_card meetup_course_card">
                       <ContentLoader viewBox="0 0 80 120">

@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
-import { usePopper } from "react-popper";
+import classNames from 'classnames';
+import { useEffect, useRef, useState } from 'react';
+import { usePopper } from 'react-popper';
 
 export const InputDropDown = (props) => {
   const [visible, setVisibility] = useState(false);
@@ -10,7 +10,7 @@ export const InputDropDown = (props) => {
 
   const {
     children,
-    containerClass = "",
+    containerClass = '',
     formikProps,
     formikKey,
     placeholder,
@@ -18,9 +18,9 @@ export const InputDropDown = (props) => {
 
   useEffect(() => {
     // listen for clicks and close dropdown on body
-    document.addEventListener("mousedown", handleDocumentClick);
+    document.addEventListener('mousedown', handleDocumentClick);
     return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
+      document.removeEventListener('mousedown', handleDocumentClick);
     };
   }, []);
 
@@ -28,17 +28,17 @@ export const InputDropDown = (props) => {
     referenceRef.current,
     popperRef.current,
     {
-      placement: "bottom",
+      placement: 'bottom',
       modifiers: [
         {
-          name: "arrow",
+          name: 'arrow',
           enabled: true,
           options: {
             element: arrowRef.current,
           },
         },
         {
-          name: "offset",
+          name: 'offset',
           enabled: true,
           options: {
             offset: [0, 10],
@@ -85,7 +85,7 @@ export const InputDropDown = (props) => {
       />
 
       <ul
-        className={classNames("tooltip-block", containerClass, {
+        className={classNames('tooltip-block', containerClass, {
           active: visible,
         })}
         ref={popperRef}

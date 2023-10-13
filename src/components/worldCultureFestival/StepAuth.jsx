@@ -1,36 +1,36 @@
 /* eslint-disable react/no-unescaped-entities */
-import Link from "@components/linkWithUTM";
-import { useAuth } from "@contexts";
-import { Auth } from "@utils";
-import classNames from "classnames";
-import startsWith from "lodash.startswith";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
-import { useAnalytics } from "use-analytics";
+import Link from '@components/linkWithUTM';
+import { useAuth } from '@contexts';
+import { Auth } from '@utils';
+import classNames from 'classnames';
+import startsWith from 'lodash.startswith';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { FaCheckCircle } from 'react-icons/fa';
+import { useAnalytics } from 'use-analytics';
 import {
   ChangePasswordForm,
   NewPasswordForm,
   ResetPasswordForm,
   SigninForm,
   SignupForm,
-} from "./loginForm";
+} from './loginForm';
 
 const encodeFormData = (data) => {
   return Object.keys(data)
-    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-    .join("&");
+    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
 };
 
-const LOGIN_MODE = "LOGIN_MODE";
-const SIGNUP_MODE = "SIGNUP_MODE";
-const RESET_PASSWORD_REQUEST = "RESET_PASSWORD_REQUEST";
-const NEW_PASSWORD_REQUEST = "NEW_PASSWORD_REQUEST";
-const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
+const LOGIN_MODE = 'LOGIN_MODE';
+const SIGNUP_MODE = 'SIGNUP_MODE';
+const RESET_PASSWORD_REQUEST = 'RESET_PASSWORD_REQUEST';
+const NEW_PASSWORD_REQUEST = 'NEW_PASSWORD_REQUEST';
+const CHANGE_PASSWORD_REQUEST = 'CHANGE_PASSWORD_REQUEST';
 
-const MESSAGE_SIGNUP_SUCCESS = "Sign up completed successfully.";
+const MESSAGE_SIGNUP_SUCCESS = 'Sign up completed successfully.';
 const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
-  "A verification code has been emailed to you. Please use the verification code and reset your password.";
+  'A verification code has been emailed to you. Please use the verification code and reset your password.';
 
 export function StepAuth({ errors, handleNext, ...props }) {
   const navigateTo = `/us-en/world-culture-festival?s=1&t=${
@@ -51,8 +51,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
 
   useEffect(() => {
     if (!router.isReady) return;
-    track("view_screen", {
-      screen_name: "wcf_registration_signup_page",
+    track('view_screen', {
+      screen_name: 'wcf_registration_signup_page',
       utm_parameters: JSON.stringify(router.query),
       sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
@@ -63,8 +63,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
     if (e) e.preventDefault();
     setAuthMode(view);
     if (view === LOGIN_MODE) {
-      track("view_screen", {
-        screen_name: "wcf_registration_login_page",
+      track('view_screen', {
+        screen_name: 'wcf_registration_login_page',
         utm_parameters: JSON.stringify(router.query),
         sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
         number_of_tickets: props.values.ticketCount,
@@ -86,9 +86,9 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const signIn = async ({ username, password }) => {
     setLoading(true);
     setShowMessage(false);
-    track("click_button", {
-      screen_name: "wcf_registration_login_page",
-      event_target: "login_button",
+    track('click_button', {
+      screen_name: 'wcf_registration_login_page',
+      event_target: 'login_button',
       utm_parameters: JSON.stringify(router.query),
       sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
@@ -104,7 +104,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
         setLoading(false);
       } else {
         const userInfo = await Auth.reFetchProfile();
-        let subscriptions = "";
+        let subscriptions = '';
         if (userInfo.profile.subscriptions) {
           subscriptions = JSON.stringify(
             userInfo.profile.subscriptions.map(({ sfid, name }) => {
@@ -130,8 +130,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
           sahaj_flag: userInfo.profile.isSahajGraduate,
           silence_course_count: userInfo.profile.aosCountTotal,
         });
-        track("login_user", {
-          screen_name: "wcf_registration_login_page",
+        track('login_user', {
+          screen_name: 'wcf_registration_login_page',
           utm_parameters: JSON.stringify(router.query),
           sessions_attending_arr: JSON.stringify(
             props.values.sessionsAttending,
@@ -139,31 +139,31 @@ export function StepAuth({ errors, handleNext, ...props }) {
           number_of_tickets: props.values.ticketCount,
         });
 
-        props.setFieldValue("state", userInfo.profile.personMailingState);
+        props.setFieldValue('state', userInfo.profile.personMailingState);
         let userCountry = userInfo.profile.personMailingCountry
           ? userInfo.profile.personMailingCountry.toUpperCase()
-          : "US";
-        let userPhoneNumber = userInfo.profile.personMobilePhone || "";
+          : 'US';
+        let userPhoneNumber = userInfo.profile.personMobilePhone || '';
         if (
-          userCountry === "" ||
-          userCountry === "USA" ||
-          userCountry === "UNITED STATES OF AMERICA"
+          userCountry === '' ||
+          userCountry === 'USA' ||
+          userCountry === 'UNITED STATES OF AMERICA'
         ) {
-          userCountry = "US";
+          userCountry = 'US';
         }
-        props.setFieldValue("country", userCountry);
-        props.setFieldValue("phoneCountry", userCountry);
+        props.setFieldValue('country', userCountry);
+        props.setFieldValue('phoneCountry', userCountry);
 
         if (
-          !startsWith(userPhoneNumber, "+") &&
-          userCountry === "US" &&
-          !startsWith(userPhoneNumber, "+1")
+          !startsWith(userPhoneNumber, '+') &&
+          userCountry === 'US' &&
+          !startsWith(userPhoneNumber, '+1')
         ) {
-          userPhoneNumber = "+1" + userPhoneNumber;
-          props.setFieldValue("phoneCountry", "US");
+          userPhoneNumber = '+1' + userPhoneNumber;
+          props.setFieldValue('phoneCountry', 'US');
         }
 
-        props.setFieldValue("phoneNumber", userPhoneNumber);
+        props.setFieldValue('phoneNumber', userPhoneNumber);
 
         setUser(userInfo);
 
@@ -195,23 +195,23 @@ export function StepAuth({ errors, handleNext, ...props }) {
   };
 
   const fbLogin = () => {
-    track("click_button", {
+    track('click_button', {
       screen_name:
         authMode === SIGNUP_MODE
-          ? "wcf_registration_signup_page"
-          : "wcf_registration_login_page",
-      event_target: "facebook_login_button",
+          ? 'wcf_registration_signup_page'
+          : 'wcf_registration_login_page',
+      event_target: 'facebook_login_button',
       utm_parameters: JSON.stringify(router.query),
       sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
     const params = {
       state: navigateTo,
-      identity_provider: "Facebook",
+      identity_provider: 'Facebook',
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
       client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-      response_type: "CODE",
-      scope: "email phone profile aws.cognito.signin.user.admin openid",
+      response_type: 'CODE',
+      scope: 'email phone profile aws.cognito.signin.user.admin openid',
     };
     window.location.assign(
       `https://${
@@ -221,23 +221,23 @@ export function StepAuth({ errors, handleNext, ...props }) {
   };
 
   const googleLogin = () => {
-    track("click_button", {
+    track('click_button', {
       screen_name:
         authMode === SIGNUP_MODE
-          ? "wcf_registration_signup_page"
-          : "wcf_registration_login_page",
-      event_target: "google_login_button",
+          ? 'wcf_registration_signup_page'
+          : 'wcf_registration_login_page',
+      event_target: 'google_login_button',
       utm_parameters: JSON.stringify(router.query),
       sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
     const params = {
       state: navigateTo,
-      identity_provider: "Google",
+      identity_provider: 'Google',
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
       client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-      response_type: "CODE",
-      scope: "email phone profile aws.cognito.signin.user.admin openid",
+      response_type: 'CODE',
+      scope: 'email phone profile aws.cognito.signin.user.admin openid',
     };
     window.location.assign(
       `https://${
@@ -249,26 +249,26 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const signout = async () => {
     await Auth.logout();
     setUser(null);
-    props.setFieldValue("state", null);
-    props.setFieldValue("country", "US");
-    props.setFieldValue("phoneCountry", "US");
-    props.setFieldValue("phoneNumber", "");
+    props.setFieldValue('state', null);
+    props.setFieldValue('country', 'US');
+    props.setFieldValue('phoneCountry', 'US');
+    props.setFieldValue('phoneNumber', '');
   };
 
   const signUp = async ({ username, password, firstName, lastName }) => {
     setLoading(true);
     setShowMessage(false);
-    track("click_button", {
-      screen_name: "wcf_registration_signup_page",
-      event_target: "signup_button",
+    track('click_button', {
+      screen_name: 'wcf_registration_signup_page',
+      event_target: 'signup_button',
       utm_parameters: JSON.stringify(router.query),
       sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
       number_of_tickets: props.values.ticketCount,
     });
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
-      track("signup_user", {
-        screen_name: "wcf_registration_login_page",
+      track('signup_user', {
+        screen_name: 'wcf_registration_login_page',
         utm_parameters: JSON.stringify(router.query),
         sessions_attending_arr: JSON.stringify(props.values.sessionsAttending),
         number_of_tickets: props.values.ticketCount,
@@ -327,11 +327,11 @@ export function StepAuth({ errors, handleNext, ...props }) {
     setLoading(true);
     setShowMessage(false);
     try {
-      await Auth.resetPassword({ email: username, code: "" + code, password });
+      await Auth.resetPassword({ email: username, code: '' + code, password });
       setUsername(null);
       setAuthMode(LOGIN_MODE);
     } catch (ex) {
-      console.log("error signing in", ex);
+      console.log('error signing in', ex);
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {
         errorMessage = errorMessage[1];
@@ -384,8 +384,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
         <div className="container world-culture-festival__container">
           <div className="world-culture-festival__column">
             <div
-              className={classNames("success-message-container", {
-                "d-none": !showSuccessMessage,
+              className={classNames('success-message-container', {
+                'd-none': !showSuccessMessage,
               })}
             >
               <div className="success-message">
@@ -402,8 +402,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
             {(authMode === LOGIN_MODE || authMode === SIGNUP_MODE) && (
               <div className="wcf-auth-selector world-culture-festival__selector">
                 <button
-                  className={classNames("wcf-auth-selector__button", {
-                    "wcf-auth-selector__button_active":
+                  className={classNames('wcf-auth-selector__button', {
+                    'wcf-auth-selector__button_active':
                       authMode === SIGNUP_MODE,
                   })}
                   type="button"
@@ -413,8 +413,8 @@ export function StepAuth({ errors, handleNext, ...props }) {
                   Sign Up
                 </button>
                 <button
-                  className={classNames("wcf-auth-selector__button", {
-                    "wcf-auth-selector__button_active": authMode === LOGIN_MODE,
+                  className={classNames('wcf-auth-selector__button', {
+                    'wcf-auth-selector__button_active': authMode === LOGIN_MODE,
                   })}
                   type="button"
                   data-target="log-in-form"
@@ -470,13 +470,13 @@ export function StepAuth({ errors, handleNext, ...props }) {
             )}
 
             <p className="wcf-body-small world-culture-festival__policy">
-              By signing in, I agree to{" "}
+              By signing in, I agree to{' '}
               <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
                 <a target="_blank" className="wcf-link">
                   Terms of Service
                 </a>
-              </Link>{" "}
-              and{" "}
+              </Link>{' '}
+              and{' '}
               <a
                 className="wcf-link"
                 href="https://www.artofliving.org/us-en/privacy-policy"
@@ -525,7 +525,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
         <div className="world-culture-festival__column">
           <center>
             <img
-              src={profile.userProfilePic || "/img/avatar-icon.svg"}
+              src={profile.userProfilePic || '/img/avatar-icon.svg'}
               name="aboutme"
               width="140"
               height="140"
@@ -533,7 +533,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
               className="avatar"
             />
             <p className="wcf-body world-culture-festival__subtitle">
-              Not {profile.name} ?{" "}
+              Not {profile.name} ?{' '}
               <a className="wcf-link" onClick={signout}>
                 Sign out
               </a>

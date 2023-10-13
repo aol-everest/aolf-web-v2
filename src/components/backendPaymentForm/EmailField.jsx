@@ -1,6 +1,6 @@
-import { api } from "@utils";
-import classNames from "classnames";
-import { useState } from "react";
+import { api } from '@utils';
+import classNames from 'classnames';
+import { useState } from 'react';
 
 export function EmailField({
   applyDiscount,
@@ -24,7 +24,7 @@ export function EmailField({
   const removeUser = (form) => (e) => {
     setStatus(0);
     applyUser({ user: null, form });
-    form.setFieldValue(name, "");
+    form.setFieldValue(name, '');
   };
   const keyPress =
     ({ field, form }) =>
@@ -44,7 +44,7 @@ export function EmailField({
 
     try {
       const { user } = await api.get({
-        path: "findUserByEmail",
+        path: 'findUserByEmail',
         param: {
           email: value,
         },
@@ -55,7 +55,7 @@ export function EmailField({
       }
 
       const { data } = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           isBackendRegistration: 1,
           id: productId,
@@ -85,7 +85,7 @@ export function EmailField({
 
   const showTag = user !== null;
   return (
-    <div className={classNames("input-group", parentClassName)}>
+    <div className={classNames('input-group', parentClassName)}>
       {!showTag && (
         <>
           <input
@@ -105,10 +105,10 @@ export function EmailField({
             <label
               htmlFor="emailId"
               className={classNames({
-                "couponCode-error": form.errors.email,
+                'couponCode-error': form.errors.email,
               })}
             >
-              {form.errors.email || "Email"}
+              {form.errors.email || 'Email'}
             </label>
           )}
           {loading && (
@@ -123,16 +123,16 @@ export function EmailField({
           <div className="react-tag-container-bc">
             {withLabel && <label className="react-tag-label">Email</label>}
             <span
-              className={classNames("badge", "react-tag", {
-                "badge-light": status === 0,
-                "badge-success": status === 1,
-                "badge-danger": status === 2,
+              className={classNames('badge', 'react-tag', {
+                'badge-light': status === 0,
+                'badge-success': status === 1,
+                'badge-danger': status === 2,
               })}
             >
               {field.value}
               <a
-                className={classNames("react-tag-remove", {
-                  "!tw-text-white": status === 2,
+                className={classNames('react-tag-remove', {
+                  '!tw-text-white': status === 2,
                 })}
                 onClick={removeUser(form)}
               >

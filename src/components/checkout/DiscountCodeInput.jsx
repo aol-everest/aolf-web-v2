@@ -1,7 +1,7 @@
-import { api } from "@utils";
-import classNames from "classnames";
-import { useEffect, useState } from "react";
-import { FieldWrapper } from "./FieldWrapper";
+import { api } from '@utils';
+import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { FieldWrapper } from './FieldWrapper';
 
 export const DiscountCodeInput = ({
   label,
@@ -9,7 +9,7 @@ export const DiscountCodeInput = ({
   formikKey,
   containerClass,
   fullWidth,
-  productType = "workshop",
+  productType = 'workshop',
   addOnProducts = [],
   product,
   applyDiscount,
@@ -87,15 +87,15 @@ export const DiscountCodeInput = ({
         userId,
       };
       if (isBackendRequest) {
-        const userEmail = formikProps.values["email"];
+        const userEmail = formikProps.values['email'];
         payLoad = { ...payLoad, isBackendRequest: true, email: userEmail };
       }
       let results = await api.post({
-        path: "applyCoupon",
+        path: 'applyCoupon',
         body: payLoad,
       });
       if (results.status !== 200) {
-        throw new Error(results.error || "Internal Server error.");
+        throw new Error(results.error || 'Internal Server error.');
       }
       setIsCouponApplied(true);
       setStatus(1);
@@ -147,7 +147,7 @@ export const DiscountCodeInput = ({
     setShowTag(false);
     setStatus(0);
     applyDiscount(null);
-    formikProps.values[formikKey] = "";
+    formikProps.values[formikKey] = '';
     if (clearCoupon) {
       clearCoupon();
     }
@@ -182,16 +182,16 @@ export const DiscountCodeInput = ({
           <>
             <div className="react-tag-container">
               <span
-                className={classNames("badge", "react-tag", {
-                  "badge-light": status === 0,
-                  "badge-success": status === 1,
-                  "badge-danger": status === 2,
+                className={classNames('badge', 'react-tag', {
+                  'badge-light': status === 0,
+                  'badge-success': status === 1,
+                  'badge-danger': status === 2,
                 })}
               >
                 {formikProps.values[formikKey]}
                 <a
-                  className={classNames("react-tag-remove", {
-                    "!tw-text-white": status === 2,
+                  className={classNames('react-tag-remove', {
+                    '!tw-text-white': status === 2,
                   })}
                   onClick={removeCoupon}
                 >

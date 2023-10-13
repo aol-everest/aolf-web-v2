@@ -1,42 +1,42 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Loader } from "@components";
+import { Loader } from '@components';
 import {
   BillingInfoForm,
   DiscountCodeInput,
   UserInfoForm,
-} from "@components/checkout";
-import Link from "@components/linkWithUTM";
-import { ALERT_TYPES, MEMBERSHIP_TYPES, COURSE_TYPES } from "@constants";
-import { useAuth, useGlobalAlertContext } from "@contexts";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Auth, api } from "@utils";
-import { filterAllowedParams } from "@utils/utmParam";
-import classNames from "classnames";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import * as Yup from "yup";
-import "yup-phone";
+} from '@components/checkout';
+import Link from '@components/linkWithUTM';
+import { ALERT_TYPES, MEMBERSHIP_TYPES, COURSE_TYPES } from '@constants';
+import { useAuth, useGlobalAlertContext } from '@contexts';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { Auth, api } from '@utils';
+import { filterAllowedParams } from '@utils/utmParam';
+import classNames from 'classnames';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import * as Yup from 'yup';
+import 'yup-phone';
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
@@ -46,18 +46,18 @@ const RetreatPrerequisiteWarning = () => {
     <>
       <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
-        the Journey + membership, which is{" "}
+        the Journey + membership, which is{' '}
         <strong>{COURSE_TYPES.SKY_BREATH_MEDITATION.name}</strong> (formerly
-        known as the Happiness Program). In{" "}
+        known as the Happiness Program). In{' '}
         {COURSE_TYPES.SKY_BREATH_MEDITATION.name}, you'll learn a powerful
         breath meditation to effectively settle and calm the mind.
       </p>
       <p className="course-join-card__text">
-        If our records are not accurate, please contact customer service at{" "}
+        If our records are not accurate, please contact customer service at{' '}
         <a href={`tel:${orgConfig.contactNumberLink}`}>
           {orgConfig.contactNumber}
-        </a>{" "}
-        or email us at{" "}
+        </a>{' '}
+        or email us at{' '}
         <a href="mailto:app.support@us.artofliving.org">
           app.support@us.artofliving.org
         </a>
@@ -138,8 +138,8 @@ export const MembershipCheckoutStripe = ({
       !profile.isMandatoryWorkshopAttended
     ) {
       return showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-        className: "retreat-prerequisite-big meditation-digital-membership",
-        title: "Retreat Prerequisite",
+        className: 'retreat-prerequisite-big meditation-digital-membership',
+        title: 'Retreat Prerequisite',
         closeModalAction: closeRetreatPrerequisiteWarning,
         footer: () => {
           return (
@@ -171,7 +171,7 @@ export const MembershipCheckoutStripe = ({
       if (!isRegisteredStripeCustomer && isCreditCardRequired !== false) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile.name ? profile.name : firstName + " " + lastName,
+          name: profile.name ? profile.name : firstName + ' ' + lastName,
         });
         let { error, token } = createTokenRespone;
         if (error) {
@@ -181,7 +181,7 @@ export const MembershipCheckoutStripe = ({
       }
 
       let products = {
-        productType: "subscription",
+        productType: 'subscription',
         productSfId: activeSubscription.sfid,
         ...extraProps,
       };
@@ -238,7 +238,7 @@ export const MembershipCheckoutStripe = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
 
@@ -274,48 +274,48 @@ export const MembershipCheckoutStripe = ({
 
   const toggleDetailMobileModal = () => {
     if (!showDetailMobileModal) {
-      document.body.classList.add("overflow-hidden");
+      document.body.classList.add('overflow-hidden');
     } else {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove('overflow-hidden');
     }
     setShowDetailMobileModal((showDetailMobileModal) => !showDetailMobileModal);
   };
 
-  const isIahv = orgConfig.name === "IAHV";
+  const isIahv = orgConfig.name === 'IAHV';
 
   return (
     <Formik
       initialValues={{
-        firstName: first_name || "",
-        lastName: last_name || "",
-        email: email || "",
-        contactPhone: personMobilePhone || "",
-        contactAddress: personMailingStreet || "",
-        contactState: personMailingState || "",
-        contactZip: personMailingPostalCode || "",
-        couponCode: couponCode ? couponCode : "",
+        firstName: first_name || '',
+        lastName: last_name || '',
+        email: email || '',
+        contactPhone: personMobilePhone || '',
+        contactAddress: personMailingStreet || '',
+        contactState: personMailingState || '',
+        contactZip: personMailingPostalCode || '',
+        couponCode: couponCode ? couponCode : '',
         ppaAgreement: false,
       }}
       validationSchema={Yup.object().shape({
-        firstName: Yup.string().required("First Name is required"),
-        lastName: Yup.string().required("Last Name is required"),
+        firstName: Yup.string().required('First Name is required'),
+        lastName: Yup.string().required('Last Name is required'),
         contactPhone: Yup.string()
-          .label("Phone")
-          .required("Phone is required")
-          .phone(null, false, "Phone is invalid")
+          .label('Phone')
+          .required('Phone is required')
+          .phone(null, false, 'Phone is invalid')
           .nullable(),
-        contactAddress: Yup.string().required("Address is required"),
-        contactState: Yup.string().required("State is required"),
+        contactAddress: Yup.string().required('Address is required'),
+        contactState: Yup.string().required('State is required'),
         contactZip: Yup.string()
-          .required("Zip is required!")
+          .required('Zip is required!')
           //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-          .min(2, "Zip is invalid")
-          .max(10, "Zip is invalid"),
+          .min(2, 'Zip is invalid')
+          .max(10, 'Zip is invalid'),
         ppaAgreement: Yup.boolean()
-          .label("Terms")
+          .label('Terms')
           .test(
-            "is-true",
-            "Please check the box in order to continue.",
+            'is-true',
+            'Please check the box in order to continue.',
             (value) => value === true,
           ),
       })}
@@ -341,7 +341,7 @@ export const MembershipCheckoutStripe = ({
                 <div className="details mb-4">
                   <h2 className="details__title">Account Details:</h2>
                   <p className="details__content">
-                    This is not your account?{" "}
+                    This is not your account?{' '}
                     <a href="#" className="link" onClick={logout}>
                       Logout
                     </a>
@@ -407,20 +407,20 @@ export const MembershipCheckoutStripe = ({
                   <div className="agreement__group">
                     <input
                       type="checkbox"
-                      className={classNames("custom-checkbox", {
+                      className={classNames('custom-checkbox', {
                         error:
                           formikProps.errors.ppaAgreement &&
                           formikProps.touched.ppaAgreement,
                       })}
                       placeholder=" "
                       checked={formikProps.values.ppaAgreement}
-                      onChange={formikProps.handleChange("ppaAgreement")}
+                      onChange={formikProps.handleChange('ppaAgreement')}
                       value={formikProps.values.ppaAgreement}
                       name="ppaAgreement"
                     />
                     <label htmlFor="ppaAgreement"></label>
                     <p className="agreement__text">
-                      I agree to the{" "}
+                      I agree to the{' '}
                       {isIahv ? (
                         <Link
                           href="https://members.us.iahv.org/policy/ppa-course"
@@ -521,20 +521,20 @@ export const MembershipCheckoutStripe = ({
                 <div className="agreement__group">
                   <input
                     type="checkbox"
-                    className={classNames("custom-checkbox", {
+                    className={classNames('custom-checkbox', {
                       error:
                         formikProps.errors.ppaAgreement &&
                         formikProps.touched.ppaAgreement,
                     })}
                     placeholder=" "
                     checked={formikProps.values.ppaAgreement}
-                    onChange={formikProps.handleChange("ppaAgreement")}
+                    onChange={formikProps.handleChange('ppaAgreement')}
                     value={formikProps.values.ppaAgreement}
                     name="ppaAgreement"
                   />
                   <label htmlFor="ppaAgreement"></label>
                   <p className="agreement__text">
-                    I agree to the{" "}
+                    I agree to the{' '}
                     {isIahv ? (
                       <Link
                         href="https://members.us.iahv.org/policy/ppa-course"
@@ -589,7 +589,7 @@ export const MembershipCheckoutStripe = ({
                 </div>
               </div>
               <div
-                className={classNames("mobile-modal v3", {
+                className={classNames('mobile-modal v3', {
                   active: showDetailMobileModal,
                   show: showDetailMobileModal,
                 })}
@@ -604,7 +604,7 @@ export const MembershipCheckoutStripe = ({
                   </div>
                   <h1 className="course-name">Enroll</h1>
                   <h6 className="new-price d-sm-block d-flex justify-content-between">
-                    {subsciption.name}{" "}
+                    {subsciption.name}{' '}
                     <span>${activeSubscription.price}/mo</span>
                   </h6>
                 </div>

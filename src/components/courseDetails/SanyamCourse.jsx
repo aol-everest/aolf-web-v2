@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
-import { ALERT_TYPES, COURSE_MODES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { priceCalculation } from "@utils";
-import { useRouter } from "next/router";
-import { Element } from "react-scroll";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { RegisterPanel } from "./RegisterPanel";
-import { ResearchFindingSource } from "./ResearchFindingSource";
+import { HideOn } from '@components';
+import { ALERT_TYPES, COURSE_MODES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { priceCalculation } from '@utils';
+import { useRouter } from 'next/router';
+import { Element } from 'react-scroll';
+import { CourseBottomCard } from './CourseBottomCard';
+import { RegisterPanel } from './RegisterPanel';
+import { ResearchFindingSource } from './ResearchFindingSource';
 
 export const SanyamCourse = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -18,9 +18,9 @@ export const SanyamCourse = ({ data, swiperOption }) => {
   const showResearchModal = (e) => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Success",
+      title: 'Success',
       children: <ResearchFindingSource />,
-      className: "research-detail-modal",
+      className: 'research-detail-modal',
       hideConfirm: true,
     });
   };
@@ -33,7 +33,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
       delay: 2000,
     },
     pagination: {
-      el: ".research__list-pagination",
+      el: '.research__list-pagination',
       clickable: true,
     },
   };
@@ -42,8 +42,8 @@ export const SanyamCourse = ({ data, swiperOption }) => {
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course`,
       query: {
-        "other-ctype": "true",
-        courseType: "SANYAM_COURSE",
+        'other-ctype': 'true',
+        courseType: 'SANYAM_COURSE',
       },
     });
   };

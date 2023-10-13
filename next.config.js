@@ -3,7 +3,7 @@
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const ContentSecurityPolicy = `
   default-src * data: mediastream: blob: filesystem: about: ws: wss: 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline';
@@ -14,32 +14,32 @@ const ContentSecurityPolicy = `
 
 const securityHeaders = [
   {
-    key: "Content-Security-Policy",
-    value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+    key: 'Content-Security-Policy',
+    value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
   },
   {
-    key: "Cross-Origin-Opener-Policy",
-    value: "same-origin-allow-popups", // "same-origin-allow-popups"
+    key: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin-allow-popups', // "same-origin-allow-popups"
   },
   {
-    key: "x-content-type-options",
-    value: "nosniff",
+    key: 'x-content-type-options',
+    value: 'nosniff',
   },
   {
-    key: "referrer-policy",
-    value: "origin-when-cross-origin",
+    key: 'referrer-policy',
+    value: 'origin-when-cross-origin',
   },
   {
-    key: "permissions-policy",
-    value: "camera=(), geolocation=(self), microphone=(self), autoplay=(self)",
+    key: 'permissions-policy',
+    value: 'camera=(), geolocation=(self), microphone=(self), autoplay=(self)',
   },
   {
-    key: "X-XSS-Protection",
-    value: "1; mode=block",
+    key: 'X-XSS-Protection',
+    value: '1; mode=block',
   },
   {
-    key: "strict-transport-security",
-    value: "max-age=31536000; includeSubDomains",
+    key: 'strict-transport-security',
+    value: 'max-age=31536000; includeSubDomains',
   },
 ];
 
@@ -50,7 +50,7 @@ const moduleExports = {
   // assetPrefix: "/us-en/",
   productionBrowserSourceMaps: true,
   images: {
-    domains: ["images.ctfassets.net"],
+    domains: ['images.ctfassets.net'],
   },
   sentry: {
     hideSourceMaps: true,
@@ -59,13 +59,13 @@ const moduleExports = {
   async redirects() {
     return [
       {
-        source: "/",
-        destination: "/us-en/course",
+        source: '/',
+        destination: '/us-en/course',
         permanent: true,
       },
       {
-        source: "/us-en",
-        destination: "/us-en/course",
+        source: '/us-en',
+        destination: '/us-en/course',
         permanent: true,
       },
     ];
@@ -74,16 +74,16 @@ const moduleExports = {
     return [
       {
         // Apply these headers to all routes in your application.
-        source: "/(.*)",
+        source: '/(.*)',
         headers: securityHeaders,
       },
       {
-        source: "/:all*(svg|jpg|png)",
+        source: '/:all*(svg|jpg|png)',
         locale: false,
         headers: [
           {
-            key: "cache-control",
-            value: "public, max-age=800 must-revalidate",
+            key: 'cache-control',
+            value: 'public, max-age=800 must-revalidate',
           },
         ],
       },

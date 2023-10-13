@@ -1,7 +1,7 @@
-import classNames from "classnames";
-import { Field } from "formik";
-import Style from "./Dropdown.module.scss";
-import { FieldWrapper } from "./FieldWrapper";
+import classNames from 'classnames';
+import { Field } from 'formik';
+import Style from './Dropdown.module.scss';
+import { FieldWrapper } from './FieldWrapper';
 
 export const Dropdown = ({
   label,
@@ -23,8 +23,8 @@ export const Dropdown = ({
       fullWidth={fullWidth}
     >
       <div
-        className={classNames("select-box", {
-          "order__card__payment-select": !innerFullWidth,
+        className={classNames('select-box', {
+          'order__card__payment-select': !innerFullWidth,
         })}
       >
         <div tabIndex="1" className="select-box__current">
@@ -49,7 +49,7 @@ export const Dropdown = ({
         </div>
         <ul
           className={classNames(
-            "select-box__list drop-list",
+            'select-box__list drop-list',
             Style.select_box_list,
           )}
         >
@@ -69,8 +69,8 @@ export const Dropdown = ({
                     style={{
                       display:
                         formikProps.values[formikKey] === option.value
-                          ? "block"
-                          : "none",
+                          ? 'block'
+                          : 'none',
                     }}
                   />
                 </label>

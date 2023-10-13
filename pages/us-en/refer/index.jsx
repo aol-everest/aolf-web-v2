@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-import dynamic from "next/dynamic";
-import { COURSE_TYPES } from "@constants";
+import dynamic from 'next/dynamic';
+import { COURSE_TYPES } from '@constants';
 
 const CouponStack = dynamic(() =>
-  import("@components/profile").then((mod) => mod.CouponStack),
+  import('@components/profile').then((mod) => mod.CouponStack),
 );
 
 export default function TalkableRefer() {
@@ -14,7 +14,7 @@ export default function TalkableRefer() {
           <h6 className="course-details-card__subtitle">How To Earn Rewards</h6>
           <ol>
             <li>
-              Invite your friends to take the{" "}
+              Invite your friends to take the{' '}
               {COURSE_TYPES.SKY_BREATH_MEDITATION.name} course
             </li>
             <li>
@@ -29,7 +29,7 @@ export default function TalkableRefer() {
               You can use the credit towards Sahaj Samadhi Meditation™, Silent
               Retreats, or to repeat your SKY course
             </li>
-          </ol>{" "}
+          </ol>{' '}
           <h6 className="course-details-card__subtitle">
             How To Claim The Rewards
           </h6>

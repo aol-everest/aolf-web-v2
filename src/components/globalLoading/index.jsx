@@ -1,5 +1,5 @@
-import { GlobalLoadingContext } from "@contexts";
-import { useState } from "react";
+import { GlobalLoadingContext } from '@contexts';
+import { useState } from 'react';
 
 export const GlobalLoading = ({ children }) => {
   const [store, setStore] = useState();

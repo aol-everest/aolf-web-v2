@@ -40,7 +40,7 @@
 
     &:before,
     &:after {
-      content: "";
+      content: '';
       height: 2px;
       flex-grow: 1;
       background-color: rgba(102, 102, 102, 0.25);

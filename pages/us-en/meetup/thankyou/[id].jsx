@@ -1,24 +1,24 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import { AddToCalendarModal, PageLoading } from "@components";
+import { AddToCalendarModal, PageLoading } from '@components';
 import {
   InPersonGenericMeetup,
   OnlineMeetup,
   SKYMeetup,
   SahajSamadhiMeetup,
-} from "@components/meetupthankYouDetails";
-import { ABBRS, ALERT_TYPES, COURSE_MODES, MEETUP_TYPES } from "@constants";
-import { useAuth, useGlobalAlertContext } from "@contexts";
-import { api, calculateBusinessDays, tConvert } from "@utils";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import utc from "dayjs/plugin/utc";
-import moment from "moment";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useQuery } from "react-query";
-import { useAnalytics } from "use-analytics";
+} from '@components/meetupthankYouDetails';
+import { ABBRS, ALERT_TYPES, COURSE_MODES, MEETUP_TYPES } from '@constants';
+import { useAuth, useGlobalAlertContext } from '@contexts';
+import { api, calculateBusinessDays, tConvert } from '@utils';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import utc from 'dayjs/plugin/utc';
+import moment from 'moment';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { useAnalytics } from 'use-analytics';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -72,13 +72,13 @@ const Thankyou = () => {
     isError,
     error,
   } = useQuery(
-    "attendeeRecord",
+    'attendeeRecord',
     async () => {
       const response = await api.get({
-        path: "getWorkshopByAttendee",
+        path: 'getWorkshopByAttendee',
         param: {
           aid: attendeeId,
-          skipcheck: "1",
+          skipcheck: '1',
         },
       });
       return response;
@@ -90,32 +90,32 @@ const Thankyou = () => {
 
   useEffect(() => {
     if (!authenticated || !result) return;
-    track("transactionComplete", {
-      viewType: "workshop",
+    track('transactionComplete', {
+      viewType: 'workshop',
       amount: unitPrice,
       title: meetupTitle || title,
       ctype: productTypeId,
-      requestType: "Thankyou",
+      requestType: 'Thankyou',
       // user,
       ecommerce: {
-        currencyCode: "USD",
+        currencyCode: 'USD',
         purchase: {
           actionField: {
             id: orderExternalId,
-            affiliation: "Website",
+            affiliation: 'Website',
             revenue: ammountPaid,
-            tax: "0.00",
-            shipping: "0.00",
-            coupon: couponCode || "",
+            tax: '0.00',
+            shipping: '0.00',
+            coupon: couponCode || '',
           },
           products: [
             {
               id: courseId,
               courseId: courseId,
               name: title,
-              category: "workshop",
-              variant: "N/A",
-              brand: "Art of Living Foundation",
+              category: 'workshop',
+              variant: 'N/A',
+              brand: 'Art of Living Foundation',
               quantity: 1,
               // price: totalOrderAmount,
             },
@@ -182,23 +182,23 @@ const Thankyou = () => {
 
   let startDatetime = null;
   if (eventStartDateTimeGMT) {
-    startDatetime = moment.utc(`${eventStartDateTimeGMT || ""}`);
+    startDatetime = moment.utc(`${eventStartDateTimeGMT || ''}`);
   } else if (eventStartDate) {
     startDatetime = moment.utc(
-      `${eventStartDate || ""} ${eventStartTime || ""}`,
+      `${eventStartDate || ''} ${eventStartTime || ''}`,
     );
   } else {
-    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`);
+    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ''}`);
   }
   let endDatetime = null;
   if (eventendDateTimeGMT) {
-    endDatetime = moment.utc(`${eventendDateTimeGMT || ""}`);
+    endDatetime = moment.utc(`${eventendDateTimeGMT || ''}`);
   } else if (eventEndDate) {
-    endDatetime = moment.utc(`${eventEndDate || ""} ${eventEndTime || ""}`);
+    endDatetime = moment.utc(`${eventEndDate || ''} ${eventEndTime || ''}`);
   } else {
     endDatetime = moment
-      .utc(`${meetupStartDateTimeGMT || ""}`)
-      .add(meetupDuration, "minutes");
+      .utc(`${meetupStartDateTimeGMT || ''}`)
+      .add(meetupDuration, 'minutes');
   }
 
   const getSelectedTimeSlotDetails = (selectedTimeSlot) => {
@@ -206,9 +206,9 @@ const Thankyou = () => {
       return (
         <>
           <p className="program_card_subtitle c_text">
-            {dayjs.utc(selectedTimeSlot.startDate).format("MMM D") +
-              " - " +
-              dayjs.utc(selectedTimeSlot.endDate).format("D, YYYY")}
+            {dayjs.utc(selectedTimeSlot.startDate).format('MMM D') +
+              ' - ' +
+              dayjs.utc(selectedTimeSlot.endDate).format('D, YYYY')}
           </p>
           <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
         </>
@@ -220,7 +220,7 @@ const Thankyou = () => {
   const showTiming = (timeZone, option) => {
     let weekdayTiming = (
       <p className="program_card_subtitle c_text c_timing">
-        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{" "}
+        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{' '}
         {option.weekendStartTime &&
           calculateBusinessDays(
             dayjs.utc(option.startDate),
@@ -230,7 +230,7 @@ const Thankyou = () => {
     );
     let weekendTiming = option.weekendStartTime && (
       <p className="program_card_subtitle c_text c_timing">
-        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{" "}
+        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{' '}
         {
           calculateBusinessDays(
             dayjs.utc(option.startDate),
@@ -260,20 +260,20 @@ const Thankyou = () => {
   };
 
   const event = {
-    timezone: "Etc/GMT",
+    timezone: 'Etc/GMT',
     description: newTitle,
     duration,
-    endDatetime: endDatetime.format("YYYYMMDDTHHmmss"),
-    location: `${streetAddress1 || ""} ${streetAddress2 || ""} ${city || ""} ${
-      country || ""
+    endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
+    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
+      country || ''
     }`,
-    startDatetime: startDatetime.format("YYYYMMDDTHHmmss"),
+    startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
 
   const addToCalendarAction = () => {
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Add to Calendar",
+      title: 'Add to Calendar',
 
       children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
@@ -284,11 +284,11 @@ const Thankyou = () => {
 
   const getMeetupImage = () => {
     switch (meetup.meetupType) {
-      case "Short SKY Meditation Meetup":
+      case 'Short SKY Meditation Meetup':
         return (
           <img className="img-fluid" src="/img/meetup_image.png" alt="bg" />
         );
-      case "Guided Meditation Meetup":
+      case 'Guided Meditation Meetup':
         return (
           <img className="img-fluid" src="/img/meetup_1_image.png" alt="bg" />
         );
@@ -325,8 +325,8 @@ const Thankyou = () => {
                     {meetupTitle || title}
                   </h1>
                   <p className="get-started__text">
-                    You're registered for the {meetupTitle || title} on{" "}
-                    {dayjs.utc(meetupStartDate).format("LL")}
+                    You're registered for the {meetupTitle || title} on{' '}
+                    {dayjs.utc(meetupStartDate).format('LL')}
                   </p>
                   <a
                     className="get-started__link"
@@ -357,7 +357,7 @@ const Thankyou = () => {
                   <ul className="program-details__list-schedule">
                     <li className="program-details__schedule tw-flex">
                       <span className="program-details__schedule-date">
-                        {dayjs.utc(meetupStartDate).format("LL")}
+                        {dayjs.utc(meetupStartDate).format('LL')}
                       </span>
                       <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
                         meetupStartTime,
@@ -375,7 +375,7 @@ const Thankyou = () => {
                       </span>
                       <a
                         href={`https://www.google.com/maps/search/?api=1&query=${
-                          meetup.locationStreet || ""
+                          meetup.locationStreet || ''
                         }, ${meetup.locationCity} ${meetup.locationProvince} ${
                           meetup.locationPostalCode
                         } ${meetup.locationCountry}`}
@@ -388,10 +388,10 @@ const Thankyou = () => {
                           </li>
                         )}
                         <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
-                          {meetup.locationCity || ""}
-                          {", "}
-                          {meetup.locationProvince || ""}{" "}
-                          {meetup.locationPostalCode || ""}
+                          {meetup.locationCity || ''}
+                          {', '}
+                          {meetup.locationProvince || ''}{' '}
+                          {meetup.locationPostalCode || ''}
                         </li>
                       </a>
                     </ul>
@@ -403,8 +403,8 @@ const Thankyou = () => {
                       </span>
                       <a
                         href={`https://www.google.com/maps/search/?api=1&query=${
-                          meetup.streetAddress1 || ""
-                        },${meetup.streetAddress2 || ""} ${meetup.city} ${
+                          meetup.streetAddress1 || ''
+                        },${meetup.streetAddress2 || ''} ${meetup.city} ${
                           meetup.state
                         } ${meetup.zip} ${meetup.country}`}
                         target="_blank"
@@ -421,9 +421,9 @@ const Thankyou = () => {
                           </li>
                         )}
                         <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
-                          {meetup.city || ""}
-                          {", "}
-                          {meetup.state || ""} {meetup.zip || ""}
+                          {meetup.city || ''}
+                          {', '}
+                          {meetup.state || ''} {meetup.zip || ''}
                         </li>
                       </a>
                     </ul>
@@ -446,7 +446,7 @@ const Thankyou = () => {
                 <img src="/img/silent-card-img.png" alt="img" />
               </div>
               <div className="course-bottom-card__info">
-                <p>{dayjs.utc(meetupStartDate).format("LL")}</p>
+                <p>{dayjs.utc(meetupStartDate).format('LL')}</p>
                 <div>
                   <h3>{meetupTitle}</h3>
                 </div>

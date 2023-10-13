@@ -1,13 +1,13 @@
-import { useGlobalAlertContext } from "@contexts";
-import classNames from "classnames";
-import Style from "./GlobalAlert.module.scss";
+import { useGlobalAlertContext } from '@contexts';
+import classNames from 'classnames';
+import Style from './GlobalAlert.module.scss';
 
 export const SuccessAlert = () => {
   const { hideAlert, store } = useGlobalAlertContext();
   const { alertProps } = store || {};
   const {
     closeModalAction,
-    confirmBtnText = "Close",
+    confirmBtnText = 'Close',
     title,
     children,
     className,
@@ -35,7 +35,7 @@ export const SuccessAlert = () => {
         <div className="course-join-card__body alert__body">
           <h2
             className={classNames(
-              "course-join-card__title section-title",
+              'course-join-card__title section-title',
               Style.title,
             )}
           >
@@ -52,7 +52,7 @@ export const SuccessAlert = () => {
           </div>
           <div className="course-join-card__text-container">{children}</div>
         </div>
-        <div className={classNames("course-join-card__footer", Style.footer)}>
+        <div className={classNames('course-join-card__footer', Style.footer)}>
           <button className="btn-secondary" onClick={handleAlertToggle}>
             {confirmBtnText}
           </button>

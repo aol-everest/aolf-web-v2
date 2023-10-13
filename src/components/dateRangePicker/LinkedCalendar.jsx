@@ -1,13 +1,13 @@
-import classNames from "classnames";
-import PropTypes from "prop-types";
-import React from "react";
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-import { Table } from "./Table";
-import { dayjs } from "./utils";
+import { Table } from './Table';
+import { dayjs } from './utils';
 
-import CalendarBody from "./CalendarBody";
-import CalendarHead from "./CalendarHead";
-import PickerUI from "./PickerUI";
+import CalendarBody from './CalendarBody';
+import CalendarHead from './CalendarHead';
+import PickerUI from './PickerUI';
 
 class LinkedCalendar extends React.Component {
   static propTypes = {
@@ -20,15 +20,15 @@ class LinkedCalendar extends React.Component {
   };
 
   static defaultProps = {
-    position: "left",
-    opens: "left",
+    position: 'left',
+    opens: 'left',
   };
 
   constructor(props) {
     super(props);
 
-    const leftCalendar = dayjs().subtract(props.toLeft ? 1 : 0, "month");
-    const rightCalendar = leftCalendar.add(1, "month");
+    const leftCalendar = dayjs().subtract(props.toLeft ? 1 : 0, 'month');
+    const rightCalendar = leftCalendar.add(1, 'month');
 
     this.state = { leftCalendar, rightCalendar };
 
@@ -37,13 +37,13 @@ class LinkedCalendar extends React.Component {
   }
 
   handlePrev(leftCalendar) {
-    const rightCalendar = leftCalendar.add(1, "month");
+    const rightCalendar = leftCalendar.add(1, 'month');
 
     this.setState({ leftCalendar, rightCalendar });
   }
 
   handleNext(rightCalendar) {
-    const leftCalendar = rightCalendar.subtract(1, "month");
+    const leftCalendar = rightCalendar.subtract(1, 'month');
 
     this.setState({ rightCalendar, leftCalendar });
   }
@@ -54,7 +54,7 @@ class LinkedCalendar extends React.Component {
     const rightState = Object.assign({}, this.props, {
       calendar: rightCalendar,
     });
-    const className = classNames("drp-calendar", "left");
+    const className = classNames('drp-calendar', 'left');
 
     return [
       <div className={className} key={0}>
@@ -108,8 +108,8 @@ class LinkedCalendar extends React.Component {
       className,
     );
     const styles = {
-      left: "auto",
-      display: "block",
+      left: 'auto',
+      display: 'block',
     };
 
     return (

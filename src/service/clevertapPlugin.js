@@ -3,7 +3,7 @@ export default function clevertapPlugin(userConfig) {
 
   return {
     /* All plugins require a name */
-    name: "clevertap-plugin",
+    name: 'clevertap-plugin',
     /* Everything else below this is optional depending on your plugin requirements */
     config: {},
     initialize: ({ config }) => {
@@ -31,7 +31,7 @@ export default function clevertapPlugin(userConfig) {
     },
     loaded: () => {
       // return boolean so analytics knows when it can send data to third party
-      return typeof window !== "undefined" && !!window.clevertap;
+      return typeof window !== 'undefined' && !!window.clevertap;
     },
   };
 }

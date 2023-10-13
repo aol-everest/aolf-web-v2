@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import { AddToCalendarModal, PageLoading } from "@components";
+import { AddToCalendarModal, PageLoading } from '@components';
 import {
   InPersonGenericCourse,
   OnlineCourse,
@@ -9,24 +9,24 @@ import {
   SahajSamadhi,
   SahajSamadhiCombo,
   SilentRetreat,
-} from "@components/coursethankYouDetails";
-import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery } from "@service";
-import { Talkable, api, calculateBusinessDays, tConvert } from "@utils";
-import { hasCookie, setCookie } from "cookies-next";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import utc from "dayjs/plugin/utc";
-import moment from "moment";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useQuery } from "react-query";
-import { useQueryString } from "@hooks";
-import { useAnalytics } from "use-analytics";
+} from '@components/coursethankYouDetails';
+import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery } from '@service';
+import { Talkable, api, calculateBusinessDays, tConvert } from '@utils';
+import { hasCookie, setCookie } from 'cookies-next';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import utc from 'dayjs/plugin/utc';
+import moment from 'moment';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { useQueryString } from '@hooks';
+import { useAnalytics } from 'use-analytics';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -51,9 +51,9 @@ dayjs.extend(localizedFormat);
 
 const renderVideo = (productTypeId) => {
   switch (productTypeId) {
-    case "811570":
-    case "1001309":
-    case "1008432":
+    case '811570':
+    case '1001309':
+    case '1008432':
       return (
         <iframe
           src="https://player.vimeo.com/video/432237531"
@@ -64,7 +64,7 @@ const renderVideo = (productTypeId) => {
           allowFullScreen
         ></iframe>
       );
-    case "811569":
+    case '811569':
       return (
         <iframe
           src="https://player.vimeo.com/video/411549679"
@@ -75,7 +75,7 @@ const renderVideo = (productTypeId) => {
           allowFullScreen
         ></iframe>
       );
-    case "999649":
+    case '999649':
       return (
         <img
           src="/img/SahajSamadhi.png"
@@ -94,7 +94,7 @@ const Thankyou = () => {
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
-  const [courseType] = useQueryString("courseType");
+  const [courseType] = useQueryString('courseType');
   const { id: attendeeId, comboId } = router.query;
   const {
     data: result,
@@ -102,13 +102,13 @@ const Thankyou = () => {
     isError,
     error,
   } = useQuery(
-    "attendeeRecord",
+    'attendeeRecord',
     async () => {
       const response = await api.get({
-        path: "getWorkshopByAttendee",
+        path: 'getWorkshopByAttendee',
         param: {
           aid: attendeeId,
-          skipcheck: "1",
+          skipcheck: '1',
         },
       });
       return response;
@@ -128,10 +128,10 @@ const Thankyou = () => {
       last_name: last_name,
     });
     page({
-      category: "course_registration",
-      name: "course_referral_popup",
+      category: 'course_registration',
+      name: 'course_referral_popup',
       course_type: courseType,
-      referral: "course_checkout",
+      referral: 'course_checkout',
     });
     track(
       "'aol_purchase'",
@@ -147,21 +147,21 @@ const Thankyou = () => {
             customer_city: personMailingCity,
             customer_zip: personMailingPostalCode,
             customer_address_1: personMailingStreet,
-            customer_address_2: "",
+            customer_address_2: '',
             customer_country: personMailingCountry,
             customer_state: personMailingState,
           },
         ],
         ecommerce: [
           {
-            currencyCode: "USD",
+            currencyCode: 'USD',
             purchase: {
               revenue: ammountPaid,
-              discount_amount: "",
-              tax: "0.00",
-              shipping: "0.00",
+              discount_amount: '',
+              tax: '0.00',
+              shipping: '0.00',
               sub_total: ammountPaid,
-              coupon: couponCode || "",
+              coupon: couponCode || '',
             },
             products: [
               {
@@ -169,8 +169,8 @@ const Thankyou = () => {
                 product_id: productTypeId,
                 id: courseId,
                 price: ammountPaid,
-                category: "workshop",
-                brand: "Art of Living Foundation",
+                category: 'workshop',
+                brand: 'Art of Living Foundation',
                 quantity: 1,
               },
             ],
@@ -180,7 +180,7 @@ const Thankyou = () => {
       {
         plugins: {
           // disable this specific track call for all plugins except customerio
-          "clevertap-plugin": false,
+          'clevertap-plugin': false,
         },
       },
     );
@@ -188,16 +188,16 @@ const Thankyou = () => {
       {
         order_number: orderExternalId, // Unique order number. Example: '100011'
         subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
-        coupon_code: isTalkableCoupon ? couponCode || "" : "", // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
-        shipping_address: "",
-        shipping_zip: "",
+        coupon_code: isTalkableCoupon ? couponCode || '' : '', // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
+        shipping_address: '',
+        shipping_zip: '',
       },
       {
         email: userEmail,
-        traffic_source: "", // The source of the traffic driven to the campaign. Example: 'facebook'
+        traffic_source: '', // The source of the traffic driven to the campaign. Example: 'facebook'
       },
     );
-    setCookie(orderExternalId, "DONE");
+    setCookie(orderExternalId, 'DONE');
   }, [result]);
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
@@ -255,21 +255,21 @@ const Thankyou = () => {
 
   let startDatetime = null;
   if (eventStartDateTimeGMT) {
-    startDatetime = moment.utc(`${eventStartDateTimeGMT || ""}`);
+    startDatetime = moment.utc(`${eventStartDateTimeGMT || ''}`);
   } else if (eventStartDate) {
     startDatetime = moment.utc(
-      `${eventStartDate || ""} ${eventStartTime || ""}`,
+      `${eventStartDate || ''} ${eventStartTime || ''}`,
     );
   } else {
-    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`);
+    startDatetime = moment.utc(`${meetupStartDateTimeGMT || ''}`);
   }
   let endDatetime = null;
   if (eventendDateTimeGMT) {
-    endDatetime = moment.utc(`${eventendDateTimeGMT || ""}`);
+    endDatetime = moment.utc(`${eventendDateTimeGMT || ''}`);
   } else if (eventEndDate) {
-    endDatetime = moment.utc(`${eventEndDate || ""} ${eventEndTime || ""}`);
+    endDatetime = moment.utc(`${eventEndDate || ''} ${eventEndTime || ''}`);
   } else {
-    endDatetime = moment.utc(`${meetupStartDateTimeGMT || ""}`).add(2, "hours");
+    endDatetime = moment.utc(`${meetupStartDateTimeGMT || ''}`).add(2, 'hours');
   }
 
   const {
@@ -277,7 +277,7 @@ const Thankyou = () => {
     orderExternalId,
     couponCode,
     selectedGenericSlot = {},
-    pricebookName = "",
+    pricebookName = '',
     isTalkableCoupon,
     first_name,
     last_name,
@@ -292,39 +292,39 @@ const Thankyou = () => {
   } = attendeeRecord;
 
   const event = {
-    timezone: "Etc/GMT",
+    timezone: 'Etc/GMT',
     description: newTitle,
     duration,
-    endDatetime: endDatetime.format("YYYYMMDDTHHmmss"),
-    location: `${streetAddress1 || ""} ${streetAddress2 || ""} ${city || ""} ${
-      country || ""
+    endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
+    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
+      country || ''
     }`,
-    startDatetime: startDatetime.format("YYYYMMDDTHHmmss"),
+    startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
 
   const addToCalendarAction = (e) => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Add to Calendar",
+      title: 'Add to Calendar',
 
       children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
         hideAlert();
       },
     });
-    track("click_button", {
-      screen_name: "course_referral_popup",
-      event_target: "add_to_calendar_button",
+    track('click_button', {
+      screen_name: 'course_referral_popup',
+      event_target: 'add_to_calendar_button',
       course_type: courseType,
-      referral: "course_checkout",
+      referral: 'course_checkout',
     });
   };
 
   const showTiming = (timeZone, option) => {
     let weekdayTiming = (
       <p className="program_card_subtitle c_text c_timing">
-        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{" "}
+        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{' '}
         {option.weekendStartTime &&
           calculateBusinessDays(
             dayjs.utc(option.startDate),
@@ -334,7 +334,7 @@ const Thankyou = () => {
     );
     let weekendTiming = option.weekendStartTime && (
       <p className="program_card_subtitle c_text c_timing">
-        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{" "}
+        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{' '}
         {
           calculateBusinessDays(
             dayjs.utc(option.startDate),
@@ -368,9 +368,9 @@ const Thankyou = () => {
       return (
         <>
           <p className="program_card_subtitle c_text">
-            {dayjs.utc(selectedTimeSlot.startDate).format("MMM D") +
-              " - " +
-              dayjs.utc(selectedTimeSlot.endDate).format("D, YYYY")}
+            {dayjs.utc(selectedTimeSlot.startDate).format('MMM D') +
+              ' - ' +
+              dayjs.utc(selectedTimeSlot.endDate).format('D, YYYY')}
           </p>
           <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
         </>
@@ -395,7 +395,7 @@ const Thankyou = () => {
     return <OnlineCourse />;
   };
 
-  const isRepeater = (pricebookName || "").toLowerCase().includes("repeater");
+  const isRepeater = (pricebookName || '').toLowerCase().includes('repeater');
 
   const comboCourse = comboId
     ? availableBundles?.find(
@@ -408,7 +408,7 @@ const Thankyou = () => {
       comboCourse.comboDetails?.some(
         (comboDetail) =>
           `${COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value}`.indexOf(
-            comboDetail.comboDetailProductAllowedFamilyProduct?.split(",")[0],
+            comboDetail.comboDetailProductAllowedFamilyProduct?.split(',')[0],
           ) >= 0,
       )) ||
     false;
@@ -418,7 +418,7 @@ const Thankyou = () => {
       comboCourse.comboDetails?.some(
         (comboDetail) =>
           `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(
-            comboDetail.comboDetailProductAllowedFamilyProduct?.split(",")[0],
+            comboDetail.comboDetailProductAllowedFamilyProduct?.split(',')[0],
           ) >= 0,
       )) ||
     false;
@@ -428,8 +428,8 @@ const Thankyou = () => {
 
   const handleSecondCourseRedirection = () => {
     const secondCourseType = isSKYType
-      ? "SAHAJ_SAMADHI_MEDITATION"
-      : "SKY_BREATH_MEDITATION";
+      ? 'SAHAJ_SAMADHI_MEDITATION'
+      : 'SKY_BREATH_MEDITATION';
 
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course`,
@@ -447,24 +447,24 @@ const Thankyou = () => {
     isSkyPlusSahajFirstCourse && comboCourse.showSecondCourseButton;
 
   const iosAppDownloadAction = () => {
-    track("click_button", {
-      screen_name: "course_referral_popup",
-      event_target: "ios_app_link",
+    track('click_button', {
+      screen_name: 'course_referral_popup',
+      event_target: 'ios_app_link',
       course_type: courseType,
-      referral: "course_checkout",
+      referral: 'course_checkout',
     });
   };
 
   const androidAppDownloadAction = () => {
-    track("click_button", {
-      screen_name: "course_referral_popup",
-      event_target: "android_app_link",
+    track('click_button', {
+      screen_name: 'course_referral_popup',
+      event_target: 'android_app_link',
       course_type: courseType,
-      referral: "course_checkout",
+      referral: 'course_checkout',
     });
   };
 
-  const autoVoidParam = ammountPaid === 0 ? "&autovoid=1" : "";
+  const autoVoidParam = ammountPaid === 0 ? '&autovoid=1' : '';
 
   return (
     <>
@@ -478,13 +478,13 @@ const Thankyou = () => {
             noimageindex: true,
             noarchive: true,
             maxSnippet: -1,
-            maxImagePreview: "none",
+            maxImagePreview: 'none',
             maxVideoPreview: -1,
           }}
         />
         {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
-          process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === "true" &&
-          ["811569", "12371", "12415", "999649"].indexOf(productTypeId) >= 0 &&
+          process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === 'true' &&
+          ['811569', '12371', '12415', '999649'].indexOf(productTypeId) >= 0 &&
           !isRepeater && (
             <>
               <img
@@ -530,13 +530,13 @@ const Thankyou = () => {
                         {title}
                       </h1>
                       <p className="get-started__text">
-                        You're registered for the {title}{" "}
+                        You're registered for the {title}{' '}
                         {!isGenericWorkshop &&
                           !isMeditationDeluxe &&
                           !gatewayToInfinity && (
                             <>
-                              {" "}
-                              from {formattedStartDateOnly} -{" "}
+                              {' '}
+                              from {formattedStartDateOnly} -{' '}
                               {formattedEndDateOnly}
                             </>
                           )}
@@ -558,11 +558,11 @@ const Thankyou = () => {
                         your {title}.
                       </p>
                     </div>
-                    {orgConfig.name !== "HB" && (
+                    {orgConfig.name !== 'HB' && (
                       <>
                         <p className="get-started__text">
                           <br />
-                          To get started, download the app.{" "}
+                          To get started, download the app.{' '}
                           {isGenericWorkshop && (
                             <>
                               <span>
@@ -626,7 +626,7 @@ const Thankyou = () => {
                                   key={i}
                                 >
                                   <span className="program-details__schedule-date">
-                                    {dayjs.utc(time.startDate).format("LL")}
+                                    {dayjs.utc(time.startDate).format('LL')}
                                   </span>
                                   <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
                                     time.startTime,
@@ -648,7 +648,7 @@ const Thankyou = () => {
                               </span>
                               <a
                                 href={`https://www.google.com/maps/search/?api=1&query=${
-                                  workshop.locationStreet || ""
+                                  workshop.locationStreet || ''
                                 }, ${workshop.locationCity} ${
                                   workshop.locationProvince
                                 } ${workshop.locationPostalCode} ${
@@ -663,10 +663,10 @@ const Thankyou = () => {
                                   </li>
                                 )}
                                 <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
-                                  {workshop.locationCity || ""}
-                                  {", "}
-                                  {workshop.locationProvince || ""}{" "}
-                                  {workshop.locationPostalCode || ""}
+                                  {workshop.locationCity || ''}
+                                  {', '}
+                                  {workshop.locationProvince || ''}{' '}
+                                  {workshop.locationPostalCode || ''}
                                 </li>
                               </a>
                             </ul>
@@ -678,8 +678,8 @@ const Thankyou = () => {
                               </div>
                               <a
                                 href={`https://www.google.com/maps/search/?api=1&query=${
-                                  workshop.streetAddress1 || ""
-                                },${workshop.streetAddress2 || ""} ${
+                                  workshop.streetAddress1 || ''
+                                },${workshop.streetAddress2 || ''} ${
                                   workshop.city
                                 } ${workshop.state} ${workshop.zip} ${
                                   workshop.country
@@ -698,9 +698,9 @@ const Thankyou = () => {
                                   </li>
                                 )}
                                 <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
-                                  {workshop.city || ""}
-                                  {", "}
-                                  {workshop.state || ""} {workshop.zip || ""}
+                                  {workshop.city || ''}
+                                  {', '}
+                                  {workshop.state || ''} {workshop.zip || ''}
                                 </li>
                               </a>
                             </ul>
@@ -763,11 +763,11 @@ const Thankyou = () => {
                   !isMeditationDeluxe &&
                   !gatewayToInfinity && (
                     <p>
-                      {dayjs.utc(eventStartDate).format("MMMM D") +
-                        " - " +
-                        dayjs.utc(eventEndDate).format("MMMM D") +
-                        ", " +
-                        dayjs.utc(eventEndDate).format("YYYY")}
+                      {dayjs.utc(eventStartDate).format('MMMM D') +
+                        ' - ' +
+                        dayjs.utc(eventEndDate).format('MMMM D') +
+                        ', ' +
+                        dayjs.utc(eventEndDate).format('YYYY')}
                     </p>
                   )}
                 <div>

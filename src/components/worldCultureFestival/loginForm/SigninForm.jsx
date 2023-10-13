@@ -1,15 +1,15 @@
-import { DevTool } from "@hookform/devtools";
-import { yupResolver } from "@hookform/resolvers/yup";
-import classNames from "classnames";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { object, string } from "yup";
+import { DevTool } from '@hookform/devtools';
+import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { object, string } from 'yup';
 
 const schema = object().shape({
   username: string()
-    .email("This type of email does not exist. Please enter a valid one.")
-    .required("Email is required"),
-  password: string().required("Password is required"),
+    .email('This type of email does not exist. Please enter a valid one.')
+    .required('Email is required'),
+  password: string().required('Password is required'),
 });
 
 export const SigninForm = ({
@@ -19,13 +19,13 @@ export const SigninForm = ({
   message,
   loading,
 }) => {
-  const [passwordType, setPasswordType] = useState("password");
+  const [passwordType, setPasswordType] = useState('password');
   const togglePassword = () => {
-    if (passwordType === "password") {
-      setPasswordType("text");
+    if (passwordType === 'password') {
+      setPasswordType('text');
       return;
     }
-    setPasswordType("password");
+    setPasswordType('password');
   };
   const {
     register,
@@ -46,11 +46,11 @@ export const SigninForm = ({
           <input
             type="email"
             id="log-in-email"
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.username,
             })}
             placeholder="Enter your email"
-            {...register("username")}
+            {...register('username')}
           />
           {errors.username && (
             <label htmlFor="log-in-email" className="wcf-select__error-message">
@@ -65,11 +65,11 @@ export const SigninForm = ({
           </label>
           <input
             type={passwordType}
-            className={classNames("wcf-input__field", {
+            className={classNames('wcf-input__field', {
               error: errors.password,
             })}
             placeholder="Enter your password"
-            {...register("password")}
+            {...register('password')}
           />
           <button
             type="button"

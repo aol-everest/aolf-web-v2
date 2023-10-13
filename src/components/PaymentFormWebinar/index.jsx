@@ -9,18 +9,18 @@ import {
   PayWith,
   ProgramQuestionnaire,
   UserInfoForm,
-} from "@components/checkout";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Auth, isEmpty } from "@utils";
-import dayjs from "dayjs";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import * as Yup from "yup";
-import "yup-phone";
+} from '@components/checkout';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { Auth, isEmpty } from '@utils';
+import dayjs from 'dayjs';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import * as Yup from 'yup';
+import 'yup-phone';
 
-import { Loader } from "@components";
+import { Loader } from '@components';
 import {
   ABBRS,
   ALERT_TYPES,
@@ -28,41 +28,41 @@ import {
   PAYMENT_MODES,
   PAYMENT_TYPES,
   COURSE_TYPES,
-} from "@constants";
+} from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
-import { useQueryString } from "@hooks";
-import { pushRouteWithUTMQuery } from "@service";
-import { api, priceCalculation, tConvert } from "@utils";
-import { filterAllowedParams } from "@utils/utmParam";
+} from '@contexts';
+import { useQueryString } from '@hooks';
+import { pushRouteWithUTMQuery } from '@service';
+import { api, priceCalculation, tConvert } from '@utils';
+import { filterAllowedParams } from '@utils/utmParam';
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
 
 export const PaymentFormWebinar = ({
   workshop = {},
-  selectedWorkshopId = "",
+  selectedWorkshopId = '',
   handleWorkshopSelectionChange = () => {},
   workshops = [],
   profile = {},
@@ -75,7 +75,7 @@ export const PaymentFormWebinar = ({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
-  const [discount] = useQueryString("discountCode");
+  const [discount] = useQueryString('discountCode');
   const [discountResponse, setDiscountResponse] = useState(null);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
   const [enrollFormValues, setEnrollFormValues] = useState(null);
@@ -118,7 +118,7 @@ export const PaymentFormWebinar = ({
       pathname: `/us-en/membership/${id}`,
       query: {
         cid: workshop.id,
-        page: "checkout",
+        page: 'checkout',
       },
     });
   };
@@ -136,7 +136,7 @@ export const PaymentFormWebinar = ({
       error: errorMessage,
       isError,
     } = await api.post({
-      path: "paypalBuyAcknowledgement",
+      path: 'paypalBuyAcknowledgement',
       body: { orderID: paypalData.orderID },
     });
 
@@ -182,7 +182,7 @@ export const PaymentFormWebinar = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -218,15 +218,15 @@ export const PaymentFormWebinar = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -235,7 +235,7 @@ export const PaymentFormWebinar = ({
 
       let payLoad = {
         shoppingRequest: {
-          couponCode: showCouponCodeField ? couponCode : "",
+          couponCode: showCouponCodeField ? couponCode : '',
           contactAddress: {
             contactPhone,
             contactAddress,
@@ -281,7 +281,7 @@ export const PaymentFormWebinar = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
       setLoading(false);
@@ -364,7 +364,7 @@ export const PaymentFormWebinar = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -375,12 +375,12 @@ export const PaymentFormWebinar = ({
       let tokenizeCC = null;
       if (
         !isCCNotRequired &&
-        (paymentMethod.type !== "card" || isChangingCard) &&
+        (paymentMethod.type !== 'card' || isChangingCard) &&
         isCreditCardRequired !== false
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile.name ? profile.name : firstName + " " + lastName,
+          name: profile.name ? profile.name : firstName + ' ' + lastName,
         });
         let { error, token } = createTokenRespone;
         if (error) {
@@ -417,15 +417,15 @@ export const PaymentFormWebinar = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -500,7 +500,7 @@ export const PaymentFormWebinar = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
 
@@ -591,12 +591,12 @@ export const PaymentFormWebinar = ({
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
     !isEmpty(groupedAddOnProducts) &&
-    "Residential Add On" in groupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].length > 0;
+    'Residential Add On' in groupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].length > 0;
 
   const residentialAddOnRequired =
     hasGroupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].some(
+    groupedAddOnProducts['Residential Add On'].some(
       (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
     );
 
@@ -608,13 +608,13 @@ export const PaymentFormWebinar = ({
   let UpdatedFeeAfterCredits;
   if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
     usableCredit.availableCredit === 1
   ) {
     UpdatedFeeAfterCredits = 0;
   } else if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
+    usableCredit.creditMeasureUnit === 'Amount'
   ) {
     if (usableCredit.availableCredit > fee) {
       UpdatedFeeAfterCredits = 0;
@@ -645,54 +645,54 @@ export const PaymentFormWebinar = ({
     <>
       <Formik
         initialValues={{
-          firstName: first_name || "",
-          lastName: last_name || "",
-          email: email || "",
-          contactPhone: personMobilePhone || "",
-          contactAddress: personMailingStreet || "",
-          contactCity: personMailingCity || "",
-          contactState: personMailingState || "",
-          contactZip: personMailingPostalCode || "",
-          couponCode: discount ? discount : "",
+          firstName: first_name || '',
+          lastName: last_name || '',
+          email: email || '',
+          contactPhone: personMobilePhone || '',
+          contactAddress: personMailingStreet || '',
+          contactCity: personMailingCity || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
+          couponCode: discount ? discount : '',
           questionnaire: questionnaire,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
           paymentMode:
-            otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") > -1
-              ? ""
+            otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') > -1
+              ? ''
               : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
           accommodation: null,
-          priceType: "regular",
+          priceType: 'regular',
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required("First Name is required"),
-          lastName: Yup.string().required("Last Name is required"),
+          firstName: Yup.string().required('First Name is required'),
+          lastName: Yup.string().required('Last Name is required'),
           contactPhone: Yup.string()
-            .label("Phone")
-            .required("Phone is required")
-            .phone(null, false, "Phone is invalid")
+            .label('Phone')
+            .required('Phone is required')
+            .phone(null, false, 'Phone is invalid')
             .nullable(),
-          contactAddress: Yup.string().required("Address is required"),
-          contactCity: Yup.string().required("City is required"),
-          contactState: Yup.string().required("State is required"),
+          contactAddress: Yup.string().required('Address is required'),
+          contactCity: Yup.string().required('City is required'),
+          contactState: Yup.string().required('State is required'),
           contactZip: Yup.string()
-            .required("Zip is required!")
+            .required('Zip is required!')
             //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-            .min(2, "Zip is invalid")
-            .max(10, "Zip is invalid"),
+            .min(2, 'Zip is invalid')
+            .max(10, 'Zip is invalid'),
           ppaAgreement: Yup.boolean()
-            .label("Terms")
+            .label('Terms')
             .test(
-              "is-true",
-              "Please check the box in order to continue.",
+              'is-true',
+              'Please check the box in order to continue.',
               (value) => value === true,
             ),
           accommodation: isAccommodationRequired
-            ? Yup.object().required("Room & Board is required!")
+            ? Yup.object().required('Room & Board is required!')
             : Yup.mixed().notRequired(),
           paymentMode: isCCNotRequired
             ? Yup.mixed().notRequired()
-            : Yup.string().required("Payment mode is required!"),
+            : Yup.string().required('Payment mode is required!'),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
@@ -736,7 +736,7 @@ export const PaymentFormWebinar = ({
           );
 
           const isRegularPrice =
-            values.priceType === null || values.priceType === "regular";
+            values.priceType === null || values.priceType === 'regular';
           const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
 
           const totalFee =
@@ -751,7 +751,7 @@ export const PaymentFormWebinar = ({
 
           let isOfflineExpense;
           if (hasGroupedAddOnProducts && expenseAddOn) {
-            isOfflineExpense = expenseAddOn.paymentMode === "In Person";
+            isOfflineExpense = expenseAddOn.paymentMode === 'In Person';
           } else if (expenseAddOn && !expenseAddOn.isAddOnSelectionRequired) {
             isOfflineExpense = values[expenseAddOn.productName] || false;
           } else if (!expenseAddOn) {
@@ -765,7 +765,7 @@ export const PaymentFormWebinar = ({
           );
 
           const isBundlePaypalAvailable = selectedBundle
-            ? selectedBundle.otherPaymentOptionAvailable?.indexOf("Paypal") > -1
+            ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
             : false;
 
           return (
@@ -780,7 +780,7 @@ export const PaymentFormWebinar = ({
                   <div className="details">
                     <h2 className="details__title">Account Details:</h2>
                     <p className="details__content">
-                      This is not your account?{" "}
+                      This is not your account?{' '}
                       <a href="#" className="link" onClick={logout}>
                         Logout
                       </a>
@@ -898,17 +898,17 @@ export const PaymentFormWebinar = ({
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                               debug: true,
-                              currency: "USD",
+                              currency: 'USD',
                             }}
                           >
                             <PayPalButtons
                               style={{
-                                layout: "horizontal",
-                                color: "blue",
-                                shape: "pill",
+                                layout: 'horizontal',
+                                color: 'blue',
+                                shape: 'pill',
                                 height: 40,
                                 tagline: false,
-                                label: "pay",
+                                label: 'pay',
                               }}
                               fundingSource="paypal"
                               forceReRender={[formikProps.values]}
@@ -961,14 +961,14 @@ export const PaymentFormWebinar = ({
                             const dateValue =
                               dayjs
                                 .utc(option.eventStartDate)
-                                ?.format("MMM DD") +
-                              "-" +
-                              dayjs.utc(option.eventEndDate)?.format("DD") +
-                              " " +
+                                ?.format('MMM DD') +
+                              '-' +
+                              dayjs.utc(option.eventEndDate)?.format('DD') +
+                              ' ' +
                               tConvert(option.eventStartTime) +
-                              "-" +
+                              '-' +
                               tConvert(option.eventEndTime) +
-                              " " +
+                              ' ' +
                               ABBRS[option.eventTimeZone];
                             return (
                               <div
@@ -995,14 +995,14 @@ export const PaymentFormWebinar = ({
                             const dateValue =
                               dayjs
                                 .utc(option.eventStartDate)
-                                ?.format("MMM DD") +
-                              "-" +
-                              dayjs.utc(option.eventEndDate)?.format("DD") +
-                              " " +
+                                ?.format('MMM DD') +
+                              '-' +
+                              dayjs.utc(option.eventEndDate)?.format('DD') +
+                              ' ' +
                               tConvert(option.eventStartTime) +
-                              "-" +
+                              '-' +
                               tConvert(option.eventEndTime) +
-                              " " +
+                              ' ' +
                               ABBRS[option.eventTimeZone];
                             return (
                               <li
@@ -1023,8 +1023,8 @@ export const PaymentFormWebinar = ({
                                     style={{
                                       display:
                                         selectedWorkshopId === option.sfid
-                                          ? "block"
-                                          : "none",
+                                          ? 'block'
+                                          : 'none',
                                     }}
                                   />
                                 </label>
@@ -1048,7 +1048,7 @@ export const PaymentFormWebinar = ({
                       <div className="course pb-3">
                         <div className="d-none d-lg-block course__photo course__photo--min-width tw-relative tw-h-[98px] tw-min-w-[98px]">
                           <img
-                            src={"/img/card-2.png"}
+                            src={'/img/card-2.png'}
                             alt="course-photo"
                             layout="fill"
                           />
@@ -1061,7 +1061,7 @@ export const PaymentFormWebinar = ({
                           <h2 className="info__title mt-3">You get:</h2>
                           <ul className="info__list info__list--classic">
                             <li>
-                              {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{" "}
+                              {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{' '}
                               On-Demand Video Access
                             </li>
                             <li>Plus 2 LIVE online sessions</li>

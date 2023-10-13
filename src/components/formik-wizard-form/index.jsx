@@ -1,5 +1,5 @@
-import { Formik } from "formik";
-import { useWizard } from "./useWizard";
+import { Formik } from 'formik';
+import { useWizard } from './useWizard';
 
 export const FormikWizard = ({
   activeStepIndex = 0,
@@ -21,7 +21,7 @@ export const FormikWizard = ({
 
   return (
     <Formik {...props} validationSchema={currentStep.validationSchema}>
-      {typeof children === "function"
+      {typeof children === 'function'
         ? (formikBag) => {
             const wizardProps = {
               handlePrev: async () => {

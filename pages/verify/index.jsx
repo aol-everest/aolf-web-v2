@@ -1,10 +1,10 @@
-import { pushRouteWithUTMQuery } from "@service";
-import { Auth, api } from "@utils";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { FaCheckCircle, FaMinusCircle } from "react-icons/fa";
-import Style from "./Verify.module.scss";
+import { pushRouteWithUTMQuery } from '@service';
+import { Auth, api } from '@utils';
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { FaCheckCircle, FaMinusCircle } from 'react-icons/fa';
+import Style from './Verify.module.scss';
 
 // export const getServerSideProps = async (context) => {
 // const { query, req, res } = context;
@@ -37,7 +37,7 @@ function Token() {
     async function fetchData() {
       try {
         await api.get({
-          path: "change-email-confirm",
+          path: 'change-email-confirm',
           param: router.query,
         });
         setSuccess(true);
@@ -54,7 +54,7 @@ function Token() {
     async function fetchStudentData() {
       try {
         await api.get({
-          path: "verify-email-confirm",
+          path: 'verify-email-confirm',
           param: router.query,
         });
         setSuccess(true);
@@ -75,7 +75,7 @@ function Token() {
   }, [router.isReady]);
 
   const handleModalToggle = () => {
-    pushRouteWithUTMQuery(router, "/us-en/course");
+    pushRouteWithUTMQuery(router, '/us-en/course');
   };
 
   return (
@@ -84,7 +84,7 @@ function Token() {
         <div className="modal-window__header">
           <button
             className={classNames(
-              "modal-window__close modal-window__close_mobile",
+              'modal-window__close modal-window__close_mobile',
               Style.mobileClose,
             )}
             onClick={handleModalToggle}
@@ -112,8 +112,8 @@ function Token() {
                   </div>
                   <div className="tw-mt-3 tw-text-sm">
                     {studentEmail
-                      ? "Your Student status has been successfully verified."
-                      : "Your Email has been successfully verified."}
+                      ? 'Your Student status has been successfully verified.'
+                      : 'Your Email has been successfully verified.'}
                   </div>
                 </>
               )}

@@ -1,34 +1,34 @@
-import dayjs from "dayjs";
-import { PageLoading } from "@components";
-import { ALERT_TYPES, COURSE_MODES } from "@constants";
-import { useQueryString } from "@hooks";
-import queryString from "query-string";
-import { useGlobalAlertContext } from "@contexts";
+import dayjs from 'dayjs';
+import { PageLoading } from '@components';
+import { ALERT_TYPES, COURSE_MODES } from '@constants';
+import { useQueryString } from '@hooks';
+import queryString from 'query-string';
+import { useGlobalAlertContext } from '@contexts';
 import {
   PaymentElement,
   Elements,
   useElements,
   useStripe,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { api, priceCalculation, tConvert } from "@utils";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import * as Yup from "yup";
-import ErrorPage from "next/error";
-import { useQuery } from "react-query";
-import { filterAllowedParams, removeNull } from "@utils/utmParam";
-import { ScheduleInput } from "@components/scheduleInput";
-import { ScheduleDiscountInput } from "@components/scheduleDiscountInput";
-import { ScheduleAgreementForm } from "@components/scheduleAgreementForm";
-import { SchedulePhoneInput } from "@components/schedulingPhoneInput";
-import { replaceRouteWithUTMQuery } from "@service";
-import { useEffectOnce } from "react-use";
-import { useAnalytics } from "use-analytics";
-import isUrl from "is-url";
+} from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { api, priceCalculation, tConvert } from '@utils';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
+import * as Yup from 'yup';
+import ErrorPage from 'next/error';
+import { useQuery } from 'react-query';
+import { filterAllowedParams, removeNull } from '@utils/utmParam';
+import { ScheduleInput } from '@components/scheduleInput';
+import { ScheduleDiscountInput } from '@components/scheduleDiscountInput';
+import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
+import { SchedulePhoneInput } from '@components/schedulingPhoneInput';
+import { replaceRouteWithUTMQuery } from '@service';
+import { useEffectOnce } from 'react-use';
+import { useAnalytics } from 'use-analytics';
+import isUrl from 'is-url';
 
-var advancedFormat = require("dayjs/plugin/advancedFormat");
+var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
 function getDomainFromUrl(url) {
@@ -40,15 +40,15 @@ function getDomainFromUrl(url) {
 }
 
 export const getServerSideProps = async (context) => {
-  const referringURL = context.req.headers.referer || "";
-  const requestingURL = context.req.reqPath || "";
+  const referringURL = context.req.headers.referer || '';
+  const requestingURL = context.req.reqPath || '';
   return { props: { referringURL, requestingURL } };
 };
 
 const SchedulingPayment = (props) => {
   const router = useRouter();
-  const [discount] = useQueryString("discountCode");
-  const [courseType] = useQueryString("courseType");
+  const [discount] = useQueryString('discountCode');
+  const [courseType] = useQueryString('courseType');
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const { track, page } = useAnalytics();
@@ -63,13 +63,13 @@ const SchedulingPayment = (props) => {
     isError,
     error,
   } = useQuery(
-    "workshopDetail",
+    'workshopDetail',
     async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           id: workshopId,
-          rp: "checkout",
+          rp: 'checkout',
         },
         isUnauthorized: true,
       });
@@ -83,8 +83,8 @@ const SchedulingPayment = (props) => {
 
   useEffectOnce(() => {
     page({
-      category: "course_registration",
-      name: "course_scheduling_checkout",
+      category: 'course_registration',
+      name: 'course_scheduling_checkout',
       course_type: courseType,
     });
   });
@@ -106,67 +106,67 @@ const SchedulingPayment = (props) => {
   };
 
   const elementsOptions = {
-    mode: "payment",
+    mode: 'payment',
     amount: 1099,
-    currency: "usd",
+    currency: 'usd',
     appearance: {
-      theme: "stripe",
+      theme: 'stripe',
       variables: {
-        colorPrimary: "#0570de",
-        colorBackground: "#ffffff",
-        colorText: "#30313d",
-        colorDanger: "#df1b41",
+        colorPrimary: '#0570de',
+        colorBackground: '#ffffff',
+        colorText: '#30313d',
+        colorDanger: '#df1b41',
         fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
-        spacingUnit: "2px",
-        borderRadius: "4px",
+        spacingUnit: '2px',
+        borderRadius: '4px',
       },
       rules: {
-        ".Block": {
-          backgroundColor: "var(--colorBackground)",
-          boxShadow: "none",
-          padding: "12px",
+        '.Block': {
+          backgroundColor: 'var(--colorBackground)',
+          boxShadow: 'none',
+          padding: '12px',
         },
-        ".Input": {
-          padding: "14px",
-          width: "100%",
-          maxHeight: "48px",
-          borderRadius: "16px",
-          border: "1px solid rgba(0, 0, 0, 0.15)",
+        '.Input': {
+          padding: '14px',
+          width: '100%',
+          maxHeight: '48px',
+          borderRadius: '16px',
+          border: '1px solid rgba(0, 0, 0, 0.15)',
         },
-        ".Input:disabled, .Input--invalid:disabled": {
-          color: "lightgray",
+        '.Input:disabled, .Input--invalid:disabled': {
+          color: 'lightgray',
         },
-        ".Tab": {
-          borderRadius: "16px",
-          border: "1px solid rgba(0, 0, 0, 0.15)",
-          padding: "16px 24px",
-          color: "#FCA248",
+        '.Tab': {
+          borderRadius: '16px',
+          border: '1px solid rgba(0, 0, 0, 0.15)',
+          padding: '16px 24px',
+          color: '#FCA248',
         },
-        ".Tab:hover": {
-          borderRadius: "16px",
-          border: "1px solid #FF9E1B",
-          padding: "16px 24px",
-          color: "#FCA248",
-          boxShadow: "none",
+        '.Tab:hover': {
+          borderRadius: '16px',
+          border: '1px solid #FF9E1B',
+          padding: '16px 24px',
+          color: '#FCA248',
+          boxShadow: 'none',
         },
-        ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
-          borderRadius: "16px",
-          border: "1px solid #FF9E1B",
-          padding: "16px 24px",
-          color: "#FCA248",
-          boxShadow: "none",
+        '.Tab--selected, .Tab--selected:focus, .Tab--selected:hover': {
+          borderRadius: '16px',
+          border: '1px solid #FF9E1B',
+          padding: '16px 24px',
+          color: '#FCA248',
+          boxShadow: 'none',
         },
-        ".TabIcon--selected, .TabIcon--selected:focus, .TabIcon--selected:hover":
+        '.TabIcon--selected, .TabIcon--selected:focus, .TabIcon--selected:hover':
           {
-            color: "#FCA248",
-            fill: "#FCA248",
+            color: '#FCA248',
+            fill: '#FCA248',
           },
-        ".TabIcon, .TabIcon:hover": {
-          color: "#FCA248",
-          fill: "#FCA248",
+        '.TabIcon, .TabIcon:hover': {
+          color: '#FCA248',
+          fill: '#FCA248',
         },
-        ".Label": {
-          opacity: "0",
+        '.Label': {
+          opacity: '0',
         },
       },
     },
@@ -302,7 +302,7 @@ const SchedulingPaymentForm = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -336,15 +336,15 @@ const SchedulingPaymentForm = ({
 
       const products = isRegularOrder
         ? {
-            productType: "workshop",
+            productType: 'workshop',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           }
         : {
-            productType: "bundle",
+            productType: 'bundle',
             productSfId: values.comboDetailId,
             childProduct: {
-              productType: "workshop",
+              productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
               complianceQuestionnaire,
@@ -353,7 +353,7 @@ const SchedulingPaymentForm = ({
 
       let payLoad = {
         shoppingRequest: {
-          couponCode: couponCode || "",
+          couponCode: couponCode || '',
           contactAddress: {
             contactPhone,
           },
@@ -389,7 +389,7 @@ const SchedulingPaymentForm = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
         isUnauthorized: true,
       });
@@ -402,8 +402,8 @@ const SchedulingPaymentForm = ({
         if (data.totalOrderAmount > 0) {
           let filteredParams = {
             ctype: productTypeId,
-            page: "ty",
-            referral: "course_scheduling_checkout",
+            page: 'ty',
+            referral: 'course_scheduling_checkout',
             courseType,
             ...filterAllowedParams(router.query),
           };
@@ -428,9 +428,9 @@ const SchedulingPaymentForm = ({
             pathname: `/us-en/course/thankyou/${data.attendeeId}`,
             query: {
               ctype: productTypeId,
-              page: "ty",
+              page: 'ty',
               courseType,
-              referral: "course_scheduling_checkout",
+              referral: 'course_scheduling_checkout',
             },
           });
         }
@@ -445,8 +445,8 @@ const SchedulingPaymentForm = ({
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: message ? `Error: ${message} (${statusCode})` : ex.message,
       });
-      track("show_error", {
-        screen_name: "course_scheduling_checkout_error",
+      track('show_error', {
+        screen_name: 'course_scheduling_checkout_error',
         course_type: courseType,
         error_message: message
           ? `Error: ${message} (${statusCode})`
@@ -479,7 +479,7 @@ const SchedulingPaymentForm = ({
         defaultValues: {
           billingDetails: {
             email: values.email,
-            name: (values.firstName || "") + (values.lastName || ""),
+            name: (values.firstName || '') + (values.lastName || ''),
             phone: values.contactPhone,
           },
         },
@@ -498,26 +498,26 @@ const SchedulingPaymentForm = ({
       {loading && <div className="cover-spin"></div>}
       <Formik
         initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
+          firstName: '',
+          lastName: '',
+          email: '',
           questionnaire: questionnaireArray,
           ppaAgreement: isReferBySameSite,
-          couponCode: discount ? discount : "",
-          contactPhone: "",
+          couponCode: discount ? discount : '',
+          contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required("First Name is required"),
-          lastName: Yup.string().required("Last Name is required"),
+          firstName: Yup.string().required('First Name is required'),
+          lastName: Yup.string().required('Last Name is required'),
           email: Yup.string()
-            .email("Email is invalid!")
-            .required("Email is required!"),
-          contactPhone: Yup.string().required("Phone is required"),
+            .email('Email is invalid!')
+            .required('Email is required!'),
+          contactPhone: Yup.string().required('Phone is required'),
           ppaAgreement: Yup.boolean()
-            .label("Terms")
+            .label('Terms')
             .test(
-              "is-true",
-              "Please check the box in order to continue.",
+              'is-true',
+              'Please check the box in order to continue.',
               (value) => value === true,
             ),
         })}
@@ -603,7 +603,7 @@ const SchedulingPaymentForm = ({
                     </h5>
                     <div className="scheduling-modal__content-total-date-time">
                       <div className="scheduling-modal__content-total-time">
-                        {tConvert(eventStartTime, true)} -{" "}
+                        {tConvert(eventStartTime, true)} -{' '}
                         {tConvert(eventEndTime, true)}
                       </div>
                     </div>
@@ -614,7 +614,7 @@ const SchedulingPaymentForm = ({
                             className="scheduling-modal__content-total-date"
                             key={t.sfid}
                           >
-                            {dayjs.utc(t.startDate).format("ddd, D")}
+                            {dayjs.utc(t.startDate).format('ddd, D')}
                           </div>
                         );
                       })}
@@ -638,14 +638,14 @@ const SchedulingPaymentForm = ({
                         ) : (
                           <a
                             href={`https://www.google.com/maps/search/?api=1&query=${
-                              locationStreet || ""
+                              locationStreet || ''
                             }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {`${locationStreet || ""} ${locationCity || ""},
-                          ${locationProvince || ""} ${
-                              locationPostalCode || ""
+                            {`${locationStreet || ''} ${locationCity || ''},
+                          ${locationProvince || ''} ${
+                              locationPostalCode || ''
                             }`}
                           </a>
                         )}
@@ -691,14 +691,14 @@ const SchedulingPaymentForm = ({
                     <span>
                       {discountResponse && delfee && (
                         <span className="discount">${delfee.toFixed(2)}</span>
-                      )}{" "}
-                      ${fee.toFixed(2) || "0".toFixed(2)}
+                      )}{' '}
+                      ${fee.toFixed(2) || '0'.toFixed(2)}
                     </span>
                   </p>
 
                   <p className="scheduling-modal__content-total-contact">
                     For any health related questions, please contact the health
-                    info desk at{" "}
+                    info desk at{' '}
                     <a href={`mailto:healthinfo@us.artofliving.org`}>
                       healthinfo@us.artofliving.org
                     </a>

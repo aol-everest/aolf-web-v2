@@ -1,8 +1,8 @@
-import classNames from "classnames";
-import { useRef, useState } from "react";
+import classNames from 'classnames';
+import { useRef, useState } from 'react';
 
 export const DateRangeInput = (props) => {
-  const { buttonText, tabindex, children, value, containerClass = "" } = props;
+  const { buttonText, tabindex, children, value, containerClass = '' } = props;
   const [visible, setVisibility] = useState(false);
   const referenceRef = useRef(null);
   const popperRef = useRef(null);
@@ -27,7 +27,7 @@ export const DateRangeInput = (props) => {
         ref={referenceRef}
         tabIndex={tabindex}
         className={classNames({
-          "tooltip-button_active": visible,
+          'tooltip-button_active': visible,
         })}
       >
         <input
@@ -41,7 +41,7 @@ export const DateRangeInput = (props) => {
         <div className="tw-relative" ref={popperRef}>
           <ul
             className={classNames(
-              "tooltip-block tw-bottom-auto tw-left-0 tw-right-auto tw-top-0 tw-p-0",
+              'tooltip-block tw-bottom-auto tw-left-0 tw-right-auto tw-top-0 tw-p-0',
               containerClass,
               {
                 active: visible,

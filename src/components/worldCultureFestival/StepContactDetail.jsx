@@ -1,14 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
-import { US_STATES } from "@constants";
-import classNames from "classnames";
-import { Field } from "formik";
-import { trim } from "lodash";
-import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
-import Select2 from "react-select2-wrapper";
-import { useAnalytics } from "use-analytics";
-import PhoneInput from "./../phoneInputCmp";
-import countryData from "./country.json";
+import { US_STATES } from '@constants';
+import classNames from 'classnames';
+import { Field } from 'formik';
+import { trim } from 'lodash';
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
+import Select2 from 'react-select2-wrapper';
+import { useAnalytics } from 'use-analytics';
+import PhoneInput from './../phoneInputCmp';
+import countryData from './country.json';
 
 function formatCountryOption(state) {
   if (!state.id) return state.text;
@@ -21,12 +21,12 @@ function formatCountryOption(state) {
 
 function matchStart(params, data) {
   // If there are no search terms, return all of the data
-  if (trim(params.term) === "") {
+  if (trim(params.term) === '') {
     return data;
   }
 
   // Do not display the item if there is no 'text' property
-  if (typeof data.text === "undefined") {
+  if (typeof data.text === 'undefined') {
     return null;
   }
 
@@ -47,9 +47,9 @@ const CountryInput = ({ field, form, ...props }) => {
       const val = selectComp.current.el.val();
       if (field.value !== val) {
         form.setFieldValue(field.name, val);
-        form.setFieldValue("state", null);
+        form.setFieldValue('state', null);
         // form.setFieldValue("phoneNumber", field.value);
-        form.setFieldValue("phoneCountry", field.value);
+        form.setFieldValue('phoneCountry', field.value);
       }
     }
   };
@@ -66,8 +66,8 @@ const CountryInput = ({ field, form, ...props }) => {
       {...props}
       data={data}
       options={{
-        placeholder: "Select your country",
-        dropdownParent: "#wcfSelect",
+        placeholder: 'Select your country',
+        dropdownParent: '#wcfSelect',
         templateResult: formatCountryOption,
         templateSelection: formatCountryOption,
         escapeMarkup: function (m) {
@@ -95,7 +95,7 @@ const StateInput = ({ field, form, ...props }) => {
       text: s.label,
       id: s.value,
     };
-  }).filter((s) => s.id !== "Other");
+  }).filter((s) => s.id !== 'Other');
   return (
     <Select2
       ref={selectComp}
@@ -103,8 +103,8 @@ const StateInput = ({ field, form, ...props }) => {
       {...props}
       data={data}
       options={{
-        placeholder: "Select your state",
-        dropdownParent: "#wcfSelect",
+        placeholder: 'Select your state',
+        dropdownParent: '#wcfSelect',
         matcher: matchStart,
       }}
       onChange={onChangeAction}
@@ -114,7 +114,7 @@ const StateInput = ({ field, form, ...props }) => {
 
 const PhoneNumberInputField = ({ field, form, ...props }) => {
   const onChangeAction = (value, data, event, formattedValue) => {
-    form.setFieldValue("phoneCountry", data.countryCode.toUpperCase());
+    form.setFieldValue('phoneCountry', data.countryCode.toUpperCase());
     form.setFieldValue(field.name, formattedValue);
   };
   return (
@@ -122,9 +122,9 @@ const PhoneNumberInputField = ({ field, form, ...props }) => {
       {...field}
       {...props}
       placeholder="Enter your phone number"
-      country={form.values.country ? form.values.country.toLowerCase() : "us"}
+      country={form.values.country ? form.values.country.toLowerCase() : 'us'}
       containerClass="wcf-select__field"
-      inputClass={classNames("wcf-input__field", {
+      inputClass={classNames('wcf-input__field', {
         error: form.errors.phoneNumber,
       })}
       countryCodeEditable={false}
@@ -158,8 +158,8 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
 
   useEffect(() => {
     if (!router.isReady) return;
-    track("view_screen", {
-      screen_name: "wcf_registration_get_tickets_page",
+    track('view_screen', {
+      screen_name: 'wcf_registration_get_tickets_page',
       utm_parameters: JSON.stringify(router.query),
       sessions_attending_arr: JSON.stringify(values.sessionsAttending),
       number_of_tickets: values.ticketCount,
@@ -167,9 +167,9 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
   }, [router.isReady]);
 
   const onNextAction = () => {
-    track("click_button", {
-      screen_name: "wcf_registration_get_tickets_page",
-      event_target: "get_tickets_button",
+    track('click_button', {
+      screen_name: 'wcf_registration_get_tickets_page',
+      event_target: 'get_tickets_button',
       sessions_attending_arr: JSON.stringify(values.sessionsAttending),
       number_of_tickets: values.ticketCount,
       utm_parameters: JSON.stringify(router.query),
@@ -195,7 +195,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                 </label>
 
                 <div
-                  className={classNames("wcf-select__field", {
+                  className={classNames('wcf-select__field', {
                     error: errors.country,
                   })}
                 >
@@ -211,7 +211,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                 </div>
               </div>
 
-              {values.country === "US" && (
+              {values.country === 'US' && (
                 <div className="wcf-select wcf-form__field">
                   <label
                     htmlFor="get-tickets-state"
@@ -221,7 +221,7 @@ export function StepContactDetail({ errors, handleNext, values, ...props }) {
                   </label>
 
                   <div
-                    className={classNames("wcf-select__field", {
+                    className={classNames('wcf-select__field', {
                       error: errors.state,
                     })}
                   >

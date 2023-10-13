@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { COURSE_TYPES } from "@constants";
+import { COURSE_TYPES } from '@constants';
 
 export const PurchaseMembershipModal = ({ modalSubscription }) => {
   return (

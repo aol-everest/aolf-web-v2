@@ -1,4 +1,4 @@
-import { orgConfig } from "@org";
+import { orgConfig } from '@org';
 
 export const NoHeader = () => {
   return (

@@ -3,33 +3,33 @@ import {
   PaymentForm,
   PaymentFormGeneric,
   PaymentFormHB,
-} from "@components";
+} from '@components';
 import {
   ALERT_TYPES,
   COURSE_TYPES,
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
-} from "@constants";
+} from '@constants';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
-import { useQueryString } from "@hooks";
-import { orgConfig } from "@org";
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from "@service";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { api } from "@utils";
-import dayjs from "dayjs";
-import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import queryString from "query-string";
-import { useAnalytics } from "use-analytics";
-import { filterAllowedParams, removeNull } from "@utils/utmParam";
+} from '@contexts';
+import { useQueryString } from '@hooks';
+import { orgConfig } from '@org';
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { api } from '@utils';
+import dayjs from 'dayjs';
+import { NextSeo } from 'next-seo';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import queryString from 'query-string';
+import { useAnalytics } from 'use-analytics';
+import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
 const RetreatPrerequisiteWarning = ({
   firstPreRequisiteFailedReason,
@@ -39,24 +39,24 @@ const RetreatPrerequisiteWarning = ({
     <>
       <p className="course-join-card__text">
         Our records indicate that you have not yet taken the prerequisite for
-        the {title}, which is{" "}
+        the {title}, which is{' '}
         <strong>
           {firstPreRequisiteFailedReason &&
           firstPreRequisiteFailedReason.totalCount <
             firstPreRequisiteFailedReason.requiredCount &&
           firstPreRequisiteFailedReason.requiredCount > 1
             ? firstPreRequisiteFailedReason.requiredCount
-            : ""}{" "}
+            : ''}{' '}
           {firstPreRequisiteFailedReason && firstPreRequisiteFailedReason.type}
         </strong>
         .
       </p>
       <p className="course-join-card__text">
-        If our records are not accurate, please contact customer service at{" "}
+        If our records are not accurate, please contact customer service at{' '}
         <a href={`tel:${orgConfig.contactNumberLink}`}>
           {orgConfig.contactNumber}
-        </a>{" "}
-        or email us at{" "}
+        </a>{' '}
+        or email us at{' '}
         <a href="mailto:app.support@us.artofliving.org">
           app.support@us.artofliving.org
         </a>
@@ -68,7 +68,7 @@ const RetreatPrerequisiteWarning = ({
 
 const validateStudentEmail = (email) => {
   const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
-  const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+  const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
   return isStudentEmail;
 };
 
@@ -76,20 +76,20 @@ const Checkout = () => {
   const router = useRouter();
   const { user, authenticated } = useAuth();
   const { id: workshopId, coupon } = router.query;
-  const [mbsy_source] = useQueryString("mbsy_source", {
+  const [mbsy_source] = useQueryString('mbsy_source', {
     defaultValue: null,
   });
-  const [campaignid] = useQueryString("campaignid", {
+  const [campaignid] = useQueryString('campaignid', {
     defaultValue: null,
   });
-  const [mbsy] = useQueryString("mbsy", {
+  const [mbsy] = useQueryString('mbsy', {
     defaultValue: null,
   });
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [comboProductSfid, setComboProductSfid] = useState("");
+  const [comboProductSfid, setComboProductSfid] = useState('');
   const { track, page } = useAnalytics();
 
   const {
@@ -98,13 +98,13 @@ const Checkout = () => {
     isError,
     error,
   } = useQuery(
-    "workshopDetail",
+    'workshopDetail',
     async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           id: workshopId,
-          rp: "checkout",
+          rp: 'checkout',
         },
       });
       return response.data;
@@ -118,7 +118,7 @@ const Checkout = () => {
   useEffect(() => {
     if (workshop && !authenticated && !workshop.isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
-        pathname: "/login",
+        pathname: '/login',
         query: {
           next: router.asPath,
         },
@@ -148,35 +148,35 @@ const Checkout = () => {
         id: name,
         name: title,
         courseId: courseId,
-        category: "workshop",
+        category: 'workshop',
         ctype: productTypeId,
-        variant: "N/A",
-        brand: "Art of Living Foundation",
+        variant: 'N/A',
+        brand: 'Art of Living Foundation',
         quantity: 1,
-        currencyCode: "USD",
+        currencyCode: 'USD',
         price: unitPrice,
       },
     ];
 
     page({
-      category: "course_registration",
-      name: "course_checkout",
+      category: 'course_registration',
+      name: 'course_checkout',
       title: title,
       ctype: productTypeId,
       amount: unitPrice,
-      requestType: "Detail",
-      hitType: "paymentpage",
+      requestType: 'Detail',
+      hitType: 'paymentpage',
       user: user.profile.id,
     });
 
-    track("eec.checkout", {
+    track('eec.checkout', {
       page: `Art of Living ${title} workshop registration page`,
-      viewType: "workshop",
+      viewType: 'workshop',
       title: title,
       ctype: productTypeId,
       amount: unitPrice,
-      requestType: "Detail",
-      hitType: "paymentpage",
+      requestType: 'Detail',
+      hitType: 'paymentpage',
       user: user.profile.id,
       ecommerce: {
         checkout: {
@@ -190,8 +190,8 @@ const Checkout = () => {
 
     if (isPreRequisiteCompleted === false) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-        className: "retreat-prerequisite-big",
-        title: "Retreat Prerequisite",
+        className: 'retreat-prerequisite-big',
+        title: 'Retreat Prerequisite',
         closeModalAction: closeRetreatPrerequisiteWarning,
         footer: () => {
           return (
@@ -199,7 +199,7 @@ const Checkout = () => {
               className="btn-secondary"
               onClick={closeRetreatPrerequisiteWarning}
             >
-              Discover{" "}
+              Discover{' '}
               {firstPreRequisiteFailedReason &&
                 firstPreRequisiteFailedReason.type}
             </button>
@@ -219,9 +219,9 @@ const Checkout = () => {
     if (e) e.preventDefault();
     hideAlert();
     pushRouteWithUTMQuery(router, {
-      pathname: "/us-en/course",
+      pathname: '/us-en/course',
       query: {
-        courseType: "SKY_BREATH_MEDITATION",
+        courseType: 'SKY_BREATH_MEDITATION',
       },
     });
   };
@@ -232,9 +232,9 @@ const Checkout = () => {
       query: {
         ctype: workshop.productTypeId,
         comboId: comboProductSfid,
-        page: "ty",
-        referral: "course_checkout",
-        type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+        page: 'ty',
+        referral: 'course_checkout',
+        type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
         campaignid,
         mbsy,
       },
@@ -245,9 +245,9 @@ const Checkout = () => {
     let filteredParams = {
       ctype: workshop.productTypeId,
       comboId: comboProductSfid,
-      page: "ty",
-      referral: "course_checkout",
-      type: `local${mbsy_source ? "&mbsy_source=" + mbsy_source : ""}`,
+      page: 'ty',
+      referral: 'course_checkout',
+      type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
       campaignid,
       mbsy,
       ...filterAllowedParams(router.query),
@@ -267,7 +267,7 @@ const Checkout = () => {
 
   const handleCouseSelection = (selectedId) => {
     if (selectedId === workshop.id) {
-      setComboProductSfid("");
+      setComboProductSfid('');
     } else {
       setComboProductSfid(selectedId);
     }
@@ -364,7 +364,7 @@ const Checkout = () => {
     setLoading(true);
     try {
       await api.post({
-        path: "verify-email",
+        path: 'verify-email',
         body: {
           email: email,
         },
@@ -374,7 +374,7 @@ const Checkout = () => {
     }
     setLoading(false);
     showModal(MODAL_TYPES.EMPTY_MODAL, {
-      title: "Verification code sent.",
+      title: 'Verification code sent.',
       children: (handleModalToggle) => (
         <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
           <div className=" modal-dialog modal-dialog-centered active">
@@ -405,52 +405,52 @@ const Checkout = () => {
     workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||
       (isStudentVerified &&
-        dayjs(new Date()).diff(dayjs(studentVerificationDate), "y", true) > 1 &&
+        dayjs(new Date()).diff(dayjs(studentVerificationDate), 'y', true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
   const elementsOptions = {
-    mode: "payment",
+    mode: 'payment',
     amount: 1099,
-    currency: "usd",
+    currency: 'usd',
     appearance: {
-      theme: "stripe",
+      theme: 'stripe',
       variables: {
-        colorPrimary: "#0570de",
-        colorBackground: "#ffffff",
-        colorText: "#30313d",
-        colorDanger: "#df1b41",
+        colorPrimary: '#0570de',
+        colorBackground: '#ffffff',
+        colorText: '#30313d',
+        colorDanger: '#df1b41',
         fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
-        spacingUnit: "2px",
-        borderRadius: "4px",
+        spacingUnit: '2px',
+        borderRadius: '4px',
       },
       rules: {
-        ".Block": {
-          backgroundColor: "var(--colorBackground)",
-          boxShadow: "none",
-          padding: "12px",
+        '.Block': {
+          backgroundColor: 'var(--colorBackground)',
+          boxShadow: 'none',
+          padding: '12px',
         },
-        ".Input": {
-          padding: "12px",
+        '.Input': {
+          padding: '12px',
         },
-        ".Input:disabled, .Input--invalid:disabled": {
-          color: "lightgray",
+        '.Input:disabled, .Input--invalid:disabled': {
+          color: 'lightgray',
         },
-        ".Tab": {
-          padding: "10px 12px 8px 12px",
-          border: "none",
+        '.Tab': {
+          padding: '10px 12px 8px 12px',
+          border: 'none',
         },
-        ".Tab:hover": {
-          border: "none",
+        '.Tab:hover': {
+          border: 'none',
           boxShadow:
-            "0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 7px rgba(18, 42, 66, 0.04)",
+            '0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 7px rgba(18, 42, 66, 0.04)',
         },
-        ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
-          border: "1px solid #89beec",
-          backgroundColor: "#fff",
-          boxShadow: "0 2px 25px 0 rgba(61,139,232,.2)",
+        '.Tab--selected, .Tab--selected:focus, .Tab--selected:hover': {
+          border: '1px solid #89beec',
+          backgroundColor: '#fff',
+          boxShadow: '0 2px 25px 0 rgba(61,139,232,.2)',
         },
-        ".Label": {
-          fontWeight: "500",
+        '.Label': {
+          fontWeight: '500',
         },
       },
     },
@@ -466,7 +466,7 @@ const Checkout = () => {
             <img src="/img/ic-timer-white.svg" alt="timer" />
             <span>
               Register soon. Course fee will go up by $
-              {workshop.earlyBirdFeeIncreasing.increasingFee} on{" "}
+              {workshop.earlyBirdFeeIncreasing.increasingFee} on{' '}
               {workshop.earlyBirdFeeIncreasing.increasingBy}
             </span>
           </aside>
@@ -474,14 +474,14 @@ const Checkout = () => {
         {showVerifyStudentStatus && (
           <aside className="tw-relative tw-whitespace-normal tw-text-center">
             <span>
-              We notice that you might be a student. Please{" "}
+              We notice that you might be a student. Please{' '}
               <a
                 className="tw-text-blue-900"
                 onClick={handleVerifyStudentEmail}
                 rel="noreferrer"
               >
-                {" "}
-                verify your student status{" "}
+                {' '}
+                verify your student status{' '}
               </a>
               to get discounted Student rates.
             </span>
@@ -526,7 +526,7 @@ const Checkout = () => {
                 fonts={[
                   {
                     cssSrc:
-                      "https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+                      'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
                   },
                 ]}
               >

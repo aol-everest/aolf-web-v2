@@ -5,38 +5,38 @@ import {
   PendingAgreement,
   ReInstate,
   UsePagesViews,
-} from "@components";
-import { GlobalAlert } from "@components/globalAlert";
-import { GlobalAudioPlayer } from "@components/globalAudioPlayer";
-import { GlobalBottomBanner } from "@components/globalBottomBanner";
-import { GlobalLoading } from "@components/globalLoading";
-import { GlobalModal } from "@components/globalModal";
-import { GlobalVideoPlayer } from "@components/globalVideoPlayer";
-import { AuthProvider } from "@contexts";
-import { orgConfig } from "@org";
-import { analytics } from "@service";
-import { Auth, Compose, Talkable, api } from "@utils";
-import { DefaultSeo } from "next-seo";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-import { AnalyticsProvider } from "use-analytics";
+} from '@components';
+import { GlobalAlert } from '@components/globalAlert';
+import { GlobalAudioPlayer } from '@components/globalAudioPlayer';
+import { GlobalBottomBanner } from '@components/globalBottomBanner';
+import { GlobalLoading } from '@components/globalLoading';
+import { GlobalModal } from '@components/globalModal';
+import { GlobalVideoPlayer } from '@components/globalVideoPlayer';
+import { AuthProvider } from '@contexts';
+import { orgConfig } from '@org';
+import { analytics } from '@service';
+import { Auth, Compose, Talkable, api } from '@utils';
+import { DefaultSeo } from 'next-seo';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { AnalyticsProvider } from 'use-analytics';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
 // import Script from "next/script";
 
-import "@styles/global-customize/style.scss";
-import "@styles/global.scss";
-import "@styles/style.scss";
+import '@styles/global-customize/style.scss';
+import '@styles/global.scss';
+import '@styles/style.scss';
 
-import "@styles/old-design/style.scss";
+import '@styles/old-design/style.scss';
 
-import SEO from "../next-seo.config";
+import SEO from '../next-seo.config';
 
 const ClevertapAnalytics = dynamic(
-  () => import("@components/clevertapAnalytics"),
+  () => import('@components/clevertapAnalytics'),
   {
     ssr: false,
   },
@@ -63,7 +63,7 @@ function App({ Component, pageProps }) {
       setUser(userInfo);
 
       const pendingAgreementRes = await api.get({
-        path: "getPendingHealthQuestionAgreement",
+        path: 'getPendingHealthQuestionAgreement',
       });
 
       setIsPendingAgreement(
@@ -87,7 +87,7 @@ function App({ Component, pageProps }) {
         first_name: userInfo.profile.first_name,
         last_name: userInfo.profile.last_name,
       });
-      let userSubscriptions = "";
+      let userSubscriptions = '';
       if (userInfo.profile.subscriptions) {
         userSubscriptions = JSON.stringify(
           userInfo.profile.subscriptions.map(({ sfid, name }) => {

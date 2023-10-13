@@ -1,7 +1,7 @@
-import { ABBRS, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { tConvert } from "@utils";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import { ABBRS, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { tConvert } from '@utils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
@@ -70,21 +70,21 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                 <h2 className="info__title">Date:</h2>
                 {dayjs
                   .utc(eventStartDate)
-                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  .isSame(dayjs.utc(eventEndDate), 'month') && (
                   <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                     .utc(eventStartDate)
-                    .format("MMMM DD")}-${dayjs
+                    .format('MMMM DD')}-${dayjs
                     .utc(eventEndDate)
-                    .format("DD, YYYY")}`}</li>
+                    .format('DD, YYYY')}`}</li>
                 )}
                 {!dayjs
                   .utc(eventStartDate)
-                  .isSame(dayjs.utc(eventEndDate), "month") && (
+                  .isSame(dayjs.utc(eventEndDate), 'month') && (
                   <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
                     .utc(eventStartDate)
-                    .format("MMMM DD")}-${dayjs
+                    .format('MMMM DD')}-${dayjs
                     .utc(eventEndDate)
-                    .format("MMMM DD, YYYY")}`}</li>
+                    .format('MMMM DD, YYYY')}`}</li>
                 )}
               </ul>
               <ul className="info__list mt-3">
@@ -96,7 +96,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                         className="tw-truncate tw-text-sm tw-tracking-tighter"
                         key={time.startDate}
                       >
-                        {`${dayjs.utc(time.startDate).format("dd")}: ${tConvert(
+                        {`${dayjs.utc(time.startDate).format('dd')}: ${tConvert(
                           time.startTime,
                         )}-${tConvert(time.endTime)} ${ABBRS[time.timeZone]}`}
                       </li>
@@ -146,7 +146,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                   <h2 className="info__title">Location:</h2>
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${
-                      workshop.locationStreet || ""
+                      workshop.locationStreet || ''
                     }, ${workshop.locationCity} ${workshop.locationProvince} ${
                       workshop.locationPostalCode
                     } ${workshop.locationCountry}`}
@@ -159,10 +159,10 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                       </li>
                     )}
                     <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                      {workshop.locationCity || ""}
-                      {", "}
-                      {workshop.locationProvince || ""}{" "}
-                      {workshop.locationPostalCode || ""}
+                      {workshop.locationCity || ''}
+                      {', '}
+                      {workshop.locationProvince || ''}{' '}
+                      {workshop.locationPostalCode || ''}
                     </li>
                   </a>
                 </ul>
@@ -172,8 +172,8 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                   <h2 className="info__title">Location:</h2>
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${
-                      workshop.streetAddress1 || ""
-                    },${workshop.streetAddress2 || ""} ${workshop.city} ${
+                      workshop.streetAddress1 || ''
+                    },${workshop.streetAddress2 || ''} ${workshop.city} ${
                       workshop.state
                     } ${workshop.zip} ${workshop.country}`}
                     target="_blank"
@@ -190,9 +190,9 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                       </li>
                     )}
                     <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                      {workshop.city || ""}
-                      {", "}
-                      {workshop.state || ""} {workshop.zip || ""}
+                      {workshop.city || ''}
+                      {', '}
+                      {workshop.state || ''} {workshop.zip || ''}
                     </li>
                   </a>
                 </ul>

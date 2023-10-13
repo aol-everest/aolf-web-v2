@@ -1,26 +1,26 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Loader, PageLoading } from "@components";
-import { ChapterItem } from "@components/content";
-import { ALERT_TYPES, MODAL_TYPES } from "@constants";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { Loader, PageLoading } from '@components';
+import { ChapterItem } from '@components/content';
+import { ALERT_TYPES, MODAL_TYPES } from '@constants';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalAudioPlayerContext,
   useGlobalModalContext,
   useGlobalVideoPlayerContext,
-} from "@contexts";
+} from '@contexts';
 import {
   markFavoriteEvent,
   pushRouteWithUTMQuery,
   updateUserActivity,
-} from "@service";
-import { api, secondsToHms } from "@utils";
-import classNames from "classnames";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import { useQuery } from "react-query";
+} from '@service';
+import { api, secondsToHms } from '@utils';
+import classNames from 'classnames';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
+import { useQuery } from 'react-query';
 import {
   BigPlayButton,
   ControlBar,
@@ -34,8 +34,8 @@ import {
   ReplayControl,
   TimeDivider,
   VolumeMenuButton,
-} from "video-react";
-import Styles from "./Learn.module.scss";
+} from 'video-react';
+import Styles from './Learn.module.scss';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -86,17 +86,17 @@ export default function Learn() {
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const { id: courseId } = router.query;
   const { data, isLoading, isError, error } = useQuery(
-    "courseDetail",
+    'courseDetail',
     async () => {
       const response = await api.get({
-        path: "courseDetail",
+        path: 'courseDetail',
         param: {
           id: courseId,
         },
       });
       if (response.isError) {
         throw new Error(
-          response.error || "No content found. Invalid content Id.",
+          response.error || 'No content found. Invalid content Id.',
         );
       }
       return response.data;
@@ -124,7 +124,7 @@ export default function Learn() {
   } = data;
 
   let introContentPoster =
-    "http://html5videoformatconverter.com/data/images/screen.jpg";
+    'http://html5videoformatconverter.com/data/images/screen.jpg';
   if (introContent && introContent.coverImage) {
     introContentPoster = introContent.coverImage.url;
   } else if (cardImage) {
@@ -177,7 +177,7 @@ export default function Learn() {
     setLoading(true);
     try {
       const { data } = await api.get({
-        path: "chapterDetail",
+        path: 'chapterDetail',
         param: {
           id: sfid,
           chapterSfid: chapter.sfid,
@@ -187,8 +187,8 @@ export default function Learn() {
       if (data) {
         const chapterDetails = { ...data, ...chapter };
         if (
-          chapterDetails.contentType === "Audio" ||
-          chapterDetails.contentType === "audio/x-m4a"
+          chapterDetails.contentType === 'Audio' ||
+          chapterDetails.contentType === 'audio/x-m4a'
         ) {
           showPlayer({
             track: {
@@ -198,7 +198,7 @@ export default function Learn() {
               audioSrc: chapterDetails.track?.url,
             },
           });
-        } else if (chapterDetails.contentType === "Video") {
+        } else if (chapterDetails.contentType === 'Video') {
           hidePlayer();
           const image = chapterDetails.coverImage?.url;
           showVideoPlayer({
@@ -242,7 +242,7 @@ export default function Learn() {
                 <img
                   src={primaryTeacherPic}
                   alt=""
-                  className={classNames("rounded-circle", Styles.teacherPic)}
+                  className={classNames('rounded-circle', Styles.teacherPic)}
                 />
                 {primaryTeacherName}
               </p>
@@ -273,7 +273,7 @@ export default function Learn() {
                       </h2>
                     </div>
                     <div
-                      className={classNames("collapse", {
+                      className={classNames('collapse', {
                         show: showWhatYoullLearn,
                       })}
                       aria-labelledby="headingOne"
@@ -307,7 +307,7 @@ export default function Learn() {
                       </h2>
                     </div>
                     <div
-                      className={classNames("collapse", {
+                      className={classNames('collapse', {
                         show: showWhoIsItFor,
                       })}
                       aria-labelledby="headingTwo"
@@ -371,11 +371,11 @@ export default function Learn() {
                       <img
                         src={
                           isPlaying
-                            ? "/img/ic-pause-40.svg"
-                            : "/img/ic-play-40.svg"
+                            ? '/img/ic-pause-40.svg'
+                            : '/img/ic-play-40.svg'
                         }
                         alt=""
-                        className={classNames("video-play", {
+                        className={classNames('video-play', {
                           play: !isPlaying,
                           pause: isPlaying,
                         })}

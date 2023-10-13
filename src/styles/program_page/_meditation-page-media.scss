@@ -170,7 +170,7 @@
           font-size: 28px;
           line-height: 40px;
           color: #31364e;
-          font-family: "Lora";
+          font-family: 'Lora';
           margin: 30px 0 10px;
         }
         span {
@@ -188,7 +188,7 @@
 }
 #play {
   transition: all 0.3s;
-  &[play="false"] {
+  &[play='false'] {
     .ic-pause-hover,
     .ic-pause-static {
       display: none;
@@ -205,7 +205,7 @@
       }
     }
   }
-  &[play="true"] {
+  &[play='true'] {
     .ic-play-hover,
     .ic-play-static {
       display: none;

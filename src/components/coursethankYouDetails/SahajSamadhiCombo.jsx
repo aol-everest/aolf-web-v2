@@ -1,10 +1,10 @@
-import classNames from "classnames";
-import dayjs from "dayjs";
+import classNames from 'classnames';
+import dayjs from 'dayjs';
 
-import { ABBRS, COURSE_MODES } from "@constants";
-import { orgConfig } from "@org";
-import { tConvert } from "@utils";
-import Style from "./CoursethankYouDetails.module.scss";
+import { ABBRS, COURSE_MODES } from '@constants';
+import { orgConfig } from '@org';
+import { tConvert } from '@utils';
+import Style from './CoursethankYouDetails.module.scss';
 
 export const SahajSamadhiCombo = ({
   addToCalendarAction,
@@ -34,10 +34,10 @@ export const SahajSamadhiCombo = ({
 
             <p className="welcome__description">
               You’re registered for {title}
-              {","}
+              {','}
               {!isGenericWorkshop && (
                 <>
-                  {" "}
+                  {' '}
                   from {formattedStartDateOnly} - {formattedEndDateOnly}
                 </>
               )}
@@ -79,10 +79,10 @@ export const SahajSamadhiCombo = ({
       </section>
       <section className="schedule">
         <div className="schedule__container container_md">
-          {orgConfig.name !== "HB" && (
+          {orgConfig.name !== 'HB' && (
             <div
               className={classNames(
-                "schedule__download download-schedule",
+                'schedule__download download-schedule',
                 Style.scheduleDownload,
               )}
             >
@@ -149,12 +149,12 @@ export const SahajSamadhiCombo = ({
 
                         <div className="sidebar-schedule__content">
                           <p className="sidebar-schedule__date">
-                            {dayjs.utc(time.startDate).format("LL")}
+                            {dayjs.utc(time.startDate).format('LL')}
                           </p>
                           {time.startTime && time.endTime && (
                             <p className="sidebar-schedule__time">
-                              <span>{tConvert(time.startTime)}</span> -{" "}
-                              <span>{tConvert(time.endTime)}</span>{" "}
+                              <span>{tConvert(time.startTime)}</span> -{' '}
+                              <span>{tConvert(time.endTime)}</span>{' '}
                               {ABBRS[time.timeZone]}
                             </p>
                           )}
@@ -175,7 +175,7 @@ export const SahajSamadhiCombo = ({
                     </span>
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${
-                        workshop.locationStreet || ""
+                        workshop.locationStreet || ''
                       }, ${workshop.locationCity} ${
                         workshop.locationProvince
                       } ${workshop.locationPostalCode} ${
@@ -190,10 +190,10 @@ export const SahajSamadhiCombo = ({
                         </li>
                       )}
                       <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
-                        {workshop.locationCity || ""}
-                        {", "}
-                        {workshop.locationProvince || ""}{" "}
-                        {workshop.locationPostalCode || ""}
+                        {workshop.locationCity || ''}
+                        {', '}
+                        {workshop.locationProvince || ''}{' '}
+                        {workshop.locationPostalCode || ''}
                       </li>
                     </a>
                   </ul>
@@ -205,8 +205,8 @@ export const SahajSamadhiCombo = ({
                     </div>
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${
-                        workshop.streetAddress1 || ""
-                      },${workshop.streetAddress2 || ""} ${workshop.city} ${
+                        workshop.streetAddress1 || ''
+                      },${workshop.streetAddress2 || ''} ${workshop.city} ${
                         workshop.state
                       } ${workshop.zip} ${workshop.country}`}
                       target="_blank"
@@ -223,9 +223,9 @@ export const SahajSamadhiCombo = ({
                         </li>
                       )}
                       <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
-                        {workshop.city || ""}
-                        {", "}
-                        {workshop.state || ""} {workshop.zip || ""}
+                        {workshop.city || ''}
+                        {', '}
+                        {workshop.state || ''} {workshop.zip || ''}
                       </li>
                     </a>
                   </ul>
@@ -235,7 +235,7 @@ export const SahajSamadhiCombo = ({
           </div>
         </div>
       </section>
-      <section className={classNames("journey", Style.journeySection)}>
+      <section className={classNames('journey', Style.journeySection)}>
         <div className="journey__container container_md">
           <h3 className="journey__title">Your Journey Starts Here</h3>
 
@@ -279,7 +279,7 @@ export const SahajSamadhiCombo = ({
               </p>
               <p className="benefit-journey__description">
                 We’ll be meeting on zoom. If you do not already have it, you can
-                download zoom{" "}
+                download zoom{' '}
                 <a
                   className="text-link text-link_orange"
                   href="https://zoom.us/download"

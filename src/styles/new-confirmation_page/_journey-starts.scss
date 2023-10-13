@@ -1,5 +1,5 @@
 .journey-starts {
-  background-image: url("/img/journey-starts-bg-new.png");
+  background-image: url('/img/journey-starts-bg-new.png');
   // background-position-y: 100%;
   background-size: cover;
   padding: 100px 0;
@@ -98,7 +98,7 @@
       &::after {
         display: block;
         position: absolute;
-        content: "";
+        content: '';
         height: 100%;
         width: 1px;
         bottom: 0;

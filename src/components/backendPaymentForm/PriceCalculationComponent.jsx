@@ -22,29 +22,29 @@ export const PriceCalculationComponent = ({
   showPrice,
   comboPrice = null,
 }) => {
-  let feeDom = "";
-  let offeringDom = "";
-  let AddOnProductsDom = "";
+  let feeDom = '';
+  let offeringDom = '';
+  let AddOnProductsDom = '';
 
   if (agreementCMEAccepted) {
     feeDom = (
       <p className="price">
-        <b>Fee:</b>{" "}
+        <b>Fee:</b>{' '}
         <ins>
           <span className="amount">${CMEPricing.unitPrice}</span>
         </ins>
       </p>
     );
-  } else if (paymentMode === "instalment") {
+  } else if (paymentMode === 'instalment') {
     feeDom = (
       <p className="price">
-        <b>Fee:</b>{" "}
+        <b>Fee:</b>{' '}
         <del>
           <span className="amount">${unitPrice}</span>
         </del>
         <ins>
           <span className="amount">
-            {instalmentTenure} Installment of ${instalmentAmount} every{" "}
+            {instalmentTenure} Installment of ${instalmentAmount} every{' '}
             {instalmentGap} {instalmentGapUnit}(s)
           </span>
         </ins>
@@ -53,7 +53,7 @@ export const PriceCalculationComponent = ({
   } else if (discount) {
     feeDom = (
       <p className="price">
-        <b>Fee:</b>{" "}
+        <b>Fee:</b>{' '}
         <del>
           <span className="amount">${discount.oldPrice}</span>
         </del>
@@ -66,7 +66,7 @@ export const PriceCalculationComponent = ({
     if (selectedListPrice !== selectedUnitPrice) {
       feeDom = (
         <p className="price">
-          <b>Fee:</b>{" "}
+          <b>Fee:</b>{' '}
           <del>
             <span className="amount">${selectedListPrice}</span>
           </del>
@@ -87,7 +87,7 @@ export const PriceCalculationComponent = ({
   } else {
     feeDom = (
       <p className="price">
-        <b>Fee:</b>{" "}
+        <b>Fee:</b>{' '}
         <del>
           <span className="amount">${listPrice}</span>
         </del>

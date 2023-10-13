@@ -1,5 +1,5 @@
-import { useGlobalModalContext } from "@contexts";
-import classNames from "classnames";
+import { useGlobalModalContext } from '@contexts';
+import classNames from 'classnames';
 
 export const CustomModal = () => {
   const { hideModal, store } = useGlobalModalContext();

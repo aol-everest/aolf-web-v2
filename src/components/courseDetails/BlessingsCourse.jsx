@@ -1,19 +1,19 @@
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
-import { Element, Link } from "react-scroll";
-import { CourseBottomCard } from "./CourseBottomCard";
-import { RegisterPanel } from "./RegisterPanel";
+import { HideOn } from '@components';
+import { Element, Link } from 'react-scroll';
+import { CourseBottomCard } from './CourseBottomCard';
+import { RegisterPanel } from './RegisterPanel';
 
 export const BlessingsCourse = ({ data }) => {
   const { title, mode, aosCountRequisite, preRequisite } = data || {};
 
   const aosCount =
-    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : "";
+    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
 
   const preRequisiteCondition = preRequisite
-    .join(", ")
-    .replace(/,(?=[^,]+$)/, " and")
-    .replace("Silent Retreat", `${aosCount} Silent Retreat`);
+    .join(', ')
+    .replace(/,(?=[^,]+$)/, ' and')
+    .replace('Silent Retreat', `${aosCount} Silent Retreat`);
 
   return (
     <>
@@ -111,7 +111,7 @@ export const BlessingsCourse = ({ data }) => {
                       </div>
                     </div>
                     <p className="participants__comment">
-                      The Blessings Course was a{" "}
+                      The Blessings Course was a{' '}
                       <span>deeply profound experience</span>deeply profound
                       experience in my life. It gave me a new type of fullness,
                       one that I hadn’t ever fully experienced before—that I am
@@ -177,7 +177,7 @@ export const BlessingsCourse = ({ data }) => {
                       One of my favorite Art of Living courses. I went into the
                       course seeking tools to deepen my connection with myself
                       and others. I was amazed by the tools I received; I had
-                      never felt so connected. After the course,{" "}
+                      never felt so connected. After the course,{' '}
                       <span>I felt filled with clarity and purpose.</span> The
                       Blessings Course takes hollow and empty to the next level;
                       it's a hidden gem.
@@ -195,7 +195,7 @@ export const BlessingsCourse = ({ data }) => {
               <div className="col-lg-10 col-xl-6">
                 <div className="instrument-section__background">
                   <h5 className="share-section__title">
-                    Tap into Abundance and Become an Instrument of Healing{" "}
+                    Tap into Abundance and Become an Instrument of Healing{' '}
                   </h5>
                   <img src="/img/share-section-background.png" alt="" />
                 </div>
@@ -291,7 +291,7 @@ export const BlessingsCourse = ({ data }) => {
                         through you and around you.
                       </div>
                       <div className="elements-section__text">
-                        Eligibility: Completion of the {preRequisiteCondition}{" "}
+                        Eligibility: Completion of the {preRequisiteCondition}{' '}
                         are required to enroll in The Blessings Course.
                       </div>
                     </div>
@@ -316,7 +316,7 @@ export const BlessingsCourse = ({ data }) => {
               </h5>
               <h6 className="upcoming-section__text">
                 Register for The Blessings Course, and unlock your innate
-                abilities to bless and heal{" "}
+                abilities to bless and heal{' '}
               </h6>
             </div>
             <Element name="registerNowBlock">

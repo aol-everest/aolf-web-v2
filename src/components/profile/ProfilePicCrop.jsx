@@ -1,8 +1,8 @@
-import { api } from "@utils";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
+import { api } from '@utils';
+import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
+import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 const TO_RADIANS = Math.PI / 180;
 
@@ -13,11 +13,11 @@ function canvasPreview(
   scale = 1,
   rotate = 0,
 ) {
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
 
   if (!ctx) {
-    throw new Error("No 2d context");
+    throw new Error('No 2d context');
   }
 
   const scaleX = image.naturalWidth / image.width;
@@ -33,7 +33,7 @@ function canvasPreview(
   canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
 
   ctx.scale(pixelRatio, pixelRatio);
-  ctx.imageSmoothingQuality = "high";
+  ctx.imageSmoothingQuality = 'high';
 
   const cropX = crop.x * scaleX;
   const cropY = crop.y * scaleY;
@@ -72,13 +72,13 @@ function canvasPreview(
     canvas.toBlob((blob) => {
       if (!blob) {
         //reject(new Error('Canvas is empty'));
-        console.error("Canvas is empty");
+        console.error('Canvas is empty');
         return;
       }
       blob.name = fileName;
       window.URL.revokeObjectURL(fileUrl);
       resolve({ fileUrlLocal: fileUrl, blobData: blob });
-    }, "image/jpeg");
+    }, 'image/jpeg');
   });
 }
 
@@ -87,7 +87,7 @@ export const ProfilePicCrop = ({ src, closeDetailAction }) => {
   const [fileUrl, setFileUrl] = useState(null);
   const [blobData, setBlobData] = useState(null);
   const [completedCrop, setCompletedCrop] = useState();
-  const [croppedImageUrl, setCroppedImageUrl] = useState("");
+  const [croppedImageUrl, setCroppedImageUrl] = useState('');
   const [aspect, setAspect] = useState(1 / 1);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -102,7 +102,7 @@ export const ProfilePicCrop = ({ src, closeDetailAction }) => {
     return centerCrop(
       makeAspectCrop(
         {
-          unit: "%",
+          unit: '%',
           width: 90,
         },
         aspect,
@@ -124,7 +124,7 @@ export const ProfilePicCrop = ({ src, closeDetailAction }) => {
         imgRef.current,
         crop,
         {
-          fileName: "newFile.jpeg",
+          fileName: 'newFile.jpeg',
           fileUrl,
         },
       );
@@ -174,13 +174,13 @@ export const ProfilePicCrop = ({ src, closeDetailAction }) => {
     try {
       await makeClientCrop(crop);
       // console.log(blobData);
-      const file = new File([blobData], "newFile.jpeg", {
+      const file = new File([blobData], 'newFile.jpeg', {
         lastModified: new Date(),
       });
       const body = new FormData();
-      body.append("profilePic", file);
+      body.append('profilePic', file);
       const { status, error: errorMessage } = await api.postFormData({
-        path: "updateProfilePic",
+        path: 'updateProfilePic',
         body,
       });
       if (status === 400) {

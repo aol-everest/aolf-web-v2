@@ -1,7 +1,7 @@
-import { useAuth } from "@contexts";
-import { withAuth } from "@hoc";
-import { Auth } from "@utils";
-import { useEffect } from "react";
+import { useAuth } from '@contexts';
+import { withAuth } from '@hoc';
+import { Auth } from '@utils';
+import { useEffect } from 'react';
 
 function DevOnly() {
   const { user, setUser } = useAuth();

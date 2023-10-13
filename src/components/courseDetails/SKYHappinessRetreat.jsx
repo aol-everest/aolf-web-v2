@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from "@components";
-import { ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { priceCalculation } from "@utils";
-import { Element, Link } from "react-scroll";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { CourseBottomCard } from "./CourseBottomCard";
-import CourseDetailsCard from "./CourseDetailsCard";
-import { RegisterPanel } from "./RegisterPanel";
-import { ResearchFindingSource } from "./ResearchFindingSource";
-import { ResearchPagination } from "./ResearchPagination";
+import { HideOn } from '@components';
+import { ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { priceCalculation } from '@utils';
+import { Element, Link } from 'react-scroll';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { CourseBottomCard } from './CourseBottomCard';
+import CourseDetailsCard from './CourseDetailsCard';
+import { RegisterPanel } from './RegisterPanel';
+import { ResearchFindingSource } from './ResearchFindingSource';
+import { ResearchPagination } from './ResearchPagination';
 
 export const SKYHappinessRetreat = ({ data, swiperOption }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -18,9 +18,9 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
   const showResearchModal = (e) => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: "Success",
+      title: 'Success',
       children: <ResearchFindingSource />,
-      className: "research-detail-modal",
+      className: 'research-detail-modal',
       hideConfirm: true,
     });
   };
@@ -33,7 +33,7 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
       delay: 2000,
     },
     pagination: {
-      el: ".research__list-pagination",
+      el: '.research__list-pagination',
       clickable: true,
     },
   };
@@ -251,7 +251,7 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
                 </span>
 
                 <p className="summary_detail_c">
-                  Summary of Independent Research Findings and{" "}
+                  Summary of Independent Research Findings and{' '}
                   <a href="#" onClick={showResearchModal}>
                     Sources
                   </a>

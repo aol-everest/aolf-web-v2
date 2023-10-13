@@ -1,8 +1,8 @@
-import { api } from "@utils";
-import dynamic from "next/dynamic";
-import ErrorPage from "next/error";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { api } from '@utils';
+import dynamic from 'next/dynamic';
+import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 // import {
 //   SKYBreathMeditation,
 //   SahajSamadhi,
@@ -10,56 +10,56 @@ import { useEffect } from "react";
 //   SriSriYoga,
 //   VolunteerTrainingProgram,
 // } from "@components/courseDetails";
-import { PageLoading } from "@components";
-import { COURSE_TYPES } from "@constants";
-import { useAuth } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { NextSeo } from "next-seo";
-import { useQuery } from "react-query";
-import { A11y, Navigation, Scrollbar } from "swiper";
-import { useAnalytics } from "use-analytics";
+import { PageLoading } from '@components';
+import { COURSE_TYPES } from '@constants';
+import { useAuth } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { NextSeo } from 'next-seo';
+import { useQuery } from 'react-query';
+import { A11y, Navigation, Scrollbar } from 'swiper';
+import { useAnalytics } from 'use-analytics';
 
-import "swiper/css";
-import "swiper/css/a11y";
-import "swiper/css/navigation";
-import "swiper/css/scrollbar";
+import 'swiper/css';
+import 'swiper/css/a11y';
+import 'swiper/css/navigation';
+import 'swiper/css/scrollbar';
 
-import "bootstrap-daterangepicker/daterangepicker.css";
+import 'bootstrap-daterangepicker/daterangepicker.css';
 
 const SKYBreathMeditation = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SKYBreathMeditation),
+  import('@components/courseDetails').then((mod) => mod.SKYBreathMeditation),
 );
 const SKYWithSahaj = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SKYWithSahaj),
+  import('@components/courseDetails').then((mod) => mod.SKYWithSahaj),
 );
 const SahajSamadhi = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SahajSamadhi),
+  import('@components/courseDetails').then((mod) => mod.SahajSamadhi),
 );
 const SilentRetreat = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SilentRetreat),
+  import('@components/courseDetails').then((mod) => mod.SilentRetreat),
 );
 const SriSriYoga = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SriSriYoga),
+  import('@components/courseDetails').then((mod) => mod.SriSriYoga),
 );
 const VolunteerTrainingProgram = dynamic(() =>
-  import("@components/courseDetails").then(
+  import('@components/courseDetails').then(
     (mod) => mod.VolunteerTrainingProgram,
   ),
 );
 const HealingBreath = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.HealingBreath),
+  import('@components/courseDetails').then((mod) => mod.HealingBreath),
 );
 const SKYSilentRetreat = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SKYSilentRetreat),
+  import('@components/courseDetails').then((mod) => mod.SKYSilentRetreat),
 );
 const BlessingsCourse = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.BlessingsCourse),
+  import('@components/courseDetails').then((mod) => mod.BlessingsCourse),
 );
 const SKYHappinessRetreat = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SKYHappinessRetreat),
+  import('@components/courseDetails').then((mod) => mod.SKYHappinessRetreat),
 );
 const SanyamCourse = dynamic(() =>
-  import("@components/courseDetails").then((mod) => mod.SanyamCourse),
+  import('@components/courseDetails').then((mod) => mod.SanyamCourse),
 );
 
 /* export const getServerSideProps = async (context) => {
@@ -103,10 +103,10 @@ function CourseDetail() {
   const { id: workshopId } = router.query;
   const { track, page } = useAnalytics();
   const { data, isLoading, isError, error } = useQuery(
-    "workshopDetail",
+    'workshopDetail',
     async () => {
       const response = await api.get({
-        path: "workshopDetail",
+        path: 'workshopDetail',
         param: {
           id: workshopId,
         },
@@ -123,16 +123,16 @@ function CourseDetail() {
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
     page({
-      category: "course_registration",
-      name: "course",
+      category: 'course_registration',
+      name: 'course',
       amount: unitPrice,
       title,
       ctype: productTypeId,
       user: user.profile,
     });
-    track("workshopview", {
-      viewType: "workshop",
-      requestType: "Detail",
+    track('workshopview', {
+      viewType: 'workshop',
+      requestType: 'Detail',
       amount: unitPrice,
       title,
       ctype: productTypeId,
@@ -159,7 +159,7 @@ function CourseDetail() {
         pathname: `/us-en/course/checkout/${data.id}`,
         query: {
           ctype: data.productTypeId,
-          page: "c-o",
+          page: 'c-o',
         },
       });
     }
@@ -175,8 +175,8 @@ function CourseDetail() {
     navigation: true,
     centeredSlides: false,
   };
-  if (typeof window !== "undefined") {
-    if (window.matchMedia("(max-width: 768px)").matches) {
+  if (typeof window !== 'undefined') {
+    if (window.matchMedia('(max-width: 768px)').matches) {
       swiperOption = {
         modules: [Navigation, Scrollbar, A11y],
         slidesPerView: 1.1,
@@ -186,14 +186,14 @@ function CourseDetail() {
         allowTouchMove: true,
         preventInteractionOnTransition: false,
       };
-    } else if (window.matchMedia("(max-width: 1024px)").matches) {
+    } else if (window.matchMedia('(max-width: 1024px)').matches) {
       swiperOption = {
         ...swiperOption,
         slidesPerView: 2,
         spaceBetween: 30,
         centeredSlides: true,
       };
-    } else if (window.matchMedia("(max-width: 1440px)").matches) {
+    } else if (window.matchMedia('(max-width: 1440px)').matches) {
       swiperOption = {
         ...swiperOption,
         slidesPerView: 3,

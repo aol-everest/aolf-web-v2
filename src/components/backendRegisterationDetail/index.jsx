@@ -1,5 +1,5 @@
-import { PriceCalculationComponent } from "@components/backendPaymentForm/PriceCalculationComponent";
-import { isEmpty } from "lodash";
+import { PriceCalculationComponent } from '@components/backendPaymentForm/PriceCalculationComponent';
+import { isEmpty } from 'lodash';
 
 export function BackendRegisterationDetail({
   workshop,
@@ -66,13 +66,13 @@ export function BackendRegisterationDetail({
   let UpdatedFeeAfterCredits;
   if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Quantity" &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
     usableCredit.availableCredit === 1
   ) {
     UpdatedFeeAfterCredits = 0;
   } else if (
     isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === "Amount"
+    usableCredit.creditMeasureUnit === 'Amount'
   ) {
     if (usableCredit.availableCredit > unitPrice) {
       UpdatedFeeAfterCredits = 0;
@@ -139,7 +139,7 @@ export function BackendRegisterationDetail({
               {earlyBirdFeeIncreasing && (
                 <p>
                   Register soon. Course fee will go up by $
-                  {earlyBirdFeeIncreasing.increasingFee} on{" "}
+                  {earlyBirdFeeIncreasing.increasingFee} on{' '}
                   {earlyBirdFeeIncreasing.increasingBy}
                 </p>
               )}
@@ -165,7 +165,7 @@ export function BackendRegisterationDetail({
                     <div className="col-sm-12">
                       <img
                         className="img"
-                        src={primaryTeacherPic || "/img/user.png"}
+                        src={primaryTeacherPic || '/img/user.png'}
                       />
                       <a href="#" className="name">
                         {primaryTeacherName}
@@ -174,10 +174,10 @@ export function BackendRegisterationDetail({
                   )}
                   {coTeacher1Name && (
                     <div className="col-sm-12">
-                      {"  "}
+                      {'  '}
                       <img
                         className="img"
-                        src={coTeacher1Pic || "/img/user.png"}
+                        src={coTeacher1Pic || '/img/user.png'}
                       />
                       <a href="#" className="name">
                         {coTeacher1Name}
@@ -186,10 +186,10 @@ export function BackendRegisterationDetail({
                   )}
                   {coTeacher2Name && (
                     <div className="col-sm-12">
-                      {"  "}
+                      {'  '}
                       <img
                         className="img"
-                        src={coTeacher2Pic || "/img/user.png"}
+                        src={coTeacher2Pic || '/img/user.png'}
                       />
                       <a href="#" className="name">
                         {coTeacher2Name}

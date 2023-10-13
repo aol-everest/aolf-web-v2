@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { useContext } from "react";
-import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { Accordion, Card, AccordionContext } from "react-bootstrap";
-import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
-import classNames from "classnames";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
-import { PriceCard } from "./PriceCard";
-import queryString from "query-string";
-import { pushRouteWithUTMQuery } from "@service";
-import { useRouter } from "next/router";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { useContext } from 'react';
+import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { Accordion, Card, AccordionContext } from 'react-bootstrap';
+import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
+import classNames from 'classnames';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
+import { PriceCard } from './PriceCard';
+import queryString from 'query-string';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
+import { FaArrowRightLong } from 'react-icons/fa6';
 
 const settings = {
   slidesToShow: 3,
@@ -22,7 +22,7 @@ const settings = {
   arrows: false,
   dots: true,
   speed: 300,
-  centerPadding: "0px",
+  centerPadding: '0px',
   infinite: true,
   autoplaySpeed: 5000,
   autoplay: true,
@@ -32,7 +32,7 @@ const settings = {
       settings: {
         arrows: false,
         centerMode: true,
-        centerPadding: "40px",
+        centerPadding: '40px',
         slidesToShow: 1,
       },
     },
@@ -41,7 +41,7 @@ const settings = {
       settings: {
         arrows: false,
         centerMode: true,
-        centerPadding: "40px",
+        centerPadding: '40px',
         slidesToShow: 1,
       },
     },
@@ -62,7 +62,7 @@ export const SKYBreathMeditation = ({ data }) => {
           pathname: `/us-en/course/checkout/${sfid}`,
           query: {
             ctype: productTypeId,
-            page: "c-o",
+            page: 'c-o',
           },
         });
       } else {
@@ -70,7 +70,7 @@ export const SKYBreathMeditation = ({ data }) => {
           navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
             router.query,
           )}`,
-          defaultView: "SIGNUP_MODE",
+          defaultView: 'SIGNUP_MODE',
         });
       }
     } else {
@@ -568,7 +568,7 @@ export const SKYBreathMeditation = ({ data }) => {
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
                   <Card.Body>
-                    Yes, you must be at least 18 years old to learn {title}.{" "}
+                    Yes, you must be at least 18 years old to learn {title}.{' '}
                     <br />
                     The Art of Living offers alternative programs for children
                     and teens (18 years and under). Contact us at
@@ -651,7 +651,7 @@ function ContextAwareToggle({ children, eventKey, callback }) {
   return (
     <h5 className="mb-0">
       <button
-        className={classNames("btn btn-link", {
+        className={classNames('btn btn-link', {
           collapsed: !isCurrentEventKey,
         })}
         onClick={decoratedOnClick}

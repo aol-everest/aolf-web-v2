@@ -2,7 +2,7 @@
   overflow: hidden;
   padding: 100px 0;
   background-color: #8abfec;
-  background-image: url("/img/program-transformations-bg.png");
+  background-image: url('/img/program-transformations-bg.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position-y: top;
@@ -54,7 +54,7 @@
         right: -90px;
 
         &:after {
-          content: url("/img/ic-arrow-rigth.svg");
+          content: url('/img/ic-arrow-rigth.svg');
         }
       }
 
@@ -62,7 +62,7 @@
         left: -90px;
 
         &:after {
-          content: url("/img/ic-arrow-left.svg");
+          content: url('/img/ic-arrow-left.svg');
         }
       }
 
@@ -98,7 +98,7 @@
           }
 
           &:after {
-            content: "“";
+            content: '“';
             position: absolute;
             top: -5px;
             right: -15px;

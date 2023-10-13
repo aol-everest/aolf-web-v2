@@ -8,53 +8,53 @@ import {
   MobileCourseOptions,
   PayWith,
   UserInfoForm,
-} from "@components/checkout";
-import { ABBRS } from "@constants";
-import { useAuth } from "@contexts";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { pushRouteWithUTMQuery } from "@service";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { isEmpty, tConvert } from "@utils";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import * as Yup from "yup";
-import "yup-phone";
+} from '@components/checkout';
+import { ABBRS } from '@constants';
+import { useAuth } from '@contexts';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { pushRouteWithUTMQuery } from '@service';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { isEmpty, tConvert } from '@utils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import * as Yup from 'yup';
+import 'yup-phone';
 
-import { Loader } from "@components";
+import { Loader } from '@components';
 import {
   ALERT_TYPES,
   MEMBERSHIP_TYPES,
   MODAL_TYPES,
   PAYMENT_MODES,
   PAYMENT_TYPES,
-} from "@constants";
-import { useGlobalAlertContext, useGlobalModalContext } from "@contexts";
-import { useQueryString } from "@hooks";
-import { Auth, api, priceCalculation } from "@utils";
-import { filterAllowedParams } from "@utils/utmParam";
+} from '@constants';
+import { useGlobalAlertContext, useGlobalModalContext } from '@contexts';
+import { useQueryString } from '@hooks';
+import { Auth, api, priceCalculation } from '@utils';
+import { filterAllowedParams } from '@utils/utmParam';
 
 dayjs.extend(utc);
 
 const createOptions = {
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: '16px',
       lineHeight: 2,
       fontWeight: 200,
-      fontStyle: "normal",
-      color: "#303650",
-      fontFamily: "Work Sans, sans-serif",
-      "::placeholder": {
-        color: "#9598a6",
-        fontFamily: "Work Sans, sans-serif",
-        fontSize: "16px",
+      fontStyle: 'normal',
+      color: '#303650',
+      fontFamily: 'Work Sans, sans-serif',
+      '::placeholder': {
+        color: '#9598a6',
+        fontFamily: 'Work Sans, sans-serif',
+        fontSize: '16px',
       },
     },
     invalid: {
-      color: "#9e2146",
+      color: '#9e2146',
     },
   },
 };
@@ -81,8 +81,8 @@ export const MeetupPaymentForm = ({
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
-  const [priceType, setPriceType] = useState("");
-  const [discount] = useQueryString("discountCode");
+  const [priceType, setPriceType] = useState('');
+  const [discount] = useQueryString('discountCode');
   const [discountResponse, setDiscountResponse] = useState(null);
   const router = useRouter();
 
@@ -109,7 +109,7 @@ export const MeetupPaymentForm = ({
       pathname: `/us-en/membership/${id}`,
       query: {
         mid: meetup.sfid,
-        page: "checkout",
+        page: 'checkout',
       },
     });
   };
@@ -127,7 +127,7 @@ export const MeetupPaymentForm = ({
       error: errorMessage,
       isError,
     } = await api.post({
-      path: "paypalBuyAcknowledgement",
+      path: 'paypalBuyAcknowledgement',
       body: { orderID: paypalData.orderID },
     });
 
@@ -164,7 +164,7 @@ export const MeetupPaymentForm = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -205,7 +205,7 @@ export const MeetupPaymentForm = ({
             contactZip,
           },
           products: {
-            productType: "meetup",
+            productType: 'meetup',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           },
@@ -223,7 +223,7 @@ export const MeetupPaymentForm = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
       setLoading(false);
@@ -273,7 +273,7 @@ export const MeetupPaymentForm = ({
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
         ...res,
-        [current.key]: current.value ? "Yes" : "No",
+        [current.key]: current.value ? 'Yes' : 'No',
       }),
       {},
     );
@@ -291,7 +291,7 @@ export const MeetupPaymentForm = ({
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile.name ? profile.name : firstName + " " + lastName,
+          name: profile.name ? profile.name : firstName + ' ' + lastName,
         });
         let { error, token } = createTokenRespone;
         if (error) {
@@ -318,7 +318,7 @@ export const MeetupPaymentForm = ({
             contactZip,
           },
           products: {
-            productType: "meetup",
+            productType: 'meetup',
             productSfId: productId,
             AddOnProductIds: AddOnProductIds,
           },
@@ -344,7 +344,7 @@ export const MeetupPaymentForm = ({
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
       });
 
@@ -424,7 +424,7 @@ export const MeetupPaymentForm = ({
     discountResponse,
   });
 
-  const isRegularPrice = priceType === null || priceType === "regular";
+  const isRegularPrice = priceType === null || priceType === 'regular';
 
   const toggleDetailMobileModal = () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
@@ -462,13 +462,13 @@ export const MeetupPaymentForm = ({
     : [];
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
-  const day = meetupStartDateTime && meetupStartDateTime.split(",")[0];
+  const day = meetupStartDateTime && meetupStartDateTime.split(',')[0];
 
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
     !isEmpty(groupedAddOnProducts) &&
-    "Residential Add On" in groupedAddOnProducts &&
-    groupedAddOnProducts["Residential Add On"].length > 0;
+    'Residential Add On' in groupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].length > 0;
 
   // const residentialAddOnRequired =
   //   hasGroupedAddOnProducts &&
@@ -485,49 +485,49 @@ export const MeetupPaymentForm = ({
   return (
     <Formik
       initialValues={{
-        firstName: first_name || "",
-        lastName: last_name || "",
-        email: email || "",
-        contactPhone: personMobilePhone || "",
-        contactAddress: personMailingStreet || "",
-        contactCity: personMailingCity || "",
-        contactState: personMailingState || "",
-        contactZip: personMailingPostalCode || "",
-        couponCode: discount ? discount : "",
+        firstName: first_name || '',
+        lastName: last_name || '',
+        email: email || '',
+        contactPhone: personMobilePhone || '',
+        contactAddress: personMailingStreet || '',
+        contactCity: personMailingCity || '',
+        contactState: personMailingState || '',
+        contactZip: personMailingPostalCode || '',
+        couponCode: discount ? discount : '',
         questionnaire: questionnaire,
         ppaAgreement: false,
         paymentOption: PAYMENT_TYPES.FULL,
         paymentMode:
-          otherPaymentOptions && otherPaymentOptions.indexOf("Paypal") > -1
-            ? ""
+          otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') > -1
+            ? ''
             : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
         accommodation: null,
       }}
       validationSchema={Yup.object().shape({
-        firstName: Yup.string().required("First Name is required"),
-        lastName: Yup.string().required("Last Name is required"),
+        firstName: Yup.string().required('First Name is required'),
+        lastName: Yup.string().required('Last Name is required'),
         contactPhone: Yup.string()
-          .label("Phone")
-          .required("Phone is required")
-          .phone(null, false, "Phone is invalid")
+          .label('Phone')
+          .required('Phone is required')
+          .phone(null, false, 'Phone is invalid')
           .nullable(),
-        contactAddress: Yup.string().required("Address is required"),
-        contactCity: Yup.string().required("City is required"),
-        contactState: Yup.string().required("State is required"),
+        contactAddress: Yup.string().required('Address is required'),
+        contactCity: Yup.string().required('City is required'),
+        contactState: Yup.string().required('State is required'),
         contactZip: Yup.string()
-          .required("Zip is required!")
+          .required('Zip is required!')
           //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-          .min(2, "Zip is invalid")
-          .max(10, "Zip is invalid"),
+          .min(2, 'Zip is invalid')
+          .max(10, 'Zip is invalid'),
         ppaAgreement: Yup.boolean()
-          .label("Terms")
+          .label('Terms')
           .test(
-            "is-true",
-            "Please check the box in order to continue.",
+            'is-true',
+            'Please check the box in order to continue.',
             (value) => value === true,
           ),
         accommodation: Yup.mixed().notRequired(),
-        paymentMode: Yup.string().required("Payment mode is required!"),
+        paymentMode: Yup.string().required('Payment mode is required!'),
       })}
       onSubmit={async (values, { setSubmitting, isValid, errors }) => {
         await completeEnrollmentAction(values);
@@ -580,7 +580,7 @@ export const MeetupPaymentForm = ({
 
         let isOfflineExpense;
         if (hasGroupedAddOnProducts && expenseAddOn) {
-          isOfflineExpense = expenseAddOn.paymentMode === "In Person";
+          isOfflineExpense = expenseAddOn.paymentMode === 'In Person';
         } else if (expenseAddOn && !expenseAddOn.isAddOnSelectionRequired) {
           isOfflineExpense = values[expenseAddOn.productName] || false;
         } else if (!expenseAddOn) {
@@ -597,7 +597,7 @@ export const MeetupPaymentForm = ({
                 <div className="details">
                   <h2 className="details__title">Account Details:</h2>
                   <p className="details__content">
-                    This is not your account?{" "}
+                    This is not your account?{' '}
                     <a href="#" className="link" onClick={logout}>
                       Logout
                     </a>
@@ -705,17 +705,17 @@ export const MeetupPaymentForm = ({
                           options={{
                             clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                             debug: true,
-                            currency: "USD",
+                            currency: 'USD',
                           }}
                         >
                           <PayPalButtons
                             style={{
-                              layout: "horizontal",
-                              color: "blue",
-                              shape: "pill",
+                              layout: 'horizontal',
+                              color: 'blue',
+                              shape: 'pill',
                               height: 40,
                               tagline: false,
-                              label: "pay",
+                              label: 'pay',
                             }}
                             fundingSource="paypal"
                             forceReRender={[formikProps.values]}
@@ -785,7 +785,7 @@ export const MeetupPaymentForm = ({
                       RSVP:
                     </span>
                   </p>
-                  {mode === "In Person" ? (
+                  {mode === 'In Person' ? (
                     <>
                       {!isJourneyPlus && (
                         <ul className="reciept__item_list">
@@ -952,18 +952,18 @@ export const MeetupPaymentForm = ({
                         {meetupStartDate && dayjs.utc(meetupStartDate) && (
                           <li>{`${dayjs
                             .utc(meetupStartDate)
-                            .format("MMMM DD")}, ${dayjs
+                            .format('MMMM DD')}, ${dayjs
                             .utc(meetupStartDate)
-                            .format("YYYY")}`}</li>
+                            .format('YYYY')}`}</li>
                         )}
                         {!dayjs
                           .utc(eventStartDate)
-                          .isSame(dayjs.utc(eventEndDate), "month") && (
+                          .isSame(dayjs.utc(eventEndDate), 'month') && (
                           <li>{`${dayjs
                             .utc(eventStartDate)
-                            .format("MMMM DD")}-${dayjs
+                            .format('MMMM DD')}-${dayjs
                             .utc(eventEndDate)
-                            .format("MMMM DD, YYYY")}`}</li>
+                            .format('MMMM DD, YYYY')}`}</li>
                         )}
                       </ul>
                       <ul className="info__list mt-3">
@@ -1002,14 +1002,14 @@ export const MeetupPaymentForm = ({
                           </a>
                         </li>
                       </ul>
-                      {meetup.mode === "In Person" && (
+                      {meetup.mode === 'In Person' && (
                         <>
                           {!meetup.isLocationEmpty && (
                             <ul className="info__list mt-3">
                               <h2 className="info__title">Location:</h2>
                               <a
                                 href={`https://www.google.com/maps/search/?api=1&query=${
-                                  meetup.locationStreet || ""
+                                  meetup.locationStreet || ''
                                 }, ${meetup.locationCity} ${
                                   meetup.locationProvince
                                 } ${meetup.locationPostalCode} ${
@@ -1022,10 +1022,10 @@ export const MeetupPaymentForm = ({
                                   <li>{meetup.locationStreet}</li>
                                 )}
                                 <li>
-                                  {meetup.locationCity || ""}
-                                  {", "}
-                                  {meetup.locationProvince || ""}{" "}
-                                  {meetup.locationPostalCode || ""}
+                                  {meetup.locationCity || ''}
+                                  {', '}
+                                  {meetup.locationProvince || ''}{' '}
+                                  {meetup.locationPostalCode || ''}
                                 </li>
                               </a>
                             </ul>
@@ -1035,8 +1035,8 @@ export const MeetupPaymentForm = ({
                               <h2 className="info__title">Location:</h2>
                               <a
                                 href={`https://www.google.com/maps/search/?api=1&query=${
-                                  meetup.streetAddress1 || ""
-                                },${meetup.streetAddress2 || ""} ${
+                                  meetup.streetAddress1 || ''
+                                },${meetup.streetAddress2 || ''} ${
                                   meetup.city
                                 } ${meetup.state} ${meetup.zip} ${
                                   meetup.country
@@ -1051,9 +1051,9 @@ export const MeetupPaymentForm = ({
                                   <li>{meetup.streetAddress2}</li>
                                 )}
                                 <li>
-                                  {meetup.city || ""}
-                                  {", "}
-                                  {meetup.state || ""} {meetup.zip || ""}
+                                  {meetup.city || ''}
+                                  {', '}
+                                  {meetup.state || ''} {meetup.zip || ''}
                                 </li>
                               </a>
                             </ul>
@@ -1139,18 +1139,18 @@ export const MeetupPaymentForm = ({
                         {meetupStartDate && dayjs.utc(meetupStartDate) && (
                           <li>{`${dayjs
                             .utc(meetupStartDate)
-                            .format("MMMM DD")}, ${dayjs
+                            .format('MMMM DD')}, ${dayjs
                             .utc(meetupStartDate)
-                            .format("YYYY")}`}</li>
+                            .format('YYYY')}`}</li>
                         )}
                         {!dayjs
                           .utc(eventStartDate)
-                          .isSame(dayjs.utc(eventEndDate), "month") && (
+                          .isSame(dayjs.utc(eventEndDate), 'month') && (
                           <li>{`${dayjs
                             .utc(eventStartDate)
-                            .format("MMMM DD")}-${dayjs
+                            .format('MMMM DD')}-${dayjs
                             .utc(eventEndDate)
-                            .format("MMMM DD, YYYY")}`}</li>
+                            .format('MMMM DD, YYYY')}`}</li>
                         )}
                       </p>
                       <button

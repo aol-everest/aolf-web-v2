@@ -1,9 +1,9 @@
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable react/no-unescaped-entities */
-import { ALERT_TYPES } from "@constants";
-import { useGlobalAlertContext } from "@contexts";
-import { api } from "@utils";
-import { NextSeo } from "next-seo";
+import { ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
+import { api } from '@utils';
+import { NextSeo } from 'next-seo';
 
 const successMessage = () => {
   return (
@@ -18,12 +18,12 @@ const PPACourse = () => {
   const handleClick = async () => {
     try {
       await api.post({
-        path: "waiveOffUserGrants",
+        path: 'waiveOffUserGrants',
         body: { waiveGrants: true },
       });
       showAlert(ALERT_TYPES.SUCCESS_ALERT, {
         children: successMessage,
-        title: "Confirmed",
+        title: 'Confirmed',
       });
     } catch (ex) {
       const data = ex.response?.data;
@@ -61,15 +61,15 @@ const PPACourse = () => {
               to as a “minor”), on behalf of such child or minor. By registering
               for or participating in a program, you accept and agree to be
               bound and abide by this Program Participation Agreement, as well
-              as our website{" "}
+              as our website{' '}
               <a
                 href="https://www.artofliving.org/us-en/terms-use"
                 target="_blank"
                 rel="noreferrer"
               >
                 Terms of Use
-              </a>{" "}
-              and our{" "}
+              </a>{' '}
+              and our{' '}
               <a
                 href="https://www.artofliving.org/us-en/privacy-policy"
                 target="_blank"
@@ -151,10 +151,10 @@ const PPACourse = () => {
               written, audio and/or visual presentations may be used in print,
               broadcast and online promotions to advance the purposes of the
               Organization around the world. If I wish to withhold or withdraw
-              this grant of rights, I may do so by{" "}
+              this grant of rights, I may do so by{' '}
               <span onClick={handleClick}>
                 <a href="#">clicking here</a>
-              </span>{" "}
+              </span>{' '}
               or writing to the Organization at support@us.artofliving.org.
             </p>
             <p>

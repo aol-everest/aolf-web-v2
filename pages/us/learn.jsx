@@ -1,5 +1,5 @@
-import { CONTENT_FOLDER_IDS } from "@constants";
-import ErrorPage from "next/error";
+import { CONTENT_FOLDER_IDS } from '@constants';
+import ErrorPage from 'next/error';
 
 export const getServerSideProps = async (context) => {
   return {

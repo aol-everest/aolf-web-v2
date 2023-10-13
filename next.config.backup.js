@@ -1,7 +1,7 @@
-const withPlugins = require("next-compose-plugins");
-const { withSentryConfig } = require("@sentry/nextjs");
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
+const withPlugins = require('next-compose-plugins');
+const { withSentryConfig } = require('@sentry/nextjs');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
 });
 // const withPWA = require("next-pwa");
 // const runtimeCaching = require("next-pwa/cache");
@@ -23,28 +23,28 @@ const SentryWebpackPluginOptions = {
 
 const securityHeaders = [
   {
-    key: "x-frame-options",
-    value: "SAMEORIGIN",
+    key: 'x-frame-options',
+    value: 'SAMEORIGIN',
   },
   {
-    key: "x-content-type-options",
-    value: "nosniff",
+    key: 'x-content-type-options',
+    value: 'nosniff',
   },
   {
-    key: "referrer-policy",
-    value: "origin-when-cross-origin",
+    key: 'referrer-policy',
+    value: 'origin-when-cross-origin',
   },
   {
-    key: "permissions-policy",
-    value: "camera=(), geolocation=(self), microphone=(self), autoplay=(self)",
+    key: 'permissions-policy',
+    value: 'camera=(), geolocation=(self), microphone=(self), autoplay=(self)',
   },
   {
-    key: "strict-transport-security",
-    value: "max-age=31536000; includeSubDomains",
+    key: 'strict-transport-security',
+    value: 'max-age=31536000; includeSubDomains',
   },
   {
-    key: "cache-control",
-    value: "no-cache, no-store, must-revalidate",
+    key: 'cache-control',
+    value: 'no-cache, no-store, must-revalidate',
   },
 ];
 
@@ -56,19 +56,19 @@ module.exports = withPlugins(
     // assetPrefix: "/us-en/",
     productionBrowserSourceMaps: true,
     images: {
-      domains: ["images.ctfassets.net"],
+      domains: ['images.ctfassets.net'],
     },
 
     async redirects() {
       return [
         {
-          source: "/",
-          destination: "/us-en/course",
+          source: '/',
+          destination: '/us-en/course',
           permanent: true,
         },
         {
-          source: "/us-en",
-          destination: "/us-en/course",
+          source: '/us-en',
+          destination: '/us-en/course',
           permanent: true,
         },
       ];
@@ -77,16 +77,16 @@ module.exports = withPlugins(
       return [
         {
           // Apply these headers to all routes in your application.
-          source: "/(.*)",
+          source: '/(.*)',
           headers: securityHeaders,
         },
         {
-          source: "/:all*(svg|jpg|png)",
+          source: '/:all*(svg|jpg|png)',
           locale: false,
           headers: [
             {
-              key: "cache-control",
-              value: "public, max-age=800 must-revalidate",
+              key: 'cache-control',
+              value: 'public, max-age=800 must-revalidate',
             },
           ],
         },

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export default function ClevertapAnalytics() {
   useEffect(() => {
@@ -8,7 +8,7 @@ export default function ClevertapAnalytics() {
         profile: [],
         account: [],
         onUserLogin: [],
-        region: "us1",
+        region: 'us1',
         notifications: [],
         privacy: [],
       };
@@ -18,14 +18,14 @@ export default function ClevertapAnalytics() {
       window.clevertap.privacy.push({ optOut: false }); //set the flag to true, if the user of the device opts out of sharing their data
       window.clevertap.privacy.push({ useIP: false }); //set the flag to true, if the user agrees to share their IP data
       (function () {
-        var wzrk = document.createElement("script");
-        wzrk.type = "text/javascript";
+        var wzrk = document.createElement('script');
+        wzrk.type = 'text/javascript';
         wzrk.async = true;
         wzrk.src =
-          ("https:" == document.location.protocol
-            ? "https://d2r1yp2w7bby2u.cloudfront.net"
-            : "http://static.clevertap.com") + "/js/clevertap.min.js";
-        var s = document.getElementsByTagName("script")[0];
+          ('https:' == document.location.protocol
+            ? 'https://d2r1yp2w7bby2u.cloudfront.net'
+            : 'http://static.clevertap.com') + '/js/clevertap.min.js';
+        var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(wzrk, s);
       })();
     }

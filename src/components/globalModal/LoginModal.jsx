@@ -1,34 +1,34 @@
-import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from "@constants";
-import { useAuth, useGlobalModalContext } from "@contexts";
-import { pushRouteWithUTMQuery } from "@service";
-import { Auth, api } from "@utils";
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
-import { useAnalytics } from "use-analytics";
+import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { Auth, api } from '@utils';
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { FaCheckCircle } from 'react-icons/fa';
+import { useAnalytics } from 'use-analytics';
 import {
   ChangePasswordForm,
   NewPasswordForm,
   ResetPasswordForm,
   SigninForm,
   SignupForm,
-} from "./../loginForm";
+} from './../loginForm';
 
-const LOGIN_MODE = "LOGIN_MODE";
-const SIGNUP_MODE = "SIGNUP_MODE";
-const RESET_PASSWORD_REQUEST = "RESET_PASSWORD_REQUEST";
-const NEW_PASSWORD_REQUEST = "NEW_PASSWORD_REQUEST";
-const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
+const LOGIN_MODE = 'LOGIN_MODE';
+const SIGNUP_MODE = 'SIGNUP_MODE';
+const RESET_PASSWORD_REQUEST = 'RESET_PASSWORD_REQUEST';
+const NEW_PASSWORD_REQUEST = 'NEW_PASSWORD_REQUEST';
+const CHANGE_PASSWORD_REQUEST = 'CHANGE_PASSWORD_REQUEST';
 
-const MESSAGE_SIGNUP_SUCCESS = "Sign up completed successfully.";
+const MESSAGE_SIGNUP_SUCCESS = 'Sign up completed successfully.';
 const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
-  "A verification code has been emailed to you. Please use the verification code and reset your password.";
+  'A verification code has been emailed to you. Please use the verification code and reset your password.';
 
 const encodeFormData = (data) => {
   return Object.keys(data)
-    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-    .join("&");
+    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
 };
 
 export const LoginModal = () => {
@@ -78,7 +78,7 @@ export const LoginModal = () => {
 
   const validateStudentEmail = (email) => {
     const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
-    const isStudentEmail = regex.test(email) && email.indexOf("alumni") < 0;
+    const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
     return isStudentEmail;
   };
 
@@ -111,7 +111,7 @@ export const LoginModal = () => {
 
         if (isStudent) {
           await api.post({
-            path: "verify-email",
+            path: 'verify-email',
             body: {
               email: username,
             },
@@ -187,11 +187,11 @@ export const LoginModal = () => {
   const fbLogin = () => {
     const params = {
       state: navigateTo || router.asPath,
-      identity_provider: "Facebook",
+      identity_provider: 'Facebook',
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
       client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-      response_type: "CODE",
-      scope: "email phone profile aws.cognito.signin.user.admin openid",
+      response_type: 'CODE',
+      scope: 'email phone profile aws.cognito.signin.user.admin openid',
     };
     window.location.replace(
       `https://${
@@ -203,11 +203,11 @@ export const LoginModal = () => {
   const googleLogin = () => {
     const params = {
       state: navigateTo || router.asPath,
-      identity_provider: "Google",
+      identity_provider: 'Google',
       redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
       client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-      response_type: "CODE",
-      scope: "email phone profile aws.cognito.signin.user.admin openid",
+      response_type: 'CODE',
+      scope: 'email phone profile aws.cognito.signin.user.admin openid',
     };
     window.location.replace(
       `https://${
@@ -220,7 +220,7 @@ export const LoginModal = () => {
     setLoading(true);
     setShowMessage(false);
     const isStudentFlowEnabled =
-      process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === "true";
+      process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === 'true';
     try {
       await Auth.signup({ email: username, password, firstName, lastName });
       const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
@@ -274,11 +274,11 @@ export const LoginModal = () => {
     setLoading(true);
     setShowMessage(false);
     try {
-      await Auth.resetPassword({ email: username, code: "" + code, password });
+      await Auth.resetPassword({ email: username, code: '' + code, password });
       setUsername(null);
       setMode(LOGIN_MODE);
     } catch (ex) {
-      console.log("error signing in", ex);
+      console.log('error signing in', ex);
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {
         errorMessage = errorMessage[1];
@@ -326,8 +326,8 @@ export const LoginModal = () => {
       <div className="modal-window__card show">
         {loading && <div className="cover-spin"></div>}
         <div
-          className={classNames("success-message-container", {
-            "d-none": !showSuccessMessage,
+          className={classNames('success-message-container', {
+            'd-none': !showSuccessMessage,
           })}
         >
           <div className="success-message">
@@ -363,14 +363,14 @@ export const LoginModal = () => {
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                {" "}
+                {' '}
                 <polyline
                   fill="none"
                   points="12.5,21 3.5,12 12.5,3 "
                   stroke="#000000"
                   strokeMiterlimit="10"
                   strokeWidth="2"
-                ></polyline>{" "}
+                ></polyline>{' '}
                 <line
                   fill="none"
                   stroke="#000000"
@@ -380,7 +380,7 @@ export const LoginModal = () => {
                   x2="3.5"
                   y1="12"
                   y2="12"
-                ></line>{" "}
+                ></line>{' '}
               </svg>
             </span>
           )}
@@ -390,7 +390,7 @@ export const LoginModal = () => {
           {(mode === LOGIN_MODE || mode === SIGNUP_MODE) && (
             <div className="auth-btn-wrapper">
               <button
-                className={classNames("auth-btn", {
+                className={classNames('auth-btn', {
                   active: mode === LOGIN_MODE,
                 })}
                 id="login"
@@ -399,7 +399,7 @@ export const LoginModal = () => {
                 Log In
               </button>
               <button
-                className={classNames("auth-btn", {
+                className={classNames('auth-btn', {
                   active: mode === SIGNUP_MODE,
                 })}
                 id="signup"

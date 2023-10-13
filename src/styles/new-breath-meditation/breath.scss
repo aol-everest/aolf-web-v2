@@ -56,7 +56,7 @@
       position: relative;
 
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         height: 1px;
         bottom: 1px;
@@ -106,7 +106,7 @@
     }
 
     &__title {
-      font: 28px/38px "Lora";
+      font: 28px/38px 'Lora';
       font-weight: 700;
       margin-bottom: 8px;
     }
@@ -177,7 +177,7 @@
     padding: 32px 40px;
 
     &__title {
-      font: 24px/32px "Lora";
+      font: 24px/32px 'Lora';
       font-weight: 700;
       margin-bottom: 20px;
     }
@@ -263,7 +263,7 @@
       position: absolute;
       top: 4px;
       right: 1px;
-      font: 24px/1px "Lora";
+      font: 24px/1px 'Lora';
       font-weight: 700;
     }
 
@@ -294,7 +294,7 @@
     background-repeat: no-repeat !important;
 
     &__title {
-      font: 700 28px/38px "Lora";
+      font: 700 28px/38px 'Lora';
       margin: 0;
     }
 
@@ -318,7 +318,7 @@
       color: #ffffff;
       text-decoration: none;
 
-      font-family: "Metropolis";
+      font-family: 'Metropolis';
       font-weight: 500;
     }
 
@@ -475,7 +475,7 @@
       padding: 60px 0 230px;
 
       &__title {
-        font: 28px/38px "Lora";
+        font: 28px/38px 'Lora';
         font-weight: 700;
         margin-bottom: 32px;
       }

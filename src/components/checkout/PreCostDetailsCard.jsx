@@ -1,6 +1,6 @@
-import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from "@constants";
-import classNames from "classnames";
-import { Field } from "formik";
+import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from '@constants';
+import classNames from 'classnames';
+import { Field } from 'formik';
 
 export const PreCostDetailsCard = ({
   workshop,
@@ -70,7 +70,7 @@ export const PreCostDetailsCard = ({
                 <p className="font-weight-bold">
                   <span className="discount font-weight-bold">
                     [$590] [$90]
-                  </span>{" "}
+                  </span>{' '}
                   $0
                 </p>
               </li>
@@ -83,7 +83,7 @@ export const PreCostDetailsCard = ({
                     <span className="discount font-weight-bold">
                       [${delfee}]
                     </span>
-                  )}{" "}
+                  )}{' '}
                   ${fee}
                 </p>
               </li>
@@ -133,7 +133,7 @@ export const PreCostDetailsCard = ({
                     <span className="discount font-weight-bold">
                       [${delfee}]
                     </span>
-                  )}{" "}
+                  )}{' '}
                   ${fee}
                 </p>
               </li>
@@ -191,9 +191,9 @@ export const PreCostDetailsCard = ({
                     name="payment-type"
                     id="payment-lg-regular-card"
                     defaultChecked
-                    checked={formikProps.values.priceType === "regular"}
+                    checked={formikProps.values.priceType === 'regular'}
                     value="regular"
-                    onChange={formikProps.handleChange("priceType")}
+                    onChange={formikProps.handleChange('priceType')}
                   />
 
                   <label htmlFor="payment-lg-regular-card">
@@ -211,9 +211,9 @@ export const PreCostDetailsCard = ({
                       type="radio"
                       name="priceType"
                       id="payment-lg-premium-card"
-                      checked={formikProps.values.priceType === "premium"}
+                      checked={formikProps.values.priceType === 'premium'}
                       value="premium"
-                      onChange={formikProps.handleChange("priceType")}
+                      onChange={formikProps.handleChange('priceType')}
                     />
                     <label htmlFor="payment-lg-premium-card">
                       <span>Premium/Journey+ rate:</span>
@@ -224,7 +224,7 @@ export const PreCostDetailsCard = ({
                             <span className="discount">
                               ${delfee || premiumRate.listPrice}
                             </span>
-                          )}{" "}
+                          )}{' '}
                         ${premiumRate.unitPrice}
                       </span>
                     </label>
@@ -307,7 +307,7 @@ export const PreCostDetailsCard = ({
                           <span className="discount">
                             ${delfee || premiumRate.listPrice}
                           </span>
-                        )}{" "}
+                        )}{' '}
                       ${premiumRate.unitPrice}
                     </span>
                   )}
@@ -370,7 +370,7 @@ export const PreCostDetailsCard = ({
                   Limited Time Offer: ${fee}
                 </h1>
                 <p className="price">
-                  Regular Course Fee:{" "}
+                  Regular Course Fee:{' '}
                   <span className="discount">${delfee}</span>
                 </p>
               </>
@@ -441,7 +441,7 @@ export const PreCostDetailsCard = ({
           <div className="reciept__payment">
             <div className="reciept__payment-option">
               <Field
-                className={classNames("custom-radio", {
+                className={classNames('custom-radio', {
                   error:
                     formikProps.errors.paymentOption &&
                     formikProps.touched.paymentOption,
@@ -463,7 +463,7 @@ export const PreCostDetailsCard = ({
             </div>
             <div className="reciept__payment-option">
               <Field
-                className={classNames("custom-radio", {
+                className={classNames('custom-radio', {
                   error:
                     formikProps.errors.paymentOption &&
                     formikProps.touched.paymentOption,
@@ -551,13 +551,13 @@ export const PreCostDetailsCard = ({
                           <span className="discount">
                             ${availableBundle.comboListPrice}
                           </span>
-                        )}{" "}
+                        )}{' '}
                         ${availableBundle.comboUnitPrice}
                       </span>
                     </label>
                   </div>
                   <div className="reciept__payment-tooltip">
-                    {availableBundle.comboDescription || ""}
+                    {availableBundle.comboDescription || ''}
                   </div>
                 </>
               );
