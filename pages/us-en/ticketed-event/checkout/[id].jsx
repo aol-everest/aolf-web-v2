@@ -1,27 +1,29 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import { useLocalStorage } from "react-use";
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useLocalStorage } from 'react-use';
 import {
   useAuth,
   useGlobalAlertContext,
   useGlobalModalContext,
-} from "@contexts";
-import { ALERT_TYPES, MODAL_TYPES, PAYMENT_MODES } from "@constants";
-import { Formik } from "formik";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
-import * as Yup from "yup";
-import { loadStripe } from "@stripe/stripe-js";
-import { useAnalytics } from "use-analytics";
+} from '@contexts';
+import { ALERT_TYPES, MODAL_TYPES, PAYMENT_MODES } from '@constants';
+import { Formik } from 'formik';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import * as Yup from 'yup';
+import { loadStripe } from '@stripe/stripe-js';
+import { useAnalytics } from 'use-analytics';
+import { filterAllowedParams } from '@utils/utmParam';
+import queryString from 'query-string';
 import {
   PaymentElement,
   Elements,
   useElements,
   useStripe,
-} from "@stripe/react-stripe-js";
-import { Auth, api } from "@utils";
-import { TicketPhoneInput } from "@components/ticketPhoneInput";
-import { pushRouteWithUTMQuery } from "@service";
+} from '@stripe/react-stripe-js';
+import { Auth, api } from '@utils';
+import { TicketPhoneInput } from '@components/ticketPhoneInput';
+import { Loader } from '@components/loader';
 
 export default function TicketCheckout() {
   const router = useRouter();
@@ -32,67 +34,67 @@ export default function TicketCheckout() {
   );
 
   const elementsOptions = {
-    mode: "payment",
+    mode: 'payment',
     amount: 1099,
-    currency: "usd",
+    currency: 'usd',
     appearance: {
-      theme: "stripe",
+      theme: 'stripe',
       variables: {
-        colorPrimary: "#0570de",
-        colorBackground: "#ffffff",
-        colorText: "#30313d",
-        colorDanger: "#df1b41",
+        colorPrimary: '#0570de',
+        colorBackground: '#ffffff',
+        colorText: '#30313d',
+        colorDanger: '#df1b41',
         fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
-        spacingUnit: "2px",
-        borderRadius: "4px",
+        spacingUnit: '2px',
+        borderRadius: '4px',
       },
       rules: {
-        ".Block": {
-          backgroundColor: "var(--colorBackground)",
-          boxShadow: "none",
-          padding: "12px",
+        '.Block': {
+          backgroundColor: 'var(--colorBackground)',
+          boxShadow: 'none',
+          padding: '12px',
         },
-        ".Input": {
-          padding: "14px",
-          width: "100%",
-          maxHeight: "48px",
-          borderRadius: "16px",
-          border: "1px solid rgba(0, 0, 0, 0.15)",
+        '.Input': {
+          padding: '14px',
+          width: '100%',
+          maxHeight: '48px',
+          borderRadius: '16px',
+          border: '1px solid rgba(0, 0, 0, 0.15)',
         },
-        ".Input:disabled, .Input--invalid:disabled": {
-          color: "lightgray",
+        '.Input:disabled, .Input--invalid:disabled': {
+          color: 'lightgray',
         },
-        ".Tab": {
-          borderRadius: "16px",
-          border: "1px solid rgba(0, 0, 0, 0.15)",
-          padding: "16px 24px",
-          color: "#FCA248",
+        '.Tab': {
+          borderRadius: '16px',
+          border: '1px solid rgba(0, 0, 0, 0.15)',
+          padding: '16px 24px',
+          color: '#FCA248',
         },
-        ".Tab:hover": {
-          borderRadius: "16px",
-          border: "1px solid #FF9E1B",
-          padding: "16px 24px",
-          color: "#FCA248",
-          boxShadow: "none",
+        '.Tab:hover': {
+          borderRadius: '16px',
+          border: '1px solid #FF9E1B',
+          padding: '16px 24px',
+          color: '#FCA248',
+          boxShadow: 'none',
         },
-        ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
-          borderRadius: "16px",
-          border: "1px solid #FF9E1B",
-          padding: "16px 24px",
-          color: "#FCA248",
-          boxShadow: "none",
+        '.Tab--selected, .Tab--selected:focus, .Tab--selected:hover': {
+          borderRadius: '16px',
+          border: '1px solid #FF9E1B',
+          padding: '16px 24px',
+          color: '#FCA248',
+          boxShadow: 'none',
         },
-        ".TabIcon--selected, .TabIcon--selected:focus, .TabIcon--selected:hover":
+        '.TabIcon--selected, .TabIcon--selected:focus, .TabIcon--selected:hover':
           {
-            color: "#FCA248",
-            fill: "#FCA248",
+            color: '#FCA248',
+            fill: '#FCA248',
           },
-        ".TabIcon, .TabIcon:hover": {
-          color: "#FCA248",
-          fill: "#FCA248",
+        '.TabIcon, .TabIcon:hover': {
+          color: '#FCA248',
+          fill: '#FCA248',
         },
-        ".Label": {
-          opacity: "0",
+        '.Label': {
+          opacity: '0',
         },
       },
     },
@@ -106,15 +108,16 @@ export default function TicketCheckout() {
 }
 
 const TicketCheckoutForm = ({ router }) => {
-  const [selectedPaymentType, setSelectedPaymentType] = useState("");
+  const [selectedPaymentType, setSelectedPaymentType] = useState('');
   const { user, authenticated: isUserLoggedIn, setUser } = useAuth();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
+  const { id: workshopId } = router.query;
 
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
-  const [value] = useLocalStorage("ticket-events");
+  const [value, setValue] = useLocalStorage('ticket-events');
   const {
     selectedTickets,
     delfee,
@@ -122,6 +125,7 @@ const TicketCheckoutForm = ({ router }) => {
     workshop,
     discountResponse,
     totalDiscount,
+    productTypeId,
   } = value;
 
   const { first_name, last_name, email } = user?.profile || {};
@@ -132,10 +136,10 @@ const TicketCheckoutForm = ({ router }) => {
 
   const setFormInitialValues = () => {
     return {
-      firstName: first_name || "",
-      lastName: last_name || "",
-      email: email || "",
-      contactPhone: "",
+      firstName: first_name || '',
+      lastName: last_name || '',
+      email: email || '',
+      contactPhone: '',
     };
   };
 
@@ -168,13 +172,13 @@ const TicketCheckoutForm = ({ router }) => {
       setLoading(true);
 
       const products = {
-        productType: "ticketed_event",
+        productType: 'ticketed_event',
         productSfId: productId,
       };
 
       let payLoad = {
         shoppingRequest: {
-          couponCode: discountResponse?.couponCode || "",
+          couponCode: discountResponse?.couponCode || '',
           contactAddress: {
             contactPhone,
           },
@@ -207,13 +211,14 @@ const TicketCheckoutForm = ({ router }) => {
 
       //token.saveCardForFuture = true;
       const {
+        stripeIntentObj,
         status,
         error: errorMessage,
         isError,
         data,
         paypalObj,
       } = await api.post({
-        path: "createAndPayOrder",
+        path: 'createAndPayOrder',
         body: payLoad,
         isUnauthorized: true,
       });
@@ -223,12 +228,39 @@ const TicketCheckoutForm = ({ router }) => {
       }
 
       if (data || paypalObj) {
-        showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-          children: "You have successfully purchased ticket",
+        setValue({
+          ...value,
+          orderId: data?.orderId,
+          attendeeId: data?.attendeeId,
         });
-        resetForm(setFormInitialValues());
+        // showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+        //   children: "You have successfully purchased ticket",
+        // });
+        // resetForm(setFormInitialValues());
+        let filteredParams = {
+          ctype: productTypeId,
+          page: 'ty',
+          referral: 'ticketed_event_checkout',
+          ...filterAllowedParams(router.query),
+        };
+        const returnUrl = `${
+          window.location.origin
+        }/us-en/ticketed-event/thankyou/${workshopId}?${queryString.stringify(
+          filteredParams,
+        )}`;
+        const result = await stripe.confirmPayment({
+          //`Elements` instance that was used to create the Payment Element
+          elements,
+          clientSecret: stripeIntentObj.client_secret,
+          confirmParams: {
+            return_url: returnUrl,
+          },
+        });
+        if (result.error) {
+          // Show error to your customer (for example, payment details incomplete)
+          throw new Error(result.error.message);
+        }
       }
-
       setLoading(false);
     } catch (ex) {
       console.error(ex);
@@ -249,7 +281,7 @@ const TicketCheckoutForm = ({ router }) => {
       error: errorMessage,
       isError,
     } = await api.post({
-      path: "paypalBuyAcknowledgement",
+      path: 'paypalBuyAcknowledgement',
       body: { orderID: paypalData.orderID },
     });
 
@@ -258,7 +290,7 @@ const TicketCheckoutForm = ({ router }) => {
       throw new Error(errorMessage);
     } else if (data) {
       showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-        children: "You have successfully purchased ticket",
+        children: 'You have successfully purchased ticket',
       });
     }
   };
@@ -287,7 +319,7 @@ const TicketCheckoutForm = ({ router }) => {
         defaultValues: {
           billingDetails: {
             email: values.email,
-            name: (values.firstName || "") + (values.lastName || ""),
+            name: (values.firstName || '') + (values.lastName || ''),
             phone: values.contactPhone,
           },
         },
@@ -313,12 +345,12 @@ const TicketCheckoutForm = ({ router }) => {
       enableReinitialize
       initialValues={setFormInitialValues()}
       validationSchema={Yup.object().shape({
-        firstName: Yup.string().required("First Name is required!"),
-        lastName: Yup.string().required("Last Name is required!"),
+        firstName: Yup.string().required('First Name is required!'),
+        lastName: Yup.string().required('Last Name is required!'),
         email: Yup.string()
-          .email("Email is invalid!")
-          .required("Email is required!"),
-        contactPhone: Yup.string().required("Phone is required"),
+          .email('Email is invalid!')
+          .required('Email is required!'),
+        contactPhone: Yup.string().required('Phone is required'),
       })}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
         await completeEnrollmentAction(values, resetForm);
@@ -350,7 +382,7 @@ const TicketCheckoutForm = ({ router }) => {
                       <p className="tickets-modal__billing-login">
                         {isUserLoggedIn ? (
                           <span className="tickets-modal__billing-login_main">
-                            This is not your account?{" "}
+                            This is not your account?{' '}
                             <a
                               href="#"
                               className="tickets-modal--accent"
@@ -366,14 +398,14 @@ const TicketCheckoutForm = ({ router }) => {
                               className="tickets-modal--accent"
                               onClick={login}
                             >
-                              Login{" "}
+                              Login{' '}
                             </a>
                             for a faster experience
                           </span>
                         )}
 
                         <span className="tickets-modal__billing-login_required">
-                          <span className="tickets-modal--accent">*</span>{" "}
+                          <span className="tickets-modal--accent">*</span>{' '}
                           Required
                         </span>
                       </p>
@@ -395,7 +427,7 @@ const TicketCheckoutForm = ({ router }) => {
                             placeholder="First name"
                           />
                           <span className="tickets-modal__input-placeholder">
-                            First name{" "}
+                            First name{' '}
                             <span className="tickets-modal--accent">*</span>
                           </span>
                         </label>
@@ -416,7 +448,7 @@ const TicketCheckoutForm = ({ router }) => {
                             placeholder="Last name"
                           />
                           <span className="tickets-modal__input-placeholder">
-                            Last name{" "}
+                            Last name{' '}
                             <span className="tickets-modal--accent">*</span>
                           </span>
                         </label>
@@ -437,7 +469,7 @@ const TicketCheckoutForm = ({ router }) => {
                             placeholder="email@example.com"
                           />
                           <span className="tickets-modal__input-placeholder">
-                            Email address{" "}
+                            Email address{' '}
                             <span className="tickets-modal--accent">*</span>
                           </span>
                         </label>
@@ -587,17 +619,17 @@ const TicketCheckoutForm = ({ router }) => {
                                 clientId:
                                   process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
                                 debug: true,
-                                currency: "USD",
+                                currency: 'USD',
                               }}
                             >
                               <PayPalButtons
                                 style={{
-                                  layout: "horizontal",
-                                  color: "blue",
-                                  shape: "pill",
+                                  layout: 'horizontal',
+                                  color: 'blue',
+                                  shape: 'pill',
                                   height: 40,
                                   tagline: false,
-                                  label: "pay",
+                                  label: 'pay',
                                 }}
                                 fundingSource="paypal"
                                 forceReRender={[formikProps.values]}
@@ -629,11 +661,13 @@ const TicketCheckoutForm = ({ router }) => {
 
                     <div className="tickets-modal__checkout-footer">
                       <p className="tickets-modal__footer-terms">
-                        By selecting Apple Pay, I agree to the{" "}
+                        By selecting Apple Pay, I agree to the{' '}
                         <a href="#" className="tickets-modal__footer-link">
                           Eventbrite Terms of Service
                         </a>
                       </p>
+
+                      {loading && <Loader />}
 
                       <button
                         className="tickets-modal__footer-button"
@@ -667,7 +701,7 @@ const TicketCheckoutForm = ({ router }) => {
                           className="tickets-modal__cart-product"
                           key={item.pricingTierId}
                         >
-                          x{item?.numberOfTickets} {item.pricingTierName}{" "}
+                          x{item?.numberOfTickets} {item.pricingTierName}{' '}
                           <span>${item.price.toFixed(2)}</span>
                         </p>
                       );
@@ -687,7 +721,7 @@ const TicketCheckoutForm = ({ router }) => {
 
                     <p className="tickets-modal__cart-total">
                       Total
-                      <span>${(parseInt(totalPrice) - delfee).toFixed(2)}</span>
+                      <span>${parseInt(delfee || totalPrice).toFixed(2)}</span>
                     </p>
                   </div>
                 </div>

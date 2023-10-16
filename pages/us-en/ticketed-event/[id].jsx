@@ -1,23 +1,23 @@
-import { api, priceCalculation, tConvert } from "@utils";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
-import * as Yup from "yup";
-import React, { useEffect, useState, useRef } from "react";
-import { useQuery } from "react-query";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { ABBRS } from "@constants";
-import { DiscountCodeInput } from "@components/checkout";
-import { pushRouteWithUTMQuery } from "@service";
-import { useLocalStorage } from "react-use";
-import { StripeExpressCheckoutTicket } from "@components/checkout/StripeExpressCheckoutTicket";
-import { Loader } from "@components/loader";
+import { api, tConvert } from '@utils';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import * as Yup from 'yup';
+import React, { useEffect, useState, useRef } from 'react';
+import { useQuery } from 'react-query';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { ABBRS } from '@constants';
+import { DiscountCodeInput } from '@components/checkout';
+import { pushRouteWithUTMQuery } from '@service';
+import { useLocalStorage } from 'react-use';
+import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
+import { Loader } from '@components/loader';
 
 dayjs.extend(utc);
 
 function TicketedEvent() {
   const router = useRouter();
-  const [, setValue] = useLocalStorage("ticket-events", {}, { raw: true });
+  const [, setValue] = useLocalStorage('ticket-events', {}, { raw: true });
   const [selectedTickets, setSelectedTickets] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -28,10 +28,10 @@ function TicketedEvent() {
   const formRef = useRef();
 
   const { data: workshop, isLoading } = useQuery(
-    "getTicketedEvent",
+    'getTicketedEvent',
     async () => {
       const response = await api.get({
-        path: "getTicketedEvent",
+        path: 'getTicketedEvent',
         param: {
           id: workshopId,
         },
@@ -76,7 +76,7 @@ function TicketedEvent() {
     const filteredItems = [];
     selectedTicketsCopy.forEach((newItem) => {
       if (newItem.pricingTierId === item.pricingTierId) {
-        if (type === "add") {
+        if (type === 'add') {
           newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
           filteredItems.push(newItem);
         } else {
@@ -112,14 +112,10 @@ function TicketedEvent() {
     });
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   return (
     <Formik
       initialValues={{
-        couponCode: "",
+        couponCode: '',
       }}
       validationSchema={Yup.object().shape({})}
       innerRef={formRef}
@@ -137,10 +133,10 @@ function TicketedEvent() {
                   <div className="tickets-modal__section-products">
                     <h2 className="tickets-modal__title">{title}</h2>
                     <p className="tickets-modal__date">
-                      {`${dayjs.utc(eventStartDate).format("dddd, MMM DD ")}`}•{" "}
-                      {tConvert(eventStartTime, true)} -{" "}
-                      {tConvert(eventEndTime, true)}{" "}
-                      {" " + ABBRS[eventTimeZone]}
+                      {`${dayjs.utc(eventStartDate).format('dddd, MMM DD ')}`}•{' '}
+                      {tConvert(eventStartTime, true)} -{' '}
+                      {tConvert(eventEndTime, true)}{' '}
+                      {' ' + ABBRS[eventTimeZone]}
                     </p>
 
                     <div className="tickets-modal__promo">
@@ -192,7 +188,7 @@ function TicketedEvent() {
                                     selectedValue?.numberOfTickets === 0
                                   }
                                   onClick={(e) =>
-                                    handleTicketSelect(e, "remove", item)
+                                    handleTicketSelect(e, 'remove', item)
                                   }
                                 >
                                   -
@@ -216,7 +212,7 @@ function TicketedEvent() {
                                     maxTicketsWithOneOrder
                                   }
                                   onClick={(e) =>
-                                    handleTicketSelect(e, "add", item)
+                                    handleTicketSelect(e, 'add', item)
                                   }
                                 >
                                   +
@@ -258,6 +254,7 @@ function TicketedEvent() {
                         Pay Another Way
                       </button>
                     </div>
+                    {isLoading && <Loader />}
                   </div>
                 </div>
 
@@ -283,7 +280,7 @@ function TicketedEvent() {
                           className="tickets-modal__cart-product"
                           key={item.pricingTierId}
                         >
-                          x{item?.numberOfTickets} {item.pricingTierName}{" "}
+                          x{item?.numberOfTickets} {item.pricingTierName}{' '}
                           <span>
                             ${(item.price * item?.numberOfTickets).toFixed(2)}
                           </span>

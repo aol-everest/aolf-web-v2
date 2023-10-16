@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   useStripe,
   useElements,
   ExpressCheckoutElement,
   Elements,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { api, priceCalculation } from "@utils";
-import { useGlobalAlertContext } from "@contexts";
-import { ALERT_TYPES } from "@constants";
-import queryString from "query-string";
-import { removeNull } from "@utils/utmParam";
-import { useRouter } from "next/router";
+} from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { api, priceCalculation } from '@utils';
+import { useGlobalAlertContext } from '@contexts';
+import { ALERT_TYPES } from '@constants';
+import queryString from 'query-string';
+import { removeNull } from '@utils/utmParam';
+import { useRouter } from 'next/router';
 
 export const StripeExpressCheckoutTicket = ({ workshop }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
@@ -19,14 +19,14 @@ export const StripeExpressCheckoutTicket = ({ workshop }) => {
     workshop,
   });
   const elementsOptions = {
-    mode: "payment",
+    mode: 'payment',
     amount: fee * 100,
-    currency: "usd",
+    currency: 'usd',
     appearance: {
-      theme: "stripe",
+      theme: 'stripe',
       variables: {
-        borderRadius: "8px",
-        height: "62.5px",
+        borderRadius: '8px',
+        height: '62.5px',
       },
     },
   };
@@ -39,14 +39,14 @@ export const StripeExpressCheckoutTicket = ({ workshop }) => {
 
 const options = {
   buttonType: {
-    applePay: "buy",
-    googlePay: "buy",
+    applePay: 'buy',
+    googlePay: 'buy',
   },
   wallets: {
-    applePay: "always",
-    googlePay: "always",
+    applePay: 'always',
+    googlePay: 'always',
   },
-  paymentMethodOrder: ["apple_pay", "google_pay"],
+  paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
 const CheckoutPage = ({ workshop }) => {
@@ -85,7 +85,7 @@ const CheckoutPage = ({ workshop }) => {
         error: errorMessage,
         isError,
       } = await api.post({
-        path: "createIntentForExpressCheckout",
+        path: 'createIntentForExpressCheckout',
         body: {
           workshopId: workshop.id,
           utmParams: filteredParams,
@@ -93,9 +93,13 @@ const CheckoutPage = ({ workshop }) => {
         isUnauthorized: true,
       });
 
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+
       filteredParams = {
         ...filteredParams,
-        referral: "course_search_scheduling",
+        referral: 'ticketed_event_checkout',
       };
 
       if (status === 400 || isError) {
@@ -104,7 +108,7 @@ const CheckoutPage = ({ workshop }) => {
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
+      }/us-en/ticketed-event/thankyou/${workshop.id}?${queryString.stringify(
         filteredParams,
       )}`;
 
