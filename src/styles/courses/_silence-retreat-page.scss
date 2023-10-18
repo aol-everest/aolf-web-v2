@@ -73,7 +73,7 @@
         margin-top: 50px;
         margin-bottom: 20px;
         .hero-register-button {
-          background: linear-gradient(90deg, #7464d6 9.51%, #9d8dff 93.54%);
+          background: linear-gradient(270deg, #3196e4 6%, #5bb8ff 94.33%);
           color: #fff;
           border: 0px;
           border-radius: 2rem;
@@ -82,8 +82,6 @@
         @media only screen and (max-width: 768px) {
           text-align: center;
           margin-top: 30px;
-          .hero-register-button {
-          }
         }
       }
     }
@@ -481,7 +479,7 @@
   .container {
     .registration-widget {
       .circle:before {
-        background-color: #9d8dff;
+        background-color: #5bb8ff;
       }
       .fa-solid,
       .fa-solid:before {
@@ -558,7 +556,7 @@
     text-align: left;
     padding-left: 10px;
     button {
-      background: linear-gradient(90deg, #7464d6 9.51%, #9d8dff 93.54%);
+      background: linear-gradient(270deg, #3196e4 6%, #5bb8ff 94.33%);
       color: #fff;
       border: 0px;
       border-radius: 2rem;
