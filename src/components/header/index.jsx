@@ -110,6 +110,10 @@ const AOL_MENU = [
             name: 'Sanyam',
             link: '/us-en/lp/sanyam',
           },
+          {
+            name: 'Volunteer Training',
+            link: '/us-en/lp/vtp',
+          },
         ],
       },
       {
