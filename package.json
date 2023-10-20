@@ -110,7 +110,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/config-conventional": "^17.8.0",
     "@svgr/cli": "^8.1.0",
     "autoprefixer": "^10.4.15",
     "cross-env": "^7.0.3",
