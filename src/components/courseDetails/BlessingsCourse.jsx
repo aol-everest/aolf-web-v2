@@ -3,8 +3,9 @@ import { HideOn } from '@components';
 import { Element, Link } from 'react-scroll';
 import { CourseBottomCard } from './CourseBottomCard';
 import { RegisterPanel } from './RegisterPanel';
+import { WORKSHOP_MODE } from '@constants';
 
-export const BlessingsCourse = ({ data }) => {
+export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
   const { title, mode, aosCountRequisite, preRequisite } = data || {};
 
   const aosCount =
@@ -47,17 +48,19 @@ export const BlessingsCourse = ({ data }) => {
                     </li>
                     <li>Become a channel for positive, healing energy</li>
                   </ul>
-                  <Link
-                    activeClassName="active"
-                    className="btn_box_secondary about-course-button"
-                    to="registerNowBlock"
-                    spy={true}
-                    smooth={true}
-                    duration={500}
-                    offset={-100}
-                  >
-                    Register Now
-                  </Link>
+                  {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                    <Link
+                      activeClassName="active"
+                      className="btn_box_secondary about-course-button"
+                      to="registerNowBlock"
+                      spy={true}
+                      smooth={true}
+                      duration={500}
+                      offset={-100}
+                    >
+                      Register Now
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -374,7 +377,7 @@ export const BlessingsCourse = ({ data }) => {
         </section>
       </main>
       <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
+        <CourseBottomCard workshop={data} courseViewMode={courseViewMode} />
       </HideOn>
     </>
   );

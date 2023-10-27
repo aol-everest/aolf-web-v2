@@ -11,7 +11,7 @@ import { CourseBottomCard } from './CourseBottomCard';
 import { RegisterPanel } from './RegisterPanel';
 import { ResearchFindingSource } from './ResearchFindingSource';
 
-export const SanyamCourse = ({ data, swiperOption }) => {
+export const SanyamCourse = ({ data, mode: courseViewMode }) => {
   const { showAlert } = useGlobalAlertContext();
   const router = useRouter();
 
@@ -498,7 +498,7 @@ export const SanyamCourse = ({ data, swiperOption }) => {
         </section>
       </main>
       <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
+        <CourseBottomCard workshop={data} courseViewMode={courseViewMode} />
       </HideOn>
     </>
   );

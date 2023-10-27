@@ -3,7 +3,12 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { PriceCard } from './PriceCard';
-import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import {
+  MODAL_TYPES,
+  COURSE_MODES,
+  COURSE_TYPES,
+  WORKSHOP_MODE,
+} from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
@@ -38,7 +43,7 @@ const swiperOption = {
   },
 };
 
-export const SilentRetreat = ({ data }) => {
+export const SilentRetreat = ({ data, mode: courseViewMode }) => {
   const { sfid, title, mode, productTypeId, isGuestCheckoutEnabled } =
     data || {};
   const router = useRouter();
@@ -84,7 +89,7 @@ export const SilentRetreat = ({ data }) => {
               <div className="banner-description">
                 Give yourself a true vacation for body, mind, and spirit
               </div>
-              {!sfid && (
+              {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
                 <div className="hero-register-button-wrapper">
                   <button
                     className="hero-register-button"
@@ -96,7 +101,9 @@ export const SilentRetreat = ({ data }) => {
               )}
             </div>
           </div>
-          {sfid && <PriceCard workshop={data} />}
+          {sfid && (
+            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+          )}
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
