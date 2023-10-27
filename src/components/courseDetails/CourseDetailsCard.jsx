@@ -1,7 +1,7 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import { Popup } from '@components';
 import { LinkedCalendar } from '@components/dateRangePicker';
-import { ABBRS, COURSE_MODES, MODAL_TYPES } from '@constants';
+import { ABBRS, COURSE_MODES, MODAL_TYPES, WORKSHOP_MODE } from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { priceCalculation, tConvert } from '@utils';
@@ -14,7 +14,12 @@ import queryString from 'query-string';
 
 dayjs.extend(utc);
 
-export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
+export const CourseDetailsCard = ({
+  workshop,
+  courseType,
+  courseViewMode,
+  ...rest
+}) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
@@ -217,14 +222,15 @@ export const CourseDetailsCard = ({ workshop, courseType, ...rest }) => {
           </p>
         </div>
       </div>
-
-      <button
-        type="button"
-        className="btn-secondary justify-content-center"
-        onClick={handleRegister}
-      >
-        Reserve
-      </button>
+      {courseViewMode !== WORKSHOP_MODE.VIEW && (
+        <button
+          type="button"
+          className="btn-secondary justify-content-center"
+          onClick={handleRegister}
+        >
+          Reserve
+        </button>
+      )}
 
       <hr style={{ margin: 0 }} />
 

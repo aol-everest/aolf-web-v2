@@ -1,12 +1,15 @@
-import { ABBRS, COURSE_TYPES } from '@constants';
+import { ABBRS, COURSE_TYPES, WORKSHOP_MODE } from '@constants';
+import { pushRouteWithUTMQuery } from '@service';
 import { tConvert } from '@utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useEmblaCarousel } from 'embla-carousel/react';
+import { useRouter } from 'next/router';
 
 dayjs.extend(utc);
 
 export const EventList = ({ isMobile, workshops }) => {
+  const router = useRouter();
   const [emblaRef] = useEmblaCarousel({
     loop: false,
     align: 'center',
@@ -15,25 +18,19 @@ export const EventList = ({ isMobile, workshops }) => {
     return (
       <div ref={emblaRef}>
         <div className="embla__container">
-          {workshops.map(renderEventMobile)}
+          {workshops.map((workshop) => renderEventMobile(workshop, router))}
         </div>
       </div>
     );
   }
-  return <>{workshops.map(renderEvent)}</>;
+  return <>{workshops.map((workshop) => renderEvent(workshop, router))}</>;
 };
 
-const renderEventMobile = (workshop) => {
+const renderEventMobile = (workshop, router) => {
   const {
     sfid,
     title,
-    coverImage,
-    accessible,
-    city,
-    state,
     mode,
-    isPurchased,
-    isEventFull,
     primaryTeacherName,
     productTypeId,
     eventStartDate,
@@ -46,6 +43,16 @@ const renderEventMobile = (workshop) => {
     meetupTimeZone,
     meetupTitle,
   } = workshop || {};
+
+  const handleEventDetails = () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/${sfid}`,
+      query: {
+        ctype: productTypeId,
+        mode: WORKSHOP_MODE.VIEW,
+      },
+    });
+  };
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(productTypeId) >= 0;
@@ -91,7 +98,7 @@ const renderEventMobile = (workshop) => {
     );
   } else {
     return (
-      <div className="embla__slide" key={sfid}>
+      <div className="embla__slide" key={sfid} onClick={handleEventDetails}>
         <div className="profile-body_mobile__course">
           {isSilentRetreatType && (
             <img
@@ -150,33 +157,33 @@ const renderEventMobile = (workshop) => {
   }
 };
 
-const renderEvent = (workshop) => {
+const renderEvent = (workshop, router) => {
   const {
     sfid,
     title,
     meetupTitle,
-    coverImage,
-    accessible,
-    city,
-    state,
     mode,
-    isOnlineMeetup,
-    isPurchased,
-    isEventFull,
     primaryTeacherName,
     productTypeId,
     eventStartDate,
     eventEndDate,
     eventType,
-    contactPersonName1,
-    meetupStartDateTimeGMT,
     meetupStartDate,
     meetupStartTime,
     meetupTimeZone,
-    eventTimeZone,
     meetupDuration,
     meetupType,
   } = workshop || {};
+
+  const handleEventDetails = () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/${sfid}`,
+      query: {
+        ctype: productTypeId,
+        mode: WORKSHOP_MODE.VIEW,
+      },
+    });
+  };
 
   let imageSrc = null;
 
@@ -228,7 +235,11 @@ const renderEvent = (workshop) => {
       imageSrc = '/img/course-card-1.png';
     }
     return (
-      <div className="col-6 col-lg-3 col-md-4" key={sfid}>
+      <div
+        className="col-6 col-lg-3 col-md-4 profile-body__main"
+        key={sfid}
+        onClick={handleEventDetails}
+      >
         <div className="profile-body__card !tw-bg-transparent">
           <img src={imageSrc} alt="bg" className="profile-body__card-img" />
           {dayjs

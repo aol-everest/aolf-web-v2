@@ -4,7 +4,12 @@ import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import { Accordion, Card, AccordionContext } from 'react-bootstrap';
 import { PriceCard } from './PriceCard';
 import { useContext } from 'react';
-import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import {
+  MODAL_TYPES,
+  COURSE_MODES,
+  COURSE_TYPES,
+  WORKSHOP_MODE,
+} from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
@@ -38,7 +43,7 @@ const swiperOption = {
     },
   },
 };
-export const SahajSamadhi = ({ data }) => {
+export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
   const router = useRouter();
   const { authenticated = false } = useAuth();
@@ -112,7 +117,7 @@ export const SahajSamadhi = ({ data }) => {
               <div className="banner-description">
                 Experience freedom from worry and anxiety
               </div>
-              {!sfid && (
+              {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
                 <div className="hero-register-button-wrapper">
                   <button
                     className="hero-register-button"
@@ -124,7 +129,9 @@ export const SahajSamadhi = ({ data }) => {
               )}
             </div>
           </div>
-          {sfid && <PriceCard workshop={data} />}
+          {sfid && (
+            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+          )}
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
@@ -245,7 +252,7 @@ export const SahajSamadhi = ({ data }) => {
             </div>
           </div>
         </section>
-        {sfid && (
+        {sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
           <section className="register-to-unlock">
             <div className="container">
               <div className="unlock-title">
@@ -372,20 +379,22 @@ export const SahajSamadhi = ({ data }) => {
             </Accordion>
           </div>
         </section>
-        <div className="float-bar">
-          <div className="float-wrapper clearfix">
-            <div className="bar-left">
-              <div className="bar-title">
-                Reserve Your Journey to a Worry-Free Mind
+        {courseViewMode !== WORKSHOP_MODE.VIEW && (
+          <div className="float-bar">
+            <div className="float-wrapper clearfix">
+              <div className="bar-left">
+                <div className="bar-title">
+                  Reserve Your Journey to a Worry-Free Mind
+                </div>
+              </div>
+              <div className="bar-right">
+                <button className="register-button" onClick={handleRegister}>
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
               </div>
             </div>
-            <div className="bar-right">
-              <button className="register-button" onClick={handleRegister}>
-                Register Now <FaArrowRightLong className="fa-solid" />
-              </button>
-            </div>
           </div>
-        </div>
+        )}
       </main>
     </>
   );

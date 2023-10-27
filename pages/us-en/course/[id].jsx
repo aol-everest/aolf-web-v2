@@ -100,7 +100,7 @@ const SanyamCourse = dynamic(() =>
 function CourseDetail() {
   const { user, authenticated } = useAuth();
   const router = useRouter();
-  const { id: workshopId } = router.query;
+  const { id: workshopId, mode = '' } = router.query;
   const { track, page } = useAnalytics();
   const { data, isLoading, isError, error } = useQuery(
     'workshopDetail',
@@ -248,6 +248,7 @@ function CourseDetail() {
   const props = {
     data,
     swiperOption,
+    mode,
   };
 
   const renderCourseDetail = () => {

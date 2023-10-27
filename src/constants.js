@@ -171,6 +171,10 @@ export const COURSE_TYPES = {
   },
 };
 
+export const WORKSHOP_MODE = {
+  VIEW: 'view',
+};
+
 export const MEETUP_TYPES = {
   SKY_MEETUP: {
     name: 'SKY Meetup',

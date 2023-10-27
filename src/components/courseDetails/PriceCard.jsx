@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { COURSE_TYPES, COURSE_MODES, MODAL_TYPES, ABBRS } from '@constants';
+import {
+  COURSE_TYPES,
+  COURSE_MODES,
+  MODAL_TYPES,
+  ABBRS,
+  WORKSHOP_MODE,
+} from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { LinkedCalendar } from '@components/dateRangePicker';
@@ -49,7 +55,7 @@ const datePickerConfig = {
   autoApply: true,
 };
 
-export const PriceCard = ({ workshop }) => {
+export const PriceCard = ({ workshop, courseViewMode }) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
@@ -304,10 +310,13 @@ export const PriceCard = ({ workshop }) => {
 
         <div className=" row register-content no_border">
           <div className="col-md-4">
-            <button className="register-button" onClick={handleRegister}>
-              Register Now <FaArrowRightLong />
-            </button>
+            {courseViewMode !== WORKSHOP_MODE.VIEW && (
+              <button className="register-button" onClick={handleRegister}>
+                Register Now <FaArrowRightLong />
+              </button>
+            )}
           </div>
+
           <div className="col-md-8">
             <div className="select-date-timezone">
               <span className="title">Looking for another date?</span>

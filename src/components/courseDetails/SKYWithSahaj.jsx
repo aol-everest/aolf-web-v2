@@ -1,7 +1,7 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { MODAL_TYPES, COURSE_TYPES } from '@constants';
+import { MODAL_TYPES, COURSE_TYPES, WORKSHOP_MODE } from '@constants';
 import classNames from 'classnames';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
@@ -19,7 +19,7 @@ import 'swiper/css/scrollbar';
 import { useContext } from 'react';
 import { priceCalculation } from '@utils';
 
-export const SKYWithSahaj = ({ data }) => {
+export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
@@ -104,7 +104,7 @@ export const SKYWithSahaj = ({ data }) => {
               <div className="banner-description">
                 Find new levels of calm and energy for life
               </div>
-              {!sfid && (
+              {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
                 <div className="hero-register-button-wrapper">
                   <button
                     className="hero-register-button"
@@ -116,7 +116,9 @@ export const SKYWithSahaj = ({ data }) => {
               )}
             </div>
           </div>
-          {sfid && <PriceCard workshop={data} />}
+          {sfid && (
+            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+          )}
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
@@ -599,20 +601,22 @@ export const SKYWithSahaj = ({ data }) => {
             </Accordion>
           </div>
         </section>
-        <div className="float-bar">
-          <div className="float-wrapper clearfix">
-            <div className="bar-left">
-              <div className="bar-title">
-                Reserve Your Journey to a Worry-Free Mind
+        {courseViewMode !== WORKSHOP_MODE.VIEW && (
+          <div className="float-bar">
+            <div className="float-wrapper clearfix">
+              <div className="bar-left">
+                <div className="bar-title">
+                  Reserve Your Journey to a Worry-Free Mind
+                </div>
+              </div>
+              <div className="bar-right">
+                <button className="register-button" onClick={handleRegister}>
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
               </div>
             </div>
-            <div className="bar-right">
-              <button className="register-button" onClick={handleRegister}>
-                Register Now <FaArrowRightLong className="fa-solid" />
-              </button>
-            </div>
           </div>
-        </div>
+        )}
       </main>
     </>
   );

@@ -12,7 +12,7 @@ import { RegisterPanel } from './RegisterPanel';
 import { ResearchFindingSource } from './ResearchFindingSource';
 import { ResearchPagination } from './ResearchPagination';
 
-export const SKYHappinessRetreat = ({ data, swiperOption }) => {
+export const SKYHappinessRetreat = ({ data, mode: courseViewMode }) => {
   const { showAlert } = useGlobalAlertContext();
 
   const showResearchModal = (e) => {
@@ -67,6 +67,7 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
           <CourseDetailsCard
             workshop={data}
             courseType={COURSE_TYPES.SKY_BREATH_MEDITATION}
+            courseViewMode={courseViewMode}
           ></CourseDetailsCard>
         </section>
         <section className="progress-section">
@@ -480,7 +481,7 @@ export const SKYHappinessRetreat = ({ data, swiperOption }) => {
         </section> */}
       </main>
       <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
+        <CourseBottomCard workshop={data} courseViewMode={courseViewMode} />
       </HideOn>
     </>
   );
