@@ -401,6 +401,7 @@ export const PaymentFormHB = ({
       accommodation,
       contactTitle,
       contactHealthcareOrganisation,
+      contactOtherHealthcareOrganization,
       contactDegree,
       claimingType,
       certificateOfAttendance,
@@ -507,6 +508,7 @@ export const PaymentFormHB = ({
           attendee: {
             contactTitle,
             contactHealthcareOrganisation,
+            contactOtherHealthcareOrganization,
             contactDegree,
             claimingType,
             certificateOfAttendance,
@@ -776,6 +778,7 @@ export const PaymentFormHB = ({
           priceType: 'regular',
           contactTitle: '',
           contactHealthcareOrganisation: '',
+          contactOtherHealthcareOrganization: '',
           contactDegree: '',
           claimingType: '',
           certificateOfAttendance: '',
@@ -814,6 +817,12 @@ export const PaymentFormHB = ({
           contactHealthcareOrganisation: Yup.string().required(
             'Healthcare Organization is required',
           ),
+          contactOtherHealthcareOrganization: Yup.string()
+            .ensure()
+            .when('contactHealthcareOrganisation', {
+              is: 'other',
+              then: Yup.string().required(),
+            }),
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),

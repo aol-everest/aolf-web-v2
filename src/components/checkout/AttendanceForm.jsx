@@ -12,9 +12,16 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
     formikProps.setFieldValue(field, value?.name || '');
   };
 
-  const corporateOptions = corporates?.map((corporate) => {
+  let corporateOptions = corporates?.map((corporate) => {
     return { value: corporate.sfid, label: corporate.corporateName };
   });
+
+  if (corporateOptions) {
+    corporateOptions = [
+      ...corporateOptions,
+      { value: 'other', label: 'Other' },
+    ];
+  }
 
   const { setFieldValue } = formikProps;
 
@@ -76,6 +83,16 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
             </FieldWrapper>
           )}
         </Field>
+        {formikProps.values.contactHealthcareOrganisation === 'other' && (
+          <StyledInput
+            containerClass={classNames(Style.address, 'mt-0')}
+            className={classNames(Style.address)}
+            placeholder="Other Healthcare Organization Name"
+            formikProps={formikProps}
+            formikKey="contactOtherHealthcareOrganization"
+            fullWidth
+          ></StyledInput>
+        )}
         <StyledInput
           containerClass={classNames(Style.address, 'mt-0')}
           className={classNames(Style.address)}
