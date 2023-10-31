@@ -821,7 +821,9 @@ export const PaymentFormHB = ({
             .ensure()
             .when('contactHealthcareOrganisation', {
               is: 'other',
-              then: Yup.string().required(),
+              then: Yup.string().required(
+                'Other Healthcare Organization is required',
+              ),
             }),
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
