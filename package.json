@@ -117,7 +117,7 @@
     "cspell": "^7.3.7",
     "cssnano": "^6.0.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.49.0",
+    "eslint": "^8.52.0",
     "eslint-config-next": "^14.0.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-no-inline-styles": "^1.0.5",
