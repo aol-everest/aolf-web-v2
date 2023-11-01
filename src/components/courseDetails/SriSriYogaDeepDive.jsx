@@ -9,13 +9,13 @@ import queryString from 'query-string';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { PriceCard } from './PriceCard';
 
 export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
   const router = useRouter();
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
-  const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [activeInstructor, setActiveInstructor] = useState('');
 
   const handleRegister = (e) => {
@@ -45,10 +45,6 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
         },
       });
     }
-  };
-
-  const handleOpenScheduleDialog = () => {
-    setShowScheduleDialog(!showScheduleDialog);
   };
 
   const handleSetActiveInstructor = (instructor = '') => {
@@ -88,12 +84,10 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                   Register for a Retreat
                 </button>
               </div>
-              <div class="eligibility-text">
-                Eligibility: SKY Breath Meditation
-              </div>
             </div>
           </div>
         </section>
+        {sfid && <PriceCard workshop={data} courseViewMode={courseViewMode} />}
         <section class="deep-dive-first-section">
           <div class="container pb-lg-5 pt-5">
             <div class="row">
@@ -126,6 +120,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </section>
+
         <section class="deep-dive-featuers">
           <div class="container pt-5 pb-5">
             <div class="row">
@@ -221,17 +216,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                 </div>
               </div>
             </div>
-            <div class="dd-view-schedule">
-              <h5>
-                <a
-                  data-toggle="modal"
-                  data-target="#dd-schedule"
-                  onClick={handleOpenScheduleDialog}
-                >
-                  View Schedule
-                </a>
-              </h5>
-            </div>
+
             <div class="dd-register-text">
               You'll learn how to bring the principles of yoga into every moment
               of your life to guide you to total health and freedom.
@@ -240,159 +225,6 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               <button class="register-button mt-4" onClick={handleRegister}>
                 Register for a Retreat
               </button>
-            </div>
-
-            <div
-              class={`modal fade ${showScheduleDialog && 'show'}`}
-              id="dd-schedule"
-              role="dialog"
-              tabindex="-1"
-              aria-labelledby="dd-scheduleLabel"
-            >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button
-                      type="button"
-                      class="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                      onClick={handleOpenScheduleDialog}
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                    <div class="modal-logo">
-                      <img
-                        src="/img/ic-logo.svg"
-                        alt="logo"
-                        class="logo__image"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="modal-body">
-                    <h3>Sri Sri Yoga Deep Dive Retreat</h3>
-                    <h5>4-Day Program</h5>
-                    <p class="text-center mb-2">
-                      The retreat offers a relaxed schedule with extended breaks
-                      between sessions.
-                    </p>
-                    <h5>Schedule</h5>
-                    <table>
-                      <tr>
-                        <td colspan="2">
-                          <strong>Day 1</strong>
-                        </td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>6:30pm - 8:30pm</td>
-                        <td>Welcome & Orientation</td>
-                      </tr>
-                      <tr>
-                        <td colspan="2"></td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <strong>Day 2</strong>
-                        </td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>7:00 am - 10:00 am</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>10:00 am - 12:00 pm</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>12:00 pm - 01:00 pm</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>01:00 pm - 03:00 pm</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>03:00 pm - 05:30 pm</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>05:30 pm - 07:00 pm</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>07:00 pm - 08:00 pm</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td colspan="2"></td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <strong>Day 3</strong>
-                        </td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>07:00 am - 8:30 am</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>08:30 am - 10:30 am</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>10:30 pm - 01:00 pm</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>01:00 pm - 03:00 pm</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>03:00 pm - 05:30 pm</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>05:30 pm - 07:00 pm</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>07:00 pm - 08:00 pm</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td colspan="2"></td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <strong>Day 4</strong>
-                        </td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>07:00 am - 8:30 am</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>08:30 am - 10:30 am</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>10:30 pm - 01:00 pm</td>
-                        <td>Session</td>
-                      </tr>
-                      <tr>
-                        <td>01:00 pm - 03:00 pm</td>
-                        <td>Break</td>
-                      </tr>
-                      <tr class="orange-text">
-                        <td>03:00 pm - 04:00 pm</td>
-                        <td>Session</td>
-                      </tr>
-                    </table>
-                    <div class="note">*Schedule subject to change</div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
