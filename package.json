@@ -123,6 +123,7 @@
     "eslint-plugin-no-inline-styles": "^1.0.5",
     "eslint-plugin-prettier": "^5.0.1",
     "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
     "kill-port": "^2.0.1",
     "lint-staged": "^14.0.1",
     "postcss": "^8.4.29",

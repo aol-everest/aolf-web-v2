@@ -617,6 +617,10 @@ export const PaymentFormHB = ({
     {},
   );
 
+  const isCMSAddOn = !!addOnProducts.find(
+    ({ isCMEAddOn }) => isCMEAddOn === true,
+  );
+
   const { fee, delfee, offering } = priceCalculation({
     workshop,
     discount: discountResponse,
@@ -1098,6 +1102,7 @@ export const PaymentFormHB = ({
                   <AttendanceForm
                     formikProps={formikProps}
                     corporates={corporates}
+                    isCMSAddOn={isCMSAddOn}
                   />
                   <AgreementForm
                     formikProps={formikProps}
