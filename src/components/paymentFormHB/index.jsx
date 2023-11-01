@@ -617,6 +617,10 @@ export const PaymentFormHB = ({
     {},
   );
 
+  const isCMSAddOn = !!addOnProducts.find(
+    ({ isCMEAddOn }) => isCMEAddOn === true,
+  );
+
   const { fee, delfee, offering } = priceCalculation({
     workshop,
     discount: discountResponse,
@@ -821,7 +825,9 @@ export const PaymentFormHB = ({
             .ensure()
             .when('contactHealthcareOrganisation', {
               is: 'other',
-              then: Yup.string().required(),
+              then: Yup.string().required(
+                'Other Healthcare Organization is required',
+              ),
             }),
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
@@ -1096,6 +1102,7 @@ export const PaymentFormHB = ({
                   <AttendanceForm
                     formikProps={formikProps}
                     corporates={corporates}
+                    isCMSAddOn={isCMSAddOn}
                   />
                   <AgreementForm
                     formikProps={formikProps}
