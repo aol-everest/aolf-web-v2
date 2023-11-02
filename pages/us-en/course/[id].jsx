@@ -149,8 +149,8 @@ function CourseDetail() {
       !isBlessingsCourse &&
       !isSKYCampusHappinessRetreat &&
       !isSanyamCourse &&
-      !SKYWithSahaj &&
-      !SriSriYogaDeepDive
+      !isSKYWithSahaj &&
+      !isSriSriYogaDeepDiveType
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
