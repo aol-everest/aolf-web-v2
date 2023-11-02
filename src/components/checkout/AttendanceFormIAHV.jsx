@@ -19,7 +19,7 @@ export const AttendanceFormIAHV = ({ formikProps, corporates }) => {
   return (
     <Fragment>
       <Dropdown
-        placeholder="Healthcare Organization"
+        placeholder="University Affiliation"
         formikProps={formikProps}
         formikKey="contactHealthcareOrganisation"
         options={corporateOptions || []}
@@ -28,7 +28,7 @@ export const AttendanceFormIAHV = ({ formikProps, corporates }) => {
         <StyledInput
           containerClass={classNames(Style.address, 'mt-0')}
           className={classNames(Style.address)}
-          placeholder="University Affiliation"
+          placeholder="University Affiliation Name"
           formikProps={formikProps}
           formikKey="contactOtherHealthcareOrganization"
           fullWidth
