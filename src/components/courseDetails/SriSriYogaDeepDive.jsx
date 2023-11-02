@@ -63,24 +63,31 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
 
   return (
     <>
-      <main class="deep-dive-retreat">
-        <section class="deep-dive-top-section">
-          <div class="banner">
-            <div class="container">
-              <div class="banner-logo">
-                <img src="/img/ic-logo.svg" alt="logo" class="logo__image" />
+      <main className="deep-dive-retreat">
+        <section className="deep-dive-top-section">
+          <div className="banner">
+            <div className="container">
+              <div className="banner-logo">
+                <img
+                  src="/img/ic-logo.svg"
+                  alt="logo"
+                  className="logo__image"
+                />
               </div>
-              <div class="banner-title">
+              <div className="banner-title">
                 <span>{updatedTitle?.[0] || 'Sri Sri Yoga'}</span>
                 <br />
                 {updatedTitle?.[1] || 'Deep Dive Retreat'}
               </div>
-              <div class="banner-text">
+              <div className="banner-text">
                 Go deeper into the realm of yoga and what it means to live like
                 a yogi
               </div>
-              <div class="registration-wrap">
-                <button class="register-button mt-4" onClick={handleRegister}>
+              <div className="registration-wrap">
+                <button
+                  className="register-button mt-4"
+                  onClick={handleRegister}
+                >
                   Register for a Retreat
                 </button>
               </div>
@@ -88,14 +95,14 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
           </div>
         </section>
         {sfid && <PriceCard workshop={data} courseViewMode={courseViewMode} />}
-        <section class="deep-dive-first-section">
-          <div class="container pb-lg-5 pt-5">
-            <div class="row">
-              <div class="col-lg-6">
-                <h2 class="section-title">
+        <section className="deep-dive-first-section">
+          <div className="container pb-lg-5 pt-5">
+            <div className="row">
+              <div className="col-lg-6">
+                <h2 className="section-title">
                   Are you looking for a perfect solo vacation?
                 </h2>
-                <h4 class="pr-lg-5">
+                <h4 className="pr-lg-5">
                   A chance to pamper and love your body? Some time to forget all
                   your worries and completely relax?
                 </h4>
@@ -105,15 +112,15 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                   detox and de-stress your body and mind.
                 </p>
               </div>
-              <div class="col-lg-6">
-                <div class="deep-dive-video">
+              <div className="col-lg-6">
+                <div className="deep-dive-video">
                   <iframe
                     src="https://player.vimeo.com/video/585892104?h=1bdc74bf1a&color=111d33&title=0&byline=0&portrait=0"
                     width="100%"
                     height="360"
-                    frameborder="0"
+                    frameBorder="0"
                     allow="autoplay; fullscreen; picture-in-picture"
-                    allowfullscreen
+                    allowFullScreen
                   ></iframe>
                 </div>
               </div>
@@ -121,46 +128,46 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
           </div>
         </section>
 
-        <section class="deep-dive-featuers">
-          <div class="container pt-5 pb-5">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="dd-feature-item">
-                  <div class="dd-feature-icon">
+        <section className="deep-dive-featuers">
+          <div className="container pt-5 pb-5">
+            <div className="row">
+              <div className="col-md-4">
+                <div className="dd-feature-item">
+                  <div className="dd-feature-icon">
                     <img src="/img/dd-icon-yoga.png" alt="yoga" />
                   </div>
-                  <div class="dd-feature-title">
+                  <div className="dd-feature-title">
                     <h5>4-DAY RETREAT</h5>
                   </div>
-                  <div class="dd-feature-text">
+                  <div className="dd-feature-text">
                     Retreat your way! Choose between a live-stream online
                     experience or an in-person retreat.
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="dd-feature-item">
-                  <div class="dd-feature-icon">
+              <div className="col-md-4">
+                <div className="dd-feature-item">
+                  <div className="dd-feature-icon">
                     <img src="/img/dd-icon-flower.png" alt="flower" />
                   </div>
-                  <div class="dd-feature-title">
+                  <div className="dd-feature-title">
                     <h5>THE BEST OF YOGA</h5>
                   </div>
-                  <div class="dd-feature-text">
+                  <div className="dd-feature-text">
                     Explore the profound depths of yoga; asana, pranayama,
                     meditation, kriya, and philosophy.
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="dd-feature-item">
-                  <div class="dd-feature-icon">
+              <div className="col-md-4">
+                <div className="dd-feature-item">
+                  <div className="dd-feature-icon">
                     <img src="/img/dd-icon-smile.png" alt="smile" />
                   </div>
-                  <div class="dd-feature-title">
+                  <div className="dd-feature-title">
                     <h5>GUIDED BY EXPERTS</h5>
                   </div>
-                  <div class="dd-feature-text">
+                  <div className="dd-feature-text">
                     Be guided deeper with experienced certified instructors who
                     live their yoga on and off the mat.
                   </div>
@@ -169,15 +176,15 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </section>
-        <section class="deep-dive-benefits">
-          <div class="container pt-5 pb-5">
-            <h2 class="section-title">
+        <section className="deep-dive-benefits">
+          <div className="container pt-5 pb-5">
+            <h2 className="section-title">
               Dive deep into yoga in a gentle yet profound, celebratory, and
               joyful way
             </h2>
-            <div class="row">
-              <div class="col-lg-8">
-                <div class="benefit-you-get">
+            <div className="row">
+              <div className="col-lg-8">
+                <div className="benefit-you-get">
                   <h5>During this retreat you will:</h5>
                   <ul>
                     <li>
@@ -209,53 +216,53 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                   </ul>
                 </div>
               </div>
-              <div class="col-lg-4">
-                <div class="benefit-pictures">
+              <div className="col-lg-4">
+                <div className="benefit-pictures">
                   <img src="/img/dd-benefit-you-get1.png" alt="benefit" />
                   <img src="/img/dd-benefit-you-get2.png" alt="benefit" />
                 </div>
               </div>
             </div>
 
-            <div class="dd-register-text">
+            <div className="dd-register-text">
               You'll learn how to bring the principles of yoga into every moment
               of your life to guide you to total health and freedom.
             </div>
-            <div class="dd-register-button">
-              <button class="register-button mt-4" onClick={handleRegister}>
+            <div className="dd-register-button">
+              <button className="register-button mt-4" onClick={handleRegister}>
                 Register for a Retreat
               </button>
             </div>
           </div>
         </section>
-        <section class="dd-testimonial">
-          <div class="container py-5">
-            <div class="rating">
+        <section className="dd-testimonial">
+          <div className="container py-5">
+            <div className="rating">
               <img src="/img/dd-rating-stars.png" alt="rating" />
             </div>
-            <div class="testimonial-text">
+            <div className="testimonial-text">
               “The Sri Sri Yoga Deep Dive is a cleanse of mind, body and soul
               and now, four days into it you can really feel the benefits. There
               is a lot of clarity and I feel at ease, the stress has washed
               away”
             </div>
-            <div class="testimonial-author">— Alex Abelin</div>
+            <div className="testimonial-author">— Alex Abelin</div>
           </div>
         </section>
-        <section class="dd-yt-video-section py-5">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-4">
-                <h2 class="section-title">
+        <section className="dd-yt-video-section py-5">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-4">
+                <h2 className="section-title">
                   Invigorate and heal your body, relax your mind, and nourish
                   your soul.
                 </h2>
-                <div class="section-description">
+                <div className="section-description">
                   Have a look and get a brief glimpse
                 </div>
               </div>
-              <div class="col-lg-8">
-                <div class="yt-wrapper">
+              <div className="col-lg-8">
+                <div className="yt-wrapper">
                   <iframe
                     width="100%"
                     height="370"
@@ -266,21 +273,21 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </section>
-        <section class="section-upcoming-dates py-5">
-          <div class="container py-5 text-center">
-            <h2 class="section-title">Upcoming Dates</h2>
+        <section className="section-upcoming-dates py-5">
+          <div className="container py-5 text-center">
+            <h2 className="section-title">Upcoming Dates</h2>
             <h5>Sri Sri Yoga Deep Dive Retreat</h5>
-            <div class="session-info">
+            <div className="session-info">
               4-Day Program
               <br />
               In-person and live online retreat options available
             </div>
-            <div class="dd-register-button">
-              <button class="register-button mt-4" onClick={handleRegister}>
+            <div className="dd-register-button">
+              <button className="register-button mt-4" onClick={handleRegister}>
                 Register for a Retreat
               </button>
             </div>
-            <div class="note">
+            <div className="note">
               Prerequisite:{' '}
               <a href="https://yoga.us.artofliving.org/srisriyoga-deepdiveretreat/clkn/https/event.us.artofliving.org/us-en/online-course-2/">
                 Breath Meditation course
@@ -289,20 +296,20 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </section>
-        <section class="section-certified-instructor py-5">
-          <div class="container text-center">
-            <h2 class="section-title">Our certified instructors</h2>
-            <div class="instructor-list">
-              <div class="instructor">
-                <div class="instructor-photo">
+        <section className="section-certified-instructor py-5">
+          <div className="container text-center">
+            <h2 className="section-title">Our certified instructors</h2>
+            <div className="instructor-list">
+              <div className="instructor">
+                <div className="instructor-photo">
                   <img src="/img/dd-jennstevenson.jpeg" alt="instructor" />
                 </div>
-                <div class="instructor-name">
+                <div className="instructor-name">
                   {instructorsName.jennifer}
                   <br />
                   Stevenson
                 </div>
-                <div class="instructor-more">
+                <div className="instructor-more">
                   <a
                     data-toggle="modal"
                     onClick={() => handleSetActiveInstructor('Jennifer')}
@@ -312,16 +319,16 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                   </a>
                 </div>
               </div>
-              <div class="instructor">
-                <div class="instructor-photo">
+              <div className="instructor">
+                <div className="instructor-photo">
                   <img src="/img/dd-jonaskarosas.png" alt="instructor" />
                 </div>
-                <div class="instructor-name">
+                <div className="instructor-name">
                   {instructorsName.jonas}
                   <br />
                   Karosas
                 </div>
-                <div class="instructor-more">
+                <div className="instructor-more">
                   <a
                     onClick={() => handleSetActiveInstructor('Jonas')}
                     data-toggle="modal"
@@ -331,16 +338,16 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                   </a>
                 </div>
               </div>
-              <div class="instructor">
-                <div class="instructor-photo">
+              <div className="instructor">
+                <div className="instructor-photo">
                   <img src="/img/dd-neelammadaik.png" alt="instructor" />
                 </div>
-                <div class="instructor-name">
+                <div className="instructor-name">
                   {instructorsName.neelam}
                   <br />
                   Madaik
                 </div>
-                <div class="instructor-more">
+                <div className="instructor-more">
                   <a
                     onClick={() => handleSetActiveInstructor('Neelam')}
                     data-toggle="modal"
@@ -350,16 +357,16 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                   </a>
                 </div>
               </div>
-              <div class="instructor">
-                <div class="instructor-photo">
+              <div className="instructor">
+                <div className="instructor-photo">
                   <img src="/img/dd-nehapatel.png" alt="instructor" />
                 </div>
-                <div class="instructor-name">
+                <div className="instructor-name">
                   {instructorsName.neha}
                   <br />
                   Patel
                 </div>
-                <div class="instructor-more">
+                <div className="instructor-more">
                   <a
                     onClick={() => handleSetActiveInstructor('Neha')}
                     data-toggle="modal"
@@ -369,16 +376,16 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                   </a>
                 </div>
               </div>
-              <div class="instructor">
-                <div class="instructor-photo">
+              <div className="instructor">
+                <div className="instructor-photo">
                   <img src="/img/dd-sejalshah.png" alt="instructor" />
                 </div>
-                <div class="instructor-name">
+                <div className="instructor-name">
                   {instructorsName.sejal}
                   <br />
                   Shah
                 </div>
-                <div class="instructor-more">
+                <div className="instructor-more">
                   <a
                     onClick={() =>
                       handleSetActiveInstructor(instructorsName.sejal)
@@ -392,21 +399,21 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               </div>
             </div>
             <div
-              class={`modal fade ${
+              className={`modal fade ${
                 activeInstructor === instructorsName.jennifer ? 'show' : ''
               }`}
               id="dd-jennifer"
-              tabindex="-1"
+              tabIndex="-1"
               role="dialog"
               aria-labelledby="dd-jenniferLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
                     <button
                       type="button"
-                      class="close"
+                      className="close"
                       data-dismiss="modal"
                       aria-label="Close"
                       onClick={handleSetActiveInstructor}
@@ -414,7 +421,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body text-left">
+                  <div className="modal-body text-left">
                     <h5>Jennifer Stevenson</h5>
                     <p>
                       Jennifer happened upon yoga more almost twenty-years ago
@@ -453,21 +460,21 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               </div>
             </div>
             <div
-              class={`modal fade ${
+              className={`modal fade ${
                 activeInstructor === instructorsName.jonas ? 'show' : ''
               }`}
               id="dd-jonas"
-              tabindex="-1"
+              tabIndex="-1"
               role="dialog"
               aria-labelledby="dd-jonasLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
                     <button
                       type="button"
-                      class="close"
+                      className="close"
                       data-dismiss="modal"
                       aria-label="Close"
                       onClick={handleSetActiveInstructor}
@@ -475,7 +482,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body text-left">
+                  <div className="modal-body text-left">
                     <h5>Jonas Karosas</h5>
                     <p>
                       A potential of yoga to expand one’s consciousness was the
@@ -495,21 +502,21 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               </div>
             </div>
             <div
-              class={`modal fade ${
+              className={`modal fade ${
                 activeInstructor === instructorsName.neelam ? 'show' : ''
               }`}
               id="dd-neelam"
-              tabindex="-1"
+              tabIndex="-1"
               role="dialog"
               aria-labelledby="dd-neelamLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
                     <button
                       type="button"
-                      class="close"
+                      className="close"
                       data-dismiss="modal"
                       aria-label="Close"
                       onClick={handleSetActiveInstructor}
@@ -517,7 +524,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body text-left">
+                  <div className="modal-body text-left">
                     <h5>Neelam Madaik</h5>
                     <p>
                       Neelam currently serves on the Board of Directors and as a
@@ -541,21 +548,21 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               </div>
             </div>
             <div
-              class={`modal fade ${
+              className={`modal fade ${
                 activeInstructor === instructorsName.neha ? 'show' : ''
               }`}
               id="dd-neha"
-              tabindex="-1"
+              tabIndex="-1"
               role="dialog"
               aria-labelledby="dd-nehaLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
                     <button
                       type="button"
-                      class="close"
+                      className="close"
                       data-dismiss="modal"
                       aria-label="Close"
                       onClick={handleSetActiveInstructor}
@@ -563,7 +570,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body text-left">
+                  <div className="modal-body text-left">
                     <h5>Neha Patel</h5>
                     <p>
                       Neha Patel was inspired to study yoga during her
@@ -585,21 +592,21 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               </div>
             </div>
             <div
-              class={`modal fade ${
+              className={`modal fade ${
                 activeInstructor === instructorsName.sejal ? 'show' : ''
               }`}
               id="dd-sejal"
-              tabindex="-1"
+              tabIndex="-1"
               role="dialog"
               aria-labelledby="dd-sejalLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
                     <button
                       type="button"
-                      class="close"
+                      className="close"
                       data-dismiss="modal"
                       aria-label="Close"
                       onClick={handleSetActiveInstructor}
@@ -607,7 +614,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body text-left">
+                  <div className="modal-body text-left">
                     <h5>Sejal Shah</h5>
                     <p>
                       Sejal has been on the path of yoga and meditation for
@@ -646,10 +653,10 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </section>
-        <section class="section-contact-info py-5">
-          <div class="container text-center">
-            <h2 class="section-title">Contact us</h2>
-            <div class="contact-info">
+        <section className="section-contact-info py-5">
+          <div className="container text-center">
+            <h2 className="section-title">Contact us</h2>
+            <div className="contact-info">
               1 (828) 278-8700 •{' '}
               <a href="mailto:info@srisrischoolofyoga.org">
                 info@srisrischoolofyoga.org
@@ -657,46 +664,48 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </section>
-        <section class="about-art-of-living--section pt-lg-5  pb-lg-5">
-          <div class="container pb-lg-2">
-            <h2 class="section-title">About the Art of Living</h2>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="marma-about-aol-item">
-                  <div class="marma-about-aol-icon">
+        <section className="about-art-of-living--section pt-lg-5  pb-lg-5">
+          <div className="container pb-lg-2">
+            <h2 className="section-title">About the Art of Living</h2>
+            <div className="row">
+              <div className="col-md-3">
+                <div className="marma-about-aol-item">
+                  <div className="marma-about-aol-icon">
                     <img src="/img/marma-about-aol-icon1.png" alt="about aol" />
                   </div>
-                  <div class="marma-about-aol-title">42 years</div>
-                  <div class="marma-about-aol-text">of service to society</div>
+                  <div className="marma-about-aol-title">42 years</div>
+                  <div className="marma-about-aol-text">
+                    of service to society
+                  </div>
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="marma-about-aol-item">
-                  <div class="marma-about-aol-icon">
+              <div className="col-md-3">
+                <div className="marma-about-aol-item">
+                  <div className="marma-about-aol-icon">
                     <img src="/img/marma-about-aol-icon2.png" alt="about aol" />
                   </div>
-                  <div class="marma-about-aol-title">3,000+ centers</div>
-                  <div class="marma-about-aol-text">worldwide</div>
+                  <div className="marma-about-aol-title">3,000+ centers</div>
+                  <div className="marma-about-aol-text">worldwide</div>
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="marma-about-aol-item">
-                  <div class="marma-about-aol-icon">
+              <div className="col-md-3">
+                <div className="marma-about-aol-item">
+                  <div className="marma-about-aol-icon">
                     <img src="/img/marma-about-aol-icon3.png" alt="about aol" />
                   </div>
-                  <div class="marma-about-aol-title">800M+ lives</div>
-                  <div class="marma-about-aol-text">
+                  <div className="marma-about-aol-title">800M+ lives</div>
+                  <div className="marma-about-aol-text">
                     touched through our courses & events
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="marma-about-aol-item">
-                  <div class="marma-about-aol-icon">
+              <div className="col-md-3">
+                <div className="marma-about-aol-item">
+                  <div className="marma-about-aol-icon">
                     <img src="/img/marma-about-aol-icon4.png" alt="about aol" />
                   </div>
-                  <div class="marma-about-aol-title">180 countries</div>
-                  <div class="marma-about-aol-text">
+                  <div className="marma-about-aol-title">180 countries</div>
+                  <div className="marma-about-aol-text">
                     where our programs made a difference
                   </div>
                 </div>
