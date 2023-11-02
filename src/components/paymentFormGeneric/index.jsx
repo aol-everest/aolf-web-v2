@@ -13,6 +13,7 @@ import {
   ProgramQuestionnaire,
   UserInfoForm,
 } from '@components/checkout';
+import { orgConfig } from '@org';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import {
   CardElement,
@@ -50,6 +51,8 @@ import { useQueryString } from '@hooks';
 import { pushRouteWithUTMQuery } from '@service';
 import { api, priceCalculation, tConvert } from '@utils';
 import Style from './PaymentFormGeneric.module.scss';
+import { AttendanceFormIAHV } from '@components/checkout/AttendanceFormIAHV';
+import { useQuery } from 'react-query';
 
 const createOptions = {
   style: {
@@ -99,6 +102,19 @@ export const PaymentFormGeneric = ({
     useState(null);
 
   const router = useRouter();
+
+  const { data: corporates } = useQuery(
+    'corporates',
+    async () => {
+      const response = await api.get({
+        path: 'getCorporates',
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   useEffect(() => {
     if (programQuestionnaireResult?.length > 0) {
@@ -573,6 +589,8 @@ export const PaymentFormGeneric = ({
       paymentMode,
       accommodation,
       email,
+      contactHealthcareOrganisation,
+      contactOtherHealthcareOrganization,
     } = values;
 
     if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
@@ -677,6 +695,10 @@ export const PaymentFormGeneric = ({
           complianceQuestionnaire,
           programQuestionnaireResult,
           isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
+          attendee: {
+            contactHealthcareOrganisation,
+            contactOtherHealthcareOrganization,
+          },
         },
         utm: filterAllowedParams(router.query),
       };
@@ -944,11 +966,6 @@ export const PaymentFormGeneric = ({
     formikProps.setFieldValue('accommodation', value);
   };
 
-  const toggleCouponCodeFieldAction = (e) => {
-    if (e) e.preventDefault();
-    setShowCouponCodeField((showCouponCodeField) => !showCouponCodeField);
-  };
-
   const paymentElementOptions = {
     defaultValues: {
       billingDetails: {
@@ -991,6 +1008,8 @@ export const PaymentFormGeneric = ({
     }
   };
 
+  const isIahv = orgConfig.name === 'IAHV';
+
   return (
     <>
       <Formik
@@ -1013,6 +1032,8 @@ export const PaymentFormGeneric = ({
               : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
           accommodation: null,
           priceType: 'regular',
+          contactHealthcareOrganisation: '',
+          contactOtherHealthcareOrganization: '',
         }}
         validationSchema={Yup.object().shape({
           firstName: Yup.string().required('First Name is required'),
@@ -1044,6 +1065,17 @@ export const PaymentFormGeneric = ({
           paymentMode: isCCNotRequired
             ? Yup.mixed().notRequired()
             : Yup.string().required('Payment mode is required!'),
+          contactHealthcareOrganisation: Yup.string().required(
+            'Healthcare Organization is required',
+          ),
+          contactOtherHealthcareOrganization: Yup.string()
+            .ensure()
+            .when('contactHealthcareOrganisation', {
+              is: 'other',
+              then: Yup.string().required(
+                'Other Healthcare Organization is required',
+              ),
+            }),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
@@ -1164,11 +1196,14 @@ export const PaymentFormGeneric = ({
                       applyDiscount={applyDiscount}
                       addOnProducts={addOnProducts}
                     ></DiscountCodeInput>
-                    {/* <input
-                    id="discount-code"
-                    type="text"
-                    placeholder="Discount Code"
-                  /> */}
+
+                    {isIahv && (
+                      <AttendanceFormIAHV
+                        formikProps={formikProps}
+                        corporates={corporates}
+                      />
+                    )}
+
                     {!isCCNotRequired && isCreditCardRequired !== false && (
                       <PayWith
                         formikProps={formikProps}
