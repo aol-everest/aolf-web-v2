@@ -95,7 +95,7 @@ const Thankyou = () => {
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
   const [courseType] = useQueryString('courseType');
-  const { id: attendeeId, comboId } = router.query;
+  const { id: attendeeId, comboId, sscid } = router.query;
   const {
     data: result,
     isLoading,
@@ -109,6 +109,7 @@ const Thankyou = () => {
         param: {
           aid: attendeeId,
           skipcheck: '1',
+          sscid,
         },
       });
       return response;
