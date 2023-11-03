@@ -390,22 +390,6 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
             </SwiperSlide>
           </Swiper>
         </section>
-        {courseViewMode !== WORKSHOP_MODE.VIEW && (
-          <div className="float-bar">
-            <div className="float-wrapper clearfix">
-              <div className="bar-left">
-                <div className="bar-title">
-                  Start Your Journey to Inner Peace
-                </div>
-              </div>
-              <div className="bar-right">
-                <button className="register-button" onClick={handleRegister}>
-                  Register Now <FaArrowRightLong />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </>
   );
