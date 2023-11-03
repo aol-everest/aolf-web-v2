@@ -639,7 +639,7 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
                       </a>
                       ,{' '}
                       <a href="clkn/http/www.yoganonymous.com/">YOGANONYMOUS</a>
-                      , etc. &nbsp;She facilitates SKY Breath Meditation, Art of
+                      , etc. &nbsp;She facilitates Art of Living-Part 1, Art of
                       Living Yoga Retreats, Art of Living Yoga Teachers Training
                       Program, Mind &amp; Meditation Seminars, and also offers
                       the Living Light Weight Loss program, and Yoga and Marma
