@@ -518,6 +518,17 @@ export const PaymentFormHB = ({
         utm: filterAllowedParams(router.query),
       };
 
+      if (!isLoggedUser) {
+        payLoad = {
+          ...payLoad,
+          user: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+          },
+        };
+      }
+
       if (isChangingCard) {
         payLoad = {
           ...payLoad,
@@ -922,12 +933,22 @@ export const PaymentFormHB = ({
                 <form className="order__form" onSubmit={handleSubmit}>
                   <div className="details">
                     <h2 className="details__title">Account Details:</h2>
-                    <p className="details__content">
-                      This is not your account?{' '}
-                      <a href="#" className="link" onClick={logout}>
-                        Logout
-                      </a>
-                    </p>
+                    {isLoggedUser && (
+                      <p className="details__content">
+                        This is not your account?{' '}
+                        <a href="#" className="link" onClick={logout}>
+                          Logout
+                        </a>
+                      </p>
+                    )}
+                    {!isLoggedUser && (
+                      <p className="details__content">
+                        Already have an Account?{' '}
+                        <a href="#" className="link" onClick={login}>
+                          Login
+                        </a>
+                      </p>
+                    )}
                   </div>
                   <div className="order__card">
                     <UserInfoForm formikProps={formikProps} isHBCheckout />
