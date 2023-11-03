@@ -3,13 +3,6 @@ import dynamic from 'next/dynamic';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-// import {
-//   SKYBreathMeditation,
-//   SahajSamadhi,
-//   SilentRetreat,
-//   SriSriYoga,
-//   VolunteerTrainingProgram,
-// } from "@components/courseDetails";
 import { PageLoading } from '@components';
 import { COURSE_TYPES } from '@constants';
 import { useAuth } from '@contexts';
@@ -61,6 +54,9 @@ const SKYHappinessRetreat = dynamic(() =>
 const SanyamCourse = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.SanyamCourse),
 );
+const SriSriYogaDeepDive = dynamic(() =>
+  import('@components/courseDetails').then((mod) => mod.SriSriYogaDeepDive),
+);
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -100,7 +96,7 @@ const SanyamCourse = dynamic(() =>
 function CourseDetail() {
   const { user, authenticated } = useAuth();
   const router = useRouter();
-  const { id: workshopId } = router.query;
+  const { id: workshopId, mode = '' } = router.query;
   const { track, page } = useAnalytics();
   const { data, isLoading, isError, error } = useQuery(
     'workshopDetail',
@@ -153,7 +149,8 @@ function CourseDetail() {
       !isBlessingsCourse &&
       !isSKYCampusHappinessRetreat &&
       !isSanyamCourse &&
-      !SKYWithSahaj
+      !isSKYWithSahaj &&
+      !isSriSriYogaDeepDiveType
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -244,10 +241,13 @@ function CourseDetail() {
     COURSE_TYPES.ART_OF_LIVING_PREMIUM_PROGRAM.value.indexOf(
       data.productTypeId,
     ) >= 0;
+  const isSriSriYogaDeepDiveType =
+    COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.value.indexOf(data.productTypeId) >= 0;
 
   const props = {
     data,
     swiperOption,
+    mode,
   };
 
   const renderCourseDetail = () => {
@@ -256,6 +256,9 @@ function CourseDetail() {
     }
     if (isSriSriYogaMeditationType) {
       return <SriSriYoga {...props} />;
+    }
+    if (isSriSriYogaDeepDiveType) {
+      return <SriSriYogaDeepDive {...props} />;
     }
     if (isSKYType) {
       return <SKYBreathMeditation {...props} />;

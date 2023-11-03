@@ -149,14 +149,18 @@ const WebinarSkyCheckout = () => {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: 'retreat-prerequisite-big',
         title: 'Retreat Prerequisite',
-        closeModalAction: closeRetreatPrerequisiteWarning,
+        closeModalAction: closeRetreatPrerequisiteWarning(
+          firstPreRequisiteFailedReason,
+        ),
         footer: () => {
           return (
             <button
               className="btn-secondary"
-              onClick={closeRetreatPrerequisiteWarning}
+              onClick={closeRetreatPrerequisiteWarning(
+                firstPreRequisiteFailedReason,
+              )}
             >
-              {firstPreRequisiteFailedReason.title}
+              {firstPreRequisiteFailedReason.actionButtonText}
             </button>
           );
         },
@@ -187,16 +191,16 @@ const WebinarSkyCheckout = () => {
     }
   }, [selectedWorkshopId]);
 
-  const closeRetreatPrerequisiteWarning = (e) => {
-    if (e) e.preventDefault();
-    hideAlert();
-    pushRouteWithUTMQuery(router, {
-      pathname: '/us-en/course',
-      query: {
-        courseType: 'SKY_BREATH_MEDITATION',
-      },
-    });
-  };
+  const closeRetreatPrerequisiteWarning =
+    (firstPreRequisiteFailedReason) => (e) => {
+      if (e) e.preventDefault();
+      hideAlert();
+      if (firstPreRequisiteFailedReason.actionButtonLink) {
+        pushRouteWithUTMQuery(router, {
+          pathname: firstPreRequisiteFailedReason.actionButtonLink,
+        });
+      }
+    };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     replaceRouteWithUTMQuery(router, {

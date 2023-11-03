@@ -169,6 +169,14 @@ export const COURSE_TYPES = {
     name: 'GATEWAY_TO_INFINITY_COURSE',
     value: process.env.NEXT_PUBLIC_GATEWAY_TO_INFINITY_CTYPE || '',
   },
+  SRI_SRI_YOGA_DEEP_DIVE: {
+    name: 'Sri Sri Yoga Deep Dive',
+    value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_DEEP_DIVE_CTYPE || '',
+  },
+};
+
+export const WORKSHOP_MODE = {
+  VIEW: 'view',
 };
 
 export const MEETUP_TYPES = {

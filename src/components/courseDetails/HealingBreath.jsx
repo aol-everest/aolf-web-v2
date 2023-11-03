@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import { COURSE_TYPES, MODAL_TYPES } from '@constants';
+import { COURSE_TYPES, MODAL_TYPES, WORKSHOP_MODE } from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
@@ -12,7 +12,7 @@ import { CourseBottomCard } from './CourseBottomCard';
 import CourseDetailsCard from './CourseDetailsCard';
 import { ResearchPaginationHB } from './ResearchPaginationHB';
 
-export const HealingBreath = ({ data, swiperOption }) => {
+export const HealingBreath = ({ data, swiperOption, mode: courseViewMode }) => {
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
@@ -64,22 +64,25 @@ export const HealingBreath = ({ data, swiperOption }) => {
               <li>Improve your energy & calm</li>
               <li>Experience deep meditation</li>
             </ul>
-            <Link
-              activeClassName="active"
-              className="btn-secondary v2"
-              to="registerNowBlock"
-              onClick={handleRegister}
-              spy={true}
-              smooth={true}
-              duration={500}
-              offset={-100}
-            >
-              Register Now
-            </Link>
+            {courseViewMode !== WORKSHOP_MODE.VIEW && (
+              <Link
+                activeClassName="active"
+                className="btn-secondary v2"
+                to="registerNowBlock"
+                onClick={handleRegister}
+                spy={true}
+                smooth={true}
+                duration={500}
+                offset={-100}
+              >
+                Register Now
+              </Link>
+            )}
           </div>
           <CourseDetailsCard
             workshop={data}
             courseType={COURSE_TYPES.HEALING_BREATH}
+            courseViewMode={courseViewMode}
           ></CourseDetailsCard>
         </section>
         <section className="progress-section">
@@ -560,7 +563,11 @@ export const HealingBreath = ({ data, swiperOption }) => {
         </section> */}
       </main>
       <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} onRegister={handleRegister} />
+        <CourseBottomCard
+          workshop={data}
+          onRegister={handleRegister}
+          courseViewMode={courseViewMode}
+        />
       </HideOn>
     </>
   );

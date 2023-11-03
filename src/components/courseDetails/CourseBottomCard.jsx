@@ -1,4 +1,4 @@
-import { COURSE_TYPES } from '@constants';
+import { COURSE_TYPES, WORKSHOP_MODE } from '@constants';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -6,7 +6,11 @@ import { Link } from 'react-scroll';
 
 dayjs.extend(utc);
 
-export const CourseBottomCard = ({ workshop, onRegister = null }) => {
+export const CourseBottomCard = ({
+  workshop,
+  onRegister = null,
+  courseViewMode,
+}) => {
   const { title, eventStartDate, eventEndDate, productTypeId } = workshop || {};
 
   const isSKYType =
@@ -64,18 +68,20 @@ export const CourseBottomCard = ({ workshop, onRegister = null }) => {
               </div>
             </div>
           </div>
-          <Link
-            activeClassName="active"
-            className="btn-secondary"
-            to="registerNowBlock"
-            onClick={onRegister}
-            spy={true}
-            smooth={true}
-            duration={500}
-            offset={0}
-          >
-            Register Today
-          </Link>
+          {courseViewMode !== WORKSHOP_MODE.VIEW && (
+            <Link
+              activeClassName="active"
+              className="btn-secondary"
+              to="registerNowBlock"
+              onClick={onRegister}
+              spy={true}
+              smooth={true}
+              duration={500}
+              offset={0}
+            >
+              Register Today
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { useContext } from 'react';
-import { MODAL_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import {
+  MODAL_TYPES,
+  COURSE_MODES,
+  COURSE_TYPES,
+  WORKSHOP_MODE,
+} from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { Accordion, Card, AccordionContext } from 'react-bootstrap';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
@@ -48,7 +53,7 @@ const settings = {
   ],
 };
 
-export const SKYBreathMeditation = ({ data }) => {
+export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
   const router = useRouter();
   const { authenticated = false } = useAuth();
@@ -140,7 +145,7 @@ export const SKYBreathMeditation = ({ data }) => {
                 Boost immunity
               </li>
             </ul>
-            {!sfid && (
+            {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
               <div className="hero-register-button-wrapper">
                 <a className="hero-register-button" onClick={handleRegister}>
                   <img src="/img/regiter-btn.original.png" alt="" />
@@ -148,7 +153,9 @@ export const SKYBreathMeditation = ({ data }) => {
               </div>
             )}
           </div>
-          {sfid && <PriceCard workshop={data} />}
+          {sfid && (
+            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+          )}
         </section>
         <section className="progress-section">
           <div className="container">
@@ -240,12 +247,14 @@ export const SKYBreathMeditation = ({ data }) => {
                       better sleep, a stronger immune system, and increased
                       energy levels.
                     </p>
-                    <button
-                      className="register-button"
-                      onClick={handleRegister}
-                    >
-                      Register Now <FaArrowRightLong />
-                    </button>
+                    {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                      <button
+                        className="register-button"
+                        onClick={handleRegister}
+                      >
+                        Register Now <FaArrowRightLong />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -621,18 +630,22 @@ export const SKYBreathMeditation = ({ data }) => {
             </Accordion>
           </div>
         </section>
-        <div className="float-bar">
-          <div className="float-wrapper clearfix">
-            <div className="bar-left">
-              <div className="bar-title">Start Your Journey to Inner Peace</div>
-            </div>
-            <div className="bar-right">
-              <a href="#" onClick={handleRegister}>
-                <img src="/img/regiter-btn-alt.original.png" alt="" />
-              </a>
+        {courseViewMode !== WORKSHOP_MODE.VIEW && (
+          <div className="float-bar">
+            <div className="float-wrapper clearfix">
+              <div className="bar-left">
+                <div className="bar-title">
+                  Start Your Journey to Inner Peace
+                </div>
+              </div>
+              <div className="bar-right">
+                <a href="#" onClick={handleRegister}>
+                  <img src="/img/regiter-btn-alt.original.png" alt="" />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </main>
     </>
   );

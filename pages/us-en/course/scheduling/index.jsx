@@ -302,6 +302,7 @@ const SchedulingRange = () => {
         ctype:
           findCourseTypeByKey(courseTypeFilter)?.value ||
           COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+        random: true,
       };
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};
