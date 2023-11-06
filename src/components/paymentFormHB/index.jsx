@@ -951,7 +951,11 @@ export const PaymentFormHB = ({
                     )}
                   </div>
                   <div className="order__card">
-                    <UserInfoForm formikProps={formikProps} isHBCheckout />
+                    <UserInfoForm
+                      formikProps={formikProps}
+                      isHBCheckout
+                      isLoggedUser={isLoggedUser}
+                    />
                   </div>
                   <div className="details mt-5">
                     <h2 className="details__title">Billing Details:</h2>
