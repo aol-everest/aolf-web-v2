@@ -406,6 +406,7 @@ export const PaymentFormHB = ({
       claimingType,
       certificateOfAttendance,
       contactClaimingTypeOther,
+      email,
     } = values;
 
     if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
