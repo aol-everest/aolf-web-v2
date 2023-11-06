@@ -22,6 +22,7 @@ import { ALERT_TYPES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
 import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
+import { pushRouteWithUTMQuery } from '@service';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -32,6 +33,7 @@ const TicketCongratulations = () => {
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const [expanded, setExpanded] = useState(0);
   const [ticketData, setTicketData] = useState({});
+  const [loading, setLoading] = useState(false);
   const [value] = useLocalStorage('ticket-events');
   const {
     selectedTickets,
@@ -161,7 +163,6 @@ const TicketCongratulations = () => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       title: 'Add to Calendar',
-
       children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
         hideAlert();
@@ -173,6 +174,59 @@ const TicketCongratulations = () => {
       event_target: 'add_to_calendar_button',
       referral: 'ticketed_event_checkout',
     });
+  };
+
+  const gotToHomePage = (e) => {
+    if (e) e.preventDefault();
+    hideAlert();
+    pushRouteWithUTMQuery(router, {
+      pathname: '/us-en/course',
+    });
+  };
+
+  const handleSubmitAttendees = async () => {
+    setLoading(true);
+    const attendeeInfo = Object.keys(ticketData).map((attendeId) => {
+      const item = ticketData[attendeId];
+      return item;
+    });
+    const payload = {
+      orderId: orderId,
+      attendeeInfo: attendeeInfo,
+    };
+    try {
+      const {
+        status,
+        error: errorMessage,
+        isError,
+        data,
+      } = await api.post({
+        path: 'updateTicketedEventAttendees',
+        body: payload,
+        isUnauthorized: true,
+      });
+      setLoading(false);
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      if (data || status === 200) {
+        showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+          title: 'Confirmed',
+          children: 'We have received your attendee details.',
+          closeModalAction: () => {
+            gotToHomePage();
+          },
+        });
+      }
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+    }
   };
 
   return (
@@ -404,7 +458,12 @@ const TicketCongratulations = () => {
                     );
                   })}
                 </div>
-                <button type="button" className="btn btn-submit">
+                {loading && <Loader />}
+                <button
+                  type="button"
+                  className="btn btn-submit"
+                  onClick={handleSubmitAttendees}
+                >
                   Submit
                 </button>
               </form>
