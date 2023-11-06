@@ -1,11 +1,11 @@
-import PhoneInput from "@components/phoneInputCmp";
-import classNames from "classnames";
+import PhoneInput from '@components/phoneInputCmp';
+import classNames from 'classnames';
 
 export const TicketPhoneInput = ({
   children,
   label,
   fullWidth,
-  containerClass = "",
+  containerClass = '',
   formikProps,
   formikKey,
   isReadOnly = false,
@@ -52,8 +52,8 @@ export const TicketPhoneInput = ({
         country="us"
         inputClass={
           formikProps.errors?.contactPhone
-            ? "text-input text-input-error"
-            : "text-input"
+            ? 'text-input text-input-error'
+            : 'text-input'
         }
         containerClass="tickets-modal__input"
         countryCodeEditable={true}
@@ -65,7 +65,7 @@ export const TicketPhoneInput = ({
       />
 
       {tooltip && (
-        <div className={classNames("input-tooltip", { active: showTooltip })}>
+        <div className={classNames('input-tooltip', { active: showTooltip })}>
           <div className="tooltip-arrow"></div>
           {tooltip}
         </div>
