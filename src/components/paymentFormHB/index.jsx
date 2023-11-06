@@ -958,6 +958,10 @@ export const PaymentFormHB = ({
                       </p>
                     )}
                   </div>
+                  <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+                    If claiming CME / CE credits, your name in the program
+                    registration should exactly match your name.
+                  </p>
                   <div className="order__card">
                     <UserInfoForm
                       formikProps={formikProps}
