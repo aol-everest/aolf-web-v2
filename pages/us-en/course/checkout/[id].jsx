@@ -171,7 +171,7 @@ const Checkout = () => {
     if (isPreRequisiteCompleted === false && firstPreRequisiteFailedReason) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: 'retreat-prerequisite-big',
-        title: 'Retreat Prerequisite',
+        title: 'Prerequisite',
         closeModalAction: closeRetreatPrerequisiteWarning(
           firstPreRequisiteFailedReason,
         ),
