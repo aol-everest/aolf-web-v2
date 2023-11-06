@@ -85,7 +85,9 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
           <div className="banner">
             <div className="container">
               <div className="courses-title">Courses</div>
-              <div className="banner-title">Art of Living Part II</div>
+              <div className="banner-title">
+                {title || 'Art of Living Part II'}
+              </div>
               <div className="banner-description">
                 Give yourself a true vacation for body, mind, and spirit
               </div>
