@@ -844,12 +844,18 @@ export const PaymentFormHB = ({
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),
-          claimingType: Yup.string().required('CE Claiming type is required'),
-          certificateOfAttendance: Yup.string().required(
-            'I would like to get the following is required',
-          ),
-          contactClaimingTypeOther: Yup.string().when('claimingType', {
-            is: 'Other',
+          claimingType: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required('CE Claiming type is required'),
+          }),
+          certificateOfAttendance: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required(
+              'I would like to get the following is required',
+            ),
+          }),
+          contactClaimingTypeOther: Yup.string().when(['CME', 'claimingType'], {
+            is: (cme, claimingType) => claimingType === 'Other' && cme === true,
             then: Yup.string().required('Other is required'),
           }),
         })}
@@ -858,6 +864,7 @@ export const PaymentFormHB = ({
         }}
       >
         {(formikProps) => {
+          console.log(formikProps.errors);
           const { values, handleSubmit } = formikProps;
 
           const addOnFee = addOnProducts.reduce(

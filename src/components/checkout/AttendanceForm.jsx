@@ -105,7 +105,7 @@ export const AttendanceForm = ({
           formikKey="contactDegree"
           fullWidth
         ></StyledInput>
-        {!isCMSAddOn && (
+        {/* {!isCMSAddOn && (
           <>
             <div className="d-flex w-50 justify-content-start">
               <FieldWrapper
@@ -227,7 +227,7 @@ export const AttendanceForm = ({
               </FieldWrapper>
             </div>
           </>
-        )}
+        )} */}
       </div>
     </Fragment>
   );
