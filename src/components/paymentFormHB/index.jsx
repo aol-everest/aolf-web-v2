@@ -864,7 +864,7 @@ export const PaymentFormHB = ({
         }}
       >
         {(formikProps) => {
-          console.log(formikProps.errors);
+          // console.log(formikProps.errors);
           const { values, handleSubmit } = formikProps;
 
           const addOnFee = addOnProducts.reduce(
