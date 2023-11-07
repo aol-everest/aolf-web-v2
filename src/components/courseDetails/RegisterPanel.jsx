@@ -157,7 +157,7 @@ export const RegisterPanel = ({ workshop }) => {
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -195,7 +195,7 @@ export const RegisterPanel = ({ workshop }) => {
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -264,7 +264,7 @@ export const RegisterPanel = ({ workshop }) => {
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -359,7 +359,7 @@ export const RegisterPanel = ({ workshop }) => {
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -428,7 +428,7 @@ export const RegisterPanel = ({ workshop }) => {
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -503,7 +503,7 @@ export const RegisterPanel = ({ workshop }) => {
           )}
           {preRequisiteCondition && preRequisiteCondition.length > 0 && (
             <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-              Eligibility: Completion of {preRequisiteCondition}
+              Eligibility: {preRequisiteCondition}
             </p>
           )}
         </div>
