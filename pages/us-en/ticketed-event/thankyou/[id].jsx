@@ -176,11 +176,11 @@ const TicketCongratulations = () => {
     });
   };
 
-  const gotToHomePage = (e) => {
+  const gotToTicketsPage = (e) => {
     if (e) e.preventDefault();
     hideAlert();
     pushRouteWithUTMQuery(router, {
-      pathname: '/us-en/course',
+      pathname: `/us-en/ticketed-event/tickets/${selectedWorkshop?.id}`,
     });
   };
 
@@ -214,7 +214,7 @@ const TicketCongratulations = () => {
           title: 'Confirmed',
           children: 'We have received your attendee details.',
           closeModalAction: () => {
-            gotToHomePage();
+            gotToTicketsPage();
           },
         });
       }
