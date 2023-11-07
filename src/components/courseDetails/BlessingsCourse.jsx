@@ -298,8 +298,7 @@ export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
                         through you and around you.
                       </div>
                       <div className="elements-section__text">
-                        Eligibility: Completion of the {preRequisiteCondition}{' '}
-                        are required to enroll in The Blessings Course.
+                        Eligibility: {preRequisiteCondition}
                       </div>
                     </div>
                   </div>

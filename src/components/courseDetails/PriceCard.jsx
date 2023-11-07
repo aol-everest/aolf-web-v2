@@ -435,7 +435,7 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p>
                 <FaRegIdCard className="fa" /> <strong>Eligibility:</strong>{' '}
-                Completion of {preRequisiteCondition}
+                {preRequisiteCondition}
               </p>
             )}
           </div>
