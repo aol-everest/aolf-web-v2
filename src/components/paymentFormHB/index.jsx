@@ -406,6 +406,7 @@ export const PaymentFormHB = ({
       claimingType,
       certificateOfAttendance,
       contactClaimingTypeOther,
+      email,
     } = values;
 
     if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
@@ -843,12 +844,18 @@ export const PaymentFormHB = ({
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),
-          claimingType: Yup.string().required('CE Claiming type is required'),
-          certificateOfAttendance: Yup.string().required(
-            'I would like to get the following is required',
-          ),
-          contactClaimingTypeOther: Yup.string().when('claimingType', {
-            is: 'Other',
+          claimingType: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required('CE Claiming type is required'),
+          }),
+          certificateOfAttendance: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required(
+              'I would like to get the following is required',
+            ),
+          }),
+          contactClaimingTypeOther: Yup.string().when(['CME', 'claimingType'], {
+            is: (cme, claimingType) => claimingType === 'Other' && cme === true,
             then: Yup.string().required('Other is required'),
           }),
         })}
@@ -857,6 +864,7 @@ export const PaymentFormHB = ({
         }}
       >
         {(formikProps) => {
+          // console.log(formikProps.errors);
           const { values, handleSubmit } = formikProps;
 
           const addOnFee = addOnProducts.reduce(
@@ -950,8 +958,16 @@ export const PaymentFormHB = ({
                       </p>
                     )}
                   </div>
+                  <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+                    If claiming CME / CE credits, your name in the program
+                    registration should exactly match your name.
+                  </p>
                   <div className="order__card">
-                    <UserInfoForm formikProps={formikProps} isHBCheckout />
+                    <UserInfoForm
+                      formikProps={formikProps}
+                      isHBCheckout
+                      isLoggedUser={isLoggedUser}
+                    />
                   </div>
                   <div className="details mt-5">
                     <h2 className="details__title">Billing Details:</h2>

@@ -188,7 +188,7 @@ function OfferingUpgradeCheckout() {
     ) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: 'retreat-prerequisite-big meditation-digital-membership',
-        title: 'Retreat Prerequisite',
+        title: 'Prerequisite',
         closeModalAction: closeRetreatPrerequisiteWarning,
         footer: () => {
           return (

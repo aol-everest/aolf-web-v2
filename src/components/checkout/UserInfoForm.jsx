@@ -15,7 +15,6 @@ export const UserInfoForm = ({
         placeholder="First name"
         formikProps={formikProps}
         formikKey="firstName"
-        tooltip="Enter given name"
       ></StyledInput>
       <StyledInput
         className="mt-lg-0"

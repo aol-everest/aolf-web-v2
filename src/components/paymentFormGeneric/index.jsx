@@ -1176,7 +1176,10 @@ export const PaymentFormGeneric = ({
                     )}
                   </div>
                   <div className="order__card">
-                    <UserInfoForm formikProps={formikProps} />
+                    <UserInfoForm
+                      formikProps={formikProps}
+                      isLoggedUser={isLoggedUser}
+                    />
                   </div>
                   <div className="details mt-5">
                     <h2 className="details__title">Billing Details:</h2>

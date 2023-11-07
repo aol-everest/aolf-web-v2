@@ -32,15 +32,13 @@ export const AttendanceForm = ({
   return (
     <Fragment>
       <div className="details mb-4 mt-5">
-        <h2 className="details__title">
-          CME/CNE Certificate of attendance form
-        </h2>
+        <h2 className="details__title">Additional Details</h2>
       </div>
-      <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+      {/* <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
         Please note, to claim CE credits, your name on the Healing Breaths’ SKY
         program registration should exactly match your name on your professional
         license for which you seek CE credits.
-      </p>
+      </p> */}
       <div className="order__card">
         <StyledInput
           className="mt-0"
@@ -105,7 +103,7 @@ export const AttendanceForm = ({
           formikKey="contactDegree"
           fullWidth
         ></StyledInput>
-        {!isCMSAddOn && (
+        {/* {!isCMSAddOn && (
           <>
             <div className="d-flex w-50 justify-content-start">
               <FieldWrapper
@@ -227,7 +225,7 @@ export const AttendanceForm = ({
               </FieldWrapper>
             </div>
           </>
-        )}
+        )} */}
       </div>
     </Fragment>
   );
