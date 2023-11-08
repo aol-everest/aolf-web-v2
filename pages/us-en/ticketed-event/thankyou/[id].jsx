@@ -34,7 +34,7 @@ const TicketCongratulations = () => {
   const [expanded, setExpanded] = useState(0);
   const [ticketData, setTicketData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [value] = useLocalStorage('ticket-events');
+  const [value, setValue] = useLocalStorage('ticket-events');
   const {
     selectedTickets,
     delfee,
@@ -51,6 +51,11 @@ const TicketCongratulations = () => {
       name: 'ticketed_event_thank_you',
       referral: 'ticketed_event_checkout',
     });
+  });
+
+  setValue({
+    ...value,
+    orderId: orderId,
   });
 
   const { data: workshop, isLoading } = useQuery(

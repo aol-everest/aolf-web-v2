@@ -1,29 +1,30 @@
 import { api } from '@utils';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import React from 'react';
 import { useQuery } from 'react-query';
+import { useLocalStorage } from 'react-use';
 
 export default function Tickets() {
-  const router = useRouter();
+  // const router = useRouter();
+  const [value] = useLocalStorage('ticket-events');
 
-  const { id: workshopId } = router.query;
-
-  const { data: attendees, isLoading } = useQuery(
+  const { data } = useQuery(
     'getTicketedEvent',
     async () => {
       const response = await api.get({
-        path: 'getTicketedEvent',
+        path: 'geticketedEventAttendees',
         param: {
-          id: workshopId,
+          orderId: value?.orderId,
         },
       });
       return response.data;
     },
     {
       refetchOnWindowFocus: false,
-      enabled: !!workshopId,
+      enabled: !!value?.orderId,
     },
   );
+  const { attendees } = data;
 
   console.log('attendees', attendees);
 
@@ -36,28 +37,25 @@ export default function Tickets() {
               <h2 class="section-title">Thank You!!</h2>
               <p>Attendee Information is accepted.</p>
               <div class="tickets-accepted">
-                <div class="ticket-box">
-                  <div class="ticket-header">
-                    <div class="ticket-title">TICKET HOLDER #1</div>
-                    <div class="ticket-type">Gold</div>
-                  </div>
-                  <div class="ticket-body">
-                    <div class="ticket-holder-name">Praveen Gupta</div>
-                    <div class="ticket-holder-email">gupta758@gmail.com</div>
-                    <div class="ticket-holder-mobile">6564645679</div>
-                  </div>
-                </div>
-                <div class="ticket-box">
-                  <div class="ticket-header">
-                    <div class="ticket-title">TICKET HOLDER #2</div>
-                    <div class="ticket-type">Platinum</div>
-                  </div>
-                  <div class="ticket-body">
-                    <div class="ticket-holder-name">Praveen Gupta</div>
-                    <div class="ticket-holder-email">gupta758@gmail.com</div>
-                    <div class="ticket-holder-mobile">6564645679</div>
-                  </div>
-                </div>
+                {attendees.map((item, index) => {
+                  return (
+                    <div class="ticket-box" key={item.attendeeRecordExternalId}>
+                      <div class="ticket-header">
+                        <div class="ticket-title">
+                          TICKET HOLDER #{index + 1}
+                        </div>
+                        <div class="ticket-type">{item.pricingTierName}</div>
+                      </div>
+                      <div class="ticket-body">
+                        <div class="ticket-holder-name">{item.name}</div>
+                        <div class="ticket-holder-email">{item.email}</div>
+                        <div class="ticket-holder-mobile">
+                          {item.contactPhone}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
