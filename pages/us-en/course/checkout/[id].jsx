@@ -201,9 +201,10 @@ const Checkout = () => {
       if (e) e.preventDefault();
       hideAlert();
       if (firstPreRequisiteFailedReason.actionButtonLink) {
-        pushRouteWithUTMQuery(router, {
-          pathname: firstPreRequisiteFailedReason.actionButtonLink,
-        });
+        pushRouteWithUTMQuery(
+          router,
+          firstPreRequisiteFailedReason.actionButtonLink,
+        );
       }
     };
 

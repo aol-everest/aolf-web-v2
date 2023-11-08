@@ -6,12 +6,16 @@ import { RegisterPanel } from './RegisterPanel';
 import { WORKSHOP_MODE } from '@constants';
 
 export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
-  const { title, mode, aosCountRequisite, preRequisite } = data || {};
+  const { title, aosCountRequisite, businessRules = [] } = data || {};
 
   const aosCount =
     aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
 
-  const preRequisiteCondition = preRequisite
+  const eligibilityCriteriaMessages = businessRules
+    .filter((item) => item.eligibilityCriteriaMessage)
+    .map((item) => item.eligibilityCriteriaMessage);
+
+  const preRequisiteCondition = eligibilityCriteriaMessages
     .join(', ')
     .replace(/,(?=[^,]+$)/, ' and')
     .replace('Silent Retreat', `${aosCount} Silent Retreat`);
@@ -294,8 +298,7 @@ export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
                         through you and around you.
                       </div>
                       <div className="elements-section__text">
-                        Eligibility: Completion of the {preRequisiteCondition}{' '}
-                        are required to enroll in The Blessings Course.
+                        Eligibility: {preRequisiteCondition}
                       </div>
                     </div>
                   </div>
