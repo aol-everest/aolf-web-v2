@@ -33,14 +33,12 @@ import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
-    <>
-      <p
-        className="course-join-card__text"
-        dangerouslySetInnerHTML={{
-          __html: firstPreRequisiteFailedReason.preRequisiteFailedReason,
-        }}
-      ></p>
-    </>
+    <p
+      className="course-join-card__text"
+      dangerouslySetInnerHTML={{
+        __html: firstPreRequisiteFailedReason.preRequisiteFailedReason,
+      }}
+    ></p>
   );
 };
 

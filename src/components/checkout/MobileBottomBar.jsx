@@ -23,20 +23,20 @@ export const MobileBottomBar = ({ workshop, toggleDetailMobileModal }) => {
                   {dayjs
                     .utc(eventStartDate)
                     .isSame(dayjs.utc(eventEndDate), 'month') && (
-                    <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
+                    <span className="tw-truncate tw-text-sm tw-tracking-tighter tw-text-white">{`${dayjs
                       .utc(eventStartDate)
                       .format('MMMM DD')}-${dayjs
                       .utc(eventEndDate)
-                      .format('DD, YYYY')}`}</li>
+                      .format('DD, YYYY')}`}</span>
                   )}
                   {!dayjs
                     .utc(eventStartDate)
                     .isSame(dayjs.utc(eventEndDate), 'month') && (
-                    <li className="tw-truncate tw-text-sm tw-tracking-tighter">{`${dayjs
+                    <span className="tw-truncate tw-text-sm tw-tracking-tighte tw-text-white">{`${dayjs
                       .utc(eventStartDate)
                       .format('MMMM DD')}-${dayjs
                       .utc(eventEndDate)
-                      .format('MMMM DD, YYYY')}`}</li>
+                      .format('MMMM DD, YYYY')}`}</span>
                   )}
                 </p>
               )}
