@@ -27,6 +27,7 @@ import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useQueryString } from '@hooks';
 import { useAnalytics } from 'use-analytics';
+import { useEffectOnce } from 'react-use';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -128,12 +129,7 @@ const Thankyou = () => {
       first_name: first_name,
       last_name: last_name,
     });
-    page({
-      category: 'course_registration',
-      name: 'course_referral_popup',
-      course_type: courseType,
-      referral: 'course_checkout',
-    });
+
     track(
       "'aol_purchase'",
       {
@@ -200,6 +196,16 @@ const Thankyou = () => {
     );
     setCookie(orderExternalId, 'DONE');
   }, [result]);
+
+  useEffectOnce(() => {
+    page({
+      category: 'course_registration',
+      name: 'course_registration_thank_you',
+      attendee_id: attendeeId,
+      course_type: courseType,
+      referral: 'course_search',
+    });
+  });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !attendeeId) return <PageLoading />;
@@ -315,9 +321,10 @@ const Thankyou = () => {
       },
     });
     track('click_button', {
-      screen_name: 'course_referral_popup',
+      screen_name: 'course_registration_thank_you',
       event_target: 'add_to_calendar_button',
       course_type: courseType,
+      attendee_id: attendeeId,
       referral: 'course_checkout',
     });
   };
@@ -449,18 +456,20 @@ const Thankyou = () => {
 
   const iosAppDownloadAction = () => {
     track('click_button', {
-      screen_name: 'course_referral_popup',
+      screen_name: 'course_registration_thank_you',
       event_target: 'ios_app_link',
       course_type: courseType,
+      attendee_id: attendeeId,
       referral: 'course_checkout',
     });
   };
 
   const androidAppDownloadAction = () => {
     track('click_button', {
-      screen_name: 'course_referral_popup',
+      screen_name: 'course_registration_thank_you',
       event_target: 'android_app_link',
       course_type: courseType,
+      attendee_id: attendeeId,
       referral: 'course_checkout',
     });
   };
