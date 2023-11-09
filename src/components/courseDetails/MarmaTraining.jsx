@@ -63,47 +63,47 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
     .replace('Silent Retreat', `${aosCount} Silent Retreat`);
 
   return (
-    <main class="marma-practitioner-training">
-      <section class="marma-top-section">
-        <div class="banner">
-          <div class="container">
+    <main className="marma-practitioner-training">
+      <section className="marma-top-section">
+        <div className="banner">
+          <div className="container">
             <p>{mode || 'In-Person'}</p>
-            <div class="banner-title">{title}</div>
-            <div class="banner-features">
+            <div className="banner-title">{title}</div>
+            <div className="banner-features">
               <ul>
                 <li>Expand your skill set with a healing modality for life</li>
                 <li>Rebalance your built-in energy network</li>
                 <li>Feel deeply relaxed, energized, and inspired</li>
               </ul>
             </div>
-            <div class="registration-wrap">
-              <button class="register-button mt-4" onClick={handleRegister}>
+            <div className="registration-wrap">
+              <button className="register-button mt-4" onClick={handleRegister}>
                 Register Now
               </button>
             </div>
             {preRequisiteCondition && (
-              <div class="training-eligibility-text">
+              <div className="training-eligibility-text">
                 Eligibility: {preRequisiteCondition}
               </div>
             )}
           </div>
         </div>
 
-        <div class="container marma-training-section pt-5">
+        <div className="container marma-training-section pt-5">
           {sfid && (
             <PriceCard workshop={data} courseViewMode={courseViewMode} />
           )}
         </div>
-        <div class="container marma-training-section pb-lg-5">
-          <div class="row">
-            <div class="col-lg-7">
-              <div class="marma-heal-box">
+        <div className="container marma-training-section pb-lg-5">
+          <div className="row">
+            <div className="col-lg-7">
+              <div className="marma-heal-box">
                 Learn how to heal yourself and others through Marma, the most
                 restorative Ayurvedic treatment.
               </div>
             </div>
-            <div class="col-lg-5">
-              <div class="marma-heal-content">
+            <div className="col-lg-5">
+              <div className="marma-heal-content">
                 <p>
                   When the energy flow in the body is sluggish, dull, or
                   blocked, we feel it—and contemporary life increasingly
@@ -122,7 +122,7 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
                   Ayurveda. You'll emerge as a confident and empowered
                   practitioner.
                 </p>
-                <p class="mt-5">
+                <p className="mt-5">
                   <em>
                     Marma Therapy is known to be beneficial for a range of
                     conditions from insomnia, chronic stress, and anxiety to
@@ -133,12 +133,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </div>
-        <div class="container marma-training-section pt-lg-5  pb-lg-5">
-          <div class=" row">
-            <div class="col-md-7">
-              <div class="marma-therapy-content">
+        <div className="container marma-training-section pt-lg-5  pb-lg-5">
+          <div className=" row">
+            <div className="col-md-7">
+              <div className="marma-therapy-content">
                 <p>Learn more</p>
-                <h2 class="section-title">What is Marma Therapy?</h2>
+                <h2 className="section-title">What is Marma Therapy?</h2>
                 <p>
                   Marma Therapy is an Ayurvedic treatment known to be one of the
                   most direct and deeply relaxing ways of harmonizing an
@@ -172,16 +172,16 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
                 </p>
               </div>
             </div>
-            <div class="col-md-5">
-              <div class="marma-therapy-image">
+            <div className="col-md-5">
+              <div className="marma-therapy-image">
                 <img src="/img/marma-therapy-main-img.jpeg" alt="marma" />
               </div>
             </div>
           </div>
         </div>
-        <div class="marma-benefit-section pt-lg-5  pb-lg-5">
-          <div class="container marma-training-section pb-lg-5">
-            <h2 class="section-title">Benefits of Marma Therapy</h2>
+        <div className="marma-benefit-section pt-lg-5  pb-lg-5">
+          <div className="container marma-training-section pb-lg-5">
+            <h2 className="section-title">Benefits of Marma Therapy</h2>
             <p>
               The practice of Marma benefits the body, mind, and spirit. On the
               bodily level, it brings about hydration, nourishment, hormonal
@@ -198,121 +198,125 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             </p>
           </div>
         </div>
-        <div class="participant-experience-section">
-          <div class="container marma-training-section">
-            <h2 class="section-title">Participant Experiences</h2>
-            <div class="participant-list">
-              <div class="participant-item">
-                <div class="participant-picture">
+        <div className="participant-experience-section">
+          <div className="container marma-training-section">
+            <h2 className="section-title">Participant Experiences</h2>
+            <div className="participant-list">
+              <div className="participant-item">
+                <div className="participant-picture">
                   <img src="/img/marma-particpant1.png" alt="Jennifer" />
                 </div>
-                <div class="participant-name">Jennifer S.</div>
-                <div class="participant-position">Director, Washington DC</div>
-                <div class="participant-rating">
+                <div className="participant-name">Jennifer S.</div>
+                <div className="participant-position">
+                  Director, Washington DC
+                </div>
+                <div className="participant-rating">
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                 </div>
-                <div class="participant-message">
+                <div className="participant-message">
                   The Marma training is such a beautiful course. You get to
                   learn and soak in the subtleties of prana, of life. While
                   giving and receiving the Marma treatments, so much healing and
                   deep rest happens.
                 </div>
               </div>
-              <div class="participant-item">
-                <div class="participant-picture">
+              <div className="participant-item">
+                <div className="participant-picture">
                   <img src="/img/marma-particpant1.png" alt="Jennifer" />
                 </div>
-                <div class="participant-name">Asha V.</div>
-                <div class="participant-position">MD, Clarksville</div>
-                <div class="participant-rating">
+                <div className="participant-name">Asha V.</div>
+                <div className="participant-position">MD, Clarksville</div>
+                <div className="participant-rating">
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                 </div>
-                <div class="participant-message">
+                <div className="participant-message">
                   One of the most comprehensive, in-depth courses I have ever
                   attended. Outstanding teachers that make you feel welcome and
                   comfortable.
                 </div>
               </div>
-              <div class="participant-item">
-                <div class="participant-picture">
+              <div className="participant-item">
+                <div className="participant-picture">
                   <img src="/img/marma-particpant1.png" alt="Jennifer" />
                 </div>
-                <div class="participant-name">Vanitha T.</div>
-                <div class="participant-position">Scientist, San Jose</div>
-                <div class="participant-rating">
+                <div className="participant-name">Vanitha T.</div>
+                <div className="participant-position">Scientist, San Jose</div>
+                <div className="participant-rating">
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                 </div>
-                <div class="participant-message">
+                <div className="participant-message">
                   Giving Marma is a very rewarding experience. My children love
                   it. This weekend my son complained of a headache. After the
                   Marma treatment, his headache was gone.
                 </div>
               </div>
-              <div class="participant-item">
-                <div class="participant-picture">
+              <div className="participant-item">
+                <div className="participant-picture">
                   <img src="/img/marma-particpant1.png" alt="Jennifer" />
                 </div>
-                <div class="participant-name">Sushma M.</div>
-                <div class="participant-position">Physician, Cary</div>
-                <div class="participant-rating">
+                <div className="participant-name">Sushma M.</div>
+                <div className="participant-position">Physician, Cary</div>
+                <div className="participant-rating">
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                 </div>
-                <div class="participant-message">
+                <div className="participant-message">
                   Playing the role of an internal medicine trained physician and
                   having been in the role of a patient myself, I have been in
                   pursuit of holistic healing methods that would help me to take
                   care of myself.
                 </div>
               </div>
-              <div class="participant-item">
-                <div class="participant-picture">
+              <div className="participant-item">
+                <div className="participant-picture">
                   <img src="/img/marma-particpant1.png" alt="Jennifer" />
                 </div>
-                <div class="participant-name">Pramoda B.</div>
-                <div class="participant-position">Coach, Washington DC</div>
-                <div class="participant-rating">
+                <div className="participant-name">Pramoda B.</div>
+                <div className="participant-position">Coach, Washington DC</div>
+                <div className="participant-rating">
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                 </div>
-                <div class="participant-message">
+                <div className="participant-message">
                   Learning and applying Marma made me feel alive and in tune
                   with nature and people. I felt happy and energetic after each
                   learning session in the course.
                 </div>
               </div>
-              <div class="participant-item">
-                <div class="participant-picture">
+              <div className="participant-item">
+                <div className="participant-picture">
                   <img src="/img/marma-particpant1.png" alt="Jennifer" />
                 </div>
-                <div class="participant-name">Kamala H.</div>
-                <div class="participant-position">Engineer, Santa Clara</div>
-                <div class="participant-rating">
+                <div className="participant-name">Kamala H.</div>
+                <div className="participant-position">
+                  Engineer, Santa Clara
+                </div>
+                <div className="participant-rating">
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                   <span></span>
                 </div>
-                <div class="participant-message">
+                <div className="participant-message">
                   The course is packed with deep knowledge and progresses very
                   methodically and scientifically.
                 </div>
@@ -320,37 +324,37 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </div>
-        <div class="what-expect-section pt-lg-5  pb-lg-5">
-          <div class="container marma-training-section pb-lg-5">
-            <h2 class="section-title">What to expect</h2>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="marma-expect-item">
-                  <div class="marma-expect-icon">
+        <div className="what-expect-section pt-lg-5  pb-lg-5">
+          <div className="container marma-training-section pb-lg-5">
+            <h2 className="section-title">What to expect</h2>
+            <div className="row">
+              <div className="col-md-4">
+                <div className="marma-expect-item">
+                  <div className="marma-expect-icon">
                     <img src="/img/marma-expect-icon1.png" alt="marma" />
                   </div>
-                  <div class="marma-expect-text">
+                  <div className="marma-expect-text">
                     4.5-day in-person course guided by a certified trainer
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="marma-expect-item">
-                  <div class="marma-expect-icon">
+              <div className="col-md-4">
+                <div className="marma-expect-item">
+                  <div className="marma-expect-icon">
                     <img src="/img/marma-expect-icon2.png" alt="marma" />
                   </div>
-                  <div class="marma-expect-text">
+                  <div className="marma-expect-text">
                     Learn how to identify imbalances & restore vitality through
                     Marma
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="marma-expect-item">
-                  <div class="marma-expect-icon">
+              <div className="col-md-4">
+                <div className="marma-expect-item">
+                  <div className="marma-expect-icon">
                     <img src="/img/marma-expect-icon3.png" alt="marma" />
                   </div>
-                  <div class="marma-expect-text">
+                  <div className="marma-expect-text">
                     Benefit from a fully integrated practical & holistic
                     training
                   </div>
@@ -360,20 +364,20 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
           </div>
         </div>
       </section>
-      <section class="marma-energy-treatment pt-lg-5">
-        <div class="container marma-training-section pb-lg-5 pt-lg-5">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="energy-treatment-image">
+      <section className="marma-energy-treatment pt-lg-5">
+        <div className="container marma-training-section pb-lg-5 pt-lg-5">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="energy-treatment-image">
                 <img
                   src="/img/marma-replenshing-energy-treatement.jpeg"
                   alt="energy treatment"
                 />
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="energy-treatment-text pt-lg-5">
-                <h2 class="section-title">
+            <div className="col-md-6">
+              <div className="energy-treatment-text pt-lg-5">
+                <h2 className="section-title">
                   Gain practical, holistic skills for life
                 </h2>
                 <p>
@@ -388,20 +392,20 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
           </div>
         </div>
       </section>
-      <section class="marma-syllabus pt-lg-5">
-        <div class="container marma-training-section pb-lg-5 pt-lg-5">
-          <h2 class="section-title">Syllabus</h2>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="syllabus-item">
+      <section className="marma-syllabus pt-lg-5">
+        <div className="container marma-training-section pb-lg-5 pt-lg-5">
+          <h2 className="section-title">Syllabus</h2>
+          <div className="row">
+            <div className="col-md-6">
+              <div className="syllabus-item">
                 <strong>• Training in 28 Major Marma Points</strong>
                 <br />
                 Emerge as a confident practitioner with a thorough understanding
                 of Marma points, locations, &amp; technique.
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="syllabus-item">
+            <div className="col-md-6">
+              <div className="syllabus-item">
                 <strong>
                   • Theory of Marma Therapy
                   <br />
@@ -410,32 +414,32 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
                 including practical demos for a complete learning experience.
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="syllabus-item">
+            <div className="col-md-6">
+              <div className="syllabus-item">
                 <strong>• Training in Marma Polarity</strong>
                 <br />
                 Discover how to balance energy flows in the body through the
                 five elements approach to mind-body healing.
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="syllabus-item">
+            <div className="col-md-6">
+              <div className="syllabus-item">
                 <strong>• Practice Sessions</strong>
                 <br />
                 To integrate the training, you’ll have opportunities to practice
                 the full Marma Therapy routine & perfect your technique.
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="syllabus-item">
+            <div className="col-md-6">
+              <div className="syllabus-item">
                 <strong>• Basic Principles of Ayurved</strong>
                 <br />
                 Learn the foundations of the healthcare system of Ayurveda,
                 including diet & nutrition, lifestyle, & self-care.
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="syllabus-item">
+            <div className="col-md-6">
+              <div className="syllabus-item">
                 <strong>
                   • Daily Yoga, Meditation, Breathwork &amp; Community Satsang
                 </strong>
@@ -445,23 +449,23 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               </div>
             </div>
           </div>
-          <div class="note">
+          <div className="note">
             Participants often describe Sri Sri Marma Practitioner Training as
             deeply meditative and restorative. It is a training that reflects
             the essence of Marma—and the experience of both a recipient and
             practitioner of Marma Therapy.
           </div>
           {preRequisiteCondition && (
-            <div class="eligibility-info">
+            <div className="eligibility-info">
               <strong>Eligibility:</strong> {preRequisiteCondition}
             </div>
           )}
         </div>
       </section>
-      {/* <section class="marma-practitioner-section pt-lg-5 pb-lg-5">
-        <div class="container marma-training-section pt-lg-5 pb-lg-5">
-          <div class="learn-how-text">Learn how to perform Marma Therapy</div>
-          <h2 class="section-title">Sri Sri Marma Practitioner Training</h2>
+      {/* <section className="marma-practitioner-section pt-lg-5 pb-lg-5">
+        <div className="container marma-training-section pt-lg-5 pb-lg-5">
+          <div className="learn-how-text">Learn how to perform Marma Therapy</div>
+          <h2 className="section-title">Sri Sri Marma Practitioner Training</h2>
           <p>
             Course Fees Including meals:
             <br />
@@ -470,49 +474,51 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             <strong>$595</strong> (Repeater)
             <br />+ Accommodation fees
           </p>
-          <button class="view-upcoming-button mt-4">View Upcoming Dates</button>
+          <button className="view-upcoming-button mt-4">View Upcoming Dates</button>
         </div>
       </section> */}
-      <div class="about-art-of-living--section pt-lg-5  pb-lg-5">
-        <div class="container marma-training-section pb-lg-2">
-          <h2 class="section-title">About the Art of Living</h2>
-          <div class="row">
-            <div class="col-md-3">
-              <div class="marma-about-aol-item">
-                <div class="marma-about-aol-icon">
+      <div className="about-art-of-living--section pt-lg-5  pb-lg-5">
+        <div className="container marma-training-section pb-lg-2">
+          <h2 className="section-title">About the Art of Living</h2>
+          <div className="row">
+            <div className="col-md-3">
+              <div className="marma-about-aol-item">
+                <div className="marma-about-aol-icon">
                   <img src="/img/marma-about-aol-icon1.png" alt="about aol" />
                 </div>
-                <div class="marma-about-aol-title">42 years</div>
-                <div class="marma-about-aol-text">of service to society</div>
+                <div className="marma-about-aol-title">42 years</div>
+                <div className="marma-about-aol-text">
+                  of service to society
+                </div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="marma-about-aol-item">
-                <div class="marma-about-aol-icon">
+            <div className="col-md-3">
+              <div className="marma-about-aol-item">
+                <div className="marma-about-aol-icon">
                   <img src="/img/marma-about-aol-icon2.png" alt="about aol" />
                 </div>
-                <div class="marma-about-aol-title">3,000+ centers</div>
-                <div class="marma-about-aol-text">worldwide</div>
+                <div className="marma-about-aol-title">3,000+ centers</div>
+                <div className="marma-about-aol-text">worldwide</div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="marma-about-aol-item">
-                <div class="marma-about-aol-icon">
+            <div className="col-md-3">
+              <div className="marma-about-aol-item">
+                <div className="marma-about-aol-icon">
                   <img src="/img/marma-about-aol-icon3.png" alt="about aol" />
                 </div>
-                <div class="marma-about-aol-title">800M+ lives</div>
-                <div class="marma-about-aol-text">
+                <div className="marma-about-aol-title">800M+ lives</div>
+                <div className="marma-about-aol-text">
                   touched through our courses & events
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="marma-about-aol-item">
-                <div class="marma-about-aol-icon">
+            <div className="col-md-3">
+              <div className="marma-about-aol-item">
+                <div className="marma-about-aol-icon">
                   <img src="/img/marma-about-aol-icon4.png" alt="about aol" />
                 </div>
-                <div class="marma-about-aol-title">180 countries</div>
-                <div class="marma-about-aol-text">
+                <div className="marma-about-aol-title">180 countries</div>
+                <div className="marma-about-aol-text">
                   where our programs made a difference
                 </div>
               </div>

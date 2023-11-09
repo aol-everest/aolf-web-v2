@@ -514,8 +514,8 @@ const SchedulingRange = () => {
           <div className="container calendar-course-type">
             <div className="calendar-benefits-wrapper row">
               <div className="col-12 col-lg-6 paddingRight">
-                <h2 class="section-title">
-                  <div class="calendar_img">
+                <h2 className="section-title">
+                  <div className="calendar_img">
                     <img src="/img/calendar.svg" />
                   </div>
                   Choose your Course Type
