@@ -420,7 +420,7 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
         </div>
         {(earlyBirdFeeIncreasing ||
           (preRequisiteCondition && preRequisiteCondition.length > 0)) && (
-          <div class="early-bird-banner">
+          <div className="early-bird-banner">
             {earlyBirdFeeIncreasing && (
               <p>
                 <FaRegClock className="fa" /> <strong>Register now</strong> to

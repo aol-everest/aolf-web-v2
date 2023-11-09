@@ -173,6 +173,10 @@ export const COURSE_TYPES = {
     name: 'Sri Sri Yoga Deep Dive',
     value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_DEEP_DIVE_CTYPE || '',
   },
+  MARMA_TRAINING: {
+    name: 'Marma Training',
+    value: process.env.NEXT_PUBLIC_MARMA_PRACTITIONER_CTYPE || '',
+  },
 };
 
 export const WORKSHOP_MODE = {

@@ -67,7 +67,8 @@ export const WorkshopTile = ({ data, authenticated }) => {
     COURSE_TYPES.SANYAM_COURSE.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.ART_OF_LIVING_PREMIUM_PROGRAM.value.indexOf(productTypeId) >=
-      0;
+      0 ||
+    COURSE_TYPES.MARMA_TRAINING.value.indexOf(productTypeId) >= 0;
 
   const coTeacherNames = [coTeacher1Name, coTeacher2Name];
   let extraTeachers = 0;
