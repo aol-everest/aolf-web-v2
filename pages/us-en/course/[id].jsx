@@ -57,7 +57,9 @@ const SanyamCourse = dynamic(() =>
 const SriSriYogaDeepDive = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.SriSriYogaDeepDive),
 );
-
+const MarmaTraining = dynamic(() =>
+  import('@components/courseDetails').then((mod) => mod.MarmaTraining),
+);
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
@@ -150,7 +152,8 @@ function CourseDetail() {
       !isSKYCampusHappinessRetreat &&
       !isSanyamCourse &&
       !isSKYWithSahaj &&
-      !isSriSriYogaDeepDiveType
+      !isSriSriYogaDeepDiveType &&
+      !isMarmaTraining
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -243,6 +246,8 @@ function CourseDetail() {
     ) >= 0;
   const isSriSriYogaDeepDiveType =
     COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.value.indexOf(data.productTypeId) >= 0;
+  const isMarmaTraining =
+    COURSE_TYPES.MARMA_TRAINING.value.indexOf(data.productTypeId) >= 0;
 
   const props = {
     data,
@@ -259,6 +264,9 @@ function CourseDetail() {
     }
     if (isSriSriYogaDeepDiveType) {
       return <SriSriYogaDeepDive {...props} />;
+    }
+    if (isMarmaTraining) {
+      return <MarmaTraining {...props} />;
     }
     if (isSKYType) {
       return <SKYBreathMeditation {...props} />;
