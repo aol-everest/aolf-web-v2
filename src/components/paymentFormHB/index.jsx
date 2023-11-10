@@ -401,10 +401,12 @@ export const PaymentFormHB = ({
       accommodation,
       contactTitle,
       contactHealthcareOrganisation,
+      contactOtherHealthcareOrganization,
       contactDegree,
       claimingType,
       certificateOfAttendance,
       contactClaimingTypeOther,
+      email,
     } = values;
 
     if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
@@ -507,6 +509,7 @@ export const PaymentFormHB = ({
           attendee: {
             contactTitle,
             contactHealthcareOrganisation,
+            contactOtherHealthcareOrganization,
             contactDegree,
             claimingType,
             certificateOfAttendance,
@@ -515,6 +518,17 @@ export const PaymentFormHB = ({
         },
         utm: filterAllowedParams(router.query),
       };
+
+      if (!isLoggedUser) {
+        payLoad = {
+          ...payLoad,
+          user: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+          },
+        };
+      }
 
       if (isChangingCard) {
         payLoad = {
@@ -613,6 +627,10 @@ export const PaymentFormHB = ({
       };
     },
     {},
+  );
+
+  const isCMSAddOn = !!addOnProducts.find(
+    ({ isCMEAddOn }) => isCMEAddOn === true,
   );
 
   const { fee, delfee, offering } = priceCalculation({
@@ -776,6 +794,7 @@ export const PaymentFormHB = ({
           priceType: 'regular',
           contactTitle: '',
           contactHealthcareOrganisation: '',
+          contactOtherHealthcareOrganization: '',
           contactDegree: '',
           claimingType: '',
           certificateOfAttendance: '',
@@ -814,15 +833,29 @@ export const PaymentFormHB = ({
           contactHealthcareOrganisation: Yup.string().required(
             'Healthcare Organization is required',
           ),
+          contactOtherHealthcareOrganization: Yup.string()
+            .ensure()
+            .when('contactHealthcareOrganisation', {
+              is: 'other',
+              then: Yup.string().required(
+                'Other Healthcare Organization is required',
+              ),
+            }),
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),
-          claimingType: Yup.string().required('CE Claiming type is required'),
-          certificateOfAttendance: Yup.string().required(
-            'I would like to get the following is required',
-          ),
-          contactClaimingTypeOther: Yup.string().when('claimingType', {
-            is: 'Other',
+          claimingType: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required('CE Claiming type is required'),
+          }),
+          certificateOfAttendance: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required(
+              'I would like to get the following is required',
+            ),
+          }),
+          contactClaimingTypeOther: Yup.string().when(['CME', 'claimingType'], {
+            is: (cme, claimingType) => claimingType === 'Other' && cme === true,
             then: Yup.string().required('Other is required'),
           }),
         })}
@@ -831,6 +864,7 @@ export const PaymentFormHB = ({
         }}
       >
         {(formikProps) => {
+          // console.log(formikProps.errors);
           const { values, handleSubmit } = formikProps;
 
           const addOnFee = addOnProducts.reduce(
@@ -907,15 +941,33 @@ export const PaymentFormHB = ({
                 <form className="order__form" onSubmit={handleSubmit}>
                   <div className="details">
                     <h2 className="details__title">Account Details:</h2>
-                    <p className="details__content">
-                      This is not your account?{' '}
-                      <a href="#" className="link" onClick={logout}>
-                        Logout
-                      </a>
-                    </p>
+                    {isLoggedUser && (
+                      <p className="details__content">
+                        This is not your account?{' '}
+                        <a href="#" className="link" onClick={logout}>
+                          Logout
+                        </a>
+                      </p>
+                    )}
+                    {!isLoggedUser && (
+                      <p className="details__content">
+                        Already have an Account?{' '}
+                        <a href="#" className="link" onClick={login}>
+                          Login
+                        </a>
+                      </p>
+                    )}
                   </div>
+                  <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+                    If claiming CME / CE credits, your name in the program
+                    registration should exactly match your name.
+                  </p>
                   <div className="order__card">
-                    <UserInfoForm formikProps={formikProps} isHBCheckout />
+                    <UserInfoForm
+                      formikProps={formikProps}
+                      isHBCheckout
+                      isLoggedUser={isLoggedUser}
+                    />
                   </div>
                   <div className="details mt-5">
                     <h2 className="details__title">Billing Details:</h2>
@@ -1087,6 +1139,7 @@ export const PaymentFormHB = ({
                   <AttendanceForm
                     formikProps={formikProps}
                     corporates={corporates}
+                    isCMSAddOn={isCMSAddOn}
                   />
                   <AgreementForm
                     formikProps={formikProps}

@@ -9,3 +9,5 @@ export { SilentRetreat } from './SilentRetreat';
 export { SriSriYoga } from './SriSriYoga';
 export { VolunteerTrainingProgram } from './VolunteerTrainingProgram';
 export { SKYWithSahaj } from './SKYWithSahaj';
+export { SriSriYogaDeepDive } from './SriSriYogaDeepDive';
+export { MarmaTraining } from './MarmaTraining';

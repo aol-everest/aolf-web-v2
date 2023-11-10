@@ -3,14 +3,19 @@ import { HideOn } from '@components';
 import { Element, Link } from 'react-scroll';
 import { CourseBottomCard } from './CourseBottomCard';
 import { RegisterPanel } from './RegisterPanel';
+import { WORKSHOP_MODE } from '@constants';
 
-export const BlessingsCourse = ({ data }) => {
-  const { title, mode, aosCountRequisite, preRequisite } = data || {};
+export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
+  const { title, aosCountRequisite, businessRules = [] } = data || {};
 
   const aosCount =
     aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
 
-  const preRequisiteCondition = preRequisite
+  const eligibilityCriteriaMessages = businessRules
+    .filter((item) => item.eligibilityCriteriaMessage)
+    .map((item) => item.eligibilityCriteriaMessage);
+
+  const preRequisiteCondition = eligibilityCriteriaMessages
     .join(', ')
     .replace(/,(?=[^,]+$)/, ' and')
     .replace('Silent Retreat', `${aosCount} Silent Retreat`);
@@ -47,17 +52,19 @@ export const BlessingsCourse = ({ data }) => {
                     </li>
                     <li>Become a channel for positive, healing energy</li>
                   </ul>
-                  <Link
-                    activeClassName="active"
-                    className="btn_box_secondary about-course-button"
-                    to="registerNowBlock"
-                    spy={true}
-                    smooth={true}
-                    duration={500}
-                    offset={-100}
-                  >
-                    Register Now
-                  </Link>
+                  {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                    <Link
+                      activeClassName="active"
+                      className="btn_box_secondary about-course-button"
+                      to="registerNowBlock"
+                      spy={true}
+                      smooth={true}
+                      duration={500}
+                      offset={-100}
+                    >
+                      Register Now
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -291,8 +298,7 @@ export const BlessingsCourse = ({ data }) => {
                         through you and around you.
                       </div>
                       <div className="elements-section__text">
-                        Eligibility: Completion of the {preRequisiteCondition}{' '}
-                        are required to enroll in The Blessings Course.
+                        Eligibility: {preRequisiteCondition}
                       </div>
                     </div>
                   </div>
@@ -374,7 +380,7 @@ export const BlessingsCourse = ({ data }) => {
         </section>
       </main>
       <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
+        <CourseBottomCard workshop={data} courseViewMode={courseViewMode} />
       </HideOn>
     </>
   );

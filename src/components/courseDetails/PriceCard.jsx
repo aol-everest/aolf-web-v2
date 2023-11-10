@@ -1,9 +1,15 @@
 import { useState } from 'react';
-import { COURSE_TYPES, COURSE_MODES, MODAL_TYPES, ABBRS } from '@constants';
+import {
+  COURSE_TYPES,
+  COURSE_MODES,
+  MODAL_TYPES,
+  ABBRS,
+  WORKSHOP_MODE,
+} from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { LinkedCalendar } from '@components/dateRangePicker';
-import { isEmpty, priceCalculation, tConvert } from '@utils';
+import { priceCalculation, tConvert } from '@utils';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -49,23 +55,19 @@ const datePickerConfig = {
   autoApply: true,
 };
 
-export const PriceCard = ({ workshop }) => {
+export const PriceCard = ({ workshop, courseViewMode }) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
-  const { authenticated = false, user } = useAuth();
+  const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
   const { fee, delfee } = priceCalculation({ workshop });
 
   const {
-    title,
     sfid,
     mode,
-    premiumRate,
     earlyBirdFeeIncreasing,
-    roomAndBoardRange,
-    usableCredit,
     productTypeId,
     eventStartDate,
     isGuestCheckoutEnabled = false,
@@ -78,39 +80,28 @@ export const PriceCard = ({ workshop }) => {
     phone1,
     description,
     notes,
-    preRequisite,
     aosCountRequisite,
+    businessRules = [],
   } = workshop || {};
 
   const aosCount =
     aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
 
-  const preRequisiteCondition = preRequisite
+  const eligibilityCriteriaMessages = businessRules
+    .filter((item) => item.eligibilityCriteriaMessage)
+    .map((item) => item.eligibilityCriteriaMessage);
+
+  const preRequisiteCondition = eligibilityCriteriaMessages
     .join(', ')
     .replace(/,(?=[^,]+$)/, ' and')
     .replace('Silent Retreat', `${aosCount} Silent Retreat`);
 
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
-    0;
   const isSilentRetreatType =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
       workshop.productTypeId,
     ) >= 0;
-  const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const isSKYCampusHappinessRetreat =
-    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const isSanyamCourse =
-    COURSE_TYPES.SANYAM_COURSE.value.indexOf(workshop.productTypeId) >= 0;
-  const isBlessingsCourse =
-    COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(workshop.productTypeId) >= 0;
 
   const isSearchDatesDisabled = !filterStartDate;
 
@@ -304,10 +295,13 @@ export const PriceCard = ({ workshop }) => {
 
         <div className=" row register-content no_border">
           <div className="col-md-4">
-            <button className="register-button" onClick={handleRegister}>
-              Register Now <FaArrowRightLong />
-            </button>
+            {courseViewMode !== WORKSHOP_MODE.VIEW && (
+              <button className="register-button" onClick={handleRegister}>
+                Register Now <FaArrowRightLong />
+              </button>
+            )}
           </div>
+
           <div className="col-md-8">
             <div className="select-date-timezone">
               <span className="title">Looking for another date?</span>
@@ -426,7 +420,7 @@ export const PriceCard = ({ workshop }) => {
         </div>
         {(earlyBirdFeeIncreasing ||
           (preRequisiteCondition && preRequisiteCondition.length > 0)) && (
-          <div class="early-bird-banner">
+          <div className="early-bird-banner">
             {earlyBirdFeeIncreasing && (
               <p>
                 <FaRegClock className="fa" /> <strong>Register now</strong> to
@@ -441,7 +435,7 @@ export const PriceCard = ({ workshop }) => {
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p>
                 <FaRegIdCard className="fa" /> <strong>Eligibility:</strong>{' '}
-                Completion of {preRequisiteCondition}
+                {preRequisiteCondition}
               </p>
             )}
           </div>

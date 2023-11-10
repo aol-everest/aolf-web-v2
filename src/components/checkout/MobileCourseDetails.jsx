@@ -86,7 +86,7 @@ const CourseFeeRender = ({
   }
   return (
     <>
-      {delfee && !isComboDetailAvailable && (
+      {delfee && (
         <>
           <h2 className="new-price">Limited Time Offer: ${fee}</h2>
           <h3 className="common-price">

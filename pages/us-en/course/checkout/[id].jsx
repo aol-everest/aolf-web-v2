@@ -31,38 +31,14 @@ import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
-const RetreatPrerequisiteWarning = ({
-  firstPreRequisiteFailedReason,
-  title,
-}) => {
+const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
-    <>
-      <p className="course-join-card__text">
-        Our records indicate that you have not yet taken the prerequisite for
-        the {title}, which is{' '}
-        <strong>
-          {firstPreRequisiteFailedReason &&
-          firstPreRequisiteFailedReason.totalCount <
-            firstPreRequisiteFailedReason.requiredCount &&
-          firstPreRequisiteFailedReason.requiredCount > 1
-            ? firstPreRequisiteFailedReason.requiredCount
-            : ''}{' '}
-          {firstPreRequisiteFailedReason && firstPreRequisiteFailedReason.type}
-        </strong>
-        .
-      </p>
-      <p className="course-join-card__text">
-        If our records are not accurate, please contact customer service at{' '}
-        <a href={`tel:${orgConfig.contactNumberLink}`}>
-          {orgConfig.contactNumber}
-        </a>{' '}
-        or email us at{' '}
-        <a href="mailto:app.support@us.artofliving.org">
-          app.support@us.artofliving.org
-        </a>
-        . We will be happy to help you so you can sign up for the {title}.
-      </p>
-    </>
+    <p
+      className="course-join-card__text"
+      dangerouslySetInnerHTML={{
+        __html: firstPreRequisiteFailedReason.preRequisiteFailedReason,
+      }}
+    ></p>
   );
 };
 
@@ -135,13 +111,15 @@ const Checkout = () => {
       productTypeId,
       unitPrice,
       id: courseId,
-      preRequisiteFailedReason = [],
       isPreRequisiteCompleted,
+      businessRules = [],
       earlyBirdFeeIncreasing,
     } = workshop;
     setShowTopMessage(!!earlyBirdFeeIncreasing);
 
-    const [firstPreRequisiteFailedReason] = preRequisiteFailedReason;
+    const firstPreRequisiteFailedReason = businessRules.find(
+      (rule) => !rule.isPreRequisiteCompleted,
+    );
 
     const products = [
       {
@@ -188,43 +166,45 @@ const Checkout = () => {
       },
     });
 
-    if (isPreRequisiteCompleted === false) {
+    if (isPreRequisiteCompleted === false && firstPreRequisiteFailedReason) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: 'retreat-prerequisite-big',
-        title: 'Retreat Prerequisite',
-        closeModalAction: closeRetreatPrerequisiteWarning,
+        title: 'Prerequisite',
+        closeModalAction: closeRetreatPrerequisiteWarning(
+          firstPreRequisiteFailedReason,
+        ),
         footer: () => {
           return (
             <button
               className="btn-secondary"
-              onClick={closeRetreatPrerequisiteWarning}
+              onClick={closeRetreatPrerequisiteWarning(
+                firstPreRequisiteFailedReason,
+              )}
             >
-              Discover{' '}
-              {firstPreRequisiteFailedReason &&
-                firstPreRequisiteFailedReason.type}
+              {firstPreRequisiteFailedReason.actionButtonText}
             </button>
           );
         },
         children: (
           <RetreatPrerequisiteWarning
             firstPreRequisiteFailedReason={firstPreRequisiteFailedReason}
-            title={workshop.title}
           />
         ),
       });
     }
   }, [user, workshop]);
 
-  const closeRetreatPrerequisiteWarning = (e) => {
-    if (e) e.preventDefault();
-    hideAlert();
-    pushRouteWithUTMQuery(router, {
-      pathname: '/us-en/course',
-      query: {
-        courseType: 'SKY_BREATH_MEDITATION',
-      },
-    });
-  };
+  const closeRetreatPrerequisiteWarning =
+    (firstPreRequisiteFailedReason) => (e) => {
+      if (e) e.preventDefault();
+      hideAlert();
+      if (firstPreRequisiteFailedReason.actionButtonLink) {
+        pushRouteWithUTMQuery(
+          router,
+          firstPreRequisiteFailedReason.actionButtonLink,
+        );
+      }
+    };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     replaceRouteWithUTMQuery(router, {

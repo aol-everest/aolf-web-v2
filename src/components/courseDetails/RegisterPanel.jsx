@@ -25,7 +25,7 @@ export const RegisterPanel = ({ workshop }) => {
     usableCredit,
     productTypeId,
     studentPriceBook,
-    preRequisite,
+    businessRules = [],
     earlyBirdPriceBook,
     repeaterPriceBook,
     standardPriceBook,
@@ -36,8 +36,7 @@ export const RegisterPanel = ({ workshop }) => {
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
     0;
-  const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
+
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
       workshop.productTypeId,
@@ -121,7 +120,11 @@ export const RegisterPanel = ({ workshop }) => {
   const aosCount =
     aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
 
-  const preRequisiteCondition = preRequisite
+  const eligibilityCriteriaMessages = businessRules
+    .filter((item) => item.eligibilityCriteriaMessage)
+    .map((item) => item.eligibilityCriteriaMessage);
+
+  const preRequisiteCondition = eligibilityCriteriaMessages
     .join(', ')
     .replace(/,(?=[^,]+$)/, ' and')
     .replace('Silent Retreat', `${aosCount} Silent Retreat`);
@@ -154,7 +157,7 @@ export const RegisterPanel = ({ workshop }) => {
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -192,7 +195,7 @@ export const RegisterPanel = ({ workshop }) => {
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -261,7 +264,7 @@ export const RegisterPanel = ({ workshop }) => {
           <div className="!tw-ml-0 tw-flex tw-flex-col tw-justify-start">
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -356,7 +359,7 @@ export const RegisterPanel = ({ workshop }) => {
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -425,7 +428,7 @@ export const RegisterPanel = ({ workshop }) => {
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-                Eligibility: Completion of {preRequisiteCondition}
+                Eligibility: {preRequisiteCondition}
               </p>
             )}
           </div>
@@ -500,7 +503,7 @@ export const RegisterPanel = ({ workshop }) => {
           )}
           {preRequisiteCondition && preRequisiteCondition.length > 0 && (
             <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
-              Eligibility: Completion of {preRequisiteCondition}
+              Eligibility: {preRequisiteCondition}
             </p>
           )}
         </div>

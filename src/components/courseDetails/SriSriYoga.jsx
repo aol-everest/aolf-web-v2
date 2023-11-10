@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { COURSE_TYPES } from '@constants';
+import { COURSE_TYPES, WORKSHOP_MODE } from '@constants';
 import { pushRouteWithUTMQuery } from '@service';
 import { priceCalculation } from '@utils';
 import classNames from 'classnames';
@@ -11,7 +11,7 @@ import { CourseBottomCard } from './CourseBottomCard';
 import Style from './CourseDetails.module.scss';
 import CourseDetailsCard from './CourseDetailsCard';
 
-export const SriSriYoga = ({ data, swiperOption }) => {
+export const SriSriYoga = ({ data, mode: courseViewMode }) => {
   const [activeSlider, setActiveSlider] = useState(0);
   const router = useRouter();
 
@@ -61,17 +61,19 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                     <li>Begin or deepen your yoga journey </li>
                     <li>Gain wisdom for greater health & vitality</li>
                   </ul>
-                  <Link
-                    activeClassName="active"
-                    className="btn-secondary about-program__main-button register-button"
-                    to="registerNowBlock"
-                    spy={true}
-                    smooth={true}
-                    duration={500}
-                    offset={-100}
-                  >
-                    Register Now
-                  </Link>
+                  {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                    <Link
+                      activeClassName="active"
+                      className="btn-secondary about-program__main-button register-button"
+                      to="registerNowBlock"
+                      spy={true}
+                      smooth={true}
+                      duration={500}
+                      offset={-100}
+                    >
+                      Register Now
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -80,6 +82,7 @@ export const SriSriYoga = ({ data, swiperOption }) => {
             <CourseDetailsCard
               workshop={data}
               courseType={COURSE_TYPES.SRI_SRI_YOGA_MEDITATION}
+              courseViewMode={courseViewMode}
             ></CourseDetailsCard>
           </div>
         </section>
@@ -232,13 +235,15 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                 )}
                 <span> ${fee}</span>
               </p>
-              <button
-                type="button"
-                className="btn-secondary program-banner__button register-button"
-                onClick={handleRegister}
-              >
-                Register Today
-              </button>
+              {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                <button
+                  type="button"
+                  className="btn-secondary program-banner__button register-button"
+                  onClick={handleRegister}
+                >
+                  Register Today
+                </button>
+              )}
             </div>
           </Element>
         </section>
@@ -544,13 +549,15 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                 <p className="program-inspiration__subtitle">
                   4-day program, 2 hours per day
                 </p>
-                <button
-                  type="button"
-                  className="btn-secondary program-inspiration__button program-inspiration__button_desktop register-button"
-                  onClick={handleRegister}
-                >
-                  Let's Get Started
-                </button>
+                {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                  <button
+                    type="button"
+                    className="btn-secondary program-inspiration__button program-inspiration__button_desktop register-button"
+                    onClick={handleRegister}
+                  >
+                    Let's Get Started
+                  </button>
+                )}
               </div>
               <div className="col-lg-7">
                 <div className="program-inspiration__items">
@@ -621,17 +628,19 @@ export const SriSriYoga = ({ data, swiperOption }) => {
                 </div>
               </div>
             </div>
-            <button
-              type="button"
-              className="btn-secondary program-inspiration__button program-inspiration__button_mobile"
-              onClick={handleRegister}
-            >
-              Let's Get Started
-            </button>
+            {courseViewMode !== WORKSHOP_MODE.VIEW && (
+              <button
+                type="button"
+                className="btn-secondary program-inspiration__button program-inspiration__button_mobile"
+                onClick={handleRegister}
+              >
+                Let's Get Started
+              </button>
+            )}
           </div>
         </section>
       </main>
-      <CourseBottomCard workshop={data} />
+      <CourseBottomCard workshop={data} courseViewMode={courseViewMode} />
     </>
   );
 };

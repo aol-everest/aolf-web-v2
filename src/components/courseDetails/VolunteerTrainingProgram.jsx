@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import { ABBRS, ALERT_TYPES } from '@constants';
+import { ABBRS, ALERT_TYPES, WORKSHOP_MODE } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { priceCalculation, tConvert } from '@utils';
@@ -59,7 +59,11 @@ const faqContent = [
   },
 ];
 
-export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
+export const VolunteerTrainingProgram = ({
+  data,
+  swiperOption,
+  mode: courseViewMode,
+}) => {
   const { showAlert } = useGlobalAlertContext();
   const router = useRouter();
   const [selectedFAQ, setSelectedFAQ] = useState(-1);
@@ -156,17 +160,19 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                     </li>
                     <li>Feel inspired, confident, connected</li>
                   </ul>
-                  <Link
-                    activeClassName="active"
-                    className="btn-primary register-button"
-                    to="registerNowBlock"
-                    spy={true}
-                    smooth={true}
-                    duration={500}
-                    offset={-100}
-                  >
-                    Register Now
-                  </Link>
+                  {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                    <Link
+                      activeClassName="active"
+                      className="btn-primary register-button"
+                      to="registerNowBlock"
+                      spy={true}
+                      smooth={true}
+                      duration={500}
+                      offset={-100}
+                    >
+                      Register Now
+                    </Link>
+                  )}
                 </div>
               </div>
 
@@ -753,13 +759,15 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
                 </div>
               </div>
             </div>
-            <button
-              type="button"
-              className="btn-secondary program-meet__button"
-              onClick={handleRegister}
-            >
-              Let's Get Started
-            </button>
+            {courseViewMode !== WORKSHOP_MODE.VIEW && (
+              <button
+                type="button"
+                className="btn-secondary program-meet__button"
+                onClick={handleRegister}
+              >
+                Let's Get Started
+              </button>
+            )}
           </div>
         </section>
         <section className="program-faqs">
@@ -811,7 +819,7 @@ export const VolunteerTrainingProgram = ({ data, swiperOption }) => {
         </section>
       </main>
       <HideOn divID="third" showOnPageInit={false}>
-        <CourseBottomCard workshop={data} />
+        <CourseBottomCard workshop={data} courseViewMode={courseViewMode} />
       </HideOn>
     </>
   );
