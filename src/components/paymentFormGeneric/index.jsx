@@ -1065,17 +1065,19 @@ export const PaymentFormGeneric = ({
           paymentMode: isCCNotRequired
             ? Yup.mixed().notRequired()
             : Yup.string().required('Payment mode is required!'),
-          contactHealthcareOrganisation: Yup.string().required(
-            'Healthcare Organization is required',
-          ),
-          contactOtherHealthcareOrganization: Yup.string()
-            .ensure()
-            .when('contactHealthcareOrganisation', {
-              is: 'other',
-              then: Yup.string().required(
-                'Other Healthcare Organization is required',
-              ),
-            }),
+          contactHealthcareOrganisation: isIahv
+            ? Yup.string().required('Healthcare Organization is required')
+            : Yup.string().notRequired(),
+          contactOtherHealthcareOrganization: isIahv
+            ? Yup.string()
+                .ensure()
+                .when('contactHealthcareOrganisation', {
+                  is: 'other',
+                  then: Yup.string().required(
+                    'Other Healthcare Organization is required',
+                  ),
+                })
+            : Yup.string().notRequired(),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
