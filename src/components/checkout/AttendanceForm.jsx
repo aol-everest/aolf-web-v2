@@ -7,11 +7,7 @@ import { FieldWrapper } from './FieldWrapper';
 import { InputDropDown } from './InputDropDown';
 import { StyledInput } from './StyledInput';
 
-export const AttendanceForm = ({
-  formikProps,
-  corporates,
-  isCMSAddOn = false,
-}) => {
+export const AttendanceForm = ({ formikProps, corporates }) => {
   const onPopupChangeEvent = (formikProps, field) => (value) => {
     formikProps.setFieldValue(field, value?.name || '');
   };
@@ -103,129 +99,6 @@ export const AttendanceForm = ({
           formikKey="contactDegree"
           fullWidth
         ></StyledInput>
-        {/* {!isCMSAddOn && (
-          <>
-            <div className="d-flex w-50 justify-content-start">
-              <FieldWrapper
-                formikKey={'claimingType'}
-                formikProps={formikProps}
-              >
-                <InputDropDown
-                  placeholder="CE Claiming type"
-                  formikProps={formikProps}
-                  formikKey="claimingType"
-                  closeEvent={onPopupChangeEvent(formikProps, 'claimingType')}
-                >
-                  {({ closeHandler }) => (
-                    <>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Physician - MD',
-                          value: 'Physician - MD',
-                        })}
-                      >
-                        Physician - MD
-                      </li>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Physician - DO',
-                          value: 'Physician - DO',
-                        })}
-                      >
-                        Physician - DO
-                      </li>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Physician Assistant',
-                          value: 'Physician Assistant',
-                        })}
-                      >
-                        Physician Assistant
-                      </li>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Physical Therapist',
-                          value: 'Physical Therapist',
-                        })}
-                      >
-                        Physical Therapist
-                      </li>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Nurse',
-                          value: 'Nurse',
-                        })}
-                      >
-                        Nurse
-                      </li>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Dentist',
-                          value: 'Dentist',
-                        })}
-                      >
-                        Dentist
-                      </li>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Other',
-                          value: 'Other',
-                        })}
-                      >
-                        Other
-                      </li>
-                    </>
-                  )}
-                </InputDropDown>
-              </FieldWrapper>
-            </div>
-            {formikProps.values['claimingType'] === 'Other' && (
-              <StyledInput
-                placeholder="Specify details (Other)"
-                formikProps={formikProps}
-                formikKey="contactClaimingTypeOther"
-                fullWidth
-              ></StyledInput>
-            )}
-            <div className="d-flex justify-content-start mt-lg-0">
-              <FieldWrapper
-                formikKey={'certificateOfAttendance'}
-                formikProps={formikProps}
-              >
-                <InputDropDown
-                  placeholder="I would like to get the following"
-                  formikProps={formikProps}
-                  formikKey="certificateOfAttendance"
-                  closeEvent={onPopupChangeEvent(
-                    formikProps,
-                    'certificateOfAttendance',
-                  )}
-                >
-                  {({ closeHandler }) => (
-                    <>
-                      <li
-                        onClick={closeHandler({
-                          name: 'CE Credits',
-                          value: 'CE Credits',
-                        })}
-                      >
-                        CE Credits
-                      </li>
-                      <li
-                        onClick={closeHandler({
-                          name: 'Certificate of Attendance',
-                          value: 'Certificate of Attendance',
-                        })}
-                      >
-                        Certificate of Attendance
-                      </li>
-                    </>
-                  )}
-                </InputDropDown>
-              </FieldWrapper>
-            </div>
-          </>
-        )} */}
       </div>
     </Fragment>
   );

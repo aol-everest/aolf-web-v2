@@ -25,6 +25,7 @@ export const PostCostDetailsCard = ({
   isUsableCreditAvailable,
   UpdatedFeeAfterCredits,
   onAccommodationChange,
+  cmeAddOn,
   ...rest
 }) => {
   const {
@@ -330,7 +331,7 @@ export const PostCostDetailsCard = ({
                         the requested additional information.
                       </p>
 
-                      {formikProps.values.CME && (
+                      {formikProps.values[cmeAddOn.productName] && (
                         <CMEInputCmp formikProps={formikProps} />
                       )}
                     </>

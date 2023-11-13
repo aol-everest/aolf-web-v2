@@ -629,9 +629,7 @@ export const PaymentFormHB = ({
     {},
   );
 
-  const isCMSAddOn = !!addOnProducts.find(
-    ({ isCMEAddOn }) => isCMEAddOn === true,
-  );
+  const cmeAddOn = addOnProducts.find(({ isCMEAddOn }) => isCMEAddOn === true);
 
   const { fee, delfee, offering } = priceCalculation({
     workshop,
@@ -1139,7 +1137,6 @@ export const PaymentFormHB = ({
                   <AttendanceForm
                     formikProps={formikProps}
                     corporates={corporates}
-                    isCMSAddOn={isCMSAddOn}
                   />
                   <AgreementForm
                     formikProps={formikProps}
@@ -1200,6 +1197,7 @@ export const PaymentFormHB = ({
                     totalFee={totalFee}
                     onAccommodationChange={handleAccommodationChange}
                     discount={discountResponse}
+                    cmeAddOn={cmeAddOn}
                   />
 
                   {/* <div className="reciept__payment">

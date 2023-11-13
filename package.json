@@ -11,7 +11,7 @@
   "scripts": {
     "develop": "cross-env NODE_ENV=development yarn local-run",
     "develop:qa": "cross-env NODE_ENV=test yarn local-run",
-    "develop:prod": "cross-env NODE_ENV=production local-run",
+    "develop:prod": "cross-env NODE_ENV=production yarn local-run",
     "debug:qa": "cross-env NODE_ENV=qa NODE_OPTIONS='--inspect' yarn local-run",
     "local-run": "next dev",
     "build": "next build",
