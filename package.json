@@ -114,7 +114,7 @@
     "@svgr/cli": "^8.1.0",
     "autoprefixer": "^10.4.15",
     "cross-env": "^7.0.3",
-    "cspell": "^7.3.7",
+    "cspell": "^8.0.0",
     "cssnano": "^6.0.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.52.0",
