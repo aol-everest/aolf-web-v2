@@ -842,20 +842,20 @@ export const PaymentFormHB = ({
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),
-          claimingType: Yup.string().when('CME', {
-            is: true,
-            then: Yup.string().required('CE Claiming type is required'),
-          }),
-          certificateOfAttendance: Yup.string().when('CME', {
-            is: true,
-            then: Yup.string().required(
-              'I would like to get the following is required',
-            ),
-          }),
-          contactClaimingTypeOther: Yup.string().when(['CME', 'claimingType'], {
-            is: (cme, claimingType) => claimingType === 'Other' && cme === true,
-            then: Yup.string().required('Other is required'),
-          }),
+          claimingType: cmeAddOn
+            ? Yup.string().required('CE Claiming type is required')
+            : Yup.mixed().notRequired(),
+          certificateOfAttendance: cmeAddOn
+            ? Yup.string().required(
+                'I would like to get the following is required',
+              )
+            : Yup.mixed().notRequired(),
+          contactClaimingTypeOther: cmeAddOn
+            ? Yup.string().when('claimingType', {
+                is: (claimingType) => claimingType === 'Other',
+                then: Yup.string().required('Other is required'),
+              })
+            : Yup.mixed().notRequired(),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
