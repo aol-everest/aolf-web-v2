@@ -326,13 +326,17 @@ export const PostCostDetailsCard = ({
                           }
                         })}
                       </ul>
-                      <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
-                        To claim CME credits, please check the box and fill in
-                        the requested additional information.
-                      </p>
+                      {cmeAddOn && (
+                        <>
+                          <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+                            To claim CME credits, please check the box and fill
+                            in the requested additional information.
+                          </p>
 
-                      {formikProps.values[cmeAddOn.productName] && (
-                        <CMEInputCmp formikProps={formikProps} />
+                          {formikProps.values[cmeAddOn.productName] && (
+                            <CMEInputCmp formikProps={formikProps} />
+                          )}
+                        </>
                       )}
                     </>
                   )}
