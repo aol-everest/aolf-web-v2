@@ -11,14 +11,13 @@ import { useAuth, useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
 import { pushRouteWithUTMQuery } from '@service';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Auth, api } from '@utils';
+import { Auth, api, phoneRegExp } from '@utils';
 import { filterAllowedParams } from '@utils/utmParam';
 import classNames from 'classnames';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import * as Yup from 'yup';
-import 'yup-phone';
 
 const createOptions = {
   style: {
@@ -300,10 +299,8 @@ export const MembershipCheckoutStripe = ({
         firstName: Yup.string().required('First Name is required'),
         lastName: Yup.string().required('Last Name is required'),
         contactPhone: Yup.string()
-          .label('Phone')
-          .required('Phone is required')
-          .phone(null, false, 'Phone is invalid')
-          .nullable(),
+          .required('Phone number required')
+          .matches(phoneRegExp, 'Phone number is not valid'),
         contactAddress: Yup.string().required('Address is required'),
         contactState: Yup.string().required('State is required'),
         contactZip: Yup.string()

@@ -7,7 +7,7 @@ import {
 } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
-import { api } from '@utils';
+import { api, phoneRegExp } from '@utils';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { Field, Formik } from 'formik';
@@ -15,7 +15,6 @@ import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 import * as Yup from 'yup';
-import 'yup-phone';
 import PhoneInput from './../phoneInputCmp';
 import Style from './ChangeProfile.module.scss';
 
@@ -306,10 +305,8 @@ export const ChangeProfile = ({
         }}
         validationSchema={Yup.object().shape({
           contactPhone: Yup.string()
-            .label('Phone')
-            .required('Phone is required')
-            .phone(null, false, 'Phone is invalid')
-            .nullable(),
+            .required('Phone number required')
+            .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().required('Address is required'),
           contactState: Yup.string().required('State is required'),
           contactZip: Yup.string()
