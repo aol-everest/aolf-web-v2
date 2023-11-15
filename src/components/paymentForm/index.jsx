@@ -35,14 +35,13 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { Auth, api, isEmpty, priceCalculation } from '@utils';
+import { Auth, api, isEmpty, priceCalculation, phoneRegExp } from '@utils';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import 'yup-phone';
 
 const createOptions = {
   style: {
@@ -942,10 +941,8 @@ export const PaymentForm = ({
     lastName: Yup.string().required('Last Name is required'),
     email: Yup.string().required('Email is required').email(),
     contactPhone: Yup.string()
-      .label('Phone')
-      .required('Phone is required')
-      .phone(null, false, 'Phone is invalid')
-      .nullable(),
+      .required('Phone number required')
+      .matches(phoneRegExp, 'Phone number is not valid'),
     contactAddress: Yup.string().required('Address is required'),
     contactCity: Yup.string().required('City is required'),
     contactState: Yup.string().required('State is required'),

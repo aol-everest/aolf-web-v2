@@ -11,7 +11,7 @@ import {
   useStripe,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { api, priceCalculation, tConvert } from '@utils';
+import { api, priceCalculation, tConvert, phoneRegExp } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
@@ -512,7 +512,9 @@ const SchedulingPaymentForm = ({
           email: Yup.string()
             .email('Email is invalid!')
             .required('Email is required!'),
-          contactPhone: Yup.string().required('Phone is required'),
+          contactPhone: Yup.string()
+            .required('Phone number required')
+            .matches(phoneRegExp, 'Phone number is not valid'),
           ppaAgreement: Yup.boolean()
             .label('Terms')
             .test(

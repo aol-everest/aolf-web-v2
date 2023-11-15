@@ -4,14 +4,13 @@ import { DiscountCodeInput, Dropdown } from '@components/checkout';
 import { ABBRS, ALERT_TYPES, MODAL_TYPES, US_STATES } from '@constants';
 import { useGlobalAlertContext, useGlobalModalContext } from '@contexts';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { api, isEmpty, tConvert } from '@utils';
+import { api, isEmpty, tConvert, phoneRegExp } from '@utils';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { Field, Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
-import 'yup-phone';
 import Style from './BackendPaymentForm.module.scss';
 import { EmailField } from './EmailField';
 import { PriceCalculationComponent } from './PriceCalculationComponent';
@@ -835,7 +834,9 @@ export const BackendPaymentForm = ({
             confirmEmail: Yup.string()
               .required('Confirm Email is required!')
               .oneOf([Yup.ref('email')], 'Emails must match'),
-            contactPhone: Yup.string().required('Phone is required!'),
+            contactPhone: Yup.string()
+              .required('Phone number required')
+              .matches(phoneRegExp, 'Phone number is not valid'),
             contactAddress: Yup.string().required('Address is required!'),
             contactCity: Yup.string().required('City is required!'),
             contactState: Yup.string().required('State is required!'),
