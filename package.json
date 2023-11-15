@@ -102,7 +102,7 @@
     "sass": "^1.69.5",
     "select2": "^4.1.0-rc.0",
     "slick-carousel": "^1.8.1",
-    "swiper": "^9.4.1",
+    "swiper": "^11.0.4",
     "use-analytics": "^1.1.0",
     "video-react": "^0.16.0",
     "yup": "^0.32.11"
