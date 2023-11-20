@@ -1,0 +1,213 @@
+.checkout-congratulations {
+  background: #fff9ed;
+  padding-top: 1rem;
+  padding-bottom: 3.75rem;
+  border-radius: 20px;
+  border: 1px solid #fff9ed;
+  .section-title {
+    font-family: 'Lora';
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    i.fa {
+      color: #fda249;
+    }
+    @media screen and (max-width: 490px) {
+      font-size: 18px;
+    }
+  }
+  .order-details-wrapper {
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 146, 0, 0.5019607843);
+    padding: 20px;
+    margin-bottom: 40px;
+    .bottom-info {
+      background: rgba(255, 146, 0, 0.5);
+      margin: 20px -20px -20px;
+      padding: 5px 20px;
+      border-radius: 0 0 7px 7px;
+    }
+  }
+  .attendee-info-form {
+    .btn-submit {
+      background-color: #fda249;
+      color: #ffffff;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 20px;
+      padding: 10px 50px;
+      @media screen and (max-width: 490px) {
+        width: 100%;
+      }
+    }
+  }
+  .order-item {
+    + .order-item {
+      margin-top: 10px;
+    }
+    i.fa,
+    span {
+      color: #7c7c7c;
+    }
+  }
+  .subsection-title {
+    font-weight: 500;
+    display: flex;
+    font-size: 20px;
+    margin-top: 20px;
+    span {
+      display: block;
+      padding: 5px 10px;
+      border: rgba(255, 146, 0, 0.5) 1px solid;
+      border-radius: 8px;
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  .attendee-details-form {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 40px;
+    row-gap: 20px;
+    .form-item {
+      display: flex;
+      flex-direction: column;
+      &.required label:after {
+        content: '*';
+        font-size: 13px;
+        color: red;
+      }
+      &.other {
+        grid-column: 1 / -1;
+      }
+    }
+    @media screen and (max-width: 490px) {
+      grid-template-columns: auto;
+    }
+    input,
+    select {
+      border: rgba(255, 146, 0, 0.5) 1px solid;
+      border-radius: 8px;
+      background: white;
+      padding: 8px 15px;
+      line-height: 1.4rem;
+    }
+  }
+  .sidebar-banner {
+    margin-bottom: 40px;
+    img {
+      max-width: 100%;
+    }
+    @media screen and (max-width: 991px) {
+      margin-top: 50px;
+    }
+  }
+  .event-details-wrapper {
+    ul.event-items-list {
+      li {
+        border-bottom: rgba(255, 146, 0, 0.5) 1px solid;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin: 20px 0;
+        flex-wrap: wrap;
+        span {
+          margin-right: auto;
+          margin-left: 7px;
+          color: #7c7c7c;
+        }
+        i.fa {
+          color: #7c7c7c;
+        }
+      }
+    }
+  }
+  .contact-info {
+    margin-top: 40px;
+  }
+  .calendar-benefits-wrapper {
+    padding: 50px 55px;
+    .paddingRight {
+      padding-right: 4rem;
+      @media screen and (max-width: 1199px) {
+        padding-right: 2.5rem;
+      }
+      @media screen and (max-width: 991px) {
+        padding: 0rem;
+      }
+    }
+    .borderLeft {
+      border-left: 1px solid #fda24980;
+      padding-left: 4rem;
+      @media screen and (max-width: 1199px) {
+        padding-right: 2.5rem;
+      }
+      @media screen and (max-width: 991px) {
+        padding: 0rem;
+        border-left: 0;
+      }
+    }
+    @media screen and (max-width: 991px) {
+      padding: 25px 30px;
+    }
+    @media screen and (max-width: 767px) {
+      padding: 15px;
+    }
+  }
+}
+.ticket-holder-accordion {
+  .accordion-item {
+    margin-top: 20px;
+    background: #ffc68996;
+    border-radius: 8px;
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 15px;
+      cursor: pointer;
+      h6 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .accordion-item-header__icon {
+        width: 28px;
+        height: 28px;
+        transition: transform 0.25s ease-in-out;
+        /* to black */
+        filter: invert(1);
+      }
+      &[aria-expanded='true'] {
+        .accordion-item-header__icon {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    &-body {
+      padding: 10px 15px 20px;
+    }
+  }
+}
+.calendar-online .congratulations-float,
+.add-calendar-btn-wrap {
+  button.register-button {
+    background: #fda249;
+    border-radius: 8px;
+    padding: 0.5rem 2rem;
+    font-size: 20px;
+    height: 50px;
+    border: none;
+    @media screen and (max-width: 767px) {
+      font-size: 16px;
+      padding: 0.5rem 1.5rem;
+    }
+  }
+}
+.add-calendar-btn-wrap {
+  margin-bottom: 25px;
+  button.register-button {
+    width: 100%;
+  }
+}
