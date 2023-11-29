@@ -174,7 +174,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             </div>
             <div className="col-md-5">
               <div className="marma-therapy-image">
-                <img src="/img/marma-therapy-main-img.jpeg" alt="marma" />
+                <img
+                  src="/img/marma-therapy-main-img.webp"
+                  alt="marma"
+                  width="673"
+                  height="800"
+                />
               </div>
             </div>
           </div>
@@ -331,7 +336,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               <div className="col-md-4">
                 <div className="marma-expect-item">
                   <div className="marma-expect-icon">
-                    <img src="/img/marma-expect-icon1.png" alt="marma" />
+                    <img
+                      src="/img/marma-expect-icon1.png"
+                      alt="marma"
+                      width="40"
+                      height="40"
+                    />
                   </div>
                   <div className="marma-expect-text">
                     4.5-day in-person course guided by a certified trainer
@@ -341,7 +351,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               <div className="col-md-4">
                 <div className="marma-expect-item">
                   <div className="marma-expect-icon">
-                    <img src="/img/marma-expect-icon2.png" alt="marma" />
+                    <img
+                      src="/img/marma-expect-icon2.png"
+                      alt="marma"
+                      width="40"
+                      height="40"
+                    />
                   </div>
                   <div className="marma-expect-text">
                     Learn how to identify imbalances & restore vitality through
@@ -352,7 +367,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               <div className="col-md-4">
                 <div className="marma-expect-item">
                   <div className="marma-expect-icon">
-                    <img src="/img/marma-expect-icon3.png" alt="marma" />
+                    <img
+                      src="/img/marma-expect-icon3.png"
+                      alt="marma"
+                      width="40"
+                      height="40"
+                    />
                   </div>
                   <div className="marma-expect-text">
                     Benefit from a fully integrated practical & holistic
@@ -370,8 +390,10 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             <div className="col-md-6">
               <div className="energy-treatment-image">
                 <img
-                  src="/img/marma-replenshing-energy-treatement.jpeg"
+                  src="/img/marma-replenshing-energy-treatement.webp"
                   alt="energy treatment"
+                  width="467"
+                  height="366"
                 />
               </div>
             </div>
@@ -484,7 +506,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             <div className="col-md-3">
               <div className="marma-about-aol-item">
                 <div className="marma-about-aol-icon">
-                  <img src="/img/marma-about-aol-icon1.png" alt="about aol" />
+                  <img
+                    src="/img/marma-about-aol-icon1.png"
+                    alt="about aol"
+                    width="80"
+                    height="63"
+                  />
                 </div>
                 <div className="marma-about-aol-title">42 years</div>
                 <div className="marma-about-aol-text">
@@ -495,7 +522,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             <div className="col-md-3">
               <div className="marma-about-aol-item">
                 <div className="marma-about-aol-icon">
-                  <img src="/img/marma-about-aol-icon2.png" alt="about aol" />
+                  <img
+                    src="/img/marma-about-aol-icon2.png"
+                    alt="about aol"
+                    width="70"
+                    height="70"
+                  />
                 </div>
                 <div className="marma-about-aol-title">3,000+ centers</div>
                 <div className="marma-about-aol-text">worldwide</div>
@@ -504,7 +536,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             <div className="col-md-3">
               <div className="marma-about-aol-item">
                 <div className="marma-about-aol-icon">
-                  <img src="/img/marma-about-aol-icon3.png" alt="about aol" />
+                  <img
+                    src="/img/marma-about-aol-icon3.png"
+                    alt="about aol"
+                    width="57"
+                    height="71"
+                  />
                 </div>
                 <div className="marma-about-aol-title">800M+ lives</div>
                 <div className="marma-about-aol-text">
@@ -515,7 +552,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
             <div className="col-md-3">
               <div className="marma-about-aol-item">
                 <div className="marma-about-aol-icon">
-                  <img src="/img/marma-about-aol-icon4.png" alt="about aol" />
+                  <img
+                    src="/img/marma-about-aol-icon4.png"
+                    alt="about aol"
+                    width="68"
+                    height="71"
+                  />
                 </div>
                 <div className="marma-about-aol-title">180 countries</div>
                 <div className="marma-about-aol-text">
