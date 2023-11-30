@@ -488,7 +488,7 @@ const TicketCheckoutForm = ({ router }) => {
                         </label>
                       </div>
 
-                      <label
+                      {/* <label
                         className="tickets-modal__distribution"
                         for="distribution"
                       >
@@ -521,7 +521,7 @@ const TicketCheckoutForm = ({ router }) => {
                           Keep me updated on more events and news from this
                           event
                         </p>
-                      </label>
+                      </label> */}
                     </div>
 
                     <div className="tickets-modal__pay">
@@ -709,19 +709,21 @@ const TicketCheckoutForm = ({ router }) => {
 
                     <p className="tickets-modal__cart-subtotal">
                       Subtotal
-                      <span>${parseInt(totalPrice).toFixed(2)}</span>
+                      <span>${parseFloat(totalPrice).toFixed(2)}</span>
                     </p>
 
                     {totalDiscount > 0 && (
                       <p className="tickets-modal__cart-discount">
                         Discount(-)
-                        <span>${parseInt(totalDiscount).toFixed(2)}</span>
+                        <span>${parseFloat(totalDiscount).toFixed(2)}</span>
                       </p>
                     )}
 
                     <p className="tickets-modal__cart-total">
                       Total
-                      <span>${parseInt(delfee || totalPrice).toFixed(2)}</span>
+                      <span>
+                        ${parseFloat(delfee || totalPrice).toFixed(2)}
+                      </span>
                     </p>
                   </div>
                 </div>

@@ -12,7 +12,7 @@ export default function Tickets() {
     'getTicketedEvent',
     async () => {
       const response = await api.get({
-        path: 'geticketedEventAttendees',
+        path: 'getTicketedEventAttendees',
         param: {
           orderId: value?.orderId,
         },
@@ -24,7 +24,7 @@ export default function Tickets() {
       enabled: !!value?.orderId,
     },
   );
-  const { attendees = [] } = data;
+  const { attendees = [] } = data || {};
 
   // console.log('attendees', attendees);
 
