@@ -17,6 +17,10 @@ export const DiscountCodeInput = ({
   setUser,
   userId = null,
   isBackendRequest = false,
+  inputClass = 'discount-code',
+  tagClass = '',
+  isTicketDiscount = false,
+  selectedTickets = [],
   ...rest
 }) => {
   const [showTag, setShowTag] = useState(false);
@@ -49,15 +53,6 @@ export const DiscountCodeInput = ({
 
     try {
       let plan = formikProps.values.plan;
-      // const {
-      //   token: accessToken,
-      //   product = plan,
-      //   addOnProducts = [],
-      //   productType = "workshop",
-      //   applyDiscount,
-      //   setUser,
-      //   userId,
-      // } = this.props;
 
       let AddOnProductIds = formikProps.values.selectedAddOn
         ? [formikProps.values.selectedAddOn]
@@ -89,6 +84,12 @@ export const DiscountCodeInput = ({
       if (isBackendRequest) {
         const userEmail = formikProps.values['email'];
         payLoad = { ...payLoad, isBackendRequest: true, email: userEmail };
+      }
+      if (isTicketDiscount) {
+        payLoad.shoppingRequest = {
+          ...payLoad.shoppingRequest,
+          tickets: selectedTickets,
+        };
       }
       let results = await api.post({
         path: 'applyCoupon',
@@ -147,10 +148,18 @@ export const DiscountCodeInput = ({
     setShowTag(false);
     setStatus(0);
     applyDiscount(null);
+    formikProps.setFieldError(formikKey, null);
     formikProps.values[formikKey] = '';
     if (clearCoupon) {
       clearCoupon();
     }
+  };
+
+  const isFieldDisabled = () => {
+    if (isTicketDiscount && selectedTickets.length == 0) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -171,16 +180,17 @@ export const DiscountCodeInput = ({
               value={formikProps.values[formikKey]}
               name={formikKey}
               onChange={onChangeAction}
-              className="discount-code"
+              className={inputClass}
               onBlur={applyCoupon}
               onKeyDown={onKeyDown}
+              disabled={isFieldDisabled()}
             />
             {loading && <span className="loader-inline"></span>}
           </>
         )}
         {showTag && (
           <>
-            <div className="react-tag-container">
+            <div className={`${tagClass} react-tag-container`}>
               <span
                 className={classNames('badge', 'react-tag', {
                   'badge-light': status === 0,

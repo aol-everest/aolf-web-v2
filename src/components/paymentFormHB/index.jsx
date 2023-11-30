@@ -17,13 +17,12 @@ import {
 } from '@components/checkout';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Auth, isEmpty } from '@utils';
+import { Auth, isEmpty, phoneRegExp } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import * as Yup from 'yup';
-import 'yup-phone';
 
 import { Loader } from '@components';
 import {
@@ -629,9 +628,7 @@ export const PaymentFormHB = ({
     {},
   );
 
-  const isCMSAddOn = !!addOnProducts.find(
-    ({ isCMEAddOn }) => isCMEAddOn === true,
-  );
+  const cmeAddOn = addOnProducts.find(({ isCMEAddOn }) => isCMEAddOn === true);
 
   const { fee, delfee, offering } = priceCalculation({
     workshop,
@@ -804,10 +801,8 @@ export const PaymentFormHB = ({
           firstName: Yup.string().required('First Name is required'),
           lastName: Yup.string().required('Last Name is required'),
           contactPhone: Yup.string()
-            .label('Phone')
-            .required('Phone is required')
-            .phone(null, false, 'Phone is invalid')
-            .nullable(),
+            .required('required')
+            .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().required('Address is required'),
           contactCity: Yup.string().required('City is required'),
           contactState: Yup.string().required('State is required'),
@@ -844,20 +839,20 @@ export const PaymentFormHB = ({
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),
-          claimingType: Yup.string().when('CME', {
-            is: true,
-            then: Yup.string().required('CE Claiming type is required'),
-          }),
-          certificateOfAttendance: Yup.string().when('CME', {
-            is: true,
-            then: Yup.string().required(
-              'I would like to get the following is required',
-            ),
-          }),
-          contactClaimingTypeOther: Yup.string().when(['CME', 'claimingType'], {
-            is: (cme, claimingType) => claimingType === 'Other' && cme === true,
-            then: Yup.string().required('Other is required'),
-          }),
+          claimingType: cmeAddOn
+            ? Yup.string().required('CE Claiming type is required')
+            : Yup.mixed().notRequired(),
+          certificateOfAttendance: cmeAddOn
+            ? Yup.string().required(
+                'I would like to get the following is required',
+              )
+            : Yup.mixed().notRequired(),
+          contactClaimingTypeOther: cmeAddOn
+            ? Yup.string().when('claimingType', {
+                is: (claimingType) => claimingType === 'Other',
+                then: Yup.string().required('Other is required'),
+              })
+            : Yup.mixed().notRequired(),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
@@ -1139,7 +1134,6 @@ export const PaymentFormHB = ({
                   <AttendanceForm
                     formikProps={formikProps}
                     corporates={corporates}
-                    isCMSAddOn={isCMSAddOn}
                   />
                   <AgreementForm
                     formikProps={formikProps}
@@ -1200,6 +1194,7 @@ export const PaymentFormHB = ({
                     totalFee={totalFee}
                     onAccommodationChange={handleAccommodationChange}
                     discount={discountResponse}
+                    cmeAddOn={cmeAddOn}
                   />
 
                   {/* <div className="reciept__payment">

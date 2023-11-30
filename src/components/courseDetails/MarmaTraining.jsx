@@ -231,7 +231,7 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="participant-item">
                 <div className="participant-picture">
-                  <img src="/img/marma-particpant1.png" alt="Jennifer" />
+                  <img src="/img/marma-particpant2.jpeg" alt="Asha" />
                 </div>
                 <div className="participant-name">Asha V.</div>
                 <div className="participant-position">MD, Clarksville</div>
@@ -250,7 +250,7 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="participant-item">
                 <div className="participant-picture">
-                  <img src="/img/marma-particpant1.png" alt="Jennifer" />
+                  <img src="/img/marma-particpant3.jpeg" alt="Vanitha" />
                 </div>
                 <div className="participant-name">Vanitha T.</div>
                 <div className="participant-position">Scientist, San Jose</div>
@@ -269,7 +269,7 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="participant-item">
                 <div className="participant-picture">
-                  <img src="/img/marma-particpant1.png" alt="Jennifer" />
+                  <img src="/img/marma-particpant4.jpeg" alt="Sushma" />
                 </div>
                 <div className="participant-name">Sushma M.</div>
                 <div className="participant-position">Physician, Cary</div>
@@ -289,7 +289,7 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="participant-item">
                 <div className="participant-picture">
-                  <img src="/img/marma-particpant1.png" alt="Jennifer" />
+                  <img src="/img/marma-particpant5.png" alt="Pramoda" />
                 </div>
                 <div className="participant-name">Pramoda B.</div>
                 <div className="participant-position">Coach, Washington DC</div>
@@ -308,7 +308,7 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="participant-item">
                 <div className="participant-picture">
-                  <img src="/img/marma-particpant1.png" alt="Jennifer" />
+                  <img src="/img/marma-particpant6.jpeg" alt="Kamala" />
                 </div>
                 <div className="participant-name">Kamala H.</div>
                 <div className="participant-position">

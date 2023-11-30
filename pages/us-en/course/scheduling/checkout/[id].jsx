@@ -11,7 +11,7 @@ import {
   useStripe,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { api, priceCalculation, tConvert } from '@utils';
+import { api, priceCalculation, tConvert, phoneRegExp } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
@@ -512,7 +512,9 @@ const SchedulingPaymentForm = ({
           email: Yup.string()
             .email('Email is invalid!')
             .required('Email is required!'),
-          contactPhone: Yup.string().required('Phone is required'),
+          contactPhone: Yup.string()
+            .required('Phone number required')
+            .matches(phoneRegExp, 'Phone number is not valid'),
           ppaAgreement: Yup.boolean()
             .label('Terms')
             .test(
@@ -601,21 +603,24 @@ const SchedulingPaymentForm = ({
                     <h5 className="scheduling-modal__content-total-title">
                       {title}
                     </h5>
-                    <div className="scheduling-modal__content-total-date-time">
-                      <div className="scheduling-modal__content-total-time">
-                        {tConvert(eventStartTime, true)} -{' '}
-                        {tConvert(eventEndTime, true)}
-                      </div>
-                    </div>
+
                     <div className="scheduling-modal__content-total-dates">
                       {timings.map((t) => {
                         return (
-                          <div
-                            className="scheduling-modal__content-total-date"
-                            key={t.sfid}
-                          >
-                            {dayjs.utc(t.startDate).format('ddd, D')}
-                          </div>
+                          <>
+                            <div
+                              className="scheduling-modal__content-total-date"
+                              key={t.sfid}
+                            >
+                              <span>
+                                {dayjs.utc(t.startDate).format('ddd, D')}
+                              </span>
+                              <span>
+                                {tConvert(t.startTime, true)} -{' '}
+                                {tConvert(t.endTime, true)}
+                              </span>
+                            </div>
+                          </>
                         );
                       })}
                     </div>

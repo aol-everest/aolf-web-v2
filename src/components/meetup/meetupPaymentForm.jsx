@@ -14,14 +14,13 @@ import { useAuth } from '@contexts';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { pushRouteWithUTMQuery } from '@service';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { isEmpty, tConvert } from '@utils';
+import { isEmpty, tConvert, phoneRegExp } from '@utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import * as Yup from 'yup';
-import 'yup-phone';
 
 import { Loader } from '@components';
 import {
@@ -507,10 +506,8 @@ export const MeetupPaymentForm = ({
         firstName: Yup.string().required('First Name is required'),
         lastName: Yup.string().required('Last Name is required'),
         contactPhone: Yup.string()
-          .label('Phone')
-          .required('Phone is required')
-          .phone(null, false, 'Phone is invalid')
-          .nullable(),
+          .required('Phone number required')
+          .matches(phoneRegExp, 'Phone number is not valid'),
         contactAddress: Yup.string().required('Address is required'),
         contactCity: Yup.string().required('City is required'),
         contactState: Yup.string().required('State is required'),

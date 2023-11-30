@@ -21,7 +21,7 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { Auth, isEmpty } from '@utils';
+import { Auth, isEmpty, phoneRegExp } from '@utils';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -30,7 +30,6 @@ import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import 'yup-phone';
 
 import { Loader } from '@components';
 import {
@@ -1040,10 +1039,8 @@ export const PaymentFormGeneric = ({
           lastName: Yup.string().required('Last Name is required'),
           email: Yup.string().required('Email is required').email(),
           contactPhone: Yup.string()
-            .label('Phone')
-            .required('Phone is required')
-            .phone(null, false, 'Phone is invalid')
-            .nullable(),
+            .required('Phone number required')
+            .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().required('Address is required'),
           contactCity: Yup.string().required('City is required'),
           contactState: Yup.string().required('State is required'),
@@ -1065,17 +1062,19 @@ export const PaymentFormGeneric = ({
           paymentMode: isCCNotRequired
             ? Yup.mixed().notRequired()
             : Yup.string().required('Payment mode is required!'),
-          contactHealthcareOrganisation: Yup.string().required(
-            'Healthcare Organization is required',
-          ),
-          contactOtherHealthcareOrganization: Yup.string()
-            .ensure()
-            .when('contactHealthcareOrganisation', {
-              is: 'other',
-              then: Yup.string().required(
-                'Other Healthcare Organization is required',
-              ),
-            }),
+          contactHealthcareOrganisation: isIahv
+            ? Yup.string().required('Healthcare Organization is required')
+            : Yup.string().notRequired(),
+          contactOtherHealthcareOrganization: isIahv
+            ? Yup.string()
+                .ensure()
+                .when('contactHealthcareOrganisation', {
+                  is: 'other',
+                  then: Yup.string().required(
+                    'Other Healthcare Organization is required',
+                  ),
+                })
+            : Yup.string().notRequired(),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);

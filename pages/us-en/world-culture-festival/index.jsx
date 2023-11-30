@@ -8,14 +8,13 @@ import {
 import { ALERT_TYPES } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useQueryString } from '@hooks';
-import { api } from '@utils';
+import { api, phoneRegExp } from '@utils';
 import startsWith from 'lodash.startswith';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useAnalytics } from 'use-analytics';
 import * as Yup from 'yup';
-import 'yup-phone';
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -210,15 +209,8 @@ function WorldCultureFestival() {
                 }),
               phoneNumber: Yup.string()
                 .label('Phone number')
-                .when('phoneCountry', {
-                  is: (country) => country === 'US',
-                  then: Yup.string()
-                    .phone('US', true, 'Please enter a valid phone number')
-                    .nullable(),
-                  otherwise: Yup.string()
-                    .phone(null, false, 'Please enter a valid phone number')
-                    .nullable(),
-                }),
+                .required('Phone number required')
+                .matches(phoneRegExp, 'Phone number is not valid'),
             }),
           },
         ]}

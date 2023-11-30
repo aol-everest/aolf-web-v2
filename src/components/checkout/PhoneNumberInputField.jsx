@@ -28,10 +28,13 @@ export const PhoneNumberInputField = ({
         {...field}
         {...props}
         placeholder="Phone No"
+        defaultCountry="us"
+        smartCaret={true}
         country="us"
         inputClass={form.errors[field.name] ? 'text-input error' : 'text-input'}
         containerClass="input-block"
         countryCodeEditable={true}
+        international={true}
         onChange={onChangeAction}
         onFocus={onFocusAction}
       />

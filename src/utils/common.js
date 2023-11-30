@@ -75,6 +75,9 @@ export const stringToBoolean = (string) => {
   }
 };
 
+export const phoneRegExp =
+  /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+
 export const isEmpty = (obj) => {
   if (typeof obj === 'object' && obj != null) {
     return Object.keys(obj).length >= 1 ? false : true;

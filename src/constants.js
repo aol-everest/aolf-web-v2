@@ -96,6 +96,7 @@ export const COURSE_TYPES = {
   },
   SILENT_RETREAT: {
     name: 'Art of Living Part II',
+    code: '10203000',
     value: process.env.NEXT_PUBLIC_SILENT_RETREAT_CTYPE || '',
   },
   SAHAJ_SAMADHI_MEDITATION: {
@@ -109,14 +110,17 @@ export const COURSE_TYPES = {
   },
   SRI_SRI_YOGA_MEDITATION: {
     name: 'Sri Sri Yoga',
+    code: '10106000',
     value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE || '',
   },
   CHAKRA_KRIYA: {
     name: 'Chakra Kriya',
+    code: '10207000',
     value: process.env.NEXT_PUBLIC_CHAKRA_KRIYA_CTYPE || '',
   },
   VOLUNTEER_TRAINING_PROGRAM: {
     name: 'Volunteer Training Program',
+    code: '10408000',
     value: process.env.NEXT_PUBLIC_VOLUNTEER_TRAINING_PROGRAM_CTYPE || '',
   },
   HEALING_BREATH: {
@@ -147,6 +151,7 @@ export const COURSE_TYPES = {
   },
   BLESSINGS_COURSE: {
     name: 'Blessings Course',
+    code: '10209000',
     value: process.env.NEXT_PUBLIC_BLESSINGS_COURSE_CTYPE || '',
   },
   INSTITUTIONAL_COURSE: {
@@ -159,14 +164,17 @@ export const COURSE_TYPES = {
   },
   SANYAM_COURSE: {
     name: 'Sanyam Course',
+    code: '10210000',
     value: process.env.NEXT_PUBLIC_SANYAM_COURSE_CTYPE || '',
   },
   MEDITATION_DELUXE_COURSE: {
     name: 'MEDITATION_DELUXE_COURSE',
+    code: '10111000',
     value: process.env.NEXT_PUBLIC_MEDITATION_DELUXE_CTYPE || '',
   },
   GATEWAY_TO_INFINITY_COURSE: {
     name: 'GATEWAY_TO_INFINITY_COURSE',
+    code: '10112000',
     value: process.env.NEXT_PUBLIC_GATEWAY_TO_INFINITY_CTYPE || '',
   },
   SRI_SRI_YOGA_DEEP_DIVE: {

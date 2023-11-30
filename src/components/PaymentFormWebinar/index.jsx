@@ -12,13 +12,12 @@ import {
 } from '@components/checkout';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Auth, isEmpty } from '@utils';
+import { Auth, isEmpty, phoneRegExp } from '@utils';
 import dayjs from 'dayjs';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import 'yup-phone';
 
 import { Loader } from '@components';
 import {
@@ -668,10 +667,8 @@ export const PaymentFormWebinar = ({
           firstName: Yup.string().required('First Name is required'),
           lastName: Yup.string().required('Last Name is required'),
           contactPhone: Yup.string()
-            .label('Phone')
-            .required('Phone is required')
-            .phone(null, false, 'Phone is invalid')
-            .nullable(),
+            .required('Phone number required')
+            .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().required('Address is required'),
           contactCity: Yup.string().required('City is required'),
           contactState: Yup.string().required('State is required'),
