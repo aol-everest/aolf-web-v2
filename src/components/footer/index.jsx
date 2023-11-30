@@ -53,6 +53,8 @@ export function Footer() {
                 src="/img/ic-logo-2.svg"
                 className="logo footer-logo"
                 alt="logo"
+                width="200"
+                height="80"
               />
             </div>
           </div>
@@ -247,22 +249,22 @@ export function Footer() {
             <ul className="footer-navbar--list footer-social-links order-2 order-md-2 mb-2 mb-md-0 mobileView">
               <li className="footer-navbar--item">
                 <Link href="https://www.facebook.com/ArtofLivingUSA">
-                  <img src="/img/footer/Fb.svg" />
+                  <img src="/img/footer/Fb.svg" width="23" height="40" />
                 </Link>
               </li>
               <li className="footer-navbar--item">
                 <Link href="https://twitter.com/artoflivingusa">
-                  <img src="/img/footer/Twitter.svg" />
+                  <img src="/img/footer/Twitter.svg" width="40" height="40" />
                 </Link>
               </li>
               <li className="footer-navbar--item">
                 <Link href="https://www.instagram.com/artoflivingusa/">
-                  <img src="/img/footer/Insta.svg" />
+                  <img src="/img/footer/Insta.svg" width="47" height="46" />
                 </Link>
               </li>
               <li className="footer-navbar--item">
                 <Link href="https://www.youtube.com/@artofliving">
-                  <img src="/img/footer/Youtube.svg" />
+                  <img src="/img/footer/Youtube.svg" width="50" height="35" />
                 </Link>
               </li>
             </ul>
@@ -310,22 +312,22 @@ export function Footer() {
           <ul className="footer-navbar--list footer-social-links order-2 order-md-2 mb-2 mb-md-0 desktopView">
             <li className="footer-navbar--item">
               <Link href="https://www.facebook.com/ArtofLivingUSA">
-                <img src="/img/footer/Fb.svg" />
+                <img src="/img/footer/Fb.svg" width="23" height="40" />
               </Link>
             </li>
             <li className="footer-navbar--item">
               <Link href="https://twitter.com/artoflivingusa">
-                <img src="/img/footer/Twitter.svg" />
+                <img src="/img/footer/Twitter.svg" width="40" height="40" />
               </Link>
             </li>
             <li className="footer-navbar--item">
               <Link href="https://www.instagram.com/artoflivingusa/">
-                <img src="/img/footer/Insta.svg" />
+                <img src="/img/footer/Insta.svg" width="47" height="46" />
               </Link>
             </li>
             <li className="footer-navbar--item">
               <Link href="https://www.youtube.com/@artofliving">
-                <img src="/img/footer/Youtube.svg" />
+                <img src="/img/footer/Youtube.svg" width="50" height="35" />
               </Link>
             </li>
           </ul>

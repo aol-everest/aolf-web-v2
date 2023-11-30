@@ -565,6 +565,8 @@ export const Header = () => {
                   src="/img/donate.svg"
                   alt="Donate"
                   className="donate__image"
+                  width="24"
+                  height="24"
                 />{' '}
                 Donation
               </a>
