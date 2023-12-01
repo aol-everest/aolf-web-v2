@@ -13,19 +13,12 @@ import CourseDetailsCard from './CourseDetailsCard';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import { useRef } from 'react';
 
 export const HealingBreath = ({ data, mode: courseViewMode }) => {
-  const navigationPrevRef = useRef(null);
-  const navigationNextRef = useRef(null);
-
   const swiperOption = {
     modules: [Pagination, A11y],
     slidesPerView: 1,
-    pagination: {
-      prevEl: navigationPrevRef.current,
-      nextEl: navigationNextRef.current,
-    },
+    pagination: { clickable: true },
     spaceBetween: 10,
     breakpoints: {
       640: {
@@ -544,8 +537,6 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                   </SwiperSlide>
                 </Swiper>
               </div>
-              <div className="swiper-button-prev" ref={navigationPrevRef}></div>
-              <div className="swiper-button-next" ref={navigationNextRef}></div>
             </div>
           </div>
         </section>
