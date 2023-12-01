@@ -59,8 +59,9 @@ function TicketedEvent() {
   useEffect(() => {
     let totalPrice = 0;
     let totalTicketQuantity = 0;
+
     selectedTickets.map((item) => {
-      totalPrice = (totalPrice + item.price) * item.numberOfTickets;
+      totalPrice = totalPrice + item.price * item.numberOfTickets;
       totalTicketQuantity = totalTicketQuantity + item.numberOfTickets;
     });
     setTotalPrice(totalPrice);
@@ -68,8 +69,8 @@ function TicketedEvent() {
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
-    setSelectedIds((prevState) => [...prevState, item.pricingTierId]);
-    const selectedTicketsCopy = !selectedIds.includes(item.pricingTierId)
+    let selectedIdsLocal = [...selectedIds];
+    const selectedTicketsCopy = !selectedIdsLocal.includes(item.pricingTierId)
       ? [...selectedTickets, item]
       : [...selectedTickets];
 
@@ -77,10 +78,20 @@ function TicketedEvent() {
     selectedTicketsCopy.forEach((newItem) => {
       if (newItem.pricingTierId === item.pricingTierId) {
         if (type === 'add') {
+          selectedIdsLocal = [...selectedIdsLocal, item.pricingTierId];
           newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
           filteredItems.push(newItem);
         } else {
-          newItem.numberOfTickets = newItem.numberOfTickets - 1;
+          if (newItem.numberOfTickets === 1) {
+            const filteredIds = selectedIdsLocal.filter(
+              (id) => id !== item.pricingTierId,
+            );
+
+            selectedIdsLocal = [...filteredIds];
+          }
+          newItem.numberOfTickets = newItem.numberOfTickets
+            ? newItem.numberOfTickets - 1
+            : newItem.numberOfTickets;
           if (newItem.numberOfTickets) {
             filteredItems.push(newItem);
           }
@@ -89,6 +100,7 @@ function TicketedEvent() {
         filteredItems.push(newItem);
       }
     });
+    setSelectedIds(selectedIdsLocal);
     setSelectedTickets(filteredItems);
   };
 
@@ -290,19 +302,19 @@ function TicketedEvent() {
 
                     <p className="tickets-modal__cart-subtotal">
                       Subtotal
-                      <span>${parseInt(totalPrice).toFixed(2)}</span>
+                      <span>${parseFloat(totalPrice).toFixed(2)}</span>
                     </p>
                     {totalDiscount > 0 && (
                       <p className="tickets-modal__cart-discount">
                         Discount(-)
-                        <span>${parseInt(totalDiscount).toFixed(2)}</span>
+                        <span>${parseFloat(totalDiscount).toFixed(2)}</span>
                       </p>
                     )}
 
                     <p className="tickets-modal__cart-total">
                       Total
                       <span>
-                        ${(parseInt(totalPrice) - totalDiscount).toFixed(2)}
+                        ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
                       </span>
                     </p>
                   </div>

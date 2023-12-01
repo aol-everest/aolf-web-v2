@@ -51,11 +51,10 @@ const TicketCongratulations = () => {
       name: 'ticketed_event_thank_you',
       referral: 'ticketed_event_checkout',
     });
-  });
-
-  setValue({
-    ...value,
-    orderId: orderId,
+    setValue({
+      ...value,
+      orderId: orderId,
+    });
   });
 
   const { data: workshop, isLoading } = useQuery(
@@ -272,7 +271,7 @@ const TicketCongratulations = () => {
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}
                     <span>Order Total: </span> $
-                    {parseInt(delfee || totalPrice).toFixed(2)}
+                    {parseFloat(delfee || totalPrice).toFixed(2)}
                   </li>
                 </ul>
                 <div className="bottom-info">
