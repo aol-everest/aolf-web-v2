@@ -6,13 +6,43 @@ import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
-import { Link } from 'react-scroll';
+import { Pagination, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { CourseBottomCard } from './CourseBottomCard';
 import CourseDetailsCard from './CourseDetailsCard';
-import { ResearchPaginationHB } from './ResearchPaginationHB';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import { useRef } from 'react';
 
-export const HealingBreath = ({ data, swiperOption, mode: courseViewMode }) => {
+export const HealingBreath = ({ data, mode: courseViewMode }) => {
+  const navigationPrevRef = useRef(null);
+  const navigationNextRef = useRef(null);
+
+  const swiperOption = {
+    modules: [Pagination, A11y],
+    slidesPerView: 1,
+    pagination: {
+      prevEl: navigationPrevRef.current,
+      nextEl: navigationNextRef.current,
+    },
+    spaceBetween: 10,
+    breakpoints: {
+      640: {
+        slidesPerView: 1,
+        spaceBetween: 20,
+      },
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 30,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+    },
+  };
+
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
@@ -39,528 +69,625 @@ export const HealingBreath = ({ data, swiperOption, mode: courseViewMode }) => {
     }
   };
 
-  const autoSwiperOption = {
-    slidesPerView: 1,
-    spaceBetween: 30,
-    centeredSlides: true,
-    autoplay: {
-      delay: 2000,
-    },
-    pagination: {
-      el: '.research__list-pagination',
-      clickable: true,
-    },
-  };
-
   return (
     <>
-      <main>
-        <section className="top-column">
-          <div className="container">
-            <p className="type-course">{mode}</p>
-            <h1 className="course-name">{title}</h1>
-            <ul className="course-details-list">
-              <li>Relieve stress, anxiety, and tension</li>
-              <li>Improve your energy & calm</li>
-              <li>Experience deep meditation</li>
-            </ul>
-            {courseViewMode !== WORKSHOP_MODE.VIEW && (
-              <Link
-                activeClassName="active"
-                className="btn-secondary v2"
-                to="registerNowBlock"
-                onClick={handleRegister}
-                spy={true}
-                smooth={true}
-                duration={500}
-                offset={-100}
-              >
-                Register Now
-              </Link>
-            )}
-          </div>
-          <CourseDetailsCard
-            workshop={data}
-            courseType={COURSE_TYPES.HEALING_BREATH}
-            courseViewMode={courseViewMode}
-          ></CourseDetailsCard>
-        </section>
-        <section className="progress-section">
-          <div className="container">
-            <h5 className="progress-section__title">
-              Discover the transformation that 4,000+
-              <br />
-              <span>healthcare professionals</span> have
-              <br />
-              experienced since 2016.
-            </h5>
-            <div className="achivment">
-              <div className="row">
-                <div className="col-12 col-lg-3 text-center text-lg-left">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img
-                        src="/img/ic-70-independent-studies.svg"
-                        alt="years"
-                      />
-                    </div>
-                    <h6 className="achivment__title">
-                      Backed by 100+ <br />
-                      independent studies
-                    </h6>
-                    <p className="achivment__text">
-                      <span>2x</span> better sleep <br />
-                      <span> 56% </span> reduced anxiety <br />
-                      <span>5x</span> improved immunity
-                    </p>
-                  </div>
-                </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-3-day-online-course.svg" alt="day" />
-                    </div>
-                    <h6 className="achivment__title">
-                      3-Day {mode}
+      <main className="the-sky-program">
+        <section className="sky-top-section">
+          <div className="banner">
+            <div className="container">
+              <div className="left-section">
+                <p>{mode}</p>
+                <div className="banner-title">{title}</div>
+                <div className="banner-features">
+                  <ul>
+                    <li>
+                      Alleviate stress & anxiety:
                       <br />
-                      course
-                    </h6>
-                    <p className="achivment__text">
-                      {workshopTotalHours} hours a day live interactive sessions
-                      with certified instructors
-                    </p>
-                  </div>
+                      Reconnect to the joy in medicine
+                    </li>
+                    <li>Boost energy & alertness</li>
+                    <li>
+                      Cultivate inner calm & connectedness with self & others{' '}
+                    </li>
+                  </ul>
                 </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-comfort-of-your-home.svg" alt="day" />
-                    </div>
-                    <h6 className="achivment__title">SKY community</h6>
-                    <p className="achivment__text">
-                      You’ll have access to online follow-up sessions to help
-                      support your continual self-care journey
-                    </p>
+                {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                  <div className="registration-wrap">
+                    <button
+                      className="register-button mt-2"
+                      onClick={handleRegister}
+                    >
+                      Register Now
+                    </button>
                   </div>
+                )}
+                <div className="training-eligibility-text">
+                  Discover the transformation experienced by over{' '}
+                  <strong>7,000 healthcare professionals</strong> since 2016.
                 </div>
-                <div className="col-12 col-lg-3 text-center text-lg-left mt-4 mt-lg-0">
-                  <div className="logo-achivment">
-                    <div className="achivment__logo">
-                      <img src="/img/ic-limited-time-only.svg" alt="day" />
-                    </div>
-                    <h6 className="achivment__title">
-                      CEs available for every
-                      <br />
-                      hour of attendance
-                    </h6>
-                    <p className="achivment__text">
-                      Accredited program by NYU
-                      <br />
-                      Langone School of Medicine
-                    </p>
-                  </div>
-                </div>
+              </div>
+              <div className="right-section">
+                <CourseDetailsCard
+                  workshop={data}
+                  courseType={COURSE_TYPES.HEALING_BREATH}
+                  courseViewMode={courseViewMode}
+                ></CourseDetailsCard>
               </div>
             </div>
-            <div className="featured-in">
-              <h2 className="featured-in__title">Featured in</h2>
-              <div className="featured-in__box d-none d-lg-flex">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-tnyt.png" alt="tnyt" />
-                <img src="/img/featured-in-time.png" alt="time" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
-              </div>
-              <div className="featured-in__box d-flex d-lg-none">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-time.png" alt="time" />
+          </div>
+        </section>
+        <section className="featured-in">
+          <div className="container">
+            <div className="featuren-in-box">
+              <h2 className="title">Featured In</h2>
+              <div className="featured-brands">
                 <img
-                  className="m-auto"
+                  src="/img/featured-in-cnn.png"
+                  width="80"
+                  height="60"
+                  alt="CNN"
+                />
+                <img
+                  src="/img/featured-in-yoga.png"
+                  width="115"
+                  height="60"
+                  alt="Yoga Journal"
+                />
+                <img
                   src="/img/featured-in-tnyt.png"
-                  alt="tnyt"
+                  width="266"
+                  height="70"
+                  alt="The New York Times"
+                />
+                <img
+                  src="/img/featured-in-time.png"
+                  width="109"
+                  height="69"
+                  alt="Time"
+                />
+                <img
+                  src="/img/featured-in-wsj.png"
+                  width="74"
+                  height="47"
+                  alt="WSJ"
+                />
+                <img
+                  src="/img/featured-in-forbes.png"
+                  width="117"
+                  height="64"
+                  alt="Forbes"
+                />
+                <img
+                  src="/img/featured-in-nbc.png"
+                  width="54"
+                  height="65"
+                  alt="NBC"
                 />
               </div>
             </div>
           </div>
         </section>
-        <section className="how-it-works how-it-works_alt">
+        <section className="techniques-to-thrive">
           <div className="container">
-            <div className="how-it-works__block">
-              <h2 className="how-it-works__title section-title">
-                Our Program:
-              </h2>
-            </div>
-            <div className="how-it-works__list">
-              <div className="how-it-works__item">
-                <ul>
-                  <li>
-                    <span>
-                      Our resilience programs help healthcare professionals cope
-                      with stress, resulting in a greater sense of calm and
-                      focus.
-                    </span>
-                  </li>
-                  <li>
-                    <span>
-                      Our research-backed techniques can help individuals manage
-                      burnout and regain a feeling of increased energy and
-                      balance in their lives.
-                    </span>
-                  </li>
-                  <li>
-                    <span>
-                      Our interactive well-being course allows participants to
-                      access that inner quiet space within each of us amid all
-                      the external chaos.
-                    </span>
-                  </li>
-                </ul>
-              </div>
+            <h2 className="title">Gain evidence-based techniques to thrive</h2>
+            <div className="content">
+              During the 3-day SKY Program, you’ll gain research-backed
+              techniques and more, including the world-renowned SKY Breath
+              Meditation, shown to significantly reduce stress, improve sleep,
+              and enhance overall wellness.
             </div>
           </div>
         </section>
-        <section className="comments">
+        <section className="the-science">
           <div className="container">
-            <h2 className="comments__title section-title text-center">
-              How this workshop is changing lives
-            </h2>
-          </div>
-          <div className="comments__video">
-            <iframe
-              src="https://player.vimeo.com/video/555823694"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            ></iframe>
-          </div>
-          <div className="container mb-5">
-            <h2 className="comments__title section-title text-center">
-              Testimonials
-            </h2>
-          </div>
-          <Swiper className="px-3 px-lg-0 comments__item_new" {...swiperOption}>
-            <SwiperSlide className="swiper-slide">
-              <div className="comments__text">
-                <p>
-                  I feel humane. I have all the clinical skills to teach me not
-                  to feel bad, to be professional, to keep up with everything
-                  around me. This course helped me accept and deal with things
-                  and process what I can control and take things as it is.
-                </p>
+            <div className="science-box">
+              <h2 className="title hidden">The Science</h2>
+              <div className="image-area">
+                <img
+                  src="/img/the-science-brain.webp"
+                  width="409"
+                  height="410"
+                  alt="science"
+                />
               </div>
-              <p className="comments__quote text-right">
-                - Sokhamony Pheng,
-                <br /> Mental Health Caseworker
-              </p>
-            </SwiperSlide>
-
-            <SwiperSlide className="swiper-slide">
-              <div className="comments__text">
-                <p>
-                  The providers thoroughly enjoyed the class and found the
-                  techniques learned and taught to be tremendously beneficial
-                  for their overall health and well-being. Per the evaluations,
-                  the providers appreciated the overall content and structure of
-                  the class. In addition, the participants found profound
-                  differences within themselves and with their overall emotional
-                  and mental well-being.
-                </p>
-              </div>
-              <p className="comments__quote text-right">
-                - Kaiser Permanente Staff
-              </p>
-            </SwiperSlide>
-
-            <SwiperSlide className="swiper-slide">
-              <div className="comments__text">
-                <p>
-                  Fabulous! Excellent! Very Positive! I will recomment it to
-                  everyone I know. All physicians need it! Excellent!
-                  Outstanding program! Good! Great! Fantastic! Excellent! I will
-                  recommend it to patients and providers! In a nice and warm
-                  environment, to learn new perspectives and skills!
-                </p>
-              </div>
-              <p className="comments__quote text-right">
-                - Kaiser Permanente Staff
-              </p>
-            </SwiperSlide>
-
-            <SwiperSlide className="swiper-slide">
-              <div className="comments__text">
-                <p>
-                  This course was an eye opener for me. I have never experienced
-                  anything like that before. The breathing exercises, meditation
-                  and the yoga really gave me a new perspective on leading a
-                  meaningful life. I would recommend this program to anyone who
-                  is searching for peace and tranquility in their life.
-                </p>
-              </div>
-              <p className="comments__quote text-right">
-                - S. Chandramohan, M.D
-              </p>
-            </SwiperSlide>
-
-            <SwiperSlide className="swiper-slide">
-              <div className="comments__text">
-                <p>
-                  A lot of us deal with very sick patients, with very needy
-                  families and we just give, give, give and it's hard to give
-                  into ourselves. This course really makes you think about
-                  self-care in a different way. That feels so good to know that
-                  I have something that I can take with me and do day after day
-                  and know that it works.
-                </p>
-              </div>
-              <p className="comments__quote text-right">
-                - Theiline T. Gborkorquellie, MD
-              </p>
-            </SwiperSlide>
-
-            <SwiperSlide className="swiper-slide">
-              <div className="comments__text">
-                <p>
-                  I am now committed to myself and to make this program work for
-                  me. I can honestly say that when I’m done with the deep
-                  breathing and meditation that I have more energy. At night, I
-                  sleep better and wake up feeling more refreshed.
-                </p>
-              </div>
-              <p className="comments__quote text-right">
-                - Margaretha Cash,
-                <br /> Clinical Nurse Specialist, NICU
-              </p>
-            </SwiperSlide>
-          </Swiper>
-        </section>
-        <section className="studies">
-          <div className="container">
-            <h2 className="col-lg-10 p-0 mx-auto studies__title section-title">
-              An evidence-based practice that can significantly lower stress
-              from the very 1st session!
-            </h2>
-            <div className="studies__block">
-              <div className="studies__info-block">
-                <div className="studies__info">
-                  <h4 className="studies__number">100+</h4>
-                  <h4 className="studies__name">
-                    independent <br />
-                    studies
-                  </h4>
-                  <img src="/img/mask.svg" alt="mask" />
-                </div>
-                <p>on {COURSE_TYPES.SKY_BREATH_MEDITATION.name} (SKY)</p>
-              </div>
-              <p className="studies__text">
-                <span>
-                  From reducing stress to getting better rest, the SKY Breath
-                  Meditation techniques have demonstrated measurable impact on
-                  quality of life.
-                </span>
-                <span>
-                  Over 100 independent studies conducted on four continents and
-                  published in peer review journals, have demonstrated a
-                  comprehensive range of benefits from practicing SKY Breath.
-                </span>
-                {/*
-                  <p className="summary_detail_c">
-                    Summary of Independent Research Findings and{' '}
-                    <a onClick={(e) => this.openResearchModal(e)}>Sources</a>
-                  </p> */}
-              </p>
-            </div>
-            <div className="studies__result">
-              <h3 className="studies__result-title section-title">
-                Research result key findings
-              </h3>
-              <div className="studies__list">
-                <div className="container col-12 col-lg-10">
-                  <div className="row">
-                    <div className="col-12 col-md-3 studies__item studies__item_violet">
-                      <h6>Deep Sleep Increases</h6>
-
-                      <div className="studies__item-img">
-                        218%
-                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Deep Sleep Increases</h3>
-                        <p>
-                          <span>INCREASE</span>
-                          in deep sleep
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_violet">
-                      <h6>Well-Being Hormones Increase</h6>
-
-                      <div className="studies__item-img">
-                        50%
-                        <img src="/img/ic-arrow-violet.svg" alt="violet" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Well-Being Hormones Increase</h3>
-                        <p>
-                          <span>INCREASE</span>
-                          serum prolactin
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_blue">
-                      <h6>Depression Decreases</h6>
-
-                      <div className="studies__item-img">
-                        70%
-                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Depression Decreases</h3>
-                        <p>
-                          <span>REMISSION RATE</span> in depression in 1 month
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-3 studies__item studies__item_blue">
-                      <h6>Stress Hormones Decrease</h6>
-
-                      <div className="studies__item-img">
-                        56%
-                        <img src="/img/ic-arrow-blue.svg" alt="blue" />
-                      </div>
-
-                      <div className="studies__item-text">
-                        <h3>Stress Hormones Decrease</h3>
-                        <p>
-                          <span>REDUCTION</span>
-                          serum cortisol
-                        </p>
-                      </div>
-                    </div>
+              <div className="content-container">
+                <h2 className="title">The Science</h2>
+                <div className="content">
+                  <div className="count">
+                    <img
+                      src="/img/100-studies.webp"
+                      width="275"
+                      height="135"
+                      alt="studies"
+                    />
+                  </div>
+                  <div className="the-science-text">
+                    Research conducted on four continents and published in
+                    peer-reviewed journals have demonstrated a comprehensive
+                    range of benefits from practicing SKY Breath Meditation
+                    (Sudarshan Kriya Yoga and accompanying breathing techniques
+                    taught in the SKY Program), including:
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <section className="research text-center">
+        <section className="research-includes">
           <div className="container">
-            <h2 className="research__title section-title research__title_new">
-              Research highlights
-            </h2>
-
-            <ResearchPaginationHB></ResearchPaginationHB>
-
-            <Swiper
-              className="d-lg-none research__list-container swiper-container"
-              {...autoSwiperOption}
-            >
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p
-                  className="research__quote"
-                  onClick={() =>
-                    window.open(
-                      'https://news.yale.edu/2020/07/27/improve-students-mental-health-yale-study-finds-teach-them-breathe',
-                    )
-                  }
-                >
-                  "Improved immune cell counts within as little as 3 weeks"
-                </p>
-                <div>
-                  <img src="/img/yale-news-color.png" alt="ljoy" />
+            <div className="research-listing">
+              <div className="research-list-item">
+                <h3>Resilience to Stress from COVID 19 Stress</h3>
+                <img
+                  src="/img/research-count1.webp"
+                  width="114"
+                  height="119"
+                  alt="research"
+                />
+                <div className="description">
+                  IMPROVED RESILIENCE IN 6 WEEKS
                 </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p
-                  className="research__quote"
-                  onClick={() =>
-                    window.open(
-                      'https://news.stanford.edu/news/2014/september/meditation-helps-ptsd-090514.html',
-                    )
-                  }
-                >
-                  “Stanford scholar helps veterans recover from war trauma”
-                </p>
-                <div>
-                  <img src="/img/stanford-news-color.png" alt="sabr" />
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="research__list-item swiper-slide">
-                <p
-                  className="research__quote"
-                  onClick={() =>
-                    window.open('https://hms.harvard.edu/news/be-kind-unwind')
-                  }
-                >
-                  "Be Kind and Unwind"
-                </p>
-                <div>
-                  <img
-                    src="/img/harvard-medical-school-color.png"
-                    alt="prevention"
-                  />
-                </div>
-              </SwiperSlide>
-              <div className="research__list-pagination"></div>
-            </Swiper>
+              </div>
+              <div className="research-list-item">
+                <h3>
+                  Cortisol
+                  <br />
+                  Stress hormone
+                </h3>
+                <img
+                  src="/img/research-count2.webp"
+                  width="114"
+                  height="119"
+                  alt="research"
+                />
+                <div className="description">IN 2 WEEKS</div>
+              </div>
+              <div className="research-list-item">
+                <h3>Anxiety</h3>
+                <img
+                  src="/img/research-count3.webp"
+                  width="114"
+                  height="119"
+                  alt="research"
+                />
+                <div className="description">ACHIEVED REMISSION IN 4 WEEKS</div>
+              </div>
+              <div className="research-list-item">
+                <h3>
+                  Sleep
+                  <br />
+                  Slow Wave Sleep
+                </h3>
+                <img
+                  src="/img/research-count4.webp"
+                  width="114"
+                  height="119"
+                  alt="research"
+                />
+              </div>
+              <div className="research-list-item">
+                <h3>Life Satisfaction</h3>
+                <img
+                  src="/img/research-count5.webp"
+                  width="114"
+                  height="119"
+                  alt="research"
+                />
+                <div className="description">IN 6 WEEKS</div>
+              </div>
+            </div>
+            <div className="view-research">
+              <a
+                data-action="url"
+                data-params="false"
+                href="clkn/https/healingbreaths.org/the-science/"
+                target="_blank"
+              >
+                View Research
+              </a>
+            </div>
           </div>
         </section>
-
-        <section className="about">
+        <section className="what-to-expect">
           <div className="container">
-            <h2 className="about__title section-title text-center">
-              About the Art of Living
-            </h2>
-            <div className="row">
-              <div className="col-12 col-md-3 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-39-years.svg" alt="years" />
+            <div className="content-area">
+              <div className="left-area">
+                <h2 className="title">What To Expect</h2>
+                <div className="content-box">
+                  <p>
+                    After completing this program, you will be equipped with the
+                    following tools and knowledge to transform all areas of your
+                    life. You will:
+                  </p>
+                  <ul>
+                    <li>
+                      Gain insight into the compelling science behind the
+                      powerful connection between your body, mind, breath, and
+                      sense of self.
+                    </li>
+                    <li>
+                      Learn SKY Breath Meditation, the renowned evidence-based
+                      technique demonstrated to improve core markers of
+                      mind-body health significantly.
+                    </li>
+                    <li>
+                      Discover further tangible breathing techniques that will
+                      increase your energy and reduce stress.
+                    </li>
+                    <li>
+                      Identify and optimize your sources of energy to maximize
+                      personal well-being.
+                    </li>
+                    <li>
+                      Develop practical tools and social skills through
+                      reflective and interactive processes.
+                    </li>
+                    <li>
+                      Create a regular self-care routine by incorporating
+                      cognitive reframing tools and the SKY practice into your
+                      daily life.{' '}
+                    </li>
+                  </ul>
                 </div>
-                <p className="about__text">
-                  <span>Since 2016</span> providing service to healthcare
-                  professionals
-                </p>
               </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-15-hospitals.svg" alt="centers" />
-                </div>
-                <p className="about__text">
-                  <span>15+ hospitals</span> across the U.S
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-30-cities.svg" alt="countries" />
-                </div>
-                <p className="about__text">
-                  <span>30+ cities</span> where our programs made a difference
-                </p>
-              </div>
-              <div className="col-12 col-md-3 mt-4 mt-md-0 text-center about__card">
-                <div className="about__logo">
-                  <img src="/img/ic-450-m-lives.svg" alt="lives" />
-                </div>
-                <p className="about__text">
-                  <span>4,000+ lives</span> touched through our courses & events
-                </p>
+              <div className="right-area">
+                <img
+                  className="expect-img"
+                  src="/img/healing-breaths-nurse.webp"
+                  width="409"
+                  height="410"
+                  alt="nurse"
+                />
               </div>
             </div>
           </div>
         </section>
-        {/* <section className="details">
-          <div className="container"></div>
-        </section> */}
+        <section className="whats-included">
+          <div className="container">
+            <h2 className="title">What's Included</h2>
+            <div className="included-listing">
+              <div className="included-list-item">
+                <div className="check-icon">
+                  <img
+                    src="/img/icon-check-pad.svg"
+                    height="60"
+                    width="60"
+                    alt="icon"
+                  />
+                </div>
+                <div className="text">
+                  Evidenced-based SKY Breath Meditation technique
+                </div>
+              </div>
+              <div className="included-list-item">
+                <div className="check-icon">
+                  <img
+                    src="/img/icon-check-pad.svg"
+                    height="60"
+                    width="60"
+                    alt="icon"
+                  />
+                </div>
+                <div className="text">2.5-hour daily live online sessions</div>
+              </div>
+              <div className="included-list-item">
+                <div className="check-icon">
+                  <img
+                    src="/img/icon-check-pad.svg"
+                    height="60"
+                    width="60"
+                    alt="icon"
+                  />
+                </div>
+                <div className="text">Certified expert instruction</div>
+              </div>
+              <div className="included-list-item">
+                <div className="check-icon">
+                  <img
+                    src="/img/icon-check-pad.svg"
+                    height="60"
+                    width="60"
+                    alt="icon"
+                  />
+                </div>
+                <div className="text">Cognitive reframing skills</div>
+              </div>
+              <div className="included-list-item">
+                <div className="check-icon">
+                  <img
+                    src="/img/icon-check-pad.svg"
+                    height="60"
+                    width="60"
+                    alt="icon"
+                  />
+                </div>
+                <div className="text">
+                  Tailored self-care regimen designed for healthcare
+                  professionals
+                </div>
+              </div>
+              <div className="included-list-item">
+                <div className="check-icon">
+                  <img
+                    src="/img/icon-check-pad.svg"
+                    height="60"
+                    width="60"
+                    alt="icon"
+                  />
+                </div>
+                <div className="text">
+                  Latest scientific evidence & research
+                </div>
+              </div>
+              <div className="included-list-item">
+                <div className="check-icon">
+                  <img
+                    src="/img/icon-check-pad.svg"
+                    height="60"
+                    width="60"
+                    alt="icon"
+                  />
+                </div>
+                <div className="text">
+                  CEU credits: Physicians, PAs, NPs, Nurses, and Dentists can
+                  receive 1 CME/CEU credit for every class hour. Other
+                  healthcare professionals can receive a letter of attendance.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="change-stories">
+          <div className="container">
+            <h2 className="title">Real Stories of Change</h2>
+            <div className="story-video">
+              <iframe
+                width="669"
+                height="376"
+                src="https://www.youtube.com/embed/SgngEpwLzig?si=onJ4WD5nlAuDMIVt"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="testimonial-slider-wrapper">
+              <div className="testimonials swiper">
+                <Swiper
+                  className="px-3 px-lg-0 comments__item_new"
+                  {...swiperOption}
+                >
+                  <SwiperSlide className="swiper-slide">
+                    <div className="testimony-item">
+                      <p>
+                        “[After the course] I was feeling better than my
+                        baseline, I was able to cut my blood pressure meds by a
+                        third.”
+                      </p>
+                      <div className="name">Dr. Robert McGregor</div>
+                      <div className="position">
+                        Chief Medical Officer, Akron Children's Hospital
+                      </div>
+                    </div>
+                  </SwiperSlide>
+
+                  <SwiperSlide className="swiper-slide">
+                    <div className="testimony-item">
+                      <p>
+                        “When I'm done with the deep breathing and meditation, I
+                        have more energy. At night, I sleep better and wake up
+                        feeling more refreshed. When I meet with the group, it
+                        reinforces my commitment to care for myself first.”
+                      </p>
+                      <div className="name">Margaretha Cash</div>
+                      <div className="position">Clinical Nurse Specialist</div>
+                    </div>
+                  </SwiperSlide>
+
+                  <SwiperSlide className="swiper-slide">
+                    <div className="testimony-item">
+                      <p>
+                        “This course was very, very good…it really does make you
+                        go deep within, and the beauty is that you do get a
+                        daily practice that you can carry with you forever. So
+                        I'm very appreciative. Very well thought out course, and
+                        I really enjoyed it.”
+                      </p>
+                      <div className="name">Dr. Sandeep Vaishnavi</div>
+                      <div className="position">
+                        Medical Director,
+                        <br />
+                        MindPath Care Center
+                      </div>
+                    </div>
+                  </SwiperSlide>
+
+                  <SwiperSlide className="swiper-slide">
+                    <div className="testimony-item">
+                      <p>
+                        “What I benefited most from the SKY Program is the
+                        affirmation that it's OK to care about myself and put me
+                        first…I will make the commitment to take 15 minutes out
+                        of the 1440 minutes a day for me, which will leave me
+                        1425 minutes to care for others.”
+                      </p>
+                      <div className="name">Kimberly Kelley</div>
+                      <div className="position">Nurse Director</div>
+                    </div>
+                  </SwiperSlide>
+
+                  <SwiperSlide className="swiper-slide">
+                    <div className="testimony-item">
+                      <p>
+                        “I had the highest sleep rating I've ever had. I'm eager
+                        to continue the practice, and I'm grateful for the
+                        training.”
+                      </p>
+                      <div className="name">Dr. Kaplan</div>
+                      <div className="position">LCMC Health System</div>
+                    </div>
+                  </SwiperSlide>
+
+                  <SwiperSlide className="swiper-slide">
+                    <div className="testimony-item">
+                      <p>
+                        “I thought it was very well organized. For every life in
+                        the pandemic now, every minute, every hour really
+                        matters. This was time very, very well spent and really
+                        necessary for me…”
+                      </p>
+                      <div className="name">David Mineta</div>
+                      <div className="position">
+                        CEO, Momentum for Mental Health
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                </Swiper>
+              </div>
+              <div className="swiper-button-prev" ref={navigationPrevRef}></div>
+              <div className="swiper-button-next" ref={navigationNextRef}></div>
+            </div>
+          </div>
+        </section>
+        <section className="healing-breaths">
+          <div className="container">
+            <h2 className="title">Healing Breaths</h2>
+            <div className="org-text">
+              List of some of the organizations that have benefited from the Art
+              of Living’s Healing Breaths SKY Programs
+            </div>
+            <div className="benefitted-orgs-list">
+              <div className="org-list-item">
+                <img
+                  src="/img/childrens-national-logo.webp"
+                  alt="children's natinoal"
+                  width="214"
+                  height="112"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/akron-childrens-hospital.webp"
+                  alt="Akron Children's Hopsital"
+                  width="151"
+                  height="65"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/franciscan-missionaries-of-our-lady.webp"
+                  alt="Franciscan missionaries of our lady"
+                  width="172"
+                  height="74"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/lcmc-health.webp"
+                  alt="LCMC Health"
+                  width="152"
+                  height="85"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/montefiore.webp"
+                  alt="montefiore"
+                  width="192"
+                  height="66"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/medstar-health.webp"
+                  alt="medstar health"
+                  width="200"
+                  height="57"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/cigna.webp"
+                  alt="Cigna"
+                  width="189"
+                  height="70"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/bayhealth.webp"
+                  alt="bayhealth"
+                  width="178"
+                  height="60"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/momentum-for-health.webp"
+                  alt="Momentum for health"
+                  width="127"
+                  height="93"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/transitions-group.webp"
+                  alt="Transitions Group"
+                  width="188"
+                  height="83"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/mindpath-care-center.webp"
+                  alt="Mindpath"
+                  width="198"
+                  height="60"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/bluecross-blueshields.webp"
+                  alt="bluecross blueshields"
+                  width="213"
+                  height="55"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/penn-medicine.webp"
+                  alt="Penn Medicine"
+                  width="233"
+                  height="50"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/metrowest-medical-center.webp"
+                  alt="Metrowest"
+                  width="198"
+                  height="60"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/pediatrix.webp"
+                  alt="Pediatrix"
+                  width="213"
+                  height="57"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/tulane.webp"
+                  alt="Tulane"
+                  width="149"
+                  height="60"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
       <HideOn divID="third" showOnPageInit={false}>
         <CourseBottomCard
