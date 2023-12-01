@@ -155,7 +155,7 @@ const AOL_MENU = [
         link: 'https://www.artofliving.org/us-en/service-projects-overview',
       },
       {
-        name: 'Research',
+        name: 'Science',
         link: 'https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya',
       },
       {
@@ -565,6 +565,8 @@ export const Header = () => {
                   src="/img/donate.svg"
                   alt="Donate"
                   className="donate__image"
+                  width="24"
+                  height="24"
                 />{' '}
                 Donation
               </a>

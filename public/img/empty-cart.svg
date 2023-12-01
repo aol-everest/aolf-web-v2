@@ -1,0 +1,25 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="mask0_1966_2784" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0"
+                        width="80" height="80">
+                        <path d="M0 7.62939e-06H80V80H0V7.62939e-06Z" fill="white" />
+                    </mask>
+                    <g mask="url(#mask0_1966_2784)">
+                        <path d="M16.5625 16.5625H77.6562L68.2812 49.375H25.9375" stroke="#FCA248"
+                            stroke-opacity="0.6" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path
+                            d="M40 68.125C40 70.7138 37.9013 72.8125 35.3125 72.8125C32.7237 72.8125 30.625 70.7138 30.625 68.125C30.625 65.5362 32.7237 63.4375 35.3125 63.4375C37.9013 63.4375 40 65.5362 40 68.125Z"
+                            stroke="#FCA248" stroke-opacity="0.6" stroke-width="3" stroke-miterlimit="10"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M63.5938 68.125C63.5938 70.7138 61.495 72.8125 58.9062 72.8125C56.3175 72.8125 54.2188 70.7138 54.2188 68.125C54.2188 65.5362 56.3175 63.4375 58.9062 63.4375C61.495 63.4375 63.5938 65.5362 63.5938 68.125Z"
+                            stroke="#FCA248" stroke-opacity="0.6" stroke-width="3" stroke-miterlimit="10"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M68.2812 58.75H28.8345C25.35 58.75 23.0836 55.083 24.6419 51.9661L25.9375 49.375"
+                            stroke="#FCA248" stroke-opacity="0.6" stroke-width="3" stroke-miterlimit="10"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M2.34375 7.1875H13.8845C17.8753 21.1577 25.9375 49.375 25.9375 49.375"
+                            stroke="#FCA248" stroke-opacity="0.6" stroke-width="3" stroke-miterlimit="10"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                </svg>

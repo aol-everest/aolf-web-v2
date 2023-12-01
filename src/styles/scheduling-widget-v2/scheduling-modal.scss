@@ -1048,8 +1048,7 @@
 
     &-dates {
       margin-top: 8px;
-
-      display: flex;
+      display: inline;
       align-items: center;
       justify-content: space-between;
     }
@@ -1064,9 +1063,12 @@
         sans-serif;
       font-size: 12px;
       line-height: 16px;
-
       border-radius: 10px;
       background: #fef5ec;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
 
       @media (min-width: 1200px) {
         font-size: 16px;

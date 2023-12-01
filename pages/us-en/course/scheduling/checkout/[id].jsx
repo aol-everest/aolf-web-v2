@@ -603,21 +603,24 @@ const SchedulingPaymentForm = ({
                     <h5 className="scheduling-modal__content-total-title">
                       {title}
                     </h5>
-                    <div className="scheduling-modal__content-total-date-time">
-                      <div className="scheduling-modal__content-total-time">
-                        {tConvert(eventStartTime, true)} -{' '}
-                        {tConvert(eventEndTime, true)}
-                      </div>
-                    </div>
+
                     <div className="scheduling-modal__content-total-dates">
                       {timings.map((t) => {
                         return (
-                          <div
-                            className="scheduling-modal__content-total-date"
-                            key={t.sfid}
-                          >
-                            {dayjs.utc(t.startDate).format('ddd, D')}
-                          </div>
+                          <>
+                            <div
+                              className="scheduling-modal__content-total-date"
+                              key={t.sfid}
+                            >
+                              <span>
+                                {dayjs.utc(t.startDate).format('ddd, D')}
+                              </span>
+                              <span>
+                                {tConvert(t.startTime, true)} -{' '}
+                                {tConvert(t.endTime, true)}
+                              </span>
+                            </div>
+                          </>
                         );
                       })}
                     </div>
