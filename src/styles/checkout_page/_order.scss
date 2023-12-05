@@ -667,6 +667,12 @@
     }
   }
 
+  .reciept__payment_list {
+    .custom-checkbox + label:before {
+      border-color: #ee8585;
+    }
+  }
+
   .agreement,
   .health-confirmation {
     &__group {
