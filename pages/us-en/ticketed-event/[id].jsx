@@ -69,39 +69,43 @@ function TicketedEvent() {
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
-    let selectedIdsLocal = [...selectedIds];
-    const selectedTicketsCopy = !selectedIdsLocal.includes(item.pricingTierId)
-      ? [...selectedTickets, item]
-      : [...selectedTickets];
+    if (item) {
+      let selectedIdsLocal = [...selectedIds];
+      const selectedTicketsCopy = !selectedIdsLocal.includes(
+        item?.pricingTierId,
+      )
+        ? [...selectedTickets, item]
+        : [...selectedTickets];
 
-    const filteredItems = [];
-    selectedTicketsCopy.forEach((newItem) => {
-      if (newItem.pricingTierId === item.pricingTierId) {
-        if (type === 'add') {
-          selectedIdsLocal = [...selectedIdsLocal, item.pricingTierId];
-          newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
-          filteredItems.push(newItem);
-        } else {
-          if (newItem.numberOfTickets === 1) {
-            const filteredIds = selectedIdsLocal.filter(
-              (id) => id !== item.pricingTierId,
-            );
-
-            selectedIdsLocal = [...filteredIds];
-          }
-          newItem.numberOfTickets = newItem.numberOfTickets
-            ? newItem.numberOfTickets - 1
-            : newItem.numberOfTickets;
-          if (newItem.numberOfTickets) {
+      const filteredItems = [];
+      selectedTicketsCopy.forEach((newItem) => {
+        if (newItem.pricingTierId === item?.pricingTierId) {
+          if (type === 'add') {
+            selectedIdsLocal = [...selectedIdsLocal, item.pricingTierId];
+            newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
             filteredItems.push(newItem);
+          } else {
+            if (newItem.numberOfTickets === 1) {
+              const filteredIds = selectedIdsLocal.filter(
+                (id) => id !== item.pricingTierId,
+              );
+
+              selectedIdsLocal = [...filteredIds];
+            }
+            newItem.numberOfTickets = newItem.numberOfTickets
+              ? newItem.numberOfTickets - 1
+              : newItem.numberOfTickets;
+            if (newItem.numberOfTickets) {
+              filteredItems.push(newItem);
+            }
           }
+        } else {
+          filteredItems.push(newItem);
         }
-      } else {
-        filteredItems.push(newItem);
-      }
-    });
-    setSelectedIds(selectedIdsLocal);
-    setSelectedTickets(filteredItems);
+      });
+      setSelectedIds(selectedIdsLocal);
+      setSelectedTickets(filteredItems);
+    }
   };
 
   const applyDiscount = (discount) => {

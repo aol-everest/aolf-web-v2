@@ -670,8 +670,14 @@ const TicketCheckoutForm = ({ router }) => {
                       {loading && <Loader />}
 
                       <button
-                        className="tickets-modal__footer-button"
-                        disabled={loading}
+                        className={`tickets-modal__footer-button ${
+                          loading || !(formikProps.isValid && formikProps.dirty)
+                            ? 'disabled'
+                            : ''
+                        }`}
+                        disabled={
+                          loading || !(formikProps.isValid && formikProps.dirty)
+                        }
                         type="submit"
                       >
                         Place order
@@ -702,7 +708,9 @@ const TicketCheckoutForm = ({ router }) => {
                           key={item.pricingTierId}
                         >
                           x{item?.numberOfTickets} {item.pricingTierName}{' '}
-                          <span>${item.price.toFixed(2)}</span>
+                          <span>
+                            ${(item.price * item?.numberOfTickets).toFixed(2)}
+                          </span>
                         </p>
                       );
                     })}
