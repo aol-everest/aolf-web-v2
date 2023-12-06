@@ -493,9 +493,9 @@ const TicketCongratulations = () => {
             <div className="col-12 col-lg-4 borderLeft">
               <div className="sidebar-banner">
                 <img
-                  src="https://cdn.emailacademy.com/user/unregistered/c5a85d22-0112-4999-94b4-c4f9e9c08eed2023_08_29_03_03_06_0800000031_03_03_12.webp"
-                  alt="gurudev image"
                   className="w-full rounded-[12px]"
+                  src="/img/image@3x.png"
+                  alt="gurudev image"
                 />
               </div>
               <div className="add-calendar-btn-wrap">
