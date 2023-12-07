@@ -1121,6 +1121,7 @@ export const PaymentFormHB = ({
                       openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                       hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                       totalFee={totalFee}
+                      onAccommodationChange={handleAccommodationChange}
                       paymentOptionChange={handlePaymentOptionChange}
                       showCouponCodeField={showCouponCodeField}
                       isUsableCreditAvailable={isUsableCreditAvailable}

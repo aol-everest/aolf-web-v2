@@ -439,8 +439,9 @@
       border-bottom: 1px solid #e8f2fc;
 
       &_v1 {
-        padding: 20px;
-
+        @media screen and (min-width: 991px) {
+          padding: 20px;
+        }
         .price {
           font-size: 20px;
           line-height: 1;
@@ -647,7 +648,6 @@
     &__total {
       display: flex;
       justify-content: space-between;
-      margin: 10px 15px;
       padding: 14px 15px;
       background-color: transparentize(#e8f2fc, 0.5);
       border-radius: 8px;
@@ -656,6 +656,10 @@
       font-weight: bold;
       line-height: 1.38;
       text-transform: uppercase;
+
+      @media screen and (min-width: 991px) {
+        margin: 10px 15px;
+      }
     }
 
     &__agreement {

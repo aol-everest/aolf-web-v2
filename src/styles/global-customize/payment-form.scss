@@ -202,6 +202,7 @@
 
     &:checked + .select-room__input-text {
       display: flex;
+      align-items: center;
     }
 
     &-text {
