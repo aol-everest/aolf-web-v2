@@ -1356,6 +1356,7 @@ export const PaymentFormGeneric = ({
                       values={values}
                       onComboDetailChange={handleComboDetailChange}
                       isCourseOptionRequired={isCourseOptionRequired}
+                      onAccommodationChange={handleAccommodationChange}
                     />
                   </div>
                   <AgreementForm

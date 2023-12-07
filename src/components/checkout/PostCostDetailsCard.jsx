@@ -357,7 +357,7 @@ export const PostCostDetailsCard = ({
                     formikProps.touched.accommodation,
                 })}
               >
-                <div tabIndex="1" className="select-room__current">
+                <div tabIndex="2" className="select-room__current">
                   <span className="select-room__placeholder">
                     Select Room &amp; Board
                   </span>
@@ -373,6 +373,10 @@ export const PostCostDetailsCard = ({
                             id={residentialAddOn.productSfid}
                             value={residentialAddOn.unitPrice}
                             name="room-lg"
+                            checked={
+                              formikProps.values?.accommodation?.productSfid ===
+                              residentialAddOn.productSfid
+                            }
                             className="select-room__input"
                           />
                           <span className="select-room__input-text">
