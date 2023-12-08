@@ -61,7 +61,7 @@
     "express": "^4.18.2",
     "formik": "^2.4.5",
     "formik-wizard-form": "^2.1.0",
-    "gsap": "^3.12.2",
+    "gsap": "^3.12.3",
     "helmet": "^7.1.0",
     "heroku-ssl-redirect": "^0.1.1",
     "is-url": "^1.2.4",
