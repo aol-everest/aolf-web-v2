@@ -555,7 +555,7 @@ const Thankyou = () => {
                           </a>
                         )}
 
-                      {!gatewayToInfinity && !isMeditationDeluxe && (
+                      {!gatewayToInfinity && (
                         <p className="get-started__text">
                           <br></br>
                           Next step: You will receive an email with details
