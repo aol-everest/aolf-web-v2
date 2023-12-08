@@ -392,7 +392,7 @@ const Thankyou = () => {
                         </p>
                       )}
                     </div>
-                    {orgConfig.name !== 'HB' && !gatewayToInfinity && (
+                    {orgConfig.name !== 'HB' && (
                       <>
                         <p className="get-started__text">
                           <br />
