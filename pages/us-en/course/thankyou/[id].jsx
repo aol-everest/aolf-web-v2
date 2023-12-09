@@ -572,8 +572,8 @@ const Thankyou = () => {
                       {isMeditationDeluxe && (
                         <p className="get-started__text">
                           <br></br>
-                          Next step: Next step: You will receive an email with
-                          details about accessing your {title.split('+')?.[0]}
+                          Next step: You will receive an email with details
+                          about accessing your {title.split('+')?.[0]}
                           online course. You will also receive an email with
                           next steps for choosing your {
                             title.split('+')?.[1]
@@ -582,7 +582,7 @@ const Thankyou = () => {
                         </p>
                       )}
                     </div>
-                    {orgConfig.name !== 'HB' && (
+                    {orgConfig.name !== 'HB' && !gatewayToInfinity && (
                       <>
                         <p className="get-started__text">
                           <br />
