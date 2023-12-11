@@ -122,7 +122,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/aolp-size.png" alt="Reduce" />
+                <img
+                  src="/img/aolp-size.png"
+                  alt="Reduce"
+                  width="50"
+                  height="50"
+                />
               </div>
               <div className="feature-text">
                 Reduce stress, anxiety, and depression
@@ -130,13 +135,23 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/aolp-increase.png" alt="Enhance" />
+                <img
+                  src="/img/aolp-increase.png"
+                  alt="Enhance"
+                  width="50"
+                  height="50"
+                />
               </div>
               <div className="feature-text">Increase your energy levels</div>
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/aolp-wellness.png" alt="Wellness" />
+                <img
+                  src="/img/aolp-wellness.png"
+                  alt="Wellness"
+                  width="50"
+                  height="50"
+                />
               </div>
               <div className="feature-text">
                 Learn wellness practices that last a lifetime
@@ -156,7 +171,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                   personal mantra, a charged sound that makes meditation easier,
                   introduced in the Sahaj Samadhi Meditation course.
                 </p>
-                <img src="/img/sky-sahaj.png" />
+                <img src="/img/sky-sahaj.webp" />
               </div>
               <p>
                 SKY Breath Meditation is an evidence-based breathwork practice
@@ -241,7 +256,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box box_1">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon1.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon1.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="92"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-1">
@@ -257,7 +277,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box box_2">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon2.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon2.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="92"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-2">21% Life Satisfaction</span>
@@ -270,7 +295,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box box_3">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon3.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon3.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="92"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-3">-57% Stress Hormone</span>
@@ -299,7 +329,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/peter_review.png" alt="reviewer" />
+                    <img
+                      src="/img/peter_review.webp"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Peter D., Los Angeles</div>
@@ -322,7 +357,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/aryanne_review.png" alt="reviewer" />
+                    <img
+                      src="/img/aryanne_review.webp"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Aryanne D., Los Angeles</div>
@@ -346,7 +386,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/amanda_review.png" alt="reviewer" />
+                    <img
+                      src="/img/amanda_review.webp"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">
@@ -371,7 +416,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/max-review.png" alt="reviewer" />
+                    <img
+                      src="/img/max-review.png"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Max Goldberg</div>
@@ -396,7 +446,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/julie-review.png" alt="reviewer" />
+                    <img
+                      src="/img/julie-review.png"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Julie Madeley</div>
@@ -418,7 +473,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/michelle_review.png" alt="reviewer" />
+                    <img
+                      src="/img/michelle_review.png"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Michelle Garisson</div>
@@ -439,7 +499,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/lewis_review.png" alt="reviewer" />
+                    <img
+                      src="/img/lewis_review.webp"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Dr. Lewis</div>
@@ -461,7 +526,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/brian_review.png" alt="reviewer" />
+                    <img
+                      src="/img/brian_review.png"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Brian</div>
@@ -482,7 +552,12 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/philip_review.png" alt="reviewer" />
+                    <img
+                      src="/img/philip_review.png"
+                      alt="reviewer"
+                      width="55"
+                      height="55"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Phillip</div>

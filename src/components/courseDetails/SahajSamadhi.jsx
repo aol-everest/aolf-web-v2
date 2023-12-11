@@ -135,19 +135,34 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/sahaj-samadhi-uparrow-icon.png" alt="Enhance" />
+                <img
+                  src="/img/sahaj-samadhi-uparrow-icon.png"
+                  alt="Enhance"
+                  width="65"
+                  height="64"
+                />
               </div>
               <div className="feature-text">Feel clearer & lighter</div>
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/sahaj-samadhi-eye-icon.png" alt="Elevate" />
+                <img
+                  src="/img/sahaj-samadhi-eye-icon.png"
+                  alt="Elevate"
+                  width="78"
+                  height="63"
+                />
               </div>
               <div className="feature-text">Unlock intuitive skills</div>
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/sahaj-samadhi-smile-icon.png" alt="Enhance" />
+                <img
+                  src="/img/sahaj-samadhi-smile-icon.png"
+                  alt="Enhance"
+                  width="64"
+                  height="64"
+                />
               </div>
               <div className="feature-text">Enhance emotional well-being</div>
             </div>
@@ -279,7 +294,12 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/dr-lewis-review.png" alt="reviewer" />
+                    <img
+                      src="/img/dr-lewis-review.png"
+                      alt="reviewer"
+                      width="69"
+                      height="69"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Dr. Lewis</div>
@@ -300,7 +320,12 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/brian-review.png" alt="reviewer" />
+                    <img
+                      src="/img/brian-review.png"
+                      alt="reviewer"
+                      width="69"
+                      height="69"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Brian</div>
@@ -320,7 +345,12 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/phillip-review.png" alt="reviewer" />
+                    <img
+                      src="/img/phillip-review.png"
+                      alt="reviewer"
+                      width="69"
+                      height="69"
+                    />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Phillip</div>

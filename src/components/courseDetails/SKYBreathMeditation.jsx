@@ -640,7 +640,10 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="bar-right">
                 <a href="#" onClick={handleRegister}>
-                  <img src="/img/regiter-btn-alt.original.png" alt="" />
+                  <img
+                    src="/img/regiter-btn-alt.original.png"
+                    alt="Enroll now"
+                  />
                 </a>
               </div>
             </div>
