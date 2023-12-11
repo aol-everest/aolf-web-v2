@@ -279,7 +279,7 @@ export const MobileCourseOptions = ({
           </div>
         )}
         {isSilentRetreatType ? (
-          <div>
+          <div className="mobile_board">
             {!isEarlyBirdAllowed && (
               <h1 className="title reciept__item reciept__item_main">
                 <span>Register</span>
@@ -459,6 +459,97 @@ export const MobileCourseOptions = ({
                   }
                 })}
               </ul>
+            )}
+
+            {hasGroupedAddOnProducts && (
+              <>
+                <h6 className="room__board__title mt-4">
+                  Room &amp; Board {isOfflineExpense && '*'}
+                </h6>
+                <div
+                  className={classNames('select-room select-room_rounded', {
+                    'no-valid':
+                      formikProps.errors.accommodation &&
+                      formikProps.touched.accommodation,
+                  })}
+                >
+                  <div tabIndex="1" className="select-room__current">
+                    <span className="select-room__placeholder">
+                      Select Room &amp; Board
+                    </span>
+                    {groupedAddOnProducts['Residential Add On'].map(
+                      (residentialAddOn) => {
+                        return (
+                          <div
+                            className="select-room__value"
+                            key={residentialAddOn.productSfid}
+                          >
+                            <input
+                              type="radio"
+                              id={residentialAddOn.productSfid}
+                              value={residentialAddOn.unitPrice}
+                              name="room-lg"
+                              checked={
+                                formikProps.values?.accommodation
+                                  ?.productSfid === residentialAddOn.productSfid
+                              }
+                              className="select-room__input"
+                            />
+                            <span className="select-room__input-text">
+                              {residentialAddOn.productName}{' '}
+                              <span className="price">
+                                $
+                                {residentialAddOn.unitPrice +
+                                  (expenseAddOn?.unitPrice || 0)}
+                              </span>
+                            </span>
+                          </div>
+                        );
+                      },
+                    )}
+                  </div>
+                  <ul className="select-room__list">
+                    {groupedAddOnProducts['Residential Add On'].map(
+                      (residentialAddOn) => {
+                        return (
+                          <li
+                            key={residentialAddOn.productSfid}
+                            onClick={() =>
+                              onAccommodationChange(
+                                formikProps,
+                                residentialAddOn,
+                              )
+                            }
+                            className={
+                              residentialAddOn.isFull &&
+                              'tw-pointer-events-none tw-opacity-60'
+                            }
+                          >
+                            <label
+                              htmlFor={residentialAddOn.productSfid}
+                              aria-hidden="aria-hidden"
+                              data-value={residentialAddOn.unitPrice}
+                              className="select-room__option"
+                            >
+                              <span>{residentialAddOn.productName}</span>
+                              {residentialAddOn.isFull && (
+                                <span className="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
+                                  Full
+                                </span>
+                              )}
+                              <span className="price">
+                                $
+                                {residentialAddOn.unitPrice +
+                                  (expenseAddOn?.unitPrice || 0)}
+                              </span>
+                            </label>
+                          </li>
+                        );
+                      },
+                    )}
+                  </ul>
+                </div>
+              </>
             )}
           </div>
         ) : (
