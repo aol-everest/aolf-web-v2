@@ -23,7 +23,7 @@
     .banner {
       height: 402px;
       width: 100%;
-      background: url(/img/art-of-living-premium-banner.jpg) no-repeat top left;
+      background: url(/img/art-of-living-premium-banner.webp) no-repeat top left;
       padding: 60px 76px 50px 76px;
       background-size: auto;
       background-position: center;
@@ -163,6 +163,7 @@
     }
     .feature-icon {
       width: 88px;
+      height: auto;
     }
     .feature-text {
       font-size: 18px;
@@ -218,16 +219,16 @@
       padding: 20px 65px 60px;
       flex-direction: column;
       &.box1 {
-        background: url(/img/aolp-ch-1.jpg) no-repeat top right;
+        background: url(/img/aolp-ch-1.webp) no-repeat top right;
       }
       &.box2 {
-        background: url(/img/aolp-ch-2.jpg) no-repeat top right;
+        background: url(/img/aolp-ch-2.webp) no-repeat top right;
       }
       &.box3 {
-        background: url(/img/aolp-ch-3.jpg) no-repeat top right;
+        background: url(/img/aolp-ch-3.webp) no-repeat top right;
       }
       &.box4 {
-        background: url(/img/aolp-ch-4.jpg) no-repeat top right;
+        background: url(/img/aolp-ch-4.webp) no-repeat top right;
       }
       .benefit-title {
         margin-top: auto;
@@ -524,6 +525,7 @@
         img {
           width: 57px;
           padding-top: 10px;
+          height: auto;
           @media only screen and (max-width: 991px) {
             width: 35px;
           }
@@ -797,7 +799,7 @@
     }
   }
   .aos-banner-third {
-    background: url(/img/aos-banner-4.jpg) no-repeat top left;
+    background: url(/img/aos-banner-4.webp) no-repeat top left;
     height: 400px;
     padding: 70px 90px 0 90px;
     margin: 20px 15px;

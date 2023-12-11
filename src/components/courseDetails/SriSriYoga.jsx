@@ -46,7 +46,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
         <section className="about-program">
           <div className="about-program__image">
             <img
-              src="/img/sri-sri-top-column.png"
+              src="/img/sri-sri-top-column.webp"
               alt="Sri Sri Yoga Foundation Program"
             />
           </div>
@@ -183,7 +183,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
               <div className="col-lg-6">
                 <div className="program-description__image">
                   <img
-                    src="/img/yoga-for-you.png"
+                    src="/img/yoga-for-you.webp"
                     alt="Yoga made just for you"
                   />
                 </div>
@@ -199,7 +199,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="col-lg-6">
                 <div className="program-description__image">
-                  <img src="/img/sri-sri-yoga.png" alt="Sri Sri Yoga" />
+                  <img src="/img/sri-sri-yoga.webp" alt="Sri Sri Yoga" />
                 </div>
               </div>
               <div className="col-lg-6 program-description__content">
@@ -220,7 +220,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
         <section className="program-banner">
           <Element name="registerNowBlock">
             <div className="program-banner__image">
-              <img src="/img/program-banner.png" alt="Limited Time Offer" />
+              <img src="/img/program-banner.webp" alt="Limited Time Offer" />
             </div>
             <div className="container">
               <h2 className="program-banner__title">Limited Time Offer</h2>
@@ -340,7 +340,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                 <div className="swiper-slide program-reviews__slide">
                   <div className="program-reviews__slide-item">
                     <div className="program-reviews__slide-item-image">
-                      <img src="/img/reviews-karen.png" alt="Karen" />
+                      <img src="/img/reviews-karen.webp" alt="Karen" />
                     </div>
                     <h3 className="program-reviews__slide-item-name">Karen</h3>
                     <span className="program-reviews__slide-item-location">
@@ -364,7 +364,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                 <div className="swiper-slide program-reviews__slide">
                   <div className="program-reviews__slide-item">
                     <div className="program-reviews__slide-item-image">
-                      <img src="/img/reviews-pooja.png" alt="Pooja" />
+                      <img src="/img/reviews-pooja.webp" alt="Pooja" />
                     </div>
                     <h3 className="program-reviews__slide-item-name">Pooja</h3>
                     <span className="program-reviews__slide-item-location">
@@ -388,7 +388,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                 <div className="swiper-slide program-reviews__slide">
                   <div className="program-reviews__slide-item">
                     <div className="program-reviews__slide-item-image">
-                      <img src="/img/reviews-emmet.png" alt="Emmet" />
+                      <img src="/img/reviews-emmet.webp" alt="Emmet" />
                     </div>
                     <h3 className="program-reviews__slide-item-name">Emmet</h3>
                     <span className="program-reviews__slide-item-location">
@@ -461,7 +461,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                 <div className="program-answers__item">
                   <div className="program-answers__item-image">
                     <img
-                      src="/img/sri-sri-answers-1.png"
+                      src="/img/sri-sri-answers-1.webp"
                       alt="Sri Sri Yoga is unique"
                     />
                   </div>
@@ -481,7 +481,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                 <div className="program-answers__item">
                   <div className="program-answers__item-image">
                     <img
-                      src="/img/sri-sri-answers-2.png"
+                      src="/img/sri-sri-answers-2.webp"
                       alt="Yoga for every body"
                     />
                   </div>
@@ -500,7 +500,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                 <div className="program-answers__item">
                   <div className="program-answers__item-image">
                     <img
-                      src="/img/sri-sri-answers-3.png"
+                      src="/img/sri-sri-answers-3.webp"
                       alt="Beyond the yoga pose"
                     />
                   </div>
@@ -523,7 +523,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
         </section>
         <section className="program-quote">
           <div className="program-quote__image">
-            <img src="/img/program-quote-bg.png" />
+            <img src="/img/program-quote-bg.webp" />
           </div>
           <div className="container">
             <div className="row">
