@@ -326,9 +326,12 @@ const SchedulingRange = () => {
       });
       if (response?.data && selectedDates?.length > 0) {
         const selectedSfids = getGroupedUniqueEventIds(response);
-        const finalWorkshops = response?.data.filter((item) =>
-          selectedSfids.includes(item.sfid),
-        );
+        const finalWorkshops =
+          mode === COURSE_MODES.IN_PERSON.value
+            ? response?.data
+            : response?.data.filter((item) =>
+                selectedSfids.includes(item.sfid),
+              );
 
         setTimeout(() => {
           const timeContainer = document.querySelector(

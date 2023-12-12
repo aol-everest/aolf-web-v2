@@ -1,5 +1,5 @@
 import { Loader } from '@components/loader';
-import { api, tConvert } from '@utils';
+import { api, emailRegExp, phoneRegExp, tConvert } from '@utils';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import moment from 'moment';
@@ -193,6 +193,24 @@ const TicketCongratulations = () => {
     const attendeeInfo = Object.keys(ticketData).map((attendeId) => {
       const item = ticketData[attendeId];
       return item;
+    });
+    if (attendeeInfo.length === 0) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: "Please input attendee details. Details can't be empty",
+      });
+    }
+    attendeeInfo.forEach((item) => {
+      if (!item || !item.firstName || !item.lastName) {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: "Please input attendee details. Details can't be empty",
+        });
+      }
+      if (!emailRegExp.test(item.email)) {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children:
+            'Please input correct email address. Email address is not valid',
+        });
+      }
     });
     const payload = {
       orderId: orderId,
@@ -475,9 +493,9 @@ const TicketCongratulations = () => {
             <div className="col-12 col-lg-4 borderLeft">
               <div className="sidebar-banner">
                 <img
-                  src="https://cdn.emailacademy.com/user/unregistered/c5a85d22-0112-4999-94b4-c4f9e9c08eed2023_08_29_03_03_06_0800000031_03_03_12.webp"
-                  alt="gurudev image"
                   className="w-full rounded-[12px]"
+                  src="/img/image@3x.png"
+                  alt="gurudev image"
                 />
               </div>
               <div className="add-calendar-btn-wrap">
@@ -507,7 +525,7 @@ const TicketCongratulations = () => {
                   <li className="event-item">
                     <i className="fa fa-calendar" aria-hidden="true"></i>{' '}
                     <span>Date: </span>
-                    {dayjs.utc(eventStartDate).format('MMMM D')}
+                    {dayjs.utc(eventStartDate).format('MMMM D YYYY')}
                   </li>
                   <li className="event-item">
                     <i className="fa fa-clock" aria-hidden="true"></i>{' '}
@@ -541,7 +559,7 @@ const TicketCongratulations = () => {
       <div className="float-bar congratulations-float">
         <div className="float-wrapper clearfix">
           <div className="bar-left">
-            <div className="bar-title">You are going to Sixth Sense</div>
+            <div className="bar-title">You are going to {title}</div>
           </div>
           <div className="bar-right">
             <button className="register-button" onClick={addToCalendarAction}>

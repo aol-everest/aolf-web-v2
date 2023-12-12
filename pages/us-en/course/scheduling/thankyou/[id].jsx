@@ -114,21 +114,15 @@ const Thankyou = () => {
   if (isLoading || !workshopId) return <PageLoading />;
 
   const {
-    title,
+    title = '',
     meetupTitle,
     productTypeId,
-    unitPrice,
-    id: courseId,
     formattedStartDateOnly,
     formattedEndDateOnly,
-    shortAddress,
     primaryTeacherName,
     primaryTeacherSfid,
     eventStartDate,
     eventEndDate,
-    phone1,
-    email,
-    timings,
     isGenericWorkshop,
     streetAddress1,
     streetAddress2,
@@ -136,15 +130,10 @@ const Thankyou = () => {
     country,
     eventStartTime,
     eventEndTime,
-    meetupStartDate,
-    meetupStartTime,
     meetupStartDateTimeGMT,
-    eventTimeZone,
-    eventType,
     eventendDateTimeGMT,
     eventStartDateTimeGMT,
     mode,
-    availableBundles,
   } = workshop;
 
   const isSKYType =
@@ -376,16 +365,40 @@ const Thankyou = () => {
                           </a>
                         )}
 
-                      <p className="get-started__text">
-                        Next step: You will receive an email with details about
-                        your {title}.
-                      </p>
+                      {!gatewayToInfinity && !isMeditationDeluxe && (
+                        <p className="get-started__text">
+                          <br></br>
+                          Next step: You will receive an email with details
+                          about your {title}.
+                        </p>
+                      )}
+                      {gatewayToInfinity && (
+                        <p className="get-started__text">
+                          <br></br>
+                          Next step: You will receive an email with details
+                          about logging in to your {title} course.
+                        </p>
+                      )}
+                      {isMeditationDeluxe && (
+                        <p className="get-started__text">
+                          <br></br>
+                          Next step: You will receive an email with details
+                          about accessing your {title.split('+')?.[0]}
+                          online course. You will also receive an email with
+                          next steps for choosing your {
+                            title.split('+')?.[1]
+                          }{' '}
+                          course dates.
+                        </p>
+                      )}
                     </div>
-                    {orgConfig.name !== 'HB' && (
+                    {orgConfig.name !== 'HB' && !gatewayToInfinity && (
                       <>
                         <p className="get-started__text">
                           <br />
-                          To get started, download the app.{' '}
+                          {isMeditationDeluxe
+                            ? 'For additional meditations, you can download the app.'
+                            : 'To get started, download the app.'}
                           {isGenericWorkshop && (
                             <>
                               <span>

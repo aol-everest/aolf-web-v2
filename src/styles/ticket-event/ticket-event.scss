@@ -408,7 +408,7 @@
 }
 .tickets-modal__counter-button,
 .tickets-modal__counter-input {
-  width: 40px;
+  width: 45px;
   height: 40px;
   border-radius: 10px;
   padding: 8px 12px;
@@ -535,6 +535,11 @@
   height: 52px;
   text-transform: uppercase;
   margin-top: 10px;
+
+  &:disabled {
+    background: #f7f5f4;
+    color: #b8b8b8;
+  }
 }
 .tickets-modal__footer-button-link {
   width: 100%;
