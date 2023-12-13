@@ -1,6 +1,6 @@
 import { Loader } from '@components';
 import { Dropdown } from '@components/checkout/Dropdown';
-import { ALERT_TYPES } from '@constants';
+import { ALERT_TYPES, COURSE_TYPES } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { api } from '@utils';
 import classNames from 'classnames';
@@ -18,17 +18,17 @@ const KeyCodes = {
   enter: 13,
 };
 
-const COURSE_TYPES = [
+const COURSE_TYPES_COUPON = [
   {
-    label: 'Silent Retreat',
+    label: COURSE_TYPES.SILENT_RETREAT.name,
     value: 'SILENT_RETREAT',
   },
   {
-    label: 'Sahaj Samadhi',
+    label: COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name,
     value: 'SAHAJ_SAMADHI_MEDITATION',
   },
   {
-    label: 'SKY Breath Meditation',
+    label: COURSE_TYPES.SKY_BREATH_MEDITATION.name,
     value: 'SKY_BREATH_MEDITATION',
   },
 ];
@@ -114,7 +114,7 @@ const CouponMergeResultCmp = ({
           <p className="advocate-reward__text mb-4">
             Your rewards code with a value of ${reedemableAmount} has been
             created for{' '}
-            {COURSE_TYPES.find((c) => c.value === workshopType).label}. A
+            {COURSE_TYPES_COUPON.find((c) => c.value === workshopType).label}. A
             confirmation email with your rewards code has been sent to
             <span className="d-block">{user.profile.email}.</span>
           </p>
@@ -227,7 +227,7 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
                     placeholder="Choose Course Type"
                     formikProps={formikProps}
                     formikKey="courseType"
-                    options={COURSE_TYPES}
+                    options={COURSE_TYPES_COUPON}
                     containerClass="tw-w-full"
                     innerFullWidth={true}
                   ></Dropdown>
@@ -300,48 +300,6 @@ export const CouponStack = () => {
   }, [status, data]);
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <Loader />;
-
-  async function verifyCoupons(values, resetForm) {
-    const { couponCodes, courseType } = values;
-    setLoading(true);
-    try {
-      const result = await api.post({
-        path: 'validateCouponsAndGetReedemableAmount',
-        body: {
-          couponCodes: couponCodes
-            .map((currentValue) => {
-              return currentValue.id;
-            })
-            .join(','), //"VYAB-4I4F,O4UC-FUWV-8O4W,YAH9-4QNR,YAH9-4QNR",
-          workshopType: courseType,
-        },
-      });
-      if (result.isError) {
-        throw new Error(result.error);
-      }
-      setCouponCodes(
-        result.coupons.map((coupon) => {
-          return {
-            id: coupon.couponCode,
-            text: `${coupon.couponCode} ($${coupon.amount})`,
-            className: coupon.isValid ? 'success' : 'error',
-            isValid: coupon.isValid,
-            amount: coupon.amount,
-          };
-        }),
-      );
-      setReedemableAmount(result.reedemableAmount);
-      setStep(2);
-      setWorkshopType(courseType);
-    } catch (ex) {
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
-    }
-    setLoading(false);
-  }
 
   const cancelAction = () => {
     setStep(1);
