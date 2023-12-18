@@ -47,25 +47,6 @@ const TIMEZONES = [
   },
 ];
 
-const MILES = [
-  {
-    text: '25 miles (40km)',
-    id: '25',
-  },
-  {
-    text: '35 miles (50km)',
-    id: '35',
-  },
-  {
-    text: '45 miles (60km)',
-    id: '45',
-  },
-  {
-    text: '55 miles (70km)',
-    id: '55',
-  },
-];
-
 function formatDateWithMonth(dateString) {
   return moment(dateString).format('MMM D');
 }
@@ -137,9 +118,22 @@ const SchedulingRange = () => {
   const [currentMonthYear, setCurrentMonthYear] = useQueryString('ym', {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
-  // const courseTypeValue =
-  //   findCourseTypeByKey(courseTypeFilter)?.value ||
-  //   COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocationFilter(JSON.stringify({ lat: latitude, lng: longitude }));
+        },
+        (error) => {
+          console.error('Error getting location:', error.message);
+        },
+      );
+    } else {
+      console.error('Geolocation is not supported by your browser.');
+    }
+  }, []);
 
   const { data: workshopMaster = {} } = useQuery(
     ['workshopMaster', mode],
@@ -735,6 +729,7 @@ const WorkshopListItem = ({
         id={`time-range-${index + 1}`}
         value={workshop.id}
         name="scheduling-options"
+        defaultChecked={selectedWorkshopId === workshop.id}
         checked={selectedWorkshopId === workshop.id}
       />
       <div className="scheduling-modal__content-option">
