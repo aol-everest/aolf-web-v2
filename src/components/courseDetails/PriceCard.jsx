@@ -436,13 +436,12 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
           <div className="early-bird-banner">
             {earlyBirdFeeIncreasing && (
               <p>
-                <FaRegClock className="fa" /> <strong>Register now</strong> to
-                save ${earlyBirdFeeIncreasing.increasingFee}; price will
-                increase on{' '}
+                <FaRegClock className="fa" /> A $
+                {earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                starting{' '}
                 {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)
                   .format('MMM D, YYYY')}
-                .
               </p>
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
