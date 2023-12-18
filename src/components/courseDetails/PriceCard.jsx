@@ -178,7 +178,7 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
               ${fee}&nbsp;
               {delfee && (
                 <span className="actual-price">
-                  <s>${delfee}</s>
+                  <strike>${delfee}</strike>
                 </span>
               )}
             </span>
