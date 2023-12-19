@@ -82,6 +82,7 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
     notes,
     aosCountRequisite,
     businessRules = [],
+    roomAndBoardRange,
   } = workshop || {};
 
   const aosCount =
@@ -171,13 +172,25 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
       <div className="registration-widget">
         <div className=" row register-content">
           <div className="col discount-price">
-            ${fee}&nbsp;
-            {delfee && (
-              <span className="actual-price">
-                <s>${delfee}</s>
-              </span>
-            )}
+            <span className="title">Course Fee</span>
+            <br />
+            <span className="content">
+              ${fee}&nbsp;
+              {delfee && (
+                <span className="actual-price">
+                  <strike>${delfee}</strike>
+                </span>
+              )}
+            </span>
           </div>
+          {roomAndBoardRange && (
+            <div className="col discount-price">
+              <span className="title">Room & Board fee</span>
+              <br />
+              <span className="content">{roomAndBoardRange}</span>
+            </div>
+          )}
+
           <div className="col dates">
             <span className="title">Dates</span>
             <br />
@@ -423,13 +436,12 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
           <div className="early-bird-banner">
             {earlyBirdFeeIncreasing && (
               <p>
-                <FaRegClock className="fa" /> <strong>Register now</strong> to
-                save ${earlyBirdFeeIncreasing.increasingFee}; price will
-                increase on{' '}
+                <FaRegClock className="fa" /> A $
+                {earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                starting{' '}
                 {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)
                   .format('MMM D, YYYY')}
-                .
               </p>
             )}
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (

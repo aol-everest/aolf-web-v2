@@ -33,6 +33,7 @@ function getAllowedParams() {
     'utm_source',
     'utmterm',
     'utm_term',
+    'sscid',
   ];
 
   return allowedParams;

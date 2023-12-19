@@ -40,11 +40,17 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
 
-  const { title, workshopTotalHours, mode, sfid, productTypeId } = data || {};
+  const {
+    title,
+    isGuestCheckoutEnabled = false,
+    mode,
+    sfid,
+    productTypeId,
+  } = data || {};
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated) {
+    if (authenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {

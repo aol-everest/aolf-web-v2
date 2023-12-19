@@ -967,6 +967,12 @@ export const PaymentForm = ({
   });
 
   const paymentElementOptions = {
+    layout: {
+      type: 'accordion',
+      defaultCollapsed: false,
+      radios: true,
+      spacedAccordionItems: false,
+    },
     defaultValues: {
       billingDetails: {
         email: email || '',
