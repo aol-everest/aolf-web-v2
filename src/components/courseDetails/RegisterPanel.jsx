@@ -347,8 +347,8 @@ export const RegisterPanel = ({ workshop }) => {
               <div className="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
-                  Register soon. Course fee will go up by $
-                  {earlyBirdFeeIncreasing.increasingFee} on{' '}
+                  A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                  starting{' '}
                   {dayjs
                     .utc(earlyBirdFeeIncreasing.increasingByDate)
                     .format('MMM D, YYYY')}
@@ -416,8 +416,8 @@ export const RegisterPanel = ({ workshop }) => {
               <div className="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
-                  Register soon. Course fee will go up by $
-                  {earlyBirdFeeIncreasing.increasingFee} on{' '}
+                  A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                  starting{' '}
                   {dayjs
                     .utc(earlyBirdFeeIncreasing.increasingByDate)
                     .format('MMM D, YYYY')}
@@ -491,8 +491,8 @@ export const RegisterPanel = ({ workshop }) => {
             <div className="!tw-ml-0 tw-flex">
               <img src="/img/ic-timer-orange.svg" alt="timer" />
               <p className="!tw-mt-1 !tw-text-sm">
-                Register soon. Course fee will go up by $
-                {earlyBirdFeeIncreasing.increasingFee} on{' '}
+                A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                starting{' '}
                 {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)
                   .format('MMM D, YYYY')}

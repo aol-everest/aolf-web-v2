@@ -138,9 +138,8 @@ export function BackendRegisterationDetail({
               )}
               {earlyBirdFeeIncreasing && (
                 <p>
-                  Register soon. Course fee will go up by $
-                  {earlyBirdFeeIncreasing.increasingFee} on{' '}
-                  {earlyBirdFeeIncreasing.increasingBy}
+                  A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                  starting {earlyBirdFeeIncreasing.increasingBy}
                 </p>
               )}
               {isUsableCreditAvailable && (
