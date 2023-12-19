@@ -701,6 +701,17 @@
     width: calc(50% - 10px);
     text-align: left;
     padding-left: 10px;
+    button {
+      background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+      color: #fff;
+      border: 0px;
+      border-radius: 10px;
+      padding: 1rem 4rem;
+      white-space: nowrap;
+      @media screen and (max-width: 767px) {
+        padding: 10px 20px;
+      }
+    }
     a img {
       width: 35%;
       @media screen and (max-width: 767px) {
