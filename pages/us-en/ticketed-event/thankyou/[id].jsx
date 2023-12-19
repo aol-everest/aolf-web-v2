@@ -39,7 +39,7 @@ const TicketCongratulations = () => {
     selectedTickets,
     delfee,
     orderId,
-    attendeeId,
+    attendeeDetails,
     workshop: selectedWorkshop,
     totalPrice,
   } = value;
@@ -55,6 +55,19 @@ const TicketCongratulations = () => {
       ...value,
       orderId: orderId,
     });
+  });
+
+  useEffectOnce(() => {
+    const newTicketData = { ...ticketData };
+    const ticketId = `${firstItemId}-${1}`;
+    newTicketData[ticketId] = {
+      ...newTicketData[ticketId],
+      firstName: attendeeDetails?.firstName,
+      lastName: attendeeDetails?.lastName,
+      contactPhone: attendeeDetails?.contactPhone,
+      email: attendeeDetails?.email,
+    };
+    setTicketData(newTicketData);
   });
 
   const { data: workshop, isLoading } = useQuery(

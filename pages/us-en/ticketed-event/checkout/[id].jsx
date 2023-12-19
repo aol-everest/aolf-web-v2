@@ -232,11 +232,13 @@ const TicketCheckoutForm = ({ router }) => {
           ...value,
           orderId: data?.orderId,
           attendeeId: data?.attendeeId,
+          attendeeDetails: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+            contactPhone: contactPhone,
+          },
         });
-        // showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-        //   children: "You have successfully purchased ticket",
-        // });
-        // resetForm(setFormInitialValues());
         let filteredParams = {
           ctype: productTypeId,
           page: 'ty',
