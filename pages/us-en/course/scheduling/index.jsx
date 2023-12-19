@@ -4,7 +4,7 @@ import { useQueryString } from '@hooks';
 import { pushRouteWithUTMQuery } from '@service';
 import { api, tConvert, findCourseTypeByKey } from '@utils';
 import dayjs from 'dayjs';
-import { sortBy, values } from 'lodash';
+import { sortBy, values, omit } from 'lodash';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -114,6 +114,7 @@ const SchedulingRange = () => {
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [zipCode, setZipCode] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [courseTypeFilter] = useQueryString('courseType', {
@@ -356,6 +357,16 @@ const SchedulingRange = () => {
     },
   );
 
+  const upcomingByZipCode = [];
+  const otherCourses = [];
+  workshops.forEach((item) => {
+    if (item.locationPostalCode == zipCode) {
+      upcomingByZipCode.push(item);
+    } else {
+      otherCourses.push(item);
+    }
+  });
+
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
     const response = await await api.get({
@@ -480,10 +491,14 @@ const SchedulingRange = () => {
   };
 
   const handleLocationFilterChange = (value) => {
+    console.log('valuee', value);
+    const zipCode = value.zipCode;
+    setZipCode(zipCode);
+    const updatedValue = omit(value, 'zipCode');
     resetCalender();
     setIsInitialLoad(true);
-    if (value && Object.keys(value).length > 0) {
-      setLocationFilter(JSON.stringify(value));
+    if (updatedValue && Object.keys(updatedValue).length > 0) {
+      setLocationFilter(JSON.stringify(updatedValue));
     } else {
       setLocationFilter(null);
     }
@@ -650,15 +665,49 @@ const SchedulingRange = () => {
                     </div>
                   )}
 
+                  {mode === COURSE_MODES.IN_PERSON.value && (
+                    <div className="date_selection">
+                      <h2 className="scheduling-modal__content-ranges-title">
+                        Upcoming courses in your zip code
+                      </h2>
+
+                      <ul className="scheduling-modal__content-options">
+                        {upcomingByZipCode?.map((workshop, index) => {
+                          return (
+                            <WorkshopListItem
+                              key={workshop.id}
+                              workshop={workshop}
+                              index={index}
+                              selectedWorkshopId={selectedWorkshopId}
+                              handleWorkshopSelect={handleWorkshopSelect}
+                              mode={mode}
+                            />
+                          );
+                        })}
+                        {upcomingByZipCode.length === 0 && (
+                          <li className="scheduling-modal__content-option scheduling-no-data">
+                            Workshop not found for you zip code
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  )}
+
                   <div className="date_selection">
-                    <h2 className="scheduling-modal__content-ranges-title">
-                      {selectedDates &&
-                        selectedDates.length > 0 &&
-                        formatDates(selectedDates)}
-                    </h2>
+                    {mode !== COURSE_MODES.ONLINE.value ? (
+                      <h2 className="scheduling-modal__content-ranges-title">
+                        Other nearbuy courses
+                      </h2>
+                    ) : (
+                      <h2 className="scheduling-modal__content-ranges-title">
+                        {selectedDates &&
+                          selectedDates.length > 0 &&
+                          formatDates(selectedDates)}
+                      </h2>
+                    )}
 
                     <ul className="scheduling-modal__content-options">
-                      {workshops?.map((workshop, index) => {
+                      {otherCourses?.map((workshop, index) => {
                         return (
                           <WorkshopListItem
                             key={workshop.id}
@@ -670,7 +719,7 @@ const SchedulingRange = () => {
                           />
                         );
                       })}
-                      {workshops.length === 0 && (
+                      {otherCourses.length === 0 && (
                         <li className="scheduling-modal__content-option scheduling-no-data">
                           Workshop not found. Please choose the next available
                           date.
