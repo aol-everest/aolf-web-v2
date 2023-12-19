@@ -31,20 +31,23 @@
       .hero-register-button-wrapper {
         margin-top: 30px;
         margin-bottom: 20px;
-        a.hero-register-button {
-          img {
-            width: 320px;
+
+        .hero-register-button {
+          background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+          color: #fff;
+          border: 0px;
+          border-radius: 10px;
+          padding: 1rem 4rem;
+          white-space: nowrap;
+          @media screen and (max-width: 767px) {
+            padding: 10px 20px;
           }
         }
+
         @media only screen and (max-width: 768px) {
           text-align: center;
           margin-top: 30px;
           margin-bottom: 0;
-          a.hero-register-button {
-            img {
-              width: 222px;
-            }
-          }
         }
       }
       @media only screen and (max-width: 768px) {

@@ -147,9 +147,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
             </ul>
             {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
               <div className="hero-register-button-wrapper">
-                <a className="hero-register-button" onClick={handleRegister}>
-                  <img src="/img/regiter-btn.original.png" alt="" />
-                </a>
+                <button
+                  className="hero-register-button"
+                  onClick={handleRegister}
+                >
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
               </div>
             )}
           </div>
