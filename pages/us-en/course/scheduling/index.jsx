@@ -122,9 +122,7 @@ const SchedulingRange = () => {
   const [mode, setMode] = useQueryString('mode', {
     defaultValue: COURSE_MODES.ONLINE.value,
   });
-  const [timezoneFilter, setTimezoneFilter] = useQueryString('timezone', {
-    defaultValue: 'EST',
-  });
+  const [timezoneFilter, setTimezoneFilter] = useState('EST');
   const [milesFilter] = useQueryString('miles', {
     defaultValue: '50',
   });
@@ -379,8 +377,8 @@ const SchedulingRange = () => {
   const handleTimezoneChange = (ev) => {
     ev.preventDefault();
     setTimezoneFilter(ev?.target?.value);
-    setActiveWorkshop(null);
-    setSelectedWorkshopId(null);
+    resetCalender();
+    setIsInitialLoad(true);
   };
 
   const goToPaymentModal = () => {
