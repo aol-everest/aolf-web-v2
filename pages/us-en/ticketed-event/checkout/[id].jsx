@@ -128,6 +128,8 @@ const TicketCheckoutForm = ({ router }) => {
     productTypeId,
   } = value;
 
+  const { eventImageUrl } = workshop;
+
   const { first_name, last_name, email } = user?.profile || {};
 
   const login = () => {
@@ -691,7 +693,7 @@ const TicketCheckoutForm = ({ router }) => {
                 <div className="tickets-modal__right-column">
                   <img
                     className="tickets-modal__photo"
-                    src="/img/Gurudev_1.png"
+                    src={eventImageUrl}
                     alt=""
                   />
 
