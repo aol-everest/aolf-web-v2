@@ -109,6 +109,7 @@ const TicketCongratulations = () => {
     city,
     country,
     eventEndDate,
+    eventImageUrl,
   } = workshop || {};
 
   if (isLoading) {
@@ -507,7 +508,7 @@ const TicketCongratulations = () => {
               <div className="sidebar-banner">
                 <img
                   className="w-full rounded-[12px]"
-                  src="/img/image@3x.png"
+                  src={eventImageUrl}
                   alt="gurudev image"
                 />
               </div>

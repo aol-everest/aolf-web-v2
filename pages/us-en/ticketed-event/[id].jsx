@@ -54,7 +54,7 @@ function TicketedEvent() {
     id: productId,
     addOnProducts,
     maxTicketsWithOneOrder,
-    coverImage,
+    eventImageUrl,
   } = workshop || {};
 
   useEffect(() => {
@@ -279,7 +279,7 @@ function TicketedEvent() {
                   {/* <img className="tickets-modal__photo" src={workshop?.coverImage} alt="" /> */}
                   <img
                     className="tickets-modal__photo"
-                    src={coverImage}
+                    src={eventImageUrl}
                     alt=""
                   />
 
