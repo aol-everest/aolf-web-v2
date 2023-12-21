@@ -46,12 +46,10 @@ export const AddressSearch = ({
   }, []);
 
   const handleChange = (address) => {
-    console.log('address', address);
     setAddress(address);
   };
 
   const handleSelect = async (selected) => {
-    console.log('selected', selected);
     try {
       setIsGeocoding(true);
       setAddress(selected);
@@ -84,7 +82,7 @@ export const AddressSearch = ({
           onSelect={handleSelect}
           searchOptions={{
             types: ['(regions)'],
-            componentRestrictions: { country: 'in' },
+            componentRestrictions: { country: 'us' },
           }}
         >
           {({

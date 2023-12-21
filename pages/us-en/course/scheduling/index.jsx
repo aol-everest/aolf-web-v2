@@ -491,7 +491,6 @@ const SchedulingRange = () => {
   };
 
   const handleLocationFilterChange = (value) => {
-    console.log('valuee', value);
     const zipCode = value.zipCode;
     setZipCode(zipCode);
     const updatedValue = omit(value, 'zipCode');
