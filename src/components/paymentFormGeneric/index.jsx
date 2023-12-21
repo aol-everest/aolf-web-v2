@@ -843,8 +843,6 @@ export const PaymentFormGeneric = ({
     isPaymentRequired = false;
   }
 
-  console.log(fee, delfee, offering);
-
   const {
     first_name,
     last_name,
