@@ -47,25 +47,6 @@ const TIMEZONES = [
   },
 ];
 
-const MILES = [
-  {
-    text: '25 miles (40km)',
-    id: '25',
-  },
-  {
-    text: '35 miles (50km)',
-    id: '35',
-  },
-  {
-    text: '45 miles (60km)',
-    id: '45',
-  },
-  {
-    text: '55 miles (70km)',
-    id: '55',
-  },
-];
-
 function formatDateWithMonth(dateString) {
   return moment(dateString).format('MMM D');
 }
@@ -131,13 +112,28 @@ const SchedulingRange = () => {
   });
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
+  const [userLatLong, setUserLatLong] = useState({});
   const [activeWorkshop, setActiveWorkshop] = useState(null);
   const [currentMonthYear, setCurrentMonthYear] = useQueryString('ym', {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
-  // const courseTypeValue =
-  //   findCourseTypeByKey(courseTypeFilter)?.value ||
-  //   COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLatLong({ lat: latitude, lng: longitude });
+          setLocationFilter(JSON.stringify({ lat: latitude, lng: longitude }));
+        },
+        (error) => {
+          console.error('Error getting location:', error.message);
+        },
+      );
+    } else {
+      console.error('Geolocation is not supported by your browser.');
+    }
+  }, []);
 
   const { data: workshopMaster = {} } = useQuery(
     ['workshopMaster', mode],
@@ -240,44 +236,73 @@ const SchedulingRange = () => {
     });
   });
 
-  // useEffect(() => {
-  //   fp.current.flatpickr.changeMonth(
-  //     parseInt(currentMonthYear.split("-")[1] - 1),
-  //     false,
-  //   );
-  //   setTimeout(() => {
-  //     fp.current.flatpickr.changeYear(
-  //       parseInt(currentMonthYear.split("-")[0]),
-  //       false,
-  //     );
-  //   }, 10);
-  // }, []);
-
   const handleModalToggle = () => {
     setShowLocationModal(!showLocationModal);
   };
 
+  function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+  }
+
   function getGroupedUniqueEventIds(response) {
-    const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
+    const groupedEvents = response.data.reduce((acc, obj) => {
       let timings = obj.timings;
       timings = sortBy(timings, (obj) => new Date(obj.startDate));
-      let timing_Str = timings.reduce((acc1, obj) => {
+
+      const timingKey = timings.reduce((acc1, obj) => {
         acc1 += '' + obj.startDate + '' + obj.startTime;
         return acc1;
       }, '');
-      timing_Str = obj.mode + '_' + timing_Str;
-      acc = { ...acc, [timing_Str]: obj.id };
+
+      const existingEvent = acc[timingKey];
+
+      if (
+        !existingEvent ||
+        calculateTotalDistance(obj) < calculateTotalDistance(existingEvent)
+      ) {
+        acc[timingKey] = obj;
+      }
+
       return acc;
     }, {});
-    return values(pairOfTimingAndEventId);
+
+    const closestEventIds = Object.values(groupedEvents).map(
+      (event) => event.id,
+    );
+
+    return closestEventIds;
+  }
+
+  function calculateTotalDistance(event) {
+    const timings = sortBy(event.timings, (obj) => new Date(obj.startDate));
+    const earthRadius = 6371; // Earth radius in kilometers
+
+    const totalDistance = timings.reduce((acc, timing) => {
+      const eventLat = event.eventGeoLat;
+      const eventLon = event.eventGeoLon;
+      const targetLat = userLatLong?.lat;
+      const targetLon = userLatLong?.lng;
+
+      // Haversine formula for distance calculation
+      const dLat = toRadians(eventLat - targetLat);
+      const dLon = toRadians(eventLon - targetLon);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(targetLat)) *
+          Math.cos(toRadians(eventLat)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = earthRadius * c;
+
+      return acc + distance;
+    }, 0);
+
+    return totalDistance;
   }
 
   let enableDates = dateAvailable.map((da) => {
     return da.firstDate;
-    // return {
-    //   from: da.firstDate,
-    //   to: da.allDates[da.allDates.length - 1],
-    // };
   });
 
   enableDates = [...enableDates, ...selectedDates];
@@ -324,6 +349,7 @@ const SchedulingRange = () => {
       });
       if (response?.data && selectedDates?.length > 0) {
         const selectedSfids = getGroupedUniqueEventIds(response);
+        console.log('selectedSfids', selectedSfids);
         const finalWorkshops =
           mode === COURSE_MODES.IN_PERSON.value
             ? response?.data
@@ -733,6 +759,7 @@ const WorkshopListItem = ({
         id={`time-range-${index + 1}`}
         value={workshop.id}
         name="scheduling-options"
+        defaultChecked={selectedWorkshopId === workshop.id}
         checked={selectedWorkshopId === workshop.id}
       />
       <div className="scheduling-modal__content-option">
