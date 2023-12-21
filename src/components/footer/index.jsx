@@ -101,7 +101,7 @@ export function Footer() {
                 <ul className="nav-details">
                   <li className="nav-item">
                     <Link href="https://event.us.artofliving.org/us-en/online-course-2">
-                      Art of Living Part I
+                      Art of Living Part 1
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -111,7 +111,7 @@ export function Footer() {
                   </li>
                   <li className="nav-item">
                     <Link href="https://event.us.artofliving.org/us-en/artoflivingpart2">
-                      Art of Living Part II
+                      Art of Living Part 2
                     </Link>
                   </li>
                   <li className="nav-item">

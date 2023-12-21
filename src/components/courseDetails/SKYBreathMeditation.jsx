@@ -244,7 +244,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                   <div className="breadth-meditation_content">
                     <p className="">
                       Sudarshan Kriya ({COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                      ) taught in the Art of Living Part I course is a powerful
+                      ) taught in the Art of Living Part 1 course is a powerful
                       rhythmic breathing technique that harmonizes the body-mind
                       complex. Participants notice reduced stress and anxiety,
                       better sleep, a stronger immune system, and increased
@@ -505,7 +505,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
         <section className="comments">
           <div className="container">
             <h2 className="comments__title section-title text-center">
-              How is Art of Living Part I Course Changing Lives?
+              How is Art of Living Part 1 Course Changing Lives?
             </h2>
           </div>
           <div className="comments__video">
