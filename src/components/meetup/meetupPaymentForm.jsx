@@ -63,16 +63,6 @@ export const MeetupPaymentForm = ({
   profile = {},
   enrollmentCompletionAction = () => {},
 }) => {
-  // const {
-  //   loading,
-  //   errorMessage,
-  //   showError,
-  //   discount,
-  //   changingCard,
-  //   priceType,
-  // } = this.state;
-  // const { isCreditCardRequired } = discount || {};
-
   const { setUser } = useAuth();
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
@@ -251,7 +241,6 @@ export const MeetupPaymentForm = ({
 
     const { sfid: productId, isCCNotRequired, addOnProducts } = meetup;
 
-    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -283,11 +272,7 @@ export const MeetupPaymentForm = ({
       setLoading(true);
 
       let tokenizeCC = null;
-      if (
-        !isCCNotRequired &&
-        (!isRegisteredStripeCustomer || isChangingCard) &&
-        isCreditCardRequired !== false
-      ) {
+      if (!isCCNotRequired && (!isRegisteredStripeCustomer || isChangingCard)) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
           name: profile.name ? profile.name : firstName + ' ' + lastName,
