@@ -838,7 +838,12 @@ export const PaymentFormGeneric = ({
     discount: discountResponse,
   });
 
-  const isPaymentRequired = !isCCNotRequired && fee !== 0;
+  let isPaymentRequired = fee !== 0;
+  if (fee === 0 && isCCNotRequired) {
+    isPaymentRequired = false;
+  }
+
+  console.log(fee, delfee, offering);
 
   const {
     first_name,

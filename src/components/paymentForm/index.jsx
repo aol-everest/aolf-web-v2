@@ -92,11 +92,8 @@ export const PaymentForm = ({
 
   const router = useRouter();
 
-  console.log('programQuestionnaireResult', programQuestionnaireResult);
-
   useEffect(() => {
     if (programQuestionnaireResult?.length > 0) {
-      console.log('enrollFormValues', enrollFormValues);
       if (enrollFormValues.paymentMode === PAYMENT_MODES.STRIPE_PAYMENT_MODE) {
         completeEnrollmentAction(enrollFormValues);
       }
@@ -153,7 +150,6 @@ export const PaymentForm = ({
 
   const preEnrollValidation = async (values) => {
     const { programQuestionnaire = [] } = workshop;
-    console.log('programQuestionnaire', programQuestionnaire);
     if (programQuestionnaire.length > 0) {
       setEnrollFormValues(values);
       setShowProgramQuestionnaireForm(true);
@@ -795,7 +791,10 @@ export const PaymentForm = ({
     discount: discountResponse,
   });
 
-  const isPaymentRequired = !isCCNotRequired && fee !== 0;
+  let isPaymentRequired = fee !== 0;
+  if (fee === 0 && isCCNotRequired) {
+    isPaymentRequired = false;
+  }
 
   const {
     first_name,
@@ -1005,8 +1004,6 @@ export const PaymentForm = ({
     }
   };
 
-  console.log('discountResponse', discountResponse);
-
   return (
     <>
       <Formik
@@ -1033,13 +1030,11 @@ export const PaymentForm = ({
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           console.log('errors', errors);
-          console.log('programQuestionnaire', programQuestionnaire);
           await preEnrollValidation(values);
         }}
       >
         {(formikProps) => {
           const { values, handleSubmit } = formikProps;
-          console.log('formikProps', formikProps);
           formikOnChange(values);
           const addOnFee = addOnProducts.reduce(
             (
@@ -1106,8 +1101,6 @@ export const PaymentForm = ({
           const isBundlePaypalAvailable = selectedBundle
             ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
             : false;
-          console.log('delfee', delfee);
-          console.log('fee', fee);
 
           return (
             <div className="row">
