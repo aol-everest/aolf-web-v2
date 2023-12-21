@@ -838,7 +838,7 @@ export const PaymentFormGeneric = ({
     discount: discountResponse,
   });
 
-  const isPaymentRequired = isCCNotRequired || (!isCCNotRequired && fee !== 0);
+  const isPaymentRequired = !isCCNotRequired && fee !== 0;
 
   const {
     first_name,
