@@ -320,7 +320,8 @@ const SchedulingRange = () => {
     async () => {
       let param = {
         timeZone: timezoneFilter,
-        sdate: selectedDates?.[0],
+        sdate:
+          mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
         timingsRequired: true,
         skipFullCourses: true,
         ctype:
