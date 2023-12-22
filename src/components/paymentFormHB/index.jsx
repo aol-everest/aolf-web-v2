@@ -421,7 +421,7 @@ export const PaymentFormHB = ({
 
       let tokenizeCC = null;
       if (
-        !isPaymentRequired &&
+        isPaymentRequired &&
         (paymentMethod.type !== 'card' || isChangingCard)
       ) {
         const cardElement = elements.getElement(CardElement);
@@ -630,10 +630,7 @@ export const PaymentFormHB = ({
     discount: discountResponse,
   });
 
-  let isPaymentRequired = fee !== 0;
-  if (fee === 0 && isCCNotRequired) {
-    isPaymentRequired = false;
-  }
+  const isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
 
   const {
     first_name,
