@@ -96,7 +96,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
             <div className="banner-title">
               The Art of Living
               <br />
-              <span>Part I Course</span>
+              <span>Part 1 Course</span>
             </div>
             <div className="banner-desc">
               Discover Gurudev Sri Sri Ravi Shankar’s
