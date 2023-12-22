@@ -1,42 +1,22 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import { ALERT_TYPES, COURSE_MODES } from '@constants';
-import { useGlobalAlertContext } from '@contexts';
+import { MODAL_TYPES } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
-import { priceCalculation } from '@utils';
 import { useRouter } from 'next/router';
 import { Element } from 'react-scroll';
 import { CourseBottomCard } from './CourseBottomCard';
 import { RegisterPanel } from './RegisterPanel';
-import { ResearchFindingSource } from './ResearchFindingSource';
+import queryString from 'query-string';
 
 export const SanyamCourse = ({ data, mode: courseViewMode }) => {
-  const { showAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
+  const { authenticated = false } = useAuth();
   const router = useRouter();
 
-  const showResearchModal = (e) => {
-    if (e) e.preventDefault();
-    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: 'Success',
-      children: <ResearchFindingSource />,
-      className: 'research-detail-modal',
-      hideConfirm: true,
-    });
-  };
-
-  const autoSwiperOption = {
-    slidesPerView: 1,
-    spaceBetween: 30,
-    centeredSlides: true,
-    autoplay: {
-      delay: 2000,
-    },
-    pagination: {
-      el: '.research__list-pagination',
-      clickable: true,
-    },
-  };
+  const { title, isGuestCheckoutEnabled, mode, productTypeId, sfid } =
+    data || {};
 
   const handleUpcomingSanyamCourse = () => {
     pushRouteWithUTMQuery(router, {
@@ -48,10 +28,25 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
     });
   };
 
-  const { title, workshopTotalHours, mode } = data || {};
-  const { fee, delfee, offering } = priceCalculation({ workshop: data });
-
-  const inPersonCourse = mode === COURSE_MODES.IN_PERSON.name;
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (authenticated || isGuestCheckoutEnabled) {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/checkout/${sfid}`,
+        query: {
+          ctype: productTypeId,
+          page: 'c-o',
+        },
+      });
+    } else {
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
+        defaultView: 'SIGNUP_MODE',
+      });
+    }
+  };
 
   return (
     <>
@@ -95,9 +90,9 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
                     <button
                       type="button"
                       className="btn_box_secondary about-course-button"
-                      onClick={handleUpcomingSanyamCourse}
+                      onClick={handleRegister}
                     >
-                      Find an Upcoming Course
+                      Register
                     </button>
                   </div>
                 </div>
