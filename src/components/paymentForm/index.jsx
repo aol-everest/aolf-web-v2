@@ -596,7 +596,7 @@ export const PaymentForm = ({
 
       let tokenizeCC = null;
       if (
-        !isPaymentRequired &&
+        isPaymentRequired &&
         (paymentMethod.type !== 'card' || isChangingCard || !isLoggedUser)
       ) {
         const cardElement = elements.getElement(CardElement);
@@ -795,7 +795,7 @@ export const PaymentForm = ({
     discount: discountResponse,
   });
 
-  const isPaymentRequired = !isCCNotRequired && fee !== 0;
+  const isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
 
   const {
     first_name,
