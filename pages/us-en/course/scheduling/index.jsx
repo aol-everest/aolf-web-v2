@@ -832,7 +832,7 @@ const WorkshopListItem = ({
               return (
                 <li className="scheduling-modal__content-ranges-row" key={i}>
                   <div className="scheduling-modal__content-ranges-row-date">
-                    {dayjs.utc(time.startDate).format('ddd, D')}
+                    {dayjs.utc(time.startDate).format('ddd, MMM D')}
                   </div>
                   <div className="scheduling-modal__content-ranges-row-time">
                     {tConvert(time.startTime, true)} -{' '}
