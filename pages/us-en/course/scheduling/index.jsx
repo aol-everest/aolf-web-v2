@@ -120,7 +120,7 @@ const SchedulingRange = () => {
   });
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
