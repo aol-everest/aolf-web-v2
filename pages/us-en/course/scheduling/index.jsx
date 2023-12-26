@@ -201,8 +201,8 @@ const SchedulingRange = () => {
         if (lat || lng) {
           param = {
             ...param,
-            lat,
-            lng,
+            lat: lat?.toFixed(4),
+            lng: lng?.toFixed(4),
           };
         }
       }
@@ -334,8 +334,8 @@ const SchedulingRange = () => {
         if (lat || lng) {
           param = {
             ...param,
-            lat,
-            lng,
+            lat: lat?.toFixed(4),
+            lng: lng?.toFixed(4),
           };
         }
       }
