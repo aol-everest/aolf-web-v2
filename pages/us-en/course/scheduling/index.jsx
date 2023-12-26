@@ -516,16 +516,18 @@ const SchedulingRange = () => {
   };
 
   const handleLocationFilterChange = (value) => {
-    const zipCode = value.zipCode;
-    setZipCode(zipCode);
-    const updatedValue = omit(value, 'zipCode');
-    resetCalender();
-    setIsInitialLoad(true);
-    if (updatedValue && Object.keys(updatedValue).length > 0) {
-      setLocationFilter(JSON.stringify(updatedValue));
+    if (value) {
+      const zipCode = value.zipCode;
+      setZipCode(zipCode);
+      const updatedValue = omit(value, 'zipCode');
+      if (updatedValue && Object.keys(updatedValue).length > 0) {
+        setLocationFilter(JSON.stringify(updatedValue));
+      }
     } else {
       setLocationFilter(null);
     }
+    resetCalender();
+    setIsInitialLoad(true);
   };
 
   return (
