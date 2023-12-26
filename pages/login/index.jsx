@@ -1,6 +1,7 @@
 import { MODAL_TYPES } from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
+import { PageLoading } from '@components';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -36,7 +37,8 @@ function Login() {
   const { authenticated } = useAuth();
 
   useEffect(() => {
-    if (!router.isReady && authenticated) return;
+    if (!router.isReady) return;
+    const { mode = 'LOGIN_MODE' } = router.query;
     const navigateTo = router.query.next || '/';
     if (authenticated) {
       pushRouteWithUTMQuery(router, {
@@ -49,6 +51,7 @@ function Login() {
         closeModalAction: () => {
           pushRouteWithUTMQuery(router, '/us-en/course');
         },
+        defaultView: mode,
       });
     }
   }, [router.isReady]);
@@ -62,6 +65,7 @@ function Login() {
       console.log("error signing in", error);
     }
   } */
+  if (!router.isReady) return <PageLoading />;
 
   return (
     <main className="aol_mainbody login-screen">
