@@ -722,7 +722,7 @@ const SchedulingRange = () => {
                   <div className="date_selection">
                     {mode !== COURSE_MODES.ONLINE.value ? (
                       <h2 className="scheduling-modal__content-ranges-title">
-                        Other nearbuy courses
+                        Other nearby courses
                       </h2>
                     ) : (
                       <h2 className="scheduling-modal__content-ranges-title">
