@@ -47,7 +47,7 @@ export const SchedulePhoneInput = ({
 
   return (
     <li
-      className={classNames(`${containerClass}`, {
+      className={classNames(`input-block ${containerClass}`, {
         error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
         'validate-error':
           formikProps.errors[formikKey] && formikProps.touched[formikKey],
@@ -65,7 +65,10 @@ export const SchedulePhoneInput = ({
         countryCodeEditable={true}
         showSpecialLabel={false}
         showLabel={true}
+        smartCaret={true}
+        international={true}
         label={label}
+        value={formikProps.values.contactPhone}
         {...rest}
         {...inputProps}
       />
