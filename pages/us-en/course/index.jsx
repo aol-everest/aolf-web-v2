@@ -199,9 +199,7 @@ const Course = () => {
   const [ctypesFilter, setCtypesFilter] = useQueryString('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryString('startEndDate');
-  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone', {
-    defaultValue: fillDefaultTimeZone(),
-  });
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryString('instructor', {
     parse: JSON.parse,
   });
@@ -464,6 +462,7 @@ const Course = () => {
     track('Product List Viewed', {
       category: 'Course',
     });
+    setTimeZoneFilter(fillDefaultTimeZone());
   });
 
   let filterCount = 0;
