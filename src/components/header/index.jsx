@@ -78,7 +78,7 @@ const AOL_MENU = [
         name: "Beginner's Courses",
         items: [
           {
-            name: 'Art Of Living Part I',
+            name: 'Art Of Living Part 1',
             link: 'https://event.us.artofliving.org/us-en/online-course-2',
           },
           {
@@ -95,7 +95,7 @@ const AOL_MENU = [
         name: 'Advanced Courses',
         items: [
           {
-            name: 'Art Of Living Part II',
+            name: 'Art Of Living Part 2',
             link: 'https://event.us.artofliving.org/us-en/artoflivingpart2',
           },
           {

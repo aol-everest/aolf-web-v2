@@ -86,7 +86,7 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
             <div className="container">
               <div className="courses-title">Courses</div>
               <div className="banner-title">
-                {title || 'Art of Living Part II'}
+                {title || 'Art of Living Part 2'}
               </div>
               <div className="banner-description">
                 Give yourself a true vacation for body, mind, and spirit
@@ -140,7 +140,7 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
                 retreat?
               </h2>
               <p>
-                The Part II course builds on your Part I experience* with a
+                The Part 2 course builds on your Part 1 experience* with a
                 unique blend of advanced breathwork, signature guided
                 meditations, daily yoga, and profound insights into the mind.
                 This is all designed to{' '}
@@ -158,9 +158,9 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
               </p>
 
               <p>
-                *You can take the Part II Course only after completing the Part
-                I course. If you would like to do a silent retreat and have not
-                yet done Part I, please visit{' '}
+                *You can take the Part 2 Course only after completing the Part 1
+                course. If you would like to do a silent retreat and have not
+                yet done Part 1, please visit{' '}
                 <Link href="/us-en/course?courseType=SKY_BREATH_MEDITATION">
                   this page
                 </Link>
@@ -246,7 +246,7 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
           <div className="aos-banner-third">
             <div className="banner-title">Escape the mind's clutter</div>
             <div className="banner-text">
-              The Part II course provides the ideal environment to dive deep
+              The Part 2 course provides the ideal environment to dive deep
               within, breaking free from the constant chatter of the mind. Each
               day is carefully structured to offer a transformative and relaxing
               experience, a true vacation for your body, mind, and soul.

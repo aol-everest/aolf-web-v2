@@ -184,7 +184,7 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
             </span>
           </div>
           {roomAndBoardRange && (
-            <div className="col discount-price">
+            <div className="col dates">
               <span className="title">Room & Board fee</span>
               <br />
               <span className="content">{roomAndBoardRange}</span>

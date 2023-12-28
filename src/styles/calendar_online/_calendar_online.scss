@@ -570,6 +570,11 @@
             }
           }
         }
+        &.upcoming_events {
+          .scheduling-modal__content-options {
+            max-height: 350px;
+          }
+        }
       }
       .agreement_selection {
         .agreement-options {

@@ -74,16 +74,6 @@ export const PaymentForm = ({
   login = () => {},
   isLoggedUser = false,
 }) => {
-  // const {
-  //   loading,
-  //   errorMessage,
-  //   showError,
-  //   discount,
-  //   changingCard,
-  //   priceType,
-  // } = this.state;
-  // const { isCreditCardRequired } = discount || {};
-
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
@@ -222,8 +212,6 @@ export const PaymentForm = ({
       couponCode,
       firstName,
       lastName,
-      paymentOption,
-      paymentMode,
       accommodation,
       email,
     } = values;
@@ -308,7 +296,7 @@ export const PaymentForm = ({
         utm: filterAllowedParams(router.query),
       };
 
-      if (workshop.isCCNotRequired) {
+      if (!isPaymentRequired) {
         payLoad.shoppingRequest.isStripeIntentPayment = false;
       }
       if (!isLoggedUser) {
@@ -390,7 +378,6 @@ export const PaymentForm = ({
     }
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
@@ -558,14 +545,12 @@ export const PaymentForm = ({
 
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
       paymentMethod = {},
     } = workshop;
 
-    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -582,7 +567,10 @@ export const PaymentForm = ({
       email,
     } = values;
 
-    if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
+    if (
+      paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE &&
+      isPaymentRequired
+    ) {
       return null;
     }
 
@@ -604,9 +592,8 @@ export const PaymentForm = ({
 
       let tokenizeCC = null;
       if (
-        !isCCNotRequired &&
-        (paymentMethod.type !== 'card' || isChangingCard || !isLoggedUser) &&
-        isCreditCardRequired !== false
+        isPaymentRequired &&
+        (paymentMethod.type !== 'card' || isChangingCard || !isLoggedUser)
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
@@ -804,7 +791,7 @@ export const PaymentForm = ({
     discount: discountResponse,
   });
 
-  const { isCreditCardRequired } = discountResponse || {};
+  const isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
 
   const {
     first_name,
@@ -961,7 +948,7 @@ export const PaymentForm = ({
     accommodation: isAccommodationRequired
       ? Yup.object().required('Room & Board is required!')
       : Yup.mixed().notRequired(),
-    paymentMode: isCCNotRequired
+    paymentMode: !isPaymentRequired
       ? Yup.mixed().notRequired()
       : Yup.string().required('Payment mode is required!'),
   });
@@ -1039,6 +1026,7 @@ export const PaymentForm = ({
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
+          console.log('errors', errors);
           await preEnrollValidation(values);
         }}
       >
@@ -1160,7 +1148,7 @@ export const PaymentForm = ({
                       addOnProducts={addOnProducts}
                     ></DiscountCodeInput>
 
-                    {!isCCNotRequired && isCreditCardRequired !== false && (
+                    {isPaymentRequired && (
                       <PayWith
                         formikProps={formikProps}
                         otherPaymentOptions={otherPaymentOptions}
@@ -1169,119 +1157,121 @@ export const PaymentForm = ({
                       />
                     )}
                     {formikProps.values.paymentMode ===
-                      PAYMENT_MODES.STRIPE_PAYMENT_MODE && (
-                      <div
-                        className="order__card__payment-method"
-                        data-method="card"
-                      >
-                        {isStripeIntentPayment && (
-                          <PaymentElement options={paymentElementOptions} />
-                        )}
-                        {!isStripeIntentPayment && (
-                          <>
-                            {!cardLast4Digit &&
-                              !isCCNotRequired &&
-                              isCreditCardRequired !== false && (
+                      PAYMENT_MODES.STRIPE_PAYMENT_MODE &&
+                      isPaymentRequired && (
+                        <div
+                          className="order__card__payment-method"
+                          data-method="card"
+                        >
+                          {isStripeIntentPayment && (
+                            <PaymentElement options={paymentElementOptions} />
+                          )}
+                          {!isStripeIntentPayment && (
+                            <>
+                              {!cardLast4Digit && !isCCNotRequired && (
                                 <div className="card-element">
                                   <CardElement options={createOptions} />
                                 </div>
                               )}
 
-                            {cardLast4Digit &&
-                              !isChangingCard &&
-                              !isCCNotRequired &&
-                              isCreditCardRequired !== false && (
+                              {cardLast4Digit &&
+                                !isChangingCard &&
+                                !isCCNotRequired && (
+                                  <>
+                                    <div className="bank-card-info">
+                                      <input
+                                        id="card-number"
+                                        className="full-width"
+                                        type="text"
+                                        value={`**** **** **** ${cardLast4Digit}`}
+                                        placeholder="Card Number"
+                                      />
+                                      <input
+                                        id="mm-yy"
+                                        type="text"
+                                        placeholder="MM/YY"
+                                        value={`**/**`}
+                                      />
+                                      <input
+                                        id="cvc"
+                                        type="text"
+                                        placeholder="CVC"
+                                        value={`****`}
+                                      />
+                                    </div>
+                                    <div className="change-cc-detail-link">
+                                      <a
+                                        href="#"
+                                        onClick={toggleCardChangeDetail}
+                                      >
+                                        Would you like to use a different credit
+                                        card?
+                                      </a>
+                                    </div>
+                                  </>
+                                )}
+
+                              {cardLast4Digit && isChangingCard && (
                                 <>
-                                  <div className="bank-card-info">
-                                    <input
-                                      id="card-number"
-                                      className="full-width"
-                                      type="text"
-                                      value={`**** **** **** ${cardLast4Digit}`}
-                                      placeholder="Card Number"
-                                    />
-                                    <input
-                                      id="mm-yy"
-                                      type="text"
-                                      placeholder="MM/YY"
-                                      value={`**/**`}
-                                    />
-                                    <input
-                                      id="cvc"
-                                      type="text"
-                                      placeholder="CVC"
-                                      value={`****`}
-                                    />
+                                  <div className="card-element">
+                                    <CardElement options={createOptions} />
                                   </div>
                                   <div className="change-cc-detail-link">
                                     <a
                                       href="#"
                                       onClick={toggleCardChangeDetail}
                                     >
-                                      Would you like to use a different credit
-                                      card?
+                                      Cancel
                                     </a>
                                   </div>
                                 </>
                               )}
-
-                            {cardLast4Digit && isChangingCard && (
-                              <>
-                                <div className="card-element">
-                                  <CardElement options={createOptions} />
-                                </div>
-                                <div className="change-cc-detail-link">
-                                  <a href="#" onClick={toggleCardChangeDetail}>
-                                    Cancel
-                                  </a>
-                                </div>
-                              </>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    )}
+                            </>
+                          )}
+                        </div>
+                      )}
                     {formikProps.values.paymentMode ===
-                      PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
-                      <div
-                        className="order__card__payment-method paypal-info !tw-w-[150px]"
-                        data-method="paypal"
-                      >
-                        <div className="paypal-info__sign-in tw-relative tw-z-0">
-                          <PayPalScriptProvider
-                            options={{
-                              clientId:
-                                process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                              debug: true,
-                              currency: 'USD',
-                              intent: 'capture',
-                              components: 'buttons',
-                            }}
-                          >
-                            <PayPalButtons
-                              style={{
-                                layout: 'horizontal',
-                                color: 'blue',
-                                shape: 'pill',
-                                height: 40,
-                                tagline: false,
-                                label: 'pay',
+                      PAYMENT_MODES.PAYPAL_PAYMENT_MODE &&
+                      isPaymentRequired && (
+                        <div
+                          className="order__card__payment-method paypal-info !tw-w-[150px]"
+                          data-method="paypal"
+                        >
+                          <div className="paypal-info__sign-in tw-relative tw-z-0">
+                            <PayPalScriptProvider
+                              options={{
+                                clientId:
+                                  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                                debug: true,
+                                currency: 'USD',
+                                intent: 'capture',
+                                components: 'buttons',
                               }}
-                              fundingSource="paypal"
-                              forceReRender={[formikProps.values]}
-                              disabled={
-                                !(formikProps.isValid && formikProps.dirty)
-                              }
-                              createOrder={async (data, actions) => {
-                                return await createPaypalOrder(
-                                  formikProps.values,
-                                );
-                              }}
-                              onApprove={paypalBuyAcknowledgement}
-                            />
-                          </PayPalScriptProvider>
+                            >
+                              <PayPalButtons
+                                style={{
+                                  layout: 'horizontal',
+                                  color: 'blue',
+                                  shape: 'pill',
+                                  height: 40,
+                                  tagline: false,
+                                  label: 'pay',
+                                }}
+                                fundingSource="paypal"
+                                forceReRender={[formikProps.values]}
+                                disabled={
+                                  !(formikProps.isValid && formikProps.dirty)
+                                }
+                                createOrder={async (data, actions) => {
+                                  return await createPaypalOrder(
+                                    formikProps.values,
+                                  );
+                                }}
+                                onApprove={paypalBuyAcknowledgement}
+                              />
+                            </PayPalScriptProvider>
 
-                          {/* <PayPalButton
+                            {/* <PayPalButton
                             options={{
                               clientId:
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
@@ -1303,17 +1293,17 @@ export const PaymentForm = ({
                             }}
                             onApprove={paypalBuyAcknowledgement}
                           /> */}
+                          </div>
+                          <div className="paypal-info__sign-out d-none">
+                            <button
+                              type="button"
+                              className="paypal-info__link sign-out-paypal"
+                            >
+                              Log out from Paypal
+                            </button>
+                          </div>
                         </div>
-                        <div className="paypal-info__sign-out d-none">
-                          <button
-                            type="button"
-                            className="paypal-info__link sign-out-paypal"
-                          >
-                            Log out from Paypal
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                      )}
 
                     <MobileCourseOptions
                       expenseAddOn={expenseAddOn}

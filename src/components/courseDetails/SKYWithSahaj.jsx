@@ -167,7 +167,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 <p>
                   This course combines two powerful experiences into one. You
                   will learn Sudarshan Kriya (SKY Breath Meditation), as taught
-                  in the Art of Living Part I course, and also acquire a
+                  in the Art of Living Part 1 course, and also acquire a
                   personal mantra, a charged sound that makes meditation easier,
                   introduced in the Sahaj Samadhi Meditation course.
                 </p>
@@ -618,7 +618,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    Sudarshan Kriya™ taught in the Art of Living Part I course
+                    Sudarshan Kriya™ taught in the Art of Living Part 1 course
                     has been researched in over 100 independent studies and
                     shown significant mind and body benefits. It lowers stress
                     levels, improves mental clarity, enhances emotional

@@ -65,6 +65,7 @@ export const AddressSearch = ({
         lat,
         lng,
         locationName: locationResult.formatted_address,
+        zipCode: address,
       })();
     } catch (error) {
       setIsGeocoding(false);

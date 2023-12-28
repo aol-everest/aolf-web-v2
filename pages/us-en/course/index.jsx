@@ -9,7 +9,7 @@ import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useAuth } from '@contexts';
 import { useIntersectionObserver, useQueryString } from '@hooks';
 import { orgConfig } from '@org';
-import { api, stringToBoolean } from '@utils';
+import { api, stringToBoolean, getUserTimeZoneAbbreviation } from '@utils';
 import classNames from 'classnames';
 import { NextSeo } from 'next-seo';
 import dynamic from 'next/dynamic';
@@ -163,12 +163,19 @@ async function queryInstructor({ queryKey: [_, term] }) {
   return response;
 }
 
+const fillDefaultTimeZone = () => {
+  const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
+  // console.log('User timezone abbreviation:', userTimeZoneAbbreviation);
+  if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
+    return userTimeZoneAbbreviation.toUpperCase();
+  }
+  return null;
+};
+
 const Course = () => {
   const seed = useUIDSeed();
   const { authenticated } = useAuth();
-  const [activeFilterType, setActiveFilterType] = useQueryString('mode', {
-    defaultValue: 'ONLINE',
-  });
+  const [activeFilterType, setActiveFilterType] = useQueryString('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryString('onlyWeekend', {
     defaultValue: false,
     parse: stringToBoolean,
@@ -192,7 +199,9 @@ const Course = () => {
   const [ctypesFilter, setCtypesFilter] = useQueryString('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryString('startEndDate');
-  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone');
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone', {
+    defaultValue: fillDefaultTimeZone(),
+  });
   const [instructorFilter, setInstructorFilter] = useQueryString('instructor', {
     parse: JSON.parse,
   });
