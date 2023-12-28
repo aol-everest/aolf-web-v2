@@ -66,6 +66,7 @@ const TicketCongratulations = () => {
       lastName: attendeeDetails?.lastName,
       contactPhone: attendeeDetails?.contactPhone,
       email: attendeeDetails?.email,
+      tierName: selectedTickets[0]?.pricingTierName || '',
     };
     setTicketData(newTicketData);
   });
@@ -133,6 +134,7 @@ const TicketCongratulations = () => {
     newTicketData[ticketId] = {
       ...newTicketData[ticketId],
       [fieldName]: value,
+      tierName: parentItem?.pricingTierName,
     };
     setTicketData(newTicketData);
   };
@@ -144,6 +146,7 @@ const TicketCongratulations = () => {
       newTicketData[ticketId] = {
         ...(newTicketData[ticketId] || {}),
         ...newTicketData[value],
+        tierName: parentItem?.pricingTierName,
       };
       setTicketData(newTicketData);
     }
@@ -204,64 +207,81 @@ const TicketCongratulations = () => {
 
   const handleSubmitAttendees = async () => {
     setLoading(true);
+    let allFieldsValid = true;
+    if (selectedTickets.length !== Object.keys(ticketData).length) {
+      allFieldsValid = false;
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: "Please input all attendee details. Details can't be empty",
+      });
+      setLoading(false);
+      return;
+    }
     const attendeeInfo = Object.keys(ticketData).map((attendeId) => {
       const item = ticketData[attendeId];
       return item;
     });
     if (attendeeInfo.length === 0) {
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
+      allFieldsValid = false;
+      setLoading(false);
+      return showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: "Please input attendee details. Details can't be empty",
       });
     }
     attendeeInfo.forEach((item) => {
       if (!item || !item.firstName || !item.lastName) {
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: "Please input attendee details. Details can't be empty",
+        allFieldsValid = false;
+        setLoading(false);
+        return showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children:
+            "Please input first and last name details. Details can't be empty",
         });
-      }
-      if (!emailRegExp.test(item.email)) {
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
+      } else if (!emailRegExp.test(item.email)) {
+        allFieldsValid = false;
+        setLoading(false);
+        return showAlert(ALERT_TYPES.ERROR_ALERT, {
           children:
             'Please input correct email address. Email address is not valid',
         });
       }
     });
-    const payload = {
-      orderId: orderId,
-      attendeeInfo: attendeeInfo,
-    };
-    try {
-      const {
-        status,
-        error: errorMessage,
-        isError,
-        data,
-      } = await api.post({
-        path: 'updateTicketedEventAttendees',
-        body: payload,
-        isUnauthorized: true,
-      });
-      setLoading(false);
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
-      }
-      if (data || status === 200) {
-        showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-          title: 'Confirmed',
-          children: 'We have received your attendee details.',
-          closeModalAction: () => {
-            gotToTicketsPage();
-          },
+    if (allFieldsValid) {
+      const payload = {
+        orderId: orderId,
+        attendeeInfo: attendeeInfo,
+      };
+      try {
+        const {
+          status,
+          error: errorMessage,
+          isError,
+          data,
+        } = await api.post({
+          path: 'updateTicketedEventAttendees',
+          body: payload,
+          isUnauthorized: true,
+        });
+        setLoading(false);
+        if (status === 400 || isError) {
+          throw new Error(errorMessage);
+        }
+        if (data || status === 200) {
+          showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+            title: 'Confirmed',
+            children: 'We have received your attendee details.',
+            closeModalAction: () => {
+              gotToTicketsPage();
+            },
+          });
+        }
+      } catch (ex) {
+        console.error(ex);
+        const data = ex.response?.data;
+        const { message, statusCode } = data || {};
+        setLoading(false);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: message ? `Error: ${message} (${statusCode})` : ex.message,
         });
       }
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
     }
   };
 
