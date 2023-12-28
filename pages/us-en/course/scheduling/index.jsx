@@ -119,6 +119,9 @@ const SchedulingRange = () => {
     defaultValue: `${moment().year()}-${moment().month() + 1}`,
   });
 
+  const [teacherFilter] = useQueryString('teacher');
+  const [cityFilter] = useQueryString('city');
+
   useEffect(() => {
     if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
       navigator.geolocation.getCurrentPosition(
@@ -195,6 +198,12 @@ const SchedulingRange = () => {
       }
       if (milesFilter) {
         param = { ...param, radius: milesFilter };
+      }
+      if (teacherFilter) {
+        param = { ...param, teacherId: teacherFilter };
+      }
+      if (cityFilter) {
+        param = { ...param, city: teacherFilter };
       }
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};
@@ -344,6 +353,12 @@ const SchedulingRange = () => {
       }
       if (mode && mode !== COURSE_MODES_BOTH) {
         param = { ...param, mode };
+      }
+      if (teacherFilter) {
+        param = { ...param, teacherId: teacherFilter };
+      }
+      if (cityFilter) {
+        param = { ...param, city: teacherFilter };
       }
       const response = await api.get({
         path: 'workshops',
