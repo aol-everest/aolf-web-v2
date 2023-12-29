@@ -483,6 +483,8 @@ const Course = () => {
     filterCount++;
   }
 
+  const isBlessingCourseSelected = !!COURSE_TYPES[courseTypeFilter];
+
   return (
     <main className="course-filter">
       <NextSeo title="Workshops" />
@@ -1109,9 +1111,33 @@ const Course = () => {
           )}
         </div>
       </section>
-      {activeFilterType === 'ONLINE' &&
+      {isBlessingCourseSelected && activeFilterType === 'ONLINE' ? (
+        <section className="about">
+          <div className="container happines_box">
+            <div className="row">
+              <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                <h1 className="happines_title">
+                  The Blessing course is not available online it is offered In
+                  Person only
+                </h1>
+                <p className="happines_subtitle">
+                  Please check out our{' '}
+                  <a
+                    href="#"
+                    className="link v2"
+                    onClick={toggleActiveFilter('IN_PERSON')}
+                  >
+                    in-person offerings
+                  </a>
+                  .
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
         isSuccess &&
-        data.pages[0].data.length === 0 &&
+        data?.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">
@@ -1127,10 +1153,11 @@ const Course = () => {
               </div>
             </div>
           </section>
-        )}
+        )
+      )}
       {activeFilterType === 'IN_PERSON' &&
-        isSuccess &&
-        data.pages[0].data.length === 0 &&
+        !isSuccess &&
+        data?.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">
