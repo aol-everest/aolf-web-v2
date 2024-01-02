@@ -133,7 +133,7 @@ const SchedulingRange = () => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setUserLatLong({ lat: latitude, lng: longitude });
-          setLocationFilter({ lat: latitude, lng: longitude });
+          setLocationFilter(JSON.stringify({ lat: latitude, lng: longitude }));
         },
         (error) => {
           console.error('Error getting location:', error.message);
