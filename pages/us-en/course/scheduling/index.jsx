@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES } from '@constants';
-import { useQueryString } from '@hooks';
+import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
 import { api, tConvert, findCourseTypeByKey } from '@utils';
 import dayjs from 'dayjs';
@@ -98,29 +98,34 @@ const SchedulingRange = () => {
   const [zipCode, setZipCode] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [courseTypeFilter] = useQueryString('courseType', {
-    defaultValue: 'SKY_BREATH_MEDITATION',
-  });
-  const [mode, setMode] = useQueryString('mode', {
-    defaultValue: COURSE_MODES.ONLINE.value,
-  });
-  const [timezoneFilter, setTimezoneFilter] = useState('EST');
-  const [milesFilter] = useQueryString('miles', {
-    defaultValue: '50',
-  });
-  const [locationFilter, setLocationFilter] = useQueryString('location', {
-    parse: JSON.parse,
-  });
+  const [courseTypeFilter] = useQueryState(
+    'courseType',
+    parseAsString.withDefault('SKY_BREATH_MEDITATION'),
+  );
+  const [mode, setMode] = useQueryState(
+    'mode',
+    parseAsString.withDefault(COURSE_MODES.ONLINE.value),
+  );
+  const [timezoneFilter, setTimezoneFilter] = useQueryState(
+    'timezone',
+    parseAsString.withDefault('EST'),
+  );
+  const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
+  const [locationFilter, setLocationFilter] = useQueryState(
+    'location',
+    parseAsJson,
+  );
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [userLatLong, setUserLatLong] = useState({});
   const [activeWorkshop, setActiveWorkshop] = useState(null);
-  const [currentMonthYear, setCurrentMonthYear] = useQueryString('ym', {
-    defaultValue: `${moment().year()}-${moment().month() + 1}`,
-  });
+  const [currentMonthYear, setCurrentMonthYear] = useQueryState(
+    'ym',
+    parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
+  );
 
-  const [teacherFilter] = useQueryString('teacher');
-  const [cityFilter] = useQueryString('city');
+  const [teacherFilter] = useQueryState('teacher');
+  const [cityFilter] = useQueryState('city');
 
   useEffect(() => {
     if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
@@ -128,7 +133,7 @@ const SchedulingRange = () => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setUserLatLong({ lat: latitude, lng: longitude });
-          setLocationFilter(JSON.stringify({ lat: latitude, lng: longitude }));
+          setLocationFilter({ lat: latitude, lng: longitude });
         },
         (error) => {
           console.error('Error getting location:', error.message);
@@ -464,7 +469,7 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(null);
     setSelectedDates([]);
     fp.current.flatpickr.clear();
-    fp.current.flatpickr.changeMonth(0, false);
+    fp.current.flatpickr.changeMonth(0);
     setCurrentMonthYear(
       `${fp.current.flatpickr.currentYear}-${
         fp.current.flatpickr.currentMonth + 1
