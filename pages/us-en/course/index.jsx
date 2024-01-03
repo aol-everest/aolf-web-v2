@@ -19,6 +19,7 @@ import { useInfiniteQuery, useQuery } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
+import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import Style from './Course.module.scss';
@@ -199,7 +200,7 @@ const Course = () => {
   const [ctypesFilter, setCtypesFilter] = useQueryString('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryString('startEndDate');
-  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone');
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryString('instructor', {
     parse: JSON.parse,
   });
@@ -462,7 +463,9 @@ const Course = () => {
     track('Product List Viewed', {
       category: 'Course',
     });
-    setTimeZoneFilter(fillDefaultTimeZone());
+    if (!timeZoneFilter) {
+      setTimeZoneFilter(fillDefaultTimeZone());
+    }
   });
 
   let filterCount = 0;
