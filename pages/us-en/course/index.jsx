@@ -19,7 +19,7 @@ import { useInfiniteQuery, useQuery } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
-import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
+import { useQueryState } from 'nuqs';
 
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import Style from './Course.module.scss';
@@ -463,7 +463,7 @@ const Course = () => {
     track('Product List Viewed', {
       category: 'Course',
     });
-    if (!timeZoneFilter) {
+    if (orgConfig.name === 'AOL' && !timeZoneFilter) {
       setTimeZoneFilter(fillDefaultTimeZone());
     }
   });
