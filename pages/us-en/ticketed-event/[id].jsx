@@ -6,12 +6,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { ABBRS } from '@constants';
+import { ABBRS, ALERT_TYPES } from '@constants';
 import { DiscountCodeInput } from '@components/checkout';
 import { pushRouteWithUTMQuery } from '@service';
-import { useLocalStorage } from 'react-use';
+import { useEffectOnce, useLocalStorage } from 'react-use';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
+import { useGlobalAlertContext } from '@contexts';
 
 dayjs.extend(utc);
 
@@ -19,6 +20,7 @@ function TicketedEvent() {
   const router = useRouter();
   const [, setValue] = useLocalStorage('ticket-events', {}, { raw: true });
   const [selectedTickets, setSelectedTickets] = useState([]);
+  const { showAlert } = useGlobalAlertContext();
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalSelectedTicketQuantity, setTotalSelectedTicketQuantity] =
@@ -55,6 +57,7 @@ function TicketedEvent() {
     addOnProducts,
     maxTicketsWithOneOrder,
     eventImageUrl,
+    isEventFull,
   } = workshop || {};
 
   useEffect(() => {
@@ -129,6 +132,23 @@ function TicketedEvent() {
     });
   };
 
+  useEffect(() => {
+    if (isEventFull) {
+      try {
+        showAlert(ALERT_TYPES.WARNING_ALERT, {
+          children: 'The Event is full. Please try for some other event',
+          closeModalAction: () => {
+            pushRouteWithUTMQuery(router, {
+              pathname: `/us-en/course`,
+            });
+          },
+        });
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  }, [workshop]);
+
   return (
     <Formik
       initialValues={{
@@ -157,7 +177,7 @@ function TicketedEvent() {
                     </p>
 
                     <div className="tickets-modal__promo">
-                      <label className="tickets-modal__promo-label" for="">
+                      <label className="tickets-modal__promo-label" htmlFor="">
                         promo code
                       </label>
 
