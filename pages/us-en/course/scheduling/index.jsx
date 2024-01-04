@@ -523,6 +523,7 @@ const SchedulingRange = () => {
       if (updatedValue && Object.keys(updatedValue).length > 0) {
         setLocationFilter(JSON.stringify(updatedValue));
       }
+      setLocationFilter(JSON.stringify(value));
     } else {
       setLocationFilter(null);
     }
