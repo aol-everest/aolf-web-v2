@@ -2,7 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
-import { api, tConvert, findCourseTypeByKey } from '@utils';
+import {
+  api,
+  tConvert,
+  findCourseTypeByKey,
+  getZipCodeByLatLang,
+} from '@utils';
 import dayjs from 'dayjs';
 import { sortBy, values, omit } from 'lodash';
 import moment from 'moment';
@@ -128,20 +133,26 @@ const SchedulingRange = () => {
   const [cityFilter] = useQueryState('city');
 
   useEffect(() => {
-    if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLatLong({ lat: latitude, lng: longitude });
-          setLocationFilter(JSON.stringify({ lat: latitude, lng: longitude }));
-        },
-        (error) => {
-          console.error('Error getting location:', error.message);
-        },
-      );
-    } else {
-      console.error('Geolocation is not supported by your browser.');
-    }
+    const getUserLocation = async () => {
+      if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            const zipCode = await getZipCodeByLatLang(latitude, longitude);
+            setUserLatLong({ lat: latitude, lng: longitude });
+            setLocationFilter(
+              JSON.stringify({ lat: latitude, lng: longitude, zipCode }),
+            );
+          },
+          (error) => {
+            console.error('Error getting location:', error.message);
+          },
+        );
+      } else {
+        console.error('Geolocation is not supported by your browser.');
+      }
+    };
+    getUserLocation();
   }, []);
 
   const { data: workshopMaster = {} } = useQuery(
@@ -344,7 +355,7 @@ const SchedulingRange = () => {
         random: true,
       };
       if (locationFilter) {
-        const { lat, lng } = locationFilter || {};
+        const { lat, lng } = JSON.parse(locationFilter || {});
         if (lat || lng) {
           param = {
             ...param,
@@ -371,7 +382,6 @@ const SchedulingRange = () => {
       });
       if (response?.data && selectedDates?.length > 0) {
         const selectedSfids = getGroupedUniqueEventIds(response);
-        console.log('selectedSfids', selectedSfids);
         const finalWorkshops =
           mode === COURSE_MODES.IN_PERSON.value
             ? response?.data
@@ -542,6 +552,8 @@ const SchedulingRange = () => {
   };
 
   const handleLocationFilterChange = (value) => {
+    resetCalender();
+    setIsInitialLoad(true);
     if (value) {
       const zipCode = value.zipCode;
       setZipCode(zipCode);
@@ -553,8 +565,6 @@ const SchedulingRange = () => {
     } else {
       setLocationFilter(null);
     }
-    resetCalender();
-    setIsInitialLoad(true);
   };
 
   return (
