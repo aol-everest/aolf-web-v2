@@ -132,7 +132,7 @@ function TicketedEvent() {
     });
   };
 
-  useEffectOnce(() => {
+  useEffect(() => {
     if (isEventFull) {
       try {
         showAlert(ALERT_TYPES.WARNING_ALERT, {
@@ -147,7 +147,7 @@ function TicketedEvent() {
         console.log('error', error);
       }
     }
-  });
+  }, [workshop]);
 
   return (
     <Formik
@@ -177,7 +177,7 @@ function TicketedEvent() {
                     </p>
 
                     <div className="tickets-modal__promo">
-                      <label className="tickets-modal__promo-label" for="">
+                      <label className="tickets-modal__promo-label" htmlFor="">
                         promo code
                       </label>
 

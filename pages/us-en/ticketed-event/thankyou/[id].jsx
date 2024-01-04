@@ -133,7 +133,7 @@ const TicketCongratulations = () => {
     const ticketId = `${parentItem.pricingTierId}-${childItem}`;
     newTicketData[ticketId] = {
       ...newTicketData[ticketId],
-      [fieldName]: value,
+      [fieldName]: value?.trim(),
       tierName: parentItem?.pricingTierName,
     };
     setTicketData(newTicketData);
@@ -241,6 +241,12 @@ const TicketCongratulations = () => {
         return showAlert(ALERT_TYPES.ERROR_ALERT, {
           children:
             'Please input correct email address. Email address is not valid',
+        });
+      } else if (item.contactPhone.length < 11) {
+        allFieldsValid = false;
+        setLoading(false);
+        return showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: 'Please input correct phone details with country code.',
         });
       }
     });
@@ -494,6 +500,8 @@ const TicketCongratulations = () => {
                                         value={
                                           ticketItemData?.contactPhone || ''
                                         }
+                                        minLength={11}
+                                        maxLength={15}
                                         onChange={(e) =>
                                           handleInputChange(
                                             ticket,
