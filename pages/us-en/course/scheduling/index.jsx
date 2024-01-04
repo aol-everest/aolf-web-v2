@@ -208,7 +208,7 @@ const SchedulingRange = () => {
         param = { ...param, teacherId: teacherFilter };
       }
       if (cityFilter) {
-        param = { ...param, city: teacherFilter };
+        param = { ...param, city: cityFilter };
       }
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};
@@ -363,7 +363,7 @@ const SchedulingRange = () => {
         param = { ...param, teacherId: teacherFilter };
       }
       if (cityFilter) {
-        param = { ...param, city: teacherFilter };
+        param = { ...param, city: cityFilter };
       }
       const response = await api.get({
         path: 'workshops',
