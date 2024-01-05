@@ -19,6 +19,7 @@ import { useInfiniteQuery, useQuery } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
+import { useQueryState } from 'nuqs';
 
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import Style from './Course.module.scss';
@@ -199,9 +200,7 @@ const Course = () => {
   const [ctypesFilter, setCtypesFilter] = useQueryString('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryString('startEndDate');
-  const [timeZoneFilter, setTimeZoneFilter] = useQueryString('timeZone', {
-    defaultValue: fillDefaultTimeZone(),
-  });
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryString('instructor', {
     parse: JSON.parse,
   });
@@ -464,6 +463,9 @@ const Course = () => {
     track('Product List Viewed', {
       category: 'Course',
     });
+    if (orgConfig.name === 'AOL' && !timeZoneFilter) {
+      setTimeZoneFilter(fillDefaultTimeZone());
+    }
   });
 
   let filterCount = 0;
@@ -482,6 +484,8 @@ const Course = () => {
   if (instructorFilter) {
     filterCount++;
   }
+
+  const isBlessingCourseSelected = !!COURSE_TYPES[courseTypeFilter];
 
   return (
     <main className="course-filter">
@@ -1109,9 +1113,33 @@ const Course = () => {
           )}
         </div>
       </section>
-      {activeFilterType === 'ONLINE' &&
+      {isBlessingCourseSelected && activeFilterType === 'ONLINE' ? (
+        <section className="about">
+          <div className="container happines_box">
+            <div className="row">
+              <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
+                <h1 className="happines_title">
+                  The Blessing course is not available online it is offered In
+                  Person only
+                </h1>
+                <p className="happines_subtitle">
+                  Please check out our{' '}
+                  <a
+                    href="#"
+                    className="link v2"
+                    onClick={toggleActiveFilter('IN_PERSON')}
+                  >
+                    in-person offerings
+                  </a>
+                  .
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
         isSuccess &&
-        data.pages[0].data.length === 0 &&
+        data?.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">
@@ -1127,10 +1155,11 @@ const Course = () => {
               </div>
             </div>
           </section>
-        )}
+        )
+      )}
       {activeFilterType === 'IN_PERSON' &&
-        isSuccess &&
-        data.pages[0].data.length === 0 &&
+        !isSuccess &&
+        data?.pages[0].data.length === 0 &&
         !isFetchingNextPage && (
           <section className="about">
             <div className="container happines_box">

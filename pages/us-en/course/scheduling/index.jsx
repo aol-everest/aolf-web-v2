@@ -1,8 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES } from '@constants';
-import { useQueryString } from '@hooks';
+import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
-import { api, tConvert, findCourseTypeByKey } from '@utils';
+import {
+  api,
+  tConvert,
+  findCourseTypeByKey,
+  getZipCodeByLatLang,
+} from '@utils';
 import dayjs from 'dayjs';
 import { sortBy, values, omit } from 'lodash';
 import moment from 'moment';
@@ -98,42 +103,56 @@ const SchedulingRange = () => {
   const [zipCode, setZipCode] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [courseTypeFilter] = useQueryString('courseType', {
-    defaultValue: 'SKY_BREATH_MEDITATION',
-  });
-  const [mode, setMode] = useQueryString('mode', {
-    defaultValue: COURSE_MODES.ONLINE.value,
-  });
-  const [timezoneFilter, setTimezoneFilter] = useState('EST');
-  const [milesFilter] = useQueryString('miles', {
-    defaultValue: '50',
-  });
-  const [locationFilter, setLocationFilter] = useQueryString('location', {
-    parse: JSON.parse,
-  });
+  const [courseTypeFilter] = useQueryState(
+    'courseType',
+    parseAsString.withDefault('SKY_BREATH_MEDITATION'),
+  );
+  const [mode, setMode] = useQueryState(
+    'mode',
+    parseAsString.withDefault(COURSE_MODES.ONLINE.value),
+  );
+  const [timezoneFilter, setTimezoneFilter] = useQueryState(
+    'timezone',
+    parseAsString.withDefault('EST'),
+  );
+  const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
+  const [locationFilter, setLocationFilter] = useQueryState(
+    'location',
+    parseAsJson,
+  );
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [userLatLong, setUserLatLong] = useState({});
   const [activeWorkshop, setActiveWorkshop] = useState(null);
-  const [currentMonthYear, setCurrentMonthYear] = useQueryString('ym', {
-    defaultValue: `${moment().year()}-${moment().month() + 1}`,
-  });
+  const [currentMonthYear, setCurrentMonthYear] = useQueryState(
+    'ym',
+    parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
+  );
+
+  const [teacherFilter] = useQueryState('teacher');
+  const [cityFilter] = useQueryState('city');
 
   useEffect(() => {
-    if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLatLong({ lat: latitude, lng: longitude });
-          setLocationFilter(JSON.stringify({ lat: latitude, lng: longitude }));
-        },
-        (error) => {
-          console.error('Error getting location:', error.message);
-        },
-      );
-    } else {
-      console.error('Geolocation is not supported by your browser.');
-    }
+    const getUserLocation = async () => {
+      if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            const zipCode = await getZipCodeByLatLang(latitude, longitude);
+            setUserLatLong({ lat: latitude, lng: longitude });
+            setLocationFilter(
+              JSON.stringify({ lat: latitude, lng: longitude, zipCode }),
+            );
+          },
+          (error) => {
+            console.error('Error getting location:', error.message);
+          },
+        );
+      } else {
+        console.error('Geolocation is not supported by your browser.');
+      }
+    };
+    getUserLocation();
   }, []);
 
   const { data: workshopMaster = {} } = useQuery(
@@ -195,6 +214,12 @@ const SchedulingRange = () => {
       }
       if (milesFilter) {
         param = { ...param, radius: milesFilter };
+      }
+      if (teacherFilter) {
+        param = { ...param, teacherId: teacherFilter };
+      }
+      if (cityFilter) {
+        param = { ...param, city: cityFilter };
       }
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};
@@ -330,7 +355,7 @@ const SchedulingRange = () => {
         random: true,
       };
       if (locationFilter) {
-        const { lat, lng } = locationFilter || {};
+        const { lat, lng } = JSON.parse(locationFilter || {});
         if (lat || lng) {
           param = {
             ...param,
@@ -345,13 +370,18 @@ const SchedulingRange = () => {
       if (mode && mode !== COURSE_MODES_BOTH) {
         param = { ...param, mode };
       }
+      if (teacherFilter) {
+        param = { ...param, teacherId: teacherFilter };
+      }
+      if (cityFilter) {
+        param = { ...param, city: cityFilter };
+      }
       const response = await api.get({
         path: 'workshops',
         param,
       });
       if (response?.data && selectedDates?.length > 0) {
         const selectedSfids = getGroupedUniqueEventIds(response);
-        console.log('selectedSfids', selectedSfids);
         const finalWorkshops =
           mode === COURSE_MODES.IN_PERSON.value
             ? response?.data
@@ -449,6 +479,12 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(null);
     setSelectedDates([]);
     fp.current.flatpickr.clear();
+    fp.current.flatpickr.changeMonth(0);
+    setCurrentMonthYear(
+      `${fp.current.flatpickr.currentYear}-${
+        fp.current.flatpickr.currentMonth + 1
+      }`,
+    );
   };
 
   const onMonthChangeAction = (e, d, instance) => {
@@ -516,6 +552,8 @@ const SchedulingRange = () => {
   };
 
   const handleLocationFilterChange = (value) => {
+    resetCalender();
+    setIsInitialLoad(true);
     if (value) {
       const zipCode = value.zipCode;
       setZipCode(zipCode);
@@ -523,11 +561,10 @@ const SchedulingRange = () => {
       if (updatedValue && Object.keys(updatedValue).length > 0) {
         setLocationFilter(JSON.stringify(updatedValue));
       }
+      setLocationFilter(JSON.stringify(value));
     } else {
       setLocationFilter(null);
     }
-    resetCalender();
-    setIsInitialLoad(true);
   };
 
   return (
