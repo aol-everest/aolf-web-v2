@@ -278,6 +278,10 @@ const Checkout = () => {
   const isHealingBreathProgram =
     COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
 
+  const isHealingBreathSilentType =
+    COURSE_TYPES.HEALING_BREATH_SILENT.value.indexOf(workshop.productTypeId) >=
+    0;
+
   const isInstitutionalProgram =
     COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(workshop.productTypeId) >=
     0;
@@ -285,7 +289,11 @@ const Checkout = () => {
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 
   const renderPaymentForm = () => {
-    if (isHealingBreathProgram || isInstitutionalProgram) {
+    if (
+      isHealingBreathProgram ||
+      isInstitutionalProgram ||
+      isHealingBreathSilentType
+    ) {
       return (
         <PaymentFormHB
           isStripeIntentPayment={isStripeIntentPayment}

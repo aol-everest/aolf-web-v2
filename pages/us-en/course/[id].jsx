@@ -42,6 +42,9 @@ const VolunteerTrainingProgram = dynamic(() =>
 const HealingBreath = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.HealingBreath),
 );
+const HealingBreathSilent = dynamic(() =>
+  import('@components/courseDetails').then((mod) => mod.HealingBreathSilent),
+);
 const SKYSilentRetreat = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.SKYSilentRetreat),
 );
@@ -153,7 +156,8 @@ function CourseDetail() {
       !isSanyamCourse &&
       !isSKYWithSahaj &&
       !isSriSriYogaDeepDiveType &&
-      !isMarmaTraining
+      !isMarmaTraining &&
+      !isHealingBreathSilentType
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -227,6 +231,8 @@ function CourseDetail() {
     0;
   const isHealingBreathType =
     COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0;
+  const isHealingBreathSilentType =
+    COURSE_TYPES.HEALING_BREATH_SILENT.value.indexOf(data.productTypeId) >= 0;
   const isInstitutionalProgram =
     COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(data.productTypeId) >= 0;
   const isSKYSilentRetreatType =
@@ -279,6 +285,9 @@ function CourseDetail() {
     }
     if (isHealingBreathType || isInstitutionalProgram) {
       return <HealingBreath {...props} />;
+    }
+    if (isHealingBreathSilentType) {
+      return <HealingBreathSilent {...props} />;
     }
     if (isSKYSilentRetreatType) {
       return <SKYSilentRetreat {...props} />;

@@ -236,7 +236,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                       height="100%"
                       frameBorder="0"
                       allow="autoplay; fullscreen"
-                      allowfullscreen
+                      allowFullScreen
                     ></iframe>
                   </div>
                 </div>
@@ -515,7 +515,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               height="100%"
               frameBorder="0"
               allow="autoplay; fullscreen"
-              allowfullscreen
+              allowFullScreen
             ></iframe>
           </div>
         </section>

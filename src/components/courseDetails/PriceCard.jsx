@@ -55,7 +55,11 @@ const datePickerConfig = {
   autoApply: true,
 };
 
-export const PriceCard = ({ workshop, courseViewMode }) => {
+export const PriceCard = ({
+  workshop,
+  courseViewMode,
+  showCeuCreditsForHbSilent = false,
+}) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
@@ -450,6 +454,15 @@ export const PriceCard = ({ workshop, courseViewMode }) => {
                 {preRequisiteCondition}
               </p>
             )}
+          </div>
+        )}
+        {showCeuCreditsForHbSilent && (
+          <div className="early-bird-banner">
+            <p>
+              <strong>CEU credits:</strong> Physicians, PAs, NPs, Nurses, and
+              Dentists can receive 1 CME/CEU credit for every class hour. Other
+              healthcare professionals can receive a letter of attendance.
+            </p>
           </div>
         )}
       </div>
