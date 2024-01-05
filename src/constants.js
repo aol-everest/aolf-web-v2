@@ -127,6 +127,10 @@ export const COURSE_TYPES = {
     name: 'Healing Breath',
     value: process.env.NEXT_PUBLIC_HEALING_BREATH_CTYPE || '',
   },
+  HEALING_BREATH_SILENT: {
+    name: 'Healing Breath Silent',
+    value: process.env.NEXT_PUBLIC_HEALING_BREATH_SILENT_CTYPE || '',
+  },
   SKY_SILENT_RETREAT: {
     name: 'Silent Retreat',
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || '',
