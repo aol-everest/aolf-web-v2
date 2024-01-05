@@ -222,7 +222,7 @@ const SchedulingRange = () => {
         param = { ...param, city: cityFilter };
       }
       if (locationFilter) {
-        const { lat, lng } = locationFilter || {};
+        const { lat, lng } = JSON.parse(locationFilter || {});
         if (lat || lng) {
           param = {
             ...param,
