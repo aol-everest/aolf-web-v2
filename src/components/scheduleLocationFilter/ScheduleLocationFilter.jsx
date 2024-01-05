@@ -16,18 +16,16 @@ export const ScheduleLocationFilter = ({
     handleLocationChange(value);
   };
 
-  const updatedValue = JSON.parse(value);
-
   return (
     <label className={classNames(`${containerClass}`, {})}>
-      {updatedValue?.locationName ? (
+      {value?.locationName ? (
         <span
           className={classNames('schedule-location-input scheduling-address')}
         >
           <span className={classNames('schedule-location-value')}>
-            {updatedValue.locationName}
+            {value.locationName}
           </span>
-          {updatedValue.locationName && (
+          {value.locationName && (
             <a
               className={classNames('react-tag-remove')}
               onClick={removeCoupon}
