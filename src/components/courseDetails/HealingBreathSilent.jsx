@@ -43,50 +43,41 @@ const swiperOption = {
   },
 };
 
-export const SilentRetreat = ({ data, mode: courseViewMode }) => {
-  const { sfid, title, mode, productTypeId, isGuestCheckoutEnabled } =
-    data || {};
+export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
+  const { sfid, title, productTypeId, isGuestCheckoutEnabled } = data || {};
   const router = useRouter();
   const { authenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (sfid) {
-      if (authenticated || isGuestCheckoutEnabled) {
-        pushRouteWithUTMQuery(router, {
-          pathname: `/us-en/course/checkout/${sfid}`,
-          query: {
-            ctype: productTypeId,
-            page: 'c-o',
-          },
-        });
-      } else {
-        showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-            router.query,
-          )}`,
-          defaultView: 'SIGNUP_MODE',
-        });
-      }
-    } else {
+
+    if (authenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling`,
+        pathname: `/us-en/course/checkout/${sfid}`,
         query: {
-          courseType: 'SILENT_RETREAT',
+          ctype: productTypeId,
+          page: 'c-o',
         },
+      });
+    } else {
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
+        defaultView: 'SIGNUP_MODE',
       });
     }
   };
   return (
     <>
-      <main className="course-filter art-of-silence">
+      <main className="course-filter art-of-silence ">
         <section className="samadhi-top-section">
           <div className="banner">
             <div className="container">
               <div className="courses-title">Courses</div>
               <div className="banner-title">
-                {title || 'Art of Living Part 2'}
+                {title || 'Art of Silence Program - Healing Breath'}
               </div>
               <div className="banner-description">
                 Give yourself a true vacation for body, mind, and spirit
@@ -104,7 +95,11 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
           {sfid && (
-            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+            <PriceCard
+              workshop={data}
+              courseViewMode={courseViewMode}
+              showCeuCreditsForHbSilent
+            />
           )}
           <div className="container samadhi-featuers">
             <div className="feature-box">
@@ -140,7 +135,8 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
                 retreat?
               </h2>
               <p>
-                The Part 2 course builds on your Part 1 experience* with a
+                The Art of Living's Healing Breaths Silence Retreat course
+                builds on your Healing Breaths SKY Program experience* with a
                 unique blend of advanced breathwork, signature guided
                 meditations, daily yoga, and profound insights into the mind.
                 This is all designed to{' '}
@@ -153,14 +149,15 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
                 productive, and full of energy. As you emerge, you feel
                 centered, recharged, and ready to embrace life with renewed
                 focus and joy. This retreat is your avenue to rekindle your
-                connection with {COURSE_TYPES.SKY_BREATH_MEDITATION.name},
-                elevating your energy to new heights.
+                connection with Healing Breaths SKY Program, elevating your
+                energy to new heights.
               </p>
 
               <p>
-                *You can take the Part 2 Course only after completing the Part 1
-                course. If you would like to do a silent retreat and have not
-                yet done Part 1, please visit{' '}
+                *You can take the Art of Living's Healing Breaths Silence
+                Retreat Course only after completing the Healing Breaths SKY
+                Program course. If you would like to do a silent retreat and
+                have not yet done Healing Breaths SKY Program, please visit{' '}
                 <Link href="/us-en/course?courseType=SKY_BREATH_MEDITATION">
                   this page
                 </Link>
@@ -246,10 +243,11 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
           <div className="aos-banner-third">
             <div className="banner-title">Escape the mind's clutter</div>
             <div className="banner-text">
-              The Part 2 course provides the ideal environment to dive deep
-              within, breaking free from the constant chatter of the mind. Each
-              day is carefully structured to offer a transformative and relaxing
-              experience, a true vacation for your body, mind, and soul.
+              The Art of Living's Healing Breaths Silence Retreat course
+              provides the ideal environment to dive deep within, breaking free
+              from the constant chatter of the mind. Each day is carefully
+              structured to offer a transformative and relaxing experience, a
+              true vacation for your body, mind, and soul.
             </div>
             <button className="enroll-btn" onClick={handleRegister}>
               Enroll Now →
@@ -391,6 +389,145 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
               </div>
             </SwiperSlide>
           </Swiper>
+        </section>
+        <section className="healing-breaths">
+          <div className="container">
+            <h2 className="title">Healing Breaths</h2>
+            <div className="org-text">
+              List of some of the organizations that have benefited from the Art
+              of Living’s Healing Breaths SKY Programs
+            </div>
+            <div className="benefitted-orgs-list">
+              <div className="org-list-item">
+                <img
+                  src="/img/childrens-national-logo.webp"
+                  alt="children's natinoal"
+                  width="214"
+                  height="112"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/akron-childrens-hospital.webp"
+                  alt="Akron Children's Hopsital"
+                  width="151"
+                  height="65"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/franciscan-missionaries-of-our-lady.webp"
+                  alt="Franciscan missionaries of our lady"
+                  width="172"
+                  height="74"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/lcmc-health.webp"
+                  alt="LCMC Health"
+                  width="152"
+                  height="85"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/montefiore.webp"
+                  alt="montefiore"
+                  width="192"
+                  height="66"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/medstar-health.webp"
+                  alt="medstar health"
+                  width="200"
+                  height="57"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/cigna.webp"
+                  alt="Cigna"
+                  width="189"
+                  height="70"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/bayhealth.webp"
+                  alt="bayhealth"
+                  width="178"
+                  height="60"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/momentum-for-health.webp"
+                  alt="Momentum for health"
+                  width="127"
+                  height="93"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/transitions-group.webp"
+                  alt="Transitions Group"
+                  width="188"
+                  height="83"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/mindpath-care-center.webp"
+                  alt="Mindpath"
+                  width="198"
+                  height="60"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/bluecross-blueshields.webp"
+                  alt="bluecross blueshields"
+                  width="213"
+                  height="55"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/penn-medicine.webp"
+                  alt="Penn Medicine"
+                  width="233"
+                  height="50"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/metrowest-medical-center.webp"
+                  alt="Metrowest"
+                  width="198"
+                  height="60"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/pediatrix.webp"
+                  alt="Pediatrix"
+                  width="213"
+                  height="57"
+                />
+              </div>
+              <div className="org-list-item">
+                <img
+                  src="/img/tulane.webp"
+                  alt="Tulane"
+                  width="149"
+                  height="60"
+                />
+              </div>
+            </div>
+          </div>
         </section>
       </main>
     </>
