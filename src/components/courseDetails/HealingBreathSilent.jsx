@@ -149,8 +149,8 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 productive, and full of energy. As you emerge, you feel
                 centered, recharged, and ready to embrace life with renewed
                 focus and joy. This retreat is your avenue to rekindle your
-                connection with {COURSE_TYPES.SKY_BREATH_MEDITATION.name},
-                elevating your energy to new heights.
+                connection with Healing Breaths SKY Program, elevating your
+                energy to new heights.
               </p>
 
               <p>

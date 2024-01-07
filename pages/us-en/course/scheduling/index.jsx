@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES } from '@constants';
-import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsString } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
 import {
   api,
@@ -116,13 +116,9 @@ const SchedulingRange = () => {
     parseAsString.withDefault('EST'),
   );
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [locationFilter, setLocationFilter] = useQueryState(
-    'location',
-    parseAsJson,
-  );
+  const [locationFilter, setLocationFilter] = useState({});
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
-  const [userLatLong, setUserLatLong] = useState({});
   const [activeWorkshop, setActiveWorkshop] = useState(null);
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
     'ym',
@@ -134,15 +130,12 @@ const SchedulingRange = () => {
 
   useEffect(() => {
     const getUserLocation = async () => {
-      if (navigator.geolocation && mode === COURSE_MODES.ONLINE.value) {
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
             const zipCode = await getZipCodeByLatLang(latitude, longitude);
-            setUserLatLong({ lat: latitude, lng: longitude });
-            setLocationFilter(
-              JSON.stringify({ lat: latitude, lng: longitude, zipCode }),
-            );
+            setLocationFilter({ lat: latitude, lng: longitude, zipCode });
           },
           (error) => {
             console.error('Error getting location:', error.message);
@@ -186,12 +179,7 @@ const SchedulingRange = () => {
     },
   );
 
-  const {
-    data: dateAvailable = [],
-    isLoading,
-    isError,
-    error,
-  } = useQuery(
+  const { data: dateAvailable = [], isLoading } = useQuery(
     [
       'workshopMonthCalendar',
       currentMonthYear,
@@ -306,8 +294,8 @@ const SchedulingRange = () => {
     const totalDistance = timings.reduce((acc, timing) => {
       const eventLat = event.eventGeoLat;
       const eventLon = event.eventGeoLon;
-      const targetLat = userLatLong?.lat;
-      const targetLon = userLatLong?.lng;
+      const targetLat = locationFilter?.lat;
+      const targetLon = locationFilter?.lng;
 
       // Haversine formula for distance calculation
       const dLat = toRadians(eventLat - targetLat);
@@ -339,8 +327,8 @@ const SchedulingRange = () => {
       selectedDates,
       timezoneFilter,
       mode,
-      locationFilter,
       milesFilter,
+      locationFilter,
     ],
     async () => {
       let param = {
@@ -354,8 +342,9 @@ const SchedulingRange = () => {
           COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
         random: true,
       };
+
       if (locationFilter) {
-        const { lat, lng } = JSON.parse(locationFilter || {});
+        const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
             ...param,
@@ -376,6 +365,7 @@ const SchedulingRange = () => {
       if (cityFilter) {
         param = { ...param, city: cityFilter };
       }
+
       const response = await api.get({
         path: 'workshops',
         param,
@@ -559,9 +549,9 @@ const SchedulingRange = () => {
       setZipCode(zipCode);
       const updatedValue = omit(value, 'zipCode');
       if (updatedValue && Object.keys(updatedValue).length > 0) {
-        setLocationFilter(JSON.stringify(updatedValue));
+        setLocationFilter(updatedValue);
       }
-      setLocationFilter(JSON.stringify(value));
+      setLocationFilter(value);
     } else {
       setLocationFilter(null);
     }
