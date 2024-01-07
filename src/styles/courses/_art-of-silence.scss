@@ -22,7 +22,7 @@
     .banner {
       height: 280px;
       width: 100%;
-      background: url(/img/art-of-silence-banner.jpg) no-repeat top left;
+      background: url(/img/art-of-silence-banner.webp) no-repeat top left;
       padding: 60px 76px 50px 76px;
       background-size: auto;
       background-position: center;
@@ -171,7 +171,7 @@
   }
   .samadhi-benefits-section {
     padding: 60px 40px 0;
-    background: url(/img/sahaj-samadhi-benefit-moon.png) no-repeat top right;
+    background: url(/img/sahaj-samadhi-benefit-moon.webp) no-repeat top right;
     text-align: center;
     .section-title {
       font-family: 'Work Sans';
@@ -194,17 +194,18 @@
       padding: 20px 65px 60px;
       flex-direction: column;
       &.box1 {
-        background: url(/img/aos-benefit-deep-meditations.jpg) no-repeat top
+        background: url(/img/aos-benefit-deep-meditations.webp) no-repeat top
           right;
       }
       &.box2 {
-        background: url(/img/aos-benefit-silence.jpg) no-repeat top right;
+        background: url(/img/aos-benefit-silence.webp) no-repeat top right;
       }
       &.box3 {
-        background: url(/img/aos-benefit-yoga.jpg) no-repeat top right;
+        background: url(/img/aos-benefit-yoga.webp) no-repeat top right;
       }
       &.box4 {
-        background: url(/img/aos-benefit-ancient-wisdom.jpg) no-repeat top right;
+        background: url(/img/aos-benefit-ancient-wisdom.webp) no-repeat top
+          right;
       }
       .benefit-title {
         margin-top: auto;
@@ -368,7 +369,7 @@
     }
   }
   .aos-banner-second {
-    background: url(/img/aos-banner-2.jpg) no-repeat top left;
+    background: url(/img/aos-banner-2.webp) no-repeat top left;
     height: 400px;
     padding: 94px 0 0 77px;
     margin: 20px 15px;
@@ -410,7 +411,7 @@
     }
   }
   .aos-banner-third {
-    background: url(/img/aos-banner-3.jpg) no-repeat top left;
+    background: url(/img/aos-banner-3.webp) no-repeat top left;
     height: 400px;
     padding: 75px 120px 0 493px;
     margin: 20px 15px;

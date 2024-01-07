@@ -22,7 +22,7 @@
     .banner {
       height: 402px;
       width: 100%;
-      background: url(/img/sahaj-samadhi-banner-bg.png) no-repeat top left;
+      background: url(/img/sahaj-samadhi-banner-bg.webp) no-repeat top left;
       padding: 60px 76px 50px 76px;
       background-size: auto;
       background-position: center;
@@ -168,7 +168,7 @@
   }
   .samadhi-benefits-section {
     padding: 60px 40px 0;
-    background: url(/img/sahaj-samadhi-benefit-moon.png) no-repeat top right;
+    background: url(/img/sahaj-samadhi-benefit-moon.webp) no-repeat top right;
     text-align: center;
     .section-title {
       font-family: 'Work Sans';
@@ -191,16 +191,16 @@
       padding: 20px 65px 60px;
       flex-direction: column;
       &.box1 {
-        background: url(/img/sahaj-benefit-elevate.jpg) no-repeat top right;
+        background: url(/img/sahaj-benefit-elevate.webp) no-repeat top right;
       }
       &.box2 {
-        background: url(/img/sahaj-benefit-revitalize.jpg) no-repeat top right;
+        background: url(/img/sahaj-benefit-revitalize.webp) no-repeat top right;
       }
       &.box3 {
-        background: url(/img/sahaj-benefit-unlock.jpg) no-repeat top right;
+        background: url(/img/sahaj-benefit-unlock.webp) no-repeat top right;
       }
       &.box4 {
-        background: url(/img/sahaj-benefit-amplify.jpg) no-repeat top right;
+        background: url(/img/sahaj-benefit-amplify.webp) no-repeat top right;
       }
       .benefit-title {
         margin-top: auto;

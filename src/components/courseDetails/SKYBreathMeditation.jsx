@@ -264,7 +264,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
           <div className="container">
             <div className="row">
               <div className="col-12 px-2 col-lg-12 text-center text-lg-center">
-                <img src="/img/smallLine.svg" />
+                <img src="/img/smallLine.svg" width="146" height="1" />
                 <h2 className="breadth-meditation__title section-title benefits-title text-center">
                   Impacts of {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
                 </h2>
@@ -276,7 +276,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-2 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon1.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon1.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="102"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-1">
@@ -295,7 +300,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-2 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon2.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon2.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="102"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-2">
@@ -313,7 +323,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-2 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon3.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon3.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="102"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-3">
@@ -344,7 +359,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="slide">
                 <div className="key-highlight-box">
                   <div className="key-highlight-logo">
-                    <img src="/img/key-11.png" alt="transforming lives" />
+                    <img
+                      src="/img/key-11.webp"
+                      alt="transforming lives"
+                      width="350"
+                      height="233"
+                    />
                   </div>
                   <div className="key-highlight-content">
                     <span className="title">Pranayama</span>
@@ -359,7 +379,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="slide">
                 <div className="key-highlight-box">
                   <div className="key-highlight-logo">
-                    <img src="/img/key-2.jpg" alt="transforming lives" />
+                    <img
+                      src="/img/key-2.webp"
+                      alt="transforming lives"
+                      width="350"
+                      height="233"
+                    />
                   </div>
                   <div className="key-highlight-content">
                     <span className="title">
@@ -376,7 +401,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="slide">
                 <div className="key-highlight-box">
                   <div className="key-highlight-logo">
-                    <img src="/img/key-3.jpg" alt="transforming lives" />
+                    <img
+                      src="/img/key-3.webp"
+                      alt="transforming lives"
+                      width="350"
+                      height="233"
+                    />
                   </div>
                   <div className="key-highlight-content">
                     <span className="title">5 Keys to a Joyful Life</span>
@@ -391,7 +421,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="slide">
                 <div className="key-highlight-box">
                   <div className="key-highlight-logo">
-                    <img src="/img/key-4.jpg" alt="transforming lives" />
+                    <img
+                      src="/img/key-4.webp"
+                      alt="transforming lives"
+                      width="350"
+                      height="233"
+                    />
                   </div>
                   <div className="key-highlight-content">
                     <span className="title">Tap Into Community</span>
@@ -406,7 +441,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="slide">
                 <div className="key-highlight-box">
                   <div className="key-highlight-logo">
-                    <img src="/img/key-3.jpg" alt="transforming lives" />
+                    <img
+                      src="/img/key-3.webp"
+                      alt="transforming lives"
+                      width="350"
+                      height="233"
+                    />
                   </div>
                   <div className="key-highlight-content">
                     <span className="title">Ongoing Support</span>
@@ -433,7 +473,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                 </span>
               </p>
               <p className="quote-section__text">
-                <img src="/img/Guruji-2.png" />
+                <img src="/img/Guruji-2.webp" width="144" height="144" />
                 <br />~ Gurudev Sri Sri Ravi Shankar
               </p>
             </div>
@@ -451,7 +491,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-lg-6 text-left text-lg-left">
                 <div className="feature_box pinkbox">
                   <div className="feature_logo">
-                    <img src="/img/CNN.png" alt="transforming lives" />
+                    <img
+                      src="/img/CNN.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="84"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">"Life Changing"</span>
@@ -461,7 +506,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-lg-6 text-left text-lg-left">
                 <div className="feature_box greybox">
                   <div className="feature_logo">
-                    <img src="/img/Yoga.png" alt="transforming lives" />
+                    <img
+                      src="/img/Yoga.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="53"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">
@@ -474,7 +524,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-lg-6 text-left text-lg-left">
                 <div className="feature_box pinkbox">
                   <div className="feature_logo">
-                    <img src="/img/Harvard.png" alt="transforming lives" />
+                    <img
+                      src="/img/Harvard.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="91"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">
@@ -486,7 +541,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-lg-6 text-left text-lg-left">
                 <div className="feature_box greybox">
                   <div className="feature_logo">
-                    <img src="/img/WP.png" alt="transforming lives" />
+                    <img
+                      src="/img/WP.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="125"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">
@@ -521,7 +581,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
           <div className="container">
             <h2 className="section-title pl-0 pr-0">
               Frequently Asked Questions
-              <img src="/img/FAQ.svg" />
+              <img src="/img/FAQ.svg" width="50" height="50" />
             </h2>
             <Accordion defaultActiveKey="0" className="accordion">
               <Card>
@@ -641,8 +701,10 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="bar-right">
                 <a href="#" onClick={handleRegister}>
                   <img
-                    src="/img/regiter-btn-alt.original.png"
+                    src="/img/regiter-btn-alt.original.webp"
                     alt="Enroll now"
+                    width="190"
+                    height="61"
                   />
                 </a>
               </div>

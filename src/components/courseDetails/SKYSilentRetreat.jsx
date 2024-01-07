@@ -119,13 +119,23 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/silence-retreat-icon-1.png" alt="Elevate" />
+                <img
+                  src="/img/silence-retreat-icon-1.webp"
+                  alt="Elevate"
+                  width="50"
+                  height="50"
+                />
               </div>
               <div className="feature-text">Enjoy deep rest & rejuvenation</div>
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/silence-retreat-icon-2.png" alt="Enhance" />
+                <img
+                  src="/img/silence-retreat-icon-2.webp"
+                  alt="Enhance"
+                  width="50"
+                  height="50"
+                />
               </div>
               <div className="feature-text">
                 Find freedom from the mind’s chatter
@@ -133,7 +143,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/silence-retreat-icon-3.png" alt="Unlock" />
+                <img
+                  src="/img/silence-retreat-icon-3.webp"
+                  alt="Unlock"
+                  width="50"
+                  height="50"
+                />
               </div>
               <div className="feature-text">
                 Learn wellness practices to last a lifetime
@@ -252,7 +267,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon1.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon1.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="102"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-1">
@@ -270,7 +290,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon2.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon2.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="102"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-2">
@@ -287,7 +312,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
               <div className="col-12 px-1 col-md-4 col-lg-4 text-left text-lg-left">
                 <div className="breadth-meditation_box">
                   <div className="breadth-meditation_logo">
-                    <img src="/img/icon3.svg" alt="transforming lives" />
+                    <img
+                      src="/img/icon3.svg"
+                      alt="transforming lives"
+                      width="57"
+                      height="102"
+                    />
                   </div>
                   <div className="breadth-meditation_content">
                     <span className="title stats-3">
@@ -347,7 +377,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
                 <div className="feature_box">
                   <div className="feature_logo">
-                    <img src="/img/CNN.png" alt="transforming lives" />
+                    <img
+                      src="/img/CNN.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="84"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">"Life Changing"</span>
@@ -357,7 +392,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
                 <div className="feature_box">
                   <div className="feature_logo">
-                    <img src="/img/Yoga.png" alt="transforming lives" />
+                    <img
+                      src="/img/Yoga.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="53"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">
@@ -370,7 +410,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
                 <div className="feature_box">
                   <div className="feature_logo">
-                    <img src="/img/Harvard.png" alt="transforming lives" />
+                    <img
+                      src="/img/Harvard.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="90"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">
@@ -382,7 +427,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
               <div className="col-12 col-md-6 col-lg-3 text-left text-lg-left">
                 <div className="feature_box feature_box-no_border_line">
                   <div className="feature_logo">
-                    <img src="/img/WP.png" alt="transforming lives" />
+                    <img
+                      src="/img/WP.webp"
+                      alt="transforming lives"
+                      width="180"
+                      height="125"
+                    />
                   </div>
                   <div className="feature-content">
                     <span className="content">
