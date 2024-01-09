@@ -131,7 +131,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
           <div className="container content-video-area">
             <div className="video-section-textbox">
               <h2 className="section-title">
-                Why take a few days to unplug from the world for a silent
+                Why take a few days to unplug from the world for a silence
                 retreat?
               </h2>
               <p>
@@ -156,7 +156,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
               <p>
                 *You can take the Art of Living's Healing Breaths Silence
                 Retreat Course only after completing the Healing Breaths SKY
-                Program course. If you would like to do a silent retreat and
+                Program course. If you would like to do a silence retreat and
                 have not yet done Healing Breaths SKY Program, please visit{' '}
                 <Link href="/us-en/course?courseType=SKY_BREATH_MEDITATION">
                   this page
@@ -256,7 +256,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
         </section>
         <section className="section-sahaj-reviews">
           <h2 className="section-title">
-            Transforming lives through silent retreats
+            Transforming lives through silence retreats
           </h2>
           <Swiper {...swiperOption} className="reviews-slider">
             <SwiperSlide>
