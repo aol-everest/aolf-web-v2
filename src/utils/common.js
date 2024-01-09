@@ -78,6 +78,9 @@ export const stringToBoolean = (string) => {
 export const phoneRegExp =
   /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
+export const emailRegExp =
+  /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+
 export const isEmpty = (obj) => {
   if (typeof obj === 'object' && obj != null) {
     return Object.keys(obj).length >= 1 ? false : true;
@@ -101,4 +104,27 @@ export const findCourseTypeByKey = (key) => {
   }
 
   return null; // Return null if no match is found
+};
+
+export const getZipCodeByLatLang = async (lat, lng) => {
+  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`;
+  const data = await fetch(apiUrl);
+  const result = await data.json();
+  if (result.status === 'OK') {
+    // Extract the address components
+    const addressComponents = result.results[0].address_components;
+
+    // Find the component with the 'postal_code' type
+    const postalCodeComponent = addressComponents.find((component) =>
+      component.types.includes('postal_code'),
+    );
+
+    // Get the zipcode
+    const zipcode = postalCodeComponent ? postalCodeComponent.short_name : '';
+
+    return zipcode;
+  } else {
+    console.error('Error:', result.status);
+    return null;
+  }
 };

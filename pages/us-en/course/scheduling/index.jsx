@@ -1,10 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES } from '@constants';
-import { useQueryString } from '@hooks';
+import { useQueryState, parseAsString } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
-import { api, tConvert, findCourseTypeByKey } from '@utils';
+import {
+  api,
+  tConvert,
+  findCourseTypeByKey,
+  getZipCodeByLatLang,
+} from '@utils';
 import dayjs from 'dayjs';
-import { sortBy, values } from 'lodash';
+import { sortBy, values, omit } from 'lodash';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -44,25 +49,6 @@ const TIMEZONES = [
     timezone: 'America/Los_Angeles',
     text: 'Pacific Time - US & Canada',
     id: 'PST',
-  },
-];
-
-const MILES = [
-  {
-    text: '25 miles (40km)',
-    id: '25',
-  },
-  {
-    text: '35 miles (50km)',
-    id: '35',
-  },
-  {
-    text: '45 miles (60km)',
-    id: '45',
-  },
-  {
-    text: '55 miles (70km)',
-    id: '55',
   },
 ];
 
@@ -114,32 +100,53 @@ const SchedulingRange = () => {
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [zipCode, setZipCode] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [courseTypeFilter] = useQueryString('courseType', {
-    defaultValue: 'SKY_BREATH_MEDITATION',
-  });
-  const [mode, setMode] = useQueryString('mode', {
-    defaultValue: COURSE_MODES.ONLINE.value,
-  });
-  const [timezoneFilter, setTimezoneFilter] = useQueryString('timezone', {
-    defaultValue: 'EST',
-  });
-  const [milesFilter] = useQueryString('miles', {
-    defaultValue: '50',
-  });
-  const [locationFilter, setLocationFilter] = useQueryString('location', {
-    parse: JSON.parse,
-  });
+  const [courseTypeFilter] = useQueryState(
+    'courseType',
+    parseAsString.withDefault('SKY_BREATH_MEDITATION'),
+  );
+  const [mode, setMode] = useQueryState(
+    'mode',
+    parseAsString.withDefault(COURSE_MODES.ONLINE.value),
+  );
+  const [timezoneFilter, setTimezoneFilter] = useQueryState(
+    'timezone',
+    parseAsString.withDefault('EST'),
+  );
+  const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
+  const [locationFilter, setLocationFilter] = useState({});
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
-  const [currentMonthYear, setCurrentMonthYear] = useQueryString('ym', {
-    defaultValue: `${moment().year()}-${moment().month() + 1}`,
-  });
-  // const courseTypeValue =
-  //   findCourseTypeByKey(courseTypeFilter)?.value ||
-  //   COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+  const [currentMonthYear, setCurrentMonthYear] = useQueryState(
+    'ym',
+    parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
+  );
+
+  const [teacherFilter] = useQueryState('teacher');
+  const [cityFilter] = useQueryState('city');
+
+  useEffect(() => {
+    const getUserLocation = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            const zipCode = await getZipCodeByLatLang(latitude, longitude);
+            setLocationFilter({ lat: latitude, lng: longitude, zipCode });
+          },
+          (error) => {
+            console.error('Error getting location:', error.message);
+          },
+        );
+      } else {
+        console.error('Geolocation is not supported by your browser.');
+      }
+    };
+    getUserLocation();
+  }, []);
 
   const { data: workshopMaster = {} } = useQuery(
     ['workshopMaster', mode],
@@ -172,12 +179,7 @@ const SchedulingRange = () => {
     },
   );
 
-  const {
-    data: dateAvailable = [],
-    isLoading,
-    isError,
-    error,
-  } = useQuery(
+  const { data: dateAvailable = [], isLoading } = useQuery(
     [
       'workshopMonthCalendar',
       currentMonthYear,
@@ -201,13 +203,19 @@ const SchedulingRange = () => {
       if (milesFilter) {
         param = { ...param, radius: milesFilter };
       }
+      if (teacherFilter) {
+        param = { ...param, teacherId: teacherFilter };
+      }
+      if (cityFilter) {
+        param = { ...param, city: cityFilter };
+      }
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
             ...param,
-            lat,
-            lng,
+            lat: lat?.toFixed(4),
+            lng: lng?.toFixed(4),
           };
         }
       }
@@ -242,44 +250,73 @@ const SchedulingRange = () => {
     });
   });
 
-  // useEffect(() => {
-  //   fp.current.flatpickr.changeMonth(
-  //     parseInt(currentMonthYear.split("-")[1] - 1),
-  //     false,
-  //   );
-  //   setTimeout(() => {
-  //     fp.current.flatpickr.changeYear(
-  //       parseInt(currentMonthYear.split("-")[0]),
-  //       false,
-  //     );
-  //   }, 10);
-  // }, []);
-
   const handleModalToggle = () => {
     setShowLocationModal(!showLocationModal);
   };
 
+  function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+  }
+
   function getGroupedUniqueEventIds(response) {
-    const pairOfTimingAndEventId = response.data.reduce((acc, obj) => {
+    const groupedEvents = response.data.reduce((acc, obj) => {
       let timings = obj.timings;
       timings = sortBy(timings, (obj) => new Date(obj.startDate));
-      let timing_Str = timings.reduce((acc1, obj) => {
+
+      const timingKey = timings.reduce((acc1, obj) => {
         acc1 += '' + obj.startDate + '' + obj.startTime;
         return acc1;
       }, '');
-      timing_Str = obj.mode + '_' + timing_Str;
-      acc = { ...acc, [timing_Str]: obj.id };
+
+      const existingEvent = acc[timingKey];
+
+      if (
+        !existingEvent ||
+        calculateTotalDistance(obj) < calculateTotalDistance(existingEvent)
+      ) {
+        acc[timingKey] = obj;
+      }
+
       return acc;
     }, {});
-    return values(pairOfTimingAndEventId);
+
+    const closestEventIds = Object.values(groupedEvents).map(
+      (event) => event.id,
+    );
+
+    return closestEventIds;
+  }
+
+  function calculateTotalDistance(event) {
+    const timings = sortBy(event.timings, (obj) => new Date(obj.startDate));
+    const earthRadius = 6371; // Earth radius in kilometers
+
+    const totalDistance = timings.reduce((acc, timing) => {
+      const eventLat = event.eventGeoLat;
+      const eventLon = event.eventGeoLon;
+      const targetLat = locationFilter?.lat;
+      const targetLon = locationFilter?.lng;
+
+      // Haversine formula for distance calculation
+      const dLat = toRadians(eventLat - targetLat);
+      const dLon = toRadians(eventLon - targetLon);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(targetLat)) *
+          Math.cos(toRadians(eventLat)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = earthRadius * c;
+
+      return acc + distance;
+    }, 0);
+
+    return totalDistance;
   }
 
   let enableDates = dateAvailable.map((da) => {
     return da.firstDate;
-    // return {
-    //   from: da.firstDate,
-    //   to: da.allDates[da.allDates.length - 1],
-    // };
   });
 
   enableDates = [...enableDates, ...selectedDates];
@@ -290,13 +327,14 @@ const SchedulingRange = () => {
       selectedDates,
       timezoneFilter,
       mode,
-      locationFilter,
       milesFilter,
+      locationFilter,
     ],
     async () => {
       let param = {
         timeZone: timezoneFilter,
-        sdate: selectedDates?.[0],
+        sdate:
+          mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
         timingsRequired: true,
         skipFullCourses: true,
         ctype:
@@ -304,13 +342,14 @@ const SchedulingRange = () => {
           COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
         random: true,
       };
+
       if (locationFilter) {
         const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
             ...param,
-            lat,
-            lng,
+            lat: lat?.toFixed(4),
+            lng: lng?.toFixed(4),
           };
         }
       }
@@ -320,15 +359,25 @@ const SchedulingRange = () => {
       if (mode && mode !== COURSE_MODES_BOTH) {
         param = { ...param, mode };
       }
+      if (teacherFilter) {
+        param = { ...param, teacherId: teacherFilter };
+      }
+      if (cityFilter) {
+        param = { ...param, city: cityFilter };
+      }
+
       const response = await api.get({
         path: 'workshops',
         param,
       });
       if (response?.data && selectedDates?.length > 0) {
         const selectedSfids = getGroupedUniqueEventIds(response);
-        const finalWorkshops = response?.data.filter((item) =>
-          selectedSfids.includes(item.sfid),
-        );
+        const finalWorkshops =
+          mode === COURSE_MODES.IN_PERSON.value
+            ? response?.data
+            : response?.data.filter((item) =>
+                selectedSfids.includes(item.sfid),
+              );
 
         setTimeout(() => {
           const timeContainer = document.querySelector(
@@ -353,6 +402,16 @@ const SchedulingRange = () => {
     },
   );
 
+  const upcomingByZipCode = [];
+  const otherCourses = [];
+  workshops.forEach((item) => {
+    if (item.locationPostalCode == zipCode) {
+      upcomingByZipCode.push(item);
+    } else {
+      otherCourses.push(item);
+    }
+  });
+
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
     const response = await await api.get({
@@ -376,8 +435,8 @@ const SchedulingRange = () => {
   const handleTimezoneChange = (ev) => {
     ev.preventDefault();
     setTimezoneFilter(ev?.target?.value);
-    setActiveWorkshop(null);
-    setSelectedWorkshopId(null);
+    resetCalender();
+    setIsInitialLoad(true);
   };
 
   const goToPaymentModal = () => {
@@ -410,6 +469,12 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(null);
     setSelectedDates([]);
     fp.current.flatpickr.clear();
+    fp.current.flatpickr.changeMonth(0);
+    setCurrentMonthYear(
+      `${fp.current.flatpickr.currentYear}-${
+        fp.current.flatpickr.currentMonth + 1
+      }`,
+    );
   };
 
   const onMonthChangeAction = (e, d, instance) => {
@@ -479,8 +544,14 @@ const SchedulingRange = () => {
   const handleLocationFilterChange = (value) => {
     resetCalender();
     setIsInitialLoad(true);
-    if (value && Object.keys(value).length > 0) {
-      setLocationFilter(JSON.stringify(value));
+    if (value) {
+      const zipCode = value.zipCode;
+      setZipCode(zipCode);
+      const updatedValue = omit(value, 'zipCode');
+      if (updatedValue && Object.keys(updatedValue).length > 0) {
+        setLocationFilter(updatedValue);
+      }
+      setLocationFilter(value);
     } else {
       setLocationFilter(null);
     }
@@ -647,15 +718,49 @@ const SchedulingRange = () => {
                     </div>
                   )}
 
+                  {mode === COURSE_MODES.IN_PERSON.value && (
+                    <div className="date_selection">
+                      <h2 className="scheduling-modal__content-ranges-title">
+                        Upcoming courses in your zip code
+                      </h2>
+
+                      <ul className="scheduling-modal__content-options">
+                        {upcomingByZipCode?.map((workshop, index) => {
+                          return (
+                            <WorkshopListItem
+                              key={workshop.id}
+                              workshop={workshop}
+                              index={index}
+                              selectedWorkshopId={selectedWorkshopId}
+                              handleWorkshopSelect={handleWorkshopSelect}
+                              mode={mode}
+                            />
+                          );
+                        })}
+                        {upcomingByZipCode.length === 0 && (
+                          <li className="scheduling-modal__content-option scheduling-no-data">
+                            Workshop not found for you zip code
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  )}
+
                   <div className="date_selection">
-                    <h2 className="scheduling-modal__content-ranges-title">
-                      {selectedDates &&
-                        selectedDates.length > 0 &&
-                        formatDates(selectedDates)}
-                    </h2>
+                    {mode !== COURSE_MODES.ONLINE.value ? (
+                      <h2 className="scheduling-modal__content-ranges-title">
+                        Other nearby courses
+                      </h2>
+                    ) : (
+                      <h2 className="scheduling-modal__content-ranges-title">
+                        {selectedDates &&
+                          selectedDates.length > 0 &&
+                          formatDates(selectedDates)}
+                      </h2>
+                    )}
 
                     <ul className="scheduling-modal__content-options">
-                      {workshops?.map((workshop, index) => {
+                      {otherCourses?.map((workshop, index) => {
                         return (
                           <WorkshopListItem
                             key={workshop.id}
@@ -667,7 +772,7 @@ const SchedulingRange = () => {
                           />
                         );
                       })}
-                      {workshops.length === 0 && (
+                      {otherCourses.length === 0 && (
                         <li className="scheduling-modal__content-option scheduling-no-data">
                           Workshop not found. Please choose the next available
                           date.
@@ -732,6 +837,7 @@ const WorkshopListItem = ({
         id={`time-range-${index + 1}`}
         value={workshop.id}
         name="scheduling-options"
+        defaultChecked={selectedWorkshopId === workshop.id}
         checked={selectedWorkshopId === workshop.id}
       />
       <div className="scheduling-modal__content-option">
@@ -755,7 +861,7 @@ const WorkshopListItem = ({
               return (
                 <li className="scheduling-modal__content-ranges-row" key={i}>
                   <div className="scheduling-modal__content-ranges-row-date">
-                    {dayjs.utc(time.startDate).format('ddd, D')}
+                    {dayjs.utc(time.startDate).format('ddd, MMM D')}
                   </div>
                   <div className="scheduling-modal__content-ranges-row-time">
                     {tConvert(time.startTime, true)} -{' '}

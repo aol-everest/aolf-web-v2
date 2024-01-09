@@ -1,5 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import { Loader } from '@googlemaps/js-api-loader';
+import { getZipCodeByLatLang } from '@utils';
 import { useEffect, useRef, useState } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -20,10 +21,6 @@ export const AddressSearch = ({
   isDefaultLocation = false,
 }) => {
   const [address, setAddress] = useState('');
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [isGeocoding, setIsGeocoding] = useState(false);
-  const inputEl = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -51,23 +48,19 @@ export const AddressSearch = ({
 
   const handleSelect = async (selected) => {
     try {
-      setIsGeocoding(true);
       setAddress(selected);
       const res = await geocodeByAddress(selected);
       const [locationResult] = res;
       const { lat, lng } = await getLatLng(locationResult);
-      setLatitude(lat);
-      setLongitude(lng);
-      setIsGeocoding(false);
-      // this.props.filter({ lat, lng, locationName: locationResult.formatted_address });
+      const zipCode = await getZipCodeByLatLang(lat, lng);
 
       closeHandler({
         lat,
         lng,
         locationName: locationResult.formatted_address,
+        zipCode: zipCode,
       })();
     } catch (error) {
-      setIsGeocoding(false);
       console.log(error); // eslint-disable-line no-console
     }
   };

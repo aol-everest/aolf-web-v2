@@ -352,7 +352,7 @@ const MembershipThankyou = () => {
                             className="btn-secondary"
                             onClick={searchSilentRetreatsAction}
                           >
-                            Search Silent Retreats
+                            {COURSE_TYPES.SILENT_RETREAT.name}
                           </button>
                         )}
                         {(courseId || meetupId) && !isSilentRetreatType && (
@@ -414,7 +414,7 @@ const MembershipThankyou = () => {
                           className="btn-secondary v2"
                           onClick={searchSilentRetreatsAction}
                         >
-                          Search Silent Retreats
+                          {COURSE_TYPES.SILENT_RETREAT.name}
                         </button>
                       )}
                   </div>
@@ -490,7 +490,8 @@ const MembershipThankyou = () => {
                   ></h1>
                 )}
                 <p className="journey-confirmation_mobile__info-text">
-                  You’re just one step away from completing your Silent Retreat
+                  You’re just one step away from completing your{' '}
+                  {COURSE_TYPES.SILENT_RETREAT.name}
                   registration. If you are not automatically redirected, please
                   click the button below.
                 </p>

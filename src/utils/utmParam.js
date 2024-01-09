@@ -13,6 +13,7 @@ function getAllowedParams() {
     'cpid',
     'campaignid',
     'campaign_id',
+    'campaign_cta',
     'keyword',
     'placement',
     'site_source',
@@ -33,6 +34,7 @@ function getAllowedParams() {
     'utm_source',
     'utmterm',
     'utm_term',
+    'sscid',
   ];
 
   return allowedParams;

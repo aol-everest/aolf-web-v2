@@ -164,7 +164,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
                 <p>
                   The Silent Retreat is a powerful mix of restorative breathing
                   practices, yoga, deep wisdom, silence, and powerful guided
-                  meditations. It combines the Art of Living Part I and II
+                  meditations. It combines the Art of Living Part 1 and 2
                   courses into one transformative experience.
                 </p>
                 <p>
@@ -189,7 +189,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
             <p>
               You'll also learn the powerful breathing practice, Sudarshan Kriya
               also known as {COURSE_TYPES.SKY_BREATH_MEDITATION.name} taught in
-              the Art of Living Part I course.
+              the Art of Living Part 1 course.
             </p>
           </div>
 
@@ -598,7 +598,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    For those who have not taken the Art of Living Part I Course
+                    For those who have not taken the Art of Living Part 1 Course
                     or {COURSE_TYPES.SKY_BREATH_MEDITATION.name} workshop and
                     would like to learn the tools and techniques to begin a
                     meditation practice and experience the power of silence —

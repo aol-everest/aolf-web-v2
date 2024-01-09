@@ -72,16 +72,6 @@ export const PaymentFormHB = ({
   login = () => {},
   isLoggedUser = false,
 }) => {
-  // const {
-  //   loading,
-  //   errorMessage,
-  //   showError,
-  //   discount,
-  //   changingCard,
-  //   priceType,
-  // } = this.state;
-  // const { isCreditCardRequired } = discount || {};
-
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
@@ -185,7 +175,6 @@ export const PaymentFormHB = ({
     }
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
@@ -291,6 +280,10 @@ export const PaymentFormHB = ({
         utm: filterAllowedParams(router.query),
       };
 
+      if (!isPaymentRequired) {
+        payLoad.shoppingRequest.isStripeIntentPayment = false;
+      }
+
       if (!isLoggedUser) {
         payLoad = {
           ...payLoad,
@@ -377,14 +370,12 @@ export const PaymentFormHB = ({
 
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
       paymentMethod = {},
     } = workshop;
 
-    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -408,7 +399,10 @@ export const PaymentFormHB = ({
       email,
     } = values;
 
-    if (paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE && !isCCNotRequired) {
+    if (
+      paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE &&
+      isPaymentRequired
+    ) {
       return null;
     }
 
@@ -425,9 +419,8 @@ export const PaymentFormHB = ({
 
       let tokenizeCC = null;
       if (
-        !isCCNotRequired &&
-        (paymentMethod.type !== 'card' || isChangingCard) &&
-        isCreditCardRequired !== false
+        isPaymentRequired &&
+        (paymentMethod.type !== 'card' || isChangingCard)
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
@@ -635,7 +628,7 @@ export const PaymentFormHB = ({
     discount: discountResponse,
   });
 
-  const { isCreditCardRequired } = discountResponse || {};
+  const isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
 
   const {
     first_name,
@@ -821,7 +814,7 @@ export const PaymentFormHB = ({
           accommodation: isAccommodationRequired
             ? Yup.object().required('Room & Board is required!')
             : Yup.mixed().notRequired(),
-          paymentMode: isCCNotRequired
+          paymentMode: !isPaymentRequired
             ? Yup.mixed().notRequired()
             : Yup.string().required('Payment mode is required!'),
           contactTitle: Yup.string().required('Title is required'),
@@ -987,7 +980,7 @@ export const PaymentFormHB = ({
                     type="text"
                     placeholder="Discount Code"
                   /> */}
-                    {!isCCNotRequired && isCreditCardRequired !== false && (
+                    {isPaymentRequired && (
                       <PayWith
                         formikProps={formikProps}
                         otherPaymentOptions={otherPaymentOptions}
@@ -997,24 +990,20 @@ export const PaymentFormHB = ({
                     )}
 
                     {formikProps.values.paymentMode ===
-                      PAYMENT_MODES.STRIPE_PAYMENT_MODE && (
-                      <div
-                        className="order__card__payment-method"
-                        data-method="card"
-                      >
-                        <>
-                          {!cardLast4Digit &&
-                            !isCCNotRequired &&
-                            isCreditCardRequired !== false && (
+                      PAYMENT_MODES.STRIPE_PAYMENT_MODE &&
+                      isPaymentRequired && (
+                        <div
+                          className="order__card__payment-method"
+                          data-method="card"
+                        >
+                          <>
+                            {!cardLast4Digit && (
                               <div className="card-element">
                                 <CardElement options={createOptions} />
                               </div>
                             )}
 
-                          {cardLast4Digit &&
-                            !isChangingCard &&
-                            !isCCNotRequired &&
-                            isCreditCardRequired !== false && (
+                            {cardLast4Digit && !isChangingCard && (
                               <>
                                 <div className="bank-card-info">
                                   <input
@@ -1046,69 +1035,70 @@ export const PaymentFormHB = ({
                               </>
                             )}
 
-                          {cardLast4Digit && isChangingCard && (
-                            <>
-                              <div className="card-element">
-                                <CardElement options={createOptions} />
-                              </div>
-                              <div className="change-cc-detail-link">
-                                <a href="#" onClick={toggleCardChangeDetail}>
-                                  Cancel
-                                </a>
-                              </div>
-                            </>
-                          )}
-                        </>
-                      </div>
-                    )}
+                            {cardLast4Digit && isChangingCard && (
+                              <>
+                                <div className="card-element">
+                                  <CardElement options={createOptions} />
+                                </div>
+                                <div className="change-cc-detail-link">
+                                  <a href="#" onClick={toggleCardChangeDetail}>
+                                    Cancel
+                                  </a>
+                                </div>
+                              </>
+                            )}
+                          </>
+                        </div>
+                      )}
                     {formikProps.values.paymentMode ===
-                      PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
-                      <div
-                        className="order__card__payment-method paypal-info tw-w-[150px]"
-                        data-method="paypal"
-                      >
-                        <div className="paypal-info__sign-in tw-relative tw-z-0">
-                          <PayPalScriptProvider
-                            options={{
-                              clientId:
-                                process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                              debug: true,
-                              currency: 'USD',
-                            }}
-                          >
-                            <PayPalButtons
-                              style={{
-                                layout: 'horizontal',
-                                color: 'blue',
-                                shape: 'pill',
-                                height: 40,
-                                tagline: false,
-                                label: 'pay',
+                      PAYMENT_MODES.PAYPAL_PAYMENT_MODE &&
+                      isPaymentRequired && (
+                        <div
+                          className="order__card__payment-method paypal-info tw-w-[150px]"
+                          data-method="paypal"
+                        >
+                          <div className="paypal-info__sign-in tw-relative tw-z-0">
+                            <PayPalScriptProvider
+                              options={{
+                                clientId:
+                                  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                                debug: true,
+                                currency: 'USD',
                               }}
-                              fundingSource="paypal"
-                              forceReRender={[formikProps.values]}
-                              disabled={
-                                !(formikProps.isValid && formikProps.dirty)
-                              }
-                              createOrder={async (data, actions) => {
-                                return await createPaypalOrder(
-                                  formikProps.values,
-                                );
-                              }}
-                              onApprove={paypalBuyAcknowledgement}
-                            />
-                          </PayPalScriptProvider>
+                            >
+                              <PayPalButtons
+                                style={{
+                                  layout: 'horizontal',
+                                  color: 'blue',
+                                  shape: 'pill',
+                                  height: 40,
+                                  tagline: false,
+                                  label: 'pay',
+                                }}
+                                fundingSource="paypal"
+                                forceReRender={[formikProps.values]}
+                                disabled={
+                                  !(formikProps.isValid && formikProps.dirty)
+                                }
+                                createOrder={async (data, actions) => {
+                                  return await createPaypalOrder(
+                                    formikProps.values,
+                                  );
+                                }}
+                                onApprove={paypalBuyAcknowledgement}
+                              />
+                            </PayPalScriptProvider>
+                          </div>
+                          <div className="paypal-info__sign-out d-none">
+                            <button
+                              type="button"
+                              className="paypal-info__link sign-out-paypal"
+                            >
+                              Log out from Paypal
+                            </button>
+                          </div>
                         </div>
-                        <div className="paypal-info__sign-out d-none">
-                          <button
-                            type="button"
-                            className="paypal-info__link sign-out-paypal"
-                          >
-                            Log out from Paypal
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                      )}
 
                     <MobileCourseOptions
                       expenseAddOn={expenseAddOn}
@@ -1121,6 +1111,7 @@ export const PaymentFormHB = ({
                       openSubscriptionPaywallPage={openSubscriptionPaywallPage}
                       hasGroupedAddOnProducts={hasGroupedAddOnProducts}
                       totalFee={totalFee}
+                      onAccommodationChange={handleAccommodationChange}
                       paymentOptionChange={handlePaymentOptionChange}
                       showCouponCodeField={showCouponCodeField}
                       isUsableCreditAvailable={isUsableCreditAvailable}

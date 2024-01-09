@@ -1,5 +1,5 @@
 import { Loader } from '@components/loader';
-import { api, tConvert } from '@utils';
+import { api, emailRegExp, phoneRegExp, tConvert } from '@utils';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import moment from 'moment';
@@ -39,7 +39,7 @@ const TicketCongratulations = () => {
     selectedTickets,
     delfee,
     orderId,
-    attendeeId,
+    attendeeDetails,
     workshop: selectedWorkshop,
     totalPrice,
   } = value;
@@ -51,11 +51,24 @@ const TicketCongratulations = () => {
       name: 'ticketed_event_thank_you',
       referral: 'ticketed_event_checkout',
     });
+    setValue({
+      ...value,
+      orderId: orderId,
+    });
   });
 
-  setValue({
-    ...value,
-    orderId: orderId,
+  useEffectOnce(() => {
+    const newTicketData = { ...ticketData };
+    const ticketId = `${firstItemId}-${1}`;
+    newTicketData[ticketId] = {
+      ...newTicketData[ticketId],
+      firstName: attendeeDetails?.firstName,
+      lastName: attendeeDetails?.lastName,
+      contactPhone: attendeeDetails?.contactPhone,
+      email: attendeeDetails?.email,
+      tierName: selectedTickets[0]?.pricingTierName || '',
+    };
+    setTicketData(newTicketData);
   });
 
   const { data: workshop, isLoading } = useQuery(
@@ -97,6 +110,7 @@ const TicketCongratulations = () => {
     city,
     country,
     eventEndDate,
+    eventImageUrl,
   } = workshop || {};
 
   if (isLoading) {
@@ -119,7 +133,8 @@ const TicketCongratulations = () => {
     const ticketId = `${parentItem.pricingTierId}-${childItem}`;
     newTicketData[ticketId] = {
       ...newTicketData[ticketId],
-      [fieldName]: value,
+      [fieldName]: value?.trim(),
+      tierName: parentItem?.pricingTierName,
     };
     setTicketData(newTicketData);
   };
@@ -131,6 +146,7 @@ const TicketCongratulations = () => {
       newTicketData[ticketId] = {
         ...(newTicketData[ticketId] || {}),
         ...newTicketData[value],
+        tierName: parentItem?.pricingTierName,
       };
       setTicketData(newTicketData);
     }
@@ -191,46 +207,87 @@ const TicketCongratulations = () => {
 
   const handleSubmitAttendees = async () => {
     setLoading(true);
+    let allFieldsValid = true;
+    if (selectedTickets.length !== Object.keys(ticketData).length) {
+      allFieldsValid = false;
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: "Please input all attendee details. Details can't be empty",
+      });
+      setLoading(false);
+      return;
+    }
     const attendeeInfo = Object.keys(ticketData).map((attendeId) => {
       const item = ticketData[attendeId];
       return item;
     });
-    const payload = {
-      orderId: orderId,
-      attendeeInfo: attendeeInfo,
-    };
-    try {
-      const {
-        status,
-        error: errorMessage,
-        isError,
-        data,
-      } = await api.post({
-        path: 'updateTicketedEventAttendees',
-        body: payload,
-        isUnauthorized: true,
-      });
+    if (attendeeInfo.length === 0) {
+      allFieldsValid = false;
       setLoading(false);
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
-      }
-      if (data || status === 200) {
-        showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-          title: 'Confirmed',
-          children: 'We have received your attendee details.',
-          closeModalAction: () => {
-            gotToTicketsPage();
-          },
+      return showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: "Please input attendee details. Details can't be empty",
+      });
+    }
+    attendeeInfo.forEach((item) => {
+      if (!item || !item.firstName || !item.lastName) {
+        allFieldsValid = false;
+        setLoading(false);
+        return showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children:
+            "Please input first and last name details. Details can't be empty",
+        });
+      } else if (!emailRegExp.test(item.email)) {
+        allFieldsValid = false;
+        setLoading(false);
+        return showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children:
+            'Please input correct email address. Email address is not valid',
+        });
+      } else if (item.contactPhone.length < 11) {
+        allFieldsValid = false;
+        setLoading(false);
+        return showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: 'Please input correct phone details with country code.',
         });
       }
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
+    });
+    if (allFieldsValid) {
+      const payload = {
+        orderId: orderId,
+        attendeeInfo: attendeeInfo,
+      };
+      try {
+        const {
+          status,
+          error: errorMessage,
+          isError,
+          data,
+        } = await api.post({
+          path: 'updateTicketedEventAttendees',
+          body: payload,
+          isUnauthorized: true,
+        });
+        setLoading(false);
+        if (status === 400 || isError) {
+          throw new Error(errorMessage);
+        }
+        if (data || status === 200) {
+          showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+            title: 'Confirmed',
+            children: 'We have received your attendee details.',
+            closeModalAction: () => {
+              gotToTicketsPage();
+            },
+          });
+        }
+      } catch (ex) {
+        console.error(ex);
+        const data = ex.response?.data;
+        const { message, statusCode } = data || {};
+        setLoading(false);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: message ? `Error: ${message} (${statusCode})` : ex.message,
+        });
+      }
     }
   };
 
@@ -272,7 +329,7 @@ const TicketCongratulations = () => {
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}
                     <span>Order Total: </span> $
-                    {parseInt(delfee || totalPrice).toFixed(2)}
+                    {parseFloat(delfee || totalPrice).toFixed(2)}
                   </li>
                 </ul>
                 <div className="bottom-info">
@@ -443,6 +500,8 @@ const TicketCongratulations = () => {
                                         value={
                                           ticketItemData?.contactPhone || ''
                                         }
+                                        minLength={11}
+                                        maxLength={15}
                                         onChange={(e) =>
                                           handleInputChange(
                                             ticket,
@@ -476,9 +535,9 @@ const TicketCongratulations = () => {
             <div className="col-12 col-lg-4 borderLeft">
               <div className="sidebar-banner">
                 <img
-                  src="https://cdn.emailacademy.com/user/unregistered/c5a85d22-0112-4999-94b4-c4f9e9c08eed2023_08_29_03_03_06_0800000031_03_03_12.webp"
-                  alt="gurudev image"
                   className="w-full rounded-[12px]"
+                  src={eventImageUrl}
+                  alt="gurudev image"
                 />
               </div>
               <div className="add-calendar-btn-wrap">
@@ -508,7 +567,7 @@ const TicketCongratulations = () => {
                   <li className="event-item">
                     <i className="fa fa-calendar" aria-hidden="true"></i>{' '}
                     <span>Date: </span>
-                    {dayjs.utc(eventStartDate).format('MMMM D')}
+                    {dayjs.utc(eventStartDate).format('MMMM D YYYY')}
                   </li>
                   <li className="event-item">
                     <i className="fa fa-clock" aria-hidden="true"></i>{' '}
@@ -542,7 +601,7 @@ const TicketCongratulations = () => {
       <div className="float-bar congratulations-float">
         <div className="float-wrapper clearfix">
           <div className="bar-left">
-            <div className="bar-title">You are going to Sixth Sense</div>
+            <div className="bar-title">You are going to {title}</div>
           </div>
           <div className="bar-right">
             <button className="register-button" onClick={addToCalendarAction}>

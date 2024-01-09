@@ -73,7 +73,7 @@ export function Footer() {
                 />
                 <ul className="nav-details">
                   <li className="nav-item">
-                    <a href="/gurudev">About Gurudev</a>
+                    <a href="/us-en/lp/gurudev">About Gurudev</a>
                   </li>
                   <li className="nav-item">
                     <a href="https://www.artofliving.org/us-en/awards-and-honours">
@@ -100,22 +100,22 @@ export function Footer() {
                 />
                 <ul className="nav-details">
                   <li className="nav-item">
-                    <Link href="/us-en/lp/online-course-2">
-                      Art of Living Part I
+                    <Link href="https://event.us.artofliving.org/us-en/online-course-2">
+                      Art of Living Part 1
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link href="https://www.artofliving.org/us-en/sahaj-samadhi-meditation">
+                    <Link href="https://event.us.artofliving.org/us-en/sahajsamadhi">
                       Sahaj Samadhi Meditation
                     </Link>
                   </li>
                   <li className="nav-item">
                     <Link href="https://event.us.artofliving.org/us-en/artoflivingpart2">
-                      Art of Living Part II
+                      Art of Living Part 2
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link href="/us-en/lp/online-foundation-program">
+                    <Link href="https://members.us.artofliving.org/us-en/lp/online-foundation-program">
                       Sri Sri Yoga Foundation Program
                     </Link>
                   </li>

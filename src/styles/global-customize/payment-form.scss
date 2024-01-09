@@ -116,6 +116,10 @@
   }
 }
 
+.mobile_board {
+  margin-bottom: 20px;
+}
+
 .select-room {
   position: relative;
   display: block;
@@ -202,6 +206,7 @@
 
     &:checked + .select-room__input-text {
       display: flex;
+      align-items: center;
     }
 
     &-text {

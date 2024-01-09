@@ -1,5 +1,5 @@
 import { api } from '@utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { COURSE_TYPES } from '@constants';
 
@@ -7,7 +7,7 @@ export const PastCourses = ({ isMobile }) => {
   const [pastWorkshops, setPastWorkshops] = useState([]);
   const [workshopOrderAsc, setWorkshopOrderAsc] = useState(true);
 
-  const { data = [], isSuccess } = useQuery(
+  const { data = [] } = useQuery(
     'userPastCourses',
     async () => {
       const response = await api.get({
@@ -18,7 +18,6 @@ export const PastCourses = ({ isMobile }) => {
           new Date(a.eventStartDateTimeGMT) - new Date(b.eventStartDateTimeGMT)
         );
       });
-      setPastWorkshops(updatedResponse);
       return updatedResponse;
     },
     {
@@ -26,21 +25,29 @@ export const PastCourses = ({ isMobile }) => {
     },
   );
 
+  useEffect(() => {
+    if (data.length > 0) {
+      setPastWorkshops(data);
+    }
+  }, [data]);
+
   const handleOrderChange = () => {
     setWorkshopOrderAsc(!workshopOrderAsc);
     const pastWorkshopsReversed = pastWorkshops.reverse();
     setPastWorkshops(pastWorkshopsReversed);
   };
 
-  const skyBreathMeditationCount = pastWorkshops.filter((item) => {
-    return item.courseType === 'sky';
-  }).length;
-  const SilentRetreatCount = pastWorkshops.filter((item) => {
-    return item.courseType === 'silent';
-  }).length;
-  const SahajSamadhiCount = pastWorkshops.filter((item) => {
-    return item.courseType === 'sahaj';
-  }).length;
+  const workshopCounts = {
+    sky: 0,
+    silent: 0,
+    sahaj: 0,
+  };
+
+  pastWorkshops.forEach((item) => {
+    if (Object.prototype.hasOwnProperty.call(workshopCounts, item.courseType)) {
+      workshopCounts[item.courseType] += 1;
+    }
+  });
 
   if (!isMobile) {
     return (
@@ -56,25 +63,25 @@ export const PastCourses = ({ isMobile }) => {
               {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
             </h4>
             <div className="past-courses__cards__item-counter">
-              <span>{skyBreathMeditationCount}</span> times
+              <span>{workshopCounts.sky}</span> times
             </div>
           </div>
           <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
           <div className="past-courses__cards__item">
             <h4 className="past-courses__cards__item-title mr-2">
-              Silent Retreat
+              {COURSE_TYPES.SILENT_RETREAT.name}
             </h4>
             <div className="past-courses__cards__item-counter">
-              <span>{SilentRetreatCount}</span> times
+              <span>{workshopCounts.silent}</span> times
             </div>
           </div>
           <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
           <div className="past-courses__cards__item">
             <h4 className="past-courses__cards__item-title mr-2">
-              Sahaj Samadhi Meditation
+              {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
             </h4>
             <div className="past-courses__cards__item-counter">
-              <span>{SahajSamadhiCount}</span> time
+              <span>{workshopCounts.sahaj}</span> time
             </div>
           </div>
         </div>
@@ -131,27 +138,34 @@ export const PastCourses = ({ isMobile }) => {
       </div>
     );
   }
+
   return (
     <>
       <div className="past-courses__cards">
         <div className="past-courses__cards__item">
-          <h4 className="past-courses__cards__item-title">SKY</h4>
+          <h4 className="past-courses__cards__item-title">
+            {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+          </h4>
           <div className="past-courses__cards__item-counter">
-            <span>{skyBreathMeditationCount}</span> times
+            <span>{workshopCounts.sky}</span> times
           </div>
         </div>
         <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
         <div className="past-courses__cards__item">
-          <h4 className="past-courses__cards__item-title">Silent Retreat</h4>
+          <h4 className="past-courses__cards__item-title">
+            {COURSE_TYPES.SILENT_RETREAT.name}
+          </h4>
           <div className="past-courses__cards__item-counter">
-            <span>{SilentRetreatCount}</span> times
+            <span>{workshopCounts.silent}</span> times
           </div>
         </div>
         <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
         <div className="past-courses__cards__item">
-          <h4 className="past-courses__cards__item-title">Sahaj</h4>
+          <h4 className="past-courses__cards__item-title">
+            {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
+          </h4>
           <div className="past-courses__cards__item-counter">
-            <span>{SahajSamadhiCount}</span> time
+            <span>{workshopCounts.sahaj}</span> time
           </div>
         </div>
       </div>
@@ -173,9 +187,6 @@ export const PastCourses = ({ isMobile }) => {
             </div>
           ))}
         </div>
-        {/* <button type="button" className="btn btn-outline">
-          Load More
-        </button> */}
       </div>
     </>
   );

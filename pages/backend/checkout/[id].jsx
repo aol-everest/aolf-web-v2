@@ -9,9 +9,6 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-);
 
 const BackEndCheckout = () => {
   const router = useRouter();
@@ -38,9 +35,10 @@ const BackEndCheckout = () => {
       refetchOnWindowFocus: false,
     },
   );
-
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !workshopId) return <PageLoading />;
+
+  const stripePromise = loadStripe(workshop.publishableKey);
 
   return (
     <main className="body_wrapper backend-reg-body tw-bg-gray-300 tw-pt-5">

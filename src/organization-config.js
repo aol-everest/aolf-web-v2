@@ -30,6 +30,7 @@ const allOrganizationConfig = [
       'VOLUNTEER_TRAINING_PROGRAM',
       'BLESSINGS_COURSE',
       'SANYAM_COURSE',
+      'SRI_SRI_YOGA_DEEP_DIVE',
     ],
   },
   {

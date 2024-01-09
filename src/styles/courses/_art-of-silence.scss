@@ -82,7 +82,7 @@
           background: linear-gradient(90deg, #57bacd 9.51%, #0398b5 93.54%);
           color: #fff;
           border: 0px;
-          border-radius: 2rem;
+          border-radius: 10px;
           padding: 1rem 4rem;
         }
         @media only screen and (max-width: 768px) {
@@ -543,11 +543,72 @@
       background: linear-gradient(90deg, #57bacd 9.51%, #0398b5 93.54%);
       color: #fff;
       border: 0px;
-      border-radius: 2rem;
+      border-radius: 10px;
       padding: 1rem 4rem;
       white-space: nowrap;
       @media screen and (max-width: 767px) {
         padding: 10px 20px;
+      }
+    }
+  }
+  .healing-breaths {
+    .container {
+      padding: 60px 0;
+      @media screen and (max-width: 767px) {
+        padding: 20px;
+      }
+    }
+    .title {
+      font-family: Lora;
+      font-weight: bolder;
+      font-size: 56px;
+      text-align: center;
+      margin-bottom: 20px;
+      @media screen and (max-width: 767px) {
+        font-size: 36px;
+      }
+    }
+    .org-text {
+      font-size: 26px;
+      text-align: center;
+      max-width: 770px;
+      margin: 0 auto;
+      @media screen and (max-width: 767px) {
+        font-size: 16px;
+      }
+    }
+    .benefitted-orgs-list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .org-list-item {
+      padding: 30px 0 10px 0;
+      margin: 0 20px;
+      @media screen and (max-width: 767px) {
+        flex: calc(50% - 40px);
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+      &:nth-last-child(2) {
+        margin-left: auto;
+        margin-right: 60px;
+        @media screen and (max-width: 767px) {
+          margin: 0 20px;
+        }
+      }
+      &:nth-last-child(1) {
+        margin-right: auto;
+        margin-left: 60px;
+        @media screen and (max-width: 767px) {
+          margin: 0 20px;
+        }
       }
     }
   }

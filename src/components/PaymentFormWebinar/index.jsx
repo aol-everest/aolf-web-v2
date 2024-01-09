@@ -153,7 +153,6 @@ export const PaymentFormWebinar = ({
     }
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
@@ -340,7 +339,6 @@ export const PaymentFormWebinar = ({
       paymentMethod = {},
     } = workshop;
 
-    const { isCreditCardRequired } = discountResponse || {};
     const {
       questionnaire,
       contactPhone,
@@ -374,8 +372,7 @@ export const PaymentFormWebinar = ({
       let tokenizeCC = null;
       if (
         !isCCNotRequired &&
-        (paymentMethod.type !== 'card' || isChangingCard) &&
-        isCreditCardRequired !== false
+        (paymentMethod.type !== 'card' || isChangingCard)
       ) {
         const cardElement = elements.getElement(CardElement);
         let createTokenRespone = await stripe.createToken(cardElement, {
@@ -562,8 +559,6 @@ export const PaymentFormWebinar = ({
     workshop,
     discount: discountResponse,
   });
-
-  const { isCreditCardRequired } = discountResponse || {};
 
   const {
     first_name,
@@ -809,7 +804,7 @@ export const PaymentFormWebinar = ({
                     type="text"
                     placeholder="Discount Code"
                   /> */}
-                    {!isCCNotRequired && isCreditCardRequired !== false && (
+                    {!isCCNotRequired && (
                       <PayWith
                         formikProps={formikProps}
                         otherPaymentOptions={otherPaymentOptions}
@@ -825,48 +820,42 @@ export const PaymentFormWebinar = ({
                         data-method="card"
                       >
                         <>
-                          {!cardLast4Digit &&
-                            !isCCNotRequired &&
-                            isCreditCardRequired !== false && (
-                              <div className="card-element">
-                                <CardElement options={createOptions} />
-                              </div>
-                            )}
+                          {!cardLast4Digit && (
+                            <div className="card-element">
+                              <CardElement options={createOptions} />
+                            </div>
+                          )}
 
-                          {cardLast4Digit &&
-                            !isChangingCard &&
-                            !isCCNotRequired &&
-                            isCreditCardRequired !== false && (
-                              <>
-                                <div className="bank-card-info">
-                                  <input
-                                    id="card-number"
-                                    className="full-width"
-                                    type="text"
-                                    value={`**** **** **** ${cardLast4Digit}`}
-                                    placeholder="Card Number"
-                                  />
-                                  <input
-                                    id="mm-yy"
-                                    type="text"
-                                    placeholder="MM/YY"
-                                    value={`**/**`}
-                                  />
-                                  <input
-                                    id="cvc"
-                                    type="text"
-                                    placeholder="CVC"
-                                    value={`****`}
-                                  />
-                                </div>
-                                <div className="change-cc-detail-link">
-                                  <a href="#" onClick={toggleCardChangeDetail}>
-                                    Would you like to use a different credit
-                                    card?
-                                  </a>
-                                </div>
-                              </>
-                            )}
+                          {cardLast4Digit && !isChangingCard && (
+                            <>
+                              <div className="bank-card-info">
+                                <input
+                                  id="card-number"
+                                  className="full-width"
+                                  type="text"
+                                  value={`**** **** **** ${cardLast4Digit}`}
+                                  placeholder="Card Number"
+                                />
+                                <input
+                                  id="mm-yy"
+                                  type="text"
+                                  placeholder="MM/YY"
+                                  value={`**/**`}
+                                />
+                                <input
+                                  id="cvc"
+                                  type="text"
+                                  placeholder="CVC"
+                                  value={`****`}
+                                />
+                              </div>
+                              <div className="change-cc-detail-link">
+                                <a href="#" onClick={toggleCardChangeDetail}>
+                                  Would you like to use a different credit card?
+                                </a>
+                              </div>
+                            </>
+                          )}
 
                           {cardLast4Digit && isChangingCard && (
                             <>

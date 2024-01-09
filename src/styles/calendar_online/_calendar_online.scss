@@ -570,6 +570,11 @@
             }
           }
         }
+        &.upcoming_events {
+          .scheduling-modal__content-options {
+            max-height: 350px;
+          }
+        }
       }
       .agreement_selection {
         .agreement-options {
@@ -636,7 +641,7 @@
         background: linear-gradient(90deg, #7464d6 9.51%, #9d8dff 93.54%);
         color: #fff;
         border: 0px;
-        border-radius: 2rem;
+        border-radius: 10px;
         padding: 1rem 4rem;
       }
     }
@@ -686,7 +691,7 @@
       background: linear-gradient(90deg, #7464d6 9.51%, #9d8dff 93.54%);
       color: #fff;
       border: 0px;
-      border-radius: 2rem;
+      border-radius: 10px;
       padding: 1rem 4rem;
       white-space: nowrap;
       @media screen and (max-width: 767px) {

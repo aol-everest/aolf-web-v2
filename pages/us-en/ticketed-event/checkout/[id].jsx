@@ -128,6 +128,8 @@ const TicketCheckoutForm = ({ router }) => {
     productTypeId,
   } = value;
 
+  const { eventImageUrl } = workshop;
+
   const { first_name, last_name, email } = user?.profile || {};
 
   const login = () => {
@@ -232,11 +234,13 @@ const TicketCheckoutForm = ({ router }) => {
           ...value,
           orderId: data?.orderId,
           attendeeId: data?.attendeeId,
+          attendeeDetails: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+            contactPhone: contactPhone,
+          },
         });
-        // showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-        //   children: "You have successfully purchased ticket",
-        // });
-        // resetForm(setFormInitialValues());
         let filteredParams = {
           ctype: productTypeId,
           page: 'ty',
@@ -488,7 +492,7 @@ const TicketCheckoutForm = ({ router }) => {
                         </label>
                       </div>
 
-                      <label
+                      {/* <label
                         className="tickets-modal__distribution"
                         for="distribution"
                       >
@@ -521,7 +525,7 @@ const TicketCheckoutForm = ({ router }) => {
                           Keep me updated on more events and news from this
                           event
                         </p>
-                      </label>
+                      </label> */}
                     </div>
 
                     <div className="tickets-modal__pay">
@@ -670,8 +674,14 @@ const TicketCheckoutForm = ({ router }) => {
                       {loading && <Loader />}
 
                       <button
-                        className="tickets-modal__footer-button"
-                        disabled={loading}
+                        className={`tickets-modal__footer-button ${
+                          loading || !(formikProps.isValid && formikProps.dirty)
+                            ? 'disabled'
+                            : ''
+                        }`}
+                        disabled={
+                          loading || !(formikProps.isValid && formikProps.dirty)
+                        }
                         type="submit"
                       >
                         Place order
@@ -683,7 +693,7 @@ const TicketCheckoutForm = ({ router }) => {
                 <div className="tickets-modal__right-column">
                   <img
                     className="tickets-modal__photo"
-                    src="/img/Gurudev_1.png"
+                    src={eventImageUrl}
                     alt=""
                   />
 
@@ -702,26 +712,30 @@ const TicketCheckoutForm = ({ router }) => {
                           key={item.pricingTierId}
                         >
                           x{item?.numberOfTickets} {item.pricingTierName}{' '}
-                          <span>${item.price.toFixed(2)}</span>
+                          <span>
+                            ${(item.price * item?.numberOfTickets).toFixed(2)}
+                          </span>
                         </p>
                       );
                     })}
 
                     <p className="tickets-modal__cart-subtotal">
                       Subtotal
-                      <span>${parseInt(totalPrice).toFixed(2)}</span>
+                      <span>${parseFloat(totalPrice).toFixed(2)}</span>
                     </p>
 
                     {totalDiscount > 0 && (
                       <p className="tickets-modal__cart-discount">
                         Discount(-)
-                        <span>${parseInt(totalDiscount).toFixed(2)}</span>
+                        <span>${parseFloat(totalDiscount).toFixed(2)}</span>
                       </p>
                     )}
 
                     <p className="tickets-modal__cart-total">
                       Total
-                      <span>${parseInt(delfee || totalPrice).toFixed(2)}</span>
+                      <span>
+                        ${parseFloat(delfee || totalPrice).toFixed(2)}
+                      </span>
                     </p>
                   </div>
                 </div>

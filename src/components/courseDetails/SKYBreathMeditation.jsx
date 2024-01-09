@@ -96,7 +96,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
             <div className="banner-title">
               The Art of Living
               <br />
-              <span>Part I Course</span>
+              <span>Part 1 Course</span>
             </div>
             <div className="banner-desc">
               Discover Gurudev Sri Sri Ravi Shankar’s
@@ -147,9 +147,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
             </ul>
             {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
               <div className="hero-register-button-wrapper">
-                <a className="hero-register-button" onClick={handleRegister}>
-                  <img src="/img/regiter-btn.original.png" alt="" />
-                </a>
+                <button
+                  className="hero-register-button"
+                  onClick={handleRegister}
+                >
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
               </div>
             )}
           </div>
@@ -233,7 +236,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                       height="100%"
                       frameBorder="0"
                       allow="autoplay; fullscreen"
-                      allowfullscreen
+                      allowFullScreen
                     ></iframe>
                   </div>
                 </div>
@@ -241,7 +244,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                   <div className="breadth-meditation_content">
                     <p className="">
                       Sudarshan Kriya ({COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                      ) taught in the Art of Living Part I course is a powerful
+                      ) taught in the Art of Living Part 1 course is a powerful
                       rhythmic breathing technique that harmonizes the body-mind
                       complex. Participants notice reduced stress and anxiety,
                       better sleep, a stronger immune system, and increased
@@ -562,7 +565,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
         <section className="comments">
           <div className="container">
             <h2 className="comments__title section-title text-center">
-              How is Art of Living Part I Course Changing Lives?
+              How is Art of Living Part 1 Course Changing Lives?
             </h2>
           </div>
           <div className="comments__video">
@@ -572,7 +575,7 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               height="100%"
               frameBorder="0"
               allow="autoplay; fullscreen"
-              allowfullscreen
+              allowFullScreen
             ></iframe>
           </div>
         </section>
@@ -699,14 +702,9 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                 </div>
               </div>
               <div className="bar-right">
-                <a href="#" onClick={handleRegister}>
-                  <img
-                    src="/img/regiter-btn-alt.original.webp"
-                    alt="Enroll now"
-                    width="190"
-                    height="61"
-                  />
-                </a>
+                <button className="register-button" onClick={handleRegister}>
+                  Register Now <FaArrowRightLong className="fa-solid" />
+                </button>
               </div>
             </div>
           </div>

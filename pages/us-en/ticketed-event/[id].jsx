@@ -6,12 +6,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { ABBRS } from '@constants';
+import { ABBRS, ALERT_TYPES } from '@constants';
 import { DiscountCodeInput } from '@components/checkout';
 import { pushRouteWithUTMQuery } from '@service';
-import { useLocalStorage } from 'react-use';
+import { useEffectOnce, useLocalStorage } from 'react-use';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
+import { useGlobalAlertContext } from '@contexts';
 
 dayjs.extend(utc);
 
@@ -19,6 +20,7 @@ function TicketedEvent() {
   const router = useRouter();
   const [, setValue] = useLocalStorage('ticket-events', {}, { raw: true });
   const [selectedTickets, setSelectedTickets] = useState([]);
+  const { showAlert } = useGlobalAlertContext();
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalSelectedTicketQuantity, setTotalSelectedTicketQuantity] =
@@ -54,13 +56,16 @@ function TicketedEvent() {
     id: productId,
     addOnProducts,
     maxTicketsWithOneOrder,
+    eventImageUrl,
+    isEventFull,
   } = workshop || {};
 
   useEffect(() => {
     let totalPrice = 0;
     let totalTicketQuantity = 0;
+
     selectedTickets.map((item) => {
-      totalPrice = (totalPrice + item.price) * item.numberOfTickets;
+      totalPrice = totalPrice + item.price * item.numberOfTickets;
       totalTicketQuantity = totalTicketQuantity + item.numberOfTickets;
     });
     setTotalPrice(totalPrice);
@@ -68,28 +73,43 @@ function TicketedEvent() {
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
-    setSelectedIds((prevState) => [...prevState, item.pricingTierId]);
-    const selectedTicketsCopy = !selectedIds.includes(item.pricingTierId)
-      ? [...selectedTickets, item]
-      : [...selectedTickets];
+    if (item) {
+      let selectedIdsLocal = [...selectedIds];
+      const selectedTicketsCopy = !selectedIdsLocal.includes(
+        item?.pricingTierId,
+      )
+        ? [...selectedTickets, item]
+        : [...selectedTickets];
 
-    const filteredItems = [];
-    selectedTicketsCopy.forEach((newItem) => {
-      if (newItem.pricingTierId === item.pricingTierId) {
-        if (type === 'add') {
-          newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
-          filteredItems.push(newItem);
-        } else {
-          newItem.numberOfTickets = newItem.numberOfTickets - 1;
-          if (newItem.numberOfTickets) {
+      const filteredItems = [];
+      selectedTicketsCopy.forEach((newItem) => {
+        if (newItem.pricingTierId === item?.pricingTierId) {
+          if (type === 'add') {
+            selectedIdsLocal = [...selectedIdsLocal, item.pricingTierId];
+            newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
             filteredItems.push(newItem);
+          } else {
+            if (newItem.numberOfTickets === 1) {
+              const filteredIds = selectedIdsLocal.filter(
+                (id) => id !== item.pricingTierId,
+              );
+
+              selectedIdsLocal = [...filteredIds];
+            }
+            newItem.numberOfTickets = newItem.numberOfTickets
+              ? newItem.numberOfTickets - 1
+              : newItem.numberOfTickets;
+            if (newItem.numberOfTickets) {
+              filteredItems.push(newItem);
+            }
           }
+        } else {
+          filteredItems.push(newItem);
         }
-      } else {
-        filteredItems.push(newItem);
-      }
-    });
-    setSelectedTickets(filteredItems);
+      });
+      setSelectedIds(selectedIdsLocal);
+      setSelectedTickets(filteredItems);
+    }
   };
 
   const applyDiscount = (discount) => {
@@ -111,6 +131,23 @@ function TicketedEvent() {
       pathname: `/us-en/ticketed-event/checkout/${workshopId}`,
     });
   };
+
+  useEffect(() => {
+    if (isEventFull) {
+      try {
+        showAlert(ALERT_TYPES.WARNING_ALERT, {
+          children: 'The Event is full. Please try for some other event',
+          closeModalAction: () => {
+            pushRouteWithUTMQuery(router, {
+              pathname: `/us-en/course`,
+            });
+          },
+        });
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  }, [workshop]);
 
   return (
     <Formik
@@ -140,7 +177,7 @@ function TicketedEvent() {
                     </p>
 
                     <div className="tickets-modal__promo">
-                      <label className="tickets-modal__promo-label" for="">
+                      <label className="tickets-modal__promo-label" htmlFor="">
                         promo code
                       </label>
 
@@ -262,7 +299,7 @@ function TicketedEvent() {
                   {/* <img className="tickets-modal__photo" src={workshop?.coverImage} alt="" /> */}
                   <img
                     className="tickets-modal__photo"
-                    src="/img/Gurudev_1.png"
+                    src={eventImageUrl}
                     alt=""
                   />
 
@@ -290,19 +327,19 @@ function TicketedEvent() {
 
                     <p className="tickets-modal__cart-subtotal">
                       Subtotal
-                      <span>${parseInt(totalPrice).toFixed(2)}</span>
+                      <span>${parseFloat(totalPrice).toFixed(2)}</span>
                     </p>
                     {totalDiscount > 0 && (
                       <p className="tickets-modal__cart-discount">
                         Discount(-)
-                        <span>${parseInt(totalDiscount).toFixed(2)}</span>
+                        <span>${parseFloat(totalDiscount).toFixed(2)}</span>
                       </p>
                     )}
 
                     <p className="tickets-modal__cart-total">
                       Total
                       <span>
-                        ${(parseInt(totalPrice) - totalDiscount).toFixed(2)}
+                        ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
                       </span>
                     </p>
                   </div>

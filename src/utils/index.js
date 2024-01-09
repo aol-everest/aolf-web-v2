@@ -6,3 +6,4 @@ export { Compose } from './compose';
 export { priceCalculation } from './priceCalculation';
 export { tConvert } from './tConvert';
 export { Talkable } from './talkable';
+export { getUserTimeZoneAbbreviation } from './timezone';
