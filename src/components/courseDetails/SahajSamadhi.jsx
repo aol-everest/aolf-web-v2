@@ -136,7 +136,7 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
             <div className="feature-box">
               <div className="feature-icon">
                 <img
-                  src="/img/sahaj-samadhi-uparrow-icon.png"
+                  src="/img/sahaj-samadhi-uparrow-icon.webp"
                   alt="Enhance"
                   width="65"
                   height="64"
@@ -147,7 +147,7 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
             <div className="feature-box">
               <div className="feature-icon">
                 <img
-                  src="/img/sahaj-samadhi-eye-icon.png"
+                  src="/img/sahaj-samadhi-eye-icon.webp"
                   alt="Elevate"
                   width="78"
                   height="63"
@@ -158,7 +158,7 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
             <div className="feature-box">
               <div className="feature-icon">
                 <img
-                  src="/img/sahaj-samadhi-smile-icon.png"
+                  src="/img/sahaj-samadhi-smile-icon.webp"
                   alt="Enhance"
                   width="64"
                   height="64"
@@ -295,7 +295,7 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 <div className="review-author">
                   <div className="reviewer-photo">
                     <img
-                      src="/img/dr-lewis-review.png"
+                      src="/img/dr-lewis-review.webp"
                       alt="reviewer"
                       width="69"
                       height="69"
@@ -321,7 +321,7 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 <div className="review-author">
                   <div className="reviewer-photo">
                     <img
-                      src="/img/brian-review.png"
+                      src="/img/brian-review.webp"
                       alt="reviewer"
                       width="69"
                       height="69"
@@ -346,7 +346,7 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 <div className="review-author">
                   <div className="reviewer-photo">
                     <img
-                      src="/img/phillip-review.png"
+                      src="/img/phillip-review.webp"
                       alt="reviewer"
                       width="69"
                       height="69"
