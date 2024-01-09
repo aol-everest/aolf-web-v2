@@ -55,6 +55,7 @@ import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import { ScheduleDiscountInput } from '@components/scheduleDiscountInput';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
+import { PayWithUpdated } from '@components/checkout/PayWithUpdated';
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
@@ -1198,7 +1199,7 @@ export const PaymentForm = ({
                     </ul>
 
                     {isPaymentRequired && (
-                      <PayWith
+                      <PayWithUpdated
                         formikProps={formikProps}
                         otherPaymentOptions={otherPaymentOptions}
                         isBundlePaypalAvailable={isBundlePaypalAvailable}
@@ -1453,12 +1454,18 @@ export const PaymentForm = ({
                     <hr />
 
                     <p className="scheduling-modal__content-total-footer">
-                      <span>Total</span>
+                      <span>Limited Time Offer</span>
+                      <span>${fee.toFixed(2) || '0'.toFixed(2)}</span>
+                    </p>
+                    <p className="scheduling-modal__content-total-footer">
+                      <span>Regular Course Fee</span>
                       <span>
-                        {discountResponse && delfee && (
-                          <span className="discount">${delfee.toFixed(2)}</span>
-                        )}{' '}
-                        ${fee.toFixed(2) || '0'.toFixed(2)}
+                        {discountResponse ||
+                          (delfee && (
+                            <span className="discount">
+                              ${delfee.toFixed(2)}
+                            </span>
+                          ))}{' '}
                       </span>
                     </p>
 
@@ -1562,203 +1569,8 @@ export const PaymentForm = ({
                 className="scheduling-modal__template second"
               >
                 <div className="scheduling-modal__content-wrapper">
-                  <h3>Checkout / Account Details</h3>
-                  {isLoggedUser && (
-                    <p className="details__content">
-                      This is not your account?{' '}
-                      <a href="#" className="link" onClick={logout}>
-                        Logout
-                      </a>
-                    </p>
-                  )}
-                  {!isLoggedUser && (
-                    <p className="details__content">
-                      Already have an Account?{' '}
-                      <a href="#" className="link" onClick={login}>
-                        Login
-                      </a>
-                    </p>
-                  )}
                   <form className="order__form" onSubmit={handleSubmit}>
                     <div className="order__card">
-                      <UserInfoForm
-                        formikProps={formikProps}
-                        isLoggedUser={isLoggedUser}
-                      />
-                    </div>
-                    <div className="details mt-5">
-                      <h2 className="details__title">Billing Details:</h2>
-                      <p className="details__content">
-                        <img src="/img/ic-visa.svg" alt="visa" />
-                        <img src="/img/ic-mc.svg" alt="mc" />
-                        <img src="/img/ic-ae.svg" alt="ae" />
-                      </p>
-                    </div>
-                    <div className="order__card">
-                      <BillingInfoForm formikProps={formikProps} />
-                      <DiscountCodeInput
-                        placeholder="Discount Code"
-                        formikProps={formikProps}
-                        formikKey="couponCode"
-                        product={productId}
-                        applyDiscount={applyDiscount}
-                        addOnProducts={addOnProducts}
-                      ></DiscountCodeInput>
-
-                      {isPaymentRequired && (
-                        <PayWith
-                          formikProps={formikProps}
-                          otherPaymentOptions={otherPaymentOptions}
-                          isBundlePaypalAvailable={isBundlePaypalAvailable}
-                          isBundleSelected={selectedBundle}
-                        />
-                      )}
-                      {formikProps.values.paymentMode ===
-                        PAYMENT_MODES.STRIPE_PAYMENT_MODE &&
-                        isPaymentRequired && (
-                          <div
-                            className="order__card__payment-method"
-                            data-method="card"
-                          >
-                            {!isStripeIntentPayment && (
-                              <>
-                                {!cardLast4Digit && !isCCNotRequired && (
-                                  <div className="card-element">
-                                    <CardElement options={createOptions} />
-                                  </div>
-                                )}
-
-                                {cardLast4Digit &&
-                                  !isChangingCard &&
-                                  !isCCNotRequired && (
-                                    <>
-                                      <div className="bank-card-info">
-                                        <input
-                                          id="card-number"
-                                          className="full-width"
-                                          type="text"
-                                          value={`**** **** **** ${cardLast4Digit}`}
-                                          placeholder="Card Number"
-                                        />
-                                        <input
-                                          id="mm-yy"
-                                          type="text"
-                                          placeholder="MM/YY"
-                                          value={`**/**`}
-                                        />
-                                        <input
-                                          id="cvc"
-                                          type="text"
-                                          placeholder="CVC"
-                                          value={`****`}
-                                        />
-                                      </div>
-                                      <div className="change-cc-detail-link">
-                                        <a
-                                          href="#"
-                                          onClick={toggleCardChangeDetail}
-                                        >
-                                          Would you like to use a different
-                                          credit card?
-                                        </a>
-                                      </div>
-                                    </>
-                                  )}
-
-                                {cardLast4Digit && isChangingCard && (
-                                  <>
-                                    <div className="card-element">
-                                      <CardElement options={createOptions} />
-                                    </div>
-                                    <div className="change-cc-detail-link">
-                                      <a
-                                        href="#"
-                                        onClick={toggleCardChangeDetail}
-                                      >
-                                        Cancel
-                                      </a>
-                                    </div>
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </div>
-                        )}
-                      {formikProps.values.paymentMode ===
-                        PAYMENT_MODES.PAYPAL_PAYMENT_MODE &&
-                        isPaymentRequired && (
-                          <div
-                            className="order__card__payment-method paypal-info !tw-w-[150px]"
-                            data-method="paypal"
-                          >
-                            <div className="paypal-info__sign-in tw-relative tw-z-0">
-                              <PayPalScriptProvider
-                                options={{
-                                  clientId:
-                                    process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                                  debug: true,
-                                  currency: 'USD',
-                                  intent: 'capture',
-                                  components: 'buttons',
-                                }}
-                              >
-                                <PayPalButtons
-                                  style={{
-                                    layout: 'horizontal',
-                                    color: 'blue',
-                                    shape: 'pill',
-                                    height: 40,
-                                    tagline: false,
-                                    label: 'pay',
-                                  }}
-                                  fundingSource="paypal"
-                                  forceReRender={[formikProps.values]}
-                                  disabled={
-                                    !(formikProps.isValid && formikProps.dirty)
-                                  }
-                                  createOrder={async (data, actions) => {
-                                    return await createPaypalOrder(
-                                      formikProps.values,
-                                    );
-                                  }}
-                                  onApprove={paypalBuyAcknowledgement}
-                                />
-                              </PayPalScriptProvider>
-
-                              {/* <PayPalButton
-                            options={{
-                              clientId:
-                                process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                              debug: true,
-                              currency: "USD",
-                            }}
-                            style={{
-                              layout: "horizontal",
-                              color: "blue",
-                              shape: "pill",
-                              height: 40,
-                              tagline: false,
-                              label: "pay",
-                            }}
-                            createOrder={async (data, actions) => {
-                              return await createPaypalOrder(
-                                formikProps.values,
-                              );
-                            }}
-                            onApprove={paypalBuyAcknowledgement}
-                          /> */}
-                            </div>
-                            <div className="paypal-info__sign-out d-none">
-                              <button
-                                type="button"
-                                className="paypal-info__link sign-out-paypal"
-                              >
-                                Log out from Paypal
-                              </button>
-                            </div>
-                          </div>
-                        )}
-
                       <MobileCourseOptions
                         expenseAddOn={expenseAddOn}
                         isOfflineExpense={isOfflineExpense}
@@ -1782,27 +1594,6 @@ export const PaymentForm = ({
                         onComboDetailChange={handleComboDetailChange}
                         isCourseOptionRequired={isCourseOptionRequired}
                       />
-                    </div>
-                    <AgreementForm
-                      formikProps={formikProps}
-                      complianceQuestionnaire={complianceQuestionnaire}
-                      isCorporateEvent={isCorporateEvent}
-                      screen="MOBILE"
-                    />
-                    <div className="order__complete">
-                      <div className="order__security security">
-                        <img src="/img/ic-lock.svg" alt="lock" />
-                        <p className="security__info">
-                          AES 256-B&T
-                          <span>SSL Secured</span>
-                        </p>
-                      </div>
-                      {formikProps.values.paymentMode !==
-                        PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
-                        <button className="btn-primary">
-                          Complete Checkout
-                        </button>
-                      )}
                     </div>
                   </form>
                 </div>
@@ -1847,15 +1638,6 @@ export const PaymentForm = ({
                     onAccommodationChange={handleAccommodationChange}
                     discount={discountResponse}
                   />
-
-                  <div className="reciept__agreement">
-                    <AgreementForm
-                      formikProps={formikProps}
-                      complianceQuestionnaire={complianceQuestionnaire}
-                      isCorporateEvent={isCorporateEvent}
-                      screen="DESKTOP"
-                    />
-                  </div>
                 </div>
               </div>
               <MobileBottomBar
