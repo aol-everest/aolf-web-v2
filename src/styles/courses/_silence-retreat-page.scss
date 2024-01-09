@@ -22,7 +22,7 @@
     .banner {
       height: 402px;
       width: 100%;
-      background: url(/img/Silence-Retreat-Banner.png) no-repeat top left;
+      background: url(/img/Silence-Retreat-Banner.webp) no-repeat top left;
       padding: 60px 76px 50px 76px;
       background-size: auto;
       background-position: center;
@@ -196,25 +196,25 @@
       padding: 20px 65px 60px;
       flex-direction: column;
       &.box1 {
-        background: url(/img/Breathwork.png) no-repeat top right;
+        background: url(/img/Breathwork.webp) no-repeat top right;
         @media screen and (max-width: 767px) {
           background-size: cover;
         }
       }
       &.box2 {
-        background: url(/img/Sudarshan-Kriya.png) no-repeat top right;
+        background: url(/img/Sudarshan-Kriya.webp) no-repeat top right;
         @media screen and (max-width: 767px) {
           background-size: cover;
         }
       }
       &.box3 {
-        background: url(/img/Deep-Meditations.png) no-repeat top right;
+        background: url(/img/Deep-Meditations.webp) no-repeat top right;
         @media screen and (max-width: 767px) {
           background-size: cover;
         }
       }
       &.box4 {
-        background: url(/img/Silence.png) no-repeat top right;
+        background: url(/img/Silence.webp) no-repeat top right;
         @media screen and (max-width: 767px) {
           background-size: cover;
         }
@@ -627,7 +627,7 @@
         }
       }
       .body-mind-spirit {
-        background-image: url(/img/Body_mind_spirit.png);
+        background-image: url(/img/Body_mind_spirit.webp);
         background-size: contain;
         width: 100%;
         height: 200px;
@@ -791,6 +791,7 @@
         img {
           width: 57px;
           padding-top: 10px;
+          height: auto;
           @media only screen and (max-width: 991px) {
             width: 35px;
           }
@@ -861,6 +862,7 @@
         padding-left: 24px;
         img {
           width: 180px;
+          height: auto;
         }
       }
       .feature-content {

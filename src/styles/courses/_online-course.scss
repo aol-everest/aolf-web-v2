@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url(/img/sky-breath-long.png);
+    background-image: url(/img/sky-breath-long.webp);
     box-shadow: inset 0px 0px 89px -60px white;
     padding-bottom: 100px;
     background-position: center top;
@@ -190,7 +190,7 @@
   .breadth-meditation {
     background-color: #f7f5f4;
     padding: 80px 0 100px 0;
-    background-image: url(/img/Breath-meditation-bg-desktop.png);
+    background-image: url(/img/Breath-meditation-bg-desktop.webp);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
@@ -250,6 +250,7 @@
         img {
           width: 57px;
           padding-top: 10px;
+          height: auto;
         }
       }
       @media only screen and (max-width: 768px) {
@@ -301,6 +302,7 @@
 
       img {
         width: 100%;
+        height: auto;
       }
       .key-highlight-content {
         background-color: #ffedd9;
@@ -350,7 +352,7 @@
   .comments {
     background-color: #f7f5f4;
     padding: 122px 0 100px 0;
-    background-image: url(/img/video-thumb-desktop.png);
+    background-image: url(/img/video-thumb-desktop.webp);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
@@ -382,7 +384,7 @@
   .quote-section {
     background-color: #f7f5f4;
     padding: 122px 0 100px 0;
-    background-image: url(/img/Quote-dektop.png);
+    background-image: url(/img/Quote-dektop.webp);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
@@ -458,6 +460,7 @@
         padding-left: 24px;
         img {
           width: 180px;
+          height: auto;
         }
       }
       .feature-content {
@@ -717,6 +720,7 @@
     }
     a img {
       width: 35%;
+      height: auto;
       @media screen and (max-width: 767px) {
         width: 132px;
       }
