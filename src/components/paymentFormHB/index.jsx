@@ -175,7 +175,6 @@ export const PaymentFormHB = ({
     }
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
@@ -371,7 +370,6 @@ export const PaymentFormHB = ({
 
     const {
       id: productId,
-      isCCNotRequired,
       availableTimings,
       isGenericWorkshop,
       addOnProducts,
@@ -999,48 +997,43 @@ export const PaymentFormHB = ({
                           data-method="card"
                         >
                           <>
-                            {!cardLast4Digit && !isCCNotRequired && (
+                            {!cardLast4Digit && (
                               <div className="card-element">
                                 <CardElement options={createOptions} />
                               </div>
                             )}
 
-                            {cardLast4Digit &&
-                              !isChangingCard &&
-                              !isCCNotRequired && (
-                                <>
-                                  <div className="bank-card-info">
-                                    <input
-                                      id="card-number"
-                                      className="full-width"
-                                      type="text"
-                                      value={`**** **** **** ${cardLast4Digit}`}
-                                      placeholder="Card Number"
-                                    />
-                                    <input
-                                      id="mm-yy"
-                                      type="text"
-                                      placeholder="MM/YY"
-                                      value={`**/**`}
-                                    />
-                                    <input
-                                      id="cvc"
-                                      type="text"
-                                      placeholder="CVC"
-                                      value={`****`}
-                                    />
-                                  </div>
-                                  <div className="change-cc-detail-link">
-                                    <a
-                                      href="#"
-                                      onClick={toggleCardChangeDetail}
-                                    >
-                                      Would you like to use a different credit
-                                      card?
-                                    </a>
-                                  </div>
-                                </>
-                              )}
+                            {cardLast4Digit && !isChangingCard && (
+                              <>
+                                <div className="bank-card-info">
+                                  <input
+                                    id="card-number"
+                                    className="full-width"
+                                    type="text"
+                                    value={`**** **** **** ${cardLast4Digit}`}
+                                    placeholder="Card Number"
+                                  />
+                                  <input
+                                    id="mm-yy"
+                                    type="text"
+                                    placeholder="MM/YY"
+                                    value={`**/**`}
+                                  />
+                                  <input
+                                    id="cvc"
+                                    type="text"
+                                    placeholder="CVC"
+                                    value={`****`}
+                                  />
+                                </div>
+                                <div className="change-cc-detail-link">
+                                  <a href="#" onClick={toggleCardChangeDetail}>
+                                    Would you like to use a different credit
+                                    card?
+                                  </a>
+                                </div>
+                              </>
+                            )}
 
                             {cardLast4Digit && isChangingCard && (
                               <>
