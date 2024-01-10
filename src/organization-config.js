@@ -22,7 +22,6 @@ const allOrganizationConfig = [
       'SILENT_RETREAT',
       'SAHAJ_SAMADHI_MEDITATION',
       'SRI_SRI_YOGA_MEDITATION',
-      'SKY_SILENT_RETREAT',
       'ART_OF_LIVING_PREMIUM_PROGRAM',
     ],
     otherCourseTypes: [
@@ -30,6 +29,8 @@ const allOrganizationConfig = [
       'VOLUNTEER_TRAINING_PROGRAM',
       'BLESSINGS_COURSE',
       'SANYAM_COURSE',
+      'SRI_SRI_YOGA_DEEP_DIVE',
+      'MARMA_TRAINING',
     ],
   },
   {
