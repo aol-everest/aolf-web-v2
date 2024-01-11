@@ -51,6 +51,7 @@ function TicketedEvent() {
     eventEndTime,
     title,
     eventStartDate,
+    eventEndDate,
     eventTimeZone,
     pricingTiers,
     id: productId,
@@ -170,7 +171,13 @@ function TicketedEvent() {
                   <div className="tickets-modal__section-products">
                     <h2 className="tickets-modal__title">{title}</h2>
                     <p className="tickets-modal__date">
-                      {`${dayjs.utc(eventStartDate).format('dddd, MMM DD ')}`}•{' '}
+                      {`${dayjs
+                        .utc(eventStartDate)
+                        .format('ddd, MMM DD, YYYY')}`}{' '}
+                      -{' '}
+                      {`${dayjs.utc(eventEndDate).format('ddd, MMM DD, YYYY')}`}
+                    </p>
+                    <p className="tickets-modal__date">
                       {tConvert(eventStartTime, true)} -{' '}
                       {tConvert(eventEndTime, true)}{' '}
                       {' ' + ABBRS[eventTimeZone]}
