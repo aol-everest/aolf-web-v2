@@ -116,7 +116,7 @@ const SchedulingRange = () => {
     parseAsString.withDefault('EST'),
   );
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [locationFilter, setLocationFilter] = useState({});
+  const [locationFilter, setLocationFilter] = useState(null);
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
@@ -135,6 +135,7 @@ const SchedulingRange = () => {
           async (position) => {
             const { latitude, longitude } = position.coords;
             const zipCode = await getZipCodeByLatLang(latitude, longitude);
+            setZipCode(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
           },
           (error) => {
@@ -458,7 +459,7 @@ const SchedulingRange = () => {
     resetCalender();
     if (
       value === COURSE_MODES.ONLINE.value ||
-      (value !== COURSE_MODES.ONLINE.value && locationFilter)
+      (value !== COURSE_MODES.ONLINE.value && locationFilter?.lat)
     ) {
       setIsInitialLoad(true);
     }
