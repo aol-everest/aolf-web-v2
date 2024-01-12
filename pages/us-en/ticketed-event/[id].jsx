@@ -59,6 +59,11 @@ function TicketedEvent() {
     maxTicketsWithOneOrder,
     eventImageUrl,
     isEventFull,
+    primaryTeacherName,
+    contactName,
+    phone1,
+    phone2,
+    email,
   } = workshop || {};
 
   useEffect(() => {
@@ -301,54 +306,87 @@ function TicketedEvent() {
                     {isLoading && <Loader />}
                   </div>
                 </div>
+                <div className="tickets-modal__right-container">
+                  <div className="tickets-modal__right-column">
+                    {/* <img className="tickets-modal__photo" src={workshop?.coverImage} alt="" /> */}
+                    <img
+                      className="tickets-modal__photo"
+                      src={eventImageUrl}
+                      alt=""
+                    />
 
-                <div className="tickets-modal__right-column">
-                  {/* <img className="tickets-modal__photo" src={workshop?.coverImage} alt="" /> */}
-                  <img
-                    className="tickets-modal__photo"
-                    src={eventImageUrl}
-                    alt=""
-                  />
+                    <div className="tickets-modal__cart-empty">
+                      <img src="/img/empty-cart.svg" alt="violet" />
+                    </div>
 
-                  <div className="tickets-modal__cart-empty">
-                    <img src="/img/empty-cart.svg" alt="violet" />
+                    <div className="tickets-modal__cart">
+                      <h2 className="tickets-modal__cart-summary">
+                        Order Summary
+                      </h2>
+                      {selectedTickets.map((item) => {
+                        return (
+                          <p
+                            className="tickets-modal__cart-product"
+                            key={item.pricingTierId}
+                          >
+                            x{item?.numberOfTickets} {item.pricingTierName}{' '}
+                            <span>
+                              ${(item.price * item?.numberOfTickets).toFixed(2)}
+                            </span>
+                          </p>
+                        );
+                      })}
+
+                      <p className="tickets-modal__cart-subtotal">
+                        Subtotal
+                        <span>${parseFloat(totalPrice).toFixed(2)}</span>
+                      </p>
+                      {totalDiscount > 0 && (
+                        <p className="tickets-modal__cart-discount">
+                          Discount(-)
+                          <span>${parseFloat(totalDiscount).toFixed(2)}</span>
+                        </p>
+                      )}
+
+                      <p className="tickets-modal__cart-total">
+                        Total
+                        <span>
+                          ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
+                        </span>
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="tickets-modal__cart">
-                    <h2 className="tickets-modal__cart-summary">
-                      Order Summary
+                  <div className="tickets-modal__contact-info">
+                    <h2 className="section-title">
+                      <i
+                        className="fa fa-address-book-o"
+                        aria-hidden="true"
+                      ></i>{' '}
+                      Contact Details:
                     </h2>
-                    {selectedTickets.map((item) => {
-                      return (
-                        <p
-                          className="tickets-modal__cart-product"
-                          key={item.pricingTierId}
-                        >
-                          x{item?.numberOfTickets} {item.pricingTierName}{' '}
-                          <span>
-                            ${(item.price * item?.numberOfTickets).toFixed(2)}
-                          </span>
-                        </p>
-                      );
-                    })}
-
-                    <p className="tickets-modal__cart-subtotal">
-                      Subtotal
-                      <span>${parseFloat(totalPrice).toFixed(2)}</span>
-                    </p>
-                    {totalDiscount > 0 && (
-                      <p className="tickets-modal__cart-discount">
-                        Discount(-)
-                        <span>${parseFloat(totalDiscount).toFixed(2)}</span>
-                      </p>
-                    )}
-
-                    <p className="tickets-modal__cart-total">
-                      Total
-                      <span>
-                        ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
-                      </span>
-                    </p>
+                    <ul className="event-items-list">
+                      <li className="event-item">
+                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
+                        <span>Teacher Name: </span>
+                        {primaryTeacherName}
+                      </li>
+                      <li className="event-item">
+                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
+                        <span>Name: </span>
+                        {contactName}
+                      </li>
+                      <li className="event-item">
+                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
+                        <span>Call: </span>
+                        {phone1 || phone2}
+                      </li>
+                      <li className="event-item">
+                        <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
+                        <span>Email: </span>
+                        {email}
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
