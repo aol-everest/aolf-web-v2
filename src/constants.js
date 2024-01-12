@@ -189,6 +189,10 @@ export const COURSE_TYPES = {
     name: 'Marma Training',
     value: process.env.NEXT_PUBLIC_MARMA_PRACTITIONER_CTYPE || '',
   },
+  DSN_COURSE: {
+    name: 'DSN Course',
+    value: process.env.NEXT_PUBLIC_DSN_CTYPE || '',
+  },
 };
 
 export const WORKSHOP_MODE = {

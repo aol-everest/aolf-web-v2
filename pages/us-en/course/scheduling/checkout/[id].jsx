@@ -242,12 +242,6 @@ const SchedulingPaymentForm = ({
     title,
     id: productId,
     addOnProducts,
-    eventStartTime,
-    eventEndTime,
-    eventStartDate,
-    eventEndDate,
-    primaryTeacherName,
-    coTeacher1Name,
     phone1,
     email,
     locationCity,
@@ -368,7 +362,7 @@ const SchedulingPaymentForm = ({
         utm: filterAllowedParams(router.query),
       };
 
-      if (isCCNotRequired) {
+      if (fee <= 0) {
         payLoad.shoppingRequest.isStripeIntentPayment = false;
       }
 
@@ -590,7 +584,6 @@ const SchedulingPaymentForm = ({
                     <>
                       <hr />
                       <h3>Pay with</h3>
-
                       <PaymentElement />
                     </>
                   )}

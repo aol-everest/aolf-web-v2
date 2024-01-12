@@ -79,7 +79,7 @@ const AOL_MENU = [
         items: [
           {
             name: 'Art Of Living Part 1',
-            link: 'https://event.us.artofliving.org/us-en/online-course-2',
+            link: 'https://event.us.artofliving.org/us-en/artoflivingpart1',
           },
           {
             name: 'Sahaj Meditation Meditation',
