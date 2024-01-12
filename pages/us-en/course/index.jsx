@@ -487,7 +487,8 @@ const Course = () => {
 
   const isCourseNotAvailableOnline =
     courseTypeFilter === 'MARMA_TRAINING' ||
-    courseTypeFilter === 'BLESSINGS_COURSE';
+    courseTypeFilter === 'BLESSINGS_COURSE' ||
+    courseTypeFilter === 'DSN_COURSE';
 
   return (
     <main className="course-filter">

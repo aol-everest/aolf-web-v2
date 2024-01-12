@@ -31,6 +31,7 @@ const allOrganizationConfig = [
       'SANYAM_COURSE',
       'SRI_SRI_YOGA_DEEP_DIVE',
       'MARMA_TRAINING',
+      'DSN_COURSE',
     ],
   },
   {
