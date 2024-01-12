@@ -775,6 +775,9 @@
   font-weight: 600;
   line-height: 24px;
 }
+.tickets-modal__right-container {
+  display: inline-table;
+}
 .tickets-modal__right-column {
   display: flex;
   flex-direction: column;
@@ -784,6 +787,7 @@
   padding: 16px 24px;
   border-radius: 12px;
   background-color: #fef5ec;
+  margin-bottom: 20px;
 }
 .tickets-modal__photo {
   border-radius: 12px;
@@ -800,6 +804,7 @@
 }
 .tickets-modal__cart-product,
 .tickets-modal__cart-subtotal,
+.tickets-modal__cart-contact-details,
 .tickets-modal__cart-discount,
 .tickets-modal__cart-total {
   display: flex;
@@ -814,12 +819,59 @@
   line-height: 32px;
 }
 .tickets-modal__cart-product {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   color: #fca248;
   font-family: Work Sans;
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
   text-transform: uppercase;
+}
+.tickets-modal__contact-info {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: 400px;
+  height: 100%;
+  padding: 16px 24px;
+  border-radius: 12px;
+  background-color: #fef5ec;
+  margin-bottom: 20px;
+  .section-title {
+    font-family: 'Lora';
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    i.fa {
+      color: #fda249;
+    }
+    @media screen and (max-width: 490px) {
+      font-size: 18px;
+    }
+  }
+  ul.event-items-list {
+    li {
+      border-bottom: rgba(255, 146, 0, 0.5) 1px solid;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin: 20px 0;
+      flex-wrap: wrap;
+      span {
+        margin-right: auto;
+        margin-left: 7px;
+        color: #7c7c7c;
+      }
+      i.fa {
+        color: #7c7c7c;
+      }
+    }
+  }
 }
 .tickets-modal__cart-subtotal {
   position: relative;
@@ -954,6 +1006,9 @@
   }
   .tickets-modal__checkout-total {
     display: flex;
+  }
+  .tickets-modal__right-container {
+    display: inline-table;
   }
   .tickets-modal__right-column {
     display: none;
