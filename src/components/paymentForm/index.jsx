@@ -113,11 +113,6 @@ export const PaymentForm = ({
       if (enrollFormValues.paymentMode === PAYMENT_MODES.STRIPE_PAYMENT_MODE) {
         completeEnrollmentAction(enrollFormValues);
       }
-      // else if (
-      //   enrollFormValues.paymentMode === PAYMENT_MODES.PAYPAL_PAYMENT_MODE
-      // ) {
-      //   this.state.paypalPromise();
-      // }
     }
   }, [programQuestionnaireResult]);
 

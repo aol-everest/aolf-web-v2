@@ -418,7 +418,7 @@
   .react-tel-input {
     .form-control-input {
       position: relative;
-      padding-left: 62px;
+      padding-left: 62px !important;
       outline: none;
       &.open {
         border-bottom-left-radius: 0;

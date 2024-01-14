@@ -17,7 +17,6 @@ export const PayWithUpdated = ({
           formikProps.errors.paymentMode && formikProps.touched.paymentMode,
       })}
     >
-      <h6 className="order__card__payment-title">Pay with</h6>
       <div className="order__card__payment-select">
         <div className="select-box__value">
           <p className="scheduling-modal__content-wrapper-form-checkbox">
