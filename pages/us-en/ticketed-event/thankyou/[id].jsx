@@ -563,8 +563,9 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="event-item">
                     <i className="fa fa-sun-o" aria-hidden="true"></i>{' '}
-                    <span>Day: </span>{' '}
-                    {dayjs.utc(eventStartDate).format('dddd')}
+                    <span>Day: </span> {dayjs.utc(eventStartDate).format('ddd')}
+                    {eventEndDate &&
+                      ` - ${dayjs.utc(eventEndDate).format('ddd')}`}
                   </li>
                   <li className="event-item">
                     <i className="fa fa-calendar" aria-hidden="true"></i>{' '}

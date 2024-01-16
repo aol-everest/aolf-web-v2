@@ -368,11 +368,6 @@ function TicketedEvent() {
                     <ul className="event-items-list">
                       <li className="event-item">
                         <i className="fa fa-phone" aria-hidden="true"></i>{' '}
-                        <span>Teacher Name: </span>
-                        {primaryTeacherName}
-                      </li>
-                      <li className="event-item">
-                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
                         <span>Name: </span>
                         {contactName}
                       </li>
@@ -385,6 +380,11 @@ function TicketedEvent() {
                         <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
                         <span>Email: </span>
                         {email}
+                      </li>
+                      <li className="event-item">
+                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
+                        <span>Teacher Name: </span>
+                        {primaryTeacherName}
                       </li>
                     </ul>
                   </div>
