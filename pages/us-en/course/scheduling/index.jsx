@@ -163,7 +163,6 @@ const SchedulingRange = () => {
 
   useEffect(() => {
     if (isMounted.current) {
-      console.log('selectedDates', selectedDates);
       getWorkshopMonthCalendar();
       if (selectedDates?.length > 0) {
         getWorkshops();
@@ -471,7 +470,7 @@ const SchedulingRange = () => {
   };
 
   const handleSelectMode = (value) => {
-    if (value !== COURSE_MODES.ONLINE.value && !locationFilter) {
+    if (value !== COURSE_MODES.ONLINE.value) {
       setShowLocationModal(true);
     }
     setMode(value);
@@ -487,6 +486,8 @@ const SchedulingRange = () => {
   const resetCalender = () => {
     setActiveWorkshop(null);
     setSelectedWorkshopId(null);
+    setWorkshops([]);
+    setDateAvailable([]);
     setSelectedDates([]);
     fp.current.flatpickr.clear();
     fp.current.flatpickr.changeMonth(0);
