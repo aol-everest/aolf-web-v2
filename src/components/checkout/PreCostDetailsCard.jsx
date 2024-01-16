@@ -216,7 +216,7 @@ export const PreCostDetailsCard = ({
                       onChange={formikProps.handleChange('priceType')}
                     />
                     <label htmlFor="payment-lg-premium-card">
-                      <span>Premium/Journey+ rate:</span>
+                      <span>Premium/Journey+ Tuition:</span>
                       <span>
                         {premiumRate &&
                           premiumRate.listPrice &&
@@ -292,7 +292,7 @@ export const PreCostDetailsCard = ({
             {(isJourneyPremium || isJourneyPlus) && (
               <ul className="reciept__payment_list">
                 <li>
-                  <span>Premium/Journey+ rate:</span>
+                  <span>Premium/Journey+ Tuition:</span>
                   {discount && discount.newPrice && (
                     <span>
                       <span className="discount">${discount.oldPrice}</span> $
