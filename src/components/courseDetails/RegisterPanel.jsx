@@ -327,7 +327,7 @@ export const RegisterPanel = ({ workshop }) => {
           </h2>
           {roomAndBoardRange && (
             <h5 className="powerful__italic-title_6">
-              plus room &amp; board: {roomAndBoardRange}
+              plus expense type: {roomAndBoardRange}
             </h5>
           )}
           {isUsableCreditAvailable && (
@@ -396,7 +396,7 @@ export const RegisterPanel = ({ workshop }) => {
           )}
           {roomAndBoardRange && (
             <h5 className="powerful__italic-title_6">
-              plus room &amp; board: {roomAndBoardRange}
+              plus expense type: {roomAndBoardRange}
             </h5>
           )}
           {isUsableCreditAvailable && (
@@ -471,7 +471,7 @@ export const RegisterPanel = ({ workshop }) => {
           )}
         {roomAndBoardRange && (
           <h5 className="powerful__italic-title_6">
-            plus room &amp; board: {roomAndBoardRange}
+            plus expense type: {roomAndBoardRange}
           </h5>
         )}
         {isUsableCreditAvailable && (

@@ -812,7 +812,7 @@ export const PaymentFormHB = ({
               (value) => value === true,
             ),
           accommodation: isAccommodationRequired
-            ? Yup.object().required('Room & Board is required!')
+            ? Yup.object().required('Expense Type is required!')
             : Yup.mixed().notRequired(),
           paymentMode: !isPaymentRequired
             ? Yup.mixed().notRequired()
@@ -1191,135 +1191,6 @@ export const PaymentFormHB = ({
                     cmeAddOn={cmeAddOn}
                   />
 
-                  {/* <div className="reciept__payment">
-                  <h6 className="reciept__payment__title">Course Options</h6>
-                  <div>
-                    <div className="reciept__payment-option">
-                      <input
-                        className="custom-radio"
-                        type="radio"
-                        name="payment-type"
-                        id="payment-lg-regular"
-                        value="regular"
-                        checked
-                      />
-                      <label htmlFor="payment-lg-regular">
-                        <span>Regular rate</span>
-                        <span>
-                          <span className="discount">$550</span> $450
-                        </span>
-                      </label>
-                    </div>
-                    <div className="reciept__payment-option">
-                      <input
-                        className="custom-radio"
-                        type="radio"
-                        name="payment-type"
-                        id="payment-lg-premium"
-                        value="premium"
-                      />
-                      <label htmlFor="payment-lg-premium">
-                        <span>Premium/Journey+ rate:</span>
-                        <span>
-                          <span className="discount">$150</span> $50
-                        </span>
-                      </label>
-                    </div>
-                    <button type="button" className="btn-outline w-100">
-                      Join Journey+
-                    </button>
-                  </div>
-                  <h6 className="reciept__payment__title mt-4">
-                    Room & Board *
-                  </h6>
-                  <div className="select-box select-box_rounded">
-                    <div tabIndex="1" className="select-box__current">
-                      <span className="select-box__placeholder">
-                        Select Room & Board
-                      </span>
-                      <div className="select-box__value">
-                        <input
-                          type="radio"
-                          id="room-lg-1"
-                          value="1"
-                          name="room-lg"
-                          className="select-box__input"
-                        />
-                        <span className="select-box__input-text">
-                          Room 1 <span className="price">$100</span>
-                        </span>
-                      </div>
-                      <div className="select-box__value">
-                        <input
-                          type="radio"
-                          id="room-lg-2"
-                          value="2"
-                          name="room-lg"
-                          className="select-box__input"
-                        />
-                        <span className="select-box__input-text">
-                          Room 2 <span className="price">$150</span>
-                        </span>
-                      </div>
-                      <div className="select-box__value">
-                        <input
-                          type="radio"
-                          id="room-lg-3"
-                          value="3"
-                          name="room-lg"
-                          className="select-box__input"
-                        />
-                        <span className="select-box__input-text">
-                          Room 3 <span className="price">$200</span>
-                        </span>
-                      </div>
-                    </div>
-                    <ul className="select-box__list">
-                      <li>
-                        <label
-                          htmlFor="room-lg-1"
-                          aria-hidden="aria-hidden"
-                          data-value="1"
-                          className="select-box__option"
-                        >
-                          <span>Room 1</span>
-                          <span className="price">$100</span>
-                        </label>
-                      </li>
-                      <li>
-                        <label
-                          htmlFor="room-lg-2"
-                          aria-hidden="aria-hidden"
-                          data-value="2"
-                          className="select-box__option"
-                        >
-                          <span>Room 2</span>
-                          <span className="price">$150</span>
-                        </label>
-                      </li>
-                      <li>
-                        <label
-                          htmlFor="room-lg-3"
-                          aria-hidden="aria-hidden"
-                          data-value="3"
-                          className="select-box__option"
-                        >
-                          <span>Room 3</span>
-                          <span className="price">$200</span>
-                        </label>
-                      </li>
-                    </ul>
-                  </div>
-                  {notes && (
-                    <div className="reciept__payment-tooltip reciept__payment-tooltip_small">
-                      Additional Notes: {renderHTML(notes)}
-                    </div>
-                  )}
-                </div>
-                <div className="reciept__total">
-                  <span>Total</span>
-                  <span>$750</span>
-                </div> */}
                   <div className="reciept__agreement">
                     <AgreementForm
                       formikProps={formikProps}
@@ -1327,62 +1198,6 @@ export const PaymentFormHB = ({
                       isCorporateEvent={isCorporateEvent}
                       screen="DESKTOP"
                     />
-                    {/* <div className="agreement">
-                    <div className="agreement__group agreement__group_important agreement__group_important_desktop">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="program"
-                        id="program"
-                      />
-                      <label htmlFor="program"></label>
-                      <p className="agreement__text">
-                        I agree to the
-                        <a href="#">
-                          Program Participant agreement including privacy and
-                          cancellation policy.
-                        </a>
-                      </p>
-                    </div>
-                    <div className="agreement__important agreement__important_desktop">
-                      <img
-                        className="agreement__important-icon"
-                        src="/img/warning.svg"
-                        alt="warning"
-                      />
-                      Please check the box in order to continue
-                    </div>
-                  </div>
-                  <div className="health-confirmation">
-                    <div className="health-confirmation__group health-confirmation__group_important health-confirmation__group_important_desktop">
-                      <input
-                        className="custom-checkbox"
-                        type="checkbox"
-                        name="health-confirmation"
-                        id="health-confirmation"
-                      />
-                      <label htmlFor="health-confirmation"></label>
-                      <p className="health-confirmation__text">
-                        I represent that I am in good health, and I will inform
-                        the health info desk of any limiting health conditions
-                        before the course begins.
-                        <br />
-                        <br />
-                        For any health related questions, please contact us at{" "}
-                        <a href="mailto:healthinfo@us.artofliving.org">
-                          healthinfo@us.artofliving.org
-                        </a>
-                      </p>
-                    </div>
-                    <div className="health-confirmation__important health-confirmation__important_desktop">
-                      <img
-                        className="health-confirmation__important-icon"
-                        src="/img/warning.svg"
-                        alt="warning"
-                      />
-                      Please check the box in order to continue
-                    </div>
-                  </div>*/}
                   </div>
                 </div>
               </div>

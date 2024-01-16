@@ -348,7 +348,10 @@ export const PostCostDetailsCard = ({
           {hasGroupedAddOnProducts && (
             <>
               <h6 className="room__board__title mt-4">
-                Room &amp; Board {isOfflineExpense && '*'}
+                Expense Type {isOfflineExpense && '*'}
+              </h6>
+              <h6 className="room__board__sub-heading">
+                *Expense includes meals
               </h6>
               <div
                 className={classNames('select-room select-room_rounded', {
@@ -359,7 +362,7 @@ export const PostCostDetailsCard = ({
               >
                 <div tabIndex="2" className="select-room__current">
                   <span className="select-room__placeholder">
-                    Select Room &amp; Board
+                    Select Expense Type
                   </span>
                   {groupedAddOnProducts['Residential Add On'].map(
                     (residentialAddOn) => {
