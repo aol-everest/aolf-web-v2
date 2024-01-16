@@ -224,10 +224,6 @@ const Thankyou = () => {
     eventEndDate,
     timings,
     isGenericWorkshop,
-    streetAddress1,
-    streetAddress2,
-    city,
-    country,
     eventStartTime,
     eventEndTime,
     meetupStartDateTimeGMT,
@@ -235,6 +231,11 @@ const Thankyou = () => {
     eventStartDateTimeGMT,
     mode,
     availableBundles,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
   } = workshop;
 
   const isSKYType =
@@ -295,9 +296,9 @@ const Thankyou = () => {
     description: newTitle,
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
-    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-      country || ''
-    }`,
+    location: `${locationStreet || ''}, ${locationCity || ''}, ${
+      locationProvince || ''
+    } ${locationPostalCode || ''}, ${locationCountry || ''}`,
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
