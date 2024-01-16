@@ -210,13 +210,13 @@ const SchedulingRange = () => {
       if (cityFilter) {
         param = { ...param, city: cityFilter };
       }
-      if (locationFilter) {
+      if (locationFilter && !cityFilter) {
         const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
             ...param,
-            lat: lat?.toFixed(4),
-            lng: lng?.toFixed(4),
+            lat: parseInt(lat)?.toFixed(4),
+            lng: parseInt(lng)?.toFixed(4),
           };
         }
       }
@@ -344,13 +344,13 @@ const SchedulingRange = () => {
         random: true,
       };
 
-      if (locationFilter) {
+      if (locationFilter && !cityFilter) {
         const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
             ...param,
-            lat: lat?.toFixed(4),
-            lng: lng?.toFixed(4),
+            lat: parseInt(lat)?.toFixed(4),
+            lng: parseInt(lng)?.toFixed(4),
           };
         }
       }
