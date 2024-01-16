@@ -383,7 +383,7 @@ export const RegisterPanel = ({ workshop }) => {
           <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
           {premiumRate && premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
-              Premium/Journey+ rate:{' '}
+              Premium/Journey+ Tuition:{' '}
               {premiumRate &&
                 premiumRate.listPrice &&
                 premiumRate.listPrice !== premiumRate.unitPrice && (
@@ -458,7 +458,7 @@ export const RegisterPanel = ({ workshop }) => {
           premiumRate &&
           premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
-              Premium/Journey+ rate:{' '}
+              Premium/Journey+ Tuition:{' '}
               {premiumRate &&
                 premiumRate.listPrice &&
                 premiumRate.listPrice !== premiumRate.unitPrice && (
