@@ -107,6 +107,112 @@ main.checkout-aol {
         color: #9598a6;
       }
     }
+    & input.text-input {
+      width: 100%;
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: rgba(38, 38, 39, 0.9);
+      font-family:
+        Work Sans,
+        sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 20px;
+
+      &::placeholder {
+        color: #fff;
+      }
+    }
+
+    & input.text-input:not(:placeholder-shown) + label.label-placeholder-style,
+    & input.text-input:focus + label.label-placeholder-style {
+      top: -5px;
+      transform: translateY(0);
+      background-color: #fff;
+      padding: 0px 3px;
+    }
+
+    & label.label-placeholder-style {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 20px;
+
+      color: rgba(38, 38, 39, 0.8);
+      font-family:
+        Work Sans,
+        sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 20px;
+
+      transition: all 0.35s ease;
+
+      @media (min-width: 1200px) {
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+    .selected-flag {
+      outline: none;
+      position: relative;
+      width: 38px;
+      height: unset;
+      padding: 0px;
+
+      .flag {
+        position: absolute;
+        top: 50%;
+      }
+      .arrow {
+        position: relative;
+        top: 50%;
+        margin-top: -5px;
+        left: 30px;
+        width: 8px;
+        height: 8px;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-top: 11px solid #000;
+        &.up {
+          border-top: none;
+          border-bottom: 11px solid #000;
+        }
+      }
+    }
+    .discount-text-input {
+      padding: 10px 14px;
+      height: 44px;
+      border: 1px solid #e9e9e9;
+      border-radius: 16px;
+      box-shadow: 0px 1px 2px 0px #1018280d;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: Work Sans;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 24px;
+
+      &:focus {
+        border-color: #ed994e;
+      }
+      &::placeholder {
+        color: #9598a6;
+        opacity: 1; /* Firefox */
+      }
+
+      &::-ms-input-placeholder {
+        /* Edge 12 -18 */
+        color: #9598a6;
+      }
+      a {
+        text-decoration: none;
+        font-size: 26px;
+      }
+    }
     &.checkbox,
     &.radio {
       flex-direction: row;

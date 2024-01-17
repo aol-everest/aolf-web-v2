@@ -1,6 +1,4 @@
-import { Field } from 'formik';
 import { Fragment } from 'react';
-import { PhoneNumberInputField } from './PhoneNumberInputField';
 import { StyledInputNewCheckout } from './StyledInputNewCheckout';
 import { PhoneInputNewCheckout } from './PhoneInputNewCheckout';
 
@@ -11,7 +9,7 @@ export const UserInfoFormNewCheckout = ({
 }) => {
   return (
     <Fragment>
-      <div class="col-12 col-lg-6 pb-3 px-2">
+      <div className="col-12 col-lg-6 pb-3 px-2">
         <StyledInputNewCheckout
           className="form-item required"
           placeholder="First name"
@@ -20,7 +18,7 @@ export const UserInfoFormNewCheckout = ({
         ></StyledInputNewCheckout>
       </div>
 
-      <div class="col-12 col-lg-6 pb-3 px-2">
+      <div className="col-12 col-lg-6 pb-3 px-2">
         <StyledInputNewCheckout
           className="form-item required"
           placeholder="Last name"
@@ -29,7 +27,7 @@ export const UserInfoFormNewCheckout = ({
         ></StyledInputNewCheckout>
       </div>
 
-      <div class="col-12 col-lg-6 pb-3 px-2 ">
+      <div className="col-12 col-lg-6 pb-3 px-2 ">
         <StyledInputNewCheckout
           type="email"
           className="form-item required"
@@ -49,7 +47,7 @@ export const UserInfoFormNewCheckout = ({
         ></StyledInputNewCheckout>
       </div>
 
-      <div class="col-12 col-lg-6 pb-3 px-2 second">
+      <div className="col-12 col-lg-6 pb-3 px-2 second">
         <PhoneInputNewCheckout
           className="form-item required"
           containerClass={`scheduling-modal__content-wrapper-form-list-row`}

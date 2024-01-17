@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import MaskedInput from 'react-text-mask';
-import { FieldWrapper } from './FieldWrapper';
 
 const phoneNumberMask = [
   '(',
@@ -82,7 +81,7 @@ export const StyledInputNewCheckout = ({
       )}
       {!isPhoneNumberMask && (
         <>
-          <label for={formikKey}>{label}</label>
+          <label htmlFor={formikKey}>{label}</label>
           <input
             type="text"
             name={formikKey}

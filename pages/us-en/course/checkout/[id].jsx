@@ -30,7 +30,6 @@ import { useQuery } from 'react-query';
 import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
-import { PaymentFormNew } from '@components/paymentFormNew';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
@@ -316,7 +315,7 @@ const Checkout = () => {
       isVolunteerTrainingProgram
     ) {
       return (
-        <PaymentFormNew
+        <PaymentForm
           isStripeIntentPayment={isStripeIntentPayment}
           workshop={workshop}
           profile={user?.profile}
