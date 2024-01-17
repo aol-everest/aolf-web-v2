@@ -739,7 +739,7 @@ const SchedulingRange = () => {
                         })}
                         {upcomingByZipCode.length === 0 && (
                           <li className="scheduling-modal__content-option scheduling-no-data">
-                            Workshop not found for you zip code
+                            Workshop not found for your zip code
                           </li>
                         )}
                       </ul>
