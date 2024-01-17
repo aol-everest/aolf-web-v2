@@ -83,7 +83,7 @@ export const PostCostDetailsCard = ({
                           onChange={formikProps.handleChange('priceType')}
                         />
                         <label htmlFor="payment-lg-regular">
-                          <span>Regular rate</span>
+                          <span>Regular Tuition</span>
                           <span>
                             {delfee && (
                               <span className="discount">${delfee}</span>

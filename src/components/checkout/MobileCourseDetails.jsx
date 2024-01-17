@@ -33,7 +33,7 @@ const CourseFeeRender = ({
       return (
         <>
           <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
-            Regular rate:
+            Regular Tuition:
             <span>
               {delfee && <span className="discount">${delfee}</span>} ${fee}
             </span>

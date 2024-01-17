@@ -241,7 +241,7 @@ export const MobileCourseOptions = ({
               </p>
               <ul className="reciept__item_list ">
                 <li>
-                  <p className="font-weight-normal">Regular rate</p>
+                  <p className="font-weight-normal">Regular Tuition</p>
                   <p className="font-weight-bold">
                     {delfee && (
                       <span className="discount font-weight-bold">
@@ -306,7 +306,7 @@ export const MobileCourseOptions = ({
                     onChange={formikProps.handleChange('priceType')}
                   />
                   <label htmlFor="payment-lg-regular-card">
-                    <span>Regular rate</span>
+                    <span>Regular Tuition</span>
                     <span>
                       {delfee && <span className="discount">${delfee}</span>} $
                       {fee}
