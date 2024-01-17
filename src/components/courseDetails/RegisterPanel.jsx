@@ -451,8 +451,8 @@ export const RegisterPanel = ({ workshop }) => {
       <div>
         <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
         <h5 className="powerful__block-title_5">
-          Regular rate: {delfee && <span className="discount">${delfee}</span>}{' '}
-          ${fee}
+          Regular Tuition:{' '}
+          {delfee && <span className="discount">${delfee}</span>} ${fee}
         </h5>
         {!isUsableCreditAvailable &&
           premiumRate &&

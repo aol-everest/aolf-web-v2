@@ -772,7 +772,7 @@ export const MeetupPaymentForm = ({
                       {!isJourneyPlus && (
                         <ul className="reciept__item_list">
                           <li>
-                            <span>Regular rate:</span>
+                            <span>Regular Tuition:</span>
                             {unitPrice !== listPrice && (
                               <span>
                                 <span className="discount">${listPrice}</span> $
@@ -847,7 +847,7 @@ export const MeetupPaymentForm = ({
                       {!isDigitalMember && (
                         <ul className="reciept__item_list">
                           <li>
-                            <span>Regular rate:</span>
+                            <span>Regular Tuition:</span>
                             {unitPrice !== listPrice && (
                               <span>
                                 <span className="discount">${listPrice}</span> $
