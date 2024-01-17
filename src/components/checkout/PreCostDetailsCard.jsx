@@ -127,7 +127,7 @@ export const PreCostDetailsCard = ({
             </p>
             <ul className="reciept__item_list ">
               <li>
-                <p className="font-weight-normal">Regular rate</p>
+                <p className="font-weight-normal">Regular Tuition</p>
                 <p className="font-weight-bold">
                   {delfee && (
                     <span className="discount font-weight-bold">
@@ -197,7 +197,7 @@ export const PreCostDetailsCard = ({
                   />
 
                   <label htmlFor="payment-lg-regular-card">
-                    <span>Regular rate</span>
+                    <span>Regular Tuition</span>
                     <span>
                       {delfee && <span className="discount">${delfee}</span>} $
                       {fee}
@@ -216,7 +216,7 @@ export const PreCostDetailsCard = ({
                       onChange={formikProps.handleChange('priceType')}
                     />
                     <label htmlFor="payment-lg-premium-card">
-                      <span>Premium/Journey+ rate:</span>
+                      <span>Premium/Journey+ Tuition:</span>
                       <span>
                         {premiumRate &&
                           premiumRate.listPrice &&
@@ -292,7 +292,7 @@ export const PreCostDetailsCard = ({
             {(isJourneyPremium || isJourneyPlus) && (
               <ul className="reciept__payment_list">
                 <li>
-                  <span>Premium/Journey+ rate:</span>
+                  <span>Premium/Journey+ Tuition:</span>
                   {discount && discount.newPrice && (
                     <span>
                       <span className="discount">${discount.oldPrice}</span> $

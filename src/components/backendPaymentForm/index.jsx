@@ -967,7 +967,7 @@ export const BackendPaymentForm = ({
                 }),
             }),
             accommodation: isAccommodationRequired
-              ? Yup.object().required('Room & Board is required!')
+              ? Yup.object().required('Expense Type is required!')
               : Yup.mixed().notRequired(),
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -1109,26 +1109,6 @@ export const BackendPaymentForm = ({
                           : 'Confirm Email'}
                       </label>
                     </div>
-
-                    {/*<div
-                    className={classNames('input-group inputLabel_place', {
-                      'text-input-error': errors.email && touched.email
-                    })}
-                  >
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      placeholder=" "
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.email}
-                      name="email"
-                    />
-                    <label htmlFor="email">
-                      {errors.email && touched.email ? errors.email : 'Email'}
-                    </label>
-                  </div>*/}
                   </div>
 
                   {isComboDetailAvailable && (
@@ -1250,17 +1230,7 @@ export const BackendPaymentForm = ({
                           }
                         })}
                       </ul>
-                      {/* <div className="col-sm-12">
-                      <h6
-                        style={{ padding: '10px 0px' }}
-                        className={classNames({
-                          'group-error': errors.selectedAddOn,
-                        })}
-                      >
-                        <i className="fas fa-cart-plus" /> Accommodation :
-                      </h6>
-                      {groupedAddOnProducts.map(this.groupAddOnSelectItem)}
-                    </div> */}
+
                       {hasGroupedAddOnProducts && (
                         <div className="col-sm-12">
                           <h6
@@ -1268,7 +1238,7 @@ export const BackendPaymentForm = ({
                               'group-error': errors.selectedAddOn,
                             })}
                           >
-                            <i className="fas fa-cart-plus" /> Room &amp; Board{' '}
+                            <i className="fas fa-cart-plus" /> Expense Type{' '}
                             {isOfflineExpense && '*'}
                           </h6>
                           <div
@@ -1282,7 +1252,7 @@ export const BackendPaymentForm = ({
                           >
                             <div tabIndex="1" className="select-room__current">
                               <span className="select-room__placeholder">
-                                Select Room &amp; Board
+                                Select Expense Type
                               </span>
                               {groupedAddOnProducts['Residential Add On'].map(
                                 (residentialAddOn) => {

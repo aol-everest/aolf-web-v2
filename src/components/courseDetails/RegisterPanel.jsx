@@ -327,7 +327,7 @@ export const RegisterPanel = ({ workshop }) => {
           </h2>
           {roomAndBoardRange && (
             <h5 className="powerful__italic-title_6">
-              plus room &amp; board: {roomAndBoardRange}
+              plus expense type: {roomAndBoardRange}
             </h5>
           )}
           {isUsableCreditAvailable && (
@@ -383,7 +383,7 @@ export const RegisterPanel = ({ workshop }) => {
           <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
           {premiumRate && premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
-              Premium/Journey+ rate:{' '}
+              Premium/Journey+ Tuition:{' '}
               {premiumRate &&
                 premiumRate.listPrice &&
                 premiumRate.listPrice !== premiumRate.unitPrice && (
@@ -396,7 +396,7 @@ export const RegisterPanel = ({ workshop }) => {
           )}
           {roomAndBoardRange && (
             <h5 className="powerful__italic-title_6">
-              plus room &amp; board: {roomAndBoardRange}
+              plus expense type: {roomAndBoardRange}
             </h5>
           )}
           {isUsableCreditAvailable && (
@@ -451,14 +451,14 @@ export const RegisterPanel = ({ workshop }) => {
       <div>
         <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
         <h5 className="powerful__block-title_5">
-          Regular rate: {delfee && <span className="discount">${delfee}</span>}{' '}
-          ${fee}
+          Regular Tuition:{' '}
+          {delfee && <span className="discount">${delfee}</span>} ${fee}
         </h5>
         {!isUsableCreditAvailable &&
           premiumRate &&
           premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
-              Premium/Journey+ rate:{' '}
+              Premium/Journey+ Tuition:{' '}
               {premiumRate &&
                 premiumRate.listPrice &&
                 premiumRate.listPrice !== premiumRate.unitPrice && (
@@ -471,7 +471,7 @@ export const RegisterPanel = ({ workshop }) => {
           )}
         {roomAndBoardRange && (
           <h5 className="powerful__italic-title_6">
-            plus room &amp; board: {roomAndBoardRange}
+            plus expense type: {roomAndBoardRange}
           </h5>
         )}
         {isUsableCreditAvailable && (

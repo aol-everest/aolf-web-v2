@@ -116,7 +116,7 @@ const SchedulingRange = () => {
     parseAsString.withDefault('EST'),
   );
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [locationFilter, setLocationFilter] = useState({});
+  const [locationFilter, setLocationFilter] = useState(null);
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
@@ -209,13 +209,13 @@ const SchedulingRange = () => {
       if (cityFilter) {
         param = { ...param, city: cityFilter };
       }
-      if (locationFilter) {
+      if (locationFilter && !cityFilter) {
         const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
             ...param,
-            lat: lat?.toFixed(4),
-            lng: lng?.toFixed(4),
+            lat: parseInt(lat)?.toFixed(4),
+            lng: parseInt(lng)?.toFixed(4),
           };
         }
       }
@@ -343,13 +343,13 @@ const SchedulingRange = () => {
         random: true,
       };
 
-      if (locationFilter) {
+      if (locationFilter && !cityFilter) {
         const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
             ...param,
-            lat: lat?.toFixed(4),
-            lng: lng?.toFixed(4),
+            lat: parseInt(lat)?.toFixed(4),
+            lng: parseInt(lng)?.toFixed(4),
           };
         }
       }
@@ -739,7 +739,7 @@ const SchedulingRange = () => {
                         })}
                         {upcomingByZipCode.length === 0 && (
                           <li className="scheduling-modal__content-option scheduling-no-data">
-                            Workshop not found for you zip code
+                            Workshop not found for your zip code
                           </li>
                         )}
                       </ul>

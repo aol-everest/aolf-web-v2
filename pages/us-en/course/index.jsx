@@ -485,7 +485,10 @@ const Course = () => {
     filterCount++;
   }
 
-  const isBlessingCourseSelected = !!COURSE_TYPES[courseTypeFilter];
+  const isCourseNotAvailableOnline =
+    courseTypeFilter === 'MARMA_TRAINING' ||
+    courseTypeFilter === 'BLESSINGS_COURSE' ||
+    courseTypeFilter === 'DSN_COURSE';
 
   return (
     <main className="course-filter">
@@ -1113,14 +1116,14 @@ const Course = () => {
           )}
         </div>
       </section>
-      {isBlessingCourseSelected && activeFilterType === 'ONLINE' ? (
+      {isCourseNotAvailableOnline && activeFilterType === 'ONLINE' ? (
         <section className="about">
           <div className="container happines_box">
             <div className="row">
               <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
                 <h1 className="happines_title">
-                  The Blessing course is not available online it is offered In
-                  Person only
+                  The {COURSE_TYPES[courseTypeFilter].name} course is not
+                  available online it is offered In Person only
                 </h1>
                 <p className="happines_subtitle">
                   Please check out our{' '}

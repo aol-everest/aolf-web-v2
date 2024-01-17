@@ -189,7 +189,7 @@ export const PriceCard = ({
           </div>
           {roomAndBoardRange && (
             <div className="col dates">
-              <span className="title">Room & Board fee</span>
+              <span className="title">Expense Type fee</span>
               <br />
               <span className="content">{roomAndBoardRange}</span>
             </div>
@@ -436,6 +436,7 @@ export const PriceCard = ({
           </div>
         </div>
         {(earlyBirdFeeIncreasing ||
+          showCeuCreditsForHbSilent ||
           (preRequisiteCondition && preRequisiteCondition.length > 0)) && (
           <div className="early-bird-banner">
             {earlyBirdFeeIncreasing && (
@@ -454,15 +455,14 @@ export const PriceCard = ({
                 {preRequisiteCondition}
               </p>
             )}
-          </div>
-        )}
-        {showCeuCreditsForHbSilent && (
-          <div className="early-bird-banner">
-            <p>
-              <strong>CEU credits:</strong> Physicians, PAs, NPs, Nurses, and
-              Dentists can receive 1 CME/CEU credit for every class hour. Other
-              healthcare professionals can receive a letter of attendance.
-            </p>
+            {showCeuCreditsForHbSilent && (
+              <p>
+                <strong>CEU credits:</strong> Physicians, PAs, NPs, Nurses, and
+                Dentists can receive 1 CME/CEU credit for every class hour.
+                Other healthcare professionals can receive a letter of
+                attendance.
+              </p>
+            )}
           </div>
         )}
       </div>

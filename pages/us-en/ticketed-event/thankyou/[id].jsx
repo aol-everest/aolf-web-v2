@@ -99,6 +99,7 @@ const TicketCongratulations = () => {
   const {
     title,
     phone1,
+    phone2,
     email,
     eventStartTime,
     eventEndTime,
@@ -108,6 +109,7 @@ const TicketCongratulations = () => {
     streetAddress1,
     streetAddress2,
     city,
+    contactName,
     country,
     eventEndDate,
     eventImageUrl,
@@ -561,13 +563,19 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="event-item">
                     <i className="fa fa-sun-o" aria-hidden="true"></i>{' '}
-                    <span>Day: </span>{' '}
-                    {dayjs.utc(eventStartDate).format('dddd')}
+                    <span>Day: </span> {dayjs.utc(eventStartDate).format('ddd')}
+                    {eventEndDate &&
+                      ` - ${dayjs.utc(eventEndDate).format('ddd')}`}
                   </li>
                   <li className="event-item">
                     <i className="fa fa-calendar" aria-hidden="true"></i>{' '}
-                    <span>Date: </span>
-                    {dayjs.utc(eventStartDate).format('MMMM D YYYY')}
+                    <span>Start Date: </span>
+                    {dayjs.utc(eventStartDate).format('MMM D, YYYY')}
+                  </li>
+                  <li className="event-item">
+                    <i className="fa fa-calendar" aria-hidden="true"></i>{' '}
+                    <span>End Date: </span>
+                    {dayjs.utc(eventEndDate).format('MMM D, YYYY')}
                   </li>
                   <li className="event-item">
                     <i className="fa fa-clock" aria-hidden="true"></i>{' '}
@@ -583,8 +591,13 @@ const TicketCongratulations = () => {
                   <ul className="event-items-list">
                     <li className="event-item">
                       <i className="fa fa-phone" aria-hidden="true"></i>{' '}
+                      <span>Name: </span>
+                      {contactName}
+                    </li>
+                    <li className="event-item">
+                      <i className="fa fa-phone" aria-hidden="true"></i>{' '}
                       <span>Call: </span>
-                      {phone1}
+                      {phone1 || phone2}
                     </li>
                     <li className="event-item">
                       <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
