@@ -33,14 +33,14 @@ const CourseFeeRender = ({
       return (
         <>
           <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
-            Regular rate:
+            Regular Tuition:
             <span>
               {delfee && <span className="discount">${delfee}</span>} ${fee}
             </span>
           </h3>
           {!isUsableCreditAvailable && (
             <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
-              Premium/Journey+ rate:
+              Premium/Journey+ Tuition:
               <span>
                 {premiumRate &&
                   premiumRate.listPrice &&
@@ -65,7 +65,7 @@ const CourseFeeRender = ({
       if (discount && discount.newPrice) {
         return (
           <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
-            Premium/Journey+ rate:
+            Premium/Journey+ Tuition:
             <span>
               <span className="discount">
                 ${delfee || premiumRate.listPrice}
@@ -77,7 +77,7 @@ const CourseFeeRender = ({
       } else {
         return (
           <h3 className="new-price d-flex justify-content-sm-start justify-content-between">
-            Premium/Journey+ rate:
+            Premium/Journey+ Tuition:
             <span>{premiumRate && premiumRate.unitPrice}</span>
           </h3>
         );

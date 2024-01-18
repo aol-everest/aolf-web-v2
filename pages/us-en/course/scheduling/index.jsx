@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { COURSE_MODES, COURSE_TYPES } from '@constants';
+import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useQueryState, parseAsString } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
 import {
@@ -7,6 +7,7 @@ import {
   tConvert,
   findCourseTypeByKey,
   getZipCodeByLatLang,
+  getUserTimeZoneAbbreviation,
 } from '@utils';
 import dayjs from 'dayjs';
 import { sortBy, values, omit } from 'lodash';
@@ -23,6 +24,7 @@ import { useEffectOnce } from 'react-use';
 import { useAnalytics } from 'use-analytics';
 import classNames from 'classnames';
 import Modal from 'react-bootstrap/Modal';
+import { orgConfig } from '@org';
 
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -120,6 +122,10 @@ const SchedulingRange = () => {
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
   const [selectedDates, setSelectedDates] = useState([]);
   const [activeWorkshop, setActiveWorkshop] = useState(null);
+  const [dateAvailable, setDateAvailable] = useState([]);
+  const [isWorkshopMonthLoading, setIsWorkshopMonthLoading] = useState(true);
+  const [isWorkshopsLoading, setIsWorkshopsLoading] = useState(false);
+  const [workshops, setWorkshops] = useState([]);
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
     'ym',
     parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
@@ -128,17 +134,23 @@ const SchedulingRange = () => {
   const [teacherFilter] = useQueryState('teacher');
   const [cityFilter] = useQueryState('city');
 
+  const isMounted = useRef(false);
+
   useEffect(() => {
     const getUserLocation = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            const zipCode = await getZipCodeByLatLang(latitude, longitude);
+            const [zipCode] = await Promise.all([
+              getZipCodeByLatLang(latitude, longitude),
+            ]);
             setZipCode(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
           },
           (error) => {
+            getWorkshopMonthCalendar();
+            getWorkshops();
             console.error('Error getting location:', error.message);
           },
         );
@@ -148,6 +160,163 @@ const SchedulingRange = () => {
     };
     getUserLocation();
   }, []);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      getWorkshopMonthCalendar();
+      if (selectedDates?.length > 0) {
+        getWorkshops();
+      }
+    } else {
+      isMounted.current = true;
+    }
+  }, [
+    currentMonthYear,
+    timezoneFilter,
+    locationFilter,
+    milesFilter,
+    mode,
+    courseTypeFilter,
+    selectedDates,
+  ]);
+
+  useEffectOnce(() => {
+    page({
+      category: 'course_registration',
+      name: 'course_search_scheduling',
+      course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+    });
+    if (orgConfig.name === 'AOL') {
+      setTimezoneFilter(fillDefaultTimeZone());
+    }
+  });
+
+  const fillDefaultTimeZone = () => {
+    const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
+    if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
+      return userTimeZoneAbbreviation.toUpperCase();
+    }
+    return null;
+  };
+
+  const getWorkshopMonthCalendar = async () => {
+    let param = {
+      ctype:
+        findCourseTypeByKey(courseTypeFilter)?.value ||
+        COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+      month: currentMonthYear,
+      timeZone: timezoneFilter,
+    };
+    if (mode && mode !== COURSE_MODES_BOTH) {
+      param = { ...param, mode };
+    }
+    if (milesFilter) {
+      param = { ...param, radius: milesFilter };
+    }
+    if (teacherFilter) {
+      param = { ...param, teacherId: teacherFilter };
+    }
+    if (cityFilter) {
+      param = { ...param, city: cityFilter };
+    }
+    if (locationFilter && !cityFilter) {
+      const { lat, lng } = locationFilter || {};
+      if (lat || lng) {
+        param = {
+          ...param,
+          lat: parseInt(lat)?.toFixed(4),
+          lng: parseInt(lng)?.toFixed(4),
+        };
+      }
+    }
+    const response = await api.get({
+      path: 'workshopMonthCalendar',
+      param,
+    });
+    if (isInitialLoad) {
+      const defaultDate =
+        response.data.length > 0 ? response.data[0].allDates : [];
+      if (fp?.current?.flatpickr && defaultDate.length > 0) {
+        setTimeout(() => {
+          fp.current.flatpickr.setDate(defaultDate, true);
+        }, 100);
+      }
+      setIsInitialLoad(false);
+    }
+    setIsWorkshopMonthLoading(false);
+    setDateAvailable(response?.data);
+  };
+
+  const getWorkshops = async () => {
+    setIsWorkshopsLoading(true);
+    let param = {
+      timeZone: timezoneFilter,
+      sdate: mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
+      timingsRequired: true,
+      skipFullCourses: true,
+      ctype:
+        findCourseTypeByKey(courseTypeFilter)?.value ||
+        COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
+      random: true,
+    };
+
+    if (milesFilter) {
+      param = { ...param, radius: milesFilter };
+    }
+    if (mode && mode !== COURSE_MODES_BOTH) {
+      param = { ...param, mode };
+    }
+    if (teacherFilter) {
+      param = { ...param, teacherId: teacherFilter };
+    }
+    if (cityFilter) {
+      param = { ...param, city: cityFilter };
+    }
+
+    if (locationFilter && !cityFilter) {
+      const { lat, lng } = locationFilter || {};
+      if (lat || lng) {
+        param = {
+          ...param,
+          lat: parseInt(lat)?.toFixed(4),
+          lng: parseInt(lng)?.toFixed(4),
+        };
+      }
+    }
+
+    const response = await api.get({
+      path: 'workshops',
+      param,
+    });
+    if (response?.data && selectedDates?.length > 0) {
+      const selectedSfids = getGroupedUniqueEventIds(response);
+      const finalWorkshops =
+        mode === COURSE_MODES.IN_PERSON.value
+          ? response?.data
+          : response?.data.filter((item) => selectedSfids.includes(item.sfid));
+
+      setTimeout(() => {
+        const timeContainer = document.querySelector(
+          '.scheduling-modal__content-option',
+        );
+        if (timeContainer) {
+          timeContainer.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        }
+      }, 100);
+      track('click_calendar', {
+        screen_name: 'course_search_scheduling',
+        course_type:
+          courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
+        location_type: mode,
+        num_results: response?.data.length,
+      });
+      setWorkshops(finalWorkshops);
+    }
+    setIsWorkshopsLoading(false);
+  };
 
   const { data: workshopMaster = {} } = useQuery(
     ['workshopMaster', mode],
@@ -179,77 +348,6 @@ const SchedulingRange = () => {
       refetchOnWindowFocus: false,
     },
   );
-
-  const { data: dateAvailable = [], isLoading } = useQuery(
-    [
-      'workshopMonthCalendar',
-      currentMonthYear,
-      courseTypeFilter,
-      timezoneFilter,
-      mode,
-      locationFilter,
-      milesFilter,
-    ],
-    async () => {
-      let param = {
-        ctype:
-          findCourseTypeByKey(courseTypeFilter)?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-        month: currentMonthYear,
-        timeZone: timezoneFilter,
-      };
-      if (mode && mode !== COURSE_MODES_BOTH) {
-        param = { ...param, mode };
-      }
-      if (milesFilter) {
-        param = { ...param, radius: milesFilter };
-      }
-      if (teacherFilter) {
-        param = { ...param, teacherId: teacherFilter };
-      }
-      if (cityFilter) {
-        param = { ...param, city: cityFilter };
-      }
-      if (locationFilter) {
-        const { lat, lng } = locationFilter || {};
-        if (lat || lng) {
-          param = {
-            ...param,
-            lat: lat?.toFixed(4),
-            lng: lng?.toFixed(4),
-          };
-        }
-      }
-      const response = await api.get({
-        path: 'workshopMonthCalendar',
-        param,
-      });
-      if (isInitialLoad) {
-        const defaultDate =
-          response.data.length > 0 ? response.data[0].allDates : [];
-        if (fp?.current?.flatpickr && defaultDate.length > 0) {
-          setTimeout(() => {
-            fp.current.flatpickr.setDate(defaultDate, true);
-          }, 100);
-
-          // fp.current.flatpickr.jumpToDate(defaultDate[0], true);
-        }
-        setIsInitialLoad(false);
-      }
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  useEffectOnce(() => {
-    page({
-      category: 'course_registration',
-      name: 'course_search_scheduling',
-      course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
-    });
-  });
 
   const handleModalToggle = () => {
     setShowLocationModal(!showLocationModal);
@@ -322,87 +420,6 @@ const SchedulingRange = () => {
 
   enableDates = [...enableDates, ...selectedDates];
 
-  const { data: workshops = [], isLoading: isLoadingWorkshops } = useQuery(
-    [
-      'workshops',
-      selectedDates,
-      timezoneFilter,
-      mode,
-      milesFilter,
-      locationFilter,
-    ],
-    async () => {
-      let param = {
-        timeZone: timezoneFilter,
-        sdate:
-          mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
-        timingsRequired: true,
-        skipFullCourses: true,
-        ctype:
-          findCourseTypeByKey(courseTypeFilter)?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-        random: true,
-      };
-
-      if (locationFilter) {
-        const { lat, lng } = locationFilter || {};
-        if (lat || lng) {
-          param = {
-            ...param,
-            lat: lat?.toFixed(4),
-            lng: lng?.toFixed(4),
-          };
-        }
-      }
-      if (milesFilter) {
-        param = { ...param, radius: milesFilter };
-      }
-      if (mode && mode !== COURSE_MODES_BOTH) {
-        param = { ...param, mode };
-      }
-      if (teacherFilter) {
-        param = { ...param, teacherId: teacherFilter };
-      }
-      if (cityFilter) {
-        param = { ...param, city: cityFilter };
-      }
-
-      const response = await api.get({
-        path: 'workshops',
-        param,
-      });
-      if (response?.data && selectedDates?.length > 0) {
-        const selectedSfids = getGroupedUniqueEventIds(response);
-        const finalWorkshops =
-          mode === COURSE_MODES.IN_PERSON.value
-            ? response?.data
-            : response?.data.filter((item) =>
-                selectedSfids.includes(item.sfid),
-              );
-
-        setTimeout(() => {
-          const timeContainer = document.querySelector(
-            '.scheduling-modal__content-option',
-          );
-          if (timeContainer) {
-            timeContainer.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-            });
-          }
-        }, 100);
-        track('click_calendar', {
-          screen_name: 'course_search_scheduling',
-          course_type:
-            courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
-          location_type: mode,
-          num_results: response?.data.length,
-        });
-        return finalWorkshops;
-      }
-    },
-  );
-
   const upcomingByZipCode = [];
   const otherCourses = [];
   workshops.forEach((item) => {
@@ -433,6 +450,7 @@ const SchedulingRange = () => {
     setSelectedWorkshopId(workshop?.id);
     getWorkshopDetails(workshop?.id);
   };
+
   const handleTimezoneChange = (ev) => {
     ev.preventDefault();
     setTimezoneFilter(ev?.target?.value);
@@ -452,7 +470,7 @@ const SchedulingRange = () => {
   };
 
   const handleSelectMode = (value) => {
-    if (value !== COURSE_MODES.ONLINE.value && !locationFilter) {
+    if (value !== COURSE_MODES.ONLINE.value) {
       setShowLocationModal(true);
     }
     setMode(value);
@@ -468,6 +486,8 @@ const SchedulingRange = () => {
   const resetCalender = () => {
     setActiveWorkshop(null);
     setSelectedWorkshopId(null);
+    setWorkshops([]);
+    setDateAvailable([]);
     setSelectedDates([]);
     fp.current.flatpickr.clear();
     fp.current.flatpickr.changeMonth(0);
@@ -563,7 +583,7 @@ const SchedulingRange = () => {
       <header className="checkout-header">
         <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
       </header>
-      {(loading || isLoading || isLoadingWorkshops) && (
+      {(loading || isWorkshopsLoading || isWorkshopMonthLoading) && (
         <div className="cover-spin"></div>
       )}
       <main className="course-filter calendar-online">
@@ -740,7 +760,7 @@ const SchedulingRange = () => {
                         })}
                         {upcomingByZipCode.length === 0 && (
                           <li className="scheduling-modal__content-option scheduling-no-data">
-                            Workshop not found for you zip code
+                            Workshop not found for your zip code
                           </li>
                         )}
                       </ul>

@@ -189,7 +189,7 @@ export const PriceCard = ({
           </div>
           {roomAndBoardRange && (
             <div className="col dates">
-              <span className="title">Room & Board fee</span>
+              <span className="title">Expense Type fee</span>
               <br />
               <span className="content">{roomAndBoardRange}</span>
             </div>
