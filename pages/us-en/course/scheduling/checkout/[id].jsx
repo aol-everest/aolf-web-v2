@@ -961,7 +961,7 @@ const SchedulingPaymentForm = ({
                               form="my-form"
                               onClick={handleFormSubmit}
                             >
-                              Confirm and pay
+                              Confirm and Pay
                             </button>
                           </div>
                         </div>

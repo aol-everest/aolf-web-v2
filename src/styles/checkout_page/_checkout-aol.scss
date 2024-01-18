@@ -154,16 +154,25 @@ main.checkout-aol {
         line-height: 24px;
       }
     }
+    .flag-dropdown {
+      .country-list {
+        top: 39px;
+        left: 5px;
+        width: 307px;
+      }
+    }
     .selected-flag {
       outline: none;
       position: relative;
       width: 38px;
-      height: unset;
+      display: flex;
+      flex: 1;
+      align-items: center;
       padding: 0px;
 
       .flag {
         position: absolute;
-        top: 50%;
+        top: unset;
       }
       .arrow {
         position: relative;
@@ -232,7 +241,6 @@ main.checkout-aol {
             border-radius: 4px;
             margin-right: 12px;
             display: flex;
-            font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             justify-content: center;
             align-items: center;
@@ -244,7 +252,7 @@ main.checkout-aol {
         }
         &:checked + label {
           &::before {
-            content: '\f00c';
+            content: url(/img/checkicon-css.svg);
             background-color: #ed994e;
             color: white;
           }
@@ -458,7 +466,7 @@ main.checkout-aol {
         font-weight: 500;
         line-height: 24px;
         color: white;
-        border-radius: 30px;
+        border-radius: 10px;
         box-shadow: none;
         border: none;
       }
