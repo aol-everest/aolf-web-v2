@@ -25,7 +25,7 @@ import { replaceRouteWithUTMQuery } from '@service';
 import { useEffectOnce } from 'react-use';
 import { useAnalytics } from 'use-analytics';
 import isUrl from 'is-url';
-import { UserInfoFormNewCheckout } from '@components/checkout/UserInfoFormNewCheckout';
+import { UserInfoFormNewCheckout } from '@components/checkout';
 
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);

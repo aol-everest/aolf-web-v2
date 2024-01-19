@@ -1,6 +1,8 @@
 import { Fragment } from 'react';
-import { StyledInputNewCheckout } from './StyledInputNewCheckout';
-import { PhoneInputNewCheckout } from './PhoneInputNewCheckout';
+import {
+  PhoneInputNewCheckout,
+  StyledInputNewCheckout,
+} from '@components/checkout';
 
 export const UserInfoFormNewCheckout = ({
   formikProps,
