@@ -220,7 +220,6 @@ const SchedulingRange = () => {
       param = { ...param, city: cityFilter };
     }
     if (locationFilter && !cityFilter) {
-      console.log('locationFilter', locationFilter);
       const { lat, lng } = locationFilter || {};
       if (lat || lng) {
         param = {
@@ -275,7 +274,6 @@ const SchedulingRange = () => {
     }
 
     if (locationFilter && !cityFilter) {
-      console.log('locationFilter', locationFilter);
       const { lat, lng } = locationFilter || {};
       if (lat || lng) {
         param = {
