@@ -2,12 +2,9 @@
 import Link from '@components/linkWithUTM';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
-import { pushRouteWithUTMQuery } from '@service';
-import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import React, { useState } from 'react';
-import Style from './Header.module.scss';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
 import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
@@ -86,7 +83,11 @@ const AOL_MENU = [
             link: `https://event.us.artofliving.org/us-en/sahajsamadhi`,
           },
           {
-            name: 'Sri Sri Yoga Foundation Program ',
+            name: 'Art Of Living Premium',
+            link: 'https://event.us.artofliving.org/us-en/premiumcourse/',
+          },
+          {
+            name: 'Sri Sri Yoga Foundation',
             link: '/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431',
           },
         ],
@@ -110,15 +111,24 @@ const AOL_MENU = [
             name: 'Sanyam',
             link: '/us-en/lp/sanyam',
           },
+        ],
+      },
+      {
+        name: 'Training Courses',
+        items: [
           {
             name: 'Volunteer Training',
             link: '/us-en/lp/vtp',
           },
+          {
+            name: 'Teacher Training',
+            link: '/us-en/lp/teacher-training-course',
+          },
+          {
+            name: 'All Courses',
+            link: '/us-en/course',
+          },
         ],
-      },
-      {
-        name: 'All Courses',
-        link: '/us-en/course',
       },
     ],
   },
@@ -126,23 +136,6 @@ const AOL_MENU = [
     name: 'App',
     link: '/us-en/lp/journey-app',
   },
-  /* {
-    name: "Events",
-    submenu: [
-      {
-        name: "World Culture Festival",
-        link: "https://wcf.artofliving.org/",
-      },
-      {
-        name: "Gurudev USA Tour",
-        link: "/us-en/lp/sixthsensetour",
-      },
-      {
-        name: "Wisdom Series",
-        link: "https://www.artofliving.org/us-en/program/196004",
-      },
-    ],
-  }, */
   {
     name: 'About Us',
     submenu: [
@@ -386,6 +379,15 @@ export const Header = () => {
     setNavExpanded(!navExpanded);
   };
 
+  // Creating a new div element
+  const dropdownMenuDiv = document.querySelector('.dropdown-menu');
+
+  // Adding classes using classList.add
+  if (dropdownMenuDiv) {
+    // Add the class multi-col using classList.add
+    dropdownMenuDiv.classList.add('multi-col');
+  }
+
   const renderMenu = (menu) => {
     if (!menu) {
       return null;
@@ -416,24 +418,23 @@ export const Header = () => {
                 {subMenu?.items && (
                   <>
                     {subMenu.name && (
-                      <h6
-                        className="dropdown-header pt-2rem"
-                        key={subMenu.name}
-                      >
-                        {subMenu.name}
-                      </h6>
+                      <div class="dropdown-menu-col">
+                        <h6 className="dropdown-header" key={subMenu.name}>
+                          {subMenu.name}
+                        </h6>
+                        {subMenu?.items.map((menuItem) => {
+                          return (
+                            <NavDropdown.Item
+                              href={menuItem.link}
+                              key={menuItem.name}
+                              as={Link}
+                            >
+                              {menuItem.name}
+                            </NavDropdown.Item>
+                          );
+                        })}
+                      </div>
                     )}
-                    {subMenu?.items.map((menuItem) => {
-                      return (
-                        <NavDropdown.Item
-                          href={menuItem.link}
-                          key={menuItem.name}
-                          as={Link}
-                        >
-                          {menuItem.name}
-                        </NavDropdown.Item>
-                      );
-                    })}
                   </>
                 )}
                 {subMenu?.link && (
