@@ -475,49 +475,117 @@ const Checkout = () => {
           </aside>
         )}
 
-        {workshop.isGenericWorkshop ? (
-          <p className="order__detail">
-            Once you register, you will be contacted to schedule your course
-            date
-            <br />
-            <span>
-              SKY is offered every week of the year across time zones.
-            </span>
-          </p>
-        ) : (
-          <p
-            className="order__detail-description"
-            dangerouslySetInnerHTML={{
-              __html: workshop?.description,
-            }}
-          ></p>
-        )}
+        <section className="order">
+          <div className="container">
+            <h1 className="title">{workshop.title}</h1>
+            {workshop.isGenericWorkshop ? (
+              <p className="order__detail">
+                Once you register, you will be contacted to schedule your course
+                date
+                <br />
+                <span>
+                  SKY is offered every week of the year across time zones.
+                </span>
+              </p>
+            ) : (
+              <p
+                className="order__detail-description"
+                dangerouslySetInnerHTML={{
+                  __html: workshop?.description,
+                }}
+              ></p>
+            )}
 
-        {workshop.isCorporateEvent && (
-          <div className="tw-mb-[60px]">
-            <h1 className="tw-text-center tw-text-4xl tw-font-bold tw-text-[#31364e]">
-              {workshop.corporateName}
-            </h1>
+            {workshop.isCorporateEvent && (
+              <div className="tw-mb-[60px]">
+                <h1 className="tw-text-center tw-text-4xl tw-font-bold tw-text-[#31364e]">
+                  {workshop.corporateName}
+                </h1>
+              </div>
+            )}
+            {isStripeIntentPayment && (
+              <Elements stripe={stripePromise} options={elementsOptions}>
+                {renderPaymentForm()}
+              </Elements>
+            )}
+            {!isStripeIntentPayment && (
+              <Elements
+                stripe={stripePromise}
+                fonts={[
+                  {
+                    cssSrc:
+                      'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+                  },
+                ]}
+              >
+                {renderPaymentForm()}
+              </Elements>
+            )}
           </div>
-        )}
-        {isStripeIntentPayment && (
-          <Elements stripe={stripePromise} options={elementsOptions}>
-            {renderPaymentForm()}
-          </Elements>
-        )}
-        {!isStripeIntentPayment && (
-          <Elements
-            stripe={stripePromise}
-            fonts={[
-              {
-                cssSrc:
-                  'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
-              },
-            ]}
-          >
-            {renderPaymentForm()}
-          </Elements>
-        )}
+        </section>
+        <section className="additional-information">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="information__blcok">
+                  <h2 className="information__tile">
+                    UNPARALLELED CONVENIENCE
+                  </h2>
+                  <p className="information__text">
+                    Choose your schedule. Learn from the comfort of your own
+                    home.
+                  </p>
+                </div>
+              </div>
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">
+                    EXPERIENCED FACILITATORS
+                  </h2>
+                  <p className="information__text">
+                    Real-time interaction with highly trained instructors
+                    (minimum of 500+ training hours)
+                  </p>
+                </div>
+              </div>
+              <div className="col-lg-4 mt-3 mt-lg-0">
+                <div className="information__blcok">
+                  <h2 className="information__tile">UPLIFTING COMMUNITY</h2>
+                  <p className="information__text">
+                    Form deep, authentic connections and community with your
+                    fellow participants.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="featured-in featured-in_with-button">
+              <h2 className="featured-in__title">Featured in</h2>
+              <div className="featured-in__box d-none d-lg-flex">
+                <img src="/img/featured-in-cnn.png" alt="cnn" />
+                <img src="/img/featured-in-yoga.png" alt="yoga" />
+                <img src="/img/featured-in-tnyt.png" alt="tnyt" />
+                <img src="/img/featured-in-time.png" alt="time" />
+                <img src="/img/featured-in-wsj.png" alt="wsj" />
+                <img src="/img/featured-in-forbes.png" alt="forbes" />
+                <img src="/img/featured-in-nbc.png" alt="nbc" />
+              </div>
+              <div className="featured-in__box d-flex d-lg-none">
+                <img src="/img/featured-in-cnn.png" alt="cnn" />
+                <img src="/img/featured-in-yoga.png" alt="yoga" />
+                <img src="/img/featured-in-nbc.png" alt="nbc" />
+                <img src="/img/featured-in-wsj.png" alt="wsj" />
+                <img src="/img/featured-in-forbes.png" alt="forbes" />
+                <img src="/img/featured-in-time.png" alt="time" />
+                <img
+                  className="m-auto"
+                  src="/img/featured-in-tnyt.png"
+                  alt="tnyt"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
