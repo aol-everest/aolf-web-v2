@@ -974,7 +974,7 @@ const SchedulingPaymentForm = ({
                             <div className="feature__box">
                               <div className="feature__title">
                                 <img
-                                  src="./img/inner-peace-icon.svg"
+                                  src="/img/inner-peace-icon.svg"
                                   width="24"
                                   height="24"
                                   alt=""
@@ -992,7 +992,7 @@ const SchedulingPaymentForm = ({
                             <div className="feature__box">
                               <div className="feature__title">
                                 <img
-                                  src="./img/calm-icon.svg"
+                                  src="/img/calm-icon.svg"
                                   width="24"
                                   height="24"
                                   alt=""
@@ -1011,7 +1011,7 @@ const SchedulingPaymentForm = ({
                             <div className="feature__box">
                               <div className="feature__title">
                                 <img
-                                  src="./img/spirituality-icon.svg"
+                                  src="/img/spirituality-icon.svg"
                                   width="24"
                                   height="24"
                                   alt=""
@@ -1030,7 +1030,7 @@ const SchedulingPaymentForm = ({
                             <div className="feature__box">
                               <div className="feature__title">
                                 <img
-                                  src="./img/experience-icon.svg"
+                                  src="/img/experience-icon.svg"
                                   width="24"
                                   height="24"
                                   alt=""
