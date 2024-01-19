@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { api } from '@utils';
 import { useEffect, useState } from 'react';
 
-export const ScheduleDiscountInput = ({
+export const DiscountInputNew = ({
   label,
   fullWidth,
   containerClass = '',
@@ -130,13 +130,17 @@ export const ScheduleDiscountInput = ({
   };
 
   return (
-    <label
-      className={classNames(`${containerClass}`, {
-        error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
-        'validate-error':
-          formikProps.errors[formikKey] && formikProps.touched[formikKey],
-      })}
-    >
+    <>
+      <label
+        className={classNames(`${containerClass}`, {
+          error:
+            formikProps.errors[formikKey] && formikProps.touched[formikKey],
+          'validate-error':
+            formikProps.errors[formikKey] && formikProps.touched[formikKey],
+        })}
+      >
+        Do you have a discount code?
+      </label>
       {showTag ? (
         <span
           className={classNames('discount-text-input badge', 'react-tag', {
@@ -159,7 +163,6 @@ export const ScheduleDiscountInput = ({
         </span>
       ) : (
         <input
-          className="tickets-modal__input discount-code"
           {...rest}
           id={formikKey}
           value={formikProps.values[formikKey]}
@@ -170,11 +173,7 @@ export const ScheduleDiscountInput = ({
           placeholder="Add code"
         />
       )}
-
-      <span className="scheduling-modal__coupon-label">
-        Do you have a discount code?
-      </span>
       {loading && <span className="loader-inline"></span>}
-    </label>
+    </>
   );
 };

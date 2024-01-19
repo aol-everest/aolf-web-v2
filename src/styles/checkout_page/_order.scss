@@ -67,6 +67,14 @@
     border: solid 1px #89beec;
     background-color: #ffffff;
 
+    &__payment-select {
+      display: inline-flex;
+      white-space: nowrap;
+      color: #31364e;
+      width: 100%;
+      justify-content: space-evenly;
+    }
+
     #address,
     #city {
       width: 100%;

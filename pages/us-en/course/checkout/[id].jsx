@@ -474,6 +474,7 @@ const Checkout = () => {
             </span>
           </aside>
         )}
+
         <section className="order">
           <div className="container">
             <h1 className="title">{workshop.title}</h1>

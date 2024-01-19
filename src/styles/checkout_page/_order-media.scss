@@ -1,10 +1,3 @@
-@media screen and (min-width: 1200px) {
-  .order__card__payment-select,
-  .order__card__state-select {
-    width: 250px !important;
-  }
-}
-
 @media screen and (max-width: 1199px) {
   .order {
     &__form {

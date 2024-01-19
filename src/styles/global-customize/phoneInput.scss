@@ -418,7 +418,7 @@
   .react-tel-input {
     .form-control-input {
       position: relative;
-      padding-left: 62px;
+      padding-left: 62px !important;
       outline: none;
       &.open {
         border-bottom-left-radius: 0;
@@ -442,7 +442,7 @@
       padding: 0;
       border-radius: 0;
       border-right-color: transparent;
-      padding: 5px 10px 5px 5px;
+      padding: 5px 10px 5px 10px;
       border-radius: 0;
       color: #2b2b2b;
       &:hover,

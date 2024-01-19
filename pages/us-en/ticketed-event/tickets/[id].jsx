@@ -29,27 +29,32 @@ export default function Tickets() {
   // console.log('attendees', attendees);
 
   return (
-    <main class="course-filter calendar-online">
-      <section class="calendar-top-section">
-        <div class="container checkout-congratulations">
-          <div class="calendar-benefits-wrapper row">
-            <div class="col-12 col-lg-12">
-              <h2 class="section-title">Thank You!!</h2>
+    <main className="course-filter calendar-online">
+      <section className="calendar-top-section">
+        <div className="container checkout-congratulations">
+          <div className="calendar-benefits-wrapper row">
+            <div className="col-12 col-lg-12">
+              <h2 className="section-title">Thank You!!</h2>
               <p>Attendee Information is accepted.</p>
-              <div class="tickets-accepted">
+              <div className="tickets-accepted">
                 {attendees.map((item, index) => {
                   return (
-                    <div class="ticket-box" key={item.attendeeRecordExternalId}>
-                      <div class="ticket-header">
-                        <div class="ticket-title">
+                    <div
+                      className="ticket-box"
+                      key={item.attendeeRecordExternalId}
+                    >
+                      <div className="ticket-header">
+                        <div className="ticket-title">
                           TICKET HOLDER #{index + 1}
                         </div>
-                        <div class="ticket-type">{item.pricingTierName}</div>
+                        <div className="ticket-type">
+                          {item.pricingTierName}
+                        </div>
                       </div>
-                      <div class="ticket-body">
-                        <div class="ticket-holder-name">{item.name}</div>
-                        <div class="ticket-holder-email">{item.email}</div>
-                        <div class="ticket-holder-mobile">
+                      <div className="ticket-body">
+                        <div className="ticket-holder-name">{item.name}</div>
+                        <div className="ticket-holder-email">{item.email}</div>
+                        <div className="ticket-holder-mobile">
                           {item.contactPhone}
                         </div>
                       </div>
