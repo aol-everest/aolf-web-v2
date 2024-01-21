@@ -24,6 +24,7 @@ import { useQuery } from 'react-query';
 import { useQueryString } from '@hooks';
 import { useEffectOnce } from 'react-use';
 import { useAnalytics } from 'use-analytics';
+import { useEffect } from 'react';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -99,6 +100,41 @@ const Thankyou = () => {
       enabled: !!workshopId,
     },
   );
+
+  useEffect(() => {
+    if (workshop) {
+      track('purchase', {
+        currency: 'USD',
+        value: workshop?.unitPrice,
+        transaction_id: paymentIntent,
+        shipping: 0.0,
+        tax: 0.0,
+        coupon: '',
+        items: [
+          {
+            item_id: workshop?.id,
+            item_name: workshop?.title,
+            affiliation: 'NA',
+            coupon: '',
+            discount: 0.0,
+            index: 0,
+            item_brand: workshop?.businessOrg,
+            item_category: workshop?.title,
+            item_category2: workshop?.mode,
+            item_category3: 'paid',
+            item_category4: 'NA',
+            item_category5: 'NA',
+            item_list_id: workshop?.productTypeId,
+            item_list_name: workshop?.title,
+            item_variant: workshop?.workshopTotalHours,
+            location_id: workshop?.locationCity,
+            price: workshop?.unitPrice,
+            quantity: 1,
+          },
+        ],
+      });
+    }
+  }, [workshop]);
 
   useEffectOnce(() => {
     page({
@@ -186,7 +222,6 @@ const Thankyou = () => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       title: 'Add to Calendar',
-
       children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
         hideAlert();

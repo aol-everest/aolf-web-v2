@@ -459,6 +459,32 @@ const SchedulingRange = () => {
   };
 
   const goToPaymentModal = () => {
+    track('view_item', {
+      currency: 'USD',
+      value: activeWorkshop?.unitPrice,
+      items: [
+        {
+          item_id: activeWorkshop?.id,
+          item_name: activeWorkshop?.title,
+          affiliation: 'NA',
+          coupon: '',
+          discount: 0.0,
+          index: 0,
+          item_brand: activeWorkshop?.businessOrg,
+          item_category: activeWorkshop?.title,
+          item_category2: activeWorkshop?.mode,
+          item_category3: 'paid',
+          item_category4: 'NA',
+          item_category5: 'NA',
+          item_list_id: activeWorkshop?.productTypeId,
+          item_list_name: activeWorkshop?.title,
+          item_variant: activeWorkshop?.workshopTotalHours,
+          location_id: activeWorkshop?.locationCity,
+          price: activeWorkshop?.unitPrice,
+          quantity: 1,
+        },
+      ],
+    });
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
       query: {

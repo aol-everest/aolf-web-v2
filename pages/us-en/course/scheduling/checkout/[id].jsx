@@ -14,7 +14,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { api, priceCalculation, tConvert, phoneRegExp } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import ErrorPage from 'next/error';
 import { useQuery } from 'react-query';
@@ -87,6 +87,64 @@ const SchedulingPayment = (props) => {
       course_type: courseType,
     });
   });
+
+  useEffect(() => {
+    if (workshop) {
+      track('add_to_cart', {
+        currency: 'USD',
+        value: workshop?.unitPrice,
+        items: [
+          {
+            item_id: workshop?.id,
+            item_name: workshop?.title,
+            affiliation: 'NA',
+            coupon: '',
+            discount: 0.0,
+            index: 0,
+            item_brand: workshop?.businessOrg,
+            item_category: workshop?.title,
+            item_category2: workshop?.mode,
+            item_category3: 'paid',
+            item_category4: 'NA',
+            item_category5: 'NA',
+            item_list_id: workshop?.productTypeId,
+            item_list_name: workshop?.title,
+            item_variant: workshop?.workshopTotalHours,
+            location_id: workshop?.locationCity,
+            price: workshop?.unitPrice,
+            quantity: 1,
+          },
+        ],
+      });
+
+      track('begin_checkout', {
+        currency: 'USD',
+        value: workshop?.unitPrice,
+        items: [
+          {
+            item_id: workshop?.id,
+            item_name: workshop?.title,
+            affiliation: 'NA',
+            coupon: '',
+            discount: 0.0,
+            index: 0,
+            item_brand: workshop?.businessOrg,
+            item_category: workshop?.title,
+            item_category2: workshop?.mode,
+            item_category3: 'paid',
+            item_category4: 'NA',
+            item_category5: 'NA',
+            item_list_id: workshop?.productTypeId,
+            item_list_name: workshop?.title,
+            item_variant: workshop?.workshopTotalHours,
+            location_id: workshop?.locationCity,
+            price: workshop?.unitPrice,
+            quantity: 1,
+          },
+        ],
+      });
+    }
+  }, [workshop]);
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !workshopId) return <PageLoading />;
@@ -250,6 +308,35 @@ const SchedulingPaymentForm = ({
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
+
+    track('add_payment_info', {
+      currency: 'USD',
+      value: workshop?.unitPrice,
+      coupon: couponCode || '',
+      payment_type: 'credit_card/gpay/apple_pay',
+      items: [
+        {
+          item_id: workshop?.id,
+          item_name: workshop?.title,
+          affiliation: 'NA',
+          coupon: couponCode || '',
+          discount: 0.0,
+          index: 0,
+          item_brand: workshop?.businessOrg,
+          item_category: workshop?.title,
+          item_category2: workshop?.mode,
+          item_category3: 'paid',
+          item_category4: 'NA',
+          item_category5: 'NA',
+          item_list_id: workshop?.productTypeId,
+          item_list_name: workshop?.title,
+          item_variant: workshop?.workshopTotalHours,
+          location_id: workshop?.locationCity,
+          price: workshop?.unitPrice,
+          quantity: 1,
+        },
+      ],
+    });
 
     // Trigger form validation and wallet collection
     const { error: submitError } = await elements.submit();
