@@ -2,7 +2,7 @@ import classNames from 'classnames';
 
 const PAYPAL_PAYMENT_MODE = 'PAYPAL_PAYMENT_MODE';
 const STRIPE_PAYMENT_MODE = 'STRIPE_PAYMENT_MODE';
-export const PayWithUpdated = ({
+export const PayWithNewCheckout = ({
   formikProps,
   otherPaymentOptions,
   isBundlePaypalAvailable,
