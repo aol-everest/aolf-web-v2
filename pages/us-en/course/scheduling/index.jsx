@@ -497,6 +497,7 @@ const SchedulingRange = () => {
 
   const handleSelectMode = (value) => {
     if (value !== COURSE_MODES.ONLINE.value) {
+      setLocationFilter(null);
       setShowLocationModal(true);
     }
     setMode(value);
@@ -929,7 +930,7 @@ const LocationSearchModal = ({
   locationFilter,
   handleLocationFilterChange,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState(locationFilter);
   const findCourses = () => {
     handleLocationFilterChange(selectedLocation);
     handleModalToggle();
