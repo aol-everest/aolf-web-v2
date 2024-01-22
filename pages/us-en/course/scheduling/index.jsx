@@ -929,6 +929,11 @@ const LocationSearchModal = ({
   locationFilter,
   handleLocationFilterChange,
 }) => {
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const findCourses = () => {
+    handleLocationFilterChange(selectedLocation);
+    handleModalToggle();
+  };
   return (
     <Modal
       show={showLocationModal}
@@ -943,7 +948,7 @@ const LocationSearchModal = ({
         <br />
         <div className="location-search-field">
           <ScheduleLocationFilter
-            handleLocationChange={handleLocationFilterChange}
+            handleLocationChange={setSelectedLocation}
             value={locationFilter}
             containerClass="location-input"
             listClassName="result-list"
@@ -953,7 +958,7 @@ const LocationSearchModal = ({
           type="button"
           data-dismiss="modal"
           className="btn btn-primary find-courses"
-          onClick={handleModalToggle}
+          onClick={findCourses}
         >
           Find Courses
         </button>
