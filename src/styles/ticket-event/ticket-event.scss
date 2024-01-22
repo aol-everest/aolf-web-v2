@@ -16,9 +16,12 @@
 .tickets-modal input[type='number'] {
   -moz-appearance: textfield;
 }
-.tickets-modal input::placeholder {
-  color: #000;
+.tickets-modal__input {
+  &::placeholder {
+    color: #000;
+  }
 }
+
 .tickets-modal__input {
   width: 100%;
   padding: 15px 20px;
@@ -949,7 +952,7 @@
 }
 @media screen and (max-width: 990px) {
   .tickets-modal__right-container {
-    padding: 0 20px 210px 20px;
+    padding: 0 20px 260px 20px;
     display: flex;
     gap: 20px;
     align-items: stretch;
@@ -984,9 +987,6 @@
   .tickets-modal__date {
     font-size: 16px;
     margin-bottom: 24px;
-  }
-  .tickets-modal__promo {
-    display: none;
   }
   .tickets-modal__language {
     padding-bottom: 24px;
@@ -1043,6 +1043,12 @@
   .tickets-modal__right-column {
     flex: 1;
     width: unset;
+  }
+  .tickets-modal__footer {
+    gap: 0;
+  }
+  .tickets-modal__footer-button-link {
+    height: unset;
   }
 }
 
