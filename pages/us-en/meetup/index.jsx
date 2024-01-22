@@ -1250,7 +1250,7 @@ const Meetup = () => {
               <div className="row">
                 <div className="col-lg-8 col-md-10 col-12 m-auto text-center">
                   <h1 className="happines_title">
-                    Sorry, no courses match your chosen filters.
+                    Sorry, no meetups match your chosen filters.
                   </h1>
                   <p className="happines_subtitle">
                     Please broaden your options and try again.
