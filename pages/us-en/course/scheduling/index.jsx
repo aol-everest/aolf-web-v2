@@ -768,7 +768,7 @@ const SchedulingRange = () => {
                   {mode === COURSE_MODES.IN_PERSON.value && (
                     <div className="date_selection">
                       <h2 className="scheduling-modal__content-ranges-title">
-                        Upcoming courses in your zip code
+                        Upcoming courses in your area
                       </h2>
 
                       <ul className="scheduling-modal__content-options">
@@ -786,7 +786,7 @@ const SchedulingRange = () => {
                         })}
                         {upcomingByZipCode.length === 0 && (
                           <li className="scheduling-modal__content-option scheduling-no-data">
-                            Workshop not found for your zip code
+                            Workshop not found for your area
                           </li>
                         )}
                       </ul>
