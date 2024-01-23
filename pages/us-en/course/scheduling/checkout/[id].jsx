@@ -299,6 +299,15 @@ const SchedulingPaymentForm = ({
     : [];
 
   const completeEnrollmentAction = async (values) => {
+    const {
+      questionnaire,
+      firstName,
+      lastName,
+      email,
+      couponCode,
+      contactPhone,
+    } = values;
+
     if (loading) {
       return null;
     }
@@ -345,15 +354,6 @@ const SchedulingPaymentForm = ({
     }
 
     const { id: productId, addOnProducts, productTypeId } = workshop;
-
-    const {
-      questionnaire,
-      firstName,
-      lastName,
-      email,
-      couponCode,
-      contactPhone,
-    } = values;
 
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
@@ -545,7 +545,7 @@ const SchedulingPaymentForm = ({
 
   const handleFormSubmit = () => {
     if (formRef.current) {
-      formRef.current.handleSubmit();
+      formRef.current.submitForm();
     }
   };
 
@@ -585,7 +585,7 @@ const SchedulingPaymentForm = ({
         }}
       >
         {(formikProps) => {
-          const { values, handleSubmit } = formikProps;
+          const { values } = formikProps;
           formikOnChange(values);
           return (
             <section>
