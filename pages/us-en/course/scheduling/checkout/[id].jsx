@@ -3,7 +3,7 @@ import { PageLoading } from '@components';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { useQueryString } from '@hooks';
 import queryString from 'query-string';
-import { useGlobalAlertContext } from '@contexts';
+import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
   PaymentElement,
   Elements,
@@ -267,6 +267,7 @@ const SchedulingPaymentForm = ({
   courseType,
   isReferBySameSite,
 }) => {
+  const { user = {} } = useAuth();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
@@ -290,6 +291,13 @@ const SchedulingPaymentForm = ({
     phone2,
     timings = [],
   } = workshop;
+
+  const {
+    first_name,
+    last_name,
+    email: userEmail,
+    personMobilePhone,
+  } = user.profile;
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -543,6 +551,22 @@ const SchedulingPaymentForm = ({
     }
   };
 
+  const paymentElementOptions = {
+    layout: {
+      type: 'accordion',
+      defaultCollapsed: false,
+      radios: true,
+      spacedAccordionItems: false,
+    },
+    defaultValues: {
+      billingDetails: {
+        email: userEmail || '',
+        name: (first_name || '') + (last_name || ''),
+        phone: personMobilePhone || '',
+      },
+    },
+  };
+
   const handleFormSubmit = () => {
     if (formRef.current) {
       formRef.current.submitForm();
@@ -612,7 +636,7 @@ const SchedulingPaymentForm = ({
                         <>
                           <h2 className="section__title">Pay with</h2>
                           <div className="section__body">
-                            <PaymentElement />
+                            <PaymentElement options={paymentElementOptions} />
                           </div>
                         </>
                       )}
