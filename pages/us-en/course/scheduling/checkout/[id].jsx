@@ -3,7 +3,7 @@ import { PageLoading } from '@components';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { useQueryString } from '@hooks';
 import queryString from 'query-string';
-import { useGlobalAlertContext } from '@contexts';
+import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
   PaymentElement,
   Elements,
@@ -267,6 +267,7 @@ const SchedulingPaymentForm = ({
   courseType,
   isReferBySameSite,
 }) => {
+  const { user = {} } = useAuth();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
@@ -291,6 +292,13 @@ const SchedulingPaymentForm = ({
     timings = [],
   } = workshop;
 
+  const {
+    first_name,
+    last_name,
+    email: userEmail,
+    personMobilePhone,
+  } = user.profile;
+
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
         key: current.questionSfid,
@@ -299,6 +307,15 @@ const SchedulingPaymentForm = ({
     : [];
 
   const completeEnrollmentAction = async (values) => {
+    const {
+      questionnaire,
+      firstName,
+      lastName,
+      email,
+      couponCode,
+      contactPhone,
+    } = values;
+
     if (loading) {
       return null;
     }
@@ -345,15 +362,6 @@ const SchedulingPaymentForm = ({
     }
 
     const { id: productId, addOnProducts, productTypeId } = workshop;
-
-    const {
-      questionnaire,
-      firstName,
-      lastName,
-      email,
-      couponCode,
-      contactPhone,
-    } = values;
 
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
@@ -543,9 +551,25 @@ const SchedulingPaymentForm = ({
     }
   };
 
+  const paymentElementOptions = {
+    layout: {
+      type: 'accordion',
+      defaultCollapsed: false,
+      radios: true,
+      spacedAccordionItems: false,
+    },
+    defaultValues: {
+      billingDetails: {
+        email: userEmail || '',
+        name: (first_name || '') + (last_name || ''),
+        phone: personMobilePhone || '',
+      },
+    },
+  };
+
   const handleFormSubmit = () => {
     if (formRef.current) {
-      formRef.current.handleSubmit();
+      formRef.current.submitForm();
     }
   };
 
@@ -585,7 +609,7 @@ const SchedulingPaymentForm = ({
         }}
       >
         {(formikProps) => {
-          const { values, handleSubmit } = formikProps;
+          const { values } = formikProps;
           formikOnChange(values);
           return (
             <section>
@@ -612,7 +636,7 @@ const SchedulingPaymentForm = ({
                         <>
                           <h2 className="section__title">Pay with</h2>
                           <div className="section__body">
-                            <PaymentElement />
+                            <PaymentElement options={paymentElementOptions} />
                           </div>
                         </>
                       )}
