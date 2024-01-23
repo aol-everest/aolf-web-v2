@@ -297,7 +297,7 @@ const SchedulingPaymentForm = ({
     last_name,
     email: userEmail,
     personMobilePhone,
-  } = user.profile;
+  } = user?.profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
