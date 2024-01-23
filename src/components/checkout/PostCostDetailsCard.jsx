@@ -8,6 +8,7 @@ import { InputDropDown } from './InputDropDown';
 import { StyledInput } from './StyledInput';
 
 export const PostCostDetailsCard = ({
+  
   workshop,
   formikProps,
   fee,

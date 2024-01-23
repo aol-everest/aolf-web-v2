@@ -21,6 +21,8 @@ import {
   ABBRS,
   ALERT_TYPES,
   COURSE_MODES,
+  COURSE_TYPES,
+  MEMBERSHIP_TYPES,
   MODAL_TYPES,
   PAYMENT_MODES,
   PAYMENT_TYPES,
@@ -57,6 +59,9 @@ import { DiscountInputNew } from '@components/discountInputNew';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import { useRef } from 'react';
 import { PayWithNewCheckout } from '@components/checkout/PayWithNewCheckout';
+import CostDetailsCardNewCheckout, {
+  PostCostDetailsCardNewCheckout,
+} from '@components/checkout/CostDetailsCardNewCheckout';
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
@@ -122,6 +127,121 @@ export const PaymentFormNew = ({
       // }
     }
   }, [programQuestionnaireResult]);
+
+  const {
+    id: productId,
+    premiumRate = {},
+    notes,
+    isCorporateEvent,
+    otherPaymentOptions,
+    groupedAddOnProducts,
+    addOnProducts = [],
+    complianceQuestionnaire,
+    availableBundles,
+    usableCredit,
+    programQuestionnaire,
+    title,
+    productTypeId,
+    isCCNotRequired,
+    paymentMethod = {},
+    phone1,
+    eventEndDate,
+    eventStartDate,
+    primaryTeacherName,
+    coTeacher1Name,
+    coTeacher2Name,
+    mode,
+    phone2,
+    timings = [],
+  } = workshop;
+
+  const questionnaireArray = complianceQuestionnaire
+    ? complianceQuestionnaire.map((current) => ({
+        key: current.questionSfid,
+        value: '',
+      }))
+    : [];
+
+  const { subscriptions = [] } = profile;
+
+  const userSubscriptions = subscriptions.reduce(
+    (accumulator, currentValue) => {
+      return {
+        ...accumulator,
+        [currentValue.subscriptionMasterSfid]: currentValue,
+      };
+    },
+    {},
+  );
+
+  const { fee, delfee, offering } = priceCalculation({
+    workshop,
+    discount: discountResponse,
+  });
+
+  const isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
+
+  const {
+    first_name,
+    last_name,
+    email,
+    personMailingPostalCode,
+    personMailingState,
+    personMobilePhone,
+    personMailingStreet,
+    personMailingCity,
+  } = profile;
+
+  const { cardLast4Digit = null } = paymentMethod;
+
+  const questionnaire = complianceQuestionnaire
+    ? complianceQuestionnaire.map((current) => ({
+        key: current.questionSfid,
+        value: false,
+      }))
+    : [];
+
+  const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
+
+  const hasGroupedAddOnProducts =
+    groupedAddOnProducts &&
+    !isEmpty(groupedAddOnProducts) &&
+    'Residential Add On' in groupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].length > 0;
+
+  const residentialAddOnRequired =
+    hasGroupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].some(
+      (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
+    );
+
+  const isAccommodationRequired =
+    hasGroupedAddOnProducts && residentialAddOnRequired;
+
+  const isCourseOptionRequired =
+    hasGroupedAddOnProducts || addOnProducts.length > 0;
+
+  const isComboDetailAvailable = availableBundles?.length > 0;
+
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Amount'
+  ) {
+    if (usableCredit.availableCredit > fee) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
+    }
+  }
 
   const logout = async (event) => {
     await Auth.logout();
@@ -774,121 +894,6 @@ export const PaymentFormNew = ({
     }
   };
 
-  const {
-    id: productId,
-    premiumRate = {},
-    notes,
-    isCorporateEvent,
-    otherPaymentOptions,
-    groupedAddOnProducts,
-    addOnProducts = [],
-    complianceQuestionnaire,
-    availableBundles,
-    usableCredit,
-    programQuestionnaire,
-    title,
-    productTypeId,
-    isCCNotRequired,
-    paymentMethod = {},
-    phone1,
-    eventEndDate,
-    eventStartDate,
-    primaryTeacherName,
-    coTeacher1Name,
-    coTeacher2Name,
-    mode,
-    phone2,
-    timings = [],
-  } = workshop;
-
-  const questionnaireArray = complianceQuestionnaire
-    ? complianceQuestionnaire.map((current) => ({
-        key: current.questionSfid,
-        value: '',
-      }))
-    : [];
-
-  const { subscriptions = [] } = profile;
-
-  const userSubscriptions = subscriptions.reduce(
-    (accumulator, currentValue) => {
-      return {
-        ...accumulator,
-        [currentValue.subscriptionMasterSfid]: currentValue,
-      };
-    },
-    {},
-  );
-
-  const { fee, delfee, offering } = priceCalculation({
-    workshop,
-    discount: discountResponse,
-  });
-
-  const isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
-
-  const {
-    first_name,
-    last_name,
-    email,
-    personMailingPostalCode,
-    personMailingState,
-    personMobilePhone,
-    personMailingStreet,
-    personMailingCity,
-  } = profile;
-
-  const { cardLast4Digit = null } = paymentMethod;
-
-  const questionnaire = complianceQuestionnaire
-    ? complianceQuestionnaire.map((current) => ({
-        key: current.questionSfid,
-        value: false,
-      }))
-    : [];
-
-  const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
-
-  const hasGroupedAddOnProducts =
-    groupedAddOnProducts &&
-    !isEmpty(groupedAddOnProducts) &&
-    'Residential Add On' in groupedAddOnProducts &&
-    groupedAddOnProducts['Residential Add On'].length > 0;
-
-  const residentialAddOnRequired =
-    hasGroupedAddOnProducts &&
-    groupedAddOnProducts['Residential Add On'].some(
-      (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
-    );
-
-  const isAccommodationRequired =
-    hasGroupedAddOnProducts && residentialAddOnRequired;
-
-  const isCourseOptionRequired =
-    hasGroupedAddOnProducts || addOnProducts.length > 0;
-
-  const isComboDetailAvailable = availableBundles?.length > 0;
-
-  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
-
-  let UpdatedFeeAfterCredits;
-  if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === 'Quantity' &&
-    usableCredit.availableCredit === 1
-  ) {
-    UpdatedFeeAfterCredits = 0;
-  } else if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === 'Amount'
-  ) {
-    if (usableCredit.availableCredit > fee) {
-      UpdatedFeeAfterCredits = 0;
-    } else {
-      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
-    }
-  }
-
   const toggleDetailMobileModal = (isRegularPrice) => () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
       children: (handleModalToggle) => {
@@ -1040,6 +1045,14 @@ export const PaymentFormNew = ({
       formRef.current.handleSubmit();
     }
   };
+
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
+  const isJourneyPremium =
+    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
+  const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
+  const isBasicMember =
+    userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
 
   return (
     <>
@@ -1423,49 +1436,30 @@ export const PaymentFormNew = ({
                       <div className="col-12 col-lg-5">
                         <div className="checkout-sidebar">
                           <div class="offer-box">
-                            <h2 class="title">
-                              <span class="icon-wrap">
-                                <img
-                                  src="/img/stars-02.svg"
-                                  width="20"
-                                  height="20"
-                                  alt=""
-                                />
-                              </span>
-                              Limited time offer:
-                            </h2>
-                            <div class="form-item radio">
-                              <input type="radio" id="regular" name="offer" />
-                              <label for="regular">
-                                <span class="radio-text">Regular Tuition</span>
-                                <span class="radio-value">
-                                  {delfee && <s>${delfee}</s>} ${fee}
-                                </span>
-                              </label>
-                            </div>
-                            <div class="form-item radio">
-                              <input type="radio" id="premium" name="offer" />
-                              <label for="premium">
-                                <span class="radio-text">Premium rate</span>
-                                <span class="radio-value">
-                                  <s>$550</s>$50
-                                </span>
-                              </label>
-                            </div>
-                            <div class="note">
-                              Note: $295 discount when you choose the special
-                              offer. Separately, course fees would be $790
-                            </div>
+                            <CostDetailsCardNewCheckout
+                              workshop={workshop}
+                              userSubscriptions={userSubscriptions}
+                              formikProps={formikProps}
+                              fee={fee}
+                              delfee={delfee}
+                              offering={offering}
+                              showCouponCodeField={showCouponCodeField}
+                              hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                              openSubscriptionPaywallPage={
+                                openSubscriptionPaywallPage
+                              }
+                              isComboDetailAvailable={isComboDetailAvailable}
+                              isCourseOptionRequired={isCourseOptionRequired}
+                              isUsableCreditAvailable={isUsableCreditAvailable}
+                              UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
+                              values={values}
+                              onComboDetailChange={handleComboDetailChange}
+                              paymentOptionChange={handlePaymentOptionChange}
+                              discount={discountResponse}
+                            />
                           </div>
+
                           <div className="room-board-pricing">
-                            <div class="form-item">
-                              <label for="phone">Room & Board</label>
-                              <select placeholder="Select room & board">
-                                <option>Dorm Style - Women $350</option>
-                                <option>Dorm Style - Men $350</option>
-                                <option>Self Arranged Accomodation $250</option>
-                              </select>
-                            </div>
                             <div className="total">
                               <div className="label">Total:</div>
                               <div className="value">
