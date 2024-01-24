@@ -14,4 +14,7 @@ export { PostCostDetailsCard } from './PostCostDetailsCard';
 export { PreCostDetailsCard } from './PreCostDetailsCard';
 export { ProgramQuestionnaire } from './ProgramQuestionnaire';
 export { StyledInput } from './StyledInput';
+export { StyledInputNewCheckout } from './StyledInputNewCheckout';
 export { UserInfoForm } from './UserInfoForm';
+export { UserInfoFormNewCheckout } from './UserInfoFormNewCheckout';
+export { PhoneInputNewCheckout } from './PhoneInputNewCheckout';

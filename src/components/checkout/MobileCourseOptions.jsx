@@ -335,6 +335,8 @@ export const MobileCourseOptions = ({
                             </span>
                           )}{' '}
                         ${premiumRate.unitPrice}
+                        {(addOnProducts || hasGroupedAddOnProducts) &&
+                          `+expenses`}
                       </span>
                     </label>
                   </div>
@@ -403,6 +405,8 @@ export const MobileCourseOptions = ({
                     <span>
                       <span className="discount">${discount.oldPrice}</span> $
                       {discount.newPrice}
+                      {(addOnProducts || hasGroupedAddOnProducts) &&
+                        `+expenses`}
                     </span>
                   )}
                   {!discount && premiumRate && (
@@ -415,6 +419,8 @@ export const MobileCourseOptions = ({
                           </span>
                         )}{' '}
                       ${premiumRate.unitPrice}
+                      {(addOnProducts || hasGroupedAddOnProducts) &&
+                        `+expenses`}
                     </span>
                   )}
                 </li>

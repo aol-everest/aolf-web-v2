@@ -369,7 +369,7 @@ const TicketCheckoutForm = ({ router }) => {
           <form
             name="workshopEnroll"
             onSubmit={handleSubmit}
-            className="workshopEnroll tw-bg-white tw-p-4 tw-shadow-lg"
+            className="workshopEnroll tw-bg-white tw-shadow-lg"
           >
             <div className="tickets-modal">
               <div className="tickets-modal__container products">
@@ -690,53 +690,55 @@ const TicketCheckoutForm = ({ router }) => {
                   </div>
                 </div>
 
-                <div className="tickets-modal__right-column">
-                  <img
-                    className="tickets-modal__photo"
-                    src={eventImageUrl}
-                    alt=""
-                  />
+                <div className="tickets-modal__right-container">
+                  <div className="tickets-modal__right-column">
+                    <img
+                      className="tickets-modal__photo"
+                      src={eventImageUrl}
+                      alt=""
+                    />
 
-                  <div className="tickets-modal__cart-empty">
-                    <img src="/img/empty-cart.svg" alt="violet" />
-                  </div>
+                    <div className="tickets-modal__cart-empty">
+                      <img src="/img/empty-cart.svg" alt="violet" />
+                    </div>
 
-                  <div className="tickets-modal__cart">
-                    <h2 className="tickets-modal__cart-summary">
-                      Order Summary
-                    </h2>
-                    {selectedTickets.map((item) => {
-                      return (
-                        <p
-                          className="tickets-modal__cart-product"
-                          key={item.pricingTierId}
-                        >
-                          x{item?.numberOfTickets} {item.pricingTierName}{' '}
-                          <span>
-                            ${(item.price * item?.numberOfTickets).toFixed(2)}
-                          </span>
-                        </p>
-                      );
-                    })}
+                    <div className="tickets-modal__cart">
+                      <h2 className="tickets-modal__cart-summary">
+                        Order Summary
+                      </h2>
+                      {selectedTickets.map((item) => {
+                        return (
+                          <p
+                            className="tickets-modal__cart-product"
+                            key={item.pricingTierId}
+                          >
+                            x{item?.numberOfTickets} {item.pricingTierName}{' '}
+                            <span>
+                              ${(item.price * item?.numberOfTickets).toFixed(2)}
+                            </span>
+                          </p>
+                        );
+                      })}
 
-                    <p className="tickets-modal__cart-subtotal">
-                      Subtotal
-                      <span>${parseFloat(totalPrice).toFixed(2)}</span>
-                    </p>
-
-                    {totalDiscount > 0 && (
-                      <p className="tickets-modal__cart-discount">
-                        Discount(-)
-                        <span>${parseFloat(totalDiscount).toFixed(2)}</span>
+                      <p className="tickets-modal__cart-subtotal">
+                        Subtotal
+                        <span>${parseFloat(totalPrice).toFixed(2)}</span>
                       </p>
-                    )}
 
-                    <p className="tickets-modal__cart-total">
-                      Total
-                      <span>
-                        ${parseFloat(delfee || totalPrice).toFixed(2)}
-                      </span>
-                    </p>
+                      {totalDiscount > 0 && (
+                        <p className="tickets-modal__cart-discount">
+                          Discount(-)
+                          <span>${parseFloat(totalDiscount).toFixed(2)}</span>
+                        </p>
+                      )}
+
+                      <p className="tickets-modal__cart-total">
+                        Total
+                        <span>
+                          ${parseFloat(delfee || totalPrice).toFixed(2)}
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

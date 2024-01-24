@@ -43,7 +43,7 @@ export const ScheduleAgreementForm = ({
 
   return (
     <>
-      <p className="scheduling-modal__content-wrapper-form-checkbox">
+      <div className="form-item checkbox mb-2">
         <input
           type="checkbox"
           className={classNames('', {
@@ -79,26 +79,26 @@ export const ScheduleAgreementForm = ({
             </Link>
           </span>
         </label>
-      </p>
+      </div>
 
       <div className="agreement mt-4">
         {formikProps.errors.ppaAgreement &&
           formikProps.touched.ppaAgreement && (
-            <p className="scheduling-modal__content-wrapper-form-checkbox">
+            <div className="form-item checkbox mb-2">
               <img
                 className="agreement__important-icon"
                 src="/img/warning.svg"
                 alt="warning"
               />
               Please check the box in order to continue
-            </p>
+            </div>
           )}
       </div>
       {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
         <div className="health-confirmation mt-4">
           {complianceQuestionnaire.map((compliance) => (
-            <p
-              className="scheduling-modal__content-wrapper-form-checkbox"
+            <div
+              className="form-item checkbox mb-2"
               key={compliance.questionSfid}
             >
               <Field
@@ -145,11 +145,11 @@ export const ScheduleAgreementForm = ({
                   ></span>
                 )}
               </label>
-            </p>
+            </div>
           ))}
           {formikProps.errors.questionnaire &&
             formikProps.touched.questionnaire && (
-              <div className="health-confirmation__important health-confirmation__important_desktop">
+              <div className="form-item checkbox mb-2">
                 <img
                   className="health-confirmation__important-icon"
                   src="/img/warning.svg"

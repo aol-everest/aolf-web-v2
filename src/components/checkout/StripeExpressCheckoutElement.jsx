@@ -17,6 +17,7 @@ import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { useRouter } from 'next/router';
 import Style from './StripeExpressCheckoutElement.module.scss';
 import { BiErrorCircle } from 'react-icons/bi';
+import { useAnalytics } from 'use-analytics';
 
 export const StripeExpressCheckoutElement = ({
   workshop,
@@ -63,6 +64,7 @@ const options = {
 };
 
 const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
+  const { track, page } = useAnalytics();
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -155,6 +157,32 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
     : [];
 
   const expressCheckoutElementOnClick = ({ resolve }) => {
+    track('begin_checkout', {
+      currency: 'USD',
+      value: workshop?.unitPrice,
+      items: [
+        {
+          item_id: workshop?.id,
+          item_name: workshop?.title,
+          affiliation: 'NA',
+          coupon: '',
+          discount: 0.0,
+          index: 0,
+          item_brand: workshop?.businessOrg,
+          item_category: workshop?.title,
+          item_category2: workshop?.mode,
+          item_category3: 'paid',
+          item_category4: 'NA',
+          item_category5: 'NA',
+          item_list_id: workshop?.productTypeId,
+          item_list_name: workshop?.title,
+          item_variant: workshop?.workshopTotalHours,
+          location_id: workshop?.locationCity,
+          price: workshop?.unitPrice,
+          quantity: 1,
+        },
+      ],
+    });
     const options = {
       emailRequired: true,
       phoneNumberRequired: true,

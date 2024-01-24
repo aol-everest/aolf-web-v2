@@ -1,7 +1,7 @@
 import PhoneInput from '@components/phoneInputCmp';
 import classNames from 'classnames';
 
-export const SchedulePhoneInput = ({
+export const PhoneInputNewCheckout = ({
   children,
   label,
   fullWidth,
@@ -13,6 +13,7 @@ export const SchedulePhoneInput = ({
   tooltip,
   tip,
   placeholder,
+  className,
   ...rest
 }) => {
   const onChangeAction = () => {
@@ -46,13 +47,8 @@ export const SchedulePhoneInput = ({
   }
 
   return (
-    <li
-      className={classNames(`${containerClass}`, {
-        error: formikProps.errors[formikKey] && formikProps.touched[formikKey],
-        'validate-error':
-          formikProps.errors[formikKey] && formikProps.touched[formikKey],
-      })}
-    >
+    <div className={className}>
+      <label htmlFor="phone"></label>
       <PhoneInput
         placeholder="Phone No"
         country="us"
@@ -65,7 +61,9 @@ export const SchedulePhoneInput = ({
         countryCodeEditable={true}
         showSpecialLabel={false}
         showLabel={true}
-        label={label}
+        smartCaret={true}
+        international={true}
+        value={formikProps.values.contactPhone}
         {...rest}
         {...inputProps}
       />
@@ -77,6 +75,6 @@ export const SchedulePhoneInput = ({
         </div>
       )}
       {tip && <p className="agreement__text !tw-ml-0 tw-w-[249px]">{tip}</p>}
-    </li>
+    </div>
   );
 };
