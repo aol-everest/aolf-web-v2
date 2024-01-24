@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useQueryState, parseAsString } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
@@ -163,6 +163,29 @@ const SchedulingRange = () => {
     getUserLocation();
   }, []);
 
+  const memoizedPayload = useMemo(
+    () => ({
+      currentMonthYear,
+      timezoneFilter,
+      locationFilter,
+      milesFilter,
+      mode,
+      courseTypeFilter,
+      selectedDates,
+      isInitialLoad,
+    }),
+    [
+      currentMonthYear,
+      timezoneFilter,
+      locationFilter,
+      milesFilter,
+      mode,
+      courseTypeFilter,
+      selectedDates,
+      isInitialLoad,
+    ],
+  );
+
   useEffect(() => {
     if (isMounted.current) {
       getWorkshopMonthCalendar();
@@ -172,15 +195,7 @@ const SchedulingRange = () => {
     } else {
       isMounted.current = true;
     }
-  }, [
-    currentMonthYear,
-    timezoneFilter,
-    locationFilter,
-    milesFilter,
-    mode,
-    courseTypeFilter,
-    selectedDates,
-  ]);
+  }, [memoizedPayload]);
 
   useEffectOnce(() => {
     page({
@@ -352,6 +367,9 @@ const SchedulingRange = () => {
   );
 
   const handleModalToggle = () => {
+    if (showLocationModal && cityFilter && !isUserLocationShared) {
+      setIsInitialLoad(true);
+    }
     setShowLocationModal(!showLocationModal);
   };
 
