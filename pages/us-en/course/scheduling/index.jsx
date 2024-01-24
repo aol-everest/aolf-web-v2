@@ -113,10 +113,7 @@ const SchedulingRange = () => {
     'mode',
     parseAsString.withDefault(COURSE_MODES.ONLINE.value),
   );
-  const [timezoneFilter, setTimezoneFilter] = useQueryState(
-    'timezone',
-    parseAsString.withDefault('EST'),
-  );
+  const [timezoneFilter, setTimezoneFilter] = useState('EST');
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
   const [locationFilter, setLocationFilter] = useState(null);
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
@@ -207,6 +204,12 @@ const SchedulingRange = () => {
       setTimezoneFilter(fillDefaultTimeZone());
     }
   });
+
+  useEffect(() => {
+    if (router.query.timezone && mode !== COURSE_MODES.IN_PERSON.value) {
+      setTimezoneFilter(router.query.timezone);
+    }
+  }, [router.query]);
 
   const fillDefaultTimeZone = () => {
     const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
@@ -447,7 +450,7 @@ const SchedulingRange = () => {
   const upcomingByZipCode = [];
   const otherCourses = [];
   workshops.forEach((item) => {
-    if (item.locationPostalCode == zipCode) {
+    if (item.locationPostalCode == zipCode && isUserLocationShared) {
       upcomingByZipCode.push(item);
     } else {
       otherCourses.push(item);
