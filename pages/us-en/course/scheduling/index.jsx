@@ -206,7 +206,7 @@ const SchedulingRange = () => {
   });
 
   useEffect(() => {
-    if (router.query.timezone && mode !== COURSE_MODES.IN_PERSON.value) {
+    if (router?.query?.timezone && mode !== COURSE_MODES.IN_PERSON.value) {
       setTimezoneFilter(router.query.timezone);
     }
   }, [router.query]);
