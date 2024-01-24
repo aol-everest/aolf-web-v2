@@ -774,7 +774,7 @@ const SchedulingPaymentForm = ({
                                   d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
                                 ></path>
                               </svg>{' '}
-                              Contact Date:
+                              Date:
                             </div>
                             <div className="value col-7">
                               {dayjs
@@ -782,9 +782,18 @@ const SchedulingPaymentForm = ({
                                 .isSame(dayjs.utc(eventEndDate), 'month') &&
                                 `${dayjs
                                   .utc(eventStartDate)
-                                  .format('MMMM DD')}-${dayjs
+                                  .format('MMM DD')}-${dayjs
                                   .utc(eventEndDate)
                                   .format('DD, YYYY')}`}
+
+                              {!dayjs
+                                .utc(eventStartDate)
+                                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                `${dayjs
+                                  .utc(eventStartDate)
+                                  .format('MMM DD')}-${dayjs
+                                  .utc(eventEndDate)
+                                  .format('MMM DD, YYYY')}`}
                             </div>
                           </div>
                           <div className="detail-item row">
