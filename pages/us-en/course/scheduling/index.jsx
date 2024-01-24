@@ -222,8 +222,10 @@ const SchedulingRange = () => {
         findCourseTypeByKey(courseTypeFilter)?.value ||
         COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
       month: currentMonthYear,
-      timeZone: timezoneFilter,
     };
+    if (mode !== COURSE_MODES.IN_PERSON.value) {
+      param = { ...param, timeZone: timezoneFilter };
+    }
     if (mode && mode !== COURSE_MODES_BOTH) {
       param = { ...param, mode };
     }
@@ -267,7 +269,6 @@ const SchedulingRange = () => {
   const getWorkshops = async () => {
     setIsWorkshopsLoading(true);
     let param = {
-      timeZone: timezoneFilter,
       sdate: mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
       timingsRequired: true,
       skipFullCourses: true,
@@ -276,6 +277,9 @@ const SchedulingRange = () => {
         COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
       random: true,
     };
+    if (mode !== COURSE_MODES.IN_PERSON.value) {
+      param = { ...param, timeZone: timezoneFilter };
+    }
 
     if (milesFilter) {
       param = { ...param, radius: milesFilter };
