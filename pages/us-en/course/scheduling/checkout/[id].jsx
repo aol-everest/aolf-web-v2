@@ -641,6 +641,14 @@ const SchedulingPaymentForm = ({
                         </>
                       )}
                     </div>
+                    <div className="checkout-security order__security">
+                      <img src="/img/ic-lock.svg" alt="lock" />
+                      <p className="security__info">
+                        AES 256-B&T
+                        <span>SSL Secured</span>
+                      </p>
+                    </div>
+
                     <div className="section-box features-desktop">
                       <div className="section__body">
                         <div className="features row mx-n2">
