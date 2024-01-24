@@ -641,6 +641,14 @@ const SchedulingPaymentForm = ({
                         </>
                       )}
                     </div>
+                    <div className="checkout-security order__security">
+                      <img src="/img/ic-lock.svg" alt="lock" />
+                      <p className="security__info">
+                        AES 256-B&T
+                        <span>SSL Secured</span>
+                      </p>
+                    </div>
+
                     <div className="section-box features-desktop">
                       <div className="section__body">
                         <div className="features row mx-n2">
@@ -766,7 +774,7 @@ const SchedulingPaymentForm = ({
                                   d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
                                 ></path>
                               </svg>{' '}
-                              Contact Date:
+                              Date:
                             </div>
                             <div className="value col-7">
                               {dayjs
@@ -774,9 +782,18 @@ const SchedulingPaymentForm = ({
                                 .isSame(dayjs.utc(eventEndDate), 'month') &&
                                 `${dayjs
                                   .utc(eventStartDate)
-                                  .format('MMMM DD')}-${dayjs
+                                  .format('MMM DD')}-${dayjs
                                   .utc(eventEndDate)
                                   .format('DD, YYYY')}`}
+
+                              {!dayjs
+                                .utc(eventStartDate)
+                                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                `${dayjs
+                                  .utc(eventStartDate)
+                                  .format('MMM DD')}-${dayjs
+                                  .utc(eventEndDate)
+                                  .format('MMM DD, YYYY')}`}
                             </div>
                           </div>
                           <div className="detail-item row">

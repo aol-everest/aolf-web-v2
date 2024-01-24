@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useQueryState, parseAsString } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
@@ -125,6 +125,7 @@ const SchedulingRange = () => {
   const [dateAvailable, setDateAvailable] = useState([]);
   const [isWorkshopMonthLoading, setIsWorkshopMonthLoading] = useState(true);
   const [isWorkshopsLoading, setIsWorkshopsLoading] = useState(false);
+  const [isUserLocationShared, setIsUserLocationShared] = useState(false);
   const [workshops, setWorkshops] = useState([]);
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
     'ym',
@@ -145,6 +146,7 @@ const SchedulingRange = () => {
             const [zipCode] = await Promise.all([
               getZipCodeByLatLang(latitude, longitude),
             ]);
+            setIsUserLocationShared(true);
             setZipCode(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
           },
@@ -161,6 +163,29 @@ const SchedulingRange = () => {
     getUserLocation();
   }, []);
 
+  const memoizedPayload = useMemo(
+    () => ({
+      currentMonthYear,
+      timezoneFilter,
+      locationFilter,
+      milesFilter,
+      mode,
+      courseTypeFilter,
+      selectedDates,
+      isInitialLoad,
+    }),
+    [
+      currentMonthYear,
+      timezoneFilter,
+      locationFilter,
+      milesFilter,
+      mode,
+      courseTypeFilter,
+      selectedDates,
+      isInitialLoad,
+    ],
+  );
+
   useEffect(() => {
     if (isMounted.current) {
       getWorkshopMonthCalendar();
@@ -170,15 +195,7 @@ const SchedulingRange = () => {
     } else {
       isMounted.current = true;
     }
-  }, [
-    currentMonthYear,
-    timezoneFilter,
-    locationFilter,
-    milesFilter,
-    mode,
-    courseTypeFilter,
-    selectedDates,
-  ]);
+  }, [memoizedPayload]);
 
   useEffectOnce(() => {
     page({
@@ -350,6 +367,9 @@ const SchedulingRange = () => {
   );
 
   const handleModalToggle = () => {
+    if (showLocationModal && cityFilter && !isUserLocationShared) {
+      setIsInitialLoad(true);
+    }
     setShowLocationModal(!showLocationModal);
   };
 
@@ -737,24 +757,26 @@ const SchedulingRange = () => {
                       <p>Based on the selected date range</p>
                     </div>
                   </div>
-                  <div
-                    className="scheduling-modal__content-country-select"
-                    data-select2-id="timezone"
-                  >
-                    <label data-select2-id="timezone">
-                      <Select2
-                        name="timezone"
-                        id="timezone"
-                        className="timezone select2-hidden-accessible"
-                        defaultValue={'EST'}
-                        multiple={false}
-                        data={TIMEZONES}
-                        onChange={handleTimezoneChange}
-                        value={timezoneFilter}
-                        options={{ minimumResultsForSearch: -1 }}
-                      />
-                    </label>
-                  </div>
+                  {mode === COURSE_MODES.ONLINE.value && (
+                    <div
+                      className="scheduling-modal__content-country-select"
+                      data-select2-id="timezone"
+                    >
+                      <label data-select2-id="timezone">
+                        <Select2
+                          name="timezone"
+                          id="timezone"
+                          className="timezone select2-hidden-accessible"
+                          defaultValue={'EST'}
+                          multiple={false}
+                          data={TIMEZONES}
+                          onChange={handleTimezoneChange}
+                          value={timezoneFilter}
+                          options={{ minimumResultsForSearch: -1 }}
+                        />
+                      </label>
+                    </div>
+                  )}
                   {mode !== COURSE_MODES.ONLINE.value && (
                     <div className="scheduling-types__location ">
                       <ScheduleLocationFilter
@@ -766,38 +788,41 @@ const SchedulingRange = () => {
                     </div>
                   )}
 
-                  {mode === COURSE_MODES.IN_PERSON.value && (
-                    <div className="date_selection">
-                      <h2 className="scheduling-modal__content-ranges-title">
-                        Upcoming courses in your area
-                      </h2>
+                  {mode === COURSE_MODES.IN_PERSON.value &&
+                    isUserLocationShared && (
+                      <div className="date_selection">
+                        <h2 className="scheduling-modal__content-ranges-title">
+                          Upcoming courses in your area
+                        </h2>
 
-                      <ul className="scheduling-modal__content-options">
-                        {upcomingByZipCode?.map((workshop, index) => {
-                          return (
-                            <WorkshopListItem
-                              key={workshop.id}
-                              workshop={workshop}
-                              index={index}
-                              selectedWorkshopId={selectedWorkshopId}
-                              handleWorkshopSelect={handleWorkshopSelect}
-                              mode={mode}
-                            />
-                          );
-                        })}
-                        {upcomingByZipCode.length === 0 && (
-                          <li className="scheduling-modal__content-option scheduling-no-data">
-                            Workshop not found for your area
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                        <ul className="scheduling-modal__content-options">
+                          {upcomingByZipCode?.map((workshop, index) => {
+                            return (
+                              <WorkshopListItem
+                                key={workshop.id}
+                                workshop={workshop}
+                                index={index}
+                                selectedWorkshopId={selectedWorkshopId}
+                                handleWorkshopSelect={handleWorkshopSelect}
+                                mode={mode}
+                              />
+                            );
+                          })}
+                          {upcomingByZipCode.length === 0 && (
+                            <li className="scheduling-modal__content-option scheduling-no-data">
+                              Workshop not found for your area
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
 
                   <div className="date_selection">
                     {mode !== COURSE_MODES.ONLINE.value ? (
                       <h2 className="scheduling-modal__content-ranges-title">
-                        Other nearby courses
+                        {isUserLocationShared
+                          ? 'Other nearby courses'
+                          : 'Nearby courses'}
                       </h2>
                     ) : (
                       <h2 className="scheduling-modal__content-ranges-title">
