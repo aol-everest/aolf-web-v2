@@ -98,6 +98,9 @@ figure {
 }
 .order__card__payment-method {
   width: 100%;
+  .bank-card-info {
+    display: inline-flex;
+  }
 }
 .card-element {
   width: 100%;

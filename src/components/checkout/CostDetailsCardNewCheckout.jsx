@@ -1,11 +1,6 @@
-import { COURSE_TYPES, MEMBERSHIP_TYPES } from '@constants';
+import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from '@constants';
 import classNames from 'classnames';
 import { Field } from 'formik';
-import { Fragment } from 'react';
-import Select from 'react-select';
-import { FieldWrapper } from './FieldWrapper';
-import { InputDropDown } from './InputDropDown';
-import { StyledInput } from './StyledInput';
 
 export const CostDetailsCardNewCheckout = ({
   workshop,
@@ -26,9 +21,14 @@ export const CostDetailsCardNewCheckout = ({
   UpdatedFeeAfterCredits,
   onAccommodationChange,
   cmeAddOn,
+  paymentOptionChange,
+  values,
+  onComboDetailChange,
   ...rest
 }) => {
   const {
+    id,
+    title,
     productTypeId,
     isInstalmentAllowed,
     isEarlyBirdAllowed,
@@ -36,6 +36,11 @@ export const CostDetailsCardNewCheckout = ({
     usableCredit,
     addOnProducts,
     groupedAddOnProducts,
+    instalmentAmount,
+    instalmentTenure,
+    instalmentGapUnit,
+    instalmentGap,
+    availableBundles,
   } = workshop || {};
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
@@ -331,67 +336,50 @@ export const CostDetailsCardNewCheckout = ({
                       {usableCredit.message} ${UpdatedFeeAfterCredits}.
                     </div>
                   )}
+
                   {addOnProducts && addOnProducts.length > 0 && (
-                    <>
-                      <ul className="reciept__payment_list">
-                        {addOnProducts.map((product) => {
-                          if (
-                            !product.isExpenseAddOn ||
-                            (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                          ) {
-                            const isChecked = product.isAddOnSelectionRequired
-                              ? true
-                              : formikProps.values[product.productName];
+                    <ul className="reciept__payment_list">
+                      {addOnProducts.map((product) => {
+                        if (
+                          !product.isExpenseAddOn ||
+                          (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                        ) {
+                          const isChecked = product.isAddOnSelectionRequired
+                            ? true
+                            : formikProps.values[product.productName];
 
-                            return (
-                              <li key={product.productSfid}>
-                                <span>
-                                  {!product.isAddOnSelectionRequired && (
-                                    <input
-                                      type="checkbox"
-                                      className="custom-checkbox"
-                                      placeholder=" "
-                                      checked={isChecked}
-                                      onChange={() =>
-                                        formikProps.setFieldValue(
-                                          product.productName,
-                                          !isChecked,
-                                        )
-                                      }
-                                      value={product.productName}
-                                      name={product.productName}
-                                      id={product.productSfid}
-                                      disabled={
-                                        product.isAddOnSelectionRequired
-                                      }
-                                    />
-                                  )}
-                                  <label htmlFor={product.productSfid}></label>
-                                  <span className="ml-2">
-                                    {product.productName}:
-                                  </span>
-                                </span>
+                          return (
+                            <li key={product.productSfid}>
+                              <span>
+                                {!product.isAddOnSelectionRequired && (
+                                  <input
+                                    type="checkbox"
+                                    className="custom-checkbox"
+                                    placeholder=" "
+                                    checked={isChecked}
+                                    onChange={() =>
+                                      formikProps.setFieldValue(
+                                        product.productName,
+                                        !isChecked,
+                                      )
+                                    }
+                                    value={product.productName}
+                                    name={product.productName}
+                                    id={product.productSfid}
+                                    disabled={product.isAddOnSelectionRequired}
+                                  />
+                                )}
+                                <label htmlFor={product.productSfid}></label>
                                 <span className="ml-2">
-                                  ${product.unitPrice}
+                                  {product.productName}:
                                 </span>
-                              </li>
-                            );
-                          }
-                        })}
-                      </ul>
-                      {cmeAddOn && (
-                        <>
-                          <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
-                            To claim CME credits, please check the box and fill
-                            in the requested additional information.
-                          </p>
-
-                          {formikProps.values[cmeAddOn.productName] && (
-                            <CMEInputCmp formikProps={formikProps} />
-                          )}
-                        </>
-                      )}
-                    </>
+                              </span>
+                              <span className="ml-2">${product.unitPrice}</span>
+                            </li>
+                          );
+                        }
+                      })}
+                    </ul>
                   )}
                 </>
               )}
@@ -419,7 +407,10 @@ export const CostDetailsCardNewCheckout = ({
                     {groupedAddOnProducts['Residential Add On'].map(
                       (residentialAddOn) => {
                         return (
-                          <div class="form-item radio">
+                          <div
+                            class="form-item radio"
+                            key={residentialAddOn.productSfid}
+                          >
                             <input
                               type="radio"
                               id={residentialAddOn.productSfid}
@@ -628,9 +619,12 @@ export const CostDetailsCardNewCheckout = ({
         <>
           <div>
             {!isEarlyBirdAllowed && (
-              <h1 className="title reciept__item reciept__item_main">
-                <span>Register</span>
-              </h1>
+              <h2 class="title">
+                <span class="icon-wrap">
+                  <img src="/img/stars-02.svg" width="20" height="20" alt="" />
+                </span>
+                Register
+              </h2>
             )}
             {isEarlyBirdAllowed && (
               <h2 class="title">
@@ -644,7 +638,6 @@ export const CostDetailsCardNewCheckout = ({
               <>
                 <div class="form-item radio">
                   <input
-                    className="custom-radio"
                     type="radio"
                     name="payment-type"
                     id="payment-lg-regular-card"
@@ -664,7 +657,6 @@ export const CostDetailsCardNewCheckout = ({
                 {!isUsableCreditAvailable && (
                   <div class="form-item radio">
                     <input
-                      className="custom-radio"
                       type="radio"
                       name="priceType"
                       id="payment-lg-premium-card"
@@ -681,7 +673,6 @@ export const CostDetailsCardNewCheckout = ({
                             <s>${delfee || premiumRate.listPrice}</s>
                           )}{' '}
                         ${premiumRate.unitPrice}
-                        {delfee && <s>${delfee}</s>} ${fee}
                       </span>
                     </label>
                   </div>
@@ -691,6 +682,7 @@ export const CostDetailsCardNewCheckout = ({
                     {usableCredit.message} ${UpdatedFeeAfterCredits}.
                   </div>
                 )}
+
                 <ul className="reciept__payment_list">
                   {addOnProducts.map((product) => {
                     if (
@@ -729,6 +721,7 @@ export const CostDetailsCardNewCheckout = ({
                       );
                     }
                   })}
+
                   {!isJourneyPremium &&
                     !isBasicMember &&
                     !isJourneyPlus &&
@@ -748,72 +741,86 @@ export const CostDetailsCardNewCheckout = ({
               </>
             )}
             {(isJourneyPremium || isJourneyPlus) && (
-              <ul className="reciept__payment_list">
-                <li>
-                  <span>Premium/Journey+ Tuition:</span>
-                  {discount && discount.newPrice && (
-                    <span>
-                      <span className="discount">${discount.oldPrice}</span> $
-                      {discount.newPrice}
+              <>
+                <div class="form-item radio">
+                  <label htmlFor="payment-lg-regular">
+                    <span class="radio-text">Premium/Journey+ Tuition:</span>
+                    <span class="radio-value">
+                      {discount && discount.newPrice && (
+                        <>
+                          <s> ${discount.oldPrice}</s>${discount.newPrice}
+                          {(addOnProducts?.length > 0 ||
+                            hasGroupedAddOnProducts) &&
+                            `+expenses`}
+                        </>
+                      )}
+                      {!discount && premiumRate && (
+                        <>
+                          {premiumRate &&
+                            premiumRate.listPrice &&
+                            premiumRate.listPrice !== premiumRate.unitPrice && (
+                              <s>${delfee || premiumRate.listPrice}</s>
+                            )}{' '}
+                          ${premiumRate.unitPrice}
+                          {(addOnProducts?.length > 0 ||
+                            hasGroupedAddOnProducts) &&
+                            `+expenses`}
+                        </>
+                      )}
                     </span>
-                  )}
-                  {!discount && premiumRate && (
-                    <span>
-                      {premiumRate &&
-                        premiumRate.listPrice &&
-                        premiumRate.listPrice !== premiumRate.unitPrice && (
-                          <span className="discount">
-                            ${delfee || premiumRate.listPrice}
-                          </span>
-                        )}{' '}
-                      ${premiumRate.unitPrice}
-                    </span>
-                  )}
-                </li>
+                  </label>
+                </div>
+                {hasGroupedAddOnProducts && (
+                  <div class="note">Note: *Expense includes meals</div>
+                )}
+
                 {isUsableCreditAvailable && (
                   <div className="credit-text">
                     {usableCredit.message} ${UpdatedFeeAfterCredits}.
                   </div>
                 )}
-                {addOnProducts.map((product) => {
-                  if (
-                    !product.isExpenseAddOn ||
-                    (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                  ) {
-                    const isChecked = product.isAddOnSelectionRequired
-                      ? true
-                      : formikProps.values[product.productName];
 
-                    return (
-                      <li key={product.productSfid}>
-                        <span>
-                          {!product.isAddOnSelectionRequired && (
-                            <input
-                              type="checkbox"
-                              className="custom-checkbox"
-                              placeholder=" "
-                              checked={isChecked}
-                              onChange={() =>
-                                formikProps.setFieldValue(
-                                  product.productName,
-                                  !isChecked,
-                                )
-                              }
-                              value={product.productName}
-                              name={product.productName}
-                              id={product.productSfid}
-                              disabled={product.isAddOnSelectionRequired}
-                            />
-                          )}
-                          <label htmlFor={product.productSfid}></label>
-                          <span className="ml-2">{product.productName}:</span>
-                        </span>
-                        <span className="ml-2">${product.unitPrice}</span>
-                      </li>
-                    );
-                  }
-                })}
-              </ul>
+                <ul className="reciept__payment_list">
+                  {addOnProducts.map((product) => {
+                    if (
+                      !product.isExpenseAddOn ||
+                      (product.isExpenseAddOn && !hasGroupedAddOnProducts)
+                    ) {
+                      const isChecked = product.isAddOnSelectionRequired
+                        ? true
+                        : formikProps.values[product.productName];
+
+                      return (
+                        <li key={product.productSfid}>
+                          <span>
+                            {!product.isAddOnSelectionRequired && (
+                              <input
+                                type="checkbox"
+                                className="custom-checkbox"
+                                placeholder=" "
+                                checked={isChecked}
+                                onChange={() =>
+                                  formikProps.setFieldValue(
+                                    product.productName,
+                                    !isChecked,
+                                  )
+                                }
+                                value={product.productName}
+                                name={product.productName}
+                                id={product.productSfid}
+                                disabled={product.isAddOnSelectionRequired}
+                              />
+                            )}
+                            <label htmlFor={product.productSfid}></label>
+                            <span className="ml-2">{product.productName}:</span>
+                          </span>
+                          <span className="ml-2">${product.unitPrice}</span>
+                        </li>
+                      );
+                    }
+                  })}
+                </ul>
+              </>
             )}
           </div>
         </>
@@ -1043,135 +1050,6 @@ export const CostDetailsCardNewCheckout = ({
         </>
       )}
     </>
-  );
-  return null;
-};
-
-const CMEInputCmp = ({ formikProps }) => {
-  const onPopupChangeEvent = (formikProps, field) => (value) => {
-    formikProps.setFieldValue(field, value?.name || '');
-  };
-  return (
-    <Fragment>
-      <div className="order__card !tw-border-0 !tw-shadow-none !tw-p-2">
-        <div className="d-flex w-50 justify-content-start">
-          <FieldWrapper formikKey={'claimingType'} formikProps={formikProps}>
-            <InputDropDown
-              placeholder="CE Claiming type"
-              formikProps={formikProps}
-              formikKey="claimingType"
-              closeEvent={onPopupChangeEvent(formikProps, 'claimingType')}
-            >
-              {({ closeHandler }) => (
-                <>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Physician - MD',
-                      value: 'Physician - MD',
-                    })}
-                  >
-                    Physician - MD
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Physician - DO',
-                      value: 'Physician - DO',
-                    })}
-                  >
-                    Physician - DO
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Physician Assistant',
-                      value: 'Physician Assistant',
-                    })}
-                  >
-                    Physician Assistant
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Physical Therapist',
-                      value: 'Physical Therapist',
-                    })}
-                  >
-                    Physical Therapist
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Nurse',
-                      value: 'Nurse',
-                    })}
-                  >
-                    Nurse
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Dentist',
-                      value: 'Dentist',
-                    })}
-                  >
-                    Dentist
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Other',
-                      value: 'Other',
-                    })}
-                  >
-                    Other
-                  </li>
-                </>
-              )}
-            </InputDropDown>
-          </FieldWrapper>
-        </div>
-        {formikProps.values['claimingType'] === 'Other' && (
-          <StyledInput
-            placeholder="Specify details (Other)"
-            formikProps={formikProps}
-            formikKey="contactClaimingTypeOther"
-            fullWidth
-          ></StyledInput>
-        )}
-        <div className="d-flex justify-content-start mt-lg-0">
-          <FieldWrapper
-            formikKey={'certificateOfAttendance'}
-            formikProps={formikProps}
-          >
-            <InputDropDown
-              placeholder="I would like to get the following"
-              formikProps={formikProps}
-              formikKey="certificateOfAttendance"
-              closeEvent={onPopupChangeEvent(
-                formikProps,
-                'certificateOfAttendance',
-              )}
-            >
-              {({ closeHandler }) => (
-                <>
-                  <li
-                    onClick={closeHandler({
-                      name: 'CE Credits',
-                      value: 'CE Credits',
-                    })}
-                  >
-                    CE Credits
-                  </li>
-                  <li
-                    onClick={closeHandler({
-                      name: 'Certificate of Attendance',
-                      value: 'Certificate of Attendance',
-                    })}
-                  >
-                    Certificate of Attendance
-                  </li>
-                </>
-              )}
-            </InputDropDown>
-          </FieldWrapper>
-        </div>
-      </div>
-    </Fragment>
   );
 };
 

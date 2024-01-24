@@ -1242,25 +1242,37 @@ export const PaymentFormNew = ({
                                     {cardLast4Digit && !isChangingCard && (
                                       <>
                                         <div className="bank-card-info">
-                                          <input
-                                            id="card-number"
-                                            className="full-width"
-                                            type="text"
-                                            value={`**** **** **** ${cardLast4Digit}`}
-                                            placeholder="Card Number"
-                                          />
-                                          <input
-                                            id="mm-yy"
-                                            type="text"
-                                            placeholder="MM/YY"
-                                            value={`**/**`}
-                                          />
-                                          <input
-                                            id="cvc"
-                                            type="text"
-                                            placeholder="CVC"
-                                            value={`****`}
-                                          />
+                                          <div class="col-12 col-lg-6 pb-3 px-2">
+                                            <div class="form-item required">
+                                              <input
+                                                id="card-number"
+                                                type="text"
+                                                value={`**** **** **** ${cardLast4Digit}`}
+                                                placeholder="Card Number"
+                                              />
+                                            </div>
+                                          </div>
+
+                                          <div class="col-12 col-lg-3 pb-3 px-2">
+                                            <div class="form-item required">
+                                              <input
+                                                id="mm-yy"
+                                                type="text"
+                                                placeholder="MM/YY"
+                                                value={`**/**`}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div class="col-12 col-lg-3 pb-3 px-2">
+                                            <div class="form-item required">
+                                              <input
+                                                id="cvc"
+                                                type="text"
+                                                placeholder="CVC"
+                                                value={`****`}
+                                              />
+                                            </div>
+                                          </div>
                                         </div>
                                         <div className="change-cc-detail-link">
                                           <a
@@ -1350,6 +1362,13 @@ export const PaymentFormNew = ({
                                 </div>
                               </div>
                             )}
+                        </div>
+                        <div className="order__security security">
+                          <img src="/img/ic-lock.svg" alt="lock" />
+                          <p className="security__info">
+                            AES 256-B&T
+                            <span>SSL Secured</span>
+                          </p>
                         </div>
                         <div className="section-box features-desktop">
                           <div className="section__body">
