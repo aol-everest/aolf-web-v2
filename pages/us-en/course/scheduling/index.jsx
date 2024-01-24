@@ -737,24 +737,26 @@ const SchedulingRange = () => {
                       <p>Based on the selected date range</p>
                     </div>
                   </div>
-                  <div
-                    className="scheduling-modal__content-country-select"
-                    data-select2-id="timezone"
-                  >
-                    <label data-select2-id="timezone">
-                      <Select2
-                        name="timezone"
-                        id="timezone"
-                        className="timezone select2-hidden-accessible"
-                        defaultValue={'EST'}
-                        multiple={false}
-                        data={TIMEZONES}
-                        onChange={handleTimezoneChange}
-                        value={timezoneFilter}
-                        options={{ minimumResultsForSearch: -1 }}
-                      />
-                    </label>
-                  </div>
+                  {mode === COURSE_MODES.ONLINE.value && (
+                    <div
+                      className="scheduling-modal__content-country-select"
+                      data-select2-id="timezone"
+                    >
+                      <label data-select2-id="timezone">
+                        <Select2
+                          name="timezone"
+                          id="timezone"
+                          className="timezone select2-hidden-accessible"
+                          defaultValue={'EST'}
+                          multiple={false}
+                          data={TIMEZONES}
+                          onChange={handleTimezoneChange}
+                          value={timezoneFilter}
+                          options={{ minimumResultsForSearch: -1 }}
+                        />
+                      </label>
+                    </div>
+                  )}
                   {mode !== COURSE_MODES.ONLINE.value && (
                     <div className="scheduling-types__location ">
                       <ScheduleLocationFilter
