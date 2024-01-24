@@ -26,6 +26,7 @@ export const CostDetailsCardNewCheckout = ({
   onComboDetailChange,
   ...rest
 }) => {
+  console.log('formikProps', formikProps);
   const {
     id,
     title,
@@ -61,7 +62,7 @@ export const CostDetailsCardNewCheckout = ({
   if (isCourseOptionRequired) {
     return (
       <>
-        <div className="room-board-pricing">
+        <div class="offer-box">
           {!isInstalmentAllowed && (
             <>
               {isSilentRetreatType && (
@@ -140,7 +141,7 @@ export const CostDetailsCardNewCheckout = ({
                         </div>
                       )}
 
-                      <ul className="reciept__payment_list !tw-p-0 !tw-py-2">
+                      <ul className="!tw-p-0 !tw-py-2">
                         {isUsableCreditAvailable && (
                           <div className="credit-text">
                             {usableCredit.message} ${UpdatedFeeAfterCredits}.
@@ -239,7 +240,7 @@ export const CostDetailsCardNewCheckout = ({
                           </span>
                         </label>
                       </div>
-                      <ul className="reciept__payment_list">
+                      <ul>
                         {isUsableCreditAvailable && (
                           <div className="credit-text">
                             {usableCredit.message} ${UpdatedFeeAfterCredits}.
@@ -338,7 +339,7 @@ export const CostDetailsCardNewCheckout = ({
                   )}
 
                   {addOnProducts && addOnProducts.length > 0 && (
-                    <ul className="reciept__payment_list">
+                    <ul>
                       {addOnProducts.map((product) => {
                         if (
                           !product.isExpenseAddOn ||
@@ -385,7 +386,8 @@ export const CostDetailsCardNewCheckout = ({
               )}
             </>
           )}
-
+        </div>
+        <div className="room-board-pricing">
           {hasGroupedAddOnProducts && (
             <>
               <div class="form-item">
@@ -393,92 +395,34 @@ export const CostDetailsCardNewCheckout = ({
                 <h6 className="room__board__sub-heading">
                   *Expense includes meals
                 </h6>
-                <div
-                  className={classNames('select-room select-room_rounded', {
-                    'no-valid':
-                      formikProps.errors.accommodation &&
-                      formikProps.touched.accommodation,
-                  })}
+
+                <select
+                  placeholder="Select Expense Type"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    onAccommodationChange(formikProps, e.target.value);
+                  }}
+                  value={formikProps.values?.accommodation ?? null}
                 >
-                  <div tabIndex="2" className="select-room__current">
-                    <span className="select-room__placeholder">
-                      Select Expense Type
-                    </span>
-                    {groupedAddOnProducts['Residential Add On'].map(
-                      (residentialAddOn) => {
-                        return (
-                          <div
-                            class="form-item radio"
-                            key={residentialAddOn.productSfid}
-                          >
-                            <input
-                              type="radio"
-                              id={residentialAddOn.productSfid}
-                              value={residentialAddOn.unitPrice}
-                              name="room-lg"
-                              checked={
-                                formikProps.values?.accommodation
-                                  ?.productSfid === residentialAddOn.productSfid
-                              }
-                              className="select-room__input"
-                            />
-                            <label htmlFor={residentialAddOn.productSfid}>
-                              <span class="radio-text">
-                                {' '}
-                                {residentialAddOn.productName}{' '}
-                              </span>
-                              <span class="radio-value">
-                                $
-                                {residentialAddOn.unitPrice +
-                                  (expenseAddOn?.unitPrice || 0)}
-                              </span>
-                            </label>
-                          </div>
-                        );
-                      },
-                    )}
-                  </div>
-                  <ul className="select-room__list">
-                    {groupedAddOnProducts['Residential Add On'].map(
-                      (residentialAddOn) => {
-                        return (
-                          <li
-                            key={residentialAddOn.productSfid}
-                            onClick={() =>
-                              onAccommodationChange(
-                                formikProps,
-                                residentialAddOn,
-                              )
-                            }
-                            className={
-                              residentialAddOn.isFull &&
-                              'tw-pointer-events-none tw-opacity-60'
-                            }
-                          >
-                            <label
-                              htmlFor={residentialAddOn.productSfid}
-                              aria-hidden="aria-hidden"
-                              data-value={residentialAddOn.unitPrice}
-                              className="select-room__option"
-                            >
-                              <span>{residentialAddOn.productName}</span>
-                              {residentialAddOn.isFull && (
-                                <span className="tw-dark:bg-gray-700 tw-dark:text-gray-500 tw-rounded tw-bg-gray-100 tw-px-2.5 tw-py-0.5 tw-text-xs tw-text-gray-800">
-                                  Full
-                                </span>
-                              )}
-                              <span className="price">
-                                $
-                                {residentialAddOn.unitPrice +
-                                  (expenseAddOn?.unitPrice || 0)}
-                              </span>
-                            </label>
-                          </li>
-                        );
-                      },
-                    )}
-                  </ul>
-                </div>
+                  <option disabled value={null}>
+                    Select Expense Type
+                  </option>
+                  {groupedAddOnProducts['Residential Add On'].map(
+                    (residentialAddOn) => {
+                      return (
+                        <option
+                          value={residentialAddOn.unitPrice}
+                          key={residentialAddOn.unitPrice}
+                        >
+                          {residentialAddOn.productName}
+                          {residentialAddOn.isFull && 'Full'} $
+                          {residentialAddOn.unitPrice +
+                            (expenseAddOn?.unitPrice || 0)}
+                        </option>
+                      );
+                    },
+                  )}
+                </select>
               </div>
             </>
           )}
@@ -487,10 +431,6 @@ export const CostDetailsCardNewCheckout = ({
               * Expences to be collected offline
             </div>
           )}
-        </div>
-        <div className="reciept__total">
-          <span>Total</span>
-          <span>${totalFee}</span>
         </div>
       </>
     );
@@ -683,7 +623,7 @@ export const CostDetailsCardNewCheckout = ({
                   </div>
                 )}
 
-                <ul className="reciept__payment_list">
+                <ul>
                   {addOnProducts.map((product) => {
                     if (
                       !product.isExpenseAddOn ||
@@ -726,7 +666,7 @@ export const CostDetailsCardNewCheckout = ({
                     !isBasicMember &&
                     !isJourneyPlus &&
                     !isUsableCreditAvailable && (
-                      <li className="btn-item">
+                      <li className="journey-button-new">
                         <button
                           className="btn-outline"
                           onClick={openSubscriptionPaywallPage(
@@ -780,7 +720,7 @@ export const CostDetailsCardNewCheckout = ({
                   </div>
                 )}
 
-                <ul className="reciept__payment_list">
+                <ul>
                   {addOnProducts.map((product) => {
                     if (
                       !product.isExpenseAddOn ||
@@ -867,7 +807,7 @@ export const CostDetailsCardNewCheckout = ({
             </div>
           )}
           {addOnProducts && addOnProducts.length > 0 && (
-            <ul className="reciept__payment_list">
+            <ul>
               {addOnProducts.map((product) => {
                 if (
                   !product.isExpenseAddOn ||

@@ -1363,7 +1363,7 @@ export const PaymentFormNew = ({
                               </div>
                             )}
                         </div>
-                        <div className="order__security security">
+                        <div className="checkout-security order__security">
                           <img src="/img/ic-lock.svg" alt="lock" />
                           <p className="security__info">
                             AES 256-B&T
@@ -1454,29 +1454,28 @@ export const PaymentFormNew = ({
                       </div>
                       <div className="col-12 col-lg-5">
                         <div className="checkout-sidebar">
-                          <div class="offer-box">
-                            <CostDetailsCardNewCheckout
-                              workshop={workshop}
-                              userSubscriptions={userSubscriptions}
-                              formikProps={formikProps}
-                              fee={fee}
-                              delfee={delfee}
-                              offering={offering}
-                              showCouponCodeField={showCouponCodeField}
-                              hasGroupedAddOnProducts={hasGroupedAddOnProducts}
-                              openSubscriptionPaywallPage={
-                                openSubscriptionPaywallPage
-                              }
-                              isComboDetailAvailable={isComboDetailAvailable}
-                              isCourseOptionRequired={isCourseOptionRequired}
-                              isUsableCreditAvailable={isUsableCreditAvailable}
-                              UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
-                              values={values}
-                              onComboDetailChange={handleComboDetailChange}
-                              paymentOptionChange={handlePaymentOptionChange}
-                              discount={discountResponse}
-                            />
-                          </div>
+                          <CostDetailsCardNewCheckout
+                            workshop={workshop}
+                            userSubscriptions={userSubscriptions}
+                            formikProps={formikProps}
+                            fee={fee}
+                            delfee={delfee}
+                            offering={offering}
+                            showCouponCodeField={showCouponCodeField}
+                            hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                            openSubscriptionPaywallPage={
+                              openSubscriptionPaywallPage
+                            }
+                            isComboDetailAvailable={isComboDetailAvailable}
+                            isCourseOptionRequired={isCourseOptionRequired}
+                            isUsableCreditAvailable={isUsableCreditAvailable}
+                            UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
+                            values={values}
+                            onComboDetailChange={handleComboDetailChange}
+                            paymentOptionChange={handlePaymentOptionChange}
+                            discount={discountResponse}
+                            onAccommodationChange={handleAccommodationChange}
+                          />
 
                           <div className="room-board-pricing">
                             <div className="total">
