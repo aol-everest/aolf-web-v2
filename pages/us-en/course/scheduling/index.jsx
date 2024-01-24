@@ -125,6 +125,7 @@ const SchedulingRange = () => {
   const [dateAvailable, setDateAvailable] = useState([]);
   const [isWorkshopMonthLoading, setIsWorkshopMonthLoading] = useState(true);
   const [isWorkshopsLoading, setIsWorkshopsLoading] = useState(false);
+  const [isUserLocationShared, setIsUserLocationShared] = useState(false);
   const [workshops, setWorkshops] = useState([]);
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
     'ym',
@@ -145,6 +146,7 @@ const SchedulingRange = () => {
             const [zipCode] = await Promise.all([
               getZipCodeByLatLang(latitude, longitude),
             ]);
+            setIsUserLocationShared(true);
             setZipCode(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
           },
@@ -766,38 +768,41 @@ const SchedulingRange = () => {
                     </div>
                   )}
 
-                  {mode === COURSE_MODES.IN_PERSON.value && (
-                    <div className="date_selection">
-                      <h2 className="scheduling-modal__content-ranges-title">
-                        Upcoming courses in your area
-                      </h2>
+                  {mode === COURSE_MODES.IN_PERSON.value &&
+                    isUserLocationShared && (
+                      <div className="date_selection">
+                        <h2 className="scheduling-modal__content-ranges-title">
+                          Upcoming courses in your area
+                        </h2>
 
-                      <ul className="scheduling-modal__content-options">
-                        {upcomingByZipCode?.map((workshop, index) => {
-                          return (
-                            <WorkshopListItem
-                              key={workshop.id}
-                              workshop={workshop}
-                              index={index}
-                              selectedWorkshopId={selectedWorkshopId}
-                              handleWorkshopSelect={handleWorkshopSelect}
-                              mode={mode}
-                            />
-                          );
-                        })}
-                        {upcomingByZipCode.length === 0 && (
-                          <li className="scheduling-modal__content-option scheduling-no-data">
-                            Workshop not found for your area
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                        <ul className="scheduling-modal__content-options">
+                          {upcomingByZipCode?.map((workshop, index) => {
+                            return (
+                              <WorkshopListItem
+                                key={workshop.id}
+                                workshop={workshop}
+                                index={index}
+                                selectedWorkshopId={selectedWorkshopId}
+                                handleWorkshopSelect={handleWorkshopSelect}
+                                mode={mode}
+                              />
+                            );
+                          })}
+                          {upcomingByZipCode.length === 0 && (
+                            <li className="scheduling-modal__content-option scheduling-no-data">
+                              Workshop not found for your area
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
 
                   <div className="date_selection">
                     {mode !== COURSE_MODES.ONLINE.value ? (
                       <h2 className="scheduling-modal__content-ranges-title">
-                        Other nearby courses
+                        {isUserLocationShared
+                          ? 'Other nearby courses'
+                          : 'Nearby courses'}
                       </h2>
                     ) : (
                       <h2 className="scheduling-modal__content-ranges-title">
