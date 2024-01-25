@@ -171,6 +171,7 @@ export const DiscountInputNew = ({
           onBlur={applyCoupon}
           onKeyDown={onKeyDown}
           placeholder="Add code"
+          disabled={loading}
         />
       )}
       {loading && <span className="loader-inline"></span>}
