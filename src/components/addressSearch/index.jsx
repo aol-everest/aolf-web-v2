@@ -32,14 +32,6 @@ export const AddressSearch = ({
     loader.load().then(() => {
       setIsLoading(false);
     });
-    if (isDefaultLocation) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        closeHandler({
-          lat: position.coords.latitude.toFixed(4),
-          lng: position.coords.longitude.toFixed(4),
-        })();
-      });
-    }
   }, []);
 
   const handleChange = (address) => {
