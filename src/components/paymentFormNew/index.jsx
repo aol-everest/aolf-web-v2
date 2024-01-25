@@ -1483,11 +1483,9 @@ export const PaymentFormNew = ({
                               <div className="value">
                                 {' '}
                                 {discountResponse && delfee && (
-                                  <span className="discount">
-                                    ${delfee.toFixed(2)}
-                                  </span>
+                                  <s>${delfee.toFixed(2)}</s>
                                 )}{' '}
-                                ${fee.toFixed(2) || '0'.toFixed(2)}
+                                ${totalFee.toFixed(2) || '0'.toFixed(2)}
                               </div>
                             </div>
                           </div>
