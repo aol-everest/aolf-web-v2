@@ -333,7 +333,7 @@ export const CostDetailsCardNewCheckout = ({
               <label htmlFor="payment-lg-regular-card">
                 <span class="radio-text">Regular Tuition:</span>
                 <span class="radio-value">
-                  {delfee ? <s>${delfee}</s> : `$${fee}`}
+                  {delfee && <s>${delfee}</s>} {`${fee}`}
                 </span>
               </label>
             </div>

@@ -29,7 +29,15 @@ main.checkout-aol {
     button {
       width: 100%;
       border: solid 1px #fff;
-      color: #fff;
+      color: #ffa180;
+      background: white;
+    }
+  }
+  .order__card__payment-select {
+    justify-content: flex-start;
+    gap: 40px;
+    .scheduling-modal__content-wrapper-form-checkbox label {
+      align-items: center;
     }
   }
   .page-title {
@@ -63,6 +71,10 @@ main.checkout-aol {
       font-weight: 500;
       font-size: 22px;
       line-height: 30px;
+      .ssl-info {
+        margin-left: auto;
+        font-size: 16px;
+      }
     }
     p {
       color: #6f7283;
@@ -73,6 +85,25 @@ main.checkout-aol {
         text-decoration: none;
         font-weight: 600;
       }
+    }
+  }
+  .trust-score {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    .first-row {
+      display: flex;
+      font-size: 18px;
+      align-items: center;
+      justify-content: center;
+      img {
+        margin-left: 12px;
+      }
+    }
+    .second-row {
+      color: #83838e;
+      font-size: 12px;
+      text-align: center;
     }
   }
   .form-item {
@@ -108,6 +139,10 @@ main.checkout-aol {
       &::placeholder {
         color: #9598a6;
         opacity: 1; /* Firefox */
+      }
+
+      &.error {
+        border-color: red;
       }
 
       &::-ms-input-placeholder {
@@ -229,6 +264,19 @@ main.checkout-aol {
         text-decoration: none;
         font-size: 26px;
       }
+
+      &.error {
+        border-color: red;
+      }
+
+      &::-ms-input-placeholder {
+        /* Edge 12 -18 */
+        color: #9598a6;
+      }
+      a {
+        text-decoration: none;
+        font-size: 26px;
+      }
     }
     &.checkbox,
     &.radio {
@@ -278,12 +326,15 @@ main.checkout-aol {
         }
         &:checked + label {
           &::before {
-            content: '\f111';
+            content: '\25cf';
             background-color: white;
             color: #ed994e;
-            font-size: 13px;
-            line-height: 18px;
-            align-items: unset;
+            font-size: 27px;
+            line-height: unset;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            padding: 0px 0 2px 1px;
           }
         }
       }
@@ -434,6 +485,11 @@ main.checkout-aol {
         line-height: 18px;
         margin-bottom: 14px;
         color: #31364e;
+        a {
+          color: #ed994e;
+          text-decoration: none;
+          text-wrap: wrap;
+        }
         @media screen and (max-width: 991px) {
           font-size: 12px;
         }
@@ -443,6 +499,9 @@ main.checkout-aol {
         .detailsIcon {
           width: 20px;
           height: 20px;
+        }
+        .value {
+          word-wrap: break-word;
         }
       }
     }
@@ -474,14 +533,13 @@ main.checkout-aol {
         font-weight: 500;
         line-height: 24px;
         color: white;
-        border-radius: 10px;
+        border-radius: 30px;
         box-shadow: none;
         border: none;
       }
     }
   }
 }
-
 .checkout-security {
   margin-bottom: 20px;
 }
