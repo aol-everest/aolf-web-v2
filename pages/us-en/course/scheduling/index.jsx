@@ -113,10 +113,7 @@ const SchedulingRange = () => {
     'mode',
     parseAsString.withDefault(COURSE_MODES.ONLINE.value),
   );
-  const [timezoneFilter, setTimezoneFilter] = useQueryState(
-    'timezone',
-    parseAsString.withDefault('EST'),
-  );
+  const [timezoneFilter, setTimezoneFilter] = useState('EST');
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
   const [locationFilter, setLocationFilter] = useState(null);
   const [selectedWorkshopId, setSelectedWorkshopId] = useState();
@@ -208,6 +205,12 @@ const SchedulingRange = () => {
     }
   });
 
+  useEffect(() => {
+    if (router?.query?.timezone && mode !== COURSE_MODES.IN_PERSON.value) {
+      setTimezoneFilter(router.query.timezone);
+    }
+  }, [router.query]);
+
   const fillDefaultTimeZone = () => {
     const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
     if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
@@ -222,8 +225,10 @@ const SchedulingRange = () => {
         findCourseTypeByKey(courseTypeFilter)?.value ||
         COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
       month: currentMonthYear,
-      timeZone: timezoneFilter,
     };
+    if (mode !== COURSE_MODES.IN_PERSON.value) {
+      param = { ...param, timeZone: timezoneFilter };
+    }
     if (mode && mode !== COURSE_MODES_BOTH) {
       param = { ...param, mode };
     }
@@ -267,7 +272,6 @@ const SchedulingRange = () => {
   const getWorkshops = async () => {
     setIsWorkshopsLoading(true);
     let param = {
-      timeZone: timezoneFilter,
       sdate: mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
       timingsRequired: true,
       skipFullCourses: true,
@@ -276,6 +280,9 @@ const SchedulingRange = () => {
         COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
       random: true,
     };
+    if (mode !== COURSE_MODES.IN_PERSON.value) {
+      param = { ...param, timeZone: timezoneFilter };
+    }
 
     if (milesFilter) {
       param = { ...param, radius: milesFilter };
@@ -443,7 +450,7 @@ const SchedulingRange = () => {
   const upcomingByZipCode = [];
   const otherCourses = [];
   workshops.forEach((item) => {
-    if (item.locationPostalCode == zipCode) {
+    if (item.locationPostalCode == zipCode && isUserLocationShared) {
       upcomingByZipCode.push(item);
     } else {
       otherCourses.push(item);
