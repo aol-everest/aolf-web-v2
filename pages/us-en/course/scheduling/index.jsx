@@ -52,6 +52,11 @@ const TIMEZONES = [
     text: 'Pacific Time - US & Canada',
     id: 'PST',
   },
+  {
+    timezone: 'US/Western',
+    text: 'Hawaii Standard Time',
+    id: 'HST',
+  },
 ];
 
 function formatDateWithMonth(dateString) {
