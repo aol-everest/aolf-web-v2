@@ -14,32 +14,37 @@ export default function gtmEcommercePlugin(userConfig = {}) {
     page: ({ payload }) => {},
     track: ({ payload, options, config }) => {
       if (typeof config.dataLayer !== 'undefined') {
-        const {
-          anonymousId,
-          userId,
-          properties,
-          options = {},
-          event,
-        } = payload;
-        const formattedPayload = properties;
-        if (userId) {
-          formattedPayload.userId = userId;
-        }
-        if (anonymousId) {
-          formattedPayload.anonymousId = anonymousId;
-        }
+        if (
+          'gtm-ecommerce-plugin' in (payload.options.plugins || {}) &&
+          payload.options.plugins['gtm-ecommerce-plugin']
+        ) {
+          const {
+            anonymousId,
+            userId,
+            properties,
+            options = {},
+            event,
+          } = payload;
+          const formattedPayload = properties;
+          if (userId) {
+            formattedPayload.userId = userId;
+          }
+          if (anonymousId) {
+            formattedPayload.anonymousId = anonymousId;
+          }
 
-        if (config.debug) {
-          console.log('dataLayer push', {
+          if (config.debug) {
+            console.log('dataLayer push', {
+              event,
+              ...formattedPayload,
+            });
+          }
+          config.dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+          config.dataLayer.push({
             event,
             ...formattedPayload,
           });
         }
-        config.dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
-        config.dataLayer.push({
-          event,
-          ...formattedPayload,
-        });
       }
       // call provider specific event tracking
     },
