@@ -1,13 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import { PageLoading } from '@components';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
+import ErrorPage from 'next/error';
 import { api } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
+
+const CenterListItem = ({ center }) => {
+  return (
+    <div class="search-list-item">
+      <div class="title">Online</div>
+      <div class="info">
+        <img class="icon" src="/img/map-search-call-icon.svg" alt="call" />
+        {center.phone1}
+      </div>
+      <div class="info">
+        <img class="icon" src="/img/map-search-email-icon.svg" alt="email" />
+        {center.email}
+      </div>
+      <div class="action-btn">
+        <button class="submit-btn">Find Courses</button>
+      </div>
+    </div>
+  );
+};
 
 const Centers = () => {
   const {
@@ -31,6 +52,8 @@ const Centers = () => {
       refetchOnWindowFocus: false,
     },
   );
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading) return <PageLoading />;
   return (
     <main class="local-centers">
       <section class="title-header">
@@ -46,217 +69,13 @@ const Centers = () => {
             <input type="text" placeholder="Search..." class="search-input" />
           </div>
           <div class="search-listing">
-            <div class="search-list-item">
-              <div class="title">Online</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
-            <div class="search-list-item">
-              <div class="title">Online</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
-            <div class="search-list-item">
-              <div class="title">New York</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-location-icon.svg"
-                  alt="call"
-                />
-                1901 Thornridge Cir. Shiloh, Hawaii 81063
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
-            <div class="search-list-item">
-              <div class="title">New York</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-location-icon.svg"
-                  alt="call"
-                />
-                1901 Thornridge Cir. Shiloh, Hawaii 81063
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
-            <div class="search-list-item">
-              <div class="title">Online</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
-            <div class="search-list-item">
-              <div class="title">Online</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
-            <div class="search-list-item">
-              <div class="title">New York</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-location-icon.svg"
-                  alt="call"
-                />
-                1901 Thornridge Cir. Shiloh, Hawaii 81063
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
-            <div class="search-list-item">
-              <div class="title">New York</div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-location-icon.svg"
-                  alt="call"
-                />
-                1901 Thornridge Cir. Shiloh, Hawaii 81063
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-call-icon.svg"
-                  alt="call"
-                />
-                (808) 555-0111
-              </div>
-              <div class="info">
-                <img
-                  class="icon"
-                  src="/img/map-search-email-icon.svg"
-                  alt="email"
-                />
-                felicia.reid@example.com
-              </div>
-              <div class="action-btn">
-                <button class="submit-btn">Find Courses</button>
-              </div>
-            </div>
+            {allCenters.map((center) => {
+              return <CenterListItem key={center.sfid} center={center} />;
+            })}
           </div>
         </div>
         <GoogleMapComponent
+          allCenters={allCenters}
           googleMapURL={GOOGLE_URL}
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div id="map" />}

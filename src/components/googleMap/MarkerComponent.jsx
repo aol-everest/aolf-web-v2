@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Marker, InfoWindow } from 'react-google-maps';
 
 const MarkerComponent = (props) => {
-  const { InfoWindowContent, ...rest } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  const {
+    InfoWindowContent,
+    selectedMarker,
+    setSelectedMarker,
+    data,
+    ...rest
+  } = props;
   const onToggleOpen = () => {
-    setIsOpen(!isOpen);
+    setSelectedMarker(data.sfid);
   };
-  console.log(InfoWindowContent);
 
   return (
     <Marker onClick={onToggleOpen} {...rest}>
-      {isOpen && (
+      {selectedMarker === data.sfid && (
         <InfoWindow onCloseClick={onToggleOpen}>
           <InfoWindowContent />
         </InfoWindow>

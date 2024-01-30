@@ -9,34 +9,25 @@ import {
 import MarkerComponent from './MarkerComponent';
 import InfoBoxComponent from './InfoBoxComponent';
 
-const GoogleMapComponent = () => {
+const GoogleMapComponent = ({ allCenters }) => {
+  const [selectedMarker, setSelectedMarker] = useState();
+  console.log(allCenters);
   const iconBase = '/img/';
-  const features = [
-    {
-      position: { lat: 48.826862, lng: -94.210067 },
-      title: 'Boynton Pass',
-      icon: iconBase + 'map-pin1.svg',
-      InfoWindowContent: InfoBoxComponent,
-    },
-    {
-      position: { lat: 44.49481, lng: -88.045968 },
-      title: 'contentString',
-      icon: iconBase + 'map-pin1.svg',
-      InfoWindowContent: InfoBoxComponent,
-    },
-    {
-      position: { lat: 37.911523, lng: -102.208114 },
-      title: 'Red Rock Crossing',
-      icon: iconBase + 'map-pin1.svg',
-      InfoWindowContent: InfoBoxComponent,
-    },
-    {
-      position: { lat: 43.357445, lng: -76.43097 },
-      title: 'Bell Rock',
-      icon: iconBase + 'map-pin2.svg',
-      InfoWindowContent: InfoBoxComponent,
-    },
-  ];
+  const features = allCenters
+    ? allCenters.map((center) => {
+        return {
+          position: {
+            lat: center.geoLocationLatitude,
+            lng: center.geoLocationLongitude,
+          },
+          title: center.centerName,
+          icon: iconBase + 'map-pin1.svg',
+          InfoWindowContent: InfoBoxComponent(center),
+          data: center,
+        };
+      })
+    : [];
+
   return (
     <GoogleMap
       defaultZoom={4}
@@ -47,7 +38,11 @@ const GoogleMapComponent = () => {
       {features.map((feature) => {
         return (
           <>
-            <MarkerComponent {...feature}></MarkerComponent>
+            <MarkerComponent
+              {...feature}
+              selectedMarker={selectedMarker}
+              setSelectedMarker={setSelectedMarker}
+            ></MarkerComponent>
           </>
         );
       })}
