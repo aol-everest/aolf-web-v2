@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  GoogleMap,
-  Marker,
-  withScriptjs,
-  withGoogleMap,
-  InfoWindow,
-} from 'react-google-maps';
+import { GoogleMap, withScriptjs, withGoogleMap } from 'react-google-maps';
 import MarkerComponent from './MarkerComponent';
 import InfoBoxComponent from './InfoBoxComponent';
 
 const GoogleMapComponent = ({ allCenters }) => {
   const [selectedMarker, setSelectedMarker] = useState();
-  console.log(allCenters);
   const iconBase = '/img/';
   const features = allCenters
     ? allCenters.map((center) => {

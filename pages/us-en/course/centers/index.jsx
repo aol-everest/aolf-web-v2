@@ -45,11 +45,7 @@ const CenterListItem = ({ center }) => {
 };
 
 const Centers = () => {
-  const {
-    latitude = 43.4142989,
-    longitude = -124.2301242,
-    error: geoLocationError,
-  } = useGeolocation();
+  const { latitude, longitude, error: geoLocationError } = useGeolocation();
   //     set search query to empty string
   const [q, setQ] = useState('');
   //     set search parameters
@@ -61,7 +57,7 @@ const Centers = () => {
     'streetAddress2',
   ]);
 
-  console.log(geoLocationError);
+  console.log(latitude, longitude, geoLocationError);
   const {
     data: allCenters,
     isLoading,
@@ -73,8 +69,8 @@ const Centers = () => {
       const response = await api.get({
         path: 'getAllCenters',
         param: {
-          lat: latitude,
-          lng: longitude,
+          lat: latitude || 43.4142989,
+          lng: longitude || -124.2301242,
         },
       });
       return response.data;
