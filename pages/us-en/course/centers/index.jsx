@@ -8,7 +8,7 @@ import { useEffectOnce } from 'react-use';
 import ErrorPage from 'next/error';
 import { api, createCompleteAddress } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
-import { useGeolocation } from '@hooks';
+import { useGeolocated } from 'react-geolocated';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
 
@@ -45,7 +45,14 @@ const CenterListItem = ({ center }) => {
 };
 
 const Centers = () => {
-  const { latitude, longitude, error: geoLocationError } = useGeolocation();
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({
+      positionOptions: {
+        enableHighAccuracy: false,
+      },
+      userDecisionTimeout: 5000,
+    });
+
   //     set search query to empty string
   const [q, setQ] = useState('');
   //     set search parameters
@@ -57,7 +64,10 @@ const Centers = () => {
     'streetAddress2',
   ]);
 
-  console.log(latitude, longitude, geoLocationError);
+  const latitude = coords && coords.latitude ? coords.latitude : 43.4142989;
+  const longitude =
+    coords && coords.longitude ? coords.longitude : -124.2301242;
+  console.log(latitude, longitude);
   const {
     data: allCenters,
     isLoading,
@@ -69,8 +79,8 @@ const Centers = () => {
       const response = await api.get({
         path: 'getAllCenters',
         param: {
-          lat: latitude || 43.4142989,
-          lng: longitude || -124.2301242,
+          lat: latitude,
+          lng: longitude,
         },
       });
       return response.data;
