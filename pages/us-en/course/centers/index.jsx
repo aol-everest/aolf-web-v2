@@ -92,12 +92,6 @@ const Centers = () => {
   if (isLoading) return <PageLoading />;
   return (
     <main class="local-centers">
-      <section class="title-header">
-        <h1 class="page-title">Local Centers</h1>
-        <div class="page-description">
-          Lorem ipsum dolor sit amet consectetur.
-        </div>
-      </section>
       <section class="map-section">
         <div class="center-search-box" id="mobile-handler">
           <div class="mobile-handler"></div>
