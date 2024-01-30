@@ -157,32 +157,43 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
     : [];
 
   const expressCheckoutElementOnClick = ({ resolve }) => {
-    track('begin_checkout', {
-      currency: 'USD',
-      value: workshop?.unitPrice,
-      items: [
-        {
-          item_id: workshop?.id,
-          item_name: workshop?.title,
-          affiliation: 'NA',
-          coupon: '',
-          discount: 0.0,
-          index: 0,
-          item_brand: workshop?.businessOrg,
-          item_category: workshop?.title,
-          item_category2: workshop?.mode,
-          item_category3: 'paid',
-          item_category4: 'NA',
-          item_category5: 'NA',
-          item_list_id: workshop?.productTypeId,
-          item_list_name: workshop?.title,
-          item_variant: workshop?.workshopTotalHours,
-          location_id: workshop?.locationCity,
-          price: workshop?.unitPrice,
-          quantity: 1,
+    track(
+      'begin_checkout',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: workshop?.unitPrice,
+          items: [
+            {
+              item_id: workshop?.id,
+              item_name: workshop?.title,
+              affiliation: 'NA',
+              coupon: '',
+              discount: 0.0,
+              index: 0,
+              item_brand: workshop?.businessOrg,
+              item_category: workshop?.title,
+              item_category2: workshop?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: workshop?.productTypeId,
+              item_list_name: workshop?.title,
+              item_variant: workshop?.workshopTotalHours,
+              location_id: workshop?.locationCity,
+              price: workshop?.unitPrice,
+              quantity: 1,
+            },
+          ],
         },
-      ],
-    });
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
+        },
+      },
+    );
     const options = {
       emailRequired: true,
       phoneNumberRequired: true,
@@ -227,6 +238,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                     complianceQuestionnaire={workshop.complianceQuestionnaire}
                     isCorporateEvent={false}
                     questionnaireArray={questionnaireArray}
+                    workshop={workshop}
                     screen="DESKTOP"
                   />
                 </p>
