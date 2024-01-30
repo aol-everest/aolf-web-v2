@@ -1555,6 +1555,15 @@ export const PaymentFormNew = ({
                                       .format('MMMM DD')}-${dayjs
                                       .utc(eventEndDate)
                                       .format('DD, YYYY')}`}
+
+                                  {!dayjs
+                                    .utc(eventStartDate)
+                                    .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                    `${dayjs
+                                      .utc(eventStartDate)
+                                      .format('MMM DD')}-${dayjs
+                                      .utc(eventEndDate)
+                                      .format('MMM DD, YYYY')}`}
                                 </div>
                               </div>
                               <div className="detail-item row">

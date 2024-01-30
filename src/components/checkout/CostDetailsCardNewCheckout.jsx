@@ -253,53 +253,7 @@ export const CostDetailsCardNewCheckout = ({
     );
   }
 
-  // <div className="room-board-pricing">
-  //   {hasGroupedAddOnProducts && (
-  //     <>
-  //       <div class="form-item">
-  //         <label>Expense Type {isOfflineExpense && '*'}</label>
-  //         <h6 className="room__board__sub-heading">*Expense includes meals</h6>
-
-  //         <select
-  //           placeholder="Select Expense Type"
-  //           onChange={(e) => {
-  //             console.log(e.target.value);
-  //             onAccommodationChange(formikProps, e.target.value);
-  //           }}
-  //           value={formikProps.values?.accommodation ?? null}
-  //         >
-  //           <option disabled value={null}>
-  //             Select Expense Type
-  //           </option>
-  //           {groupedAddOnProducts['Residential Add On'].map(
-  //             (residentialAddOn) => {
-  //               return (
-  //                 <option
-  //                   value={residentialAddOn.unitPrice}
-  //                   key={residentialAddOn.unitPrice}
-  //                 >
-  //                   {residentialAddOn.productName}
-  //                   {residentialAddOn.isFull && 'Full'} $
-  //                   {residentialAddOn.unitPrice +
-  //                     (expenseAddOn?.unitPrice || 0)}
-  //                 </option>
-  //               );
-  //             },
-  //           )}
-  //         </select>
-  //       </div>
-  //     </>
-  //   )}
-  //   {isOfflineExpense && (
-  //     <div className="reciept__payment-tooltip reciept__payment-tooltip_small">
-  //       * Expences to be collected offline
-  //     </div>
-  //   )}
-  // </div>;
-
   const isPremiumPriceType = formikProps?.values?.priceType === 'premium';
-
-  console.log('formikProps?.values?.priceType', formikProps?.values?.priceType);
 
   return (
     <>
@@ -333,7 +287,7 @@ export const CostDetailsCardNewCheckout = ({
               <label htmlFor="payment-lg-regular-card">
                 <span class="radio-text">Regular Tuition:</span>
                 <span class="radio-value">
-                  {delfee && <s>${delfee}</s>} {`${fee}`}
+                  {delfee && <s>${delfee}</s>} {`$${fee}`}
                 </span>
               </label>
             </div>
