@@ -109,7 +109,7 @@ const Meetup = () => {
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { latitude, longitude, error: geoLocationError } = useGeolocation();
+  //const { latitude, longitude, error: geoLocationError } = useGeolocation();
   const [privateEvent] = useQueryString('private-event', {
     defaultValue: false,
     parse: stringToBoolean,
