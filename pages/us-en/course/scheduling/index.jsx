@@ -54,7 +54,7 @@ const TIMEZONES = [
   },
   {
     timezone: 'US/Western',
-    text: 'Hawaii Standard Time',
+    text: 'Hawaii Time - US & Canada',
     id: 'HST',
   },
 ];

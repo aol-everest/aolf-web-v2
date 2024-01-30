@@ -197,7 +197,7 @@ const SchedulingPayment = (props) => {
         colorDanger: '#df1b41',
         fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
         spacingUnit: '2px',
-        borderRadius: '4px',
+        borderRadius: '16px',
       },
       rules: {
         '.Block': {
@@ -206,7 +206,7 @@ const SchedulingPayment = (props) => {
           padding: '12px',
         },
         '.Input': {
-          padding: '14px',
+          padding: '16px',
           width: '100%',
           maxHeight: '48px',
           borderRadius: '16px',
@@ -505,9 +505,11 @@ const SchedulingPaymentForm = ({
             ...filterAllowedParams(router.query),
           };
           filteredParams = removeNull(filteredParams);
-          const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-            data.attendeeId
-          }?${queryString.stringify(filteredParams)}`;
+          const returnUrl = `${
+            window.location.origin
+          }/us-en/course/scheduling/thankyou/${productId}?${queryString.stringify(
+            filteredParams,
+          )}`;
           const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element
             elements,
@@ -522,7 +524,7 @@ const SchedulingPaymentForm = ({
           }
         } else {
           replaceRouteWithUTMQuery(router, {
-            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+            pathname: `/us-en/course/scheduling/thankyou/${productId}`,
             query: {
               ctype: productTypeId,
               page: 'ty',
