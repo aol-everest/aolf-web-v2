@@ -128,3 +128,45 @@ export const getZipCodeByLatLang = async (lat, lng) => {
     return null;
   }
 };
+
+export const createCompleteAddress = ({
+  streetAddress1,
+  streetAddress2,
+  city,
+  state,
+  zipCode,
+  country,
+}) => {
+  // Start with an empty array to store the address components
+  let addressComponents = [];
+
+  // Add non-empty address components to the array
+  if (streetAddress1) {
+    addressComponents.push(streetAddress1);
+  }
+
+  if (streetAddress2) {
+    addressComponents.push(streetAddress2);
+  }
+
+  if (city) {
+    addressComponents.push(city);
+  }
+
+  if (state) {
+    addressComponents.push(state);
+  }
+
+  if (zipCode) {
+    addressComponents.push(zipCode);
+  }
+
+  if (country) {
+    addressComponents.push(country);
+  }
+
+  // Join the address components with a comma and space to create the complete address
+  const completeAddress = addressComponents.join(', ');
+
+  return completeAddress;
+};
