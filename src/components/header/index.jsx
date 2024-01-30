@@ -427,6 +427,11 @@ export const Header = () => {
                             <NavDropdown.Item
                               href={menuItem.link}
                               key={menuItem.name}
+                              className={
+                                menuItem.link === '/us-en/course'
+                                  ? 'active'
+                                  : ''
+                              }
                               as={Link}
                             >
                               {menuItem.name}
