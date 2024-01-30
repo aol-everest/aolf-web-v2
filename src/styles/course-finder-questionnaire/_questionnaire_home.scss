@@ -1,0 +1,260 @@
+.course-finder-questionnaire {
+  @media screen and (max-width: 991px) {
+    margin-top: 0 !important;
+  }
+  .banner-section {
+    background-image: url(/img/questionnaire-banner.webp);
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: cover;
+    margin-bottom: 200px;
+    @media screen and (max-width: 991px) {
+      margin-bottom: 550px;
+    }
+    @media screen and (max-width: 767px) {
+      background-image: url(/img/questionnaire-home-banner-bg-mobile.webp);
+      background-position: top center;
+    }
+    @media screen and (max-width: 480px) {
+      margin-bottom: 650px;
+    }
+    .container {
+      height: 875px;
+      background-image: url(/img/questionnaire-banner-girl.webp);
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      display: flex;
+      flex-direction: column;
+      @media screen and (min-width: 1460px) {
+        max-width: 1400px;
+      }
+      @media screen and (max-width: 991px) {
+        background-size: 351px;
+        background-position: bottom center;
+        height: 690px;
+      }
+    }
+    .banner-title {
+      font-family: Lora;
+      font-size: 70px;
+      font-weight: 400;
+      line-height: 70px;
+      color: #31364e;
+      padding-top: 185px;
+      @media screen and (max-width: 991px) {
+        font-size: 36px;
+        line-height: 45px;
+        padding-top: 32px;
+        text-align: center;
+      }
+    }
+    .banner-desc {
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 28px;
+      color: #6f7283;
+      padding-top: 28px;
+      @media screen and (max-width: 991px) {
+        font-size: 18px;
+        line-height: 24px;
+        padding-top: 12px;
+        text-align: center;
+      }
+    }
+    .banner-register {
+      @media screen and (max-width: 991px) {
+        text-align: center;
+        margin-bottom: 375px;
+      }
+      @media screen and (max-width: 480px) {
+        margin-bottom: 350px;
+      }
+    }
+    .btn-register {
+      margin-top: 60px;
+      height: 64px;
+      padding: 0 32px;
+      border-radius: 100px;
+      background: linear-gradient(102.78deg, #ffd16f -37.89%, #ff865b 100.28%);
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #fff;
+      border: none;
+      @media screen and (max-width: 991px) {
+        margin-top: 32px;
+        height: 54px;
+        font-size: 18px;
+      }
+    }
+    .banner-key-highlights {
+      margin-top: auto;
+      margin-bottom: -100px;
+      display: flex;
+      padding: 32px 28px;
+      border-radius: 32px;
+      box-shadow: 7px 12px 39.79999923706055px 5px #7473711f;
+      background-color: white;
+      @media screen and (max-width: 991px) {
+        flex-direction: column;
+      }
+      .key-item {
+        border-right: #e9e9e9 1px solid;
+        text-align: center;
+        flex: 1;
+        padding: 13px 24px;
+        @media screen and (max-width: 991px) {
+          border-right: none;
+          border-bottom: #e9e9e9 1px solid;
+        }
+        &:first-child {
+          padding-left: 0;
+          @media screen and (max-width: 991px) {
+            padding-left: 24px;
+          }
+        }
+        &:last-child {
+          padding-right: 0;
+          border-right: none;
+          @media screen and (max-width: 991px) {
+            padding-right: 24px;
+            border-bottom: none;
+          }
+        }
+        &--title {
+          font-family: Lora;
+          font-size: 54px;
+          font-weight: 500;
+          line-height: 65px;
+          @media screen and (max-width: 991px) {
+            font-size: 36px;
+            line-height: 45px;
+          }
+        }
+        &--desc {
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 22px;
+          padding-top: 10px;
+          color: #6f7283;
+          @media screen and (max-width: 991px) {
+            font-size: 16px;
+            line-height: 28px;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+    .help-action {
+      position: absolute;
+      right: 0;
+      width: 70px;
+      top: 380px;
+      > ul > li {
+        width: 100%;
+        height: 208px;
+        position: relative;
+        &:hover {
+          .find-course {
+            display: block;
+          }
+        }
+      }
+      .help-link {
+        background: linear-gradient(
+          102.78deg,
+          #3d8be8 -37.89%,
+          #89beec 100.28%
+        );
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 18px;
+        padding: 15px 40px;
+        transform: rotate(90deg);
+        position: absolute;
+        color: white;
+        text-decoration: none;
+        border-radius: 0 0 16px 16px;
+        white-space: nowrap;
+        bottom: 38%;
+        right: -79px;
+      }
+      .find-course {
+        display: none;
+        position: absolute;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background-color: white;
+        width: 324px;
+        right: 70px;
+        //box-shadow: 0px 8px 8px -4px #00000008;
+        box-shadow: 0px 20px 24px -4px #00000014;
+        bottom: 28px;
+        &::after {
+          left: 100%;
+          top: 50%;
+          border: solid transparent;
+          content: '';
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none;
+          border-color: rgba(255, 255, 255, 0);
+          border-left-color: #fff;
+          border-width: 10px;
+          margin-top: -10px;
+        }
+        .title {
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 24px;
+          margin-bottom: 8px;
+        }
+        .desc {
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 24px;
+          color: #6f7283;
+        }
+        .actions {
+          display: flex;
+          margin-top: 16px;
+          gap: 4px;
+          button {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            flex: 1;
+            padding: 8px 0;
+            border-radius: 100px;
+            height: unset;
+            justify-content: center;
+            &.btn-primary {
+              background: linear-gradient(
+                102.78deg,
+                #3d8be8 -37.89%,
+                #89beec 100.28%
+              );
+              color: white;
+            }
+            &.btn-secondary {
+              border-color: linear-gradient(
+                102.78deg,
+                #3d8be8 -37.89%,
+                #89beec 100.28%
+              );
+              border-width: 1px;
+              border-style: solid;
+              color: #3d8be8;
+              background: white;
+            }
+            & + button {
+              margin-left: 4px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
