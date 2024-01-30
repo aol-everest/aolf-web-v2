@@ -3,6 +3,7 @@ import onRouteChange from '@analytics/router-utils';
 import segmentPlugin from '@analytics/segment';
 import Analytics from 'analytics';
 import clevertapPlugin from './clevertapPlugin';
+import gtmEcommercePlugin from './gtmEcommercePlugin';
 
 let plugins = [];
 
@@ -20,6 +21,7 @@ if (process.env.NEXT_PUBLIC_GTM_ID) {
     googleTagManager({
       containerId: process.env.NEXT_PUBLIC_GTM_ID,
     }),
+    gtmEcommercePlugin(),
   ];
 }
 if (process.env.NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID) {

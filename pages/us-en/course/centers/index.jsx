@@ -48,11 +48,13 @@ const Centers = () => {
   //     set search query to empty string
   const [q, setQ] = useState('');
   //     set search parameters
-  //     we only what to search countries by capital and name
+  //     we only what to search centers by centerName and streetAddress1
   //     this list can be longer if you want
-  //     you can search countries even by their population
-  // just add it to this array
-  const [searchParam] = useState(['centerName', 'streetAddress1']);
+  const [searchParam] = useState([
+    'centerName',
+    'streetAddress1',
+    'streetAddress2',
+  ]);
   const {
     data: allCenters,
     isLoading,
