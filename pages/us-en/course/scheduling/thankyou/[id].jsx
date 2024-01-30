@@ -211,9 +211,12 @@ const Thankyou = () => {
     description: newTitle,
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
-    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-      country || ''
-    }`,
+    location:
+      mode === COURSE_MODES.IN_PERSON.name
+        ? `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
+            country || ''
+          }`
+        : '',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
