@@ -7,7 +7,10 @@ export default function gtmEcommercePlugin(userConfig = {}) {
     /* Everything else below this is optional depending on your plugin requirements */
     config: { ...userConfig },
     initialize: ({ config }) => {
-      if (typeof window.dataLayer !== 'undefined') {
+      if (
+        typeof window !== 'undefined' &&
+        typeof window.dataLayer !== 'undefined'
+      ) {
         config.dataLayer = window.dataLayer;
       }
     },
