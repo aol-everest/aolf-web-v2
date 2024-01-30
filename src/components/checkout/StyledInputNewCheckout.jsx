@@ -84,6 +84,11 @@ export const StyledInputNewCheckout = ({
           <label htmlFor={formikKey}>{label}</label>
           <input
             type="text"
+            className={
+              formikProps.errors[formikKey] && formikProps.touched[formikKey]
+                ? 'error'
+                : ''
+            }
             name={formikKey}
             value={formikProps.values[formikKey]}
             {...inputProps}
