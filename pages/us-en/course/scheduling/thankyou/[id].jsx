@@ -168,10 +168,6 @@ const Thankyou = () => {
     eventStartDate,
     eventEndDate,
     isGenericWorkshop,
-    streetAddress1,
-    streetAddress2,
-    city,
-    country,
     eventStartTime,
     eventEndTime,
     meetupStartDateTimeGMT,
@@ -179,6 +175,11 @@ const Thankyou = () => {
     eventStartDateTimeGMT,
     mode,
     timings,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
   } = workshop;
 
   const isSKYType =
@@ -222,10 +223,10 @@ const Thankyou = () => {
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
     location:
       mode === COURSE_MODES.IN_PERSON.name
-        ? `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-            country || ''
-          }`
-        : '',
+        ? `${locationStreet || ''}, ${locationCity || ''}, ${
+            locationProvince || ''
+          } ${locationPostalCode || ''}, ${locationCountry || ''}`
+        : 'Online',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
