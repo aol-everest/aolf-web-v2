@@ -48,7 +48,7 @@ export const PhoneInputNewCheckout = ({
 
   return (
     <div className={className}>
-      <label htmlFor="phone"></label>
+      <label htmlFor="phone">{label}</label>
       <PhoneInput
         placeholder="Phone No"
         country="us"
