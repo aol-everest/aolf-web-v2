@@ -13,19 +13,27 @@ const CenterListItem = ({ center }) => {
   return (
     <div class="search-list-item">
       <div class="title">
-        <img src="/img/center-icon.svg" alt="icon" class="icon" />
+        {center.isNationalCenter && (
+          <img src="/img/center-icon.svg" alt="icon" class="icon" />
+        )}
         {center.centerName}
       </div>
-      <div class="info">
-        <img class="icon" src="/img/map-search-location-icon.svg" alt="call" />
-        {createCompleteAddress({
-          streetAddress1: center.streetAddress1,
-          streetAddress2: center.streetAddress2,
-          city: center.city,
-          zipCode: center.postalOrZipCode,
-          state: center.stateProvince,
-        })}
-      </div>
+      {center.centerMode === 'InPerson' && (
+        <div class="info">
+          <img
+            class="icon"
+            src="/img/map-search-location-icon.svg"
+            alt="call"
+          />
+          {createCompleteAddress({
+            streetAddress1: center.streetAddress1,
+            streetAddress2: center.streetAddress2,
+            city: center.city,
+            zipCode: center.postalOrZipCode,
+            state: center.stateProvince,
+          })}
+        </div>
+      )}
       <div class="info">
         <img class="icon" src="/img/map-search-call-icon.svg" alt="call" />
         {center.phone1 || center.phone2}
