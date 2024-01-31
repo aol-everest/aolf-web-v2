@@ -463,9 +463,9 @@ const SchedulingRange = () => {
     setLoading(false);
   };
 
-  const handleWorkshopSelect = (workshop) => {
+  const handleWorkshopSelect = async (workshop) => {
     setSelectedWorkshopId(workshop?.id);
-    getWorkshopDetails(workshop?.id);
+    await getWorkshopDetails(workshop?.id);
     track('program_date_button', {
       program_id: workshop?.id,
       program_name: activeWorkshop?.title,
