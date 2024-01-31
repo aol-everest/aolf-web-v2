@@ -11,8 +11,7 @@ import {
 import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
-import { pushRouteWithUTMQuery } from '@service';
-import { api, calculateBusinessDays, tConvert } from '@utils';
+import { api, tConvert } from '@utils';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
@@ -103,36 +102,47 @@ const Thankyou = () => {
 
   useEffect(() => {
     if (workshop) {
-      track('purchase', {
-        currency: 'USD',
-        value: workshop?.unitPrice,
-        transaction_id: paymentIntent,
-        shipping: 0.0,
-        tax: 0.0,
-        coupon: '',
-        items: [
-          {
-            item_id: workshop?.id,
-            item_name: workshop?.title,
-            affiliation: 'NA',
+      track(
+        'purchase',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshop?.unitPrice,
+            transaction_id: paymentIntent,
+            shipping: 0.0,
+            tax: 0.0,
             coupon: '',
-            discount: 0.0,
-            index: 0,
-            item_brand: workshop?.businessOrg,
-            item_category: workshop?.title,
-            item_category2: workshop?.mode,
-            item_category3: 'paid',
-            item_category4: 'NA',
-            item_category5: 'NA',
-            item_list_id: workshop?.productTypeId,
-            item_list_name: workshop?.title,
-            item_variant: workshop?.workshopTotalHours,
-            location_id: workshop?.locationCity,
-            price: workshop?.unitPrice,
-            quantity: 1,
+            items: [
+              {
+                item_id: workshop?.id,
+                item_name: workshop?.title,
+                affiliation: 'NA',
+                coupon: '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshop?.businessOrg,
+                item_category: workshop?.title,
+                item_category2: workshop?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshop?.productTypeId,
+                item_list_name: workshop?.title,
+                item_variant: workshop?.workshopTotalHours,
+                location_id: workshop?.locationCity,
+                price: workshop?.unitPrice,
+                quantity: 1,
+              },
+            ],
           },
-        ],
-      });
+        },
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
     }
   }, [workshop]);
 
@@ -155,21 +165,21 @@ const Thankyou = () => {
     productTypeId,
     formattedStartDateOnly,
     formattedEndDateOnly,
-    primaryTeacherName,
-    primaryTeacherSfid,
     eventStartDate,
     eventEndDate,
     isGenericWorkshop,
-    streetAddress1,
-    streetAddress2,
-    city,
-    country,
     eventStartTime,
     eventEndTime,
     meetupStartDateTimeGMT,
     eventendDateTimeGMT,
     eventStartDateTimeGMT,
     mode,
+    timings,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
   } = workshop;
 
   const isSKYType =
@@ -211,9 +221,12 @@ const Thankyou = () => {
     description: newTitle,
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
-    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-      country || ''
-    }`,
+    location:
+      mode === COURSE_MODES.IN_PERSON.name
+        ? `${locationStreet || ''}, ${locationCity || ''}, ${
+            locationProvince || ''
+          } ${locationPostalCode || ''}, ${locationCountry || ''}`
+        : 'Online',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
@@ -237,64 +250,6 @@ const Thankyou = () => {
     });
   };
 
-  const showTiming = (timeZone, option) => {
-    let weekdayTiming = (
-      <p className="program_card_subtitle c_text c_timing">
-        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{' '}
-        {option.weekendStartTime &&
-          calculateBusinessDays(
-            dayjs.utc(option.startDate),
-            dayjs.utc(option.endDate),
-          ).weekday}
-      </p>
-    );
-    let weekendTiming = option.weekendStartTime && (
-      <p className="program_card_subtitle c_text c_timing">
-        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{' '}
-        {
-          calculateBusinessDays(
-            dayjs.utc(option.startDate),
-            dayjs.utc(option.endDate),
-          ).weekend
-        }
-      </p>
-    );
-    if (
-      dayjs.utc(option.startDate).day() === 0 ||
-      dayjs.utc(option.startDate).day() === 6
-    ) {
-      return (
-        <>
-          {weekendTiming}
-          {weekdayTiming}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {weekdayTiming}
-          {weekendTiming}
-        </>
-      );
-    }
-  };
-
-  const getSelectedTimeSlotDetails = (selectedTimeSlot) => {
-    if (selectedTimeSlot) {
-      return (
-        <>
-          <p className="program_card_subtitle c_text">
-            {dayjs.utc(selectedTimeSlot.startDate).format('MMM D') +
-              ' - ' +
-              dayjs.utc(selectedTimeSlot.endDate).format('D, YYYY')}
-          </p>
-          <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
-        </>
-      );
-    }
-    return null;
-  };
-
   const RenderJourneyContent = () => {
     if (mode === COURSE_MODES.IN_PERSON.name) {
       if (isSilentRetreatType) {
@@ -309,23 +264,6 @@ const Thankyou = () => {
       return <InPersonGenericCourse />;
     }
     return <OnlineCourse />;
-  };
-
-  const handleSecondCourseRedirection = () => {
-    const secondCourseType = isSKYType
-      ? 'SAHAJ_SAMADHI_MEDITATION'
-      : 'SKY_BREATH_MEDITATION';
-
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course`,
-      query: {
-        instructor: JSON.stringify({
-          value: primaryTeacherSfid,
-          label: primaryTeacherName,
-        }),
-        courseType: secondCourseType,
-      },
-    });
   };
 
   const iosAppDownloadAction = () => {
@@ -478,6 +416,106 @@ const Thankyou = () => {
             </section>
             <section className="journey-starts !tw-mb-0">
               <div className="container">
+                {!isGenericWorkshop &&
+                  !isMeditationDeluxe &&
+                  !gatewayToInfinity && (
+                    <div className="program-details">
+                      <h2 className="program-details__title">
+                        Program Details
+                      </h2>
+
+                      <ul className="program-details__list-schedule tw-max-h-[400px] tw-overflow-y-auto">
+                        {timings &&
+                          timings.map((time, i) => {
+                            return (
+                              <li
+                                className="program-details__schedule tw-flex"
+                                key={i}
+                              >
+                                <span className="program-details__schedule-date">
+                                  {dayjs.utc(time.startDate).format('LL')}
+                                </span>
+                                <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
+                                  time.startTime,
+                                )} - ${tConvert(time.endTime)} ${
+                                  ABBRS[time.timeZone]
+                                }`}</span>
+                              </li>
+                            );
+                          })}
+                      </ul>
+
+                      {(mode === COURSE_MODES.IN_PERSON.name ||
+                        mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
+                        <>
+                          {!workshop.isLocationEmpty && (
+                            <ul className="program-details__list-schedule tw-mt-2">
+                              <span className="program-details__schedule-date">
+                                Location
+                              </span>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  workshop.locationStreet || ''
+                                }, ${workshop.locationCity} ${
+                                  workshop.locationProvince
+                                } ${workshop.locationPostalCode} ${
+                                  workshop.locationCountry
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {workshop.locationStreet && (
+                                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
+                                    {workshop.locationStreet}
+                                  </li>
+                                )}
+                                <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  {workshop.locationCity || ''}
+                                  {', '}
+                                  {workshop.locationProvince || ''}{' '}
+                                  {workshop.locationPostalCode || ''}
+                                </li>
+                              </a>
+                            </ul>
+                          )}
+                          {workshop.isLocationEmpty && (
+                            <ul className="course-details__list">
+                              <div className="course-details__list__title">
+                                <h6>Location:</h6>
+                              </div>
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  workshop.streetAddress1 || ''
+                                },${workshop.streetAddress2 || ''} ${
+                                  workshop.city
+                                } ${workshop.state} ${workshop.zip} ${
+                                  workshop.country
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {workshop.streetAddress1 && (
+                                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
+                                    {workshop.streetAddress1}
+                                  </li>
+                                )}
+                                {workshop.streetAddress2 && (
+                                  <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
+                                    {workshop.streetAddress2}
+                                  </li>
+                                )}
+                                <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
+                                  {workshop.city || ''}
+                                  {', '}
+                                  {workshop.state || ''} {workshop.zip || ''}
+                                </li>
+                              </a>
+                            </ul>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
                 {!isMeditationDeluxe && !gatewayToInfinity && (
                   <>
                     <h2 className="journey-starts__title section-title">
