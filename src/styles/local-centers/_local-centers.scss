@@ -115,9 +115,11 @@ main.local-centers {
     border-radius: 20px;
     font-size: 14px;
     line-height: 18px;
-    flex: 0.5;
+    flex: 48%;
+    display: flex;
+    flex-direction: column;
     @media screen and (max-width: 1179px) {
-      flex: 1;
+      flex: 100%;
     }
     .title {
       font-family: Lora;
@@ -133,9 +135,13 @@ main.local-centers {
       margin-bottom: 14px;
       display: flex;
       align-items: flex-start;
+      &.email {
+        word-break: break-word;
+        margin-bottom: 34px;
+      }
     }
     .action-btn {
-      margin-top: 20px;
+      margin-top: auto;
       .submit-btn {
         background: linear-gradient(
           102.78deg,

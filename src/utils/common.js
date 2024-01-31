@@ -170,3 +170,20 @@ export const createCompleteAddress = ({
 
   return completeAddress;
 };
+
+export const joinPhoneNumbers = (...phoneNumbers) => {
+  // Filter out null or empty phone numbers
+  const validNumbers = phoneNumbers.filter(
+    (number) => number !== null && number !== '',
+  );
+
+  // Check if there are any valid phone numbers provided
+  if (validNumbers.length === 0) {
+    return null;
+  }
+
+  // Format each valid phone number and join them with "/"
+  const formattedNumbers = validNumbers.join(' / ');
+
+  return formattedNumbers;
+};
