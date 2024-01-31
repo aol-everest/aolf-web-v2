@@ -11,7 +11,7 @@ export const UserInfoFormNewCheckout = ({
 }) => {
   return (
     <Fragment>
-      <div className="col-12 col-lg-6 pb-3 px-2">
+      <div className="form-inputs">
         <StyledInputNewCheckout
           className="form-item required"
           placeholder="First Name"
@@ -19,9 +19,7 @@ export const UserInfoFormNewCheckout = ({
           formikKey="firstName"
           label="First Name"
         ></StyledInputNewCheckout>
-      </div>
 
-      <div className="col-12 col-lg-6 pb-3 px-2">
         <StyledInputNewCheckout
           className="form-item required"
           placeholder="Last Name"
@@ -29,9 +27,7 @@ export const UserInfoFormNewCheckout = ({
           formikKey="lastName"
           label="Last Name"
         ></StyledInputNewCheckout>
-      </div>
 
-      <div className="col-12 col-lg-6 pb-3 px-2 ">
         <StyledInputNewCheckout
           type="email"
           label="Email Address"
@@ -50,11 +46,9 @@ export const UserInfoFormNewCheckout = ({
             event.preventDefault();
           }}
         ></StyledInputNewCheckout>
-      </div>
 
-      <div className="col-12 col-lg-6 pb-3 px-2 second">
         <PhoneInputNewCheckout
-          className="form-item required"
+          className="second form-item required"
           containerClass={`scheduling-modal__content-wrapper-form-list-row`}
           formikProps={formikProps}
           formikKey="contactPhone"
