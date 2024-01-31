@@ -4,7 +4,7 @@ import { useAuth, useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
 import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
@@ -379,14 +379,18 @@ export const Header = () => {
     setNavExpanded(!navExpanded);
   };
 
-  // Creating a new div element
-  const dropdownMenuDiv = document.querySelector('.dropdown-menu');
+  useEffect(() => {
+    setTimeout(() => {
+      // Creating a new div element
+      const dropdownMenuDiv = document.querySelector('.dropdown-menu');
 
-  // Adding classes using classList.add
-  if (dropdownMenuDiv) {
-    // Add the class multi-col using classList.add
-    dropdownMenuDiv.classList.add('multi-col');
-  }
+      // Adding classes using classList.add
+      if (dropdownMenuDiv) {
+        // Add the class multi-col using classList.add
+        dropdownMenuDiv.classList.add('multi-col');
+      }
+    }, 1000);
+  }, []);
 
   const renderMenu = (menu) => {
     if (!menu) {
