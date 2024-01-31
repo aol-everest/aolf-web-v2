@@ -338,9 +338,12 @@ const Thankyou = () => {
     description: newTitle,
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
-    location: `${locationStreet || ''}, ${locationCity || ''}, ${
-      locationProvince || ''
-    } ${locationPostalCode || ''}, ${locationCountry || ''}`,
+    location:
+      mode === COURSE_MODES.IN_PERSON.name
+        ? `${locationStreet || ''}, ${locationCity || ''}, ${
+            locationProvince || ''
+          } ${locationPostalCode || ''}, ${locationCountry || ''}`
+        : 'Online',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
