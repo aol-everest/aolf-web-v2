@@ -652,15 +652,11 @@ const SchedulingPaymentForm = ({
                     <div className="section--title">
                       <h1 className="page-title">{title}</h1>
                     </div>
-                    <div className="section-box">
+                    <div className="section-box account-details">
                       <h2 className="section__title">Account Details</h2>
                       <div className="section__body">
                         <form id="my-form">
-                          <div className="row pt-3 mx-n2">
-                            <UserInfoFormNewCheckout
-                              formikProps={formikProps}
-                            />
-                          </div>
+                          <UserInfoFormNewCheckout formikProps={formikProps} />
                         </form>
                       </div>
                     </div>
@@ -710,79 +706,74 @@ const SchedulingPaymentForm = ({
 
                     <div className="section-box features-desktop">
                       <div className="section__body">
-                        <div className="features row mx-n2">
-                          <div className="col-12 col-lg-6 px-2">
-                            <div className="feature__box">
-                              <div className="feature__title">
-                                <img
-                                  src="/img/inner-peace-icon.svg"
-                                  width="24"
-                                  height="24"
-                                  alt=""
-                                />
-                                Evidence-Based Practice
-                              </div>
-                              <div className="feature__content">
-                                Scientifically proven to reduce stress, anxiety,
-                                and improve sleep through hundreds of scientific
-                                studies.
-                              </div>
+                        <div className="features">
+                          <div className="feature__box">
+                            <div className="feature__title">
+                              <img
+                                src="/img/inner-peace-icon.svg"
+                                width="24"
+                                height="24"
+                                alt=""
+                              />
+                              Evidence-Based Practice
+                            </div>
+                            <div className="feature__content">
+                              Scientifically proven to reduce stress, anxiety,
+                              and improve sleep through hundreds of scientific
+                              studies.
                             </div>
                           </div>
-                          <div className="col-12 col-lg-6 px-2">
-                            <div className="feature__box">
-                              <div className="feature__title">
-                                <img
-                                  src="/img/calm-icon.svg"
-                                  width="24"
-                                  height="24"
-                                  alt=""
-                                />
-                                Authentic Meditation Practice
-                              </div>
-                              <div className="feature__content">
-                                Drawing from Vedic principles of meditation, SKY
-                                offers an authentic and deeply profound
-                                experience, effortlessly allowing anyone to
-                                connect with the depth of their being.
-                              </div>
+
+                          <div className="feature__box">
+                            <div className="feature__title">
+                              <img
+                                src="/img/calm-icon.svg"
+                                width="24"
+                                height="24"
+                                alt=""
+                              />
+                              Authentic Meditation Practice
+                            </div>
+                            <div className="feature__content">
+                              Drawing from Vedic principles of meditation, SKY
+                              offers an authentic and deeply profound
+                              experience, effortlessly allowing anyone to
+                              connect with the depth of their being.
                             </div>
                           </div>
-                          <div className="col-12 col-lg-6 px-2">
-                            <div className="feature__box">
-                              <div className="feature__title">
-                                <img
-                                  src="/img/spirituality-icon.svg"
-                                  width="24"
-                                  height="24"
-                                  alt=""
-                                />
-                                Certified SKY Instructors
-                              </div>
-                              <div className="feature__content">
-                                Learn from the best! Our SKY instructors are
-                                certified and go through over 500 hours of
-                                training to provide you with an interactive and
-                                enriching learning experience.
-                              </div>
+
+                          <div className="feature__box">
+                            <div className="feature__title">
+                              <img
+                                src="/img/spirituality-icon.svg"
+                                width="24"
+                                height="24"
+                                alt=""
+                              />
+                              Certified SKY Instructors
+                            </div>
+                            <div className="feature__content">
+                              Learn from the best! Our SKY instructors are
+                              certified and go through over 500 hours of
+                              training to provide you with an interactive and
+                              enriching learning experience.
                             </div>
                           </div>
-                          <div className="col-12 col-lg-6 px-2">
-                            <div className="feature__box">
-                              <div className="feature__title">
-                                <img
-                                  src="/img/experience-icon.svg"
-                                  width="24"
-                                  height="24"
-                                  alt=""
-                                />
-                                Millions of Lives Touched
-                              </div>
-                              <div className="feature__content">
-                                Join a community of over 500 million people
-                                whose lives have been positively transformed
-                                through SKY Breath Meditation and other events.
-                              </div>
+
+                          <div className="feature__box">
+                            <div className="feature__title">
+                              <img
+                                src="/img/experience-icon.svg"
+                                width="24"
+                                height="24"
+                                alt=""
+                              />
+                              Millions of Lives Touched
+                            </div>
+                            <div className="feature__content">
+                              Join a community of over 500 million people whose
+                              lives have been positively transformed through SKY
+                              Breath Meditation and other events.
                             </div>
                           </div>
                         </div>
