@@ -308,26 +308,6 @@ const Checkout = () => {
         />
       );
     }
-    // if (
-    //   isSKYType ||
-    //   isSilentRetreatType ||
-    //   isSahajSamadhiMeditationType ||
-    //   isSriSriYogaMeditationType ||
-    //   isVolunteerTrainingProgram
-    // ) {
-    //   return (
-    //     <PaymentFormNew
-    //       isStripeIntentPayment={isStripeIntentPayment}
-    //       workshop={workshop}
-    //       profile={user?.profile}
-    //       enrollmentCompletionAction={enrollmentCompletionAction}
-    //       enrollmentCompletionLink={enrollmentCompletionLink}
-    //       handleCouseSelection={handleCouseSelection}
-    //       login={login}
-    //       isLoggedUser={authenticated}
-    //     />
-    //   );
-    // }
     return (
       <PaymentFormNew
         isStripeIntentPayment={isStripeIntentPayment}

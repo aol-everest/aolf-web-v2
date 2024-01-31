@@ -7,20 +7,16 @@ export const CostDetailsCardNewCheckout = ({
   formikProps,
   fee,
   delfee,
-  offering,
   showCouponCodeField,
   userSubscriptions,
   hasGroupedAddOnProducts,
   discount,
   isComboDetailAvailable,
-  isCourseOptionRequired,
   isOfflineExpense,
   openSubscriptionPaywallPage,
-  totalFee,
   isUsableCreditAvailable,
   UpdatedFeeAfterCredits,
   onAccommodationChange,
-  cmeAddOn,
   paymentOptionChange,
   values,
   onComboDetailChange,
@@ -31,7 +27,6 @@ export const CostDetailsCardNewCheckout = ({
     title,
     productTypeId,
     isInstalmentAllowed,
-    isEarlyBirdAllowed,
     premiumRate,
     usableCredit,
     addOnProducts,
@@ -42,15 +37,11 @@ export const CostDetailsCardNewCheckout = ({
     instalmentGap,
     availableBundles,
   } = workshop || {};
-  console.log('premiumRate', premiumRate);
-  console.log('delfee', delfee);
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
 
   const isSilentRetreatType =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
-  const isMeditationDeluxe =
-    COURSE_TYPES.MEDITATION_DELUXE_COURSE.value === productTypeId;
   const gatewayToInfinity =
     COURSE_TYPES.GATEWAY_TO_INFINITY_COURSE.value === productTypeId;
   const isJourneyPremium =
@@ -59,9 +50,6 @@ export const CostDetailsCardNewCheckout = ({
     !!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     !!userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
-
-  console.log('isUsableCreditAvailable', isUsableCreditAvailable);
-  console.log('adddd', addOnProducts);
 
   if (gatewayToInfinity) {
     return (
@@ -321,44 +309,6 @@ export const CostDetailsCardNewCheckout = ({
             )}
 
             <ul>
-              {addOnProducts.map((product) => {
-                if (
-                  !product.isExpenseAddOn ||
-                  (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                ) {
-                  const isChecked = product.isAddOnSelectionRequired
-                    ? true
-                    : formikProps.values[product.productName];
-                  return (
-                    <li key={product.productSfid}>
-                      <span>
-                        {!product.isAddOnSelectionRequired && (
-                          <input
-                            type="checkbox"
-                            className="custom-checkbox"
-                            placeholder=" "
-                            checked={isChecked}
-                            onChange={() =>
-                              formikProps.setFieldValue(
-                                product.productName,
-                                !isChecked,
-                              )
-                            }
-                            value={product.productName}
-                            name={product.productName}
-                            id={product.productSfid}
-                            disabled={product.isAddOnSelectionRequired}
-                          />
-                        )}
-                        <label htmlFor={product.productSfid}></label>
-                        <span className="ml-2">{product.productName}:</span>
-                      </span>
-                      <span className="ml-2">${product.unitPrice}</span>
-                    </li>
-                  );
-                }
-              })}
-
               {!isJourneyPremium &&
                 !isBasicMember &&
                 !isJourneyPlus &&
@@ -415,53 +365,11 @@ export const CostDetailsCardNewCheckout = ({
             {hasGroupedAddOnProducts && (
               <div class="note">Note: *Expense includes meals</div>
             )}
-
             {isUsableCreditAvailable && (
               <div className="credit-text">
                 {usableCredit.message} ${UpdatedFeeAfterCredits}.
               </div>
             )}
-
-            <ul>
-              {addOnProducts.map((product) => {
-                if (
-                  !product.isExpenseAddOn ||
-                  (product.isExpenseAddOn && !hasGroupedAddOnProducts)
-                ) {
-                  const isChecked = product.isAddOnSelectionRequired
-                    ? true
-                    : formikProps.values[product.productName];
-
-                  return (
-                    <li key={product.productSfid}>
-                      <span>
-                        {!product.isAddOnSelectionRequired && (
-                          <input
-                            type="checkbox"
-                            className="custom-checkbox"
-                            placeholder=" "
-                            checked={isChecked}
-                            onChange={() =>
-                              formikProps.setFieldValue(
-                                product.productName,
-                                !isChecked,
-                              )
-                            }
-                            value={product.productName}
-                            name={product.productName}
-                            id={product.productSfid}
-                            disabled={product.isAddOnSelectionRequired}
-                          />
-                        )}
-                        <label htmlFor={product.productSfid}></label>
-                        <span className="ml-2">{product.productName}:</span>
-                      </span>
-                      <span className="ml-2">${product.unitPrice}</span>
-                    </li>
-                  );
-                }
-              })}
-            </ul>
           </>
         )}
       </div>
@@ -478,15 +386,12 @@ export const CostDetailsCardNewCheckout = ({
                 placeholder="Select Expense Type"
                 onChange={(e) => {
                   const selectedValue = e.target.value;
-                  console.log('selectedValue', selectedValue);
-                  // Find the selected object based on the identifier
                   const selectedObject = groupedAddOnProducts[
                     'Residential Add On'
                   ].find(
                     (residentialAddOn) =>
                       residentialAddOn.priceBookEntryId === selectedValue,
                   );
-                  console.log(selectedObject);
                   onAccommodationChange(formikProps, selectedObject);
                 }}
                 value={
