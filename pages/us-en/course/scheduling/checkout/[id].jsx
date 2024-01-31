@@ -505,11 +505,9 @@ const SchedulingPaymentForm = ({
             ...filterAllowedParams(router.query),
           };
           filteredParams = removeNull(filteredParams);
-          const returnUrl = `${
-            window.location.origin
-          }/us-en/course/scheduling/thankyou/${productId}?${queryString.stringify(
-            filteredParams,
-          )}`;
+          const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+            data.attendeeId
+          }?${queryString.stringify(filteredParams)}`;
           const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element
             elements,
@@ -524,7 +522,7 @@ const SchedulingPaymentForm = ({
           }
         } else {
           replaceRouteWithUTMQuery(router, {
-            pathname: `/us-en/course/scheduling/thankyou/${productId}`,
+            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
             query: {
               ctype: productTypeId,
               page: 'ty',
