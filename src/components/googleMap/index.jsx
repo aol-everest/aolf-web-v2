@@ -7,18 +7,27 @@ const GoogleMapComponent = ({ allCenters }) => {
   const [selectedMarker, setSelectedMarker] = useState();
   const iconBase = '/img/';
   const features = allCenters
-    ? allCenters.map((center) => {
-        return {
-          position: {
-            lat: center.geoLocationLatitude,
-            lng: center.geoLocationLongitude,
-          },
-          title: center.centerName,
-          icon: iconBase + 'map-pin1.svg',
-          InfoWindowContent: InfoBoxComponent(center),
-          data: center,
-        };
-      })
+    ? allCenters
+        .filter(
+          (center) =>
+            center.geoLocationLatitude !== null &&
+            center.geoLocationLongitude !== null,
+        )
+        .map((center) => {
+          return {
+            position: {
+              lat: center.geoLocationLatitude,
+              lng: center.geoLocationLongitude,
+            },
+            title: center.centerName,
+            icon:
+              iconBase +
+              (center.isNationalCenter ? 'map-pin2.svg' : 'map-pin1.svg'),
+            InfoWindowContent: InfoBoxComponent(center),
+            data: center,
+            sfid: center.sfid,
+          };
+        })
     : [];
 
   return (
@@ -30,13 +39,12 @@ const GoogleMapComponent = ({ allCenters }) => {
       {/* <InfoWindow>Hello</InfoWindow> */}
       {features.map((feature) => {
         return (
-          <>
-            <MarkerComponent
-              {...feature}
-              selectedMarker={selectedMarker}
-              setSelectedMarker={setSelectedMarker}
-            ></MarkerComponent>
-          </>
+          <MarkerComponent
+            key={feature.sfid}
+            {...feature}
+            selectedMarker={selectedMarker}
+            setSelectedMarker={setSelectedMarker}
+          ></MarkerComponent>
         );
       })}
     </GoogleMap>
