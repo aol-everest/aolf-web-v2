@@ -102,36 +102,47 @@ const Thankyou = () => {
 
   useEffect(() => {
     if (workshop) {
-      track('purchase', {
-        currency: 'USD',
-        value: workshop?.unitPrice,
-        transaction_id: paymentIntent,
-        shipping: 0.0,
-        tax: 0.0,
-        coupon: '',
-        items: [
-          {
-            item_id: workshop?.id,
-            item_name: workshop?.title,
-            affiliation: 'NA',
+      track(
+        'purchase',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshop?.unitPrice,
+            transaction_id: paymentIntent,
+            shipping: 0.0,
+            tax: 0.0,
             coupon: '',
-            discount: 0.0,
-            index: 0,
-            item_brand: workshop?.businessOrg,
-            item_category: workshop?.title,
-            item_category2: workshop?.mode,
-            item_category3: 'paid',
-            item_category4: 'NA',
-            item_category5: 'NA',
-            item_list_id: workshop?.productTypeId,
-            item_list_name: workshop?.title,
-            item_variant: workshop?.workshopTotalHours,
-            location_id: workshop?.locationCity,
-            price: workshop?.unitPrice,
-            quantity: 1,
+            items: [
+              {
+                item_id: workshop?.id,
+                item_name: workshop?.title,
+                affiliation: 'NA',
+                coupon: '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshop?.businessOrg,
+                item_category: workshop?.title,
+                item_category2: workshop?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshop?.productTypeId,
+                item_list_name: workshop?.title,
+                item_variant: workshop?.workshopTotalHours,
+                location_id: workshop?.locationCity,
+                price: workshop?.unitPrice,
+                quantity: 1,
+              },
+            ],
           },
-        ],
-      });
+        },
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
     }
   }, [workshop]);
 
@@ -157,10 +168,6 @@ const Thankyou = () => {
     eventStartDate,
     eventEndDate,
     isGenericWorkshop,
-    streetAddress1,
-    streetAddress2,
-    city,
-    country,
     eventStartTime,
     eventEndTime,
     meetupStartDateTimeGMT,
@@ -168,6 +175,11 @@ const Thankyou = () => {
     eventStartDateTimeGMT,
     mode,
     timings,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
   } = workshop;
 
   const isSKYType =
@@ -211,10 +223,10 @@ const Thankyou = () => {
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
     location:
       mode === COURSE_MODES.IN_PERSON.name
-        ? `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-            country || ''
-          }`
-        : '',
+        ? `${locationStreet || ''}, ${locationCity || ''}, ${
+            locationProvince || ''
+          } ${locationPostalCode || ''}, ${locationCountry || ''}`
+        : 'Online',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };

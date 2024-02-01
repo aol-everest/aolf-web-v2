@@ -3,13 +3,16 @@ import { orgConfig } from '@org';
 import classNames from 'classnames';
 import { Field } from 'formik';
 import React, { useEffect } from 'react';
+import { useAnalytics } from 'use-analytics';
 
 export const ScheduleAgreementForm = ({
   formikProps,
   complianceQuestionnaire = [],
   isCorporateEvent,
   questionnaireArray,
+  workshop,
 }) => {
+  const { track, page } = useAnalytics();
   const validateQuestionnaire = (complianceQuestionnaire) => (value) => {
     let error;
     let result = false;
@@ -41,6 +44,16 @@ export const ScheduleAgreementForm = ({
 
   const isIahv = orgConfig.name === 'IAHV';
 
+  const onChangeHandler = (e) => {
+    track('ppa_button_click', {
+      program_id: workshop?.id,
+      program_name: workshop?.title,
+      program_date: workshop?.eventStartDate,
+      program_time: workshop?.eventStartTime,
+    });
+    formikProps.handleChange('ppaAgreement')(e);
+  };
+
   return (
     <>
       <div className="form-item checkbox mb-2">
@@ -53,7 +66,7 @@ export const ScheduleAgreementForm = ({
           })}
           id="privacy"
           checked={formikProps.values.ppaAgreement}
-          onChange={formikProps.handleChange('ppaAgreement')}
+          onChange={onChangeHandler}
           value={formikProps.values.ppaAgreement}
           name="ppaAgreement"
         />
@@ -121,6 +134,12 @@ export const ScheduleAgreementForm = ({
                       )}
                       value={compliance.questionSfid}
                       onChange={() => {
+                        track('health_agreement_button_click', {
+                          program_id: workshop?.id,
+                          program_name: workshop?.title,
+                          program_date: workshop?.eventStartDate,
+                          program_time: workshop?.eventStartTime,
+                        });
                         const currentValue = field.value.find(
                           (v) => v.key === compliance.questionSfid,
                         );

@@ -21,7 +21,6 @@ import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpress
 import 'flatpickr/dist/flatpickr.min.css';
 import { ScheduleLocationFilter } from '@components/scheduleLocationFilter/ScheduleLocationFilter';
 import { useEffectOnce } from 'react-use';
-import { useAnalytics } from 'use-analytics';
 import classNames from 'classnames';
 import Modal from 'react-bootstrap/Modal';
 import { orgConfig } from '@org';
@@ -104,7 +103,6 @@ function formatDates(dates) {
 
 const SchedulingRange = () => {
   const fp = useRef(null);
-  const { track, page } = useAnalytics();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [zipCode, setZipCode] = useState('');
@@ -158,11 +156,6 @@ const SchedulingRange = () => {
   }, []);
 
   useEffectOnce(() => {
-    page({
-      category: 'course_registration',
-      name: 'course_search_scheduling',
-      course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
-    });
     setTimezoneFilter(fillDefaultTimeZone());
   });
 
@@ -320,13 +313,7 @@ const SchedulingRange = () => {
             });
           }
         }, 100);
-        track('click_calendar', {
-          screen_name: 'course_search_scheduling',
-          course_type:
-            courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
-          location_type: mode,
-          num_results: response?.data.length,
-        });
+
         return finalWorkshops;
       }
     },
@@ -463,15 +450,9 @@ const SchedulingRange = () => {
     setLoading(false);
   };
 
-  const handleWorkshopSelect = async (workshop) => {
+  const handleWorkshopSelect = (workshop) => {
     setSelectedWorkshopId(workshop?.id);
-    await getWorkshopDetails(workshop?.id);
-    track('program_date_button', {
-      program_id: workshop?.id,
-      program_name: activeWorkshop?.title,
-      program_date: activeWorkshop?.eventStartDate,
-      program_time: activeWorkshop?.eventStartTime,
-    });
+    getWorkshopDetails(workshop?.id);
   };
 
   const handleTimezoneChange = (ev) => {
@@ -482,43 +463,6 @@ const SchedulingRange = () => {
   };
 
   const goToPaymentModal = () => {
-    track(
-      'view_item',
-      {
-        ecommerce: {
-          currency: 'USD',
-          value: activeWorkshop?.unitPrice,
-          items: [
-            {
-              item_id: activeWorkshop?.id,
-              item_name: activeWorkshop?.title,
-              affiliation: 'NA',
-              coupon: '',
-              discount: 0.0,
-              index: 0,
-              item_brand: activeWorkshop?.businessOrg,
-              item_category: activeWorkshop?.title,
-              item_category2: activeWorkshop?.mode,
-              item_category3: 'paid',
-              item_category4: 'NA',
-              item_category5: 'NA',
-              item_list_id: activeWorkshop?.productTypeId,
-              item_list_name: activeWorkshop?.title,
-              item_variant: activeWorkshop?.workshopTotalHours,
-              location_id: activeWorkshop?.locationCity,
-              price: activeWorkshop?.unitPrice,
-              quantity: 1,
-            },
-          ],
-        },
-      },
-      {
-        plugins: {
-          all: false,
-          'gtm-ecommerce-plugin': true,
-        },
-      },
-    );
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
       query: {
