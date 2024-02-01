@@ -136,19 +136,19 @@ const AOL_MENU = [
     name: 'App',
     link: '/us-en/lp/journey-app',
   },
-  {
-    name: 'Centers',
-    submenu: [
-      {
-        name: 'Art of Living Boone Retreat',
-        link: '/us-en/lp/theartoflivingretreatcenter',
-      },
-      {
-        name: 'Local Centers',
-        link: '/us-en/course/centers',
-      },
-    ],
-  },
+  // {
+  //   name: 'Centers',
+  //   submenu: [
+  //     {
+  //       name: 'Art of Living Boone Retreat',
+  //       link: '/us-en/lp/theartoflivingretreatcenter',
+  //     },
+  //     {
+  //       name: 'Local Centers',
+  //       link: '/us-en/course/centers',
+  //     },
+  //   ],
+  // },
   {
     name: 'About Us',
     submenu: [
