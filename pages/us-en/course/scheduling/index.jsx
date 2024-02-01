@@ -461,16 +461,17 @@ const SchedulingRange = () => {
       setActiveWorkshop(response?.data);
     }
     setLoading(false);
+    return response?.data;
   };
 
   const handleWorkshopSelect = async (workshop) => {
     setSelectedWorkshopId(workshop?.id);
-    await getWorkshopDetails(workshop?.id);
+    const workshopDetail = await getWorkshopDetails(workshop?.id);
     track('program_date_button', {
       program_id: workshop?.id,
-      program_name: activeWorkshop?.title,
-      program_date: activeWorkshop?.eventStartDate,
-      program_time: activeWorkshop?.eventStartTime,
+      program_name: workshopDetail?.title,
+      program_date: workshopDetail?.eventStartDate,
+      program_time: workshopDetail?.eventStartTime,
     });
   };
 
