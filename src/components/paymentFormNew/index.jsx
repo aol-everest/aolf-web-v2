@@ -162,7 +162,7 @@ export const PaymentFormNew = ({
     discount: discountResponse,
   });
 
-  const isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
+  let isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
 
   const {
     first_name,
@@ -968,9 +968,6 @@ export const PaymentFormNew = ({
   };
 
   const formikOnChange = (values) => {
-    if (!stripe || !elements || !isStripeIntentPayment) {
-      return;
-    }
     let finalPrice = fee;
     if (values.comboDetailId && values.comboDetailId !== workshop.id) {
       const selectedBundle = workshop.availableBundles.find(
@@ -980,6 +977,53 @@ export const PaymentFormNew = ({
         finalPrice = selectedBundle.comboUnitPrice;
       }
     }
+    const addOnFee = addOnProducts.reduce(
+      (
+        previousValue,
+        { unitPrice, isAddOnSelectionRequired, productName, isExpenseAddOn },
+      ) => {
+        if (!isExpenseAddOn) {
+          if (
+            (!isAddOnSelectionRequired && values[productName]) ||
+            isAddOnSelectionRequired
+          ) {
+            return previousValue + unitPrice;
+          } else {
+            return previousValue;
+          }
+        } else if (isExpenseAddOn && !hasGroupedAddOnProducts) {
+          if (
+            (!isAddOnSelectionRequired && values[productName]) ||
+            isAddOnSelectionRequired
+          ) {
+            return previousValue + unitPrice;
+          }
+          return previousValue;
+        } else {
+          return previousValue;
+        }
+      },
+      0,
+    );
+    const isRegularPrice =
+      values.priceType === null || values.priceType === 'regular';
+    const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
+
+    finalPrice =
+      (isUsableCreditAvailable && usableCredit.creditMeasureUnit
+        ? UpdatedFeeAfterCredits
+        : courseFee) +
+      (values.accommodation?.isExpenseAddOn
+        ? expenseAddOn?.unitPrice || 0
+        : (values.accommodation?.unitPrice || 0) +
+          (values.accommodation ? expenseAddOn?.unitPrice || 0 : 0)) +
+      addOnFee;
+    isPaymentRequired = finalPrice !== 0 ? true : !isCCNotRequired;
+
+    if (!stripe || !elements || !isStripeIntentPayment) {
+      return;
+    }
+
     if (finalPrice > 0) {
       elements.update({
         amount: finalPrice * 100,
