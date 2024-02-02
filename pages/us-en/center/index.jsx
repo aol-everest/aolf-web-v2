@@ -3,46 +3,77 @@ import { PageLoading } from '@components';
 import { useInfiniteQuery, useQuery } from 'react-query';
 import { useEffectOnce } from 'react-use';
 import ErrorPage from 'next/error';
-import { api, createCompleteAddress } from '@utils';
+import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
 import { useGeolocation } from '@uidotdev/usehooks';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
 
 const CenterListItem = ({ center }) => {
+  const router = useRouter();
+  const goFindCourse = () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course`,
+      query: {
+        city: center.city,
+      },
+    });
+  };
+  const phoneNumber = joinPhoneNumbers(center.phone1, center.phone2);
   return (
     <div class="search-list-item">
       <div class="title">
-        <img src="/img/center-icon.svg" alt="icon" class="icon" />
+        {center.isNationalCenter && (
+          <img src="/img/center-icon.svg" alt="icon" class="icon" />
+        )}
         {center.centerName}
       </div>
-      <div class="info">
-        <img class="icon" src="/img/map-search-location-icon.svg" alt="call" />
-        {createCompleteAddress({
-          streetAddress1: center.streetAddress1,
-          streetAddress2: center.streetAddress2,
-          city: center.city,
-          zipCode: center.postalOrZipCode,
-          state: center.stateProvince,
-        })}
-      </div>
-      <div class="info">
-        <img class="icon" src="/img/map-search-call-icon.svg" alt="call" />
-        {center.phone1 || center.phone2}
-      </div>
-      <div class="info">
-        <img class="icon" src="/img/map-search-email-icon.svg" alt="email" />
-        {center.email}
-      </div>
+      {center.centerMode === 'InPerson' && (
+        <div class="info">
+          <img
+            class="icon"
+            src="/img/map-search-location-icon.svg"
+            alt="call"
+          />
+          {createCompleteAddress({
+            streetAddress1: center.streetAddress1,
+            streetAddress2: center.streetAddress2,
+            city: center.city,
+            zipCode: center.postalOrZipCode,
+            state: center.stateProvince,
+          })}
+        </div>
+      )}
+      {phoneNumber && (
+        <div class="info">
+          <img class="icon" src="/img/map-search-call-icon.svg" alt="call" />
+          {phoneNumber}
+        </div>
+      )}
+      {center.email && (
+        <div class="info email">
+          <img class="icon" src="/img/map-search-email-icon.svg" alt="email" />
+          {center.email}
+        </div>
+      )}
       <div class="action-btn">
-        <button class="submit-btn">Find Courses</button>
+        <button class="submit-btn" onClick={goFindCourse}>
+          Find Courses
+        </button>
       </div>
     </div>
   );
 };
 
 const Centers = () => {
-  const { latitude, longitude, error: geoLocationError } = useGeolocation();
+  const {
+    loading,
+    latitude,
+    longitude,
+    error: geoLocationError,
+  } = useGeolocation();
 
   //     set search query to empty string
   const [q, setQ] = useState('');
@@ -57,7 +88,7 @@ const Centers = () => {
 
   const finalLatitude = latitude ? latitude : 43.4142989;
   const finalLongitude = longitude ? longitude : -124.2301242;
-  console.log(latitude, longitude, geoLocationError);
+
   const {
     data: allCenters,
     isLoading,
@@ -91,7 +122,7 @@ const Centers = () => {
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading) return <PageLoading />;
+  if (isLoading || loading) return <PageLoading />;
   return (
     <main class="local-centers">
       <section class="map-section">
