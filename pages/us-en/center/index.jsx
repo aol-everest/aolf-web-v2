@@ -3,7 +3,7 @@ import { PageLoading } from '@components';
 import { useInfiniteQuery, useQuery } from 'react-query';
 import { useEffectOnce } from 'react-use';
 import ErrorPage from 'next/error';
-import { api, createCompleteAddress } from '@utils';
+import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
 import { useGeolocation } from '@uidotdev/usehooks';
 import { pushRouteWithUTMQuery } from '@service';
@@ -21,6 +21,7 @@ const CenterListItem = ({ center }) => {
       },
     });
   };
+  const phoneNumber = joinPhoneNumbers(center.phone1, center.phone2);
   return (
     <div class="search-list-item">
       <div class="title">
@@ -45,14 +46,18 @@ const CenterListItem = ({ center }) => {
           })}
         </div>
       )}
-      <div class="info">
-        <img class="icon" src="/img/map-search-call-icon.svg" alt="call" />
-        {center.phone1 || center.phone2}
-      </div>
-      <div class="info">
-        <img class="icon" src="/img/map-search-email-icon.svg" alt="email" />
-        {center.email}
-      </div>
+      {phoneNumber && (
+        <div class="info">
+          <img class="icon" src="/img/map-search-call-icon.svg" alt="call" />
+          {phoneNumber}
+        </div>
+      )}
+      {center.email && (
+        <div class="info email">
+          <img class="icon" src="/img/map-search-email-icon.svg" alt="email" />
+          {center.email}
+        </div>
+      )}
       <div class="action-btn">
         <button class="submit-btn" onClick={goFindCourse}>
           Find Courses
