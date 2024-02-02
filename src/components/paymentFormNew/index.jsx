@@ -1,7 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {
-  MobileCourseDetails,
   ProgramQuestionnaire,
   UserInfoFormNewCheckout,
 } from '@components/checkout';

@@ -250,12 +250,7 @@ export const CostDetailsCardNewCheckout = ({
           <span class="icon-wrap">
             <img src="/img/stars-02.svg" width="20" height="20" alt="" />
           </span>
-
-          {delfee
-            ? `Limited time offer: $${
-                isPremiumPriceType ? premiumRate.unitPrice || fee : fee
-              }`
-            : 'Limited time offer'}
+          Limited time offer
         </h2>
 
         {!isJourneyPremium && !isJourneyPlus && (
@@ -297,7 +292,7 @@ export const CostDetailsCardNewCheckout = ({
                       premiumRate.listPrice !== premiumRate.unitPrice && (
                         <s>${delfee || premiumRate.listPrice}</s>
                       )}{' '}
-                    ${premiumRate.unitPrice}
+                    ${premiumRate.unitPrice} +expenses
                   </span>
                 </label>
               </div>
@@ -343,7 +338,11 @@ export const CostDetailsCardNewCheckout = ({
                     <>
                       <s> ${discount.oldPrice}</s>
                       {(addOnProducts?.length > 0 || hasGroupedAddOnProducts) &&
-                        `${discount.newPrice} +expenses`}
+                        `$${discount.newPrice} ${
+                          isUsableCreditAvailable &&
+                          isSilentRetreatType &&
+                          '+expenses'
+                        }`}
                     </>
                   )}
                   {!discount && premiumRate && (

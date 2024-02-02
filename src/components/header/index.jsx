@@ -379,22 +379,13 @@ export const Header = () => {
     setNavExpanded(!navExpanded);
   };
 
-  // Creating a new div element
-  const dropdownMenuDiv = document.querySelector('.dropdown-menu');
-
-  // Adding classes using classList.add
-  if (dropdownMenuDiv) {
-    // Add the class multi-col using classList.add
-    dropdownMenuDiv.classList.add('multi-col');
-  }
-
   const renderMenu = (menu) => {
     if (!menu) {
       return null;
     }
     if (menu.submenu) {
       return (
-        <>
+        <div className="dropdown-menu-col">
           {menu.submenu.map((submenu) => {
             return (
               <NavDropdown.Item
@@ -406,7 +397,7 @@ export const Header = () => {
               </NavDropdown.Item>
             );
           })}
-        </>
+        </div>
       );
     }
     if (menu.subHeading) {

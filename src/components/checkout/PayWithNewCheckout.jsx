@@ -34,7 +34,7 @@ export const PayWithNewCheckout = ({
               data-value="card"
               aria-hidden="aria-hidden"
             >
-              <span className="agreement__text">Credit card or debit card</span>
+              <span className="agreement__text">Credit/Debit card</span>
             </label>
           </p>
         </div>
