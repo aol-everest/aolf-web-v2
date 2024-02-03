@@ -83,7 +83,6 @@ export const PaymentFormNew = ({
 }) => {
   const formRef = useRef();
   const { showAlert } = useGlobalAlertContext();
-  const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const elements = useElements();
   const { setUser } = useAuth();
@@ -1049,16 +1048,9 @@ export const PaymentFormNew = ({
     }
   };
 
-  const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
-  const isJourneyPremium =
-    userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PREMIUM.value];
-  const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
-  const isBasicMember =
-    userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
-
   return (
     <>
+      {loading && <div className="cover-spin"></div>}
       <Formik
         initialValues={{
           firstName: first_name || '',
@@ -1082,8 +1074,7 @@ export const PaymentFormNew = ({
         }}
         validationSchema={validationSchema}
         innerRef={formRef}
-        onSubmit={async (values, { setSubmitting, isValid, errors }) => {
-          console.log('errors', errors);
+        onSubmit={async (values) => {
           await preEnrollValidation(values);
         }}
       >
