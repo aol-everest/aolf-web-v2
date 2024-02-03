@@ -1045,7 +1045,7 @@ export const PaymentFormNew = ({
 
   const handleFormSubmit = () => {
     if (formRef.current) {
-      formRef.current.handleSubmit();
+      formRef.current.submitForm();
     }
   };
 
