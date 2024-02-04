@@ -1,8 +1,6 @@
 import { COURSE_TYPES, MEMBERSHIP_TYPES } from '@constants';
 import classNames from 'classnames';
-import { Field } from 'formik';
 import { Fragment } from 'react';
-import Select from 'react-select';
 import { FieldWrapper } from './FieldWrapper';
 import { InputDropDown } from './InputDropDown';
 import { StyledInput } from './StyledInput';

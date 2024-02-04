@@ -50,22 +50,17 @@ export const PhoneInputNewCheckout = ({
     <div className={className}>
       <label htmlFor="phone">{label}</label>
       <PhoneInput
-        placeholder="Phone No"
-        country="us"
-        inputClass={
-          formikProps.errors?.contactPhone
-            ? 'text-input text-input-error'
-            : 'text-input'
-        }
-        containerClass="input-block"
-        countryCodeEditable={true}
-        showSpecialLabel={false}
-        showLabel={true}
-        smartCaret={true}
-        international={true}
-        value={formikProps.values.contactPhone}
         {...rest}
         {...inputProps}
+        placeholder="Phone No"
+        defaultCountry="us"
+        smartCaret={true}
+        country="us"
+        inputClass={formikProps.errors?.contactPhone ? 'error' : ''}
+        value={formikProps.values.contactPhone}
+        containerClass="input-block"
+        countryCodeEditable={true}
+        international={true}
       />
 
       {tooltip && (

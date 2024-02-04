@@ -30,6 +30,7 @@ import { useQuery } from 'react-query';
 import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
+import { PaymentFormNew } from '@components/paymentFormNew';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
@@ -307,28 +308,8 @@ const Checkout = () => {
         />
       );
     }
-    if (
-      isSKYType ||
-      isSilentRetreatType ||
-      isSahajSamadhiMeditationType ||
-      isSriSriYogaMeditationType ||
-      isVolunteerTrainingProgram
-    ) {
-      return (
-        <PaymentForm
-          isStripeIntentPayment={isStripeIntentPayment}
-          workshop={workshop}
-          profile={user?.profile}
-          enrollmentCompletionAction={enrollmentCompletionAction}
-          enrollmentCompletionLink={enrollmentCompletionLink}
-          handleCouseSelection={handleCouseSelection}
-          login={login}
-          isLoggedUser={authenticated}
-        />
-      );
-    }
     return (
-      <PaymentFormGeneric
+      <PaymentFormNew
         isStripeIntentPayment={isStripeIntentPayment}
         workshop={workshop}
         profile={user?.profile}
@@ -475,27 +456,8 @@ const Checkout = () => {
           </aside>
         )}
 
-        <section className="order">
+        <section>
           <div className="container">
-            <h1 className="title">{workshop.title}</h1>
-            {workshop.isGenericWorkshop ? (
-              <p className="order__detail">
-                Once you register, you will be contacted to schedule your course
-                date
-                <br />
-                <span>
-                  SKY is offered every week of the year across time zones.
-                </span>
-              </p>
-            ) : (
-              <p
-                className="order__detail-description"
-                dangerouslySetInnerHTML={{
-                  __html: workshop?.description,
-                }}
-              ></p>
-            )}
-
             {workshop.isCorporateEvent && (
               <div className="tw-mb-[60px]">
                 <h1 className="tw-text-center tw-text-4xl tw-font-bold tw-text-[#31364e]">
@@ -525,40 +487,6 @@ const Checkout = () => {
         </section>
         <section className="additional-information">
           <div className="container">
-            <div className="row">
-              <div className="col-lg-4">
-                <div className="information__blcok">
-                  <h2 className="information__tile">
-                    UNPARALLELED CONVENIENCE
-                  </h2>
-                  <p className="information__text">
-                    Choose your schedule. Learn from the comfort of your own
-                    home.
-                  </p>
-                </div>
-              </div>
-              <div className="col-lg-4 mt-3 mt-lg-0">
-                <div className="information__blcok">
-                  <h2 className="information__tile">
-                    EXPERIENCED FACILITATORS
-                  </h2>
-                  <p className="information__text">
-                    Real-time interaction with highly trained instructors
-                    (minimum of 500+ training hours)
-                  </p>
-                </div>
-              </div>
-              <div className="col-lg-4 mt-3 mt-lg-0">
-                <div className="information__blcok">
-                  <h2 className="information__tile">UPLIFTING COMMUNITY</h2>
-                  <p className="information__text">
-                    Form deep, authentic connections and community with your
-                    fellow participants.
-                  </p>
-                </div>
-              </div>
-            </div>
-
             <div className="featured-in featured-in_with-button">
               <h2 className="featured-in__title">Featured in</h2>
               <div className="featured-in__box d-none d-lg-flex">

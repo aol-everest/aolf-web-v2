@@ -75,8 +75,7 @@ export const stringToBoolean = (string) => {
   }
 };
 
-export const phoneRegExp =
-  /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+export const phoneRegExp = /^\+?\d{1,4}\s?(\(\d{1,}\))?[0-9\-.\s]{6,}$/;
 
 export const emailRegExp =
   /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
