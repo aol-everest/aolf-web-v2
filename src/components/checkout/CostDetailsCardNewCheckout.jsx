@@ -315,6 +315,7 @@ export const CostDetailsCardNewCheckout = ({
                       onClick={openSubscriptionPaywallPage(
                         MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
                       )}
+                      disabled={formikProps.values.priceType === 'regular'}
                     >
                       Join Journey+
                     </button>
