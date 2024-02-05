@@ -186,3 +186,23 @@ export const joinPhoneNumbers = (...phoneNumbers) => {
 
   return formattedNumbers;
 };
+
+export const findExistingQuestionnaire = (
+  totalSelectedOptions,
+  currentStepData,
+  answerId,
+) => {
+  const updatedOptions = [...totalSelectedOptions];
+  const existingOptionIndex = updatedOptions.findIndex(
+    (option) => option.questionSfid === currentStepData?.questionSfid,
+  );
+
+  if (existingOptionIndex !== -1) {
+    updatedOptions.splice(existingOptionIndex, 1);
+  }
+  updatedOptions.push({
+    questionSfid: currentStepData?.questionSfid,
+    answer: answerId,
+  });
+  return updatedOptions;
+};
