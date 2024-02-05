@@ -16,14 +16,14 @@ const Step2 = () => {
   useEffect(() => {
     if (questions.length === 0) {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/questionnaire`,
+        pathname: `/us-en/course-finder`,
       });
     }
   }, []);
 
   const NavigateToStep3 = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/questionnaire/step3`,
+      pathname: `/us-en/course-finder/step3`,
     });
   };
 

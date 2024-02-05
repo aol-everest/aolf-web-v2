@@ -8,7 +8,7 @@ const Step1 = () => {
 
   const NavigateToStep1 = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/questionnaire/step1`,
+      pathname: `/us-en/course-finder/step1`,
     });
   };
 

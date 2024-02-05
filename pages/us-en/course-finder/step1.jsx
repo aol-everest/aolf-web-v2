@@ -42,7 +42,7 @@ const Step1 = () => {
       questions,
     });
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/questionnaire/step2`,
+      pathname: `/us-en/course-finder/step2`,
     });
   };
 
