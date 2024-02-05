@@ -73,17 +73,17 @@ export function Footer() {
                 />
                 <ul className="nav-details">
                   <li className="nav-item">
-                    <a href="/us-en/lp/gurudev">About Gurudev</a>
+                    <Link href="/us-en/lp/gurudev">About Gurudev</Link>
                   </li>
                   <li className="nav-item">
-                    <a href="https://www.artofliving.org/us-en/awards-and-honours">
+                    <Link href="https://www.artofliving.org/us-en/awards-and-honours">
                       Accolades
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a href="https://www.artofliving.org/us-en/sri-sri-blog">
+                    <Link href="https://www.artofliving.org/us-en/sri-sri-blog">
                       Blog
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
