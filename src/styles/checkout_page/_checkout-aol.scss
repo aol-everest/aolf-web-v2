@@ -46,6 +46,11 @@ main.checkout-aol {
       border: solid 1px #fff;
       color: #ffa180;
       background: white;
+      &:disabled {
+        cursor: not-allowed;
+        background: #f7f5f4;
+        color: #b8b8b8;
+      }
     }
   }
   .order__card__payment-select {
@@ -578,6 +583,11 @@ main.checkout-aol {
         box-shadow: none;
         border: none;
         font-weight: 500 !important;
+        &:disabled {
+          cursor: not-allowed;
+          background: #f7f5f4;
+          color: #b8b8b8;
+        }
       }
     }
   }
