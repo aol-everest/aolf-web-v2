@@ -1059,12 +1059,12 @@ export const PaymentFormNew = ({
         }}
         validationSchema={validationSchema}
         innerRef={formRef}
-        onSubmit={async (values, { errors }) => {
+        onSubmit={async (values) => {
           await preEnrollValidation(values);
         }}
       >
         {(formikProps) => {
-          const { values, handleSubmit } = formikProps;
+          const { values } = formikProps;
           formikOnChange(values);
           const addOnFee = addOnProducts.reduce(
             (
