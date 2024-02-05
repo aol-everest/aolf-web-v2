@@ -6,9 +6,9 @@ const Home = () => {
   const router = useRouter();
 
   const NavigateToWelcome = () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/questionnaire/welcome`,
-    });
+    // pushRouteWithUTMQuery(router, {
+    //   pathname: `/us-en/questionnaire/welcome`,
+    // });
   };
 
   return (
@@ -65,7 +65,12 @@ const Home = () => {
                   <div className="title">Find the right course for you</div>
                   <div className="desc">Answer a few quick questions...</div>
                   <div className="actions">
-                    <button className="btn btn-primary">Get started</button>
+                    <button
+                      className="btn btn-primary"
+                      onClick={NavigateToWelcome}
+                    >
+                      Get started
+                    </button>
                     <button className="btn btn-secondary">Not now</button>
                   </div>
                 </div>
