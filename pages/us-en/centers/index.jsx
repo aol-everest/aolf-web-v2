@@ -28,7 +28,7 @@ const CenterListItem = ({ center }) => {
         {center.isNationalCenter && (
           <img src="/img/center-icon.svg" alt="icon" class="icon" />
         )}
-        {center.centerName}
+        {center.centerName}, {center.stateProvince}
       </div>
       {center.centerMode === 'InPerson' && (
         <div class="info">
@@ -104,7 +104,10 @@ const Centers = () => {
           lng: finalLongitude,
         },
       });
-      return response.data;
+      const data = (response.data || []).filter((center) => {
+        return center.email || center.phone1 || center.phone2;
+      });
+      return data;
     },
     {
       refetchOnWindowFocus: false,
