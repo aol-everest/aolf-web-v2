@@ -927,14 +927,6 @@ export const PaymentFormNew = ({
     contactPhone: Yup.string()
       .required('Phone number required')
       .matches(phoneRegExp, 'Phone number is not valid'),
-    contactAddress: Yup.string().required('Address is required'),
-    contactCity: Yup.string().required('City is required'),
-    contactState: Yup.string().required('State is required'),
-    contactZip: Yup.string()
-      .required('Zip is required!')
-      //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-      .min(2, 'Zip is invalid')
-      .max(10, 'Zip is invalid'),
     ppaAgreement: Yup.boolean()
       .label('Terms')
       .test(
@@ -1074,7 +1066,8 @@ export const PaymentFormNew = ({
         }}
         validationSchema={validationSchema}
         innerRef={formRef}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { errors }) => {
+          console.log('errors', errors);
           await preEnrollValidation(values);
         }}
       >
