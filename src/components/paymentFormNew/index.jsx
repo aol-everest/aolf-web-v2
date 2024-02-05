@@ -9,17 +9,10 @@ import {
   ABBRS,
   ALERT_TYPES,
   COURSE_MODES,
-  COURSE_TYPES,
-  MEMBERSHIP_TYPES,
-  MODAL_TYPES,
   PAYMENT_MODES,
   PAYMENT_TYPES,
 } from '@constants';
-import {
-  useAuth,
-  useGlobalAlertContext,
-  useGlobalModalContext,
-} from '@contexts';
+import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useQueryString } from '@hooks';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { pushRouteWithUTMQuery } from '@service';
@@ -1067,7 +1060,6 @@ export const PaymentFormNew = ({
         validationSchema={validationSchema}
         innerRef={formRef}
         onSubmit={async (values, { errors }) => {
-          console.log('errors', errors);
           await preEnrollValidation(values);
         }}
       >
