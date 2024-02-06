@@ -351,10 +351,9 @@ export const CostDetailsCardNewCheckout = ({
                         premiumRate.listPrice !== premiumRate.unitPrice && (
                           <s>${delfee || premiumRate.listPrice}</s>
                         )}
-                      {premiumRate.listPrice === premiumRate.unitPrice &&
-                        `$${premiumRate.unitPrice}`}
-                      {(addOnProducts?.length > 0 || hasGroupedAddOnProducts) &&
-                        `$${premiumRate.unitPrice} +expenses`}
+                      {addOnProducts?.length > 0 || hasGroupedAddOnProducts
+                        ? `$${premiumRate.unitPrice} +expenses`
+                        : `$${premiumRate.unitPrice}`}
                     </>
                   )}
                 </span>
