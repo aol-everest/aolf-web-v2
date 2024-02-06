@@ -668,9 +668,9 @@ const SchedulingPaymentForm = ({
                     <div className="section-box">
                       {fee > 0 && (
                         <>
-                          <h2 class="section__title d-flex">
+                          <h2 className="section__title d-flex">
                             Pay with
-                            <span class="ssl-info">
+                            <span className="ssl-info">
                               <svg
                                 width="20"
                                 height="21"
@@ -691,8 +691,8 @@ const SchedulingPaymentForm = ({
                           </div>
                         </>
                       )}
-                      <div class="trust-score">
-                        <div class="first-row">
+                      <div className="trust-score">
+                        <div className="first-row">
                           Excellent
                           <img
                             src="/img/Trustpilo_stars-5.png"
@@ -703,7 +703,7 @@ const SchedulingPaymentForm = ({
                             alt="Trust Pilot"
                           />
                         </div>
-                        <div class="second-row">
+                        <div className="second-row">
                           TrustScore <strong>4.7</strong>
                         </div>
                       </div>

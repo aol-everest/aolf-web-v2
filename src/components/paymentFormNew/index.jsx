@@ -1134,7 +1134,7 @@ export const PaymentFormNew = ({
                       <div className="section--title">
                         <h1 className="page-title">{title}</h1>
                         {workshop.isGenericWorkshop ? (
-                          <div class="description">
+                          <div className="description">
                             Once you register, you will be contacted to schedule
                             your course date
                             <br />
@@ -1145,7 +1145,7 @@ export const PaymentFormNew = ({
                           </div>
                         ) : (
                           <div
-                            class="description"
+                            className="description"
                             dangerouslySetInnerHTML={{
                               __html: workshop?.description,
                             }}
@@ -1181,9 +1181,9 @@ export const PaymentFormNew = ({
                       <div className="section-box">
                         {isPaymentRequired && (
                           <>
-                            <h2 class="section__title d-flex">
+                            <h2 className="section__title d-flex">
                               Pay with
-                              <span class="ssl-info">
+                              <span className="ssl-info">
                                 <svg
                                   width="20"
                                   height="21"
@@ -1230,8 +1230,8 @@ export const PaymentFormNew = ({
                                   {cardLast4Digit && !isChangingCard && (
                                     <>
                                       <div className="bank-card-info">
-                                        <div class="col-12 col-lg-6 pb-3 px-2">
-                                          <div class="form-item required">
+                                        <div className="col-12 col-lg-6 pb-3 px-2">
+                                          <div className="form-item required">
                                             <input
                                               id="card-number"
                                               type="text"
@@ -1241,8 +1241,8 @@ export const PaymentFormNew = ({
                                           </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-3 pb-3 px-2">
-                                          <div class="form-item required">
+                                        <div className="col-12 col-lg-3 pb-3 px-2">
+                                          <div className="form-item required">
                                             <input
                                               id="mm-yy"
                                               type="text"
@@ -1251,8 +1251,8 @@ export const PaymentFormNew = ({
                                             />
                                           </div>
                                         </div>
-                                        <div class="col-12 col-lg-3 pb-3 px-2">
-                                          <div class="form-item required">
+                                        <div className="col-12 col-lg-3 pb-3 px-2">
+                                          <div className="form-item required">
                                             <input
                                               id="cvc"
                                               type="text"
@@ -1346,8 +1346,8 @@ export const PaymentFormNew = ({
                               </div>
                             </div>
                           )}
-                        <div class="trust-score">
-                          <div class="first-row">
+                        <div className="trust-score">
+                          <div className="first-row">
                             Excellent
                             <img
                               src="/img/Trustpilo_stars-5.png"
@@ -1358,7 +1358,7 @@ export const PaymentFormNew = ({
                               alt="Trust Pilot"
                             />
                           </div>
-                          <div class="second-row">
+                          <div className="second-row">
                             TrustScore <strong>4.7</strong>
                           </div>
                         </div>

@@ -52,25 +52,25 @@ const Step3 = () => {
               <div className="question-step-highlighter"></div>
               <div className="question-step-highlighter"></div>
             </div>
-            <h1 class="question-title">
+            <h1 className="question-title">
               What best describes your meditation experience?
             </h1>
-            <div class="question-options">
-              <div class="option-item">
+            <div className="question-options">
+              <div className="option-item">
                 <input type="radio" id="q1" name="quest" />
-                <label for="q1">None, I’m new!</label>
+                <label htmlFor="q1">None, I’m new!</label>
               </div>
-              <div class="option-item">
+              <div className="option-item">
                 <input type="radio" id="q2" name="quest" />
-                <label for="q2">Tried it once or twice</label>
+                <label htmlFor="q2">Tried it once or twice</label>
               </div>
-              <div class="option-item">
+              <div className="option-item">
                 <input type="radio" id="q3" name="quest" />
-                <label for="q3">Meditate occasionally</label>
+                <label htmlFor="q3">Meditate occasionally</label>
               </div>
-              <div class="option-item">
+              <div className="option-item">
                 <input type="radio" id="q4" name="quest" />
-                <label for="q4">Meditate regularly</label>
+                <label htmlFor="q4">Meditate regularly</label>
               </div>
             </div>
             <div className="question-action">

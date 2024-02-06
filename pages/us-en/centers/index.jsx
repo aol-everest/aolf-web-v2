@@ -23,17 +23,17 @@ const CenterListItem = ({ center }) => {
   };
   const phoneNumber = joinPhoneNumbers(center.phone1, center.phone2);
   return (
-    <div class="search-list-item">
-      <div class="title">
+    <div className="search-list-item">
+      <div className="title">
         {center.isNationalCenter && (
-          <img src="/img/center-icon.svg" alt="icon" class="icon" />
+          <img src="/img/center-icon.svg" alt="icon" className="icon" />
         )}
         {center.centerName}, {center.stateProvince}
       </div>
       {center.centerMode === 'InPerson' && (
-        <div class="info">
+        <div className="info">
           <img
-            class="icon"
+            className="icon"
             src="/img/map-search-location-icon.svg"
             alt="call"
           />
@@ -47,19 +47,27 @@ const CenterListItem = ({ center }) => {
         </div>
       )}
       {phoneNumber && (
-        <div class="info">
-          <img class="icon" src="/img/map-search-call-icon.svg" alt="call" />
+        <div className="info">
+          <img
+            className="icon"
+            src="/img/map-search-call-icon.svg"
+            alt="call"
+          />
           {phoneNumber}
         </div>
       )}
       {center.email && (
-        <div class="info email">
-          <img class="icon" src="/img/map-search-email-icon.svg" alt="email" />
+        <div className="info email">
+          <img
+            className="icon"
+            src="/img/map-search-email-icon.svg"
+            alt="email"
+          />
           {center.email}
         </div>
       )}
-      <div class="action-btn">
-        <button class="submit-btn" onClick={goFindCourse}>
+      <div className="action-btn">
+        <button className="submit-btn" onClick={goFindCourse}>
           Find Courses
         </button>
       </div>
@@ -127,20 +135,20 @@ const Centers = () => {
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || loading) return <PageLoading />;
   return (
-    <main class="local-centers">
-      <section class="map-section">
-        <div class="center-search-box" id="mobile-handler">
-          <div class="mobile-handler"></div>
-          <div class="search-input-wrap">
+    <main className="local-centers">
+      <section className="map-section">
+        <div className="center-search-box" id="mobile-handler">
+          <div className="mobile-handler"></div>
+          <div className="search-input-wrap">
             <input
               type="text"
               placeholder="Search..."
-              class="search-input"
+              className="search-input"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div class="search-listing">
+          <div className="search-listing">
             {search(allCenters).map((center) => {
               return <CenterListItem key={center.sfid} center={center} />;
             })}

@@ -55,8 +55,8 @@ export const CostDetailsCardNewCheckout = ({
     return (
       <div className="reciept reciept--box d-none d-lg-block">
         <div className="reciept__header">
-          <h2 class="title">
-            <span class="icon-wrap">
+          <h2 className="title">
+            <span className="icon-wrap">
               <img src="/img/stars-02.svg" width="20" height="20" alt="" />
             </span>
             Limited time offer
@@ -243,9 +243,9 @@ export const CostDetailsCardNewCheckout = ({
 
   return (
     <>
-      <div class="offer-box">
-        <h2 class="title">
-          <span class="icon-wrap">
+      <div className="offer-box">
+        <h2 className="title">
+          <span className="icon-wrap">
             <img src="/img/stars-02.svg" width="20" height="20" alt="" />
           </span>
           Limited time offer
@@ -253,7 +253,7 @@ export const CostDetailsCardNewCheckout = ({
 
         {!isJourneyPremium && !isJourneyPlus && (
           <>
-            <div class="form-item radio">
+            <div className="form-item radio">
               {isSilentRetreatType && (
                 <input
                   type="radio"
@@ -266,14 +266,14 @@ export const CostDetailsCardNewCheckout = ({
                 />
               )}
               <label htmlFor="payment-lg-regular-card">
-                <span class="radio-text">Regular Tuition:</span>
-                <span class="radio-value">
+                <span className="radio-text">Regular Tuition:</span>
+                <span className="radio-value">
                   {delfee && <s>${delfee}</s>} {`$${fee}`}
                 </span>
               </label>
             </div>
             {!isUsableCreditAvailable && isSilentRetreatType && (
-              <div class="form-item radio">
+              <div className="form-item radio">
                 <input
                   type="radio"
                   name="priceType"
@@ -283,8 +283,8 @@ export const CostDetailsCardNewCheckout = ({
                   onChange={formikProps.handleChange('priceType')}
                 />
                 <label htmlFor="payment-lg-premium-card">
-                  <span class="radio-text">Premium/Journey+ Tuition:</span>
-                  <span class="radio-value">
+                  <span className="radio-text">Premium/Journey+ Tuition:</span>
+                  <span className="radio-value">
                     {premiumRate &&
                       premiumRate.listPrice &&
                       premiumRate.listPrice !== premiumRate.unitPrice && (
@@ -324,15 +324,15 @@ export const CostDetailsCardNewCheckout = ({
         )}
         {(isJourneyPremium || isJourneyPlus) && (
           <>
-            <div class="form-item radio">
+            <div className="form-item radio">
               <label htmlFor="payment-lg-regular">
-                <span class="radio-text">
+                <span className="radio-text">
                   {!isUsableCreditAvailable && !isSilentRetreatType
                     ? 'Regular Tuition'
                     : 'Premium/Journey+ Tuition'}
                   :
                 </span>
-                <span class="radio-value">
+                <span className="radio-value">
                   {discount && discount.newPrice && (
                     <>
                       <s> ${discount.oldPrice}</s>
@@ -361,7 +361,7 @@ export const CostDetailsCardNewCheckout = ({
               </label>
             </div>
             {hasGroupedAddOnProducts && (
-              <div class="note">Note: *Expense includes meals</div>
+              <div className="note">Note: *Expense includes meals</div>
             )}
             {isUsableCreditAvailable && (
               <div className="credit-text">
@@ -374,7 +374,7 @@ export const CostDetailsCardNewCheckout = ({
       <div className="room-board-pricing">
         {hasGroupedAddOnProducts && (
           <>
-            <div class="form-item">
+            <div className="form-item">
               <label>Expense Type {isOfflineExpense && '*'}</label>
               <h6 className="room__board__sub-heading">
                 *Expense includes meals

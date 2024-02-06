@@ -86,11 +86,11 @@ const Step6 = () => {
                   className="workshopEnroll"
                 >
                   <div className="question-box">
-                    <h1 class="question-title mt-0">
+                    <h1 className="question-title mt-0">
                       Where can we send your personalized recommendation?
                     </h1>
-                    <div class="recommendation-form">
-                      <div class="form-item">
+                    <div className="recommendation-form">
+                      <div className="form-item">
                         <label htmlFor="firstName">First name</label>
                         <input
                           type="text"
@@ -107,7 +107,7 @@ const Step6 = () => {
                           onBlur={handleBlur}
                         />
                       </div>
-                      <div class="form-item">
+                      <div className="form-item">
                         <label htmlFor="email">Email address</label>
                         <input
                           type="email"
@@ -124,7 +124,7 @@ const Step6 = () => {
                           onBlur={handleBlur}
                         />
                       </div>
-                      <div class="form-item">
+                      <div className="form-item">
                         <label htmlFor="contactPhone">
                           Mobile number (optional)
                         </label>
@@ -143,7 +143,7 @@ const Step6 = () => {
                           onBlur={handleBlur}
                         />
                       </div>
-                      <div class="form-item checkbox">
+                      <div className="form-item checkbox">
                         <input
                           type="checkbox"
                           id="guidance"

@@ -1,5 +1,5 @@
 import { Loader } from '@components/loader';
-import { api, emailRegExp, phoneRegExp, tConvert } from '@utils';
+import { api, emailRegExp, tConvert } from '@utils';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import moment from 'moment';
@@ -402,7 +402,7 @@ const TicketCongratulations = () => {
                                     {Object.keys(ticketData)?.length > 0 &&
                                       `${firstItemId}-1` !== ticketId && (
                                         <div className="form-item other">
-                                          <label for="other">
+                                          <label htmlFor="other">
                                             Copy data from
                                           </label>
                                           <select
@@ -445,7 +445,7 @@ const TicketCongratulations = () => {
                                       )}
 
                                     <div className="form-item required">
-                                      <label for="fname">First Name</label>
+                                      <label htmlFor="fname">First Name</label>
                                       <input
                                         type="text"
                                         name="firstName"
@@ -461,7 +461,7 @@ const TicketCongratulations = () => {
                                       />
                                     </div>
                                     <div className="form-item required">
-                                      <label for="lname required">
+                                      <label htmlFor="lname required">
                                         Last Name
                                       </label>
                                       <input
@@ -479,7 +479,9 @@ const TicketCongratulations = () => {
                                       />
                                     </div>
                                     <div className="form-item required">
-                                      <label for="email">Email Address</label>
+                                      <label htmlFor="email">
+                                        Email Address
+                                      </label>
                                       <input
                                         type="email"
                                         name="email"
@@ -495,7 +497,9 @@ const TicketCongratulations = () => {
                                       />
                                     </div>
                                     <div className="form-item required">
-                                      <label for="phone">Phone Number</label>
+                                      <label htmlFor="phone">
+                                        Phone Number
+                                      </label>
                                       <input
                                         type="tel"
                                         name="contactPhone"

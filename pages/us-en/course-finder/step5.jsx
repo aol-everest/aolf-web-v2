@@ -46,30 +46,32 @@ const Step5 = () => {
             </button>
           </div>
           <div className="question-box">
-            <div class="question-step-highlighter-wrap">
-              <div class="question-step-highlighter active"></div>
-              <div class="question-step-highlighter active"></div>
-              <div class="question-step-highlighter active"></div>
-              <div class="question-step-highlighter active"></div>
-              <div class="question-step-highlighter active"></div>
+            <div className="question-step-highlighter-wrap">
+              <div className="question-step-highlighter active"></div>
+              <div className="question-step-highlighter active"></div>
+              <div className="question-step-highlighter active"></div>
+              <div className="question-step-highlighter active"></div>
+              <div className="question-step-highlighter active"></div>
             </div>
-            <h1 class="question-title">When would you like to get started?</h1>
-            <div class="question-options">
-              <div class="option-item">
+            <h1 className="question-title">
+              When would you like to get started?
+            </h1>
+            <div className="question-options">
+              <div className="option-item">
                 <input type="radio" id="q1" name="quest" />
-                <label for="q1">Right now</label>
+                <label htmlFor="q1">Right now</label>
               </div>
-              <div class="option-item">
+              <div className="option-item">
                 <input type="radio" id="q2" name="quest" />
-                <label for="q2">Sometimes soon</label>
+                <label htmlFor="q2">Sometimes soon</label>
               </div>
-              <div class="option-item">
+              <div className="option-item">
                 <input type="radio" id="q3" name="quest" />
-                <label for="q3">Just thinking about it</label>
+                <label htmlFor="q3">Just thinking about it</label>
               </div>
-              <div class="option-item">
+              <div className="option-item">
                 <input type="radio" id="q4" name="quest" />
-                <label for="q4">Don't know</label>
+                <label htmlFor="q4">Don't know</label>
               </div>
             </div>
 

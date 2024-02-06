@@ -60,19 +60,19 @@ const Step4 = () => {
             <div className="question-options">
               <div className="option-item">
                 <input type="checkbox" id="q1" name="q1" />
-                <label for="q1">Breathwork</label>
+                <label htmlFor="q1">Breathwork</label>
               </div>
               <div className="option-item">
                 <input type="checkbox" id="q2" name="q2" />
-                <label for="q2">Meditation</label>
+                <label htmlFor="q2">Meditation</label>
               </div>
               <div className="option-item">
                 <input type="checkbox" id="q3" name="q3" />
-                <label for="q3">Silent Retreat</label>
+                <label htmlFor="q3">Silent Retreat</label>
               </div>
               <div className="option-item">
                 <input type="checkbox" id="q4" name="q4" />
-                <label for="q4">Wisdom for daily life</label>
+                <label htmlFor="q4">Wisdom for daily life</label>
               </div>
             </div>
 

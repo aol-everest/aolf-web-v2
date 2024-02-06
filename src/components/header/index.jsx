@@ -422,7 +422,7 @@ export const Header = () => {
                 {subMenu?.items && (
                   <>
                     {subMenu.name && (
-                      <div class="dropdown-menu-col">
+                      <div className="dropdown-menu-col">
                         <h6 className="dropdown-header" key={subMenu.name}>
                           {subMenu.name}
                         </h6>
