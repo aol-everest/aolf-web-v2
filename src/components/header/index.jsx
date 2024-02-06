@@ -4,7 +4,7 @@ import { useAuth, useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
 import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
@@ -136,19 +136,19 @@ const AOL_MENU = [
     name: 'App',
     link: '/us-en/lp/journey-app',
   },
-  // {
-  //   name: 'Centers',
-  //   submenu: [
-  //     {
-  //       name: 'Art of Living Boone Retreat',
-  //       link: '/us-en/lp/theartoflivingretreatcenter',
-  //     },
-  //     {
-  //       name: 'Local Centers',
-  //       link: '/us-en/course/centers',
-  //     },
-  //   ],
-  // },
+  {
+    name: 'Centers',
+    submenu: [
+      {
+        name: 'Art of Living Boone Retreat',
+        link: '/us-en/lp/theartoflivingretreatcenter',
+      },
+      {
+        name: 'Local Centers',
+        link: '/us-en/centers',
+      },
+    ],
+  },
   {
     name: 'About Us',
     submenu: [
@@ -418,14 +418,12 @@ export const Header = () => {
         <>
           {menu.subHeading?.map((subMenu) => {
             return (
-              <>
+              <React.Fragment key={subMenu.name}>
                 {subMenu?.items && (
                   <>
                     {subMenu.name && (
                       <div className="dropdown-menu-col">
-                        <h6 className="dropdown-header" key={subMenu.name}>
-                          {subMenu.name}
-                        </h6>
+                        <h6 className="dropdown-header">{subMenu.name}</h6>
                         {subMenu?.items.map((menuItem) => {
                           return (
                             <NavDropdown.Item
@@ -456,7 +454,7 @@ export const Header = () => {
                     {subMenu.name}
                   </NavDropdown.Item>
                 )}
-              </>
+              </React.Fragment>
             );
           })}
         </>
