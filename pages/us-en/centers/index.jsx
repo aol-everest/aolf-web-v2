@@ -260,6 +260,10 @@ const Centers = () => {
     });
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 100, left: 0, behavior: 'smooth' });
+  };
+
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || loading) return <PageLoading />;
   return (
@@ -534,7 +538,9 @@ const Centers = () => {
             </div>
           </div>
           <div className="actions">
-            <button className="submit-btn">Find Your Community!</button>
+            <button className="submit-btn" onClick={scrollToTop}>
+              Find Your Community!
+            </button>
           </div>
         </div>
       </section>
@@ -606,7 +612,9 @@ const Centers = () => {
               events and milestones.
             </div>
             <div className="actions">
-              <button className="submit-btn">Find Your Community!</button>
+              <button className="submit-btn" onClick={scrollToTop}>
+                Find Your Community!
+              </button>
             </div>
           </div>
         </div>
@@ -649,11 +657,15 @@ const Centers = () => {
               </p>
             </div>
             <div className="second-col">
-              <img
-                src="/img/founder-video-placeholder.webp"
-                alt="founder"
+              <iframe
                 width="100%"
-              />
+                height="100%"
+                src="https://www.youtube.com/embed/k493mHHWTfw?si=TXZlbZfVWJmEchhf"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
         </div>
@@ -665,7 +677,9 @@ const Centers = () => {
               Find An Art Of Living Center Near You
             </h2>
             <div className="actions">
-              <button className="submit-btn">Find Your Community!</button>
+              <button className="submit-btn" onClick={scrollToTop}>
+                Find Your Community!
+              </button>
             </div>
           </div>
         </div>
