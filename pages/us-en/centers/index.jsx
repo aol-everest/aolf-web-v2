@@ -33,7 +33,14 @@ const STORIES = [
   {
     index: 3,
     title: 'Come to Work in a Better Mindset',
-    body: `I was always interested in meditation and I had never meditated before. It was always something that was sort of elusive but Ithought that I maybe never be capable of it. I thought that maybe my mind moved too quickly or I wasn't focus sed enough. Directly after the course and since then... just this understanding that this moment in the now is to be appreciated and enjoyed... and that released a lot of stress for meWhen I come to work having already centered myself, it's way easier to plan... delegate tasks to other people, or work with other people. Now I come to work in a much better mindset, and that in turn translates into the quality of work and the way I deal with people at work. Just the way I process emotions, thoughts, and feelings is different from before`,
+    body: `I was always interested in meditation and I had never meditated before. It was always something
+    that was sort of elusive but I thought that I maybe never be capable of it. I thought that maybe my
+    mind moved too quickly or I wasn't focus sed enough. Directly after the course and since then...
+    just this understanding that this moment in the now is to be appreciated and enjoyed... and that
+    released a lot of stress for meWhen I come to work having already centered myself, it's way easier
+    to plan... delegate tasks to other people, or work with other people. Now I come to work in a much
+    better mindset, and that in turn translates into the quality of work and the way I deal with people at
+    work. Just the way I process emotions, thoughts, and feelings is different from before`,
     authorName: 'Dan J.',
     authorTitle: 'Chef Asheville, NC',
     authorPic: '/img/Testimony-Dan.webp',
@@ -41,7 +48,11 @@ const STORIES = [
   {
     index: 1,
     title: 'Great insights and practical tools',
-    body: `I joined the Art of Living Part 1 Course after an introductory meet up at the Art of Living Center. It felt like it could be a great program for me, and before I could change my mind, I signed up for it. If I had waited until later to   join, I would have missed out on a truly life transforming experience. The program gave me great insights and practical tools to dealing with life's stressful situations. I met some really good friends that I still stay in contact with`,
+    body: `I joined the Art of Living Part 1 Course after an introductory meet up at the Art of Living
+    Center. It felt like it could be a great program for me, and before I could change my mind,
+    I signed up for it. If I had waited until later to   join, I would have missed out on a truly life
+    transforming experience. The program gave me great insights and practical tools to dealing with life's
+     stressful situations. I met some really good friends that I still stay in contact with`,
     authorName: 'Tiffany Guynes',
     authorTitle: 'Chef & private caterer, Austin, TX',
     authorPic: '/img/Testimony-Tiffany.webp',
