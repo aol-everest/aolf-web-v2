@@ -620,11 +620,16 @@ const SchedulingPaymentForm = ({
           contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required('First Name is required'),
-          lastName: Yup.string().required('Last Name is required'),
+          firstName: Yup.string()
+            .required('First Name is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
+          lastName: Yup.string()
+            .required('Last Name is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
           email: Yup.string()
             .email('Email is invalid!')
-            .required('Email is required!'),
+            .required('Email is required!')
+            .email(),
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),

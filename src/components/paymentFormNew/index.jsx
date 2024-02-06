@@ -914,8 +914,12 @@ export const PaymentFormNew = ({
   };
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string().required('Last Name is required'),
+    firstName: Yup.string()
+      .required('First Name is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
+    lastName: Yup.string()
+      .required('Last Name is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
     email: Yup.string().required('Email is required').email(),
     contactPhone: Yup.string()
       .required('Phone number required')
