@@ -24,8 +24,23 @@ main.checkout-aol {
     padding-top: 0;
     margin-top: 30px;
   }
+  .agreement__important {
+    align-items: center;
+    color: #ee8585;
+    display: flex;
+    font-size: 12px;
+    font-stretch: normal;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: normal;
+    opacity: 1;
+    pointer-events: all;
+    transition: all 0.3s ease-in-out;
+  }
   .agreement__important-icon {
-    color: red;
+    color: #ee8585;
+    margin-right: 10px;
   }
   .loader-inline {
     width: 28px;
@@ -557,6 +572,7 @@ main.checkout-aol {
         font-size: 14px;
         line-height: 18px;
         margin-bottom: 20px;
+        margin-top: 20px;
         a {
           color: #ed994e;
           text-decoration: none;

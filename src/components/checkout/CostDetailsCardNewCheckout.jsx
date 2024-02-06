@@ -241,8 +241,6 @@ export const CostDetailsCardNewCheckout = ({
     );
   }
 
-  const isPremiumPriceType = formikProps?.values?.priceType === 'premium';
-
   return (
     <>
       <div class="offer-box">
@@ -405,7 +403,7 @@ export const CostDetailsCardNewCheckout = ({
                     return (
                       <option
                         value={residentialAddOn.priceBookEntryId}
-                        key={residentialAddOn.unitPrice}
+                        key={residentialAddOn.priceBookEntryId}
                       >
                         {residentialAddOn.productName}
                         {residentialAddOn.isFull && 'Full'} $
@@ -424,6 +422,17 @@ export const CostDetailsCardNewCheckout = ({
             * Expences to be collected offline
           </div>
         )}
+        {formikProps.errors.accommodation &&
+          formikProps.touched.accommodation && (
+            <div className="agreement__important">
+              <img
+                className="agreement__important-icon"
+                src="/img/warning.svg"
+                alt="warning"
+              />
+              Please select expense type in order to continue
+            </div>
+          )}
       </div>
     </>
   );
