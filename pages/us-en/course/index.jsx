@@ -634,7 +634,7 @@ const Course = () => {
 
                   <Popup
                     tabIndex="4"
-                    value={timeZoneFilter}
+                    value={TIME_ZONE[timeZoneFilter] ? timeZoneFilter : null}
                     buttonText={
                       timeZoneFilter && TIME_ZONE[timeZoneFilter]
                         ? TIME_ZONE[timeZoneFilter].name
