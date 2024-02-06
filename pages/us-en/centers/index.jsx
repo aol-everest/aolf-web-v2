@@ -660,7 +660,7 @@ const Centers = () => {
               <iframe
                 width="100%"
                 height="100%"
-                src="https://www.youtube.com/embed/k493mHHWTfw?si=TXZlbZfVWJmEchhf"
+                src="https://www.youtube.com/embed/k493mHHWTfw?si=TXZlbZfVWJmEchhf&rel=0"
                 title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
