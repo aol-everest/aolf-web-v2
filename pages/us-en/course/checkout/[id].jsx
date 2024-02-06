@@ -1,9 +1,4 @@
-import {
-  PageLoading,
-  PaymentForm,
-  PaymentFormGeneric,
-  PaymentFormHB,
-} from '@components';
+import { PageLoading, PaymentFormHB } from '@components';
 import {
   ALERT_TYPES,
   COURSE_TYPES,
@@ -16,7 +11,6 @@ import {
   useGlobalModalContext,
 } from '@contexts';
 import { useQueryString } from '@hooks';
-import { orgConfig } from '@org';
 import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -259,28 +253,15 @@ const Checkout = () => {
 
   const stripePromise = loadStripe(workshop.publishableKey);
 
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
-    0;
-  const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
-  const isSahajSamadhiMeditationType =
-    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const isSriSriYogaMeditationType =
-    COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
-  const isVolunteerTrainingProgram =
-    COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
   const isHealingBreathProgram =
     COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
 
   const isHealingBreathSilentType =
     COURSE_TYPES.HEALING_BREATH_SILENT.value.indexOf(workshop.productTypeId) >=
+    0;
+
+  const isSkyHappinessRetreat =
+    COURSE_TYPES.SKY_HAPPINESS_RETREAT.value.indexOf(workshop.productTypeId) >=
     0;
 
   const isInstitutionalProgram =
@@ -293,19 +274,22 @@ const Checkout = () => {
     if (
       isHealingBreathProgram ||
       isInstitutionalProgram ||
-      isHealingBreathSilentType
+      isHealingBreathSilentType ||
+      isSkyHappinessRetreat
     ) {
       return (
-        <PaymentFormHB
-          isStripeIntentPayment={isStripeIntentPayment}
-          workshop={workshop}
-          profile={user?.profile}
-          enrollmentCompletionAction={enrollmentCompletionAction}
-          enrollmentCompletionLink={enrollmentCompletionLink}
-          handleCouseSelection={handleCouseSelection}
-          login={login}
-          isLoggedUser={authenticated}
-        />
+        <div className="order">
+          <PaymentFormHB
+            isStripeIntentPayment={isStripeIntentPayment}
+            workshop={workshop}
+            profile={user?.profile}
+            enrollmentCompletionAction={enrollmentCompletionAction}
+            enrollmentCompletionLink={enrollmentCompletionLink}
+            handleCouseSelection={handleCouseSelection}
+            login={login}
+            isLoggedUser={authenticated}
+          />
+        </div>
       );
     }
     return (
