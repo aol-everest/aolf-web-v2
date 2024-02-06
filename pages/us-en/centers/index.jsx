@@ -11,6 +11,7 @@ import { useGeolocation } from '@uidotdev/usehooks';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import LinesEllipsis from 'react-lines-ellipsis';
+import Highlighter from 'react-highlight-words';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
 
@@ -59,7 +60,15 @@ const STORIES = [
   },
 ];
 
-const CenterListItem = ({ center }) => {
+const SEARCH_PARAM = [
+  'centerName',
+  'streetAddress1',
+  'streetAddress2',
+  'stateProvince',
+];
+const SEARCH_PARAM_WITHOUT_ADDRESS = ['centerName', 'stateProvince'];
+
+const CenterListItem = ({ center, search }) => {
   const router = useRouter();
   const goFindCourse = () => {
     pushRouteWithUTMQuery(router, {
@@ -77,7 +86,14 @@ const CenterListItem = ({ center }) => {
         {center.isNationalCenter && (
           <img src="/img/center-icon.svg" alt="icon" className="icon" />
         )}
-        {center.centerName}, {center.stateProvince}
+        <Highlighter
+          highlightClassName="YourHighlightClass"
+          searchWords={[search]}
+          autoEscape={true}
+          textToHighlight={`${center.centerName},  ${
+            center.stateProvince || ''
+          }`}
+        />
       </div>
       {center.centerMode === 'InPerson' && (
         <div className="info">
@@ -86,13 +102,18 @@ const CenterListItem = ({ center }) => {
             src="/img/map-search-location-icon.svg"
             alt="call"
           />
-          {createCompleteAddress({
-            streetAddress1: center.streetAddress1,
-            streetAddress2: center.streetAddress2,
-            city: center.city,
-            zipCode: center.postalOrZipCode,
-            state: center.stateProvince,
-          })}
+          <Highlighter
+            highlightClassName="YourHighlightClass"
+            searchWords={[search]}
+            autoEscape={true}
+            textToHighlight={createCompleteAddress({
+              streetAddress1: center.streetAddress1,
+              streetAddress2: center.streetAddress2,
+              city: center.city,
+              zipCode: center.postalOrZipCode,
+              state: center.stateProvince,
+            })}
+          />
         </div>
       )}
       {phoneNumber && (
@@ -192,11 +213,6 @@ const Centers = () => {
   //     set search parameters
   //     we only what to search centers by centerName and streetAddress1
   //     this list can be longer if you want
-  const [searchParam] = useState([
-    'centerName',
-    'streetAddress1',
-    'streetAddress2',
-  ]);
 
   const finalLatitude = latitude ? latitude : 43.4142989;
   const finalLongitude = longitude ? longitude : -124.2301242;
@@ -228,7 +244,15 @@ const Centers = () => {
 
   const search = (items) => {
     return items.filter((item) => {
-      return searchParam.some((newItem) => {
+      if (item.centerMode === 'InPerson') {
+        return SEARCH_PARAM.some((newItem) => {
+          return (
+            item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) >
+            -1
+          );
+        });
+      }
+      return SEARCH_PARAM_WITHOUT_ADDRESS.some((newItem) => {
         return (
           item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1
         );
@@ -257,7 +281,9 @@ const Centers = () => {
           </div>
           <div className="search-listing">
             {search(allCenters).map((center) => {
-              return <CenterListItem key={center.sfid} center={center} />;
+              return (
+                <CenterListItem key={center.sfid} center={center} search={q} />
+              );
             })}
           </div>
         </div>
