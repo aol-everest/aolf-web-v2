@@ -276,6 +276,13 @@ const Centers = () => {
         <h1 class="page-title">Connect, Grow, Celebrate. Join The Community</h1>
       </section>
       <section className="map-section">
+        <GoogleMapComponent
+          allCenters={search(allCenters)}
+          googleMapURL={GOOGLE_URL}
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div id="map" />}
+          mapElement={<div style={{ height: `100%` }} />}
+        ></GoogleMapComponent>
         <div className="center-search-box" id="mobile-handler">
           <div className="mobile-handler"></div>
           <div className="search-input-wrap">
@@ -313,13 +320,6 @@ const Centers = () => {
             })}
           </div>
         </div>
-        <GoogleMapComponent
-          allCenters={search(allCenters)}
-          googleMapURL={GOOGLE_URL}
-          loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div id="map" />}
-          mapElement={<div style={{ height: `100%` }} />}
-        ></GoogleMapComponent>
       </section>
       <section className="nourish">
         <div className="container">
