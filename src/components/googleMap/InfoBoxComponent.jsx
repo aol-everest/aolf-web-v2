@@ -7,10 +7,10 @@ const InfoBoxComponent = (center) => {
     const phoneNumber = joinPhoneNumbers(center.phone1, center.phone2);
     return (
       <div id="content">
-        <h1 class="mapInfoTitle">{center.centerName}</h1>
+        <h1 className="mapInfoTitle">{center.centerName}</h1>
         <div id="bodyContent">
           {center.centerMode === 'InPerson' && (
-            <div class="mapInfoaddress">
+            <div className="mapInfoaddress">
               {createCompleteAddress({
                 streetAddress1: center.streetAddress1,
                 streetAddress2: center.streetAddress2,
@@ -21,9 +21,9 @@ const InfoBoxComponent = (center) => {
             </div>
           )}
           {phoneNumber && (
-            <div class="mapInfoLine">
+            <div className="mapInfoLine">
               <img
-                class="icon"
+                className="icon"
                 src="/img/map-search-call-icon.svg"
                 alt="call"
               />
@@ -31,9 +31,9 @@ const InfoBoxComponent = (center) => {
             </div>
           )}
           {center.email && (
-            <div class="mapInfoLine">
+            <div className="mapInfoLine">
               <img
-                class="icon"
+                className="icon"
                 src="/img/map-search-email-icon.svg"
                 alt="email"
               />

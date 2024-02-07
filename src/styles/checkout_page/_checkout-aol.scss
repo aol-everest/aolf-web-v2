@@ -24,6 +24,24 @@ main.checkout-aol {
     padding-top: 0;
     margin-top: 30px;
   }
+  .agreement__important {
+    align-items: center;
+    color: #ee8585;
+    display: flex;
+    font-size: 12px;
+    font-stretch: normal;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: normal;
+    opacity: 1;
+    pointer-events: all;
+    transition: all 0.3s ease-in-out;
+  }
+  .agreement__important-icon {
+    color: #ee8585;
+    margin-right: 10px;
+  }
   .loader-inline {
     width: 28px;
     height: 28px;
@@ -43,6 +61,11 @@ main.checkout-aol {
       border: solid 1px #fff;
       color: #ffa180;
       background: white;
+      &:disabled {
+        cursor: not-allowed;
+        background: #f7f5f4;
+        color: #b8b8b8;
+      }
     }
   }
   .order__card__payment-select {
@@ -179,7 +202,7 @@ main.checkout-aol {
       }
 
       &.error {
-        border-color: red;
+        border-color: red !important;
       }
 
       &::-ms-input-placeholder {
@@ -549,6 +572,7 @@ main.checkout-aol {
         font-size: 14px;
         line-height: 18px;
         margin-bottom: 20px;
+        margin-top: 20px;
         a {
           color: #ed994e;
           text-decoration: none;
@@ -575,6 +599,11 @@ main.checkout-aol {
         box-shadow: none;
         border: none;
         font-weight: 500 !important;
+        &:disabled {
+          cursor: not-allowed;
+          background: #f7f5f4;
+          color: #b8b8b8;
+        }
       }
     }
   }

@@ -1416,7 +1416,7 @@ export const BackendPaymentForm = ({
                     </div>
                   </div>
 
-                  <div className="col-sm-6!">
+                  <div className="col-sm-6">
                     <Field name="contactState">
                       {({ field, form }) => {
                         return (

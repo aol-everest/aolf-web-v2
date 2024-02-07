@@ -620,11 +620,16 @@ const SchedulingPaymentForm = ({
           contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required('First Name is required'),
-          lastName: Yup.string().required('Last Name is required'),
+          firstName: Yup.string()
+            .required('First Name is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
+          lastName: Yup.string()
+            .required('Last Name is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
           email: Yup.string()
             .email('Email is invalid!')
-            .required('Email is required!'),
+            .required('Email is required!')
+            .email(),
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
@@ -663,9 +668,9 @@ const SchedulingPaymentForm = ({
                     <div className="section-box">
                       {fee > 0 && (
                         <>
-                          <h2 class="section__title d-flex">
+                          <h2 className="section__title d-flex">
                             Pay with
-                            <span class="ssl-info">
+                            <span className="ssl-info">
                               <svg
                                 width="20"
                                 height="21"
@@ -686,8 +691,8 @@ const SchedulingPaymentForm = ({
                           </div>
                         </>
                       )}
-                      <div class="trust-score">
-                        <div class="first-row">
+                      <div className="trust-score">
+                        <div className="first-row">
                           Excellent
                           <img
                             src="/img/Trustpilo_stars-5.png"
@@ -698,7 +703,7 @@ const SchedulingPaymentForm = ({
                             alt="Trust Pilot"
                           />
                         </div>
-                        <div class="second-row">
+                        <div className="second-row">
                           TrustScore <strong>4.7</strong>
                         </div>
                       </div>

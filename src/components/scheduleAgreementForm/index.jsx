@@ -94,10 +94,10 @@ export const ScheduleAgreementForm = ({
         </label>
       </div>
 
-      <div className="agreement mt-4">
+      <div className="agreement">
         {formikProps.errors.ppaAgreement &&
           formikProps.touched.ppaAgreement && (
-            <div className="form-item checkbox mb-2">
+            <div className="agreement__important">
               <img
                 className="agreement__important-icon"
                 src="/img/warning.svg"
@@ -168,9 +168,9 @@ export const ScheduleAgreementForm = ({
           ))}
           {formikProps.errors.questionnaire &&
             formikProps.touched.questionnaire && (
-              <div className="form-item checkbox mb-2">
+              <div className="agreement__important">
                 <img
-                  className="health-confirmation__important-icon"
+                  className="agreement__important-icon"
                   src="/img/warning.svg"
                   alt="warning"
                 />

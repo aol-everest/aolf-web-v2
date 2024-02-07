@@ -491,41 +491,6 @@ const TicketCheckoutForm = ({ router }) => {
                           />
                         </label>
                       </div>
-
-                      {/* <label
-                        className="tickets-modal__distribution"
-                        for="distribution"
-                      >
-                        <input
-                          className="tickets-modal__distribution-input"
-                          type="checkbox"
-                          name="distribution"
-                          id="distribution"
-                          checked
-                        />
-                        <span className="tickets-modal__distribution-checkbox">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                          >
-                            <path
-                              d="M16.6416 8.85537L10.3522 15.1448L7.35815 12.1508"
-                              stroke="white"
-                              stroke-miterlimit="10"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </span>
-
-                        <p className="tickets-modal__distribution-text">
-                          Keep me updated on more events and news from this
-                          event
-                        </p>
-                      </label> */}
                     </div>
 
                     <div className="tickets-modal__pay">
@@ -533,7 +498,7 @@ const TicketCheckoutForm = ({ router }) => {
 
                       <div
                         className="tickets-modal__payment-dropdown"
-                        data-dropdown-for="creditCard"
+                        data-dropdown-htmlFor="creditCard"
                       >
                         <label
                           className="tickets-modal__payment-label"

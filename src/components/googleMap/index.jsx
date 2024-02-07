@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, withScriptjs, withGoogleMap } from 'react-google-maps';
+import { createBreakpoint } from 'react-use';
 import MarkerComponent from './MarkerComponent';
 import InfoBoxComponent from './InfoBoxComponent';
 
+const useBreakpoint = createBreakpoint({ XL: 1280, L: 768, S: 350 });
+
 const GoogleMapComponent = ({ allCenters }) => {
+  const breakpoint = useBreakpoint();
   const [selectedMarker, setSelectedMarker] = useState();
   const iconBase = '/img/';
   const features = allCenters
@@ -30,10 +34,18 @@ const GoogleMapComponent = ({ allCenters }) => {
         })
     : [];
 
+  let position = { lat: 43.4142989, lng: -124.2301242 };
+  let zoom = 4;
+
+  if (breakpoint === 'S') {
+    position = { lat: 40.49983925459706, lng: -101.63480276952534 };
+    zoom = 3;
+  }
+
   return (
     <GoogleMap
-      defaultZoom={4}
-      defaultCenter={{ lat: 43.4142989, lng: -124.2301242 }}
+      defaultZoom={zoom}
+      defaultCenter={position}
       defaultOptions={{ mapTypeControl: false }}
     >
       {/* <InfoWindow>Hello</InfoWindow> */}
