@@ -1821,7 +1821,10 @@ export const PaymentFormNew = ({
                                 type="button"
                                 disabled={
                                   loading ||
-                                  formikProps.values.priceType === 'premium'
+                                  formikProps.values.priceType === 'premium' ||
+                                  (formikProps.values.paymentMode ===
+                                    PAYMENT_MODES.PAYPAL_PAYMENT_MODE &&
+                                    isPaymentRequired)
                                 }
                                 form="my-form"
                                 onClick={handleFormSubmit}
