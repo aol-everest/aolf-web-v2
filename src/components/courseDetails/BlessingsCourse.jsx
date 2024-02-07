@@ -119,15 +119,15 @@ export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
                     </div>
                     <p className="participants__comment">
                       The Blessings Course was a{' '}
-                      <span>deeply profound experience</span>deeply profound
-                      experience in my life. It gave me a new type of fullness,
-                      one that I hadn’t ever fully experienced before—that I am
-                      actually taken care of, perpetually swimming in an ocean
-                      of blessings. This is not to say it was the end of tough
-                      times in my life, but rather that I’ve since been able to
-                      sail through those times with a much more impactful and
-                      sturdy sense of confidence. As the name says, The Blessing
-                      Course is indeed a blessing! A big one!
+                      <span>deeply profound experience</span> in my life. It
+                      gave me a new type of fullness, one that I hadn’t ever
+                      fully experienced before—that I am actually taken care of,
+                      perpetually swimming in an ocean of blessings. This is not
+                      to say it was the end of tough times in my life, but
+                      rather that I’ve since been able to sail through those
+                      times with a much more impactful and sturdy sense of
+                      confidence. As the name says, The Blessing Course is
+                      indeed a blessing! A big one!
                     </p>
                   </div>
                 </div>
