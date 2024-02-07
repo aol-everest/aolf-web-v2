@@ -158,7 +158,7 @@ const StoryComp = ({ story }) => {
       <div className="testimony-comment more">
         {useEllipsis ? (
           <>
-            <span class="morecontent">
+            <span className="morecontent">
               <LinesEllipsis
                 text={story.body}
                 maxLine="5"
@@ -166,16 +166,16 @@ const StoryComp = ({ story }) => {
                 trimRight
                 basedOn="letters"
               />
-              <a href="#" class="morelink" onClick={readMoreClickAction}>
+              <a href="#" className="morelink" onClick={readMoreClickAction}>
                 Read more...
               </a>
             </span>
           </>
         ) : (
           <>
-            <span class="morecontent">
+            <span className="morecontent">
               {story.body}
-              <a href="#" class="morelink" onClick={readMoreClickAction}>
+              <a href="#" className="morelink" onClick={readMoreClickAction}>
                 Read less...
               </a>
             </span>
@@ -272,8 +272,10 @@ const Centers = () => {
   if (isLoading || loading) return <PageLoading />;
   return (
     <main className="local-centers">
-      <section class="title-header">
-        <h1 class="page-title">Connect, Grow, Celebrate. Join The Community</h1>
+      <section className="title-header">
+        <h1 className="page-title">
+          Connect, Grow, Celebrate. Join The Community
+        </h1>
       </section>
       <section className="map-section">
         <GoogleMapComponent

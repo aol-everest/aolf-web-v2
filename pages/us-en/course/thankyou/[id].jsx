@@ -532,7 +532,16 @@ const Thankyou = () => {
         />
         {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
           process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === 'true' &&
-          ['811569', '12371', '12415', '999649'].indexOf(productTypeId) >= 0 &&
+          [
+            '811569',
+            '12371',
+            '12415',
+            '999649',
+            '10703361',
+            '10703362',
+            '10703363',
+            '435714',
+          ].indexOf(productTypeId) >= 0 &&
           !isRepeater && (
             <>
               <img
