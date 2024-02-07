@@ -469,35 +469,6 @@ const Checkout = () => {
             )}
           </div>
         </section>
-        <section className="additional-information">
-          <div className="container">
-            <div className="featured-in featured-in_with-button">
-              <h2 className="featured-in__title">Featured in</h2>
-              <div className="featured-in__box d-none d-lg-flex">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-tnyt.png" alt="tnyt" />
-                <img src="/img/featured-in-time.png" alt="time" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
-              </div>
-              <div className="featured-in__box d-flex d-lg-none">
-                <img src="/img/featured-in-cnn.png" alt="cnn" />
-                <img src="/img/featured-in-yoga.png" alt="yoga" />
-                <img src="/img/featured-in-nbc.png" alt="nbc" />
-                <img src="/img/featured-in-wsj.png" alt="wsj" />
-                <img src="/img/featured-in-forbes.png" alt="forbes" />
-                <img src="/img/featured-in-time.png" alt="time" />
-                <img
-                  className="m-auto"
-                  src="/img/featured-in-tnyt.png"
-                  alt="tnyt"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
     </>
   );
