@@ -1,6 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Loader } from '@components';
-import { DiscountCodeInput, Dropdown } from '@components/checkout';
+import {
+  AttendanceForm,
+  DiscountCodeInput,
+  Dropdown,
+  PostCostDetailsCard,
+} from '@components/checkout';
 import { ABBRS, ALERT_TYPES, MODAL_TYPES, US_STATES } from '@constants';
 import { useGlobalAlertContext, useGlobalModalContext } from '@contexts';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -15,6 +20,12 @@ import Style from './BackendPaymentForm.module.scss';
 import { EmailField } from './EmailField';
 import { PriceCalculationComponent } from './PriceCalculationComponent';
 import { Radiobox } from './Radiobox';
+import { useQuery } from 'react-query';
+import { Fragment } from 'react';
+import { FieldWrapper } from '@components/checkout';
+import { InputDropDown } from '@components/checkout';
+import { StyledInput } from '@components/checkout';
+import { AttendanceFormIAHV } from '@components/checkout/AttendanceFormIAHV';
 
 dayjs.extend(isSameOrBefore);
 
@@ -68,6 +79,23 @@ export const BackendPaymentForm = ({
   const stripe = useStripe();
   const elements = useElements();
 
+  const {
+    data: corporates,
+    isLoading,
+    error,
+  } = useQuery(
+    'corporates',
+    async () => {
+      const response = await api.get({
+        path: 'getCorporates',
+      });
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
   const paymentOptionChangeAction = (mode) => {
     setPaymentMode(mode);
   };
@@ -113,6 +141,12 @@ export const BackendPaymentForm = ({
       secondChequeRoutingNumber: '',
       secondPaymentDate,
       firstPaymentAmount: workshop.minimumPartialPayment || 0,
+      contactHealthcareOrganisation: '',
+      contactOtherHealthcareOrganization: '',
+      contactDegree: '',
+      claimingType: '',
+      certificateOfAttendance: '',
+      contactClaimingTypeOther: '',
     };
   };
 
@@ -261,6 +295,12 @@ export const BackendPaymentForm = ({
       secondPaymentDate,
       firstPaymentAmount,
       accommodation,
+      contactHealthcareOrganisation,
+      contactOtherHealthcareOrganization,
+      contactDegree,
+      claimingType,
+      certificateOfAttendance,
+      contactClaimingTypeOther,
     } = values;
 
     if (!loading) {
@@ -435,6 +475,14 @@ export const BackendPaymentForm = ({
           isBackendRequest: true,
           shoppingRequest: {
             ...shoppingRequest,
+          },
+          attendee: {
+            contactHealthcareOrganisation,
+            contactOtherHealthcareOrganization,
+            contactDegree,
+            claimingType,
+            certificateOfAttendance,
+            contactClaimingTypeOther,
           },
         };
         payLoad = {
@@ -645,6 +693,7 @@ export const BackendPaymentForm = ({
     groupedAddOnProducts,
     remainPartialPaymentDateCap,
     timings,
+    businessOrg,
   } = workshop;
 
   const comboPrice = availableBundles?.find(
@@ -673,6 +722,7 @@ export const BackendPaymentForm = ({
   }
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
+  const cmeAddOn = addOnProducts.find(({ isCMEAddOn }) => isCMEAddOn === true);
 
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
@@ -690,6 +740,9 @@ export const BackendPaymentForm = ({
     hasGroupedAddOnProducts && residentialAddOnRequired;
 
   const isComboDetailAvailable = availableBundles?.length > 0;
+
+  const isIahv = businessOrg === 'IAHV';
+  const isHb = businessOrg === 'HB';
 
   return (
     <>
@@ -969,6 +1022,34 @@ export const BackendPaymentForm = ({
             accommodation: isAccommodationRequired
               ? Yup.object().required('Expense Type is required!')
               : Yup.mixed().notRequired(),
+            contactHealthcareOrganisation: isIahv
+              ? Yup.string().required('Healthcare Organization is required')
+              : Yup.string().notRequired(),
+            contactOtherHealthcareOrganization: isIahv
+              ? Yup.string()
+                  .ensure()
+                  .when('contactHealthcareOrganisation', {
+                    is: 'other',
+                    then: Yup.string().required(
+                      'Other Healthcare Organization is required',
+                    ),
+                  })
+              : Yup.string().notRequired(),
+            contactDegree: Yup.string().required(
+              'Degree/Qualifications is required',
+            ),
+            claimingType: Yup.mixed().when('CME', {
+              is: true,
+              then: Yup.string().required('CE Claiming type is required'),
+              otherwise: Yup.mixed().notRequired(),
+            }),
+            certificateOfAttendance: Yup.mixed().when('CME', {
+              is: true,
+              then: Yup.string().required(
+                'I would like to get the following is required',
+              ),
+              otherwise: Yup.mixed().notRequired(),
+            }),
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             await completeEnrollmentAction(values, resetForm);
@@ -999,6 +1080,140 @@ export const BackendPaymentForm = ({
             } else {
               isOfflineExpense = true;
             }
+
+            const CMEInputCmp = ({ formikProps }) => {
+              const onPopupChangeEvent = (formikProps, field) => (value) => {
+                formikProps.setFieldValue(field, value?.name || '');
+              };
+              return (
+                <Fragment>
+                  <div className="order__card !tw-border-0 !tw-shadow-none !tw-p-2">
+                    <div className="d-flex w-50 justify-content-start">
+                      <FieldWrapper
+                        formikKey={'claimingType'}
+                        formikProps={formikProps}
+                      >
+                        <InputDropDown
+                          placeholder="CE Claiming type"
+                          formikProps={formikProps}
+                          formikKey="claimingType"
+                          closeEvent={onPopupChangeEvent(
+                            formikProps,
+                            'claimingType',
+                          )}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Physician - MD',
+                                  value: 'Physician - MD',
+                                })}
+                              >
+                                Physician - MD
+                              </li>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Physician - DO',
+                                  value: 'Physician - DO',
+                                })}
+                              >
+                                Physician - DO
+                              </li>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Physician Assistant',
+                                  value: 'Physician Assistant',
+                                })}
+                              >
+                                Physician Assistant
+                              </li>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Physical Therapist',
+                                  value: 'Physical Therapist',
+                                })}
+                              >
+                                Physical Therapist
+                              </li>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Nurse',
+                                  value: 'Nurse',
+                                })}
+                              >
+                                Nurse
+                              </li>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Dentist',
+                                  value: 'Dentist',
+                                })}
+                              >
+                                Dentist
+                              </li>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Other',
+                                  value: 'Other',
+                                })}
+                              >
+                                Other
+                              </li>
+                            </>
+                          )}
+                        </InputDropDown>
+                      </FieldWrapper>
+                    </div>
+                    {formikProps.values['claimingType'] === 'Other' && (
+                      <StyledInput
+                        placeholder="Specify details (Other)"
+                        formikProps={formikProps}
+                        formikKey="contactClaimingTypeOther"
+                        fullWidth
+                      ></StyledInput>
+                    )}
+                    <div className="d-flex justify-content-start mt-lg-0">
+                      <FieldWrapper
+                        formikKey={'certificateOfAttendance'}
+                        formikProps={formikProps}
+                      >
+                        <InputDropDown
+                          placeholder="I would like to get the following"
+                          formikProps={formikProps}
+                          formikKey="certificateOfAttendance"
+                          closeEvent={onPopupChangeEvent(
+                            formikProps,
+                            'certificateOfAttendance',
+                          )}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'CE Credits',
+                                  value: 'CE Credits',
+                                })}
+                              >
+                                CE Credits
+                              </li>
+                              <li
+                                onClick={closeHandler({
+                                  name: 'Certificate of Attendance',
+                                  value: 'Certificate of Attendance',
+                                })}
+                              >
+                                Certificate of Attendance
+                              </li>
+                            </>
+                          )}
+                        </InputDropDown>
+                      </FieldWrapper>
+                    </div>
+                  </div>
+                </Fragment>
+              );
+            };
 
             return (
               <form
@@ -1334,6 +1549,79 @@ export const BackendPaymentForm = ({
                     </>
                   )}
 
+                  {addOnProducts && addOnProducts.length > 0 && (
+                    <div className="room__board">
+                      <>
+                        <h6 className="room__board__title">Course Options</h6>
+                        <div className="col-sm-12 heading_info">
+                          <ul className="reciept__payment_list mt-3">
+                            {addOnProducts.map((product) => {
+                              if (
+                                !product.isExpenseAddOn ||
+                                (product.isExpenseAddOn &&
+                                  !hasGroupedAddOnProducts)
+                              ) {
+                                const isChecked =
+                                  product.isAddOnSelectionRequired
+                                    ? true
+                                    : formikProps.values[product.productName];
+
+                                return (
+                                  <li key={product.productSfid}>
+                                    <span>
+                                      {!product.isAddOnSelectionRequired && (
+                                        <input
+                                          type="checkbox"
+                                          className="custom-checkbox"
+                                          placeholder=" "
+                                          checked={isChecked}
+                                          onChange={() =>
+                                            formikProps.setFieldValue(
+                                              product.productName,
+                                              !isChecked,
+                                            )
+                                          }
+                                          value={product.productName}
+                                          name={product.productName}
+                                          id={product.productSfid}
+                                          disabled={
+                                            product.isAddOnSelectionRequired
+                                          }
+                                        />
+                                      )}
+                                      <label
+                                        htmlFor={product.productSfid}
+                                      ></label>
+                                      <span className="ml-2">
+                                        {product.productName}:
+                                      </span>
+                                    </span>
+                                    <span className="ml-2">
+                                      ${product.unitPrice}
+                                    </span>
+                                  </li>
+                                );
+                              }
+                            })}
+                          </ul>
+                        </div>
+                        {cmeAddOn && (
+                          <>
+                            <div className="col-sm-12">
+                              <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+                                To claim CME credits, please check the box and
+                                fill in the requested additional information.
+                              </p>
+                            </div>
+                            {formikProps.values[cmeAddOn.productName] && (
+                              <CMEInputCmp formikProps={formikProps} />
+                            )}
+                          </>
+                        )}
+                      </>
+                    </div>
+                  )}
+
                   <div className="col-sm-12 heading_info">
                     <p>Contact Information:</p>
                   </div>
@@ -1416,7 +1704,7 @@ export const BackendPaymentForm = ({
                     </div>
                   </div>
 
-                  <div className="col-sm-6!">
+                  <div className="col-sm-6">
                     <Field name="contactState">
                       {({ field, form }) => {
                         return (
@@ -1486,6 +1774,13 @@ export const BackendPaymentForm = ({
                       </label>
                     </div>
                   </div>
+                  {isHb && (
+                    <AttendanceForm
+                      formikProps={formikProps}
+                      corporates={corporates}
+                    />
+                  )}
+
                   {values.selectedPaymentOption !== INSTALMENT && (
                     <div className="col-sm-12 tw-mt-6">
                       {showCouponCodeField && (
@@ -1645,6 +1940,14 @@ export const BackendPaymentForm = ({
                       </div>
                     </>
                   )}
+
+                  {isIahv && (
+                    <AttendanceFormIAHV
+                      formikProps={formikProps}
+                      corporates={corporates}
+                    />
+                  )}
+
                   <div className="col-sm-12 heading_info">
                     <p>Payment Options:</p>
                   </div>
