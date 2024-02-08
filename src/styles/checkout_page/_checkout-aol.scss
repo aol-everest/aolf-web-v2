@@ -163,9 +163,21 @@ main.checkout-aol {
       text-align: center;
     }
   }
+  .health-confirmation {
+    .form-item {
+      label {
+        font-weight: 400;
+        color: #31364e;
+      }
+    }
+  }
   .form-item {
     display: flex;
     flex-direction: column;
+    .agreement__text {
+      font-weight: 400;
+      color: #31364e;
+    }
     label {
       font-size: 14px;
       color: #9598a6;
