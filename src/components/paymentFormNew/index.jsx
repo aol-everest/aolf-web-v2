@@ -1054,10 +1054,7 @@ export const PaymentFormNew = ({
           questionnaire: questionnaire,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
-          paymentMode:
-            otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') >= 0
-              ? ''
-              : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
+          paymentMode: '',
           accommodation: null,
           priceType: 'regular',
         }}
