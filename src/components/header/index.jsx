@@ -309,10 +309,6 @@ const IAHV_MENU = [
         name: 'Press & Media',
         link: 'https://www.artofliving.org/us-en/media-coverage',
       },
-      {
-        name: 'Retreat Center',
-        link: '/us-en/lp/theartoflivingretreatcenter',
-      },
     ],
   },
   {
