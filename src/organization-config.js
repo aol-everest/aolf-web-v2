@@ -2,6 +2,7 @@ const allOrganizationConfig = [
   {
     name: 'AOL',
     logo: 'ic-logo.svg',
+    logoLink: 'https://www.artofliving.org/us-en',
     title: 'Art of Living Journey',
     favicon: 'favicon.ico',
     favicon180: 'apple-touch-icon.png',
@@ -37,6 +38,7 @@ const allOrganizationConfig = [
   {
     name: 'HB',
     logo: 'cyne-logo.png',
+    logoLink: 'https://healingbreaths.org',
     title: 'Healing Breaths',
     favicon180: 'hb-apple-touch-icon.png',
     favicon: 'hb-favicon.ico',
@@ -68,6 +70,7 @@ const allOrganizationConfig = [
   {
     name: 'IAHV',
     logo: 'iahv-logo.png',
+    logoLink: 'https://us.iahv.org',
     title: 'IAHV',
     favicon180: 'iahv-favicon-96x96.png',
     favicon: 'iahv-favicon.ico',
