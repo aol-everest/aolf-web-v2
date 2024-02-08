@@ -466,7 +466,7 @@ export const Header = () => {
   return (
     <header className="header header-v2">
       <div className="header__container container">
-        <a href="https://www.artofliving.org/us-en" className="logo">
+        <a href={orgConfig.logoLink} className="logo">
           <img
             src={`/img/${orgConfig.logo}`}
             alt="logo"
