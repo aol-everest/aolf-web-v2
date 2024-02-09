@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useQueryState, parseAsString } from 'nuqs';
 import { pushRouteWithUTMQuery } from '@service';
+import { NextSeo } from 'next-seo';
 import {
   api,
   tConvert,
@@ -640,6 +641,13 @@ const SchedulingRange = () => {
 
   return (
     <>
+      {COURSE_TYPES[courseTypeFilter] &&
+        COURSE_TYPES[courseTypeFilter].name && (
+          <NextSeo
+            title={COURSE_TYPES[courseTypeFilter].name + ' Course Scheduler'}
+          />
+        )}
+
       <header className="checkout-header">
         <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
       </header>

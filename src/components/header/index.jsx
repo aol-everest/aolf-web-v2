@@ -165,10 +165,6 @@ const AOL_MENU = [
         link: 'https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya',
       },
       {
-        name: 'Retreat Center',
-        link: '/us-en/lp/theartoflivingretreatcenter',
-      },
-      {
         name: 'Blog',
         link: 'https://www.artofliving.org/us-en/blog',
       },
@@ -302,16 +298,16 @@ const IAHV_MENU = [
         link: 'https://www.artofliving.org/us-en/testimonials/search',
       },
       {
+        name: 'Retreat Center',
+        link: '/us-en/lp/theartoflivingretreatcenter',
+      },
+      {
         name: 'Research',
         link: 'https://www.artofliving.org/us-en/research-sudarshan-kriya',
       },
       {
         name: 'Press & Media',
         link: 'https://www.artofliving.org/us-en/media-coverage',
-      },
-      {
-        name: 'Retreat Center',
-        link: '/us-en/lp/theartoflivingretreatcenter',
       },
     ],
   },
