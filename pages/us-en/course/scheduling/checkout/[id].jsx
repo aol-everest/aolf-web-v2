@@ -303,7 +303,7 @@ const SchedulingPaymentForm = ({
     id: productId,
     addOnProducts,
     phone1,
-    email,
+    email: contactEmail,
     eventEndDate,
     eventStartDate,
     primaryTeacherName,
@@ -314,12 +314,8 @@ const SchedulingPaymentForm = ({
     timings = [],
   } = workshop;
 
-  const {
-    first_name,
-    last_name,
-    email: userEmail,
-    personMobilePhone,
-  } = user?.profile || {};
+  const { first_name, last_name, email, personMobilePhone } =
+    user?.profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -593,7 +589,7 @@ const SchedulingPaymentForm = ({
     },
     defaultValues: {
       billingDetails: {
-        email: userEmail || '',
+        email: email || '',
         name: (first_name || '') + (last_name || ''),
         phone: personMobilePhone || '',
       },
@@ -1101,7 +1097,9 @@ const SchedulingPaymentForm = ({
                               <a href={`tel:${phone1}`}>{phone1}</a>
                               <br />
                               {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}
-                              <a href={`mailto:${email}`}>{email}</a>
+                              <a href={`mailto:${contactEmail}`}>
+                                {contactEmail}
+                              </a>
                             </div>
                           </div>
                         </div>

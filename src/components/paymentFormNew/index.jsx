@@ -128,6 +128,7 @@ export const PaymentFormNew = ({
     mode,
     phone2,
     timings = [],
+    email: contactEmail,
   } = workshop;
 
   const questionnaireArray = complianceQuestionnaire
@@ -1500,7 +1501,7 @@ export const PaymentFormNew = ({
                                     d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
                                   ></path>
                                 </svg>{' '}
-                                Contact Date:
+                                Date:
                               </div>
                               <div className="value col-7">
                                 {dayjs
@@ -1777,7 +1778,9 @@ export const PaymentFormNew = ({
                                 {phone2 && (
                                   <a href={`tel:${phone2}`}>{phone2}</a>
                                 )}
-                                <a href={`mailto:${email}`}>{email}</a>
+                                <a href={`mailto:${contactEmail}`}>
+                                  {contactEmail}
+                                </a>
                               </div>
                             </div>
                           </div>
