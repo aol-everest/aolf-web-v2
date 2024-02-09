@@ -1037,6 +1037,9 @@ export const PaymentFormNew = ({
     }
   };
 
+  const showPaymentOptions =
+    otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') > -1;
+
   return (
     <>
       {loading && <div className="cover-spin"></div>}
@@ -1054,7 +1057,9 @@ export const PaymentFormNew = ({
           questionnaire: questionnaire,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
-          paymentMode: '',
+          paymentMode: !showPaymentOptions
+            ? PAYMENT_MODES.STRIPE_PAYMENT_MODE
+            : '',
           accommodation: null,
           priceType: 'regular',
         }}
@@ -1196,12 +1201,16 @@ export const PaymentFormNew = ({
                                 SSL Secured
                               </span>
                             </h2>
-                            <PayWithNewCheckout
-                              formikProps={formikProps}
-                              otherPaymentOptions={otherPaymentOptions}
-                              isBundlePaypalAvailable={isBundlePaypalAvailable}
-                              isBundleSelected={selectedBundle}
-                            />
+                            {showPaymentOptions && (
+                              <PayWithNewCheckout
+                                formikProps={formikProps}
+                                otherPaymentOptions={otherPaymentOptions}
+                                isBundlePaypalAvailable={
+                                  isBundlePaypalAvailable
+                                }
+                                isBundleSelected={selectedBundle}
+                              />
+                            )}
                           </>
                         )}
                         {formikProps.values.paymentMode ===
