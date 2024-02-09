@@ -942,7 +942,7 @@ export const PaymentFormNew = ({
   const paymentElementOptions = {
     layout: {
       type: 'accordion',
-      defaultCollapsed: false,
+      defaultCollapsed: true,
       radios: true,
       spacedAccordionItems: false,
     },
