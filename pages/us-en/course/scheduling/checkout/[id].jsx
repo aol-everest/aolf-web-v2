@@ -584,7 +584,7 @@ const SchedulingPaymentForm = ({
   const paymentElementOptions = {
     layout: {
       type: 'accordion',
-      defaultCollapsed: false,
+      defaultCollapsed: true,
       radios: true,
       spacedAccordionItems: false,
     },
