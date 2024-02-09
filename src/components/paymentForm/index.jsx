@@ -1026,7 +1026,6 @@ export const PaymentForm = ({
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
-          console.log('errors', errors);
           await preEnrollValidation(values);
         }}
       >

@@ -549,7 +549,7 @@ const SchedulingRange = () => {
   };
 
   const handleSelectMode = (value) => {
-    if (value !== COURSE_MODES.ONLINE.value) {
+    if (value !== COURSE_MODES.ONLINE.value && !locationFilter?.locationName) {
       setLocationFilter(null);
       setShowLocationModal(true);
     }
