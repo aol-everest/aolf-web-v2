@@ -128,6 +128,7 @@ export const PaymentFormNew = ({
     mode,
     phone2,
     timings = [],
+    email: contactEmail,
   } = workshop;
 
   const questionnaireArray = complianceQuestionnaire
@@ -942,7 +943,7 @@ export const PaymentFormNew = ({
   const paymentElementOptions = {
     layout: {
       type: 'accordion',
-      defaultCollapsed: false,
+      defaultCollapsed: true,
       radios: true,
       spacedAccordionItems: false,
     },
@@ -1037,6 +1038,9 @@ export const PaymentFormNew = ({
     }
   };
 
+  const showPaymentOptions =
+    otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') > -1;
+
   return (
     <>
       {loading && <div className="cover-spin"></div>}
@@ -1054,10 +1058,9 @@ export const PaymentFormNew = ({
           questionnaire: questionnaire,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
-          paymentMode:
-            otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') >= 0
-              ? ''
-              : PAYMENT_MODES.STRIPE_PAYMENT_MODE,
+          paymentMode: !showPaymentOptions
+            ? PAYMENT_MODES.STRIPE_PAYMENT_MODE
+            : '',
           accommodation: null,
           priceType: 'regular',
         }}
@@ -1199,12 +1202,16 @@ export const PaymentFormNew = ({
                                 SSL Secured
                               </span>
                             </h2>
-                            <PayWithNewCheckout
-                              formikProps={formikProps}
-                              otherPaymentOptions={otherPaymentOptions}
-                              isBundlePaypalAvailable={isBundlePaypalAvailable}
-                              isBundleSelected={selectedBundle}
-                            />
+                            {showPaymentOptions && (
+                              <PayWithNewCheckout
+                                formikProps={formikProps}
+                                otherPaymentOptions={otherPaymentOptions}
+                                isBundlePaypalAvailable={
+                                  isBundlePaypalAvailable
+                                }
+                                isBundleSelected={selectedBundle}
+                              />
+                            )}
                           </>
                         )}
                         {formikProps.values.paymentMode ===
@@ -1503,7 +1510,7 @@ export const PaymentFormNew = ({
                                     d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
                                   ></path>
                                 </svg>{' '}
-                                Contact Date:
+                                Date:
                               </div>
                               <div className="value col-7">
                                 {dayjs
@@ -1780,7 +1787,9 @@ export const PaymentFormNew = ({
                                 {phone2 && (
                                   <a href={`tel:${phone2}`}>{phone2}</a>
                                 )}
-                                <a href={`mailto:${email}`}>{email}</a>
+                                <a href={`mailto:${contactEmail}`}>
+                                  {contactEmail}
+                                </a>
                               </div>
                             </div>
                           </div>

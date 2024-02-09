@@ -10,6 +10,7 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
+import { NextSeo } from 'next-seo';
 import { loadStripe } from '@stripe/stripe-js';
 import { api, priceCalculation, tConvert, phoneRegExp } from '@utils';
 import { Formik } from 'formik';
@@ -303,7 +304,7 @@ const SchedulingPaymentForm = ({
     id: productId,
     addOnProducts,
     phone1,
-    email,
+    email: contactEmail,
     eventEndDate,
     eventStartDate,
     primaryTeacherName,
@@ -314,12 +315,8 @@ const SchedulingPaymentForm = ({
     timings = [],
   } = workshop;
 
-  const {
-    first_name,
-    last_name,
-    email: userEmail,
-    personMobilePhone,
-  } = user?.profile || {};
+  const { first_name, last_name, email, personMobilePhone } =
+    user?.profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -587,13 +584,13 @@ const SchedulingPaymentForm = ({
   const paymentElementOptions = {
     layout: {
       type: 'accordion',
-      defaultCollapsed: false,
+      defaultCollapsed: true,
       radios: true,
       spacedAccordionItems: false,
     },
     defaultValues: {
       billingDetails: {
-        email: userEmail || '',
+        email: email || '',
         name: (first_name || '') + (last_name || ''),
         phone: personMobilePhone || '',
       },
@@ -608,6 +605,7 @@ const SchedulingPaymentForm = ({
 
   return (
     <>
+      <NextSeo title={title + ' Course Checkout'} />
       {loading && <div className="cover-spin"></div>}
       <Formik
         initialValues={{
@@ -1101,7 +1099,9 @@ const SchedulingPaymentForm = ({
                               <a href={`tel:${phone1}`}>{phone1}</a>
                               <br />
                               {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}
-                              <a href={`mailto:${email}`}>{email}</a>
+                              <a href={`mailto:${contactEmail}`}>
+                                {contactEmail}
+                              </a>
                             </div>
                           </div>
                         </div>
