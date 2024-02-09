@@ -10,6 +10,7 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
+import { NextSeo } from 'next-seo';
 import { loadStripe } from '@stripe/stripe-js';
 import { api, priceCalculation, tConvert, phoneRegExp } from '@utils';
 import { Formik } from 'formik';
@@ -604,6 +605,7 @@ const SchedulingPaymentForm = ({
 
   return (
     <>
+      <NextSeo title={title + ' Course Checkout'} />
       {loading && <div className="cover-spin"></div>}
       <Formik
         initialValues={{

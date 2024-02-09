@@ -290,6 +290,7 @@ const Thankyou = () => {
     <>
       <main>
         <NextSeo
+          title={title + ' Course Thank You Page'}
           noindex={true}
           nofollow={true}
           robotsProps={{
