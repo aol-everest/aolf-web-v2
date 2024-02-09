@@ -9,6 +9,7 @@ import {
   findCourseTypeByKey,
   getZipCodeByLatLang,
   getUserTimeZoneAbbreviation,
+  getLatLangByZipCode,
 } from '@utils';
 import dayjs from 'dayjs';
 import { sortBy, values, omit } from 'lodash';
@@ -26,6 +27,7 @@ import { useAnalytics } from 'use-analytics';
 import classNames from 'classnames';
 import Modal from 'react-bootstrap/Modal';
 import { orgConfig } from '@org';
+import { useSessionStorage } from '@uidotdev/usehooks';
 
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -106,6 +108,7 @@ function formatDates(dates) {
 const SchedulingRange = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
+  const [value, setValue] = useSessionStorage('zipCode', '');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [zipCode, setZipCode] = useState('');
@@ -135,6 +138,19 @@ const SchedulingRange = () => {
   const [cityFilter] = useQueryState('city');
 
   useEffect(() => {
+    const getAddress = async () => {
+      if (value) {
+        const latLng = await getLatLangByZipCode(value);
+        setZipCode(value);
+        if (latLng?.locationName) {
+          setLocationFilter(latLng);
+        }
+      }
+    };
+    getAddress();
+  }, [value]);
+
+  useEffect(() => {
     const getUserLocation = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -144,6 +160,7 @@ const SchedulingRange = () => {
               getZipCodeByLatLang(latitude, longitude),
             ]);
             setIsUserLocationShared(true);
+            setValue(zipCode);
             setZipCode(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
           },
@@ -628,6 +645,7 @@ const SchedulingRange = () => {
     setIsInitialLoad(true);
     if (value) {
       const zipCode = value.zipCode;
+      setValue(zipCode);
       setZipCode(zipCode);
       const updatedValue = omit(value, 'zipCode');
       if (updatedValue && Object.keys(updatedValue).length > 0) {
@@ -635,6 +653,8 @@ const SchedulingRange = () => {
       }
       setLocationFilter(value);
     } else {
+      setValue('');
+      setZipCode('');
       setLocationFilter(null);
     }
   };
