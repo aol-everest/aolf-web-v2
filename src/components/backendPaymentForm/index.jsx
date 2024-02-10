@@ -1035,9 +1035,9 @@ export const BackendPaymentForm = ({
                     ),
                   })
               : Yup.string().notRequired(),
-            contactDegree: Yup.string().required(
-              'Degree/Qualifications is required',
-            ),
+            contactDegree: isIahv
+              ? Yup.string().notRequired()
+              : Yup.string().required('Degree/Qualifications is required'),
             claimingType: Yup.mixed().when('CME', {
               is: true,
               then: Yup.string().required('CE Claiming type is required'),
