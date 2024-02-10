@@ -8,8 +8,6 @@ const Step2 = () => {
   const router = useRouter();
   const [selectedId, setSelectedId] = useState('');
   const [value, setValue] = useSessionStorage('center-finder', {});
-
-  console.log('value', value);
   const { totalSelectedOptions = [], questions = [] } = value;
   const currentStepData = questions?.find((item) => item.sequence === 2);
 
