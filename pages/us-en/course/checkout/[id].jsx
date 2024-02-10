@@ -1,4 +1,4 @@
-import { PageLoading, PaymentFormHB } from '@components';
+import { PageLoading, PaymentFormGeneric, PaymentFormHB } from '@components';
 import {
   ALERT_TYPES,
   COURSE_TYPES,
@@ -274,8 +274,7 @@ const Checkout = () => {
     if (
       isHealingBreathProgram ||
       isInstitutionalProgram ||
-      isHealingBreathSilentType ||
-      isSkyHappinessRetreat
+      isHealingBreathSilentType
     ) {
       return (
         <div className="order">
@@ -290,6 +289,20 @@ const Checkout = () => {
             isLoggedUser={authenticated}
           />
         </div>
+      );
+    }
+    if (isSkyHappinessRetreat) {
+      return (
+        <PaymentFormGeneric
+          isStripeIntentPayment={isStripeIntentPayment}
+          workshop={workshop}
+          profile={user?.profile}
+          enrollmentCompletionAction={enrollmentCompletionAction}
+          enrollmentCompletionLink={enrollmentCompletionLink}
+          handleCouseSelection={handleCouseSelection}
+          login={login}
+          isLoggedUser={authenticated}
+        />
       );
     }
     return (
