@@ -77,8 +77,6 @@ const Step6 = () => {
                 setFieldValue,
               } = props;
 
-              console.log('values', values);
-
               return (
                 <form
                   name="workshopEnroll"
@@ -149,7 +147,6 @@ const Step6 = () => {
                           id="guidance"
                           name="guidance"
                           onChange={(ev) => {
-                            console.log('ev', ev.target.checked);
                             setFieldValue('guidance', ev.target.checked);
                           }}
                           onBlur={handleBlur}

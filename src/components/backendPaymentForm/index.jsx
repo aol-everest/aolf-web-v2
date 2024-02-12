@@ -650,16 +650,8 @@ export const BackendPaymentForm = ({
   const {
     id,
     title,
-    shortAddress,
     email,
     contactName,
-    formattedStartDate,
-    formattedEndDate,
-    formattedStartDateOnly,
-    formattedEndDateOnly,
-    formattedWeekDay,
-    formattedWeekEnd,
-    courseId,
     phone1,
     primaryTeacherName,
     primaryTeacherPic,
@@ -682,8 +674,6 @@ export const BackendPaymentForm = ({
     earlyBirdFeeIncreasing,
     isGenericWorkshop,
     name,
-    eventStartTime,
-    eventEndTime,
     availableBundles,
     addOnProducts,
     usableCredit,
@@ -1039,9 +1029,9 @@ export const BackendPaymentForm = ({
                     ),
                   })
               : Yup.string().notRequired(),
-            contactDegree: Yup.string().required(
-              'Degree/Qualifications is required',
-            ),
+            contactDegree: isHb
+              ? Yup.string().required('Degree/Qualifications is required')
+              : Yup.string().notRequired(),
             claimingType: Yup.mixed().when('CME', {
               is: true,
               then: Yup.string().required('CE Claiming type is required'),
