@@ -297,7 +297,7 @@ const Centers = () => {
               onChange={(e) => setQ(e.target.value)}
             />
             {q !== '' && (
-              <button class="search-clear" onClick={clearSearch}>
+              <button className="search-clear" onClick={clearSearch}>
                 <svg
                   fill="#9698a6"
                   height="16px"
