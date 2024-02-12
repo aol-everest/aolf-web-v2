@@ -309,16 +309,18 @@ const Checkout = () => {
       );
     }
     return (
-      <PaymentFormNew
-        isStripeIntentPayment={isStripeIntentPayment}
-        workshop={workshop}
-        profile={user?.profile}
-        enrollmentCompletionAction={enrollmentCompletionAction}
-        enrollmentCompletionLink={enrollmentCompletionLink}
-        handleCouseSelection={handleCouseSelection}
-        login={login}
-        isLoggedUser={authenticated}
-      />
+      <div className="order">
+        <PaymentFormNew
+          isStripeIntentPayment={isStripeIntentPayment}
+          workshop={workshop}
+          profile={user?.profile}
+          enrollmentCompletionAction={enrollmentCompletionAction}
+          enrollmentCompletionLink={enrollmentCompletionLink}
+          handleCouseSelection={handleCouseSelection}
+          login={login}
+          isLoggedUser={authenticated}
+        />
+      </div>
     );
   };
 
@@ -516,5 +518,6 @@ const Checkout = () => {
 };
 
 Checkout.hideHeader = true;
+Checkout.hideFooter = true;
 
 export default Checkout;
