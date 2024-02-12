@@ -18,16 +18,14 @@ export default function TalkableRefer() {
               {COURSE_TYPES.SKY_BREATH_MEDITATION.name} course
             </li>
             <li>
-              Your friends will get 20% off their very first SKY Breath
-              Meditation course
+              For every friend that completes the course, you’ll be entered into
+              a Sweepstakes where you can win an{' '}
+              {COURSE_TYPES.SILENT_RETREAT.name} Course (Silence Program) online
+              or in-person up to a value of $700.
             </li>
             <li>
-              You’ll get $20 for every friend that completes the course, earning
-              up to $200 per year
-            </li>
-            <li>
-              You can use the credit towards Sahaj Samadhi Meditation™, Silent
-              Retreats, or to repeat your SKY course
+              The winner will be announced at the end of every quarter. See T&Cs
+              for details.
             </li>
           </ol>{' '}
           <h6 className="course-details-card__subtitle">
@@ -35,19 +33,12 @@ export default function TalkableRefer() {
           </h6>
           <ol>
             <li>
-              You’ll receive a $20 coupon code for every friend that completes
-              their course via ema
+              The winner of the Sweepstakes will receive an email with a coupon
+              code for the Art of Living - Part 2 Course.
             </li>
             <li>
-              Enter the coupon code and select your course of choice to redeem
-              your reward. A new code will be provided, which can be applied at
-              checkout upon registering for your course.
-            </li>
-            <li>
-              If you have multiple coupon codes that you’d like to redeem for a
-              single course, you can merge your coupons below. Your dashboard
-              balance will update once your new coupon code has been
-              enjoyed—have a great course :)
+              Enter the coupon code when registering for the course and enjoy a
+              few days of deep calm & peace.
             </li>
           </ol>
           <div className="tw-mb-2 tw-mt-4">
