@@ -1065,7 +1065,11 @@ export const PaymentFormGeneric = ({
             ? Yup.mixed().notRequired()
             : Yup.string().required('Payment mode is required!'),
           contactHealthcareOrganisation: isIahv
-            ? Yup.string().required('Healthcare Organization is required')
+            ? Yup.string().required(
+                isIahv
+                  ? 'University Affiliation is required'
+                  : 'Healthcare Organization is required',
+              )
             : Yup.string().notRequired(),
           contactOtherHealthcareOrganization: isIahv
             ? Yup.string()

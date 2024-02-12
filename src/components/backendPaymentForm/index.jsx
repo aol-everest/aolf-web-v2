@@ -1023,7 +1023,11 @@ export const BackendPaymentForm = ({
               ? Yup.object().required('Expense Type is required!')
               : Yup.mixed().notRequired(),
             contactHealthcareOrganisation: isIahv
-              ? Yup.string().required('Healthcare Organization is required')
+              ? Yup.string().required(
+                  isIahv
+                    ? 'University Affiliation is required'
+                    : 'Healthcare Organization is required',
+                )
               : Yup.string().notRequired(),
             contactOtherHealthcareOrganization: isIahv
               ? Yup.string()
@@ -1060,14 +1064,9 @@ export const BackendPaymentForm = ({
               values,
               touched,
               errors,
-              dirty,
-              isSubmitting,
               handleChange,
               handleBlur,
               handleSubmit,
-              handleReset,
-              submitCount,
-              isValid,
             } = formikProps;
 
             let isOfflineExpense;
