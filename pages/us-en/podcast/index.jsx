@@ -5,12 +5,12 @@ import { useRouter } from 'next/router';
 function PodcastPage() {
   const router = useRouter();
   return (
-    <main class="podcasts">
-      <section class="top-video">
+    <main className="podcasts">
+      <section className="top-video">
         <img
           onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
           src="http://img.youtube.com/vi/Y5JoBOyig-s/maxresdefault.jpg"
-          class="video-thumb-img"
+          className="video-thumb-img"
           width="100%"
           height="700"
           alt="YouTube"
@@ -24,33 +24,33 @@ function PodcastPage() {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
         ></iframe>
-        <div class="top-video-info">
-          <div class="channel-name">Aubrey Marcus 2022</div>
-          <div class="video-title">
+        <div className="top-video-info">
+          <div className="channel-name">Aubrey Marcus 2022</div>
+          <div className="video-title">
             Spiritual Guru Answers Life's biggest Questions
           </div>
         </div>
       </section>
-      <section class="video-playlist">
-        <div class="container">
-          <div class="podcast-search-wrap">
+      <section className="video-playlist">
+        <div className="container">
+          <div className="podcast-search-wrap">
             <input
               type="text"
-              class="podcast-search-input"
+              className="podcast-search-input"
               placeholder="Search..."
             />
           </div>
-          <h2 class="section-title">Gurudev in Conversation</h2>
-          <div class="section-description">
+          <h2 className="section-title">Gurudev in Conversation</h2>
+          <div className="section-description">
             Sharing wisdom with the world’s best thought leaders
           </div>
-          <div class="featured-video-list">
-            <div class="featured-video-item">
-              <div class="video-thumb">
+          <div className="featured-video-list">
+            <div className="featured-video-item">
+              <div className="video-thumb">
                 <img
                   onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
                   src="http://img.youtube.com/vi/Q7p_E_3Upzg/maxresdefault.jpg"
-                  class="video-thumb-img"
+                  className="video-thumb-img"
                   alt="YouTube"
                 />
                 <iframe
@@ -62,35 +62,35 @@ function PodcastPage() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                 ></iframe>
-                <span class="thumb-label popular">The Most Popular</span>
+                <span className="thumb-label popular">The Most Popular</span>
               </div>
-              <div class="video-info">
-                <div class="channel-name">Lewis Howes 2022</div>
-                <div class="video-title">
+              <div className="video-info">
+                <div className="channel-name">Lewis Howes 2022</div>
+                <div className="video-title">
                   Everything You Know About Manifesting Is wrong! (Do This
                   Instead)
                 </div>
-                <ul class="video-actions">
+                <ul className="video-actions">
                   <li>
-                    <a href="" class="watch">
+                    <a href="" className="watch">
                       Watch
                     </a>
                   </li>
-                  {/* <li><a href="" class="listen">Listen</a></li> */}
+                  {/* <li><a href="" className="listen">Listen</a></li> */}
                   <li>
-                    <a href="" class="duration">
+                    <a href="" className="duration">
                       00:37:36
                     </a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="featured-video-item">
-              <div class="video-thumb">
+            <div className="featured-video-item">
+              <div className="video-thumb">
                 <img
                   onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
                   src="http://img.youtube.com/vi/WNuI8_8mX34/maxresdefault.jpg"
-                  class="video-thumb-img"
+                  className="video-thumb-img"
                   alt="YouTube"
                 />
                 <iframe
@@ -102,33 +102,33 @@ function PodcastPage() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                 ></iframe>
-                <span class="thumb-label popular">The Most Popular</span>
+                <span className="thumb-label popular">The Most Popular</span>
               </div>
-              <div class="video-info">
-                <div class="channel-name">Vishen (Mindvalley)</div>
-                <div class="video-title">
+              <div className="video-info">
+                <div className="channel-name">Vishen (Mindvalley)</div>
+                <div className="video-title">
                   Your Most Difficult Philosophical Questions Answered
                 </div>
-                <ul class="video-actions">
+                <ul className="video-actions">
                   <li>
-                    <a href="" class="watch">
+                    <a href="" className="watch">
                       Watch
                     </a>
                   </li>
                   <li>
-                    <a href="" class="duration">
+                    <a href="" className="duration">
                       00:48:15
                     </a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="featured-video-item">
-              <div class="video-thumb">
+            <div className="featured-video-item">
+              <div className="video-thumb">
                 <img
                   onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
                   src="http://img.youtube.com/vi/wPQJz__rdHo/maxresdefault.jpg"
-                  class="video-thumb-img"
+                  className="video-thumb-img"
                   alt="YouTube"
                 />
                 <iframe
@@ -140,22 +140,22 @@ function PodcastPage() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                 ></iframe>
-                <span class="thumb-label featured">Featured</span>
+                <span className="thumb-label featured">Featured</span>
               </div>
-              <div class="video-info">
-                <div class="channel-name">Next Level Soul</div>
-                <div class="video-title">
+              <div className="video-info">
+                <div className="channel-name">Next Level Soul</div>
+                <div className="video-title">
                   Indian Mystic Reveals everything You Know About the universe
                   is wrong
                 </div>
-                <ul class="video-actions">
+                <ul className="video-actions">
                   <li>
-                    <a href="" class="watch">
+                    <a href="" className="watch">
                       Watch
                     </a>
                   </li>
                   <li>
-                    <a href="" class="duration">
+                    <a href="" className="duration">
                       0:48:15
                     </a>
                   </li>
@@ -163,13 +163,13 @@ function PodcastPage() {
               </div>
             </div>
           </div>
-          <div class="video-listing">
-            <div class="video-item">
-              <div class="video-thumb">
+          <div className="video-listing">
+            <div className="video-item">
+              <div className="video-thumb">
                 <img
                   onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
                   src="http://img.youtube.com/vi/HTtKk7FvqBc/maxresdefault.jpg"
-                  class="video-thumb-img"
+                  className="video-thumb-img"
                   alt="YouTube"
                 />
                 <iframe
@@ -182,32 +182,32 @@ function PodcastPage() {
                   allowfullscreen
                 ></iframe>
               </div>
-              <div class="video-info">
-                <div class="channel-name">Lewis Howes 2022</div>
-                <div class="video-title">
+              <div className="video-info">
+                <div className="channel-name">Lewis Howes 2022</div>
+                <div className="video-title">
                   Everything You Know About Manifesting Is wrong! (Do This
                   Instead)
                 </div>
-                <ul class="video-actions">
+                <ul className="video-actions">
                   <li>
-                    <a href="" class="watch">
+                    <a href="" className="watch">
                       Watch
                     </a>
                   </li>
                   <li>
-                    <a href="" class="duration">
+                    <a href="" className="duration">
                       00:37:36
                     </a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="video-item">
-              <div class="video-thumb">
+            <div className="video-item">
+              <div className="video-thumb">
                 <img
                   onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
                   src="http://img.youtube.com/vi/n_uN-Lq3nyU/maxresdefault.jpg"
-                  class="video-thumb-img"
+                  className="video-thumb-img"
                   alt="YouTube"
                 />
                 <iframe
@@ -220,31 +220,31 @@ function PodcastPage() {
                   allowfullscreen
                 ></iframe>
               </div>
-              <div class="video-info">
-                <div class="channel-name">Vishen (Mindvalley)</div>
-                <div class="video-title">
+              <div className="video-info">
+                <div className="channel-name">Vishen (Mindvalley)</div>
+                <div className="video-title">
                   Your Most Difficult Philosophical Questions Answered
                 </div>
-                <ul class="video-actions">
+                <ul className="video-actions">
                   <li>
-                    <a href="" class="watch">
+                    <a href="" className="watch">
                       Watch
                     </a>
                   </li>
                   <li>
-                    <a href="" class="duration">
+                    <a href="" className="duration">
                       00:48:15
                     </a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="video-item">
-              <div class="video-thumb">
+            <div className="video-item">
+              <div className="video-thumb">
                 <img
                   onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
                   src="http://img.youtube.com/vi/iQWZdALmOcw/maxresdefault.jpg"
-                  class="video-thumb-img"
+                  className="video-thumb-img"
                   alt="YouTube"
                 />
                 <iframe
@@ -257,20 +257,20 @@ function PodcastPage() {
                   allowfullscreen
                 ></iframe>
               </div>
-              <div class="video-info">
-                <div class="channel-name">Next Level Soul</div>
-                <div class="video-title">
+              <div className="video-info">
+                <div className="channel-name">Next Level Soul</div>
+                <div className="video-title">
                   Indian Mystic Reveals everything You Know About the universe
                   is wrong
                 </div>
-                <ul class="video-actions">
+                <ul className="video-actions">
                   <li>
-                    <a href="" class="watch">
+                    <a href="" className="watch">
                       Watch
                     </a>
                   </li>
                   <li>
-                    <a href="" class="duration">
+                    <a href="" className="duration">
                       0:48:15
                     </a>
                   </li>
@@ -278,8 +278,8 @@ function PodcastPage() {
               </div>
             </div>
           </div>
-          <div class="load-more-action">
-            <button class="load-more-btn">Load more</button>
+          <div className="load-more-action">
+            <button className="load-more-btn">Load more</button>
           </div>
         </div>
       </section>
