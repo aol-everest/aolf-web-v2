@@ -458,7 +458,11 @@ const SchedulingRange = () => {
   const upcomingByZipCode = [];
   const otherCourses = [];
   workshops.forEach((item) => {
-    if (item.locationPostalCode == zipCode && isUserLocationShared) {
+    if (
+      item.locationPostalCode == zipCode &&
+      isUserLocationShared &&
+      mode === COURSE_MODES.IN_PERSON.value
+    ) {
       upcomingByZipCode.push(item);
     } else {
       otherCourses.push(item);
