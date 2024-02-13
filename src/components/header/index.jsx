@@ -66,7 +66,7 @@ const HB_MENU = [
 const AOL_MENU = [
   {
     name: 'Gurudev',
-    link: '/us-en/lp/gurudev',
+    link: 'https://www.artofliving.org/us-en/gurudev',
   },
   {
     name: 'Courses',
