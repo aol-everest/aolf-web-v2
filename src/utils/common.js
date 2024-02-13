@@ -207,9 +207,9 @@ export const joinPhoneNumbers = (...phoneNumbers) => {
 };
 
 export const findExistingQuestionnaire = (
-  totalSelectedOptions,
-  currentStepData,
-  answerId,
+  totalSelectedOptions = [],
+  currentStepData = {},
+  answerId = '',
 ) => {
   const updatedOptions = [...totalSelectedOptions];
   const existingOptionIndex = updatedOptions.findIndex(

@@ -38,7 +38,7 @@ const Step1 = () => {
 
   const NavigateToStep2 = () => {
     setValue({
-      totalSelectedOptions: value?.totalSelectedOptions,
+      totalSelectedOptions: value?.totalSelectedOptions || [],
       questions,
     });
     pushRouteWithUTMQuery(router, {
@@ -49,7 +49,7 @@ const Step1 = () => {
   const handleOptionSelect = (answerId) => {
     setSelectedId(answerId);
     const updatedOptions = findExistingQuestionnaire(
-      value?.totalSelectedOptions,
+      value?.totalSelectedOptions || [],
       currentStepData,
       answerId,
     );
@@ -113,9 +113,7 @@ const Step1 = () => {
                         id={answer.optionId}
                         name={answer.optionId}
                         checked={selectedId === answer.optionId}
-                        onChange={(ev) =>
-                          handleOptionSelect(ev.target.value, answer.optionId)
-                        }
+                        onChange={(ev) => handleOptionSelect(answer.optionId)}
                       />
                       <label htmlFor={answer.optionId}>
                         {answer.optionText}

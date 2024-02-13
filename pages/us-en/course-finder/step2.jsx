@@ -20,9 +20,9 @@ const Step2 = () => {
   }, []);
 
   const NavigateToStep3 = () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course-finder/step3`,
-    });
+    // pushRouteWithUTMQuery(router, {
+    //   pathname: `/us-en/course-finder/step3`,
+    // });
   };
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Step2 = () => {
       <section className="questionnaire-question">
         <div className="container">
           <div className="back-btn-wrap">
-            <a href="javascript:history.go(-1)" className="back-btn">
+            <button className="back-btn" onClick={router.back}>
               <svg
                 width="24"
                 height="24"
@@ -81,7 +81,7 @@ const Step2 = () => {
                 />
               </svg>
               Back
-            </a>
+            </button>
           </div>
           <div className="question-box">
             <div className="question-step-highlighter-wrap">

@@ -17,7 +17,7 @@ const Step5 = () => {
       <section className="questionnaire-question">
         <div className="container">
           <div className="back-btn-wrap">
-            <button className="back-btn" onClick={() => router.back()}>
+            <button className="back-btn" onClick={router.back}>
               <svg
                 width="24"
                 height="24"
