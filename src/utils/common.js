@@ -128,6 +128,25 @@ export const getZipCodeByLatLang = async (lat, lng) => {
   }
 };
 
+export const getLatLangByZipCode = async (zipCode) => {
+  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${zipCode}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`;
+  const data = await fetch(apiUrl);
+  const result = await data.json();
+  if (result.status === 'OK') {
+    const finalData = result.results[0];
+    if (finalData) {
+      const locationName = finalData.formatted_address;
+      const location = finalData.geometry.location;
+      const latitude = location.lat;
+      const longitude = location.lng;
+      return { lat: latitude, lng: longitude, locationName };
+    }
+  } else {
+    console.error('Error:', result.status);
+    return null;
+  }
+};
+
 export const createCompleteAddress = ({
   streetAddress1,
   streetAddress2,

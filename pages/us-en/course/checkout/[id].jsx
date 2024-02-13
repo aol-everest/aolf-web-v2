@@ -1,4 +1,4 @@
-import { PageLoading, PaymentFormHB } from '@components';
+import { PageLoading, PaymentFormGeneric, PaymentFormHB } from '@components';
 import {
   ALERT_TYPES,
   COURSE_TYPES,
@@ -270,13 +270,13 @@ const Checkout = () => {
 
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 
+  const isHBCheckoutPage =
+    isHealingBreathProgram ||
+    isInstitutionalProgram ||
+    isHealingBreathSilentType;
+
   const renderPaymentForm = () => {
-    if (
-      isHealingBreathProgram ||
-      isInstitutionalProgram ||
-      isHealingBreathSilentType ||
-      isSkyHappinessRetreat
-    ) {
+    if (isHBCheckoutPage) {
       return (
         <div className="order">
           <PaymentFormHB
@@ -292,17 +292,35 @@ const Checkout = () => {
         </div>
       );
     }
+    if (isSkyHappinessRetreat) {
+      return (
+        <div className="order">
+          <PaymentFormGeneric
+            isStripeIntentPayment={isStripeIntentPayment}
+            workshop={workshop}
+            profile={user?.profile}
+            enrollmentCompletionAction={enrollmentCompletionAction}
+            enrollmentCompletionLink={enrollmentCompletionLink}
+            handleCouseSelection={handleCouseSelection}
+            login={login}
+            isLoggedUser={authenticated}
+          />
+        </div>
+      );
+    }
     return (
-      <PaymentFormNew
-        isStripeIntentPayment={isStripeIntentPayment}
-        workshop={workshop}
-        profile={user?.profile}
-        enrollmentCompletionAction={enrollmentCompletionAction}
-        enrollmentCompletionLink={enrollmentCompletionLink}
-        handleCouseSelection={handleCouseSelection}
-        login={login}
-        isLoggedUser={authenticated}
-      />
+      <div className="order">
+        <PaymentFormNew
+          isStripeIntentPayment={isStripeIntentPayment}
+          workshop={workshop}
+          profile={user?.profile}
+          enrollmentCompletionAction={enrollmentCompletionAction}
+          enrollmentCompletionLink={enrollmentCompletionLink}
+          handleCouseSelection={handleCouseSelection}
+          login={login}
+          isLoggedUser={authenticated}
+        />
+      </div>
     );
   };
 
@@ -440,8 +458,33 @@ const Checkout = () => {
           </aside>
         )}
 
-        <section>
+        <section
+          className={isHBCheckoutPage || isSkyHappinessRetreat ? 'order' : ''}
+        >
           <div className="container">
+            {(isHBCheckoutPage || isSkyHappinessRetreat) && (
+              <>
+                <h1 className="title">{workshop.title}</h1>
+                {workshop.isGenericWorkshop ? (
+                  <p className="order__detail">
+                    Once you register, you will be contacted to schedule your
+                    course date
+                    <br />
+                    <span>
+                      SKY is offered every week of the year across time zones.
+                    </span>
+                  </p>
+                ) : (
+                  <p
+                    className="order__detail-description"
+                    dangerouslySetInnerHTML={{
+                      __html: workshop?.description,
+                    }}
+                  ></p>
+                )}
+              </>
+            )}
+
             {workshop.isCorporateEvent && (
               <div className="tw-mb-[60px]">
                 <h1 className="tw-text-center tw-text-4xl tw-font-bold tw-text-[#31364e]">
@@ -475,5 +518,6 @@ const Checkout = () => {
 };
 
 Checkout.hideHeader = true;
+Checkout.hideFooter = true;
 
 export default Checkout;
