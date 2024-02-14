@@ -13,7 +13,7 @@ async function getPlaylistDetails(playlistId) {
 
     const videoDetails = await getVideoDetails(videoIds);
 
-    const result = data.items.map((item) => {
+    let result = data.items.map((item) => {
       const videoDetail = videoDetails.find(
         (v) => v.id === item.snippet.resourceId.videoId,
       );
@@ -26,11 +26,33 @@ async function getPlaylistDetails(playlistId) {
       return dateB - dateA;
     });
 
-    return result;
+    const mostPopular = getMostViewedVideo(result);
+    console.log(mostPopular);
+
+    result = result.filter((video) => {
+      return video.videoDetail.id !== mostPopular.videoDetail.id;
+    });
+
+    return { mostPopular, all: result };
   } catch (error) {
     console.error('Error fetching playlist details:', error);
     throw error;
   }
+}
+
+function getMostViewedVideo(playlistDetails) {
+  if (!playlistDetails || playlistDetails.length === 0) {
+    throw new Error('Playlist details are empty or undefined.');
+  }
+
+  const mostViewedVideo = playlistDetails.reduce((prev, current) => {
+    const prevViewCount = prev.videoDetail.statistics.viewCount || 0;
+    const currentViewCount = current.videoDetail.statistics.viewCount || 0;
+
+    return currentViewCount > prevViewCount ? current : prev;
+  });
+
+  return mostViewedVideo;
 }
 
 async function searchVideos(query, maxResults = 10) {
