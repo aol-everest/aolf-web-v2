@@ -8,7 +8,7 @@ import ErrorPage from 'next/error';
 import YouTube from 'react-youtube';
 import { useEffect, useState } from 'react';
 
-const PLAYLIST_ID = 'PLj4pqY15Io_m1E0YeB2_tvY6xxjLuhUNz';
+const PLAYLIST_ID = `${process.env.NEXT_PUBLIC_PODCAST_PLAYLIST_ID}`;
 
 const SEARCH_PARAM = [
   'videoDetail.snippet.title',
@@ -24,8 +24,9 @@ function deepValue(obj, path) {
 }
 
 const VideoItemComp = (props) => {
-  const { video, playingId, onPlayAction } = props;
+  const { video, playingId, onPlayAction, isVertical, isMostPopular } = props;
   const [isInitialPlaying, setInitialPlaying] = useState(false);
+  const [isReady, setReady] = useState(false);
   const [isPlaying, setPlaying] = useState(false);
   const [player, setPlayer] = useState(null);
   const [playerState, setPlayerState] = useState(null);
@@ -51,6 +52,7 @@ const VideoItemComp = (props) => {
 
   const onReady = (event) => {
     setPlayer(event.target);
+    setReady(true);
   };
 
   const playVideo = () => {
@@ -113,165 +115,81 @@ const VideoItemComp = (props) => {
     setPlayerState(event.data);
   };
 
-  return (
-    <div className="video-item">
-      <div className="video-thumb" onClick={watchAction}>
-        {playerState &&
-          playerState !== YouTube.PlayerState.PLAYING &&
-          playerState !== YouTube.PlayerState.PAUSED &&
-          playerState !== YouTube.PlayerState.ENDED && (
+  const showLoader = () => {
+    return (
+      !isReady ||
+      (playerState &&
+        playerState !== YouTube.PlayerState.PLAYING &&
+        playerState !== YouTube.PlayerState.PAUSED &&
+        playerState !== YouTube.PlayerState.ENDED)
+    );
+  };
+
+  if (isVertical) {
+    return (
+      <div className="video-item">
+        <div className="video-thumb" onClick={watchAction}>
+          {showLoader() && (
             <div className="loader-container">
               <div className="loader"></div>
             </div>
           )}
-        <img
-          src={video.snippet.thumbnails.medium.url}
-          style={{ display: isInitialPlaying ? 'none' : 'block' }}
-          className="video-thumb-img"
-          alt="YouTube"
-        />
+          <img
+            src={video.snippet.thumbnails.medium.url}
+            style={{ display: isInitialPlaying ? 'none' : 'block' }}
+            className="video-thumb-img"
+            alt="YouTube"
+          />
 
-        <YouTube
-          videoId={video.videoDetail.id}
-          title={video.snippet.title}
-          loading="loading"
-          opts={opts}
-          onReady={onReady}
-          onPlay={onPlay}
-          onPause={onPause}
-          onError={onError}
-          onStateChange={onStateChange}
-        />
-      </div>
-
-      <div className="video-info">
-        <div className="channel-name">
-          {video.snippet.videoOwnerChannelTitle}
+          <YouTube
+            videoId={video.videoDetail.id}
+            title={video.snippet.title}
+            loading="loading"
+            opts={opts}
+            onReady={onReady}
+            onPlay={onPlay}
+            onPause={onPause}
+            onError={onError}
+            onStateChange={onStateChange}
+          />
         </div>
-        <div className="video-title">{video.snippet.title}</div>
-        <ul className="video-actions">
-          <li>
-            {playerState !== YouTube.PlayerState.PLAYING && (
-              <button onClick={watchAction} className="watch">
-                Watch
-              </button>
-            )}
-            {playerState === YouTube.PlayerState.PLAYING && (
-              <button onClick={pauseAction} className="pause">
-                Pause
-              </button>
-            )}
-          </li>
-          <li>
-            <a href="" className="duration">
-              {video.videoDetail.duration}
-            </a>
-          </li>
-        </ul>
+
+        <div className="video-info">
+          <div className="channel-name">
+            {video.snippet.videoOwnerChannelTitle}
+          </div>
+          <div className="video-title">{video.snippet.title}</div>
+          <ul className="video-actions">
+            <li>
+              {playerState !== YouTube.PlayerState.PLAYING && (
+                <button onClick={watchAction} className="watch">
+                  Watch
+                </button>
+              )}
+              {playerState === YouTube.PlayerState.PLAYING && (
+                <button onClick={pauseAction} className="pause">
+                  Pause
+                </button>
+              )}
+            </li>
+            <li>
+              <a href="" className="duration">
+                {video.videoDetail.duration}
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  );
-};
-
-const VideoItemCompTop = (props) => {
-  const { video, playingId, onPlayAction, isMostPopular } = props;
-  const [isInitialPlaying, setInitialPlaying] = useState(false);
-  const [isPlaying, setPlaying] = useState(false);
-  const [player, setPlayer] = useState(null);
-  const [playerState, setPlayerState] = useState(null);
-
-  const opts = {
-    height: '560',
-    width: '315',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      version: 3,
-      controls: 1,
-      playerapiid: 'ytplayer',
-      color: 'white',
-      enablejsapi: 1,
-      mute: 1,
-      showinfo: 0,
-      rel: 0,
-      playsinline: 1,
-      iv_load_policy: 3,
-      listType: 'playlist',
-      list: PLAYLIST_ID,
-    },
-  };
-
-  const onReady = (event) => {
-    setPlayer(event.target);
-  };
-
-  const playVideo = () => {
-    if (player) {
-      player.unMute();
-      player.playVideo();
-      setTimeout(function () {
-        if (player.getPlayerState() !== 1) {
-          player.mute();
-          player.playVideo();
-        }
-      }, 1000);
-    }
-  };
-
-  useEffect(() => {
-    if (player) {
-      if (playingId === video.videoDetail.id) {
-        playVideo();
-      } else {
-        player.pauseVideo();
-      }
-    }
-  }, [playingId, player]);
-
-  const onPlay = async (e) => {
-    setPlaying(true);
-    setInitialPlaying(true);
-    if (playingId !== video.videoDetail.id) {
-      onPlayAction(video.videoDetail.id);
-    }
-  };
-
-  const onPause = async (e) => {
-    setPlaying(false);
-  };
-
-  const watchAction = () => {
-    if (player) {
-      if (playingId !== video.videoDetail.id) {
-        onPlayAction(video.videoDetail.id);
-      }
-      if (player.getPlayerState() === 2) {
-        playVideo();
-      }
-    }
-  };
-
-  const pauseAction = () => {
-    if (playingId === video.videoDetail.id) {
-      onPlayAction(null);
-    }
-  };
-
-  const onStateChange = (event) => {
-    console.log(event.data);
-    setPlayerState(event.data);
-  };
-
+    );
+  }
   return (
     <div className="featured-video-item">
       <div className="video-thumb" onClick={watchAction}>
-        {playerState !== null &&
-          playerState !== YouTube.PlayerState.PLAYING &&
-          playerState !== YouTube.PlayerState.PAUSED &&
-          playerState !== YouTube.PlayerState.ENDED && (
-            <div className="loader-container">
-              <div className="loader"></div>
-            </div>
-          )}
+        {showLoader() && (
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+        )}
         <img
           style={{ display: isInitialPlaying ? 'none' : 'block' }}
           src={video.snippet.thumbnails.medium.url}
@@ -329,6 +247,7 @@ function PodcastPage() {
   const [player, setPlayer] = useState(null);
   //     set search query to empty string
   const [q, setQ] = useState('');
+  const [playerCount, setPlayerCount] = useState(0);
 
   const { data, isLoading, isError, error } = useQuery(
     'yt-playlist',
@@ -397,6 +316,10 @@ function PodcastPage() {
     if (playingId !== first.videoDetail.id) {
       setPlayingId(first.videoDetail.id);
     }
+  };
+
+  const addPlayerLoadedCount = () => {
+    setPlayerCount(playerCount + 1);
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
@@ -469,31 +392,33 @@ function PodcastPage() {
             Sharing wisdom with the world’s best thought leaders
           </div>
           <div className="featured-video-list">
-            <VideoItemCompTop
+            <VideoItemComp
               video={data.mostPopular}
               playingId={playingId}
               onPlayAction={onPlayAction}
               isMostPopular
-            ></VideoItemCompTop>
-            <VideoItemCompTop
+            ></VideoItemComp>
+            <VideoItemComp
               video={second}
               playingId={playingId}
               onPlayAction={onPlayAction}
-            ></VideoItemCompTop>
-            <VideoItemCompTop
+            ></VideoItemComp>
+            <VideoItemComp
               video={third}
               playingId={playingId}
               onPlayAction={onPlayAction}
-            ></VideoItemCompTop>
+            ></VideoItemComp>
           </div>
           <div className="video-listing">
             {search(restData).map((video) => {
               return (
                 <VideoItemComp
+                  addPlayerLoadedCount={addPlayerLoadedCount}
                   key={video.id}
                   video={video}
                   playingId={playingId}
                   onPlayAction={onPlayAction}
+                  isVertical
                 />
               );
             })}
