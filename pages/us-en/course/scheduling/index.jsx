@@ -761,13 +761,33 @@ const SchedulingRange = () => {
                 </div>
                 <div className="course_price">
                   {mode === COURSE_MODES.IN_PERSON.value && (
-                    <h5>In-Person course price: ${workshopMaster.unitPrice}</h5>
+                    <>
+                      <h5>
+                        In-Person course price: ${workshopMaster.unitPrice}
+                      </h5>
+                      <p className="tw-pb-4">
+                        (select Klarna for 4 interest-free payments of $
+                        {workshopMaster.unitPrice / 4})
+                      </p>
+                    </>
                   )}
                   {mode === COURSE_MODES.ONLINE.value && (
-                    <h5>Online course price: ${workshopMaster.unitPrice}</h5>
+                    <>
+                      <h5>Online course price: ${workshopMaster.unitPrice}</h5>
+                      <p className="tw-pb-4">
+                        (select Klarna for 4 interest-free payments of $
+                        {workshopMaster.unitPrice / 4})
+                      </p>
+                    </>
                   )}
                   {mode === COURSE_MODES_BOTH && (
-                    <h5>Course price: ${workshopMaster.unitPrice}</h5>
+                    <>
+                      <h5>Course price: ${workshopMaster.unitPrice}</h5>
+                      <p className="tw-pb-4">
+                        (select Klarna for 4 interest-free payments of $
+                        {workshopMaster.unitPrice / 4})
+                      </p>
+                    </>
                   )}
                   <p>Select the start date for this 3-day course</p>
                 </div>
