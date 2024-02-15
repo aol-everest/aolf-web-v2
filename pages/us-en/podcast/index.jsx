@@ -28,6 +28,7 @@ const VideoItemComp = (props) => {
   const [isInitialPlaying, setInitialPlaying] = useState(false);
   const [isPlaying, setPlaying] = useState(false);
   const [player, setPlayer] = useState(null);
+  const [playerState, setPlayerState] = useState(null);
   const opts = {
     height: '560',
     width: '315',
@@ -56,10 +57,12 @@ const VideoItemComp = (props) => {
     if (player) {
       player.unMute();
       player.playVideo();
-      if (player.getPlayerState() !== 1) {
-        player.mute();
-        player.playVideo();
-      }
+      setTimeout(function () {
+        if (player.getPlayerState() !== 1) {
+          player.mute();
+          player.playVideo();
+        }
+      }, 1000);
     }
   };
 
@@ -86,20 +89,48 @@ const VideoItemComp = (props) => {
   };
 
   const watchAction = () => {
-    if (playingId !== video.videoDetail.id) {
-      onPlayAction(video.videoDetail.id);
+    if (player) {
+      if (playingId !== video.videoDetail.id) {
+        onPlayAction(video.videoDetail.id);
+      }
+      if (player.getPlayerState() === 2) {
+        playVideo();
+      }
     }
+  };
+
+  const pauseAction = () => {
+    if (playingId === video.videoDetail.id) {
+      onPlayAction(null);
+    }
+  };
+
+  const onError = (event) => {
+    console.log('Error code:', event.data);
+  };
+
+  const onStateChange = (event) => {
+    setPlayerState(event.data);
   };
 
   return (
     <div className="video-item">
       <div className="video-thumb" onClick={watchAction}>
+        {playerState &&
+          playerState !== YouTube.PlayerState.PLAYING &&
+          playerState !== YouTube.PlayerState.PAUSED &&
+          playerState !== YouTube.PlayerState.ENDED && (
+            <div className="loader-container">
+              <div className="loader"></div>
+            </div>
+          )}
         <img
           src={video.snippet.thumbnails.medium.url}
           style={{ display: isInitialPlaying ? 'none' : 'block' }}
           className="video-thumb-img"
           alt="YouTube"
         />
+
         <YouTube
           videoId={video.videoDetail.id}
           title={video.snippet.title}
@@ -108,6 +139,8 @@ const VideoItemComp = (props) => {
           onReady={onReady}
           onPlay={onPlay}
           onPause={onPause}
+          onError={onError}
+          onStateChange={onStateChange}
         />
       </div>
 
@@ -118,10 +151,16 @@ const VideoItemComp = (props) => {
         <div className="video-title">{video.snippet.title}</div>
         <ul className="video-actions">
           <li>
-            <button onClick={watchAction}>Play Video with Volume</button>
-            <a href="#" className="watch" onClick={watchAction}>
-              Watch
-            </a>
+            {playerState !== YouTube.PlayerState.PLAYING && (
+              <button onClick={watchAction} className="watch">
+                Watch
+              </button>
+            )}
+            {playerState === YouTube.PlayerState.PLAYING && (
+              <button onClick={pauseAction} className="pause">
+                Pause
+              </button>
+            )}
           </li>
           <li>
             <a href="" className="duration">
@@ -139,6 +178,8 @@ const VideoItemCompTop = (props) => {
   const [isInitialPlaying, setInitialPlaying] = useState(false);
   const [isPlaying, setPlaying] = useState(false);
   const [player, setPlayer] = useState(null);
+  const [playerState, setPlayerState] = useState(null);
+
   const opts = {
     height: '560',
     width: '315',
@@ -167,10 +208,12 @@ const VideoItemCompTop = (props) => {
     if (player) {
       player.unMute();
       player.playVideo();
-      if (player.getPlayerState() !== 1) {
-        player.mute();
-        player.playVideo();
-      }
+      setTimeout(function () {
+        if (player.getPlayerState() !== 1) {
+          player.mute();
+          player.playVideo();
+        }
+      }, 1000);
     }
   };
 
@@ -197,14 +240,38 @@ const VideoItemCompTop = (props) => {
   };
 
   const watchAction = () => {
-    if (playingId !== video.videoDetail.id) {
-      onPlayAction(video.videoDetail.id);
+    if (player) {
+      if (playingId !== video.videoDetail.id) {
+        onPlayAction(video.videoDetail.id);
+      }
+      if (player.getPlayerState() === 2) {
+        playVideo();
+      }
     }
+  };
+
+  const pauseAction = () => {
+    if (playingId === video.videoDetail.id) {
+      onPlayAction(null);
+    }
+  };
+
+  const onStateChange = (event) => {
+    console.log(event.data);
+    setPlayerState(event.data);
   };
 
   return (
     <div className="featured-video-item">
       <div className="video-thumb" onClick={watchAction}>
+        {playerState !== null &&
+          playerState !== YouTube.PlayerState.PLAYING &&
+          playerState !== YouTube.PlayerState.PAUSED &&
+          playerState !== YouTube.PlayerState.ENDED && (
+            <div className="loader-container">
+              <div className="loader"></div>
+            </div>
+          )}
         <img
           style={{ display: isInitialPlaying ? 'none' : 'block' }}
           src={video.snippet.thumbnails.medium.url}
@@ -219,6 +286,7 @@ const VideoItemCompTop = (props) => {
           onReady={onReady}
           onPlay={onPlay}
           onPause={onPause}
+          onStateChange={onStateChange}
         />
         {isMostPopular && (
           <span className="thumb-label popular">The Most Popular</span>
@@ -231,9 +299,16 @@ const VideoItemCompTop = (props) => {
         <div className="video-title">{video.snippet.title}</div>
         <ul className="video-actions">
           <li>
-            <a href="" className="watch" onClick={watchAction}>
-              Watch
-            </a>
+            {!isPlaying && (
+              <button onClick={watchAction} className="watch">
+                Watch
+              </button>
+            )}
+            {isPlaying && (
+              <button onClick={pauseAction} className="pause">
+                Pause
+              </button>
+            )}
           </li>
           {/* <li><a href="" className="listen">Listen</a></li> */}
           <li>
