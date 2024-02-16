@@ -257,8 +257,8 @@ function TicketedEvent() {
                                   data-product={`product-${index + 1}`}
                                   type="button"
                                   disabled={
-                                    totalSelectedTicketQuantity >=
-                                    maxTicketsWithOneOrder
+                                    selectedValue?.numberOfTickets >=
+                                    item.availableSeats
                                   }
                                   onClick={(e) =>
                                     handleTicketSelect(e, 'add', item)
@@ -268,25 +268,21 @@ function TicketedEvent() {
                                 </button>
                               </div>
                             </div>
-
-                            <h4 className="tickets-modal__card-amount">
-                              ${item.price.toFixed(2)}
-                              {/* <span>+ $3.31 Fee</span> */}
-                            </h4>
-
-                            {/* <p className="tickets-modal__card-sale">
-                      Sales end on Jul 26, 2023
-                    </p> */}
+                            <div className="tickets-modal__card-left">
+                              <h4 className="tickets-modal__card-amount">
+                                ${item.price.toFixed(2)}
+                                {/* <span>+ $3.31 Fee</span> */}
+                              </h4>
+                              <h4 className="tickets-modal__card-left">
+                                * {item.availableSeats} left
+                              </h4>
+                            </div>
                           </div>
                         );
                       })}
                     </div>
 
-                    <div className="tickets-modal__language">
-                      <span>
-                        * Max {maxTicketsWithOneOrder} tickets allowed per order
-                      </span>
-                    </div>
+                    <div className="tickets-modal__language"></div>
 
                     <div className="tickets-modal__footer">
                       {workshop && (
