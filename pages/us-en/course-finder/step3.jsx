@@ -1,13 +1,56 @@
 import { pushRouteWithUTMQuery } from '@service';
+import { useSessionStorage } from '@uidotdev/usehooks';
+import { findExistingQuestionnaire } from '@utils';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Step3 = () => {
   const router = useRouter();
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [value, setValue] = useSessionStorage('center-finder', {});
+  const { totalSelectedOptions = [], questions = [] } = value;
+  const currentStepData = questions?.find((item) => item.sequence === 3);
+
+  useEffect(() => {
+    if (questions.length === 0) {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course-finder`,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (totalSelectedOptions && !selectedIds?.length) {
+      const selectedOption = totalSelectedOptions.find(
+        (item) => item?.questionSfid === currentStepData?.questionSfid,
+      );
+      if (selectedOption?.answer) {
+        setSelectedIds([selectedOption.answer]);
+      }
+    }
+  }, []);
+
+  const handleOptionSelect = (answerId) => {
+    const selectedIdsLocal = [answerId];
+    setSelectedIds(selectedIdsLocal);
+    const updatedOptions = findExistingQuestionnaire(
+      totalSelectedOptions,
+      currentStepData,
+      selectedIdsLocal,
+    );
+    setValue({
+      ...value,
+      totalSelectedOptions: updatedOptions,
+    });
+  };
 
   const NavigateToStep4 = () => {
+    setValue({
+      totalSelectedOptions: totalSelectedOptions,
+      questions,
+    });
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/questionnaire/step4`,
+      pathname: `/us-en/course-finder/step4`,
     });
   };
 
@@ -16,7 +59,7 @@ const Step3 = () => {
       <section className="questionnaire-question">
         <div className="container">
           <div className="back-btn-wrap">
-            <button className="back-btn" onClick={() => router.back()}>
+            <button className="back-btn" onClick={router.back}>
               <svg
                 width="24"
                 height="24"
@@ -52,29 +95,34 @@ const Step3 = () => {
               <div className="question-step-highlighter"></div>
               <div className="question-step-highlighter"></div>
             </div>
-            <h1 className="question-title">
-              What best describes your meditation experience?
-            </h1>
+            <h1
+              className="question-title"
+              dangerouslySetInnerHTML={{
+                __html: currentStepData?.question,
+              }}
+            ></h1>
             <div className="question-options">
-              <div className="option-item">
-                <input type="radio" id="q1" name="quest" />
-                <label htmlFor="q1">None, I’m new!</label>
-              </div>
-              <div className="option-item">
-                <input type="radio" id="q2" name="quest" />
-                <label htmlFor="q2">Tried it once or twice</label>
-              </div>
-              <div className="option-item">
-                <input type="radio" id="q3" name="quest" />
-                <label htmlFor="q3">Meditate occasionally</label>
-              </div>
-              <div className="option-item">
-                <input type="radio" id="q4" name="quest" />
-                <label htmlFor="q4">Meditate regularly</label>
-              </div>
+              {currentStepData?.options?.map((answer) => {
+                return (
+                  <div className="option-item" key={answer.optionId}>
+                    <input
+                      type="checkbox"
+                      id={answer.optionId}
+                      name={answer.optionId}
+                      checked={selectedIds.includes(answer.optionId)}
+                      onChange={(ev) => handleOptionSelect(answer.optionId)}
+                    />
+                    <label htmlFor={answer.optionId}>{answer.optionText}</label>
+                  </div>
+                );
+              })}
             </div>
             <div className="question-action">
-              <button onClick={NavigateToStep4} className="btn-register">
+              <button
+                disabled={!selectedIds.length}
+                onClick={NavigateToStep4}
+                className="btn-register"
+              >
                 Continue
               </button>
             </div>

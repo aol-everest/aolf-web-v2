@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 
 const Step1 = () => {
   const router = useRouter();
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedIds, setSelectedIds] = useState([]);
   const [value, setValue] = useSessionStorage('center-finder', {});
 
   const { data: questions, isLoading } = useQuery(
@@ -26,12 +26,12 @@ const Step1 = () => {
   const currentStepData = questions?.find((item) => item.sequence === 1);
 
   useEffect(() => {
-    if (value?.totalSelectedOptions && !selectedId) {
+    if (value?.totalSelectedOptions && !selectedIds?.length) {
       const selectedOption = value?.totalSelectedOptions.find(
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
       if (selectedOption?.answer) {
-        setSelectedId(selectedOption.answer);
+        setSelectedIds([selectedOption.answer]);
       }
     }
   }, [questions]);
@@ -47,11 +47,12 @@ const Step1 = () => {
   };
 
   const handleOptionSelect = (answerId) => {
-    setSelectedId(answerId);
+    const selectedIdsLocal = [answerId];
+    setSelectedIds(selectedIdsLocal);
     const updatedOptions = findExistingQuestionnaire(
       value?.totalSelectedOptions || [],
       currentStepData,
-      answerId,
+      selectedIdsLocal,
     );
     setValue({
       ...value,
@@ -103,7 +104,12 @@ const Step1 = () => {
                 <div className="question-step-highlighter"></div>
                 <div className="question-step-highlighter"></div>
               </div>
-              <h1 className="question-title">{currentStepData?.question}</h1>
+              <h1
+                className="question-title"
+                dangerouslySetInnerHTML={{
+                  __html: currentStepData?.question,
+                }}
+              ></h1>
               <div className="question-options">
                 {currentStepData?.options?.map((answer) => {
                   return (
@@ -112,7 +118,7 @@ const Step1 = () => {
                         type="checkbox"
                         id={answer.optionId}
                         name={answer.optionId}
-                        checked={selectedId === answer.optionId}
+                        checked={selectedIds.includes(answer.optionId)}
                         onChange={(ev) => handleOptionSelect(answer.optionId)}
                       />
                       <label htmlFor={answer.optionId}>
@@ -126,7 +132,7 @@ const Step1 = () => {
                 <button
                   className="btn-register"
                   onClick={NavigateToStep2}
-                  disabled={!selectedId}
+                  disabled={!selectedIds.length}
                 >
                   Continue
                 </button>
