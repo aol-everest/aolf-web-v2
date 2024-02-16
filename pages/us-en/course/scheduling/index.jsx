@@ -193,6 +193,8 @@ const SchedulingRange = () => {
           ecommerce: {
             currency: 'USD',
             value: workshopMaster?.unitPrice,
+            course_format: workshopMaster?.productTypeId,
+            course_name: workshopMaster?.title,
             items: [
               {
                 item_id: 'NA',
@@ -547,6 +549,45 @@ const SchedulingRange = () => {
   };
 
   const goToPaymentModal = () => {
+    track(
+      'add_to_cart',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: activeWorkshop?.unitPrice,
+          course_format: activeWorkshop?.productTypeId,
+          course_name: activeWorkshop?.title,
+          items: [
+            {
+              item_id: activeWorkshop?.id,
+              item_name: activeWorkshop?.title,
+              affiliation: 'NA',
+              coupon: '',
+              discount: 0.0,
+              index: 0,
+              item_brand: activeWorkshop?.businessOrg,
+              item_category: activeWorkshop?.title,
+              item_category2: activeWorkshop?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: activeWorkshop?.productTypeId,
+              item_list_name: activeWorkshop?.title,
+              item_variant: activeWorkshop?.workshopTotalHours,
+              location_id: activeWorkshop?.locationCity,
+              price: activeWorkshop?.unitPrice,
+              quantity: 1,
+            },
+          ],
+        },
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
+        },
+      },
+    );
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
       query: {
