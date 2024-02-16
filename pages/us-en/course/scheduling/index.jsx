@@ -181,8 +181,50 @@ const SchedulingRange = () => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
+
     setTimezoneFilter(fillDefaultTimeZone());
   });
+
+  useEffect(() => {
+    if (workshopMaster && JSON.stringify(workshopMaster) !== '{}')
+      track(
+        'view_item',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshopMaster?.unitPrice,
+            items: [
+              {
+                item_id: 'NA',
+                item_name: workshopMaster?.title,
+                affiliation: 'NA',
+                coupon: '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshopMaster?.orgnization,
+                item_category: workshopMaster?.title,
+                item_category2: workshopMaster?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshopMaster?.productTypeId,
+                item_list_name: workshopMaster?.title,
+                item_variant: 'NA',
+                location_id: 'NA',
+                price: workshopMaster?.unitPrice,
+                quantity: 1,
+              },
+            ],
+          },
+        },
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
+  }, [workshopMaster]);
 
   useEffect(() => {
     if (router?.query?.timezone && mode !== COURSE_MODES.IN_PERSON.value) {
@@ -505,43 +547,6 @@ const SchedulingRange = () => {
   };
 
   const goToPaymentModal = () => {
-    track(
-      'view_item',
-      {
-        ecommerce: {
-          currency: 'USD',
-          value: activeWorkshop?.unitPrice,
-          items: [
-            {
-              item_id: activeWorkshop?.id,
-              item_name: activeWorkshop?.title,
-              affiliation: 'NA',
-              coupon: '',
-              discount: 0.0,
-              index: 0,
-              item_brand: activeWorkshop?.businessOrg,
-              item_category: activeWorkshop?.title,
-              item_category2: activeWorkshop?.mode,
-              item_category3: 'paid',
-              item_category4: 'NA',
-              item_category5: 'NA',
-              item_list_id: activeWorkshop?.productTypeId,
-              item_list_name: activeWorkshop?.title,
-              item_variant: activeWorkshop?.workshopTotalHours,
-              location_id: activeWorkshop?.locationCity,
-              price: activeWorkshop?.unitPrice,
-              quantity: 1,
-            },
-          ],
-        },
-      },
-      {
-        plugins: {
-          all: false,
-          'gtm-ecommerce-plugin': true,
-        },
-      },
-    );
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/checkout/${selectedWorkshopId}`,
       query: {
@@ -761,13 +766,33 @@ const SchedulingRange = () => {
                 </div>
                 <div className="course_price">
                   {mode === COURSE_MODES.IN_PERSON.value && (
-                    <h5>In-Person course price: ${workshopMaster.unitPrice}</h5>
+                    <>
+                      <h5>
+                        In-Person course price: ${workshopMaster.unitPrice}
+                      </h5>
+                      <p className="tw-pb-4">
+                        (select Klarna for 4 interest-free payments of $
+                        {workshopMaster.unitPrice / 4})
+                      </p>
+                    </>
                   )}
                   {mode === COURSE_MODES.ONLINE.value && (
-                    <h5>Online course price: ${workshopMaster.unitPrice}</h5>
+                    <>
+                      <h5>Online course price: ${workshopMaster.unitPrice}</h5>
+                      <p className="tw-pb-4">
+                        (select Klarna for 4 interest-free payments of $
+                        {workshopMaster.unitPrice / 4})
+                      </p>
+                    </>
                   )}
                   {mode === COURSE_MODES_BOTH && (
-                    <h5>Course price: ${workshopMaster.unitPrice}</h5>
+                    <>
+                      <h5>Course price: ${workshopMaster.unitPrice}</h5>
+                      <p className="tw-pb-4">
+                        (select Klarna for 4 interest-free payments of $
+                        {workshopMaster.unitPrice / 4})
+                      </p>
+                    </>
                   )}
                   <p>Select the start date for this 3-day course</p>
                 </div>

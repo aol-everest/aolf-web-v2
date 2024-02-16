@@ -37,7 +37,7 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
       </p> */}
       <div className="order__card">
         <StyledInput
-          className="mt-0"
+          className="mt-0 mb-3"
           placeholder="Title"
           formikProps={formikProps}
           formikKey="contactTitle"
