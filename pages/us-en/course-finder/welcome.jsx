@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-// import { pushRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -7,9 +7,9 @@ const Step1 = () => {
   const router = useRouter();
 
   const NavigateToStep1 = () => {
-    // pushRouteWithUTMQuery(router, {
-    //   pathname: `/us-en/course-finder/step1`,
-    // });
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course-finder/step1`,
+    });
   };
 
   return (

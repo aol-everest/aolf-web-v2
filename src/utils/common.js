@@ -209,7 +209,7 @@ export const joinPhoneNumbers = (...phoneNumbers) => {
 export const findExistingQuestionnaire = (
   totalSelectedOptions,
   currentStepData,
-  answerId,
+  selectedIdsLocal,
 ) => {
   const updatedOptions = [...totalSelectedOptions];
   const existingOptionIndex = updatedOptions.findIndex(
@@ -221,7 +221,7 @@ export const findExistingQuestionnaire = (
   }
   updatedOptions.push({
     questionSfid: currentStepData?.questionSfid,
-    answer: answerId,
+    answer: selectedIdsLocal,
   });
   return updatedOptions;
 };
