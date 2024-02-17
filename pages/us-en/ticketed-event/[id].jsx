@@ -9,7 +9,7 @@ import utc from 'dayjs/plugin/utc';
 import { ABBRS, ALERT_TYPES } from '@constants';
 import { DiscountCodeInput } from '@components/checkout';
 import { pushRouteWithUTMQuery } from '@service';
-import { useEffectOnce, useLocalStorage } from 'react-use';
+import { useLocalStorage } from 'react-use';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
@@ -23,8 +23,6 @@ function TicketedEvent() {
   const { showAlert } = useGlobalAlertContext();
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalSelectedTicketQuantity, setTotalSelectedTicketQuantity] =
-    useState(0);
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const formRef = useRef();
@@ -56,7 +54,6 @@ function TicketedEvent() {
     pricingTiers,
     id: productId,
     addOnProducts,
-    maxTicketsWithOneOrder,
     eventImageUrl,
     isEventFull,
     primaryTeacherName,
@@ -75,7 +72,6 @@ function TicketedEvent() {
       totalTicketQuantity = totalTicketQuantity + item.numberOfTickets;
     });
     setTotalPrice(totalPrice);
-    setTotalSelectedTicketQuantity(totalTicketQuantity);
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
