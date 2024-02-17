@@ -167,6 +167,7 @@ main.podcasts {
         }
       }
       .loader-container {
+        z-index: 99;
         width: 100%;
         height: 240px;
         position: absolute;
