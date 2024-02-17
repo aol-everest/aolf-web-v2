@@ -372,6 +372,13 @@
   height: 0.5px;
   background-color: rgba(252, 162, 72, 0.4);
 }
+.tickets-modal__card-left {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .tickets-modal__card-name {
   margin: 0;
   color: #fca248;
@@ -389,6 +396,11 @@
   line-height: 32px;
   margin: 0;
 }
+.tickets-modal__card-left {
+  color: rgba(38, 38, 39, 0.9);
+  font-size: 14px;
+}
+
 .tickets-modal__card-amount span {
   display: block;
   margin-top: 8px;

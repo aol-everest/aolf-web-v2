@@ -9,7 +9,7 @@ import utc from 'dayjs/plugin/utc';
 import { ABBRS, ALERT_TYPES } from '@constants';
 import { DiscountCodeInput } from '@components/checkout';
 import { pushRouteWithUTMQuery } from '@service';
-import { useEffectOnce, useLocalStorage } from 'react-use';
+import { useLocalStorage } from 'react-use';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
@@ -23,8 +23,6 @@ function TicketedEvent() {
   const { showAlert } = useGlobalAlertContext();
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalSelectedTicketQuantity, setTotalSelectedTicketQuantity] =
-    useState(0);
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const formRef = useRef();
@@ -56,7 +54,6 @@ function TicketedEvent() {
     pricingTiers,
     id: productId,
     addOnProducts,
-    maxTicketsWithOneOrder,
     eventImageUrl,
     isEventFull,
     primaryTeacherName,
@@ -75,7 +72,6 @@ function TicketedEvent() {
       totalTicketQuantity = totalTicketQuantity + item.numberOfTickets;
     });
     setTotalPrice(totalPrice);
-    setTotalSelectedTicketQuantity(totalTicketQuantity);
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
@@ -257,8 +253,8 @@ function TicketedEvent() {
                                   data-product={`product-${index + 1}`}
                                   type="button"
                                   disabled={
-                                    totalSelectedTicketQuantity >=
-                                    maxTicketsWithOneOrder
+                                    selectedValue?.numberOfTickets >=
+                                    item.availableSeats
                                   }
                                   onClick={(e) =>
                                     handleTicketSelect(e, 'add', item)
@@ -268,25 +264,21 @@ function TicketedEvent() {
                                 </button>
                               </div>
                             </div>
-
-                            <h4 className="tickets-modal__card-amount">
-                              ${item.price.toFixed(2)}
-                              {/* <span>+ $3.31 Fee</span> */}
-                            </h4>
-
-                            {/* <p className="tickets-modal__card-sale">
-                      Sales end on Jul 26, 2023
-                    </p> */}
+                            <div className="tickets-modal__card-left">
+                              <h4 className="tickets-modal__card-amount">
+                                ${item.price.toFixed(2)}
+                                {/* <span>+ $3.31 Fee</span> */}
+                              </h4>
+                              <h4 className="tickets-modal__card-left">
+                                * {item.availableSeats} left
+                              </h4>
+                            </div>
                           </div>
                         );
                       })}
                     </div>
 
-                    <div className="tickets-modal__language">
-                      <span>
-                        * Max {maxTicketsWithOneOrder} tickets allowed per order
-                      </span>
-                    </div>
+                    <div className="tickets-modal__language"></div>
 
                     <div className="tickets-modal__footer">
                       {workshop && (
