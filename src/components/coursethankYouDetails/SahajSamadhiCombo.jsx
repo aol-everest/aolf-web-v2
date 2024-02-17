@@ -57,23 +57,9 @@ export const SahajSamadhiCombo = ({
           <div className="welcome__player player-welcome">
             <img
               className="player-welcome__cover"
-              //  src="/img/sahaj-meditation-bg.png"
               src="/img/image@3x.png"
               alt="welcome-bg"
             />
-
-            {/* <p
-              className="player-welcome__btn-play"
-              role="button"
-              aria-label="Play video"
-            >
-              <img src="/img/ic-play-white.svg" alt="play-icon" />
-            </p>
-
-            <div className="player-welcome__content">
-              <p className="player-welcome__title">The Art of Meditation</p>
-              <p className="player-welcome__description">Sahaj Meditation</p>
-            </div> */}
           </div>
         </div>
       </section>

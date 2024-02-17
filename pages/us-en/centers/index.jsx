@@ -532,7 +532,7 @@ const Centers = () => {
           <div className="journal-info">
             <div className="feature_box">
               <div className="feature_logo">
-                <img src="/img/WP.png" alt="transforming lives" />
+                <img src="/img/WP.webp" alt="transforming lives" />
               </div>
               <div className="feature-content">
                 "Like Fresh air to millions"
@@ -540,7 +540,7 @@ const Centers = () => {
             </div>
             <div className="feature_box">
               <div className="feature_logo">
-                <img src="/img/Harvard.png" alt="transforming lives" />
+                <img src="/img/Harvard.webp" alt="transforming lives" />
               </div>
               <div className="feature-content">
                 "Show promise in providing relief for depression"
@@ -548,13 +548,13 @@ const Centers = () => {
             </div>
             <div className="feature_box">
               <div className="feature_logo">
-                <img src="/img/CNN.png" alt="transforming lives" />
+                <img src="/img/CNN.webp" alt="transforming lives" />
               </div>
               <div className="feature-content">"Life Changing"</div>
             </div>
             <div className="feature_box">
               <div className="feature_logo">
-                <img src="/img/Yoga.png" alt="transforming lives" />
+                <img src="/img/Yoga.webp" alt="transforming lives" />
               </div>
               <div className="feature-content">
                 "May be the fastest growing spiritual practice on the planet"

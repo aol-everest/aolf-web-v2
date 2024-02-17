@@ -417,7 +417,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 <div className="review-author">
                   <div className="reviewer-photo">
                     <img
-                      src="/img/max-review.png"
+                      src="/img/max-review.webp"
                       alt="reviewer"
                       width="55"
                       height="55"
@@ -474,7 +474,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 <div className="review-author">
                   <div className="reviewer-photo">
                     <img
-                      src="/img/michelle_review.png"
+                      src="/img/michelle-review.webp"
                       alt="reviewer"
                       width="55"
                       height="55"
@@ -527,10 +527,10 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 <div className="review-author">
                   <div className="reviewer-photo">
                     <img
-                      src="/img/brian_review.png"
+                      src="/img/brian-review.webp"
                       alt="reviewer"
-                      width="55"
-                      height="55"
+                      width="69"
+                      height="69"
                     />
                   </div>
                   <div className="reviewer-info">
@@ -553,10 +553,10 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 <div className="review-author">
                   <div className="reviewer-photo">
                     <img
-                      src="/img/philip_review.png"
+                      src="/img/phillip-review.webp"
                       alt="reviewer"
-                      width="55"
-                      height="55"
+                      width="69"
+                      height="69"
                     />
                   </div>
                   <div className="reviewer-info">

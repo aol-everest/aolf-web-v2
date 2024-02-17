@@ -104,7 +104,12 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
           <div className="container samadhi-featuers">
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/aos-eye-icon.png" alt="Elevate" />
+                <img
+                  src="/img/aos-eye-icon.webp"
+                  alt="Elevate"
+                  width="61"
+                  height="50"
+                />
               </div>
               <div className="feature-text">
                 Immerse yourself in deep rest & rejuvenation
@@ -112,7 +117,12 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/aos-flower-icon.png" alt="Enhance" />
+                <img
+                  src="/img/aos-flower-icon.webp"
+                  alt="Enhance"
+                  width="50"
+                  height="50"
+                />
               </div>
               <div className="feature-text">
                 Naturally elevate your energy levels
@@ -120,7 +130,12 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
             </div>
             <div className="feature-box">
               <div className="feature-icon">
-                <img src="/img/aos-uparrow-icon.png" alt="Unlock" />
+                <img
+                  src="/img/aos-uparrow-icon.webp"
+                  alt="Unlock"
+                  width="55"
+                  height="55"
+                />
               </div>
               <div className="feature-text">
                 Uncover the profound art of inner silence
@@ -270,7 +285,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/max-review.png" alt="reviewer" />
+                    <img src="/img/max-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Max Goldberg</div>
@@ -294,7 +309,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/reviewer-photo.png" alt="reviewer" />
+                    <img src="/img/reviewer-photo.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Julie Madeley</div>
@@ -315,7 +330,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/michelle-review.png" alt="reviewer" />
+                    <img src="/img/michelle-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Michelle Garisson</div>
@@ -337,7 +352,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/vinita-review.png" alt="reviewer" />
+                    <img src="/img/vinita-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Vinita D.</div>
@@ -356,7 +371,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/aarti-review.png" alt="reviewer" />
+                    <img src="/img/aarti-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Aarti R.</div>
@@ -377,7 +392,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/daniel-review.png" alt="reviewer" />
+                    <img src="/img/daniel-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Daniel M.</div>
