@@ -1361,7 +1361,7 @@ export const PaymentFormNew = ({
                               alt="Trust Pilot"
                             />
                             <img
-                              src="/img/Trustpilot_Logo.png"
+                              src="/img/TrustPilot-logo2x.webp"
                               alt="Trust Pilot"
                             />
                           </div>

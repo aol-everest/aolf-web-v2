@@ -663,8 +663,9 @@ const SchedulingPaymentForm = ({
                             alt="Trust Pilot"
                           />
                           <img
-                            src="/img/Trustpilot_Logo.png"
+                            src="/img/TrustPilot-logo2x.webp"
                             alt="Trust Pilot"
+                            height="33"
                           />
                         </div>
                         <div className="second-row">
