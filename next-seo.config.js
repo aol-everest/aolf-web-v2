@@ -4,6 +4,7 @@ export default {
   titleTemplate: `${orgConfig.title} | %s`,
   defaultTitle: orgConfig.title,
   description: orgConfig.seo.description,
+  canonical: orgConfig.seo.url,
   openGraph: {
     type: 'website',
     locale: 'en_US',

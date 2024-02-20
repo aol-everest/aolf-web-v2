@@ -492,7 +492,10 @@ const Course = () => {
 
   return (
     <main className="course-filter">
-      <NextSeo title="Workshops" />
+      <NextSeo
+        title="Find A Course"
+        description="Explore a diverse range of transformative courses designed to enhance your mental, physical, and spiritual well-being. From stress-relief breathing techniques and meditation to yoga and leadership training, find the perfect course to embark on a journey of self-discovery and personal growth."
+      />
       <section className="courses">
         {orgConfig.name !== 'HB' && (
           <>
