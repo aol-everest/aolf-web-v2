@@ -607,7 +607,10 @@ const Meetup = () => {
 
   return (
     <main className="course-filter">
-      <NextSeo title="Meetups" />
+      <NextSeo
+        title="Meetups"
+        description="RSVP for live online short SKY Meditation Meetups guided by certified Art of Living instuctors from the comfort of your home. "
+      />
       <section className="courses">
         <div className="container search_course_form d-lg-block d-none mb-2">
           <div className="row">

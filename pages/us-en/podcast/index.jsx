@@ -1,34 +1,379 @@
 /* eslint-disable react/no-unescaped-entities */
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { youtube } from '@service';
+import { PageLoading } from '@components';
+import ErrorPage from 'next/error';
+import YouTube from 'react-youtube';
+import { useEffect, useState } from 'react';
+
+const PLAYLIST_ID = `${process.env.NEXT_PUBLIC_PODCAST_PLAYLIST_ID}`;
+
+const SEARCH_PARAM = [
+  'videoDetail.snippet.title',
+  'videoDetail.snippet.description',
+  'videoDetail.snippet.channelTitle',
+  'snippet.videoOwnerChannelTitle',
+];
+
+// Helper function to handle nested properties
+function deepValue(obj, path) {
+  const parts = path.split('.');
+  return parts.reduce((acc, current) => acc[current], obj);
+}
+
+const VideoItemComp = (props) => {
+  const { video, playingId, onPlayAction, isVertical, isMostPopular } = props;
+  const [isInitialPlaying, setInitialPlaying] = useState(false);
+  const [isReady, setReady] = useState(false);
+  const [isPlaying, setPlaying] = useState(false);
+  const [player, setPlayer] = useState(null);
+  const [playerState, setPlayerState] = useState(null);
+  const opts = {
+    height: '560',
+    width: '315',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      version: 3,
+      controls: 1,
+      playerapiid: 'ytplayer',
+      color: 'white',
+      enablejsapi: 1,
+      mute: 1,
+      showinfo: 0,
+      rel: 0,
+      playsinline: 1,
+      iv_load_policy: 3,
+      listType: 'playlist',
+      list: PLAYLIST_ID,
+    },
+  };
+
+  const onReady = (event) => {
+    setPlayer(event.target);
+    setReady(true);
+  };
+
+  const playVideo = () => {
+    if (player) {
+      player.unMute();
+      player.playVideo();
+      setTimeout(function () {
+        if (player.getPlayerState() !== 1) {
+          player.mute();
+          player.playVideo();
+        }
+      }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    if (player) {
+      if (playingId === video.videoDetail.id) {
+        playVideo();
+      } else {
+        player.pauseVideo();
+      }
+    }
+  }, [playingId, player]);
+
+  const onPlay = async (e) => {
+    setPlaying(true);
+    setInitialPlaying(true);
+    if (playingId !== video.videoDetail.id) {
+      onPlayAction(video.videoDetail.id);
+    }
+  };
+
+  const onPause = async (e) => {
+    setPlaying(false);
+  };
+
+  const watchAction = () => {
+    if (player) {
+      if (playingId !== video.videoDetail.id) {
+        onPlayAction(video.videoDetail.id);
+      }
+      if (player.getPlayerState() === 2) {
+        playVideo();
+      }
+    }
+  };
+
+  const pauseAction = () => {
+    if (playingId === video.videoDetail.id) {
+      onPlayAction(null);
+    }
+  };
+
+  const onError = (event) => {
+    console.log('Error code:', event.data);
+  };
+
+  const onStateChange = (event) => {
+    setPlayerState(event.data);
+  };
+
+  const showLoader = () => {
+    return (
+      !isReady ||
+      (playerState &&
+        playerState !== YouTube.PlayerState.PLAYING &&
+        playerState !== YouTube.PlayerState.PAUSED &&
+        playerState !== YouTube.PlayerState.ENDED)
+    );
+  };
+
+  if (isVertical) {
+    return (
+      <div className="video-item">
+        <div className="video-thumb" onClick={watchAction}>
+          {showLoader() && (
+            <div className="loader-container">
+              <div className="loader"></div>
+            </div>
+          )}
+          <img
+            src={video.snippet.thumbnails.medium.url}
+            style={{ display: isInitialPlaying ? 'none' : 'block' }}
+            className="video-thumb-img"
+            alt="YouTube"
+          />
+
+          <YouTube
+            videoId={video.videoDetail.id}
+            title={video.snippet.title}
+            loading="loading"
+            opts={opts}
+            onReady={onReady}
+            onPlay={onPlay}
+            onPause={onPause}
+            onError={onError}
+            onStateChange={onStateChange}
+          />
+        </div>
+
+        <div className="video-info">
+          <div className="channel-name">
+            {video.snippet.videoOwnerChannelTitle}
+          </div>
+          <div className="video-title">{video.snippet.title}</div>
+          <ul className="video-actions">
+            <li>
+              {playerState !== YouTube.PlayerState.PLAYING && (
+                <button onClick={watchAction} className="watch">
+                  Watch
+                </button>
+              )}
+              {playerState === YouTube.PlayerState.PLAYING && (
+                <button onClick={pauseAction} className="pause">
+                  Pause
+                </button>
+              )}
+            </li>
+            <li>
+              <a href="" className="duration">
+                {video.videoDetail.duration}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="featured-video-item">
+      <div className="video-thumb" onClick={watchAction}>
+        {showLoader() && (
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+        )}
+        <img
+          style={{ display: isInitialPlaying ? 'none' : 'block' }}
+          src={video.snippet.thumbnails.medium.url}
+          className="video-thumb-img"
+          alt="YouTube"
+        />
+        <YouTube
+          videoId={video.videoDetail.id}
+          title={video.snippet.title}
+          loading="loading"
+          opts={opts}
+          onReady={onReady}
+          onPlay={onPlay}
+          onPause={onPause}
+          onStateChange={onStateChange}
+        />
+        {isMostPopular && (
+          <span className="thumb-label popular">The Most Popular</span>
+        )}
+      </div>
+      <div className="video-info">
+        <div className="channel-name">
+          {video.snippet.videoOwnerChannelTitle}
+        </div>
+        <div className="video-title">{video.snippet.title}</div>
+        <ul className="video-actions">
+          <li>
+            {!isPlaying && (
+              <button onClick={watchAction} className="watch">
+                Watch
+              </button>
+            )}
+            {isPlaying && (
+              <button onClick={pauseAction} className="pause">
+                Pause
+              </button>
+            )}
+          </li>
+          {/* <li><a href="" className="listen">Listen</a></li> */}
+          <li>
+            <a href="" className="duration">
+              {video.videoDetail.duration}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 function PodcastPage() {
   const router = useRouter();
+  const [isPlaying, setPlaying] = useState(false);
+  const [playingId, setPlayingId] = useState(null);
+  const [player, setPlayer] = useState(null);
+  //     set search query to empty string
+  const [q, setQ] = useState('');
+  const [playerCount, setPlayerCount] = useState(0);
+
+  const { data, isLoading, isError, error } = useQuery(
+    'yt-playlist',
+    async () => {
+      const result = await youtube.getPlaylistDetails(PLAYLIST_ID);
+      console.log(result);
+      return result;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+  const [first, second, third, ...restData] = data?.all || [];
+
+  const playVideo = () => {
+    if (player) {
+      player.unMute();
+      player.playVideo();
+      console.log('player.getPlayerState()', player.getPlayerState());
+      if (player.getPlayerState() !== 1) {
+        player.mute();
+        player.playVideo();
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (first) {
+      setPlayingId(first.videoDetail.id);
+    }
+  }, [first]);
+
+  useEffect(() => {
+    if (first && player) {
+      if (playingId === first.videoDetail.id) {
+        playVideo();
+      } else if (player.getPlayerState() === 1) {
+        player.pauseVideo();
+      }
+    }
+  }, [playingId, player]);
+
+  const search = (items) => {
+    return items.filter((item) => {
+      return SEARCH_PARAM.some((newItem) => {
+        const value = deepValue(item, newItem); // Helper function to handle nested properties
+        return (
+          value && value.toString().toLowerCase().indexOf(q.toLowerCase()) > -1
+        );
+      });
+    });
+  };
+
+  const onReady = (event) => {
+    setPlayer(event.target);
+  };
+
+  const onPlay = async (e) => {
+    setPlaying(true);
+    if (playingId !== first.videoDetail.id) {
+      setPlayingId(first.videoDetail.id);
+    }
+  };
+
+  const watchAction = () => {
+    if (playingId !== first.videoDetail.id) {
+      setPlayingId(first.videoDetail.id);
+    }
+  };
+
+  const addPlayerLoadedCount = () => {
+    setPlayerCount(playerCount + 1);
+  };
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
+
+  const opts = {
+    height: '700px',
+    width: '100%',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+      color: 'white',
+      mute: 1,
+      enablejsapi: 1,
+      fs: 0,
+      hl: 'en',
+      loop: 1,
+      showinfo: 0,
+      rel: 0,
+      playsinline: 1,
+      iv_load_policy: 3,
+      listType: 'playlist',
+      list: PLAYLIST_ID,
+    },
+  };
+
+  const onPlayAction = (id) => {
+    setPlayingId(id);
+  };
+
   return (
-    <main className="podcasts">
-      <section className="top-video">
+    <main class="podcasts">
+      <section class="top-video">
         <img
-          onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
-          src="http://img.youtube.com/vi/Y5JoBOyig-s/maxresdefault.jpg"
-          className="video-thumb-img"
+          style={{ display: isPlaying ? 'none' : 'inline-block' }}
+          src={first.snippet.thumbnails.standard.url}
+          class="video-thumb-img"
           width="100%"
           height="700"
           alt="YouTube"
         />
-        <iframe
-          width="100%"
-          height="700"
-          src="https://www.youtube.com/embed/videoseries?si=tLo6vq5L3OavMtMz&amp;list=PLj4pqY15Io_m1E0YeB2_tvY6xxjLuhUNz"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
-        <div className="top-video-info">
-          <div className="channel-name">Aubrey Marcus 2022</div>
-          <div className="video-title">
-            Spiritual Guru Answers Life's biggest Questions
-          </div>
+
+        <YouTube
+          videoId={first.videoDetail.id}
+          title={first.snippet.title}
+          loading="loading"
+          opts={opts}
+          onPlay={onPlay}
+          onReady={onReady}
+        />
+
+        <div class="top-video-info">
+          <div class="channel-name">{first.snippet.videoOwnerChannelTitle}</div>
+          <div class="video-title">{first.snippet.title}</div>
         </div>
       </section>
       <section className="video-playlist">
@@ -38,6 +383,8 @@ function PodcastPage() {
               type="text"
               className="podcast-search-input"
               placeholder="Search..."
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
             />
           </div>
           <h2 className="section-title">Gurudev in Conversation</h2>
@@ -45,241 +392,36 @@ function PodcastPage() {
             Sharing wisdom with the world’s best thought leaders
           </div>
           <div className="featured-video-list">
-            <div className="featured-video-item">
-              <div className="video-thumb">
-                <img
-                  onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
-                  src="http://img.youtube.com/vi/Q7p_E_3Upzg/maxresdefault.jpg"
-                  className="video-thumb-img"
-                  alt="YouTube"
-                />
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/Q7p_E_3Upzg?enablejsapi=1&html5=1&mute=1"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-                <span className="thumb-label popular">The Most Popular</span>
-              </div>
-              <div className="video-info">
-                <div className="channel-name">Lewis Howes 2022</div>
-                <div className="video-title">
-                  Everything You Know About Manifesting Is wrong! (Do This
-                  Instead)
-                </div>
-                <ul className="video-actions">
-                  <li>
-                    <a href="" className="watch">
-                      Watch
-                    </a>
-                  </li>
-                  {/* <li><a href="" className="listen">Listen</a></li> */}
-                  <li>
-                    <a href="" className="duration">
-                      00:37:36
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="featured-video-item">
-              <div className="video-thumb">
-                <img
-                  onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
-                  src="http://img.youtube.com/vi/WNuI8_8mX34/maxresdefault.jpg"
-                  className="video-thumb-img"
-                  alt="YouTube"
-                />
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/WNuI8_8mX34?si=-hCnl2OJygKWRRbd"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-                <span className="thumb-label popular">The Most Popular</span>
-              </div>
-              <div className="video-info">
-                <div className="channel-name">Vishen (Mindvalley)</div>
-                <div className="video-title">
-                  Your Most Difficult Philosophical Questions Answered
-                </div>
-                <ul className="video-actions">
-                  <li>
-                    <a href="" className="watch">
-                      Watch
-                    </a>
-                  </li>
-                  <li>
-                    <a href="" className="duration">
-                      00:48:15
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="featured-video-item">
-              <div className="video-thumb">
-                <img
-                  onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
-                  src="http://img.youtube.com/vi/wPQJz__rdHo/maxresdefault.jpg"
-                  className="video-thumb-img"
-                  alt="YouTube"
-                />
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/wPQJz__rdHo?si=gcjhHIxpWl7bi0W5"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-                <span className="thumb-label featured">Featured</span>
-              </div>
-              <div className="video-info">
-                <div className="channel-name">Next Level Soul</div>
-                <div className="video-title">
-                  Indian Mystic Reveals everything You Know About the universe
-                  is wrong
-                </div>
-                <ul className="video-actions">
-                  <li>
-                    <a href="" className="watch">
-                      Watch
-                    </a>
-                  </li>
-                  <li>
-                    <a href="" className="duration">
-                      0:48:15
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <VideoItemComp
+              video={data.mostPopular}
+              playingId={playingId}
+              onPlayAction={onPlayAction}
+              isMostPopular
+            ></VideoItemComp>
+            <VideoItemComp
+              video={second}
+              playingId={playingId}
+              onPlayAction={onPlayAction}
+            ></VideoItemComp>
+            <VideoItemComp
+              video={third}
+              playingId={playingId}
+              onPlayAction={onPlayAction}
+            ></VideoItemComp>
           </div>
           <div className="video-listing">
-            <div className="video-item">
-              <div className="video-thumb">
-                <img
-                  onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
-                  src="http://img.youtube.com/vi/HTtKk7FvqBc/maxresdefault.jpg"
-                  className="video-thumb-img"
-                  alt="YouTube"
+            {search(restData).map((video) => {
+              return (
+                <VideoItemComp
+                  addPlayerLoadedCount={addPlayerLoadedCount}
+                  key={video.id}
+                  video={video}
+                  playingId={playingId}
+                  onPlayAction={onPlayAction}
+                  isVertical
                 />
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/HTtKk7FvqBc?si=bRXc9AlYWj4MXMbG"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-              </div>
-              <div className="video-info">
-                <div className="channel-name">Lewis Howes 2022</div>
-                <div className="video-title">
-                  Everything You Know About Manifesting Is wrong! (Do This
-                  Instead)
-                </div>
-                <ul className="video-actions">
-                  <li>
-                    <a href="" className="watch">
-                      Watch
-                    </a>
-                  </li>
-                  <li>
-                    <a href="" className="duration">
-                      00:37:36
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="video-item">
-              <div className="video-thumb">
-                <img
-                  onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
-                  src="http://img.youtube.com/vi/n_uN-Lq3nyU/maxresdefault.jpg"
-                  className="video-thumb-img"
-                  alt="YouTube"
-                />
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/n_uN-Lq3nyU?si=WmiN5_MSh_U6exjk"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-              </div>
-              <div className="video-info">
-                <div className="channel-name">Vishen (Mindvalley)</div>
-                <div className="video-title">
-                  Your Most Difficult Philosophical Questions Answered
-                </div>
-                <ul className="video-actions">
-                  <li>
-                    <a href="" className="watch">
-                      Watch
-                    </a>
-                  </li>
-                  <li>
-                    <a href="" className="duration">
-                      00:48:15
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="video-item">
-              <div className="video-thumb">
-                <img
-                  onclick="this.nextElementSibling.style.display='block'; this.style.display='none';"
-                  src="http://img.youtube.com/vi/iQWZdALmOcw/maxresdefault.jpg"
-                  className="video-thumb-img"
-                  alt="YouTube"
-                />
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/iQWZdALmOcw?si=5kpV6V7ic_3kuX8x"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-              </div>
-              <div className="video-info">
-                <div className="channel-name">Next Level Soul</div>
-                <div className="video-title">
-                  Indian Mystic Reveals everything You Know About the universe
-                  is wrong
-                </div>
-                <ul className="video-actions">
-                  <li>
-                    <a href="" className="watch">
-                      Watch
-                    </a>
-                  </li>
-                  <li>
-                    <a href="" className="duration">
-                      0:48:15
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="load-more-action">
-            <button className="load-more-btn">Load more</button>
+              );
+            })}
           </div>
         </div>
       </section>

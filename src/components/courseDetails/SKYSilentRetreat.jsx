@@ -459,7 +459,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/max-review.png" alt="reviewer" />
+                    <img src="/img/max-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Max Goldberg</div>
@@ -506,7 +506,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/michelle-review.png" alt="reviewer" />
+                    <img src="/img/michelle-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Michelle Garisson</div>
@@ -529,7 +529,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/vinita-review.png" alt="reviewer" />
+                    <img src="/img/vinita-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Vinita D.</div>
@@ -549,7 +549,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/aarti-review.png" alt="reviewer" />
+                    <img src="/img/aarti-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Aarti R.</div>
@@ -571,7 +571,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
                 </div>
                 <div className="review-author">
                   <div className="reviewer-photo">
-                    <img src="/img/daniel-review.png" alt="reviewer" />
+                    <img src="/img/daniel-review.webp" alt="reviewer" />
                   </div>
                   <div className="reviewer-info">
                     <div className="reviewer-name">Daniel M.</div>

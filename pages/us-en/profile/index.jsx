@@ -18,6 +18,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FaCamera } from 'react-icons/fa';
+import { NextSeo } from 'next-seo';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -218,6 +219,10 @@ const Profile = ({ tab }) => {
   return (
     <>
       {loading && <Loader />}
+      <NextSeo
+        title="Profile"
+        description="Manage your journey with ease on your profile dashboard: Access upcoming events, review past courses, update your profile, refer a friend, manage card details, and change your password—all in one convenient place."
+      />
       <main className="profile">
         {request === '1' && (
           <aside className="profile__alert profile__alert_error">

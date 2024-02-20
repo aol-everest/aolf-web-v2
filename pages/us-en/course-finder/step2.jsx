@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 
 const Step2 = () => {
   const router = useRouter();
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedIds, setSelectedIds] = useState([]);
   const [value, setValue] = useSessionStorage('center-finder', {});
   const { totalSelectedOptions = [], questions = [] } = value;
   const currentStepData = questions?.find((item) => item.sequence === 2);
@@ -20,30 +20,34 @@ const Step2 = () => {
   }, []);
 
   const NavigateToStep3 = () => {
+    setValue({
+      totalSelectedOptions: totalSelectedOptions,
+      questions,
+    });
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course-finder/step3`,
     });
   };
 
   useEffect(() => {
-    if (totalSelectedOptions && !selectedId) {
-      const selectedOption = totalSelectedOptions?.find(
+    if (totalSelectedOptions && !selectedIds?.length) {
+      const selectedOption = totalSelectedOptions.find(
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
       if (selectedOption?.answer) {
-        setSelectedId(selectedOption.answer);
+        setSelectedIds([selectedOption.answer]);
       }
     }
   }, []);
 
   const handleOptionSelect = (answerId) => {
-    setSelectedId(answerId);
+    const selectedIdsLocal = [answerId];
+    setSelectedIds(selectedIdsLocal);
     const updatedOptions = findExistingQuestionnaire(
       totalSelectedOptions,
       currentStepData,
-      answerId,
+      selectedIdsLocal,
     );
-
     setValue({
       ...value,
       totalSelectedOptions: updatedOptions,
@@ -55,7 +59,7 @@ const Step2 = () => {
       <section className="questionnaire-question">
         <div className="container">
           <div className="back-btn-wrap">
-            <a href="javascript:history.go(-1)" className="back-btn">
+            <button className="back-btn" onClick={router.back}>
               <svg
                 width="24"
                 height="24"
@@ -81,7 +85,7 @@ const Step2 = () => {
                 />
               </svg>
               Back
-            </a>
+            </button>
           </div>
           <div className="question-box">
             <div className="question-step-highlighter-wrap">
@@ -91,7 +95,12 @@ const Step2 = () => {
               <div className="question-step-highlighter"></div>
               <div className="question-step-highlighter"></div>
             </div>
-            <h1 className="question-title">{currentStepData?.question}</h1>
+            <h1
+              className="question-title"
+              dangerouslySetInnerHTML={{
+                __html: currentStepData?.question,
+              }}
+            ></h1>
             <div className="question-options">
               {currentStepData?.options?.map((answer) => {
                 return (
@@ -100,8 +109,8 @@ const Step2 = () => {
                       type="checkbox"
                       id={answer.optionId}
                       name={answer.optionId}
-                      checked={selectedId === answer.optionId}
-                      onChange={() => handleOptionSelect(answer.optionId)}
+                      checked={selectedIds.includes(answer.optionId)}
+                      onChange={(ev) => handleOptionSelect(answer.optionId)}
                     />
                     <label htmlFor={answer.optionId}>{answer.optionText}</label>
                   </div>
@@ -117,7 +126,11 @@ const Step2 = () => {
               </div>
             </div>
             <div className="question-action">
-              <button onClick={NavigateToStep3} className="btn-register">
+              <button
+                disabled={!selectedIds.length}
+                onClick={NavigateToStep3}
+                className="btn-register"
+              >
                 Continue
               </button>
             </div>

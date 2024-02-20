@@ -112,6 +112,8 @@ const Thankyou = () => {
             shipping: 0.0,
             tax: 0.0,
             coupon: '',
+            course_format: workshop?.productTypeId,
+            course_name: workshop?.title,
             items: [
               {
                 item_id: workshop?.id,

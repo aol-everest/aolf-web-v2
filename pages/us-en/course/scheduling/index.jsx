@@ -181,6 +181,7 @@ const SchedulingRange = () => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
+
     setTimezoneFilter(fillDefaultTimeZone());
   });
 
@@ -381,6 +382,49 @@ const SchedulingRange = () => {
     },
   );
 
+  useEffect(() => {
+    if (workshopMaster && JSON.stringify(workshopMaster) !== '{}')
+      track(
+        'view_item',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshopMaster?.unitPrice,
+            course_format: workshopMaster?.productTypeId,
+            course_name: workshopMaster?.title,
+            items: [
+              {
+                item_id: 'NA',
+                item_name: workshopMaster?.title,
+                affiliation: 'NA',
+                coupon: '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshopMaster?.orgnization,
+                item_category: workshopMaster?.title,
+                item_category2: workshopMaster?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshopMaster?.productTypeId,
+                item_list_name: workshopMaster?.title,
+                item_variant: 'NA',
+                location_id: 'NA',
+                price: workshopMaster?.unitPrice,
+                quantity: 1,
+              },
+            ],
+          },
+        },
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
+  }, [workshopMaster]);
+
   const handleModalToggle = () => {
     if (showLocationModal && cityFilter && !isUserLocationShared) {
       setIsInitialLoad(true);
@@ -506,11 +550,13 @@ const SchedulingRange = () => {
 
   const goToPaymentModal = () => {
     track(
-      'view_item',
+      'add_to_cart',
       {
         ecommerce: {
           currency: 'USD',
           value: activeWorkshop?.unitPrice,
+          course_format: activeWorkshop?.productTypeId,
+          course_name: activeWorkshop?.title,
           items: [
             {
               item_id: activeWorkshop?.id,

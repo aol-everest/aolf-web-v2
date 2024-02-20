@@ -279,7 +279,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
               <a
                 data-action="url"
                 data-params="false"
-                href="clkn/https/healingbreaths.org/the-science/"
+                href="https://healingbreaths.org/the-science"
                 target="_blank"
               >
                 View Research
