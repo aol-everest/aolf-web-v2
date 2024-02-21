@@ -12,10 +12,10 @@ export default function CourseFinderResult() {
     });
   };
   return (
-    <main class="course-finder-questionnaire-question">
-      <section class="questionnaire-results">
-        <div class="container">
-          <div class="back-btn-wrap">
+    <main className="course-finder-questionnaire-question">
+      <section className="questionnaire-results">
+        <div className="container">
+          <div className="back-btn-wrap">
             <button className="back-btn" onClick={handleStartOver}>
               <svg
                 width="20"
@@ -35,49 +35,49 @@ export default function CourseFinderResult() {
               Start Over
             </button>
           </div>
-          <div class="question-box">
-            <h1 class="section-title">
+          <div className="question-box">
+            <h1 className="section-title">
               Here's your personalized recommendation
             </h1>
-            <div class="result-boxes">
-              <div class="result-box">
-                <div class="first-info">FREE INTRO SERIES</div>
-                <div class="box-title">
+            <div className="result-boxes">
+              <div className="result-box">
+                <div className="first-info">FREE INTRO SERIES</div>
+                <div className="box-title">
                   Get started on your journey with a few quick tips & tricks for
                   [XXXXX][XXXX]
                 </div>
-                <div class="picture-box">
+                <div className="picture-box">
                   <img src="/img/quest-result-box-pic.webp" alt="result" />
-                  <div class="picture-title">The Art of Meditation</div>
+                  <div className="picture-title">The Art of Meditation</div>
                 </div>
               </div>
-              <div class="result-box recommendation">
-                <div class="first-info">RECOMMENDED COURSE FOR YOU</div>
-                <div class="box-title">
+              <div className="result-box recommendation">
+                <div className="first-info">RECOMMENDED COURSE FOR YOU</div>
+                <div className="box-title">
                   For lasting transformation
                   <br />
                   Art of Living Part 1
                 </div>
-                <div class="box-desc">
+                <div className="box-desc">
                   Discover SKY Breath Meditation, an evidence-based technique
                   that quickly reduces stress, balances emotions, and restores
                   calm.
                 </div>
-                <ul class="recommended-course-info">
+                <ul className="recommended-course-info">
                   <li>
-                    <div class="label">Course</div>
-                    <div class="value">
+                    <div className="label">Course</div>
+                    <div className="value">
                       3 days with 2.5 hours of live sessions
                     </div>
                   </li>
                   <li>
-                    <div class="label">Course format:</div>
-                    <div class="value">Online / In Person</div>
+                    <div className="label">Course format:</div>
+                    <div className="value">Online / In Person</div>
                   </li>
                 </ul>
-                <div class="course-payment-options">
-                  <a href="#" class="payment-option">
-                    <span class="first-info">
+                <div className="course-payment-options">
+                  <a href="#" className="payment-option">
+                    <span className="first-info">
                       Pay as low as{' '}
                       <img
                         src="/img/logo-affirm.webp"
@@ -85,46 +85,48 @@ export default function CourseFinderResult() {
                         alt="author"
                       />
                     </span>
-                    <span class="price">
+                    <span className="price">
                       $27<sub>/month</sub>
                     </span>
-                    <span class="desc">for 12 months</span>
+                    <span className="desc">for 12 months</span>
                   </a>
-                  <a href="#" class="payment-option selected">
-                    <span class="first-info">One Payment </span>
-                    <span class="price">$295</span>
+                  <a href="#" className="payment-option selected">
+                    <span className="first-info">One Payment </span>
+                    <span className="price">$295</span>
                   </a>
                 </div>
-                <div class="course-actions">
-                  <div class="btn-wrap">
-                    <button class="submit-btn">Register now</button>
-                    <span class="desc">Select a date & time that suit you</span>
+                <div className="course-actions">
+                  <div className="btn-wrap">
+                    <button className="submit-btn">Register now</button>
+                    <span className="desc">
+                      Select a date & time that suit you
+                    </span>
                   </div>
-                  <div class="btn-wrap">
-                    <button class="submit-btn learn">Learn more</button>
+                  <div className="btn-wrap">
+                    <button className="submit-btn learn">Learn more</button>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="testimonials">
-              <h2 class="section-title">What people are sharing</h2>
-              <div class="testimonials-listing">
-                <div class="testimonial-box">
-                  <div class="testimonial-text">
+            <div className="testimonials">
+              <h2 className="section-title">What people are sharing</h2>
+              <div className="testimonials-listing">
+                <div className="testimonial-box">
+                  <div className="testimonial-text">
                     Learning the SKY breathing technique was one of the best
                     things I did for myself. I have anxiety disorder for many
                     years already, and the problem was escalating despite of
                     taking my anti anxiety medication.
                   </div>
-                  <div class="testimonial-info">
-                    <div class="author">
+                  <div className="testimonial-info">
+                    <div className="author">
                       <img
                         src="/img/quest-result-testimony3.webp"
                         alt="author"
                       />
-                      <span class="author-name">Cristina</span>
+                      <span className="author-name">Cristina</span>
                     </div>
-                    <div class="rating">
+                    <div className="rating">
                       <img
                         src="/img/testimonial-rating.webp"
                         alt="rating"
@@ -133,22 +135,22 @@ export default function CourseFinderResult() {
                     </div>
                   </div>
                 </div>
-                <div class="testimonial-box">
-                  <div class="testimonial-text">
+                <div className="testimonial-box">
+                  <div className="testimonial-text">
                     I cannot say enough good things about our teachers Naveen
                     Sharma and Poonam Verma. Their love of and reverence for SKY
                     and Sahaj is deep. They are so thorough, making sure that we
                     all understood the practice.
                   </div>
-                  <div class="testimonial-info">
-                    <div class="author">
+                  <div className="testimonial-info">
+                    <div className="author">
                       <img
                         src="/img/quest-result-testimony1.webp"
                         alt="author"
                       />
-                      <span class="author-name">Vilja</span>
+                      <span className="author-name">Vilja</span>
                     </div>
-                    <div class="rating">
+                    <div className="rating">
                       <img
                         src="/img/testimonial-rating.webp"
                         alt="rating"
@@ -157,23 +159,23 @@ export default function CourseFinderResult() {
                     </div>
                   </div>
                 </div>
-                <div class="testimonial-box">
-                  <div class="testimonial-text">
+                <div className="testimonial-box">
+                  <div className="testimonial-text">
                     I feel renewed with life and joy.I am glad I had the
                     repeater option available and used it.It is after repeating
                     the program I realize how good I feel.My money and time were
                     well invested. Filled with wonder and enthusiasm I am
                     embracing life itself.
                   </div>
-                  <div class="testimonial-info">
-                    <div class="author">
+                  <div className="testimonial-info">
+                    <div className="author">
                       <img
                         src="/img/quest-result-testimony2.webp"
                         alt="author"
                       />
-                      <span class="author-name">Revathi</span>
+                      <span className="author-name">Revathi</span>
                     </div>
-                    <div class="rating">
+                    <div className="rating">
                       <img
                         src="/img/testimonial-rating.webp"
                         alt="rating"
@@ -182,22 +184,22 @@ export default function CourseFinderResult() {
                     </div>
                   </div>
                 </div>
-                <div class="testimonial-box">
-                  <div class="testimonial-text">
+                <div className="testimonial-box">
+                  <div className="testimonial-text">
                     I laughed, I smiled, I worked, I relaxed more deeply than I
                     thought humanly possible. If you are here reading this, then
                     run (don’t walk) to this program, and let the next beautiful
                     chapter of your life begin.
                   </div>
-                  <div class="testimonial-info">
-                    <div class="author">
+                  <div className="testimonial-info">
+                    <div className="author">
                       <img
                         src="/img/quest-result-testimony4.webp"
                         alt="author"
                       />
-                      <span class="author-name">Fulpak</span>
+                      <span className="author-name">Fulpak</span>
                     </div>
-                    <div class="rating">
+                    <div className="rating">
                       <img
                         src="/img/testimonial-rating.webp"
                         alt="rating"
@@ -207,7 +209,7 @@ export default function CourseFinderResult() {
                   </div>
                 </div>
               </div>
-              <div class="trustpilot-wrap">
+              <div className="trustpilot-wrap">
                 Read more at{' '}
                 <a href="#">
                   <img
