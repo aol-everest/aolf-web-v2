@@ -206,6 +206,7 @@ const Course = () => {
   });
 
   const [cityFilter] = useQueryString('city');
+  const [centerFilter] = useQueryString('center');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -346,6 +347,7 @@ const Course = () => {
           activeFilterType,
           onlyWeekend,
           cityFilter,
+          centerFilter,
         },
       ],
       async ({ pageParam = 1 }) => {
@@ -427,6 +429,12 @@ const Course = () => {
           param = {
             ...param,
             city: cityFilter,
+          };
+        }
+        if (centerFilter) {
+          param = {
+            ...param,
+            center: centerFilter,
           };
         }
 
