@@ -25,8 +25,6 @@ const Step1 = () => {
   );
   const currentStepData = questions?.find((item) => item.sequence === 1);
 
-  console.log('currentStepData', currentStepData);
-
   useEffect(() => {
     if (value?.totalSelectedOptions && !selectedIds?.length) {
       const selectedOption = value?.totalSelectedOptions.find(

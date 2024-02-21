@@ -401,12 +401,12 @@ function PodcastPage() {
   };
 
   return (
-    <main class="podcasts">
-      <section class="top-video">
+    <main className="podcasts">
+      <section className="top-video">
         <img
           style={{ display: isPlaying ? 'none' : 'inline-block' }}
           src={first.snippet.thumbnails.standard.url}
-          class="video-thumb-img"
+          className="video-thumb-img"
           width="100%"
           height="700"
           alt="YouTube"
@@ -421,9 +421,11 @@ function PodcastPage() {
           onReady={onReady}
         />
 
-        <div class="top-video-info">
-          <div class="channel-name">{first.snippet.videoOwnerChannelTitle}</div>
-          <div class="video-title">
+        <div className="top-video-info">
+          <div className="channel-name">
+            {first.snippet.videoOwnerChannelTitle}
+          </div>
+          <div className="video-title">
             {toPascalCaseWithSpaces(first.snippet.title)}
           </div>
         </div>
