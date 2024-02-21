@@ -31,12 +31,13 @@ const Step1 = () => {
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
       if (selectedOption?.answer) {
-        setSelectedIds([selectedOption.answer]);
+        setSelectedIds([...selectedOption.answer]);
       }
     }
   }, [questions]);
 
   const NavigateToStep2 = () => {
+    setSelectedIds([]);
     setValue({
       totalSelectedOptions: value?.totalSelectedOptions || [],
       questions,

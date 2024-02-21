@@ -25,7 +25,7 @@ const Step3 = () => {
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
       if (selectedOption?.answer) {
-        setSelectedIds([selectedOption.answer]);
+        setSelectedIds([...selectedOption.answer]);
       }
     }
   }, []);
@@ -45,6 +45,7 @@ const Step3 = () => {
   };
 
   const NavigateToStep4 = () => {
+    setSelectedIds([]);
     setValue({
       totalSelectedOptions: totalSelectedOptions,
       questions,

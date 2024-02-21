@@ -25,19 +25,18 @@ const Step5 = () => {
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
       if (selectedOption?.answer) {
-        setSelectedIds([selectedOption.answer]);
+        setSelectedIds([...selectedOption.answer]);
       }
     }
   }, []);
 
   const handleOptionSelect = (answerId) => {
-    const selectedIdsLocal = [...selectedIds, answerId];
-    const trimmedAnswerIds = selectedIdsLocal.slice(0, 1);
-    setSelectedIds(trimmedAnswerIds);
+    const selectedIdsLocal = [answerId];
+    setSelectedIds(selectedIdsLocal);
     const updatedOptions = findExistingQuestionnaire(
       totalSelectedOptions,
       currentStepData,
-      trimmedAnswerIds,
+      selectedIdsLocal,
     );
     setValue({
       ...value,
@@ -46,6 +45,7 @@ const Step5 = () => {
   };
 
   const NavigateToStep6 = () => {
+    setSelectedIds([]);
     setValue({
       totalSelectedOptions: totalSelectedOptions,
       questions,
@@ -111,7 +111,7 @@ const Step5 = () => {
                       id={answer.optionId}
                       name={answer.optionId}
                       checked={selectedIds.includes(answer.optionId)}
-                      onChange={(ev) => handleOptionSelect(answer.optionId)}
+                      onChange={() => handleOptionSelect(answer.optionId)}
                     />
                     <label htmlFor={answer.optionId}>{answer.optionText}</label>
                   </div>

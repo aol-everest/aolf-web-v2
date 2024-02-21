@@ -25,10 +25,11 @@ const Step4 = () => {
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
       if (selectedOption?.answer) {
-        setSelectedIds([selectedOption.answer]);
+        setSelectedIds([...selectedOption.answer]);
       }
     }
   }, []);
+
   const handleOptionSelect = (answerId) => {
     const selectedIdsLocal = [...selectedIds, answerId];
     const trimmedAnswerIds = selectedIdsLocal.slice(-2);
@@ -45,6 +46,7 @@ const Step4 = () => {
   };
 
   const NavigateToStep5 = () => {
+    setSelectedIds([]);
     setValue({
       totalSelectedOptions: totalSelectedOptions,
       questions,
