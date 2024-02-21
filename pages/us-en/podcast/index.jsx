@@ -23,6 +23,52 @@ function deepValue(obj, path) {
   return parts.reduce((acc, current) => acc[current], obj);
 }
 
+function toPascalCaseWithSpaces(inputString) {
+  // Check if inputString is not null or undefined
+  if (inputString == null) {
+    console.error('Input string is null or undefined.');
+    return null; // or return an appropriate value based on your use case
+  }
+
+  // Split the string into words while preserving special characters
+  let words = inputString.trim().toLowerCase().split(/\b/);
+
+  // Capitalize the first letter of each word
+  let pascalCaseString = words
+    .map((word) => {
+      // Check if the word is a word character (letter, digit, or underscore)
+      if (/^\w+$/.test(word)) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      } else {
+        return word; // Retain the special character
+      }
+    })
+    .join('');
+
+  // return pascalCaseString;
+
+  return removeTextFromEnd(pascalCaseString, [
+    '– Gurudev Sri Sri Ravi Shankar',
+    '– Gurudev Sri Sri Ravi Shankar.',
+    '| Gurudev Sri Sri Ravi Shankar',
+    '| Gurudev Sri Sri Ravi Shankar.',
+    'Gurudev Sri Sri Ravi Shankar.',
+    'Gurudev Sri Sri Ravi Shankar',
+  ]);
+}
+
+function removeTextFromEnd(inputString, textsToRemove) {
+  for (const textToRemove of textsToRemove) {
+    const lowerInput = inputString.toLowerCase();
+    const lowerTextToRemove = textToRemove.toLowerCase();
+
+    if (lowerInput.endsWith(lowerTextToRemove)) {
+      return inputString.slice(0, -textToRemove.length);
+    }
+  }
+  return inputString;
+}
+
 const VideoItemComp = (props) => {
   const { video, playingId, onPlayAction, isVertical, isMostPopular } = props;
   const [isInitialPlaying, setInitialPlaying] = useState(false);
@@ -158,7 +204,9 @@ const VideoItemComp = (props) => {
           <div className="channel-name">
             {video.snippet.videoOwnerChannelTitle}
           </div>
-          <div className="video-title">{video.snippet.title}</div>
+          <div className="video-title">
+            {toPascalCaseWithSpaces(video.snippet.title)}
+          </div>
           <ul className="video-actions">
             <li>
               {playerState !== YouTube.PlayerState.PLAYING && (
@@ -214,7 +262,9 @@ const VideoItemComp = (props) => {
         <div className="channel-name">
           {video.snippet.videoOwnerChannelTitle}
         </div>
-        <div className="video-title">{video.snippet.title}</div>
+        <div className="video-title">
+          {toPascalCaseWithSpaces(video.snippet.title)}
+        </div>
         <ul className="video-actions">
           <li>
             {!isPlaying && (
@@ -375,7 +425,9 @@ function PodcastPage() {
           <div className="channel-name">
             {first.snippet.videoOwnerChannelTitle}
           </div>
-          <div className="video-title">{first.snippet.title}</div>
+          <div className="video-title">
+            {toPascalCaseWithSpaces(first.snippet.title)}
+          </div>
         </div>
       </section>
       <section className="video-playlist">

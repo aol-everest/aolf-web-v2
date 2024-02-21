@@ -206,6 +206,7 @@ const Course = () => {
   });
 
   const [cityFilter] = useQueryString('city');
+  const [centerFilter] = useQueryString('center');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -346,6 +347,7 @@ const Course = () => {
           activeFilterType,
           onlyWeekend,
           cityFilter,
+          centerFilter,
         },
       ],
       async ({ pageParam = 1 }) => {
@@ -429,6 +431,12 @@ const Course = () => {
             city: cityFilter,
           };
         }
+        if (centerFilter) {
+          param = {
+            ...param,
+            center: centerFilter,
+          };
+        }
 
         const res = await api.get({
           path: 'workshops',
@@ -492,7 +500,10 @@ const Course = () => {
 
   return (
     <main className="course-filter">
-      <NextSeo title="Workshops" />
+      <NextSeo
+        title="Find A Course"
+        description="Explore a diverse range of transformative courses designed to enhance your mental, physical, and spiritual well-being. From stress-relief breathing techniques and meditation to yoga and leadership training, find the perfect course to embark on a journey of self-discovery and personal growth."
+      />
       <section className="courses">
         {orgConfig.name !== 'HB' && (
           <>

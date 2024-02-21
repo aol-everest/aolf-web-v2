@@ -21,6 +21,7 @@ import {
 } from '@service';
 import ErrorPage from 'next/error';
 import { A11y, Navigation, Scrollbar } from 'swiper';
+import { NextSeo } from 'next-seo';
 
 import 'swiper/css';
 import 'swiper/css/a11y';
@@ -317,6 +318,10 @@ export default function GuidedMeditations() {
       return (
         <>
           {loading && <Loader />}
+          <NextSeo
+            title="Meditations"
+            description="Relax with a currated colection of guided meditations by Gurudev and senior Art of Living instructors."
+          />
           <DesignOne data={rootFolder} {...params} />
         </>
       );
@@ -324,6 +329,10 @@ export default function GuidedMeditations() {
       return (
         <>
           {loading && <Loader />}
+          <NextSeo
+            title="Meditations"
+            description="Relax with a currated colection of guided meditations by Gurudev and senior Art of Living instructors."
+          />
           <DesignTwo data={rootFolder} {...params} />
         </>
       );

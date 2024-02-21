@@ -69,6 +69,15 @@ const AOL_MENU = [
     link: 'https://www.artofliving.org/us-en/gurudev',
   },
   {
+    name: 'Wisdom',
+    submenu: [
+      {
+        name: 'Podcasts',
+        link: '/us-en/podcast',
+      },
+    ],
+  },
+  {
     name: 'Courses',
     subHeading: [
       {

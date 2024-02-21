@@ -10,7 +10,9 @@ const PAGES = {
     url: 'https://event.us.artofliving.org/us-en/online-course-2/',
   },
   'journey-app': {
-    name: 'Join the Art of Living Membership with the Journey App.',
+    name: 'Journey App',
+    description:
+      'Unlock lasting transformation with the Journey App, featuring guided SKY Breath Meditations. Dive into a growing library of guided meditations and insights, improve your rest with sleep support sessions, and connect through live meetups with your instructors. Start your path to deeper wellness today.',
     url: 'https://event.us.artofliving.org/us-en/journey-app/',
   },
   'journeyapp-np': {
@@ -55,14 +57,20 @@ const PAGES = {
   },
   'blessings-course': {
     name: 'The Blessings Course',
+    description:
+      'Learn to channel healing energy into blessings for those around you. Let go of negative concepts, resistance, and fear to effectively bless and heal others.',
     url: 'https://event.us.artofliving.org/us-en/blessings-course/',
   },
   'chakra-kriya': {
     name: 'Chakra Kriya',
+    description:
+      'Incorporate the energy of the chakras to release blocks and cleanse your energetic body, leaving you with a clear pathway to a deeper, more restful meditation experience—and vibrant life. ',
     url: 'https://event.us.artofliving.org/us-en/chakra-kriya/',
   },
   sanyam: {
     name: 'Sanyam',
+    description:
+      'Experience an integration of yoga and meditation firsthand. Dive deep and explore the eight limbs of yoga, with each day tailored to give you the most profound experience possible.',
     url: 'https://event.us.artofliving.org/us-en/sanyam/',
   },
   vtp: {
@@ -76,6 +84,12 @@ const PAGES = {
     description:
       'At the Art of Living Retreat Center, we strive to bring you the powerful practices of meditation and mindfulness, Ayurveda, yoga, so that you may have more happiness, health, and peace in your life.',
     url: 'https://event.us.artofliving.org/us-en/theartoflivingretreatcenter/',
+  },
+  donations: {
+    name: 'Art of Living Donations',
+    description:
+      'Each life matters.. Your donation changes lives & communities. Together we can make a difference.',
+    url: 'https://event.us.artofliving.org/us-en/donations/',
   },
 };
 
