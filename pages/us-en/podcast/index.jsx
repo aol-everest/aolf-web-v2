@@ -39,7 +39,9 @@ function toPascalCaseWithSpaces(inputString) {
       // Check if the word is a word character (letter, digit, or underscore)
       if (/^\w+$/.test(word)) {
         // Check if the previous word ends with an apostrophe
-        let isAfterApostrophe = index > 0 && words[index - 1].endsWith("'");
+        let isAfterApostrophe =
+          index > 0 &&
+          (words[index - 1].endsWith("'") || words[index - 1].endsWith('’'));
         return isAfterApostrophe
           ? word.toLowerCase()
           : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
