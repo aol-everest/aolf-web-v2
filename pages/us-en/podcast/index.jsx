@@ -31,14 +31,18 @@ function toPascalCaseWithSpaces(inputString) {
   }
 
   // Split the string into words while preserving special characters
-  let words = inputString.trim().toLowerCase().split(/\b/);
+  let words = inputString.split(/\b/);
 
-  // Capitalize the first letter of each word
+  // Capitalize the first letter of each word, excluding words after an apostrophe
   let pascalCaseString = words
-    .map((word) => {
+    .map((word, index) => {
       // Check if the word is a word character (letter, digit, or underscore)
       if (/^\w+$/.test(word)) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
+        // Check if the previous word ends with an apostrophe
+        let isAfterApostrophe = index > 0 && words[index - 1].endsWith("'");
+        return isAfterApostrophe
+          ? word.toLowerCase()
+          : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
       } else {
         return word; // Retain the special character
       }
