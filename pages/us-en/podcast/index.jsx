@@ -48,12 +48,14 @@ function toPascalCaseWithSpaces(inputString) {
   // return pascalCaseString;
 
   return removeTextFromEnd(pascalCaseString, [
-    '– Gurudev Sri Sri Ravi Shankar',
-    '- Gurudev Sri Sri Ravi Shankar',
-    '| Gurudev Sri Sri Ravi Shankar',
-    '| Gurudev Sri Sri Ravi Shankar.',
-    'Gurudev Sri Sri Ravi Shankar.',
-    'Gurudev Sri Sri Ravi Shankar',
+    ' | A Conversation With Gurudev Sri Sri Ravi Shankar',
+    ' With Gurudev Sri Sri Ravi Shankar',
+    ' – Gurudev Sri Sri Ravi Shankar',
+    ' - Gurudev Sri Sri Ravi Shankar',
+    ' | Gurudev Sri Sri Ravi Shankar',
+    ' | Gurudev Sri Sri Ravi Shankar.',
+    ' Gurudev Sri Sri Ravi Shankar.',
+    ' Gurudev Sri Sri Ravi Shankar',
   ]);
 }
 
