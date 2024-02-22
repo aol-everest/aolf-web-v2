@@ -252,6 +252,11 @@
         color: white;
         border-radius: 16px;
         border: none;
+        text-decoration: none;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        display: flex;
         &.learn {
           background: linear-gradient(
             102.78deg,
