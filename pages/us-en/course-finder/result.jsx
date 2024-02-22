@@ -133,7 +133,7 @@ export default function CourseFinderResult() {
                   <div className="btn-wrap">
                     <a
                       className="submit-btn learn"
-                      href={recommendationResponse?.learnMoreUrl}
+                      href={recommendationResponse?.learnMoreURL}
                     >
                       Learn more
                     </a>
