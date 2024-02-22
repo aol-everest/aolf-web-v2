@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import { PhoneInputNewCheckout } from '@components/checkout';
 import { ALERT_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
@@ -75,7 +76,7 @@ const Step6 = () => {
     <>
       {loading && <div className="cover-spin"></div>}
 
-      <main className="course-finder-questionnaire-question">
+      <main className="course-finder-questionnaire-question checkout-aol">
         <section className="questionnaire-question">
           <div className="container">
             <div className="back-btn-wrap">
@@ -90,18 +91,18 @@ const Step6 = () => {
                   <path
                     d="M9.57 5.93018L3.5 12.0002L9.57 18.0702"
                     stroke="#31364E"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeMiterlimit="10"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M20.4999 12H3.66992"
                     stroke="#31364E"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeMiterlimit="10"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 Back
@@ -201,25 +202,20 @@ const Step6 = () => {
                             onBlur={handleBlur}
                           />
                         </div>
+
                         <div className="form-item">
-                          <label htmlFor="contactPhone">
-                            Mobile number (optional)
-                          </label>
-                          <input
-                            type="tel"
-                            className={
-                              errors.contactPhone && touched.contactPhone
-                                ? 'form-control error'
-                                : 'form-control'
-                            }
-                            id="contactPhone"
-                            placeholder=" "
-                            value={values.contactPhone}
+                          <PhoneInputNewCheckout
+                            className="second form-item required"
+                            containerClass={`scheduling-modal__content-wrapper-form-list-row`}
+                            formikProps={props}
+                            formikKey="contactPhone"
                             name="contactPhone"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
+                            label=" Mobile number (optional)"
+                            placeholder="Mobile number"
+                            type="tel"
+                          ></PhoneInputNewCheckout>
                         </div>
+
                         <div className="form-item checkbox">
                           <input
                             type="checkbox"

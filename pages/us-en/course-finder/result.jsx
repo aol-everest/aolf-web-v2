@@ -1,16 +1,30 @@
 /* eslint-disable react/no-unescaped-entities */
+import Link from '@components/linkWithUTM';
 import { pushRouteWithUTMQuery } from '@service';
+import { useSessionStorage } from '@uidotdev/usehooks';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function CourseFinderResult() {
   const router = useRouter();
+  const [value, setValue] = useSessionStorage('center-finder', {});
+  const { recommendationResponse = {}, questions = [], type = '' } = value;
+
+  useEffect(() => {
+    if (questions.length === 0) {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course-finder`,
+      });
+    }
+  }, []);
 
   const handleStartOver = () => {
+    setValue({});
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course-finder/`,
     });
   };
+
   return (
     <main className="course-finder-questionnaire-question">
       <section className="questionnaire-results">
@@ -27,9 +41,9 @@ export default function CourseFinderResult() {
                 <path
                   d="M18.3337 9.99984C18.3337 14.5998 14.6003 18.3332 10.0003 18.3332C5.40033 18.3332 2.59199 13.6998 2.59199 13.6998M2.59199 13.6998H6.35866M2.59199 13.6998V17.8665M1.66699 9.99984C1.66699 5.39984 5.36699 1.6665 10.0003 1.6665C15.5587 1.6665 18.3337 6.29984 18.3337 6.29984M18.3337 6.29984V2.13317M18.3337 6.29984H14.6337"
                   stroke="#31364E"
-                  stroke-width="1.25"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
               Start Over
@@ -43,12 +57,17 @@ export default function CourseFinderResult() {
               <div className="result-box">
                 <div className="first-info">FREE INTRO SERIES</div>
                 <div className="box-title">
-                  Get started on your journey with a few quick tips & tricks for
-                  [XXXXX][XXXX]
+                  Get started on your journey with a few quick tips & tricks to{' '}
+                  {type}
                 </div>
                 <div className="picture-box">
-                  <img src="/img/quest-result-box-pic.webp" alt="result" />
-                  <div className="picture-title">The Art of Meditation</div>
+                  <Link
+                    prefetch={false}
+                    href={recommendationResponse?.thinkificUrl || ''}
+                  >
+                    <img src="/img/quest-result-box-pic.webp" alt="result" />
+                    {/* <div className="picture-title">The Art of Meditation</div> */}
+                  </Link>
                 </div>
               </div>
               <div className="result-box recommendation">
@@ -56,7 +75,7 @@ export default function CourseFinderResult() {
                 <div className="box-title">
                   For lasting transformation
                   <br />
-                  Art of Living Part 1
+                  {recommendationResponse?.workshopInfo?.title}
                 </div>
                 <div className="box-desc">
                   Discover SKY Breath Meditation, an evidence-based technique
@@ -64,19 +83,21 @@ export default function CourseFinderResult() {
                   calm.
                 </div>
                 <ul className="recommended-course-info">
-                  <li>
+                  {/* <li>
                     <div className="label">Course</div>
                     <div className="value">
                       3 days with 2.5 hours of live sessions
                     </div>
-                  </li>
+                  </li> */}
                   <li>
                     <div className="label">Course format:</div>
-                    <div className="value">Online / In Person</div>
+                    <div className="value">
+                      {recommendationResponse?.workshopInfo?.mode}
+                    </div>
                   </li>
                 </ul>
                 <div className="course-payment-options">
-                  <a href="#" className="payment-option">
+                  <a className="payment-option">
                     <span className="first-info">
                       Pay as low as{' '}
                       <img
@@ -90,20 +111,33 @@ export default function CourseFinderResult() {
                     </span>
                     <span className="desc">for 12 months</span>
                   </a>
-                  <a href="#" className="payment-option selected">
+                  <a className="payment-option">
                     <span className="first-info">One Payment </span>
-                    <span className="price">$295</span>
+                    <span className="price">
+                      ${recommendationResponse?.workshopInfo?.unitPrice}
+                    </span>
                   </a>
                 </div>
                 <div className="course-actions">
                   <div className="btn-wrap">
-                    <button className="submit-btn">Register now</button>
+                    <a
+                      className="submit-btn"
+                      href={recommendationResponse?.redirectURL}
+                    >
+                      Register now
+                    </a>
                     <span className="desc">
                       Select a date & time that suit you
                     </span>
                   </div>
                   <div className="btn-wrap">
-                    <button className="submit-btn learn">Learn more</button>
+                    <a
+                      className="submit-btn learn"
+                      href={recommendationResponse?.learnMoreURL}
+                    >
+                      Learn more
+                    </a>
+                    {/* <button className="submit-btn learn">Learn more</button> */}
                   </div>
                 </div>
               </div>

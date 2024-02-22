@@ -1,15 +1,20 @@
 import { pushRouteWithUTMQuery } from '@service';
 import { useSessionStorage } from '@uidotdev/usehooks';
-import { findExistingQuestionnaire } from '@utils';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import useQuestionnaireSelection from 'src/hooks/useQuestionnaireSelection';
 
 const Step3 = () => {
   const router = useRouter();
-  const [selectedIds, setSelectedIds] = useState([]);
   const [value, setValue] = useSessionStorage('center-finder', {});
-  const { totalSelectedOptions = [], questions = [] } = value;
-  const currentStepData = questions?.find((item) => item.sequence === 3);
+  const { questions = [] } = value;
+  const {
+    updatedOptions,
+    selectedIds,
+    handleOptionSelect,
+    setSelectedIds,
+    currentStepData,
+  } = useQuestionnaireSelection(value, questions, 3);
 
   useEffect(() => {
     if (questions.length === 0) {
@@ -19,34 +24,11 @@ const Step3 = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (totalSelectedOptions && !selectedIds?.length) {
-      const selectedOption = totalSelectedOptions.find(
-        (item) => item?.questionSfid === currentStepData?.questionSfid,
-      );
-      if (selectedOption?.answer) {
-        setSelectedIds([selectedOption.answer]);
-      }
-    }
-  }, []);
-
-  const handleOptionSelect = (answerId) => {
-    const selectedIdsLocal = [answerId];
-    setSelectedIds(selectedIdsLocal);
-    const updatedOptions = findExistingQuestionnaire(
-      totalSelectedOptions,
-      currentStepData,
-      selectedIdsLocal,
-    );
+  const NavigateToStep4 = () => {
+    setSelectedIds([]);
     setValue({
       ...value,
       totalSelectedOptions: updatedOptions,
-    });
-  };
-
-  const NavigateToStep4 = () => {
-    setValue({
-      totalSelectedOptions: totalSelectedOptions,
       questions,
     });
     pushRouteWithUTMQuery(router, {
@@ -70,18 +52,18 @@ const Step3 = () => {
                 <path
                   d="M9.57 5.93018L3.5 12.0002L9.57 18.0702"
                   stroke="#31364E"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M20.4999 12H3.66992"
                   stroke="#31364E"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
               Back
