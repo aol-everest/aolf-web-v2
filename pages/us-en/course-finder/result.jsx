@@ -63,9 +63,12 @@ export default function CourseFinderResult() {
                 <div className="picture-box">
                   <Link
                     prefetch={false}
-                    href={recommendationResponse?.thinkificUrl || ''}
+                    href={recommendationResponse?.thinkificURL || ''}
                   >
-                    <img src="/img/quest-result-box-pic.webp" alt="result" />
+                    <img
+                      src={recommendationResponse?.thinkificImageURL}
+                      alt="result"
+                    />
                     {/* <div className="picture-title">The Art of Meditation</div> */}
                   </Link>
                 </div>
