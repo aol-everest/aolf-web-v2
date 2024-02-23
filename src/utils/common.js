@@ -228,10 +228,10 @@ export const findExistingQuestionnaire = (
 
 export const convertToUpperCaseAndReplaceSpacesForURL = (inputText) => {
   // Convert input text to uppercase
-  const upperCaseText = inputText.toUpperCase();
+  // const upperCaseText = inputText.toUpperCase();
 
   // Replace spaces with underscores
-  const resultText = upperCaseText.replace(/\s+/g, '_');
+  const resultText = inputText.replace(/\s+/g, '_');
 
   // Encode the result for use in a URL parameter
   const encodedResult = encodeURIComponent(resultText);
