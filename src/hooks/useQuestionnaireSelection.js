@@ -28,7 +28,11 @@ function useQuestionnaireSelection(value, questions, sequence) {
 
   const handleOptionSelect = (answerId, answerName) => {
     setSelectedOptionName(answerName);
-    const selectedIdsLocal = [answerId];
+    let selectedIdsLocal = [answerId];
+    if (sequence === 4) {
+      selectedIdsLocal = [...selectedIds, answerId];
+      selectedIdsLocal = selectedIdsLocal.slice(-2);
+    }
     setSelectedIds(selectedIdsLocal);
     const updatedOptions = findExistingQuestionnaire(
       value?.totalSelectedOptions || [],
