@@ -413,7 +413,7 @@ function PodcastPage() {
       <section className="top-video">
         <img
           style={{ display: isPlaying ? 'none' : 'inline-block' }}
-          src={first.snippet.thumbnails.standard.url}
+          src={first.snippet.thumbnails.maxres.url}
           className="video-thumb-img"
           width="100%"
           height="700"
