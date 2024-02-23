@@ -50,6 +50,7 @@ export const ScheduleAgreementForm = ({
       program_name: workshop?.title,
       program_date: workshop?.eventStartDate,
       program_time: workshop?.eventStartTime,
+      category: 'All',
     });
     formikProps.handleChange('ppaAgreement')(e);
   };
@@ -139,6 +140,7 @@ export const ScheduleAgreementForm = ({
                           program_name: workshop?.title,
                           program_date: workshop?.eventStartDate,
                           program_time: workshop?.eventStartTime,
+                          category: 'All',
                         });
                         const currentValue = field.value.find(
                           (v) => v.key === compliance.questionSfid,
