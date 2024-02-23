@@ -6,11 +6,13 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
+import { useAnalytics } from 'use-analytics';
 
 dayjs.extend(utc);
 
 export const WorkshopTile = ({ data, authenticated }) => {
   const router = useRouter();
+  const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
   const {
     title,
@@ -33,6 +35,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
   } = data || {};
 
   const enrollAction = (workshopId, productTypeId) => () => {
+    track('allcourses_enroll_click', {
+      course_format: data?.productTypeId,
+      course_name: data?.title,
+      course_id: data?.sfid,
+      course_price: data?.unitPrice,
+    });
     if (isGuestCheckoutEnabled || authenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
@@ -81,6 +89,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
   }
 
   const detailAction = (workshopId, productTypeId) => () => {
+    track('allcourses_details_click', {
+      course_format: data?.productTypeId,
+      course_name: data?.title,
+      course_id: data?.sfid,
+      course_price: data?.unitPrice,
+    });
     if (isKnownWorkshop) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/${workshopId}`,

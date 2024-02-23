@@ -163,6 +163,8 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
         ecommerce: {
           currency: 'USD',
           value: workshop?.unitPrice,
+          course_format: workshop?.productTypeId,
+          course_name: workshop?.title,
           items: [
             {
               item_id: workshop?.id,

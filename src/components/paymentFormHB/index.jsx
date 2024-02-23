@@ -1123,6 +1123,7 @@ export const PaymentFormHB = ({
                       values={values}
                       onComboDetailChange={handleComboDetailChange}
                       isCourseOptionRequired={isCourseOptionRequired}
+                      cmeAddOn={cmeAddOn}
                     />
                   </div>
                   <AttendanceForm

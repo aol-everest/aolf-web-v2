@@ -165,7 +165,7 @@ function App({ Component, pageProps }) {
               wcfHeader={Component.wcfHeader}
             >
               <DefaultSeo {...SEO} />
-              <UsePagesViews />
+              {/* <UsePagesViews /> */}
               {/* <TopProgressBar /> */}
               {isReInstateRequired && (
                 <ReInstate subscription={reinstateRequiredSubscription} />

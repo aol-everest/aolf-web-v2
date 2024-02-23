@@ -61,12 +61,19 @@ const STORIES = [
 ];
 
 const SEARCH_PARAM = [
+  'postalOrZipCode',
   'centerName',
   'streetAddress1',
   'streetAddress2',
   'stateProvince',
+  'city',
 ];
-const SEARCH_PARAM_WITHOUT_ADDRESS = ['centerName', 'stateProvince'];
+const SEARCH_PARAM_WITHOUT_ADDRESS = [
+  'postalOrZipCode',
+  'centerName',
+  'stateProvince',
+  'city',
+];
 
 const CenterListItem = ({ center, search }) => {
   const router = useRouter();
@@ -74,7 +81,7 @@ const CenterListItem = ({ center, search }) => {
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course`,
       query: {
-        city: center.city,
+        center: center.sfid,
         timeZone: 'NAN',
       },
     });
@@ -90,11 +97,20 @@ const CenterListItem = ({ center, search }) => {
           highlightClassName="YourHighlightClass"
           searchWords={[search]}
           autoEscape={true}
-          textToHighlight={`${center.centerName},  ${
-            center.stateProvince || ''
-          }`}
+          textToHighlight={`${center.centerName}`}
         />
+        <div className="tw-text-sm">
+          <Highlighter
+            highlightClassName="YourHighlightClass"
+            searchWords={[search]}
+            autoEscape={true}
+            textToHighlight={`${center.city || ''},  ${
+              center.stateProvince || ''
+            }`}
+          />
+        </div>
       </div>
+
       {center.centerMode === 'InPerson' && (
         <div className="info">
           <img

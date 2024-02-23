@@ -23,6 +23,60 @@ function deepValue(obj, path) {
   return parts.reduce((acc, current) => acc[current], obj);
 }
 
+function toPascalCaseWithSpaces(inputString) {
+  // Check if inputString is not null or undefined
+  if (inputString == null) {
+    console.error('Input string is null or undefined.');
+    return null; // or return an appropriate value based on your use case
+  }
+
+  // Split the string into words while preserving special characters
+  let words = inputString.split(/\b/);
+
+  // Capitalize the first letter of each word, excluding words after an apostrophe
+  let pascalCaseString = words
+    .map((word, index) => {
+      // Check if the word is a word character (letter, digit, or underscore)
+      if (/^\w+$/.test(word)) {
+        // Check if the previous word ends with an apostrophe
+        let isAfterApostrophe =
+          index > 0 &&
+          (words[index - 1].endsWith("'") || words[index - 1].endsWith('’'));
+        return isAfterApostrophe
+          ? word.toLowerCase()
+          : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      } else {
+        return word; // Retain the special character
+      }
+    })
+    .join('');
+
+  // return pascalCaseString;
+
+  return removeTextFromEnd(pascalCaseString, [
+    ' | A Conversation With Gurudev Sri Sri Ravi Shankar',
+    ' With Gurudev Sri Sri Ravi Shankar',
+    ' – Gurudev Sri Sri Ravi Shankar',
+    ' - Gurudev Sri Sri Ravi Shankar',
+    ' | Gurudev Sri Sri Ravi Shankar',
+    ' | Gurudev Sri Sri Ravi Shankar.',
+    ' Gurudev Sri Sri Ravi Shankar.',
+    ' Gurudev Sri Sri Ravi Shankar',
+  ]);
+}
+
+function removeTextFromEnd(inputString, textsToRemove) {
+  for (const textToRemove of textsToRemove) {
+    const lowerInput = inputString.toLowerCase();
+    const lowerTextToRemove = textToRemove.toLowerCase();
+
+    if (lowerInput.endsWith(lowerTextToRemove)) {
+      return inputString.slice(0, -textToRemove.length);
+    }
+  }
+  return inputString;
+}
+
 const VideoItemComp = (props) => {
   const { video, playingId, onPlayAction, isVertical, isMostPopular } = props;
   const [isInitialPlaying, setInitialPlaying] = useState(false);
@@ -158,7 +212,9 @@ const VideoItemComp = (props) => {
           <div className="channel-name">
             {video.snippet.videoOwnerChannelTitle}
           </div>
-          <div className="video-title">{video.snippet.title}</div>
+          <div className="video-title">
+            {toPascalCaseWithSpaces(video.snippet.title)}
+          </div>
           <ul className="video-actions">
             <li>
               {playerState !== YouTube.PlayerState.PLAYING && (
@@ -214,7 +270,9 @@ const VideoItemComp = (props) => {
         <div className="channel-name">
           {video.snippet.videoOwnerChannelTitle}
         </div>
-        <div className="video-title">{video.snippet.title}</div>
+        <div className="video-title">
+          {toPascalCaseWithSpaces(video.snippet.title)}
+        </div>
         <ul className="video-actions">
           <li>
             {!isPlaying && (
@@ -351,12 +409,12 @@ function PodcastPage() {
   };
 
   return (
-    <main class="podcasts">
-      <section class="top-video">
+    <main className="podcasts">
+      <section className="top-video">
         <img
           style={{ display: isPlaying ? 'none' : 'inline-block' }}
-          src={first.snippet.thumbnails.standard.url}
-          class="video-thumb-img"
+          src={first.snippet.thumbnails.maxres.url}
+          className="video-thumb-img"
           width="100%"
           height="700"
           alt="YouTube"
@@ -371,9 +429,13 @@ function PodcastPage() {
           onReady={onReady}
         />
 
-        <div class="top-video-info">
-          <div class="channel-name">{first.snippet.videoOwnerChannelTitle}</div>
-          <div class="video-title">{first.snippet.title}</div>
+        <div className="top-video-info">
+          <div className="channel-name">
+            {first.snippet.videoOwnerChannelTitle}
+          </div>
+          <div className="video-title">
+            {toPascalCaseWithSpaces(first.snippet.title)}
+          </div>
         </div>
       </section>
       <section className="video-playlist">
