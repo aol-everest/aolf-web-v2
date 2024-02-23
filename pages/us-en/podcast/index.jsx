@@ -333,14 +333,14 @@ function PodcastPage() {
   };
 
   useEffect(() => {
-    if (first) {
-      setPlayingId(first.videoDetail.id);
+    if (data?.mostPopular) {
+      setPlayingId(data.mostPopular.videoDetail.id);
     }
-  }, [first]);
+  }, [data?.mostPopular]);
 
   useEffect(() => {
-    if (first && player) {
-      if (playingId === first.videoDetail.id) {
+    if (data?.mostPopular && player) {
+      if (playingId === data.mostPopular.videoDetail.id) {
         playVideo();
       } else if (player.getPlayerState() === 1) {
         player.pauseVideo();
@@ -365,14 +365,14 @@ function PodcastPage() {
 
   const onPlay = async (e) => {
     setPlaying(true);
-    if (playingId !== first.videoDetail.id) {
-      setPlayingId(first.videoDetail.id);
+    if (playingId !== data.mostPopular.videoDetail.id) {
+      setPlayingId(data.mostPopular.videoDetail.id);
     }
   };
 
   const watchAction = () => {
-    if (playingId !== first.videoDetail.id) {
-      setPlayingId(first.videoDetail.id);
+    if (playingId !== data.mostPopular.videoDetail.id) {
+      setPlayingId(data.mostPopular.videoDetail.id);
     }
   };
 
@@ -413,7 +413,7 @@ function PodcastPage() {
       <section className="top-video">
         <img
           style={{ display: isPlaying ? 'none' : 'inline-block' }}
-          src={first.snippet.thumbnails.maxres.url}
+          src={data.mostPopular.snippet.thumbnails.maxres.url}
           className="video-thumb-img"
           width="100%"
           height="700"
@@ -421,8 +421,8 @@ function PodcastPage() {
         />
 
         <YouTube
-          videoId={first.videoDetail.id}
-          title={first.snippet.title}
+          videoId={data.mostPopular.videoDetail.id}
+          title={data.mostPopular.snippet.title}
           loading="loading"
           opts={opts}
           onPlay={onPlay}
@@ -431,10 +431,10 @@ function PodcastPage() {
 
         <div className="top-video-info">
           <div className="channel-name">
-            {first.snippet.videoOwnerChannelTitle}
+            {data.mostPopular.snippet.videoOwnerChannelTitle}
           </div>
           <div className="video-title">
-            {toPascalCaseWithSpaces(first.snippet.title)}
+            {toPascalCaseWithSpaces(data.mostPopular.snippet.title)}
           </div>
         </div>
       </section>
@@ -455,10 +455,10 @@ function PodcastPage() {
           </div>
           <div className="featured-video-list">
             <VideoItemComp
-              video={data.mostPopular}
+              video={first}
               playingId={playingId}
               onPlayAction={onPlayAction}
-              isMostPopular
+              // isMostPopular
             ></VideoItemComp>
             <VideoItemComp
               video={second}
