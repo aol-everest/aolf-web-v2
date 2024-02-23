@@ -9,7 +9,11 @@ import { loadStripe } from '@stripe/stripe-js';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { api, priceCalculation } from '@utils';
+import {
+  api,
+  priceCalculation,
+  convertToUpperCaseAndReplaceSpacesForURL,
+} from '@utils';
 import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import queryString from 'query-string';
@@ -118,11 +122,13 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
         throw new Error(errorMessage);
       }
 
+      const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
+
       const returnUrl = `${
         window.location.origin
-      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
-        filteredParams,
-      )}`;
+      }/us-en/course/scheduling/thankyou/${title}/${
+        workshop.id
+      }?${queryString.stringify(filteredParams)}`;
 
       // Confirm the PaymentIntent using the details collected by the Express Checkout Element
       const { error } = await stripe.confirmPayment({

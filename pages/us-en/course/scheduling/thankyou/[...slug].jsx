@@ -69,13 +69,24 @@ const renderVideo = (productTypeId) => {
   }
 };
 
+function getLastElement(arr) {
+  // Check if the array is not null and has a non-zero length
+  if (arr && arr.length > 0) {
+    // Use slice() to get the last element
+    return arr.slice(-1)[0];
+  } else {
+    return null; // or any default value you prefer
+  }
+}
+
 const Thankyou = () => {
   const router = useRouter();
   const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const [paymentIntent] = useQueryString('payment_intent');
   const [courseType] = useQueryString('courseType');
-  const { id: workshopId } = router.query;
+  const { slug } = router.query;
+  const workshopId = getLastElement(slug);
   const {
     data: workshop,
     isLoading,
@@ -145,18 +156,15 @@ const Thankyou = () => {
           },
         },
       );
+      page({
+        category: 'course_registration',
+        name: 'course_registration_thank_you',
+        payment_intent: paymentIntent,
+        course_type: courseType,
+        referral: 'course_search_scheduling',
+      });
     }
   }, [workshop]);
-
-  useEffectOnce(() => {
-    page({
-      category: 'course_registration',
-      name: 'course_registration_thank_you',
-      payment_intent: paymentIntent,
-      course_type: courseType,
-      referral: 'course_search_scheduling',
-    });
-  });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !workshopId) return <PageLoading />;

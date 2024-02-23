@@ -12,7 +12,13 @@ import {
 } from '@stripe/react-stripe-js';
 import { NextSeo } from 'next-seo';
 import { loadStripe } from '@stripe/stripe-js';
-import { api, priceCalculation, tConvert, phoneRegExp } from '@utils';
+import {
+  api,
+  priceCalculation,
+  tConvert,
+  phoneRegExp,
+  convertToUpperCaseAndReplaceSpacesForURL,
+} from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useRef, useState, useEffect } from 'react';
@@ -459,6 +465,7 @@ const SchedulingPaymentForm = ({
       }
 
       if (data) {
+        const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
         if (data.totalOrderAmount > 0) {
           let filteredParams = {
             ctype: productTypeId,
@@ -468,7 +475,9 @@ const SchedulingPaymentForm = ({
             ...filterAllowedParams(router.query),
           };
           filteredParams = removeNull(filteredParams);
-          const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+          const returnUrl = `${
+            window.location.origin
+          }/us-en/course/thankyou/${title}/${
             data.attendeeId
           }?${queryString.stringify(filteredParams)}`;
           const result = await stripe.confirmPayment({
@@ -485,7 +494,7 @@ const SchedulingPaymentForm = ({
           }
         } else {
           replaceRouteWithUTMQuery(router, {
-            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+            pathname: `/us-en/course/thankyou/${title}/${data.attendeeId}`,
             query: {
               ctype: productTypeId,
               page: 'ty',

@@ -14,7 +14,7 @@ import { useQueryString } from '@hooks';
 import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { api } from '@utils';
+import { api, convertToUpperCaseAndReplaceSpacesForURL } from '@utils';
 import dayjs from 'dayjs';
 import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
@@ -202,8 +202,9 @@ const Checkout = () => {
     };
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
+    const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
     replaceRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/thankyou/${attendeeId}`,
+      pathname: `/us-en/course/thankyou/${title}/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
         comboId: comboProductSfid,
@@ -217,6 +218,7 @@ const Checkout = () => {
   };
 
   const enrollmentCompletionLink = ({ attendeeId }) => {
+    const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
     let filteredParams = {
       ctype: workshop.productTypeId,
       comboId: comboProductSfid,
@@ -230,7 +232,7 @@ const Checkout = () => {
     filteredParams = removeNull(filteredParams);
     const returnUrl = `${
       window.location.origin
-    }/us-en/course/thankyou/${attendeeId}?${queryString.stringify(
+    }/us-en/course/thankyou/${title}/${attendeeId}?${queryString.stringify(
       filteredParams,
     )}`;
     return returnUrl;
