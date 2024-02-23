@@ -1,6 +1,10 @@
 import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from '@constants';
 import classNames from 'classnames';
 import { Field } from 'formik';
+import { Fragment } from 'react';
+import { FieldWrapper } from './FieldWrapper';
+import { InputDropDown } from './InputDropDown';
+import { StyledInput } from './StyledInput';
 
 export const MobileCourseOptions = ({
   expenseAddOn,
@@ -22,6 +26,7 @@ export const MobileCourseOptions = ({
   onComboDetailChange,
   onAccommodationChange,
   totalFee,
+  cmeAddOn,
 }) => {
   const {
     premiumRate,
@@ -51,6 +56,134 @@ export const MobileCourseOptions = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
+
+  const CMEInputCmp = ({ formikProps }) => {
+    const onPopupChangeEvent = (formikProps, field) => (value) => {
+      formikProps.setFieldValue(field, value?.name || '');
+    };
+    return (
+      <Fragment>
+        <div className="order__card !tw-border-0 !tw-shadow-none !tw-p-2">
+          <div className="d-flex w-50 justify-content-start">
+            <FieldWrapper formikKey={'claimingType'} formikProps={formikProps}>
+              <InputDropDown
+                placeholder="CE Claiming type"
+                formikProps={formikProps}
+                formikKey="claimingType"
+                closeEvent={onPopupChangeEvent(formikProps, 'claimingType')}
+              >
+                {({ closeHandler }) => (
+                  <>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Physician - MD',
+                        value: 'Physician - MD',
+                      })}
+                    >
+                      Physician - MD
+                    </li>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Physician - DO',
+                        value: 'Physician - DO',
+                      })}
+                    >
+                      Physician - DO
+                    </li>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Physician Assistant',
+                        value: 'Physician Assistant',
+                      })}
+                    >
+                      Physician Assistant
+                    </li>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Physical Therapist',
+                        value: 'Physical Therapist',
+                      })}
+                    >
+                      Physical Therapist
+                    </li>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Nurse',
+                        value: 'Nurse',
+                      })}
+                    >
+                      Nurse
+                    </li>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Dentist',
+                        value: 'Dentist',
+                      })}
+                    >
+                      Dentist
+                    </li>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Other',
+                        value: 'Other',
+                      })}
+                    >
+                      Other
+                    </li>
+                  </>
+                )}
+              </InputDropDown>
+            </FieldWrapper>
+          </div>
+          {formikProps.values['claimingType'] === 'Other' && (
+            <StyledInput
+              placeholder="Specify details (Other)"
+              formikProps={formikProps}
+              formikKey="contactClaimingTypeOther"
+              fullWidth
+            ></StyledInput>
+          )}
+          <div className="d-flex justify-content-start mt-lg-0">
+            <FieldWrapper
+              formikKey={'certificateOfAttendance'}
+              formikProps={formikProps}
+            >
+              <InputDropDown
+                placeholder="I would like to get the following"
+                formikProps={formikProps}
+                formikKey="certificateOfAttendance"
+                closeEvent={onPopupChangeEvent(
+                  formikProps,
+                  'certificateOfAttendance',
+                )}
+              >
+                {({ closeHandler }) => (
+                  <>
+                    <li
+                      onClick={closeHandler({
+                        name: 'CE Credits',
+                        value: 'CE Credits',
+                      })}
+                    >
+                      CE Credits
+                    </li>
+                    <li
+                      onClick={closeHandler({
+                        name: 'Certificate of Attendance',
+                        value: 'Certificate of Attendance',
+                      })}
+                    >
+                      Certificate of Attendance
+                    </li>
+                  </>
+                )}
+              </InputDropDown>
+            </FieldWrapper>
+          </div>
+        </div>
+      </Fragment>
+    );
+  };
 
   if (isInstalmentAllowed) {
     return (
@@ -691,9 +824,12 @@ export const MobileCourseOptions = ({
                             className="custom-checkbox tw-w-auto"
                             placeholder=" "
                             checked={isChecked}
-                            onChange={formikProps.handleChange(
-                              product.productName,
-                            )}
+                            onChange={() =>
+                              formikProps.setFieldValue(
+                                product.productName,
+                                !isChecked,
+                              )
+                            }
                             value={product.productName}
                             name={product.productName}
                             id={product.productSfid}
@@ -709,6 +845,18 @@ export const MobileCourseOptions = ({
                 }
               })}
             </ul>
+            {cmeAddOn && (
+              <>
+                <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
+                  To claim CME credits, please check the box and fill in the
+                  requested additional information.
+                </p>
+
+                {formikProps.values[cmeAddOn.productName] && (
+                  <CMEInputCmp formikProps={formikProps} />
+                )}
+              </>
+            )}
           </>
         )}
       </>
