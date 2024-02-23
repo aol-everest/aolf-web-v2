@@ -94,9 +94,7 @@ export default function CourseFinderResult() {
                   </li> */}
                   <li>
                     <div className="label">Course format:</div>
-                    <div className="value">
-                      {recommendationResponse?.workshopInfo?.mode}
-                    </div>
+                    <div className="value">Online / In Person</div>
                   </li>
                 </ul>
                 <div className="course-payment-options">
