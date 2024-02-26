@@ -139,7 +139,7 @@ const AOL_MENU = [
           },
           {
             name: 'Help me choose',
-            link: '/us-en/course-finder',
+            link: '/us-en/course-finder/welcome',
           },
         ],
       },
