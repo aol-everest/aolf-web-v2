@@ -5,17 +5,13 @@ import {
   InPersonGenericCourse,
   OnlineCourse,
   SKYBreathMeditation,
-  SKYBreathMeditationCombo,
   SahajSamadhi,
-  SahajSamadhiCombo,
   SilentRetreat,
 } from '@components/coursethankYouDetails';
 import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
-import { pushRouteWithUTMQuery } from '@service';
-import { Talkable, api, calculateBusinessDays, tConvert } from '@utils';
-import { hasCookie, setCookie } from 'cookies-next';
+import { api, tConvert } from '@utils';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
@@ -23,31 +19,14 @@ import moment from 'moment';
 import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useQueryString } from '@hooks';
+import { useEffectOnce } from 'react-use';
 import { useAnalytics } from 'use-analytics';
+import { useEffect } from 'react';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
-
-/* export async function getServerSideProps(context) {
-  const { query, req, res } = context;
-  const { id } = query;
-  const { data, attendeeRecord } = await api.get({
-    path: "getWorkshopByAttendee",
-    param: {
-      aid: id,
-      skipcheck: 1,
-    },
-  });
-  return {
-    props: {
-      workshop: data,
-      attendeeRecord,
-    },
-  };
-} */
 
 const renderVideo = (productTypeId) => {
   switch (productTypeId) {
@@ -102,178 +81,101 @@ function getLastElement(arr) {
 
 const Thankyou = () => {
   const router = useRouter();
+  const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { track, page, identify } = useAnalytics();
+  const [paymentIntent] = useQueryString('payment_intent');
   const [courseType] = useQueryString('courseType');
-  const { slug, comboId, sscid } = router.query;
-  const attendeeId = getLastElement(slug);
+  const { id: workshopId } = router.query;
   const {
-    data: result,
+    data: workshop,
     isLoading,
     isError,
     error,
   } = useQuery(
-    'attendeeRecord',
+    'workshopDetail',
     async () => {
       const response = await api.get({
-        path: 'getWorkshopByAttendee',
+        path: 'workshopDetail',
         param: {
-          aid: attendeeId,
-          skipcheck: '1',
-          sscid,
+          id: workshopId,
+          rp: 'checkout',
         },
+        isUnauthorized: true,
       });
-      return response;
+      return response.data;
     },
     {
       refetchOnWindowFocus: false,
-      enabled: !!attendeeId,
+      enabled: !!workshopId,
     },
   );
 
   useEffect(() => {
-    if (!result || hasCookie(orderExternalId)) return;
-    identify(userEmail, {
-      id: userExternalId,
-      email: userEmail,
-      first_name: first_name,
-      last_name: last_name,
-    });
-    page({
-      category: 'course_registration',
-      name: 'course_registration_thank_you',
-      attendee_id: attendeeId,
-      course_type: courseType,
-      referral: 'course_search',
-    });
-
-    track(
-      'purchase',
-      {
-        ecommerce: {
-          currency: 'USD',
-          value: workshop?.unitPrice,
-          transaction_id: orderExternalId,
-          shipping: 0.0,
-          tax: 0.0,
-          coupon: couponCode || '',
-          course_format: workshop?.productTypeId,
-          course_name: workshop?.title,
-          items: [
-            {
-              item_id: workshop?.id,
-              item_name: workshop?.title,
-              affiliation: 'NA',
-              coupon: couponCode || '',
-              discount: 0.0,
-              index: 0,
-              item_brand: workshop?.businessOrg,
-              item_category: workshop?.title,
-              item_category2: workshop?.mode,
-              item_category3: 'paid',
-              item_category4: 'NA',
-              item_category5: 'NA',
-              item_list_id: workshop?.productTypeId,
-              item_list_name: workshop?.title,
-              item_variant: workshop?.workshopTotalHours,
-              location_id: workshop?.locationCity,
-              price: workshop?.unitPrice,
-              quantity: 1,
-            },
-          ],
-        },
-      },
-      {
-        plugins: {
-          all: false,
-          'gtm-ecommerce-plugin': true,
-        },
-      },
-    );
-
-    track(
-      'aol_purchase',
-      {
-        event_id: orderExternalId,
-        user_properties: [
-          {
-            customer_id: userExternalId,
-            customer_email: userEmail,
-            customer_first_name: first_name,
-            customer_phone: personMobilePhone,
-            customer_last_name: last_name,
-            customer_city: personMailingCity,
-            customer_zip: personMailingPostalCode,
-            customer_address_1: personMailingStreet,
-            customer_address_2: '',
-            customer_country: personMailingCountry,
-            customer_state: personMailingState,
-          },
-        ],
-        ecommerce: [
-          {
-            currencyCode: 'USD',
-            purchase: {
-              revenue: ammountPaid,
-              discount_amount: '',
-              tax: '0.00',
-              shipping: '0.00',
-              sub_total: ammountPaid,
-              coupon: couponCode || '',
-            },
-            products: [
+    if (workshop) {
+      track(
+        'purchase',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshop?.unitPrice,
+            transaction_id: paymentIntent,
+            shipping: 0.0,
+            tax: 0.0,
+            coupon: '',
+            course_format: workshop?.productTypeId,
+            course_name: workshop?.title,
+            items: [
               {
-                name: title,
-                product_id: productTypeId,
-                id: courseId,
-                price: ammountPaid,
-                category: 'workshop',
-                brand: 'Art of Living Foundation',
+                item_id: workshop?.id,
+                item_name: workshop?.title,
+                affiliation: 'NA',
+                coupon: '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshop?.businessOrg,
+                item_category: workshop?.title,
+                item_category2: workshop?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshop?.productTypeId,
+                item_list_name: workshop?.title,
+                item_variant: workshop?.workshopTotalHours,
+                location_id: workshop?.locationCity,
+                price: workshop?.unitPrice,
                 quantity: 1,
               },
             ],
           },
-        ],
-      },
-      {
-        plugins: {
-          // disable this specific track call for all plugins except customerio
-          'clevertap-plugin': false,
         },
-      },
-    );
-    Talkable.purchase(
-      {
-        order_number: orderExternalId, // Unique order number. Example: '100011'
-        subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
-        coupon_code: isTalkableCoupon ? couponCode || '' : '', // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
-        shipping_address: '',
-        shipping_zip: '',
-      },
-      {
-        email: userEmail,
-        traffic_source: '', // The source of the traffic driven to the campaign. Example: 'facebook'
-      },
-    );
-    setCookie(orderExternalId, 'DONE');
-  }, [result]);
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
+      page({
+        category: 'course_registration',
+        name: 'course_registration_thank_you',
+        payment_intent: paymentIntent,
+        course_type: courseType,
+        referral: 'course_search_scheduling',
+      });
+    }
+  }, [workshop]);
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading || !attendeeId) return <PageLoading />;
-  const { data: workshop, attendeeRecord } = result;
+  if (isLoading || !workshopId) return <PageLoading />;
 
   const {
     title = '',
     meetupTitle,
     productTypeId,
-    id: courseId,
     formattedStartDateOnly,
     formattedEndDateOnly,
-    primaryTeacherName,
-    primaryTeacherSfid,
     eventStartDate,
     eventEndDate,
-    timings,
     isGenericWorkshop,
     eventStartTime,
     eventEndTime,
@@ -281,7 +183,7 @@ const Thankyou = () => {
     eventendDateTimeGMT,
     eventStartDateTimeGMT,
     mode,
-    availableBundles,
+    timings,
     locationStreet,
     locationCity,
     locationProvince,
@@ -323,25 +225,6 @@ const Thankyou = () => {
     endDatetime = moment.utc(`${meetupStartDateTimeGMT || ''}`).add(2, 'hours');
   }
 
-  const {
-    ammountPaid,
-    orderExternalId,
-    couponCode,
-    selectedGenericSlot = {},
-    pricebookName = '',
-    isTalkableCoupon,
-    first_name,
-    last_name,
-    userExternalId,
-    email: userEmail,
-    personMobilePhone,
-    personMailingCity,
-    personMailingStreet,
-    personMailingCountry,
-    personMailingState,
-    personMailingPostalCode,
-  } = attendeeRecord;
-
   const event = {
     timezone: 'Etc/GMT',
     description: newTitle,
@@ -361,77 +244,19 @@ const Thankyou = () => {
     if (e) e.preventDefault();
     showAlert(ALERT_TYPES.CUSTOM_ALERT, {
       title: 'Add to Calendar',
-
       children: <AddToCalendarModal event={event} />,
       closeModalAction: () => {
         hideAlert();
       },
     });
+
     track('click_button', {
       screen_name: 'course_registration_thank_you',
       event_target: 'add_to_calendar_button',
       course_type: courseType,
-      attendee_id: attendeeId,
-      referral: 'course_checkout',
+      payment_intent: paymentIntent,
+      referral: 'course_scheduling_checkout',
     });
-  };
-
-  const showTiming = (timeZone, option) => {
-    let weekdayTiming = (
-      <p className="program_card_subtitle c_text c_timing">
-        {option.weekdayStartTime} - {option.weekdayEndTime} {timeZone}{' '}
-        {option.weekendStartTime &&
-          calculateBusinessDays(
-            dayjs.utc(option.startDate),
-            dayjs.utc(option.endDate),
-          ).weekday}
-      </p>
-    );
-    let weekendTiming = option.weekendStartTime && (
-      <p className="program_card_subtitle c_text c_timing">
-        {option.weekendStartTime} - {option.weekendEndTime} {timeZone}{' '}
-        {
-          calculateBusinessDays(
-            dayjs.utc(option.startDate),
-            dayjs.utc(option.endDate),
-          ).weekend
-        }
-      </p>
-    );
-    if (
-      dayjs.utc(option.startDate).day() === 0 ||
-      dayjs.utc(option.startDate).day() === 6
-    ) {
-      return (
-        <>
-          {weekendTiming}
-          {weekdayTiming}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {weekdayTiming}
-          {weekendTiming}
-        </>
-      );
-    }
-  };
-
-  const getSelectedTimeSlotDetails = (selectedTimeSlot) => {
-    if (selectedTimeSlot) {
-      return (
-        <>
-          <p className="program_card_subtitle c_text">
-            {dayjs.utc(selectedTimeSlot.startDate).format('MMM D') +
-              ' - ' +
-              dayjs.utc(selectedTimeSlot.endDate).format('D, YYYY')}
-          </p>
-          <>{showTiming(selectedTimeSlot.timeZone, selectedTimeSlot)}</>
-        </>
-      );
-    }
-    return null;
   };
 
   const RenderJourneyContent = () => {
@@ -450,64 +275,13 @@ const Thankyou = () => {
     return <OnlineCourse />;
   };
 
-  const isRepeater = (pricebookName || '').toLowerCase().includes('repeater');
-
-  const comboCourse = comboId
-    ? availableBundles?.find(
-        (availableBundle) => availableBundle.comboProductSfid === comboId,
-      )
-    : false;
-
-  const isBundleContainsSahaj =
-    (comboCourse &&
-      comboCourse.comboDetails?.some(
-        (comboDetail) =>
-          `${COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value}`.indexOf(
-            comboDetail.comboDetailProductAllowedFamilyProduct?.split(',')[0],
-          ) >= 0,
-      )) ||
-    false;
-
-  const isBundleContainsSKY =
-    (comboCourse &&
-      comboCourse.comboDetails?.some(
-        (comboDetail) =>
-          `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.indexOf(
-            comboDetail.comboDetailProductAllowedFamilyProduct?.split(',')[0],
-          ) >= 0,
-      )) ||
-    false;
-
-  const isSkyPlusSahajFirstCourse =
-    (comboId && isBundleContainsSahaj && isBundleContainsSKY) || false;
-
-  const handleSecondCourseRedirection = () => {
-    const secondCourseType = isSKYType
-      ? 'SAHAJ_SAMADHI_MEDITATION'
-      : 'SKY_BREATH_MEDITATION';
-
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course`,
-      query: {
-        instructor: JSON.stringify({
-          value: primaryTeacherSfid,
-          label: primaryTeacherName,
-        }),
-        courseType: secondCourseType,
-      },
-    });
-  };
-
-  const showSecondCourseButton =
-    isSkyPlusSahajFirstCourse && comboCourse.showSecondCourseButton;
-
   const iosAppDownloadAction = () => {
     track('click_button', {
       screen_name: 'course_registration_thank_you',
       event_target: 'ios_app_link',
       course_type: courseType,
-      attendee_id: attendeeId,
-      referral: 'course_checkout',
+      payment_intent: paymentIntent,
+      referral: 'course_scheduling_checkout',
     });
   };
 
@@ -516,12 +290,10 @@ const Thankyou = () => {
       screen_name: 'course_registration_thank_you',
       event_target: 'android_app_link',
       course_type: courseType,
-      attendee_id: attendeeId,
-      referral: 'course_checkout',
+      payment_intent: paymentIntent,
+      referral: 'course_scheduling_checkout',
     });
   };
-
-  const autoVoidParam = ammountPaid === 0 ? '&autovoid=1' : '';
 
   return (
     <>
@@ -540,52 +312,8 @@ const Thankyou = () => {
             maxVideoPreview: -1,
           }}
         />
-        {process.env.NEXT_PUBLIC_ENABLE_SHAREASALE &&
-          process.env.NEXT_PUBLIC_ENABLE_SHAREASALE === 'true' &&
-          [
-            '811569',
-            '12371',
-            '12415',
-            '999649',
-            '10703361',
-            '10703362',
-            '10703363',
-            '435714',
-          ].indexOf(productTypeId) >= 0 &&
-          !isRepeater && (
-            <>
-              <img
-                src={`https://www.shareasale.com/sale.cfm?tracking=${attendeeId}&amount=${ammountPaid}&merchantID=103115&transtype=sale&X-type=${productTypeId}${autoVoidParam}`}
-                width="1"
-                height="1"
-                id="_SHRSL_img_1"
-              ></img>
-              <script
-                src="https://www.dwin1.com/51621.js"
-                type="text/javascript"
-                defer="defer"
-              ></script>
-            </>
-          )}
-        {isSkyPlusSahajFirstCourse ? (
-          <SKYBreathMeditationCombo
-            workshop={workshop}
-            selectedGenericSlot={selectedGenericSlot}
-            showSecondCourseButton={showSecondCourseButton}
-            handleSecondCourseRedirection={handleSecondCourseRedirection}
-            addToCalendarAction={addToCalendarAction}
-            getSelectedTimeSlotDetails={getSelectedTimeSlotDetails}
-            isSKYType={isSKYType}
-          />
-        ) : isSahajSamadhiMeditationType ? (
-          <SahajSamadhiCombo
-            workshop={workshop}
-            selectedGenericSlot={selectedGenericSlot}
-            handleSahajCourseRedirection={handleSecondCourseRedirection}
-            addToCalendarAction={addToCalendarAction}
-            getSelectedTimeSlotDetails={getSelectedTimeSlotDetails}
-          />
-        ) : (
+
+        {!isSahajSamadhiMeditationType && (
           <>
             <section className="get-started">
               <div className="container-md">
@@ -666,20 +394,20 @@ const Thankyou = () => {
                         <div className="btn-wrapper">
                           <a
                             className="btn-outline tw-mr-2"
+                            onClick={iosAppDownloadAction}
                             href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
                             target="_blank"
                             rel="noreferrer"
-                            onClick={iosAppDownloadAction}
                           >
                             <img src="/img/ic-apple.svg" alt="apple" />
                             iOS App
                           </a>
                           <a
                             className="btn-outline"
+                            onClick={androidAppDownloadAction}
                             href="https://play.google.com/store/apps/details?id=com.aol.app"
                             target="_blank"
                             rel="noreferrer"
-                            onClick={androidAppDownloadAction}
                           >
                             <img src="/img/ic-android.svg" alt="android" />
                             Android App
@@ -705,30 +433,28 @@ const Thankyou = () => {
                       <h2 className="program-details__title">
                         Program Details
                       </h2>
-                      {selectedGenericSlot.startDate &&
-                        getSelectedTimeSlotDetails(selectedGenericSlot)}
-                      {!selectedGenericSlot.startDate && (
-                        <ul className="program-details__list-schedule tw-max-h-[400px] tw-overflow-y-auto">
-                          {timings &&
-                            timings.map((time, i) => {
-                              return (
-                                <li
-                                  className="program-details__schedule tw-flex"
-                                  key={i}
-                                >
-                                  <span className="program-details__schedule-date">
-                                    {dayjs.utc(time.startDate).format('LL')}
-                                  </span>
-                                  <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
-                                    time.startTime,
-                                  )} - ${tConvert(time.endTime)} ${
-                                    ABBRS[time.timeZone]
-                                  }`}</span>
-                                </li>
-                              );
-                            })}
-                        </ul>
-                      )}
+
+                      <ul className="program-details__list-schedule tw-max-h-[400px] tw-overflow-y-auto">
+                        {timings &&
+                          timings.map((time, i) => {
+                            return (
+                              <li
+                                className="program-details__schedule tw-flex"
+                                key={i}
+                              >
+                                <span className="program-details__schedule-date">
+                                  {dayjs.utc(time.startDate).format('LL')}
+                                </span>
+                                <span className="program-details__schedule-time tw-ml-2">{`${tConvert(
+                                  time.startTime,
+                                )} - ${tConvert(time.endTime)} ${
+                                  ABBRS[time.timeZone]
+                                }`}</span>
+                              </li>
+                            );
+                          })}
+                      </ul>
+
                       {(mode === COURSE_MODES.IN_PERSON.name ||
                         mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
                         <>

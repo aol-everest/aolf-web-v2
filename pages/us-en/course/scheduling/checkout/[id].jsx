@@ -475,9 +475,7 @@ const SchedulingPaymentForm = ({
             ...filterAllowedParams(router.query),
           };
           filteredParams = removeNull(filteredParams);
-          const returnUrl = `${
-            window.location.origin
-          }/us-en/course/thankyou/${title}/${
+          const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
             data.attendeeId
           }?${queryString.stringify(filteredParams)}`;
           const result = await stripe.confirmPayment({
@@ -494,7 +492,7 @@ const SchedulingPaymentForm = ({
           }
         } else {
           replaceRouteWithUTMQuery(router, {
-            pathname: `/us-en/course/thankyou/${title}/${data.attendeeId}`,
+            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
             query: {
               ctype: productTypeId,
               page: 'ty',
