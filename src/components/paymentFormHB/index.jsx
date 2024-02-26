@@ -1136,7 +1136,7 @@ export const PaymentFormHB = ({
                     isCorporateEvent={isCorporateEvent}
                     screen="MOBILE"
                   />
-                  <div className="order__complete">
+                  <div className="order__complete tw-mb-10">
                     <div className="order__security security">
                       <img src="/img/ic-lock.svg" alt="lock" />
                       <p className="security__info">
