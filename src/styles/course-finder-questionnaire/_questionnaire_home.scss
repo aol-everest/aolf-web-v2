@@ -1,6 +1,7 @@
 .course-finder-questionnaire {
   @media screen and (max-width: 991px) {
     margin-top: 0 !important;
+    min-height: auto;
   }
   .banner-section {
     background-image: url(/img/questionnaire-banner.webp);
