@@ -1363,6 +1363,7 @@ export const PaymentFormNew = ({
                             <img
                               src="/img/TrustPilot-logo2x.webp"
                               alt="Trust Pilot"
+                              width="90"
                             />
                           </div>
                           <div className="second-row">
