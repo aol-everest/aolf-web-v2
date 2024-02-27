@@ -73,7 +73,7 @@ const AOL_MENU = [
     submenu: [
       {
         name: 'Podcasts',
-        link: '/us-en/podcast',
+        link: '/us-en/wisdom/podcast',
       },
     ],
   },
