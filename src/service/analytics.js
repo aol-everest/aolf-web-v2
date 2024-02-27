@@ -1,4 +1,4 @@
-import googleTagManager from '@analytics/google-tag-manager';
+import googleTagManager from './googleTagManagerPlugin';
 import onRouteChange from '@analytics/router-utils';
 import segmentPlugin from '@analytics/segment';
 import Analytics from 'analytics';
