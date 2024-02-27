@@ -124,6 +124,7 @@ const Thankyou = () => {
             coupon: '',
             course_format: workshop?.productTypeId,
             course_name: workshop?.title,
+            flow_name: 'scheduling_flow',
             items: [
               {
                 item_id: workshop?.id,
