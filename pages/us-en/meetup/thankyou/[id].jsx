@@ -131,30 +131,22 @@ const Thankyou = () => {
   const { data: meetup, attendeeRecord } = result;
 
   const {
-    formattedStartDateOnly,
-    formattedEndDateOnly,
-    shortAddress,
     title,
     meetupTitle,
-    primaryTeacherName,
     eventStartDate,
     eventEndDate,
-    phone1,
     productTypeId,
-    email,
-    timings,
-    isGenericWorkshop,
-    streetAddress1,
-    streetAddress2,
-    city,
-    country,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
     eventStartTime,
     eventEndTime,
     meetupStartDate,
     meetupStartTime,
     meetupStartDateTimeGMT,
     eventTimeZone,
-    eventType,
     eventendDateTimeGMT,
     eventStartDateTimeGMT,
     unitPrice,
@@ -164,9 +156,7 @@ const Thankyou = () => {
     meetupDuration,
   } = meetup || {};
   const {
-    email: attendeeEmail,
     selectedGenericSlot = {},
-    sfid: attendeeSfid,
     ammountPaid,
     orderExternalId,
     couponCode,
@@ -264,9 +254,12 @@ const Thankyou = () => {
     description: newTitle,
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
-    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-      country || ''
-    }`,
+    location:
+      mode === COURSE_MODES.IN_PERSON.name
+        ? `${locationStreet || ''}, ${locationCity || ''}, ${
+            locationProvince || ''
+          } ${locationPostalCode || ''}, ${locationCountry || ''}`
+        : 'Online',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: newTitle,
   };
