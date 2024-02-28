@@ -490,18 +490,20 @@ main.checkout-aol {
           margin-right: 12px;
         }
       }
+      .offer-type {
+        background: #ffffff26;
+        padding: 12px;
+        border-radius: 16px;
+        margin-bottom: 12px;
+      }
       .radio {
         label {
-          background: #ffffff26;
-          padding: 12px;
-          height: 48px;
-          border-radius: 16px;
           color: white;
           font-size: 15px;
           line-height: 24px;
           display: flex;
           align-items: center;
-          margin-bottom: 12px;
+          margin-bottom: 0;
           flex: 1;
           &::before {
             border-color: white !important;
@@ -511,11 +513,35 @@ main.checkout-aol {
           .radio-value {
             margin-left: auto;
             font-weight: 600;
+            text-align: right;
             s {
               font-size: 14px;
               font-weight: 400;
               margin-right: 6px;
             }
+            .desc {
+              display: block;
+              white-space: nowrap;
+              font-size: 12px;
+              line-height: 18px;
+            }
+          }
+        }
+      }
+      .offer-additions {
+        background: #fce2d9;
+        padding: 16px;
+        border-radius: 16px;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        .form-item {
+          label {
+            margin-bottom: 0;
+            line-height: 18px;
+            display: flex;
+            align-items: flex-start;
           }
         }
       }
@@ -524,6 +550,17 @@ main.checkout-aol {
         font-weight: 400;
         line-height: 18px;
         color: white;
+      }
+      .btn-submit {
+        background: white;
+        color: #e47d6c;
+        height: 54px;
+        width: 100%;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 24px;
+        border: none;
+        border-radius: 100px;
       }
     }
     .room-board-pricing {
