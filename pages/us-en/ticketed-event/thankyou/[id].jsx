@@ -18,7 +18,7 @@ import {
   FaList,
 } from 'react-icons/fa6';
 import { FaInfoCircle } from 'react-icons/fa';
-import { ALERT_TYPES } from '@constants';
+import { ALERT_TYPES, COURSE_MODES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
 import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
@@ -106,13 +106,15 @@ const TicketCongratulations = () => {
     eventStartDate,
     eventStartDateTimeGMT = '',
     eventendDateTimeGMT = '',
-    streetAddress1,
-    streetAddress2,
-    city,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
     contactName,
-    country,
     eventEndDate,
     eventImageUrl,
+    mode,
   } = workshop || {};
 
   if (isLoading) {
@@ -175,9 +177,12 @@ const TicketCongratulations = () => {
     description: title,
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
-    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-      country || ''
-    }`,
+    location:
+      mode === COURSE_MODES.IN_PERSON.name
+        ? `${locationStreet || ''}, ${locationCity || ''}, ${
+            locationProvince || ''
+          } ${locationPostalCode || ''}, ${locationCountry || ''}`
+        : 'Online',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: title,
   };
