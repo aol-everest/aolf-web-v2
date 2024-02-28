@@ -538,6 +538,7 @@ const SchedulingRange = () => {
       program_name: workshopDetail?.title,
       program_date: workshopDetail?.eventStartDate,
       program_time: workshopDetail?.eventStartTime,
+      category: 'All',
     });
   };
 

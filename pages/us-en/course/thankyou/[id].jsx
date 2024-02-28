@@ -27,7 +27,6 @@ import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useQueryString } from '@hooks';
 import { useAnalytics } from 'use-analytics';
-import { useEffectOnce } from 'react-use';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -91,12 +90,22 @@ const renderVideo = (productTypeId) => {
   }
 };
 
+function getLastElement(arr) {
+  // Check if the array is not null and has a non-zero length
+  if (arr && arr.length > 0) {
+    // Use slice() to get the last element
+    return arr.slice(-1)[0];
+  } else {
+    return null; // or any default value you prefer
+  }
+}
+
 const Thankyou = () => {
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
   const [courseType] = useQueryString('courseType');
-  const { id: attendeeId, comboId, sscid } = router.query;
+  const { id: attendeeId, comboId, sscid, referral } = router.query;
   const {
     data: result,
     isLoading,
@@ -129,6 +138,22 @@ const Thankyou = () => {
       first_name: first_name,
       last_name: last_name,
     });
+    page({
+      category: 'course_registration',
+      name: 'course_registration_thank_you',
+      attendee_id: attendeeId,
+      course_type: courseType,
+      referral: referral || 'course_search',
+    });
+
+    let flowName = 'journey_flow';
+
+    if (referral) {
+      flowName =
+        referral === 'course_scheduling_checkout'
+          ? 'scheduling_flow'
+          : 'journey_flow';
+    }
 
     track(
       'purchase',
@@ -142,6 +167,7 @@ const Thankyou = () => {
           coupon: couponCode || '',
           course_format: workshop?.productTypeId,
           course_name: workshop?.title,
+          flow_name: flowName,
           items: [
             {
               item_id: workshop?.id,
@@ -240,16 +266,6 @@ const Thankyou = () => {
     );
     setCookie(orderExternalId, 'DONE');
   }, [result]);
-
-  useEffectOnce(() => {
-    page({
-      category: 'course_registration',
-      name: 'course_registration_thank_you',
-      attendee_id: attendeeId,
-      course_type: courseType,
-      referral: 'course_search',
-    });
-  });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !attendeeId) return <PageLoading />;

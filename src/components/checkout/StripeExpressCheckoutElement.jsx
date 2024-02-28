@@ -9,7 +9,11 @@ import { loadStripe } from '@stripe/stripe-js';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { api, priceCalculation } from '@utils';
+import {
+  api,
+  priceCalculation,
+  convertToUpperCaseAndReplaceSpacesForURL,
+} from '@utils';
 import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import queryString from 'query-string';
@@ -117,6 +121,8 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
       if (status === 400 || isError) {
         throw new Error(errorMessage);
       }
+
+      const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
 
       const returnUrl = `${
         window.location.origin

@@ -12,7 +12,13 @@ import {
 } from '@stripe/react-stripe-js';
 import { NextSeo } from 'next-seo';
 import { loadStripe } from '@stripe/stripe-js';
-import { api, priceCalculation, tConvert, phoneRegExp } from '@utils';
+import {
+  api,
+  priceCalculation,
+  tConvert,
+  phoneRegExp,
+  convertToUpperCaseAndReplaceSpacesForURL,
+} from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useRef, useState, useEffect } from 'react';
@@ -459,6 +465,7 @@ const SchedulingPaymentForm = ({
       }
 
       if (data) {
+        const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
         if (data.totalOrderAmount > 0) {
           let filteredParams = {
             ctype: productTypeId,

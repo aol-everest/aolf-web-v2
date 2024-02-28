@@ -94,9 +94,7 @@ export default function CourseFinderResult() {
                   </li> */}
                   <li>
                     <div className="label">Course format:</div>
-                    <div className="value">
-                      {recommendationResponse?.workshopInfo?.mode}
-                    </div>
+                    <div className="value">Online / In Person</div>
                   </li>
                 </ul>
                 <div className="course-payment-options">
@@ -248,13 +246,11 @@ export default function CourseFinderResult() {
               </div>
               <div className="trustpilot-wrap">
                 Read more at{' '}
-                <a href="#">
-                  <img
-                    src="/img/TrustPilot-logo2x.webp"
-                    height="33"
-                    alt="trustpilot"
-                  />
-                </a>
+                <img
+                  src="/img/TrustPilot-logo2x.webp"
+                  height="33"
+                  alt="trustpilot"
+                />
               </div>
             </div>
           </div>

@@ -73,7 +73,7 @@ const AOL_MENU = [
   //   submenu: [
   //     {
   //       name: 'Podcasts',
-  //       link: '/us-en/podcast',
+  //       link: '/us-en/wisdom/podcast',
   //     },
   //   ],
   // },
@@ -137,6 +137,10 @@ const AOL_MENU = [
             name: 'All Courses',
             link: '/us-en/course',
           },
+          // {
+          //   name: 'Help me choose',
+          //   link: '/us-en/course-finder/welcome',
+          // },
         ],
       },
     ],
@@ -437,6 +441,8 @@ export const Header = () => {
                               className={
                                 menuItem.link === '/us-en/course'
                                   ? 'active'
+                                  : menuItem.link === '/us-en/course-finder'
+                                  ? 'help'
                                   : ''
                               }
                               as={Link}
