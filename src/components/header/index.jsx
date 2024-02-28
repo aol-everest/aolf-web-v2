@@ -440,7 +440,7 @@ export const Header = () => {
       return (
         <>
           <button
-            class="back-link dropdown-toggle"
+            className="back-link dropdown-toggle"
             href="#"
             id="navbarCoursesDropdown"
             data-toggle="dropdown"
@@ -452,49 +452,51 @@ export const Header = () => {
               className="past-courses__cards__arrow back-link"
             />
           </button>
-          {menu.subHeading?.map((subMenu) => {
-            return (
-              <React.Fragment key={subMenu.name}>
-                {subMenu?.items && (
-                  <>
-                    {subMenu.name && (
-                      <div className="dropdown-menu-col">
-                        <h6 className="dropdown-header">{subMenu.name}</h6>
-                        {subMenu?.items.map((menuItem) => {
-                          return (
-                            <NavDropdown.Item
-                              href={menuItem.link}
-                              key={menuItem.name}
-                              className={
-                                menuItem.link === '/us-en/course'
-                                  ? 'active'
-                                  : menuItem.link === '/us-en/course-finder'
-                                  ? 'help'
-                                  : ''
-                              }
-                              as={Link}
-                            >
-                              {menuItem.name}
-                            </NavDropdown.Item>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </>
-                )}
-                {subMenu?.link && (
-                  <NavDropdown.Item
-                    href={subMenu.link}
-                    key={subMenu.name}
-                    as={Link}
-                    className="pt25"
-                  >
-                    {subMenu.name}
-                  </NavDropdown.Item>
-                )}
-              </React.Fragment>
-            );
-          })}
+          <div className="dropdown-menu-inner">
+            {menu.subHeading?.map((subMenu) => {
+              return (
+                <React.Fragment key={subMenu.name}>
+                  {subMenu?.items && (
+                    <>
+                      {subMenu.name && (
+                        <div className="dropdown-menu-col">
+                          <h6 className="dropdown-header">{subMenu.name}</h6>
+                          {subMenu?.items.map((menuItem) => {
+                            return (
+                              <NavDropdown.Item
+                                href={menuItem.link}
+                                key={menuItem.name}
+                                className={
+                                  menuItem.link === '/us-en/course'
+                                    ? 'active'
+                                    : menuItem.link === '/us-en/course-finder'
+                                    ? 'help'
+                                    : ''
+                                }
+                                as={Link}
+                              >
+                                {menuItem.name}
+                              </NavDropdown.Item>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {subMenu?.link && (
+                    <NavDropdown.Item
+                      href={subMenu.link}
+                      key={subMenu.name}
+                      as={Link}
+                      className="pt25"
+                    >
+                      {subMenu.name}
+                    </NavDropdown.Item>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
         </>
       );
     }
