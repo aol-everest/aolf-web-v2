@@ -391,6 +391,20 @@ export const Header = () => {
   let initials = `${first_name || ''} ${last_name || ''}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
 
+  document.addEventListener('click', function (event) {
+    if (event?.target?.classList?.contains('back-link')) {
+      // Find the immediate parent element and remove it
+      var parent = event.target?.closest('.show');
+      if (parent) {
+        parent.style.transition = 'all 0.3s ease-in-out';
+        // After a short delay, remove the parent class
+        setTimeout(function () {
+          parent.classList?.remove('show');
+        }, 3);
+      }
+    }
+  });
+
   const loginAction = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL, {
       navigateTo: '/us-en/profile?' + queryString.stringify(router.query),
@@ -425,6 +439,19 @@ export const Header = () => {
     if (menu.subHeading) {
       return (
         <>
+          <button
+            class="back-link dropdown-toggle"
+            href="#"
+            id="navbarCoursesDropdown"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              src="/img/BackArrow.svg"
+              className="past-courses__cards__arrow back-link"
+            />
+          </button>
           {menu.subHeading?.map((subMenu) => {
             return (
               <React.Fragment key={subMenu.name}>
