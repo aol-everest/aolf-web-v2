@@ -205,7 +205,7 @@ const WebinarSkyCheckout = () => {
   const enrollmentCompletionAction = ({ attendeeId }) => {
     const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
     replaceRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/thankyou/${title}/${attendeeId}`,
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
         comboId: '',

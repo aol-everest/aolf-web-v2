@@ -94,7 +94,16 @@ const Step3 = () => {
                       checked={selectedIds.includes(answer.optionId)}
                       onChange={(ev) => handleOptionSelect(answer.optionId)}
                     />
-                    <label htmlFor={answer.optionId}>{answer.optionText}</label>
+                    <label htmlFor={answer.optionId}>
+                      {answer?.iconURL && (
+                        <img
+                          src={answer?.iconURL}
+                          alt={answer.optionText}
+                          width={24}
+                        />
+                      )}
+                      {answer.optionText}
+                    </label>
                   </div>
                 );
               })}

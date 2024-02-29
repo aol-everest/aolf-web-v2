@@ -105,8 +105,7 @@ const Thankyou = () => {
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
   const [courseType] = useQueryString('courseType');
-  const { slug, comboId, sscid } = router.query;
-  const attendeeId = getLastElement(slug);
+  const { id: attendeeId, comboId, sscid, referral } = router.query;
   const {
     data: result,
     isLoading,
@@ -144,8 +143,17 @@ const Thankyou = () => {
       name: 'course_registration_thank_you',
       attendee_id: attendeeId,
       course_type: courseType,
-      referral: 'course_search',
+      referral: referral || 'course_search',
     });
+
+    let flowName = 'journey_flow';
+
+    if (referral) {
+      flowName =
+        referral === 'course_scheduling_checkout'
+          ? 'scheduling_flow'
+          : 'journey_flow';
+    }
 
     track(
       'purchase',
@@ -159,6 +167,7 @@ const Thankyou = () => {
           coupon: couponCode || '',
           course_format: workshop?.productTypeId,
           course_name: workshop?.title,
+          flow_name: flowName,
           items: [
             {
               item_id: workshop?.id,
@@ -192,7 +201,7 @@ const Thankyou = () => {
     );
 
     track(
-      'aol_purchase',
+      "'aol_purchase'",
       {
         event_id: orderExternalId,
         user_properties: [

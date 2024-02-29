@@ -36,6 +36,7 @@ export const CostDetailsCardNewCheckout = ({
     instalmentGapUnit,
     instalmentGap,
     availableBundles,
+    subscriptionDetails,
   } = workshop || {};
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
@@ -253,46 +254,59 @@ export const CostDetailsCardNewCheckout = ({
 
         {!isJourneyPremium && !isJourneyPlus && (
           <>
-            <div className="form-item radio">
-              {isSilentRetreatType && (
-                <input
-                  type="radio"
-                  name="payment-type"
-                  id="payment-lg-regular-card"
-                  defaultChecked
-                  checked={formikProps.values.priceType === 'regular'}
-                  value="regular"
-                  onChange={formikProps.handleChange('priceType')}
-                />
-              )}
-              <label htmlFor="payment-lg-regular-card">
-                <span className="radio-text">Regular Tuition:</span>
-                <span className="radio-value">
-                  {delfee && <s>${delfee}</s>} {`$${fee}`}
-                </span>
-              </label>
-            </div>
-            {!isUsableCreditAvailable && isSilentRetreatType && (
+            <div className="offer-type">
               <div className="form-item radio">
-                <input
-                  type="radio"
-                  name="priceType"
-                  id="payment-lg-premium-card"
-                  checked={formikProps.values.priceType === 'premium'}
-                  value="premium"
-                  onChange={formikProps.handleChange('priceType')}
-                />
-                <label htmlFor="payment-lg-premium-card">
-                  <span className="radio-text">Premium/Journey+ Tuition:</span>
+                {isSilentRetreatType && (
+                  <input
+                    type="radio"
+                    name="payment-type"
+                    id="payment-lg-regular-card"
+                    defaultChecked
+                    checked={formikProps.values.priceType === 'regular'}
+                    value="regular"
+                    onChange={formikProps.handleChange('priceType')}
+                  />
+                )}
+                <label htmlFor="payment-lg-regular-card">
+                  <span className="radio-text">Regular Tuition:</span>
                   <span className="radio-value">
-                    {premiumRate &&
-                      premiumRate.listPrice &&
-                      premiumRate.listPrice !== premiumRate.unitPrice && (
-                        <s>${delfee || premiumRate.listPrice}</s>
-                      )}{' '}
-                    ${premiumRate.unitPrice} +expenses
+                    {delfee && <s>${delfee}</s>} {`$${fee}`}
                   </span>
                 </label>
+              </div>
+            </div>
+            {!isUsableCreditAvailable && isSilentRetreatType && (
+              <div className="offer-type">
+                <div className="form-item radio">
+                  <input
+                    type="radio"
+                    name="priceType"
+                    id="payment-lg-premium-card"
+                    checked={formikProps.values.priceType === 'premium'}
+                    value="premium"
+                    onChange={formikProps.handleChange('priceType')}
+                  />
+                  <label htmlFor="payment-lg-premium-card">
+                    <span className="radio-text">
+                      Premium/Journey+ Tuition:
+                    </span>
+                    <span className="radio-value">
+                      {premiumRate &&
+                        premiumRate.listPrice &&
+                        premiumRate.listPrice !== premiumRate.unitPrice && (
+                          <s>${delfee || premiumRate.listPrice}</s>
+                        )}{' '}
+                      ${premiumRate.unitPrice} +expenses
+                    </span>
+                  </label>
+                </div>
+                <div className="offer-additions">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: subscriptionDetails.description,
+                    }}
+                  ></div>
+                </div>
               </div>
             )}
             {isUsableCreditAvailable && (
@@ -301,63 +315,64 @@ export const CostDetailsCardNewCheckout = ({
               </div>
             )}
 
-            <ul>
-              {!isJourneyPremium &&
-                !isBasicMember &&
-                !isJourneyPlus &&
-                !isUsableCreditAvailable &&
-                isSilentRetreatType && (
-                  <li className="journey-button-new">
-                    <button
-                      className="btn-outline"
-                      onClick={openSubscriptionPaywallPage(
-                        MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
-                      )}
-                      disabled={formikProps.values.priceType === 'regular'}
-                    >
-                      Join Journey+
-                    </button>
-                  </li>
-                )}
-            </ul>
+            {!isJourneyPremium &&
+              !isBasicMember &&
+              !isJourneyPlus &&
+              !isUsableCreditAvailable &&
+              isSilentRetreatType && (
+                <div className="offer-action">
+                  <button
+                    className="btn-submit"
+                    onClick={openSubscriptionPaywallPage(
+                      MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+                    )}
+                    disabled={formikProps.values.priceType === 'regular'}
+                  >
+                    Join Journey+
+                  </button>
+                </div>
+              )}
           </>
         )}
         {(isJourneyPremium || isJourneyPlus) && (
           <>
-            <div className="form-item radio">
-              <label htmlFor="payment-lg-regular">
-                <span className="radio-text">
-                  {!isUsableCreditAvailable && !isSilentRetreatType
-                    ? 'Regular Tuition'
-                    : 'Premium/Journey+ Tuition'}
-                  :
-                </span>
-                <span className="radio-value">
-                  {discount && discount.newPrice && (
-                    <>
-                      <s> ${discount.oldPrice}</s>
-                      {(addOnProducts?.length > 0 || hasGroupedAddOnProducts) &&
-                        `$${discount.newPrice} ${
-                          isUsableCreditAvailable &&
-                          isSilentRetreatType &&
-                          '+expenses'
-                        }`}
-                    </>
-                  )}
-                  {!discount && premiumRate && (
-                    <>
-                      {premiumRate &&
-                        premiumRate.listPrice &&
-                        premiumRate.listPrice !== premiumRate.unitPrice && (
-                          <s>${delfee || premiumRate.listPrice}</s>
-                        )}
-                      {addOnProducts?.length > 0 || hasGroupedAddOnProducts
-                        ? `$${premiumRate.unitPrice} +expenses`
-                        : `$${premiumRate.unitPrice}`}
-                    </>
-                  )}
-                </span>
-              </label>
+            <div className="offer-type">
+              <div className="form-item radio">
+                <label htmlFor="payment-lg-regular">
+                  <span className="radio-text">
+                    {!isUsableCreditAvailable && !isSilentRetreatType
+                      ? 'Regular Tuition'
+                      : 'Premium/Journey+ Tuition'}
+                    :
+                  </span>
+                  <span className="radio-value">
+                    {discount && discount.newPrice && (
+                      <>
+                        <s> ${discount.oldPrice}</s>
+                        {(addOnProducts?.length > 0 ||
+                          hasGroupedAddOnProducts) &&
+                          `$${discount.newPrice} ${
+                            isUsableCreditAvailable &&
+                            isSilentRetreatType &&
+                            '+expenses'
+                          }`}
+                      </>
+                    )}
+                    {!discount && premiumRate && (
+                      <>
+                        {premiumRate &&
+                          premiumRate.listPrice &&
+                          premiumRate.listPrice !== premiumRate.unitPrice && (
+                            <s>${delfee || premiumRate.listPrice}</s>
+                          )}
+                        {addOnProducts?.length > 0 || hasGroupedAddOnProducts
+                          ? `$${premiumRate.unitPrice} +expenses`
+                          : `$${premiumRate.unitPrice}`}
+                      </>
+                    )}
+                  </span>
+                </label>
+              </div>
             </div>
             {hasGroupedAddOnProducts && (
               <div className="note">Note: *Expense includes meals</div>

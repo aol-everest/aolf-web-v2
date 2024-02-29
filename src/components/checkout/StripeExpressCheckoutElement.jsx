@@ -126,9 +126,9 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/course/scheduling/thankyou/${title}/${
-        workshop.id
-      }?${queryString.stringify(filteredParams)}`;
+      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
+        filteredParams,
+      )}`;
 
       // Confirm the PaymentIntent using the details collected by the Express Checkout Element
       const { error } = await stripe.confirmPayment({

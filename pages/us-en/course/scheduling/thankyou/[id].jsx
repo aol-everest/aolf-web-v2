@@ -85,8 +85,7 @@ const Thankyou = () => {
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const [paymentIntent] = useQueryString('payment_intent');
   const [courseType] = useQueryString('courseType');
-  const { slug } = router.query;
-  const workshopId = getLastElement(slug);
+  const { id: workshopId } = router.query;
   const {
     data: workshop,
     isLoading,
@@ -125,6 +124,7 @@ const Thankyou = () => {
             coupon: '',
             course_format: workshop?.productTypeId,
             course_name: workshop?.title,
+            flow_name: 'scheduling_flow',
             items: [
               {
                 item_id: workshop?.id,

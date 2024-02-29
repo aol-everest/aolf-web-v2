@@ -204,7 +204,7 @@ const Checkout = () => {
   const enrollmentCompletionAction = ({ attendeeId }) => {
     const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
     replaceRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/thankyou/${title}/${attendeeId}`,
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
         ctype: workshop.productTypeId,
         comboId: comboProductSfid,
@@ -232,7 +232,7 @@ const Checkout = () => {
     filteredParams = removeNull(filteredParams);
     const returnUrl = `${
       window.location.origin
-    }/us-en/course/thankyou/${title}/${attendeeId}?${queryString.stringify(
+    }/us-en/course/thankyou/${attendeeId}?${queryString.stringify(
       filteredParams,
     )}`;
     return returnUrl;
