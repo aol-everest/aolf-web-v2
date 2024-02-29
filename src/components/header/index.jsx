@@ -469,7 +469,8 @@ export const Header = () => {
                                 className={
                                   menuItem.link === '/us-en/course'
                                     ? 'active'
-                                    : menuItem.link === '/us-en/course-finder'
+                                    : menuItem.link ===
+                                      '/us-en/course-finder/welcome'
                                     ? 'help'
                                     : ''
                                 }
