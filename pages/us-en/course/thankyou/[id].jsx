@@ -201,7 +201,7 @@ const Thankyou = () => {
     );
 
     track(
-      'aol_purchase',
+      "'aol_purchase'",
       {
         event_id: orderExternalId,
         user_properties: [
