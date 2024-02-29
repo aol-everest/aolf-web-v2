@@ -36,6 +36,7 @@ export const CostDetailsCardNewCheckout = ({
     instalmentGapUnit,
     instalmentGap,
     availableBundles,
+    subscriptionDetails,
   } = workshop || {};
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
@@ -300,31 +301,11 @@ export const CostDetailsCardNewCheckout = ({
                   </label>
                 </div>
                 <div className="offer-additions">
-                  <div className="form-item checkbox">
-                    <input type="checkbox" id="addition1" />
-                    <label className="events-news" for="addition1">
-                      $400 off on Art of Living Part 2
-                    </label>
-                  </div>
-                  <div className="form-item checkbox">
-                    <input type="checkbox" id="addition2" />
-                    <label className="events-news" for="addition2">
-                      A $200 discount on additional silent retreats
-                    </label>
-                  </div>
-                  <div className="form-item checkbox">
-                    <input type="checkbox" id="addition3" />
-                    <label className="events-news" for="addition3">
-                      Includes in-person SKY meetups
-                    </label>
-                  </div>
-                  <div className="form-item checkbox">
-                    <input type="checkbox" id="addition4" />
-                    <label className="events-news" for="addition4">
-                      Exclusive discounts on other retreats & special events
-                      with Gurudev
-                    </label>
-                  </div>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: subscriptionDetails.description,
+                    }}
+                  ></div>
                 </div>
               </div>
             )}
@@ -341,7 +322,7 @@ export const CostDetailsCardNewCheckout = ({
               isSilentRetreatType && (
                 <div className="offer-action">
                   <button
-                    className="btn-outline"
+                    className="btn-submit"
                     onClick={openSubscriptionPaywallPage(
                       MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
                     )}
