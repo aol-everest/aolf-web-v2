@@ -349,7 +349,6 @@ const New = () => {
           </div>
         </div>
       </section>
-
       <LocationSearchModal
         handleModalToggle={handleModalToggle}
         showLocationModal={showLocationModal}
