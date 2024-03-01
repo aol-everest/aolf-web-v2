@@ -50,7 +50,9 @@ function googleTagManager(pluginConfig = {}) {
 
       /* eslint-enable */
       initializedDataLayerName = dataLayerName;
-      config.dataLayer = window[dataLayerName];
+      if (typeof window !== 'undefined') {
+        config.dataLayer = window[dataLayerName];
+      }
     },
     page: ({ payload, options, instance, config }) => {
       if (typeof config.dataLayer !== 'undefined') {
@@ -83,6 +85,9 @@ function googleTagManager(pluginConfig = {}) {
       }
     },
     loaded: () => {
+      if (typeof window === 'undefined') {
+        return false;
+      }
       const hasDataLayer =
         !!initializedDataLayerName &&
         !!(
