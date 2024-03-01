@@ -18,7 +18,7 @@ import {
   FaList,
 } from 'react-icons/fa6';
 import { FaInfoCircle } from 'react-icons/fa';
-import { ALERT_TYPES } from '@constants';
+import { ALERT_TYPES, COURSE_MODES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
 import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
@@ -106,13 +106,22 @@ const TicketCongratulations = () => {
     eventStartDate,
     eventStartDateTimeGMT = '',
     eventendDateTimeGMT = '',
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
+    contactName,
+    eventEndDate,
+    eventImageUrl,
+    mode,
+    isLocationEmpty,
     streetAddress1,
     streetAddress2,
     city,
-    contactName,
+    state,
+    zip,
     country,
-    eventEndDate,
-    eventImageUrl,
   } = workshop || {};
 
   if (isLoading) {
@@ -175,9 +184,12 @@ const TicketCongratulations = () => {
     description: title,
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
-    location: `${streetAddress1 || ''} ${streetAddress2 || ''} ${city || ''} ${
-      country || ''
-    }`,
+    location:
+      mode === COURSE_MODES.IN_PERSON.name
+        ? `${locationStreet || ''}, ${locationCity || ''}, ${
+            locationProvince || ''
+          } ${locationPostalCode || ''}, ${locationCountry || ''}`
+        : 'Online',
     startDatetime: startDatetime.format('YYYYMMDDTHHmmss'),
     title: title,
   };
@@ -607,6 +619,50 @@ const TicketCongratulations = () => {
                       <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
                       <span>Email: </span>
                       {email}
+                    </li>
+                    <li className="event-item">
+                      <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
+                      <span>Location: </span>
+                      {mode === COURSE_MODES.ONLINE.name
+                        ? mode
+                        : (mode === COURSE_MODES.IN_PERSON.name ||
+                            mode ===
+                              COURSE_MODES.DESTINATION_RETREATS.name) && (
+                            <>
+                              {!isLocationEmpty && (
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${
+                                    locationStreet || ''
+                                  }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {locationStreet && locationStreet}
+                                  {locationCity || ''}
+                                  {', '}
+                                  {locationProvince || ''}{' '}
+                                  {locationPostalCode || ''}
+                                </a>
+                              )}
+                              {isLocationEmpty && (
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${
+                                    streetAddress1 || ''
+                                  },${
+                                    streetAddress2 || ''
+                                  } ${city} ${state} ${zip} ${country}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {streetAddress1 && streetAddress1}
+                                  {streetAddress2 && streetAddress2}
+                                  {city || ''}
+                                  {', '}
+                                  {state || ''} {zip || ''}
+                                </a>
+                              )}
+                            </>
+                          )}
                     </li>
                   </ul>
                 </div>
