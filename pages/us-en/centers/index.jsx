@@ -12,6 +12,11 @@ import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import LinesEllipsis from 'react-lines-ellipsis';
 import Highlighter from 'react-highlight-words';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
+import { Loader } from '@googlemaps/js-api-loader';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
 
@@ -219,10 +224,50 @@ const StoryComp = ({ story }) => {
 const Centers = () => {
   const {
     loading,
-    latitude,
-    longitude,
+    // latitude,
+    // longitude,
     error: geoLocationError,
   } = useGeolocation();
+
+  const [address, setAddress] = useState('');
+  const parentClass = '';
+  const placeholder = address ? address : 'location';
+  const listClassName = '';
+
+  console.log('address----------->', address);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loader = new Loader({
+      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
+      version: 'weekly',
+      libraries: ['places'],
+    });
+    loader.load().then(() => {
+      // setIsLoading(false);
+    });
+  }, []);
+
+  const handleChange = (address) => {
+    setAddress(address);
+  };
+
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+
+  const handleSelect = (address) => {
+    setAddress(address);
+    console.log('address-handleSelect ---------------->', address);
+    geocodeByAddress(address)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => {
+        const { lat, lng } = latLng;
+        setLatitude(lat);
+        setLongitude(lng);
+        console.log('Success', lat + ' ' + lng);
+      })
+      .catch((error) => console.error('Error', error));
+  };
 
   //     set search query to empty string
   const [q, setQ] = useState('');
@@ -281,7 +326,10 @@ const Centers = () => {
   };
 
   const clearSearch = () => {
-    setQ('');
+    // setQ('');
+    setAddress('');
+    setLatitude('');
+    setLongitude('');
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
@@ -303,33 +351,82 @@ const Centers = () => {
         ></GoogleMapComponent>
         <div className="center-search-box" id="mobile-handler">
           <div className="mobile-handler"></div>
-          <div className="search-input-wrap">
-            <input
-              id="search-field"
-              type="text"
-              placeholder="Search..."
-              className="search-input"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-            />
-            {q !== '' && (
-              <button className="search-clear" onClick={clearSearch}>
-                <svg
-                  fill="#9698a6"
-                  height="16px"
-                  width="16px"
-                  version="1.1"
-                  id="Capa_1"
-                  viewBox="0 0 490 490"
-                >
-                  <polygon
-                    points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
+          <PlacesAutocomplete
+            value={address}
+            onChange={handleChange}
+            onSelect={handleSelect}
+            searchOptions={{
+              types: ['(regions)'],
+              componentRestrictions: { country: 'us' },
+            }}
+          >
+            {({
+              getInputProps,
+              suggestions,
+              getSuggestionItemProps,
+              loading,
+            }) => (
+              <div className="search-input-wrap">
+                <input
+                  id="search-field"
+                  value={address}
+                  className="search-input"
+                  {...getInputProps({
+                    placeholder,
+                  })}
+                />
+                {address !== '' && (
+                  <button className="search-clear" onClick={clearSearch}>
+                    <svg
+                      fill="#9698a6"
+                      height="16px"
+                      width="16px"
+                      version="1.1"
+                      id="Capa_1"
+                      viewBox="0 0 490 490"
+                    >
+                      <polygon
+                        points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
               489.292,457.678 277.331,245.004 489.292,32.337 "
-                  />
-                </svg>
-              </button>
+                      />
+                    </svg>
+                  </button>
+                )}
+
+                {suggestions.length > 0 && (
+                  <div style={{ zIndex: 9 }} className={listClassName}>
+                    {suggestions.map((suggestion) => {
+                      const className = suggestion.active
+                        ? 'suggestion-item--active smart-input--list-item'
+                        : 'suggestion-item smart-input--list-item';
+                      // inline style for demonstration purpose
+                      const style = suggestion.active
+                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                      return (
+                        <>
+                          <div
+                            {...getSuggestionItemProps(suggestion, {
+                              className,
+                              style,
+                            })}
+                          >
+                            <strong>
+                              {suggestion.formattedSuggestion.mainText}
+                            </strong>{' '}
+                            <small>
+                              {suggestion.formattedSuggestion.secondaryText}
+                            </small>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             )}
-          </div>
+          </PlacesAutocomplete>
+
           <div className="search-listing">
             {search(allCenters).map((center) => {
               return (
