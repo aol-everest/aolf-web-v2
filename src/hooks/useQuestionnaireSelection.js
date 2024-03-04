@@ -15,7 +15,6 @@ function useQuestionnaireSelection(value, questions, sequence) {
       !updatedOptions?.length
     ) {
       setUpdatedOptions(value?.totalSelectedOptions);
-      setSelectedHelpType(value);
       const selectedOption = value?.totalSelectedOptions.find(
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
@@ -26,7 +25,9 @@ function useQuestionnaireSelection(value, questions, sequence) {
   }, [currentStepData]);
 
   const handleOptionSelect = (answerId, helpResonse) => {
-    setSelectedHelpType(helpResonse);
+    if (sequence === 1) {
+      setSelectedHelpType(helpResonse);
+    }
     let selectedIdsLocal = [answerId];
     if (sequence === 3) {
       selectedIdsLocal = [...selectedIds, answerId];

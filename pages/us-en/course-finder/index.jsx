@@ -71,11 +71,16 @@ const Step1 = () => {
     }
   };
 
-  const handlePreviousStep = () => {
+  const handlePreviousStep = async () => {
     if (currentStep === 1) {
-      router.back();
+      await setValue({});
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course-finder/welcome`,
+      });
     } else {
-      setCurrentStep(currentStep - 1);
+      if (!captureUserDetails) {
+        setCurrentStep(currentStep - 1);
+      }
       if (captureUserDetails) {
         setCaptureUserDetails(false);
       }
@@ -257,7 +262,7 @@ const Step1 = () => {
     <>
       {(isLoading || loading) && <div className="cover-spin"></div>}
 
-      <main className="course-finder-questionnaire-question">
+      <main className="course-finder-questionnaire-question checkout-aol">
         <section className="questionnaire-question">
           <div className="container">
             <div className="back-btn-wrap">
