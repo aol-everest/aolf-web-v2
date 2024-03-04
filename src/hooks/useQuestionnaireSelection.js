@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 function useQuestionnaireSelection(value, questions, sequence) {
   const currentStepData = questions?.find((item) => item.sequence === sequence);
   const [updatedOptions, setUpdatedOptions] = useState([]);
-  const [selectedOptionName, setSelectedOptionName] = useState('');
+  const [selectedHelpType, setSelectedHelpType] = useState({});
   const [selectedIds, setSelectedIds] = useState([]);
 
   useEffect(() => {
@@ -15,21 +15,21 @@ function useQuestionnaireSelection(value, questions, sequence) {
       !updatedOptions?.length
     ) {
       setUpdatedOptions(value?.totalSelectedOptions);
-      setSelectedOptionName(value.type);
       const selectedOption = value?.totalSelectedOptions.find(
         (item) => item?.questionSfid === currentStepData?.questionSfid,
       );
-      console.log('selectedOption', selectedOption);
       if (selectedOption?.answer) {
         setSelectedIds([...selectedOption.answer]);
       }
     }
   }, [currentStepData]);
 
-  const handleOptionSelect = (answerId, answerName) => {
-    setSelectedOptionName(answerName);
+  const handleOptionSelect = (answerId, helpResonse) => {
+    if (sequence === 1) {
+      setSelectedHelpType(helpResonse);
+    }
     let selectedIdsLocal = [answerId];
-    if (sequence === 4) {
+    if (sequence === 3) {
       selectedIdsLocal = [...selectedIds, answerId];
       selectedIdsLocal = selectedIdsLocal.slice(-2);
     }
@@ -44,7 +44,7 @@ function useQuestionnaireSelection(value, questions, sequence) {
 
   return {
     updatedOptions,
-    selectedOptionName,
+    selectedHelpType,
     selectedIds,
     setSelectedIds,
     handleOptionSelect,

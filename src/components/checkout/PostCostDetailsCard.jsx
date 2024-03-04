@@ -292,7 +292,7 @@ export const PostCostDetailsCard = ({
                           ) {
                             const isChecked = product.isAddOnSelectionRequired
                               ? true
-                              : formikProps.values[product.productName];
+                              : formikProps.values['CME'];
 
                             return (
                               <li key={product.productSfid}>
@@ -305,7 +305,7 @@ export const PostCostDetailsCard = ({
                                       checked={isChecked}
                                       onChange={() =>
                                         formikProps.setFieldValue(
-                                          product.productName,
+                                          'CME',
                                           !isChecked,
                                         )
                                       }

@@ -13,7 +13,7 @@ export default function CourseFinderResult() {
   useEffect(() => {
     if (questions.length === 0) {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course-finder`,
+        pathname: `/us-en/course-finder/welcome`,
       });
     }
   }, []);
@@ -21,7 +21,7 @@ export default function CourseFinderResult() {
   const handleStartOver = () => {
     setValue({});
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course-finder/`,
+      pathname: `/us-en/course-finder/welcome`,
     });
   };
 
