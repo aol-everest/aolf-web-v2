@@ -390,9 +390,6 @@ export const CostDetailsCardNewCheckout = ({
           <>
             <div className="form-item">
               <label>Expense Type {isOfflineExpense && '*'}</label>
-              <h6 className="room__board__sub-heading">
-                *Expense includes meals
-              </h6>
 
               <select
                 placeholder="Select Expense Type"
@@ -428,6 +425,9 @@ export const CostDetailsCardNewCheckout = ({
                   },
                 )}
               </select>
+              <h6 className="room__board__sub-heading">
+                *Expense includes meals
+              </h6>
             </div>
           </>
         )}
