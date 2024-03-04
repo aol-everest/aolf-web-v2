@@ -620,7 +620,7 @@ export const Header = () => {
             </Navbar>
           )}
 
-          <div className="nav-item desktopView">
+          {/* <div className="nav-item desktopView">
             <Link prefetch={false} href="/us-en/lp/donations" legacyBehavior>
               <a className="nav-link donate-link">
                 <img
@@ -633,7 +633,7 @@ export const Header = () => {
                 Donation
               </a>
             </Link>
-          </div>
+          </div> */}
 
           <div className="UserprofileView">
             {!authenticated && (
