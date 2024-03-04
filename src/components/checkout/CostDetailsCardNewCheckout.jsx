@@ -303,7 +303,7 @@ export const CostDetailsCardNewCheckout = ({
                 <div className="offer-additions">
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: subscriptionDetails.description,
+                      __html: subscriptionDetails?.description,
                     }}
                   ></div>
                 </div>
