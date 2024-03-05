@@ -8,7 +8,11 @@ import React, { useEffect } from 'react';
 export default function CourseFinderResult() {
   const router = useRouter();
   const [value, setValue] = useSessionStorage('center-finder', {});
-  const { recommendationResponse = {}, questions = [], type = '' } = value;
+  const {
+    recommendationResponse = {},
+    questions = [],
+    scientificStudy = {},
+  } = value;
 
   useEffect(() => {
     if (questions.length === 0) {
@@ -58,7 +62,7 @@ export default function CourseFinderResult() {
                 <div className="first-info">FREE INTRO SERIES</div>
                 <div className="box-title">
                   Get started on your journey with a few quick tips & tricks to{' '}
-                  {type}
+                  {scientificStudy?.optionText || ''}
                 </div>
                 <div className="picture-box">
                   <Link
