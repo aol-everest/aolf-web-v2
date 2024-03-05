@@ -18,9 +18,8 @@ const Step1 = () => {
   const { showAlert } = useGlobalAlertContext();
   const [value, setValue] = useSessionStorage('center-finder', {});
   const [currentStep, setCurrentStep] = useState(1);
-  const [showReport, setShowReport] = useState(false);
-  const [captureUserDetails, setCaptureUserDetails] = useState(false);
-  const { totalSelectedOptions = [] } = value;
+  const [showScientificStudies, setShowScientificStudies] = useState(false);
+  const { totalSelectedOptions = [], scientificStudy } = value;
 
   const { data: questions, isLoading } = useQuery(
     'getOnBoardingQuestions',
@@ -36,54 +35,31 @@ const Step1 = () => {
     },
   );
 
-  const {
-    updatedOptions,
-    selectedHelpType,
-    selectedIds,
-    handleOptionSelect,
-    currentStepData,
-  } = useQuestionnaireSelection(value, questions, currentStep);
+  const { selectedIds, handleOptionSelect, currentStepData } =
+    useQuestionnaireSelection(questions, currentStep);
+
+  const isUserDetailsForm = currentStepData?.questionType === 'Text';
 
   const handleNextStep = () => {
-    if (currentStep + 1 === questions.length) {
-      setCaptureUserDetails(true);
-    } else if (currentStep === 1 && !showReport) {
-      setShowReport(true);
-      if (!showReport) {
-        setValue({
-          ...value,
-          totalSelectedOptions: updatedOptions || [],
-          questions,
-          selectedHelpType,
-        });
-      }
+    if (currentStep === 1 && !showScientificStudies) {
+      setShowScientificStudies(true);
     } else {
-      if (showReport) {
-        setShowReport(false);
+      if (showScientificStudies) {
+        setShowScientificStudies(false);
       }
-      setValue({
-        ...value,
-        totalSelectedOptions: updatedOptions || [],
-        questions,
-        selectedHelpType,
-      });
       setCurrentStep(currentStep + 1);
     }
   };
 
   const handlePreviousStep = async () => {
-    if (currentStep === 1) {
-      await setValue({});
+    if (currentStep === 1 && !showScientificStudies) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course-finder/welcome`,
       });
+    } else if (currentStep === 1 && showScientificStudies) {
+      setShowScientificStudies(false);
     } else {
-      if (!captureUserDetails) {
-        setCurrentStep(currentStep - 1);
-      }
-      if (captureUserDetails) {
-        setCaptureUserDetails(false);
-      }
+      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -258,6 +234,10 @@ const Step1 = () => {
     );
   };
 
+  const selectedItem = totalSelectedOptions.find(
+    (item) => item?.questionSfid === currentStepData?.questionSfid,
+  );
+
   return (
     <>
       {(isLoading || loading) && <div className="cover-spin"></div>}
@@ -294,7 +274,7 @@ const Step1 = () => {
                 Back
               </button>
             </div>
-            {captureUserDetails ? (
+            {isUserDetailsForm ? (
               userDetails()
             ) : (
               <div className="question-box">
@@ -310,7 +290,7 @@ const Step1 = () => {
                     );
                   })}
                 </div>
-                {showReport ? (
+                {showScientificStudies ? (
                   <>
                     <h1 className="question-title">
                       Scientific Studies are reporting
@@ -319,25 +299,25 @@ const Step1 = () => {
                       <div className="option-item">
                         <input
                           type="checkbox"
-                          id={selectedHelpType.optionId}
-                          name={selectedHelpType.optionId}
+                          id={scientificStudy?.optionId}
+                          name={scientificStudy?.optionId}
                           defaultChecked={true}
                           disabled
                         />
-                        <label htmlFor={selectedHelpType.optionId}>
-                          {selectedHelpType?.iconURL && (
+                        <label htmlFor={scientificStudy?.optionId}>
+                          {scientificStudy?.iconURL && (
                             <img
-                              src={selectedHelpType?.iconURL}
-                              alt={selectedHelpType.optionText}
+                              src={scientificStudy?.iconURL}
+                              alt={scientificStudy?.optionText}
                               width={24}
                             />
                           )}
-                          {selectedHelpType.optionText}
+                          {scientificStudy?.optionText}
                         </label>
                       </div>
                       <div className="questions-info">
                         <div className="info-text">
-                          {selectedHelpType.description}
+                          {scientificStudy?.description}
                         </div>
                       </div>
                     </div>
@@ -358,11 +338,6 @@ const Step1 = () => {
 
                     <div className="question-options">
                       {currentStepData?.options?.map((answer) => {
-                        const selectedItem = totalSelectedOptions.find(
-                          (item) =>
-                            item.questionSfid === currentStepData.questionSfid,
-                        );
-
                         return (
                           <div className="option-item" key={answer.optionId}>
                             <input
@@ -399,7 +374,7 @@ const Step1 = () => {
                   <button
                     className="btn-register"
                     onClick={handleNextStep}
-                    disabled={!selectedIds.length}
+                    disabled={!selectedItem?.questionSfid}
                   >
                     Continue
                   </button>
