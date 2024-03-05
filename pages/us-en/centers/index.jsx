@@ -234,9 +234,6 @@ const Centers = () => {
   const placeholder = address ? address : 'location';
   const listClassName = '';
 
-  console.log('address----------->', address);
-  // const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const loader = new Loader({
       apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
@@ -251,20 +248,19 @@ const Centers = () => {
   const handleChange = (address) => {
     setAddress(address);
   };
-
+  const [isItemSelected, setISItemSelected] = useState(false);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
   const handleSelect = (address) => {
     setAddress(address);
-    console.log('address-handleSelect ---------------->', address);
     geocodeByAddress(address)
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
         const { lat, lng } = latLng;
         setLatitude(lat);
         setLongitude(lng);
-        console.log('Success', lat + ' ' + lng);
+        setISItemSelected(true);
       })
       .catch((error) => console.error('Error', error));
   };
@@ -304,7 +300,7 @@ const Centers = () => {
   );
 
   const search = (items) => {
-    return items.filter((item) => {
+    return items?.filter((item) => {
       if (item.centerMode === 'InPerson') {
         return SEARCH_PARAM.some((newItem) => {
           return (
@@ -333,7 +329,8 @@ const Centers = () => {
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading || loading) return <PageLoading />;
+  if ((!isItemSelected && isLoading) || loading) return <PageLoading />;
+
   return (
     <main className="local-centers">
       <section className="title-header">
@@ -360,12 +357,7 @@ const Centers = () => {
               componentRestrictions: { country: 'us' },
             }}
           >
-            {({
-              getInputProps,
-              suggestions,
-              getSuggestionItemProps,
-              loading,
-            }) => (
+            {({ getInputProps, suggestions, getSuggestionItemProps }) => (
               <div className="search-input-wrap">
                 <input
                   id="search-field"
@@ -428,7 +420,7 @@ const Centers = () => {
           </PlacesAutocomplete>
 
           <div className="search-listing">
-            {search(allCenters).map((center) => {
+            {search(allCenters)?.map((center) => {
               return (
                 <CenterListItem key={center.sfid} center={center} search={q} />
               );
