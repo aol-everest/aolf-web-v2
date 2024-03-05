@@ -1,33 +1,14 @@
+import { useSessionStorage } from '@uidotdev/usehooks';
 import { findExistingQuestionnaire } from '@utils';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-function useQuestionnaireSelection(value, questions, sequence) {
+function useQuestionnaireSelection(questions, sequence) {
+  const [value, setValue] = useSessionStorage('center-finder');
   const currentStepData = questions?.find((item) => item.sequence === sequence);
-  const [updatedOptions, setUpdatedOptions] = useState([]);
-  const [selectedHelpType, setSelectedHelpType] = useState({});
   const [selectedIds, setSelectedIds] = useState([]);
 
-  useEffect(() => {
-    if (
-      value?.totalSelectedOptions &&
-      !selectedIds?.length &&
-      currentStepData &&
-      !updatedOptions?.length
-    ) {
-      setUpdatedOptions(value?.totalSelectedOptions);
-      const selectedOption = value?.totalSelectedOptions.find(
-        (item) => item?.questionSfid === currentStepData?.questionSfid,
-      );
-      if (selectedOption?.answer) {
-        setSelectedIds([...selectedOption.answer]);
-      }
-    }
-  }, [currentStepData]);
-
   const handleOptionSelect = (answerId, helpResonse) => {
-    if (sequence === 1) {
-      setSelectedHelpType(helpResonse);
-    }
+    console.log('value', value);
     let selectedIdsLocal = [answerId];
     if (sequence === 3) {
       selectedIdsLocal = [...selectedIds, answerId];
@@ -39,14 +20,16 @@ function useQuestionnaireSelection(value, questions, sequence) {
       currentStepData,
       selectedIdsLocal,
     );
-    setUpdatedOptions(updatedOptions);
+    setValue({
+      ...value,
+      totalSelectedOptions: updatedOptions || [],
+      questions,
+      scientificStudy: sequence === 1 ? helpResonse : value.scientificStudy,
+    });
   };
 
   return {
-    updatedOptions,
-    selectedHelpType,
     selectedIds,
-    setSelectedIds,
     handleOptionSelect,
     currentStepData,
   };
