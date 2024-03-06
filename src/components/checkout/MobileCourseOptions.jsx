@@ -813,7 +813,7 @@ export const MobileCourseOptions = ({
                 ) {
                   const isChecked = product.isAddOnSelectionRequired
                     ? true
-                    : formikProps.values[product.productName];
+                    : formikProps.values['CME'];
 
                   return (
                     <li key={product.productSfid}>
@@ -825,12 +825,9 @@ export const MobileCourseOptions = ({
                             placeholder=" "
                             checked={isChecked}
                             onChange={() =>
-                              formikProps.setFieldValue(
-                                product.productName,
-                                !isChecked,
-                              )
+                              formikProps.setFieldValue('CME', !isChecked)
                             }
-                            value={product.productName}
+                            value="CME"
                             name={product.productName}
                             id={product.productSfid}
                             disabled={product.isAddOnSelectionRequired}
@@ -852,7 +849,7 @@ export const MobileCourseOptions = ({
                   requested additional information.
                 </p>
 
-                {formikProps.values[cmeAddOn.productName] && (
+                {formikProps.values['CME'] && (
                   <CMEInputCmp formikProps={formikProps} />
                 )}
               </>
