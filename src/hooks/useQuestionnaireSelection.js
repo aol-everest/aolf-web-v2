@@ -1,35 +1,16 @@
+import { useSessionStorage } from '@uidotdev/usehooks';
 import { findExistingQuestionnaire } from '@utils';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-function useQuestionnaireSelection(value, questions, sequence) {
+function useQuestionnaireSelection(questions, sequence) {
+  const [value, setValue] = useSessionStorage('center-finder');
   const currentStepData = questions?.find((item) => item.sequence === sequence);
-  const [updatedOptions, setUpdatedOptions] = useState([]);
-  const [selectedOptionName, setSelectedOptionName] = useState('');
   const [selectedIds, setSelectedIds] = useState([]);
 
-  useEffect(() => {
-    if (
-      value?.totalSelectedOptions &&
-      !selectedIds?.length &&
-      currentStepData &&
-      !updatedOptions?.length
-    ) {
-      setUpdatedOptions(value?.totalSelectedOptions);
-      setSelectedOptionName(value.type);
-      const selectedOption = value?.totalSelectedOptions.find(
-        (item) => item?.questionSfid === currentStepData?.questionSfid,
-      );
-      console.log('selectedOption', selectedOption);
-      if (selectedOption?.answer) {
-        setSelectedIds([...selectedOption.answer]);
-      }
-    }
-  }, [currentStepData]);
-
-  const handleOptionSelect = (answerId, answerName) => {
-    setSelectedOptionName(answerName);
+  const handleOptionSelect = (answerId, helpResonse) => {
+    console.log('value', value);
     let selectedIdsLocal = [answerId];
-    if (sequence === 4) {
+    if (sequence === 3) {
       selectedIdsLocal = [...selectedIds, answerId];
       selectedIdsLocal = selectedIdsLocal.slice(-2);
     }
@@ -39,14 +20,16 @@ function useQuestionnaireSelection(value, questions, sequence) {
       currentStepData,
       selectedIdsLocal,
     );
-    setUpdatedOptions(updatedOptions);
+    setValue({
+      ...value,
+      totalSelectedOptions: updatedOptions || [],
+      questions,
+      scientificStudy: sequence === 1 ? helpResonse : value.scientificStudy,
+    });
   };
 
   return {
-    updatedOptions,
-    selectedOptionName,
     selectedIds,
-    setSelectedIds,
     handleOptionSelect,
     currentStepData,
   };

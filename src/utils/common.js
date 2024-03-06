@@ -238,3 +238,9 @@ export const convertToUpperCaseAndReplaceSpacesForURL = (inputText) => {
 
   return encodedResult;
 };
+
+export function trimAndSplitName(name) {
+  let [firstName, ...lastNameParts] = name.trim().split(/\s+/);
+  let lastName = lastNameParts.join(' ');
+  return [firstName, lastName];
+}

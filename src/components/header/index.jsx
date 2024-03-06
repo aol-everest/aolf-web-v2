@@ -593,6 +593,17 @@ export const Header = () => {
                 </Nav.Link>
               </Nav.Item>
             </Nav>
+            <div class="mobile-menu-buttons">
+              {!authenticated && (
+                <button
+                  className="btn btn-outline header__button login-btn"
+                  type="button"
+                  onClick={loginAction}
+                >
+                  Log In
+                </button>
+              )}
+            </div>
           </Navbar.Collapse>
         </Navbar>
         <div className="user-profile-link">
@@ -619,21 +630,6 @@ export const Header = () => {
               </Nav>
             </Navbar>
           )}
-
-          <div className="nav-item desktopView">
-            <Link prefetch={false} href="/us-en/lp/donations" legacyBehavior>
-              <a className="nav-link donate-link">
-                <img
-                  src="/img/donate.svg"
-                  alt="Donate"
-                  className="donate__image"
-                  width="24"
-                  height="24"
-                />{' '}
-                Donation
-              </a>
-            </Link>
-          </div>
 
           <div className="UserprofileView">
             {!authenticated && (

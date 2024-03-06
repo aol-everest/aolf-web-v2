@@ -1,86 +1,391 @@
+/* eslint-disable react/no-unescaped-entities */
 import { pushRouteWithUTMQuery } from '@service';
+import { useSessionStorage } from '@uidotdev/usehooks';
+import { api, trimAndSplitName } from '@utils';
+import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
+import { useQuery } from 'react-query';
+import * as Yup from 'yup';
+import useQuestionnaireSelection from 'src/hooks/useQuestionnaireSelection';
+import { useGlobalAlertContext } from '@contexts';
+import { ALERT_TYPES } from '@constants';
+import { PhoneInputNewCheckout } from '@components/checkout';
 
-const Home = () => {
+const Step1 = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { showAlert } = useGlobalAlertContext();
+  const [value, setValue] = useSessionStorage('center-finder', {});
+  const [currentStep, setCurrentStep] = useState(1);
+  const [showScientificStudies, setShowScientificStudies] = useState(false);
+  const { totalSelectedOptions = [], scientificStudy } = value;
 
-  const NavigateToWelcome = () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course-finder/welcome`,
-    });
+  const { data: questions, isLoading } = useQuery(
+    'getOnBoardingQuestions',
+    async () => {
+      const response = await api.get({
+        path: 'getOnBoardingQuestions',
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      enabled: true,
+    },
+  );
+
+  const { selectedIds, handleOptionSelect, currentStepData } =
+    useQuestionnaireSelection(questions, currentStep);
+
+  const isUserDetailsForm = currentStepData?.questionType === 'Text';
+
+  const handleNextStep = () => {
+    if (currentStep === 1 && !showScientificStudies) {
+      setShowScientificStudies(true);
+    } else {
+      if (showScientificStudies) {
+        setShowScientificStudies(false);
+      }
+      setCurrentStep(currentStep + 1);
+    }
   };
 
-  return (
-    <main className="course-finder-questionnaire">
-      <section className="banner-section">
-        <div className="container">
-          <div className="banner-title">
-            Dramatically reduce
-            <br />
-            anxiety, stress, &<br />
-            depression
-          </div>
-          <div className="banner-desc">
-            Increase relaxation brain waves: Feel calm & clear
-          </div>
-          <div className="banner-register">
-            <button className="btn-register" onClick={NavigateToWelcome}>
-              Register Now
-            </button>
-          </div>
-          <div className="banner-key-highlights">
-            <div className="key-item">
-              <div className="key-item--title">42</div>
-              <div className="key-item--desc">Years of transforming lives</div>
-            </div>
-            <div className="key-item">
-              <div className="key-item--title">180</div>
-              <div className="key-item--desc">
-                Countries where our programs made a difference
-              </div>
-            </div>
-            <div className="key-item">
-              <div className="key-item--title">10,000+</div>
-              <div className="key-item--desc">
-                Centers
-                <br />
-                worldwide
-              </div>
-            </div>
-            <div className="key-item">
-              <div className="key-item--title">500M+</div>
-              <div className="key-item--desc">
-                Lives touched through our courses & events
-              </div>
-            </div>
-          </div>
-          <div className="help-action">
-            <ul>
-              <li>
-                <a href="javascript:void()" className="help-link">
-                  Help me choose
-                </a>
-                <div className="find-course">
-                  <div className="title">Find the right course for you</div>
-                  <div className="desc">Answer a few quick questions...</div>
-                  <div className="actions">
-                    <button
-                      className="btn btn-primary"
-                      onClick={NavigateToWelcome}
-                    >
-                      Get started
-                    </button>
-                    <button className="btn btn-secondary">Not now</button>
+  const handlePreviousStep = async () => {
+    if (currentStep === 1 && !showScientificStudies) {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course-finder/welcome`,
+      });
+    } else if (currentStep === 1 && showScientificStudies) {
+      setShowScientificStudies(false);
+    } else {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const submitUserDetails = async (values) => {
+    setLoading(true);
+
+    let [firstName = '', lastName = ''] = trimAndSplitName(values?.name || '');
+
+    const payload = {
+      user: {
+        firstName: firstName,
+        lastName: lastName,
+        email: values?.email,
+        contactMeFurther: values?.guidance,
+        contactPhone: values?.contactPhone,
+      },
+      answers: [...totalSelectedOptions],
+    };
+    try {
+      const {
+        status,
+        error: errorMessage,
+        isError,
+        data,
+      } = await api.post({
+        path: 'getRecommendationsBasedOnQuestions',
+        body: payload,
+      });
+      setLoading(false);
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      if (data || status === 200) {
+        await setValue({
+          ...value,
+          recommendationResponse: data,
+        });
+        pushRouteWithUTMQuery(router, {
+          pathname: `/us-en/course-finder/result`,
+        });
+      }
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+    }
+  };
+
+  const userDetails = () => {
+    return (
+      <Formik
+        enableReinitialize
+        initialValues={{
+          name: '',
+          email: '',
+          contactPhone: '',
+          guidance: false,
+        }}
+        validationSchema={Yup.object().shape({
+          name: Yup.string().required('Name is required!'),
+          email: Yup.string()
+            .email('Email is invalid!')
+            .required('Email is required!'),
+          contactPhone: Yup.string(),
+        })}
+        onSubmit={async (values, { setSubmitting }) => {
+          await submitUserDetails(values);
+        }}
+      >
+        {(props) => {
+          const {
+            values,
+            touched,
+            errors,
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            setFieldValue,
+          } = props;
+
+          return (
+            <form
+              name="workshopEnroll"
+              onSubmit={handleSubmit}
+              className="workshopEnroll"
+            >
+              <div className="question-box">
+                <h1 className="question-title mt-0">
+                  Where can we send your personalized recommendation?
+                </h1>
+                <div className="recommendation-form">
+                  <div className="form-item">
+                    <label htmlFor="name">Name</label>
+                    <input
+                      type="text"
+                      className={
+                        errors.name && touched.name
+                          ? 'form-control error'
+                          : 'form-control'
+                      }
+                      id="name"
+                      placeholder=" "
+                      value={values.name}
+                      name="name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </div>
+
+                  <div className="form-item">
+                    <label htmlFor="email">Email address</label>
+                    <input
+                      type="email"
+                      className={
+                        errors.email && touched.email
+                          ? 'form-control error'
+                          : 'form-control'
+                      }
+                      id="email"
+                      placeholder=" "
+                      value={values.email}
+                      name="email"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </div>
+
+                  <div className="form-item">
+                    <PhoneInputNewCheckout
+                      className="second form-item required"
+                      containerClass={`scheduling-modal__content-wrapper-form-list-row`}
+                      formikProps={props}
+                      formikKey="contactPhone"
+                      name="contactPhone"
+                      label=" Mobile number (optional)"
+                      placeholder="Mobile number"
+                      type="tel"
+                    ></PhoneInputNewCheckout>
+                  </div>
+
+                  <div className="form-item checkbox">
+                    <input
+                      type="checkbox"
+                      id="guidance"
+                      name="guidance"
+                      onChange={(ev) => {
+                        setFieldValue('guidance', ev.target.checked);
+                      }}
+                      onBlur={handleBlur}
+                    />
+                    <label htmlFor="guidance">
+                      I'd like a well-being expert to reach out to me for
+                      further guidance.
+                    </label>
                   </div>
                 </div>
-              </li>
-            </ul>
+
+                <div className="question-action">
+                  <button type="submit" className="btn-register">
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </form>
+          );
+        }}
+      </Formik>
+    );
+  };
+
+  const selectedItem = totalSelectedOptions.find(
+    (item) => item?.questionSfid === currentStepData?.questionSfid,
+  );
+
+  return (
+    <>
+      {(isLoading || loading) && <div className="cover-spin"></div>}
+
+      <main className="course-finder-questionnaire-question checkout-aol">
+        <section className="questionnaire-question">
+          <div className="container">
+            <div className="back-btn-wrap">
+              <button className="back-btn" onClick={handlePreviousStep}>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9.57 5.93018L3.5 12.0002L9.57 18.0702"
+                    stroke="#31364E"
+                    strokeWidth="1.5"
+                    strokeMiterlimit="10"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M20.4999 12H3.66992"
+                    stroke="#31364E"
+                    strokeWidth="1.5"
+                    strokeMiterlimit="10"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+            {isUserDetailsForm ? (
+              userDetails()
+            ) : (
+              <div className="question-box">
+                <div className="question-step-highlighter-wrap">
+                  {questions?.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`question-step-highlighter ${
+                          currentStep >= item.sequence ? 'active' : ''
+                        }`}
+                      ></div>
+                    );
+                  })}
+                </div>
+                {showScientificStudies ? (
+                  <>
+                    <h1 className="question-title">
+                      Scientific Studies are reporting
+                    </h1>
+                    <div className="question-options">
+                      <div className="option-item">
+                        <input
+                          type="checkbox"
+                          id={scientificStudy?.optionId}
+                          name={scientificStudy?.optionId}
+                          defaultChecked={true}
+                          disabled
+                        />
+                        <label htmlFor={scientificStudy?.optionId}>
+                          {scientificStudy?.iconURL && (
+                            <img
+                              src={scientificStudy?.iconURL}
+                              alt={scientificStudy?.optionText}
+                              width={24}
+                            />
+                          )}
+                          {scientificStudy?.optionText}
+                        </label>
+                      </div>
+                      <div className="questions-info">
+                        <div className="info-text">
+                          {scientificStudy?.description}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h1
+                      className="question-title"
+                      dangerouslySetInnerHTML={{
+                        __html: currentStepData?.question,
+                      }}
+                    ></h1>
+                    {currentStep === 3 && (
+                      <div className="question-description">
+                        * You can select up to 2 options
+                      </div>
+                    )}
+
+                    <div className="question-options">
+                      {currentStepData?.options?.map((answer) => {
+                        return (
+                          <div className="option-item" key={answer.optionId}>
+                            <input
+                              type="checkbox"
+                              id={answer.optionId}
+                              name={answer.optionId}
+                              checked={
+                                selectedItem?.answer.includes(
+                                  answer.optionId,
+                                ) || selectedIds.includes(answer.optionId)
+                              }
+                              onChange={(ev) =>
+                                handleOptionSelect(answer.optionId, answer)
+                              }
+                            />
+                            <label htmlFor={answer.optionId}>
+                              {answer?.iconURL && (
+                                <img
+                                  src={answer?.iconURL}
+                                  alt={answer.optionText}
+                                  width={24}
+                                />
+                              )}
+                              {answer.optionText}
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+
+                <div className="question-action">
+                  <button
+                    className="btn-register"
+                    onClick={handleNextStep}
+                    disabled={!selectedItem?.questionSfid}
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </>
   );
 };
 
-export default Home;
+export default Step1;
