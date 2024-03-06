@@ -2,8 +2,7 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { PageLoading } from '@components';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { useEffectOnce } from 'react-use';
+import { useQuery } from 'react-query';
 import ErrorPage from 'next/error';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
@@ -222,17 +221,14 @@ const StoryComp = ({ story }) => {
 };
 
 const Centers = () => {
-  const {
-    loading,
-    // latitude,
-    // longitude,
-    error: geoLocationError,
-  } = useGeolocation();
+  const { loading } = useGeolocation();
 
-  const [address, setAddress] = useState('');
-  const parentClass = '';
-  const placeholder = address ? address : 'location';
-  const listClassName = '';
+  const [location, setLocation] = useState({
+    address: '',
+    latitude: null,
+    longitude: null,
+  });
+  const placeholder = location.address || 'location';
 
   useEffect(() => {
     const loader = new Loader({
@@ -240,39 +236,41 @@ const Centers = () => {
       version: 'weekly',
       libraries: ['places'],
     });
-    loader.load().then(() => {
-      // setIsLoading(false);
-    });
+    loader.load().then(() => {});
   }, []);
 
   const handleChange = (address) => {
-    setAddress(address);
+    setLocation((prevLocation) => ({
+      ...prevLocation,
+      address: address,
+    }));
   };
-  const [isItemSelected, setISItemSelected] = useState(false);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+
+  const [isItemSelected, setIsItemSelected] = useState(false);
 
   const handleSelect = (address) => {
-    setAddress(address);
     geocodeByAddress(address)
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
         const { lat, lng } = latLng;
-        setLatitude(lat);
-        setLongitude(lng);
-        setISItemSelected(true);
+        setLocation((prevLocation) => ({
+          ...prevLocation,
+          address: address,
+          latitude: lat,
+          longitude: lng,
+        }));
+        setIsItemSelected(true);
       })
       .catch((error) => console.error('Error', error));
   };
 
-  //     set search query to empty string
-  const [q, setQ] = useState('');
-  //     set search parameters
-  //     we only what to search centers by centerName and streetAddress1
-  //     this list can be longer if you want
-
-  const finalLatitude = latitude ? latitude : 43.4142989;
-  const finalLongitude = longitude ? longitude : -124.2301242;
+  const clearSearch = () => {
+    setLocation({
+      address: '',
+      latitude: null,
+      longitude: null,
+    });
+  };
 
   const {
     data: allCenters,
@@ -280,13 +278,13 @@ const Centers = () => {
     isError,
     error,
   } = useQuery(
-    ['allCenters', latitude, longitude],
+    ['allCenters', location.latitude, location.longitude],
     async () => {
       const response = await api.get({
         path: 'getAllCenters',
         param: {
-          lat: finalLatitude,
-          lng: finalLongitude,
+          lat: location.latitude || 43.4142989,
+          lng: location.longitude || -124.2301242,
         },
       });
       const data = (response.data || []).filter((center) => {
@@ -303,29 +301,17 @@ const Centers = () => {
     return items?.filter((item) => {
       if (item.centerMode === 'InPerson') {
         return SEARCH_PARAM.some((newItem) => {
-          return (
-            item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) >
-            -1
-          );
+          return item[newItem]?.toString().toLowerCase() > -1;
         });
       }
       return SEARCH_PARAM_WITHOUT_ADDRESS.some((newItem) => {
-        return (
-          item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1
-        );
+        return item[newItem]?.toString().toLowerCase() > -1;
       });
     });
   };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 100, left: 0, behavior: 'smooth' });
-  };
-
-  const clearSearch = () => {
-    // setQ('');
-    setAddress('');
-    setLatitude('');
-    setLongitude('');
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
@@ -349,7 +335,7 @@ const Centers = () => {
         <div className="center-search-box" id="mobile-handler">
           <div className="mobile-handler"></div>
           <PlacesAutocomplete
-            value={address}
+            value={location.address}
             onChange={handleChange}
             onSelect={handleSelect}
             searchOptions={{
@@ -361,13 +347,13 @@ const Centers = () => {
               <div className="search-input-wrap">
                 <input
                   id="search-field"
-                  value={address}
+                  value={location.address}
                   className="search-input"
                   {...getInputProps({
                     placeholder,
                   })}
                 />
-                {address !== '' && (
+                {location.address && (
                   <button className="search-clear" onClick={clearSearch}>
                     <svg
                       fill="#9698a6"
@@ -385,8 +371,8 @@ const Centers = () => {
                   </button>
                 )}
 
-                {suggestions.length > 0 && (
-                  <div style={{ zIndex: 9 }} className={listClassName}>
+                {!!suggestions.length && (
+                  <div style={{ zIndex: 9 }}>
                     {suggestions.map((suggestion) => {
                       const className = suggestion.active
                         ? 'suggestion-item--active smart-input--list-item'
@@ -421,9 +407,7 @@ const Centers = () => {
 
           <div className="search-listing">
             {search(allCenters)?.map((center) => {
-              return (
-                <CenterListItem key={center.sfid} center={center} search={q} />
-              );
+              return <CenterListItem key={center.sfid} center={center} />;
             })}
           </div>
         </div>
