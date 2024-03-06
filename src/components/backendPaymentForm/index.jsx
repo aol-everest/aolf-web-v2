@@ -626,13 +626,6 @@ export const BackendPaymentForm = ({
     updateCourseAddOnFee(values);
   };
 
-  const handleCmeAddOnSelection = (formikProps, productName, value) => {
-    formikProps.setFieldValue(productName, value);
-    const { values } = formikProps;
-    values[productName] = value;
-    updateCourseAddOnFee(values);
-  };
-
   const handleComboDetailChange = (
     formikProps,
     comboDetailProductSfid,
