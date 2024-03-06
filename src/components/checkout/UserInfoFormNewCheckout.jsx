@@ -1,12 +1,15 @@
 import { Fragment } from 'react';
 import {
+  Dropdown,
   PhoneInputNewCheckout,
   StyledInputNewCheckout,
 } from '@components/checkout';
+import { US_STATES } from '@constants';
+import { DropdownNewCheckout } from './DropdownNewCheckout';
 
 export const UserInfoFormNewCheckout = ({
   formikProps,
-  isHBCheckout = false,
+  showAdressFields = false,
   isLoggedUser = false,
 }) => {
   return (
@@ -27,6 +30,50 @@ export const UserInfoFormNewCheckout = ({
           formikKey="lastName"
           label="Last Name"
         ></StyledInputNewCheckout>
+
+        {showAdressFields && (
+          <>
+            <StyledInputNewCheckout
+              className="form-item required"
+              placeholder="Street Address"
+              formikProps={formikProps}
+              formikKey="contactAddress"
+              label="Street Address"
+            ></StyledInputNewCheckout>
+
+            {/* <StyledInputNewCheckout
+              className="form-item required"
+              placeholder="City"
+              formikProps={formikProps}
+              formikKey="contactState"
+              label="State"
+            ></StyledInputNewCheckout> */}
+
+            <DropdownNewCheckout
+              placeholder="State"
+              formikProps={formikProps}
+              formikKey="contactState"
+              options={US_STATES}
+              containerClass="form-item required"
+            ></DropdownNewCheckout>
+
+            <StyledInputNewCheckout
+              className="form-item required"
+              placeholder="City"
+              formikProps={formikProps}
+              formikKey="contactCity"
+              label="City"
+            ></StyledInputNewCheckout>
+
+            <StyledInputNewCheckout
+              className="form-item required"
+              placeholder="Zip"
+              formikProps={formikProps}
+              formikKey="contactZip"
+              label="Zip"
+            ></StyledInputNewCheckout>
+          </>
+        )}
 
         <StyledInputNewCheckout
           type="email"
@@ -56,11 +103,6 @@ export const UserInfoFormNewCheckout = ({
           label="Mobile Number"
           placeholder="Mobile Number"
           type="tel"
-          tip={
-            isHBCheckout
-              ? 'This number will be used to send reminder texts'
-              : null
-          }
         ></PhoneInputNewCheckout>
       </div>
     </Fragment>

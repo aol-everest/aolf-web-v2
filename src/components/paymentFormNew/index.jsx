@@ -922,6 +922,14 @@ export const PaymentFormNew = ({
       .required('Last Name is required')
       .matches(/\S/, 'String should not contain empty spaces'),
     email: Yup.string().required('Email is required').email(),
+    contactAddress: Yup.string().required('Address is required'),
+    contactCity: Yup.string().required('City is required'),
+    contactState: Yup.string().required('State is required'),
+    contactZip: Yup.string()
+      .required('Zip is required!')
+      //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+      .min(2, 'Zip is invalid')
+      .max(10, 'Zip is invalid'),
     contactPhone: Yup.string()
       .required('Phone number required')
       .matches(phoneRegExp, 'Phone number is not valid'),
@@ -1177,6 +1185,8 @@ export const PaymentFormNew = ({
                           <form id="my-form">
                             <UserInfoFormNewCheckout
                               formikProps={formikProps}
+                              showAdressFields={true}
+                              isLoggedUser={isLoggedUser}
                             />
                           </form>
                         </div>
