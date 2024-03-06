@@ -68,28 +68,28 @@ const AOL_MENU = [
     name: 'Gurudev',
     link: 'https://www.artofliving.org/us-en/gurudev',
   },
-  // {
-  //   name: 'Explore',
-  //   submenu: [
-  //     {
-  //       name: 'Breathwork',
-  //       link: 'https://event.us.artofliving.org/us-en/breathwork2/lp1/',
-  //     },
-  //     {
-  //       name: 'Meditation',
-  //       link: 'https://event.us.artofliving.org/us-en/secrets-of-meditation2/lp1/',
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: 'Wisdom',
-  //   submenu: [
-  //     {
-  //       name: 'Podcasts',
-  //       link: '/us-en/wisdom/podcast',
-  //     },
-  //   ],
-  // },
+  {
+    name: 'Explore',
+    submenu: [
+      {
+        name: 'Breathwork',
+        link: 'https://event.us.artofliving.org/us-en/breathwork2/lp1/',
+      },
+      {
+        name: 'Meditation',
+        link: 'https://event.us.artofliving.org/us-en/secrets-of-meditation2/lp1/',
+      },
+    ],
+  },
+  {
+    name: 'Wisdom',
+    submenu: [
+      {
+        name: 'Podcasts',
+        link: '/us-en/wisdom/podcast',
+      },
+    ],
+  },
   {
     name: 'Courses',
     subHeading: [
