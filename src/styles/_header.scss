@@ -421,6 +421,9 @@
   z-index: 101;
   @media screen and (max-width: 991px) {
     position: relative !important;
+    &.menu-opened {
+      position: fixed !important;
+    }
   }
   .header__container {
     flex-direction: unset;
