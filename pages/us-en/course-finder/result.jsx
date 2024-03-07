@@ -62,7 +62,10 @@ export default function CourseFinderResult() {
                 <div className="first-info">FREE INTRO SERIES</div>
                 <div className="box-title">
                   Get started on your journey with a few quick tips & tricks to{' '}
-                  {scientificStudy?.optionText || ''}
+                  {(scientificStudy?.optionText || '').replace(
+                    /\bmy\b/g,
+                    'your',
+                  )}
                 </div>
                 <div className="picture-box">
                   <Link

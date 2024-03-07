@@ -159,10 +159,6 @@ const AOL_MENU = [
     ],
   },
   {
-    name: 'App',
-    link: '/us-en/lp/journey-app',
-  },
-  {
     name: 'Centers',
     submenu: [
       {
@@ -176,7 +172,7 @@ const AOL_MENU = [
     ],
   },
   {
-    name: 'About Us',
+    name: 'About',
     submenu: [
       {
         name: 'Art of Living',
@@ -379,6 +375,10 @@ const ResourcesMenuItem = {
     {
       name: 'Meetups',
       link: '/us-en/meetup',
+    },
+    {
+      name: 'App',
+      link: '/us-en/lp/journey-app',
     },
   ],
 };
