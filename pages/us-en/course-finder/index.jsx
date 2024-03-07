@@ -18,6 +18,7 @@ const Step1 = () => {
   const { showAlert } = useGlobalAlertContext();
   const [value, setValue] = useSessionStorage('center-finder', {});
   const [currentStep, setCurrentStep] = useState(1);
+  const [currentQuestionCount, setCurrentQuestionCount] = useState(1);
   const [showScientificStudies, setShowScientificStudies] = useState(false);
   const { totalSelectedOptions = [], scientificStudy } = value;
 
@@ -35,32 +36,46 @@ const Step1 = () => {
     },
   );
 
-  const { selectedIds, handleOptionSelect, currentStepData } =
-    useQuestionnaireSelection(questions, currentStep);
+  const {
+    selectedIds,
+    handleOptionSelect,
+    currentStepData,
+    isMultiStep,
+    isMultiSelectQuestion,
+    previousStepData,
+  } = useQuestionnaireSelection(questions, currentQuestionCount);
 
   const isUserDetailsForm = currentStepData?.questionType === 'Text';
+  const totalStepCount = questions?.reduce((total, element) => {
+    const stepCount = element.stepCount !== null ? element.stepCount : 1;
+    return total + stepCount;
+  }, 0);
 
   const handleNextStep = () => {
-    if (currentStep === 1 && !showScientificStudies) {
+    setCurrentStep((prevCount) => prevCount + 1);
+    if (isMultiStep && !showScientificStudies) {
       setShowScientificStudies(true);
     } else {
-      if (showScientificStudies) {
-        setShowScientificStudies(false);
-      }
-      setCurrentStep(currentStep + 1);
+      setShowScientificStudies(false);
+    }
+
+    if (!showScientificStudies) {
+      setCurrentQuestionCount(currentQuestionCount + 1);
     }
   };
 
   const handlePreviousStep = async () => {
-    if (currentStep === 1 && !showScientificStudies) {
+    if (currentStep === 1) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course-finder/welcome`,
       });
-    } else if (currentStep === 1 && showScientificStudies) {
-      setShowScientificStudies(false);
-    } else {
-      setCurrentStep(currentStep - 1);
+      return;
     }
+    const decreaseStep =
+      previousStepData?.stepCount > 1 && !showScientificStudies ? 2 : 1;
+    setCurrentStep((prevStep) => prevStep - decreaseStep);
+    setCurrentQuestionCount((prevCount) => prevCount - 1);
+    setShowScientificStudies(false);
   };
 
   const submitUserDetails = async (values) => {
@@ -238,6 +253,11 @@ const Step1 = () => {
     (item) => item?.questionSfid === currentStepData?.questionSfid,
   );
 
+  const stepHighlighters = Array.from(
+    { length: totalStepCount },
+    (_, index) => index + 1,
+  );
+
   return (
     <>
       {(isLoading || loading) && <div className="cover-spin"></div>}
@@ -279,12 +299,12 @@ const Step1 = () => {
             ) : (
               <div className="question-box">
                 <div className="question-step-highlighter-wrap">
-                  {questions?.map((item, index) => {
+                  {stepHighlighters?.map((item, index) => {
                     return (
                       <div
                         key={index}
                         className={`question-step-highlighter ${
-                          currentStep >= item.sequence ? 'active' : ''
+                          currentStep >= item ? 'active' : ''
                         }`}
                       ></div>
                     );
@@ -330,7 +350,7 @@ const Step1 = () => {
                         __html: currentStepData?.question,
                       }}
                     ></h1>
-                    {currentStep === 3 && (
+                    {isMultiSelectQuestion && (
                       <div className="question-description">
                         * You can select up to 2 options
                       </div>
@@ -374,7 +394,9 @@ const Step1 = () => {
                   <button
                     className="btn-register"
                     onClick={handleNextStep}
-                    disabled={!selectedItem?.questionSfid}
+                    disabled={
+                      !selectedItem?.questionSfid && !showScientificStudies
+                    }
                   >
                     Continue
                   </button>

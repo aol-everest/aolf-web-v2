@@ -518,7 +518,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="header header-v2">
+    <header className={`header header-v2 ${navExpanded && 'menu-opened'}`}>
       <div className="header__container container">
         <a href={orgConfig.logoLink} className="logo">
           <img
