@@ -150,10 +150,10 @@ const AOL_MENU = [
             name: 'All Courses',
             link: '/us-en/course',
           },
-          // {
-          //   name: 'Help me choose',
-          //   link: '/us-en/course-finder/welcome',
-          // },
+          {
+            name: 'Help me choose',
+            link: '/us-en/course-finder/welcome',
+          },
         ],
       },
     ],
@@ -168,6 +168,27 @@ const AOL_MENU = [
       {
         name: 'Local Centers',
         link: '/us-en/centers',
+      },
+    ],
+  },
+  {
+    name: 'Resources',
+    submenu: [
+      {
+        name: 'Meditations',
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+      },
+      {
+        name: 'Wisdom',
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
+      },
+      {
+        name: 'Meetups',
+        link: '/us-en/meetup',
+      },
+      {
+        name: 'App',
+        link: '/us-en/lp/journey-app',
       },
     ],
   },
@@ -361,28 +382,6 @@ const IAHV_MENU = [
   }, */
 ];
 
-const ResourcesMenuItem = {
-  name: 'Resources',
-  submenu: [
-    {
-      name: 'Meditations',
-      link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
-    },
-    {
-      name: 'Wisdom',
-      link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
-    },
-    {
-      name: 'Meetups',
-      link: '/us-en/meetup',
-    },
-    {
-      name: 'App',
-      link: '/us-en/lp/journey-app',
-    },
-  ],
-};
-
 const MENU =
   orgConfig.name === 'AOL'
     ? AOL_MENU
@@ -567,26 +566,6 @@ export const Header = () => {
                   </NavDropdown>
                 );
               })}
-              {orgConfig.name === 'AOL' && (
-                <NavDropdown
-                  title={ResourcesMenuItem.name}
-                  as="li"
-                  renderMenuOnMount
-                  className="mobileView"
-                >
-                  {ResourcesMenuItem.submenu.map((submenu) => {
-                    return (
-                      <NavDropdown.Item
-                        href={submenu.link}
-                        key={submenu.name}
-                        as={Link}
-                      >
-                        {submenu.name}
-                      </NavDropdown.Item>
-                    );
-                  })}
-                </NavDropdown>
-              )}
               <Nav.Item as="li" className="mobileView">
                 <Nav.Link href="/us-en/lp/donations" as={Link}>
                   Donation
@@ -607,30 +586,6 @@ export const Header = () => {
           </Navbar.Collapse>
         </Navbar>
         <div className="user-profile-link">
-          {orgConfig.name === 'AOL' && (
-            <Navbar expand="lg" className="resourceNav desktopView">
-              <Nav className="mr-auto" as="ul">
-                <NavDropdown
-                  title={ResourcesMenuItem.name}
-                  as="li"
-                  renderMenuOnMount
-                >
-                  {ResourcesMenuItem.submenu.map((submenu) => {
-                    return (
-                      <NavDropdown.Item
-                        href={submenu.link}
-                        key={submenu.name}
-                        as={Link}
-                      >
-                        {submenu.name}
-                      </NavDropdown.Item>
-                    );
-                  })}
-                </NavDropdown>
-              </Nav>
-            </Navbar>
-          )}
-
           <div className="UserprofileView">
             {!authenticated && (
               <button
