@@ -221,13 +221,22 @@ const StoryComp = ({ story }) => {
 };
 
 const Centers = () => {
-  const { loading } = useGeolocation();
+  const { latitude, longitude, loading } = useGeolocation();
 
   const [location, setLocation] = useState({
     address: '',
     latitude: null,
     longitude: null,
   });
+
+  useEffect(() => {
+    setLocation((prevState) => ({
+      ...prevState,
+      latitude: latitude || null,
+      longitude: longitude || null,
+    }));
+  }, [latitude, longitude]);
+
   const placeholder = location.address || 'location';
 
   useEffect(() => {
@@ -267,8 +276,8 @@ const Centers = () => {
   const clearSearch = () => {
     setLocation({
       address: '',
-      latitude: null,
-      longitude: null,
+      latitude: latitude || null,
+      longitude: longitude || null,
     });
   };
 
