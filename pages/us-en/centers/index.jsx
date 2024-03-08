@@ -292,8 +292,8 @@ const Centers = () => {
       const response = await api.get({
         path: 'getAllCenters',
         param: {
-          lat: location.latitude || 43.4142989,
-          lng: location.longitude || -124.2301242,
+          lat: location.latitude || 40.73061,
+          lng: location.longitude || -73.935242,
         },
       });
       const data = (response.data || []).filter((center) => {
