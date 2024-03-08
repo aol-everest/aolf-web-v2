@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
 import {
-  Dropdown,
   PhoneInputNewCheckout,
   StyledInputNewCheckout,
 } from '@components/checkout';
@@ -9,7 +8,6 @@ import { DropdownNewCheckout } from './DropdownNewCheckout';
 
 export const UserInfoFormNewCheckout = ({
   formikProps,
-  showAdressFields = false,
   isLoggedUser = false,
 }) => {
   return (
@@ -31,49 +29,37 @@ export const UserInfoFormNewCheckout = ({
           label="Last Name"
         ></StyledInputNewCheckout>
 
-        {showAdressFields && (
-          <>
-            <StyledInputNewCheckout
-              className="form-item required"
-              placeholder="Street Address"
-              formikProps={formikProps}
-              formikKey="contactAddress"
-              label="Street Address"
-            ></StyledInputNewCheckout>
+        <StyledInputNewCheckout
+          className="form-item required"
+          placeholder="Street Address"
+          formikProps={formikProps}
+          formikKey="contactAddress"
+          label="Street Address"
+        ></StyledInputNewCheckout>
 
-            {/* <StyledInputNewCheckout
-              className="form-item required"
-              placeholder="City"
-              formikProps={formikProps}
-              formikKey="contactState"
-              label="State"
-            ></StyledInputNewCheckout> */}
+        <DropdownNewCheckout
+          placeholder="State"
+          formikProps={formikProps}
+          formikKey="contactState"
+          options={US_STATES}
+          containerClass="form-item required"
+        ></DropdownNewCheckout>
 
-            <DropdownNewCheckout
-              placeholder="State"
-              formikProps={formikProps}
-              formikKey="contactState"
-              options={US_STATES}
-              containerClass="form-item required"
-            ></DropdownNewCheckout>
+        <StyledInputNewCheckout
+          className="form-item required"
+          placeholder="City"
+          formikProps={formikProps}
+          formikKey="contactCity"
+          label="City"
+        ></StyledInputNewCheckout>
 
-            <StyledInputNewCheckout
-              className="form-item required"
-              placeholder="City"
-              formikProps={formikProps}
-              formikKey="contactCity"
-              label="City"
-            ></StyledInputNewCheckout>
-
-            <StyledInputNewCheckout
-              className="form-item required"
-              placeholder="Zip"
-              formikProps={formikProps}
-              formikKey="contactZip"
-              label="Zip"
-            ></StyledInputNewCheckout>
-          </>
-        )}
+        <StyledInputNewCheckout
+          className="form-item required"
+          placeholder="Zip"
+          formikProps={formikProps}
+          formikKey="contactZip"
+          label="Zip"
+        ></StyledInputNewCheckout>
 
         <StyledInputNewCheckout
           type="email"

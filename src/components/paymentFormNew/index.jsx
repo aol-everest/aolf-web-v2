@@ -1185,7 +1185,6 @@ export const PaymentFormNew = ({
                           <form id="my-form">
                             <UserInfoFormNewCheckout
                               formikProps={formikProps}
-                              showAdressFields={true}
                               isLoggedUser={isLoggedUser}
                             />
                           </form>
@@ -1687,6 +1686,7 @@ export const PaymentFormNew = ({
                                 {primaryTeacherName && primaryTeacherName}
                                 <br />
                                 {coTeacher1Name && coTeacher1Name}
+                                <br />
                                 {coTeacher2Name && coTeacher2Name}
                               </div>
                             </div>
