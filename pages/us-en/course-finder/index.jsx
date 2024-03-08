@@ -2,6 +2,7 @@
 import { pushRouteWithUTMQuery } from '@service';
 import { useSessionStorage } from '@uidotdev/usehooks';
 import { api, trimAndSplitName } from '@utils';
+import { useAnalytics } from 'use-analytics';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -12,8 +13,81 @@ import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import { PhoneInputNewCheckout } from '@components/checkout';
 
-const Step1 = () => {
+const humanizeNumber = (num) => {
+  var ones = [
+    '',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+    'ten',
+    'eleven',
+    'twelve',
+    'thirteen',
+    'fourteen',
+    'fifteen',
+    'sixteen',
+    'seventeen',
+    'eighteen',
+    'nineteen',
+  ];
+  var tens = [
+    '',
+    '',
+    'twenty',
+    'thirty',
+    'forty',
+    'fifty',
+    'sixty',
+    'seventy',
+    'eighty',
+    'ninety',
+  ];
+
+  var numString = num.toString();
+
+  if (num < 0) throw new Error('Negative numbers are not supported.');
+
+  if (num === 0) return 'zero';
+
+  //the case of 1 - 20
+  if (num < 20) {
+    return ones[num];
+  }
+
+  if (numString.length === 2) {
+    return tens[numString[0]] + ' ' + ones[numString[1]];
+  }
+
+  //100 and more
+  if (numString.length == 3) {
+    if (numString[1] === '0' && numString[2] === '0')
+      return ones[numString[0]] + ' hundred';
+    else
+      return (
+        ones[numString[0]] +
+        ' hundred and ' +
+        humanizeNumber(+(numString[1] + numString[2]))
+      );
+  }
+
+  if (numString.length === 4) {
+    var end = +(numString[1] + numString[2] + numString[3]);
+    if (end === 0) return ones[numString[0]] + ' thousand';
+    if (end < 100)
+      return ones[numString[0]] + ' thousand and ' + humanizeNumber(end);
+    return ones[numString[0]] + ' thousand ' + humanizeNumber(end);
+  }
+};
+
+const CourseFinder = () => {
   const router = useRouter();
+  const { track, page } = useAnalytics();
   const [loading, setLoading] = useState(false);
   const { showAlert } = useGlobalAlertContext();
   const [value, setValue] = useSessionStorage('center-finder', {});
@@ -52,7 +126,20 @@ const Step1 = () => {
   }, 0);
 
   const handleNextStep = () => {
+    const answers = currentStepData.options.reduce(
+      (accumulator, currentValue) => {
+        if (selectedIds.includes(currentValue.optionId)) {
+          return [...accumulator, currentValue.optionText];
+        }
+        return accumulator;
+      },
+      [],
+    );
+    track(`question_${humanizeNumber(currentStep)}_click`, {
+      answer_chosen: answers.join(', '),
+    });
     setCurrentStep((prevCount) => prevCount + 1);
+
     if (isMultiStep && !showScientificStudies) {
       setShowScientificStudies(true);
     } else {
@@ -112,6 +199,7 @@ const Step1 = () => {
           ...value,
           recommendationResponse: data,
         });
+        track(`questionnaire_submit`, {});
         pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course-finder/result`,
         });
@@ -294,6 +382,7 @@ const Step1 = () => {
                 Back
               </button>
             </div>
+
             {isUserDetailsForm ? (
               userDetails()
             ) : (
@@ -410,4 +499,4 @@ const Step1 = () => {
   );
 };
 
-export default Step1;
+export default CourseFinder;
