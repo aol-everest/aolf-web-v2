@@ -1,35 +1,20 @@
+import { useSessionStorage } from '@uidotdev/usehooks';
 import { findExistingQuestionnaire } from '@utils';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-function useQuestionnaireSelection(value, questions, sequence) {
+function useQuestionnaireSelection(questions, sequence) {
+  const [value, setValue] = useSessionStorage('center-finder');
   const currentStepData = questions?.find((item) => item.sequence === sequence);
-  const [updatedOptions, setUpdatedOptions] = useState([]);
-  const [selectedOptionName, setSelectedOptionName] = useState('');
+  const previousStepData = questions?.find(
+    (item) => item.sequence === sequence - 1,
+  );
   const [selectedIds, setSelectedIds] = useState([]);
+  const isMultiSelectQuestion = currentStepData?.isMultiselectQuestion;
+  const isMultiStep = currentStepData?.stepCount > 1;
 
-  useEffect(() => {
-    if (
-      value?.totalSelectedOptions &&
-      !selectedIds?.length &&
-      currentStepData &&
-      !updatedOptions?.length
-    ) {
-      setUpdatedOptions(value?.totalSelectedOptions);
-      setSelectedOptionName(value.type);
-      const selectedOption = value?.totalSelectedOptions.find(
-        (item) => item?.questionSfid === currentStepData?.questionSfid,
-      );
-      console.log('selectedOption', selectedOption);
-      if (selectedOption?.answer) {
-        setSelectedIds([...selectedOption.answer]);
-      }
-    }
-  }, [currentStepData]);
-
-  const handleOptionSelect = (answerId, answerName) => {
-    setSelectedOptionName(answerName);
+  const handleOptionSelect = (answerId, helpResonse) => {
     let selectedIdsLocal = [answerId];
-    if (sequence === 4) {
+    if (isMultiSelectQuestion) {
       selectedIdsLocal = [...selectedIds, answerId];
       selectedIdsLocal = selectedIdsLocal.slice(-2);
     }
@@ -39,16 +24,21 @@ function useQuestionnaireSelection(value, questions, sequence) {
       currentStepData,
       selectedIdsLocal,
     );
-    setUpdatedOptions(updatedOptions);
+    setValue({
+      ...value,
+      totalSelectedOptions: updatedOptions || [],
+      questions,
+      scientificStudy: isMultiStep ? helpResonse : value.scientificStudy,
+    });
   };
 
   return {
-    updatedOptions,
-    selectedOptionName,
     selectedIds,
-    setSelectedIds,
     handleOptionSelect,
     currentStepData,
+    isMultiSelectQuestion,
+    isMultiStep,
+    previousStepData,
   };
 }
 

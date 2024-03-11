@@ -285,8 +285,16 @@ const SchedulingPaymentForm = ({
     timings = [],
   } = workshop;
 
-  const { first_name, last_name, email, personMobilePhone } =
-    user?.profile || {};
+  const {
+    first_name,
+    last_name,
+    email,
+    personMailingPostalCode,
+    personMailingState,
+    personMobilePhone,
+    personMailingStreet,
+    personMailingCity,
+  } = user?.profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -303,6 +311,10 @@ const SchedulingPaymentForm = ({
       email,
       couponCode,
       contactPhone,
+      contactAddress,
+      contactCity,
+      contactState,
+      contactZip,
     } = values;
 
     if (loading) {
@@ -422,9 +434,17 @@ const SchedulingPaymentForm = ({
           couponCode: couponCode || '',
           contactAddress: {
             contactPhone,
+            contactAddress,
+            contactCity,
+            contactState,
+            contactZip,
           },
           billingAddress: {
             billingPhone: contactPhone,
+            billingAddress: contactAddress,
+            billingCity: contactCity,
+            billingState: contactState,
+            billingZip: contactZip,
           },
           products,
           complianceQuestionnaire,
@@ -585,6 +605,10 @@ const SchedulingPaymentForm = ({
           firstName: '',
           lastName: '',
           email: '',
+          contactAddress: personMailingStreet || '',
+          contactCity: personMailingCity || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
           questionnaire: questionnaireArray,
           ppaAgreement: isReferBySameSite,
           couponCode: discount ? discount : '',
@@ -604,6 +628,14 @@ const SchedulingPaymentForm = ({
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
+          contactAddress: Yup.string().required('Address is required'),
+          contactCity: Yup.string().required('City is required'),
+          contactState: Yup.string().required('State is required'),
+          contactZip: Yup.string()
+            .required('Zip is required!')
+            //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+            .min(2, 'Zip is invalid')
+            .max(10, 'Zip is invalid'),
           ppaAgreement: Yup.boolean()
             .label('Terms')
             .test(
