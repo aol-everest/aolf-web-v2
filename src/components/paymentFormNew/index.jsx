@@ -825,17 +825,6 @@ export const PaymentFormNew = ({
         };
       }
 
-      // if (!token) {
-      //   payLoad = {
-      //     ...payLoad,
-      //     user: {
-      //       firstName,
-      //       lastName,
-      //     },
-      //   };
-      // }
-      //token.saveCardForFuture = true;
-
       const {
         data,
         status,
