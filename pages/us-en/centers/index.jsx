@@ -221,13 +221,22 @@ const StoryComp = ({ story }) => {
 };
 
 const Centers = () => {
-  const { loading } = useGeolocation();
+  const { latitude, longitude, loading } = useGeolocation();
 
   const [location, setLocation] = useState({
     address: '',
     latitude: null,
     longitude: null,
   });
+
+  useEffect(() => {
+    setLocation((prevState) => ({
+      ...prevState,
+      latitude: latitude || null,
+      longitude: longitude || null,
+    }));
+  }, [latitude, longitude]);
+
   const placeholder = location.address || 'location';
 
   useEffect(() => {
@@ -267,8 +276,8 @@ const Centers = () => {
   const clearSearch = () => {
     setLocation({
       address: '',
-      latitude: null,
-      longitude: null,
+      latitude: latitude || null,
+      longitude: longitude || null,
     });
   };
 
@@ -283,8 +292,8 @@ const Centers = () => {
       const response = await api.get({
         path: 'getAllCenters',
         param: {
-          lat: location.latitude || 43.4142989,
-          lng: location.longitude || -124.2301242,
+          lat: location.latitude || 40.73061,
+          lng: location.longitude || -73.935242,
         },
       });
       const data = (response.data || []).filter((center) => {
