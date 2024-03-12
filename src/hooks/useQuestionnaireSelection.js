@@ -5,12 +5,16 @@ import { useState } from 'react';
 function useQuestionnaireSelection(questions, sequence) {
   const [value, setValue] = useSessionStorage('center-finder');
   const currentStepData = questions?.find((item) => item.sequence === sequence);
+  const previousStepData = questions?.find(
+    (item) => item.sequence === sequence - 1,
+  );
   const [selectedIds, setSelectedIds] = useState([]);
+  const isMultiSelectQuestion = currentStepData?.isMultiselectQuestion;
+  const isMultiStep = currentStepData?.stepCount > 1;
 
   const handleOptionSelect = (answerId, helpResonse) => {
-    console.log('value', value);
     let selectedIdsLocal = [answerId];
-    if (sequence === 3) {
+    if (isMultiSelectQuestion) {
       selectedIdsLocal = [...selectedIds, answerId];
       selectedIdsLocal = selectedIdsLocal.slice(-2);
     }
@@ -24,7 +28,7 @@ function useQuestionnaireSelection(questions, sequence) {
       ...value,
       totalSelectedOptions: updatedOptions || [],
       questions,
-      scientificStudy: sequence === 1 ? helpResonse : value.scientificStudy,
+      scientificStudy: isMultiStep ? helpResonse : value.scientificStudy,
     });
   };
 
@@ -32,6 +36,9 @@ function useQuestionnaireSelection(questions, sequence) {
     selectedIds,
     handleOptionSelect,
     currentStepData,
+    isMultiSelectQuestion,
+    isMultiStep,
+    previousStepData,
   };
 }
 

@@ -159,10 +159,6 @@ const AOL_MENU = [
     ],
   },
   {
-    name: 'App',
-    link: '/us-en/lp/journey-app',
-  },
-  {
     name: 'Centers',
     submenu: [
       {
@@ -176,7 +172,28 @@ const AOL_MENU = [
     ],
   },
   {
-    name: 'About Us',
+    name: 'Resources',
+    submenu: [
+      {
+        name: 'Meditations',
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+      },
+      {
+        name: 'Wisdom',
+        link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
+      },
+      {
+        name: 'Meetups',
+        link: '/us-en/meetup',
+      },
+      {
+        name: 'App',
+        link: '/us-en/lp/journey-app',
+      },
+    ],
+  },
+  {
+    name: 'About',
     submenu: [
       {
         name: 'Art of Living',
@@ -365,24 +382,6 @@ const IAHV_MENU = [
   }, */
 ];
 
-const ResourcesMenuItem = {
-  name: 'Resources',
-  submenu: [
-    {
-      name: 'Meditations',
-      link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
-    },
-    {
-      name: 'Wisdom',
-      link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
-    },
-    {
-      name: 'Meetups',
-      link: '/us-en/meetup',
-    },
-  ],
-};
-
 const MENU =
   orgConfig.name === 'AOL'
     ? AOL_MENU
@@ -518,7 +517,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="header header-v2">
+    <header className={`header header-v2 ${navExpanded && 'menu-opened'}`}>
       <div className="header__container container">
         <a href={orgConfig.logoLink} className="logo">
           <img
@@ -567,26 +566,6 @@ export const Header = () => {
                   </NavDropdown>
                 );
               })}
-              {orgConfig.name === 'AOL' && (
-                <NavDropdown
-                  title={ResourcesMenuItem.name}
-                  as="li"
-                  renderMenuOnMount
-                  className="mobileView"
-                >
-                  {ResourcesMenuItem.submenu.map((submenu) => {
-                    return (
-                      <NavDropdown.Item
-                        href={submenu.link}
-                        key={submenu.name}
-                        as={Link}
-                      >
-                        {submenu.name}
-                      </NavDropdown.Item>
-                    );
-                  })}
-                </NavDropdown>
-              )}
               <Nav.Item as="li" className="mobileView">
                 <Nav.Link href="/us-en/lp/donations" as={Link}>
                   Donation
@@ -607,30 +586,6 @@ export const Header = () => {
           </Navbar.Collapse>
         </Navbar>
         <div className="user-profile-link">
-          {orgConfig.name === 'AOL' && (
-            <Navbar expand="lg" className="resourceNav desktopView">
-              <Nav className="mr-auto" as="ul">
-                <NavDropdown
-                  title={ResourcesMenuItem.name}
-                  as="li"
-                  renderMenuOnMount
-                >
-                  {ResourcesMenuItem.submenu.map((submenu) => {
-                    return (
-                      <NavDropdown.Item
-                        href={submenu.link}
-                        key={submenu.name}
-                        as={Link}
-                      >
-                        {submenu.name}
-                      </NavDropdown.Item>
-                    );
-                  })}
-                </NavDropdown>
-              </Nav>
-            </Navbar>
-          )}
-
           <div className="UserprofileView">
             {!authenticated && (
               <button

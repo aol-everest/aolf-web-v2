@@ -621,7 +621,7 @@ export const BackendPaymentForm = ({
 
   const handleAddOnSelection = (formikProps, productName, value) => {
     formikProps.setFieldValue(productName, value);
-    const { values } = formikProps;
+    const values = { ...formikProps.values };
     values[productName] = value;
     updateCourseAddOnFee(values);
   };
@@ -1564,10 +1564,11 @@ export const BackendPaymentForm = ({
                                           className="custom-checkbox"
                                           placeholder=" "
                                           checked={isChecked}
-                                          onChange={() =>
-                                            formikProps.setFieldValue(
+                                          onClick={(e) =>
+                                            handleAddOnSelection(
+                                              formikProps,
                                               product.productName,
-                                              !isChecked,
+                                              e.target.checked,
                                             )
                                           }
                                           value={product.productName}

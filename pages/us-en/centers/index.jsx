@@ -2,8 +2,7 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { PageLoading } from '@components';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { useEffectOnce } from 'react-use';
+import { useQuery } from 'react-query';
 import ErrorPage from 'next/error';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
@@ -12,6 +11,11 @@ import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import LinesEllipsis from 'react-lines-ellipsis';
 import Highlighter from 'react-highlight-words';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
+import { Loader } from '@googlemaps/js-api-loader';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
 
@@ -217,21 +221,65 @@ const StoryComp = ({ story }) => {
 };
 
 const Centers = () => {
-  const {
-    loading,
-    latitude,
-    longitude,
-    error: geoLocationError,
-  } = useGeolocation();
+  const { latitude, longitude, loading } = useGeolocation();
 
-  //     set search query to empty string
-  const [q, setQ] = useState('');
-  //     set search parameters
-  //     we only what to search centers by centerName and streetAddress1
-  //     this list can be longer if you want
+  const [location, setLocation] = useState({
+    address: '',
+    latitude: null,
+    longitude: null,
+  });
 
-  const finalLatitude = latitude ? latitude : 43.4142989;
-  const finalLongitude = longitude ? longitude : -124.2301242;
+  useEffect(() => {
+    setLocation((prevState) => ({
+      ...prevState,
+      latitude: latitude || null,
+      longitude: longitude || null,
+    }));
+  }, [latitude, longitude]);
+
+  const placeholder = location.address || 'location';
+
+  useEffect(() => {
+    const loader = new Loader({
+      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
+      version: 'weekly',
+      libraries: ['places'],
+    });
+    loader.load().then(() => {});
+  }, []);
+
+  const handleChange = (address) => {
+    setLocation((prevLocation) => ({
+      ...prevLocation,
+      address: address,
+    }));
+  };
+
+  const [isItemSelected, setIsItemSelected] = useState(false);
+
+  const handleSelect = (address) => {
+    geocodeByAddress(address)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => {
+        const { lat, lng } = latLng;
+        setLocation((prevLocation) => ({
+          ...prevLocation,
+          address: address,
+          latitude: lat,
+          longitude: lng,
+        }));
+        setIsItemSelected(true);
+      })
+      .catch((error) => console.error('Error', error));
+  };
+
+  const clearSearch = () => {
+    setLocation({
+      address: '',
+      latitude: latitude || null,
+      longitude: longitude || null,
+    });
+  };
 
   const {
     data: allCenters,
@@ -239,13 +287,13 @@ const Centers = () => {
     isError,
     error,
   } = useQuery(
-    ['allCenters', latitude, longitude],
+    ['allCenters', location.latitude, location.longitude],
     async () => {
       const response = await api.get({
         path: 'getAllCenters',
         param: {
-          lat: finalLatitude,
-          lng: finalLongitude,
+          lat: location.latitude || 40.73061,
+          lng: location.longitude || -73.935242,
         },
       });
       const data = (response.data || []).filter((center) => {
@@ -259,19 +307,14 @@ const Centers = () => {
   );
 
   const search = (items) => {
-    return items.filter((item) => {
+    return items?.filter((item) => {
       if (item.centerMode === 'InPerson') {
         return SEARCH_PARAM.some((newItem) => {
-          return (
-            item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) >
-            -1
-          );
+          return item[newItem]?.toString().toLowerCase() > -1;
         });
       }
       return SEARCH_PARAM_WITHOUT_ADDRESS.some((newItem) => {
-        return (
-          item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1
-        );
+        return item[newItem]?.toString().toLowerCase() > -1;
       });
     });
   };
@@ -280,12 +323,9 @@ const Centers = () => {
     window.scrollTo({ top: 100, left: 0, behavior: 'smooth' });
   };
 
-  const clearSearch = () => {
-    setQ('');
-  };
-
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if (isLoading || loading) return <PageLoading />;
+  if ((!isItemSelected && isLoading) || loading) return <PageLoading />;
+
   return (
     <main className="local-centers">
       <section className="title-header">
@@ -303,38 +343,80 @@ const Centers = () => {
         ></GoogleMapComponent>
         <div className="center-search-box" id="mobile-handler">
           <div className="mobile-handler"></div>
-          <div className="search-input-wrap">
-            <input
-              id="search-field"
-              type="text"
-              placeholder="Search..."
-              className="search-input"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-            />
-            {q !== '' && (
-              <button className="search-clear" onClick={clearSearch}>
-                <svg
-                  fill="#9698a6"
-                  height="16px"
-                  width="16px"
-                  version="1.1"
-                  id="Capa_1"
-                  viewBox="0 0 490 490"
-                >
-                  <polygon
-                    points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
+          <PlacesAutocomplete
+            value={location.address}
+            onChange={handleChange}
+            onSelect={handleSelect}
+            searchOptions={{
+              types: ['(regions)'],
+              componentRestrictions: { country: 'us' },
+            }}
+          >
+            {({ getInputProps, suggestions, getSuggestionItemProps }) => (
+              <div className="search-input-wrap">
+                <input
+                  id="search-field"
+                  value={location.address}
+                  className="search-input"
+                  {...getInputProps({
+                    placeholder,
+                  })}
+                />
+                {location.address && (
+                  <button className="search-clear" onClick={clearSearch}>
+                    <svg
+                      fill="#9698a6"
+                      height="16px"
+                      width="16px"
+                      version="1.1"
+                      id="Capa_1"
+                      viewBox="0 0 490 490"
+                    >
+                      <polygon
+                        points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
               489.292,457.678 277.331,245.004 489.292,32.337 "
-                  />
-                </svg>
-              </button>
+                      />
+                    </svg>
+                  </button>
+                )}
+
+                {!!suggestions.length && (
+                  <div style={{ zIndex: 9 }}>
+                    {suggestions.map((suggestion) => {
+                      const className = suggestion.active
+                        ? 'suggestion-item--active smart-input--list-item'
+                        : 'suggestion-item smart-input--list-item';
+                      // inline style for demonstration purpose
+                      const style = suggestion.active
+                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                      return (
+                        <>
+                          <div
+                            {...getSuggestionItemProps(suggestion, {
+                              className,
+                              style,
+                            })}
+                          >
+                            <strong>
+                              {suggestion.formattedSuggestion.mainText}
+                            </strong>{' '}
+                            <small>
+                              {suggestion.formattedSuggestion.secondaryText}
+                            </small>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             )}
-          </div>
+          </PlacesAutocomplete>
+
           <div className="search-listing">
-            {search(allCenters).map((center) => {
-              return (
-                <CenterListItem key={center.sfid} center={center} search={q} />
-              );
+            {search(allCenters)?.map((center) => {
+              return <CenterListItem key={center.sfid} center={center} />;
             })}
           </div>
         </div>

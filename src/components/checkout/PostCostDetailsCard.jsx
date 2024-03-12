@@ -309,7 +309,7 @@ export const PostCostDetailsCard = ({
                                           !isChecked,
                                         )
                                       }
-                                      value={product.productName}
+                                      value="CME"
                                       name={product.productName}
                                       id={product.productSfid}
                                       disabled={
@@ -337,7 +337,7 @@ export const PostCostDetailsCard = ({
                             in the requested additional information.
                           </p>
 
-                          {formikProps.values[cmeAddOn.productName] && (
+                          {formikProps.values['CME'] && (
                             <CMEInputCmp formikProps={formikProps} />
                           )}
                         </>

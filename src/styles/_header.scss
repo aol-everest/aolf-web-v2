@@ -421,6 +421,9 @@
   z-index: 101;
   @media screen and (max-width: 991px) {
     position: relative !important;
+    &.menu-opened {
+      position: fixed !important;
+    }
   }
   .header__container {
     flex-direction: unset;
@@ -611,7 +614,7 @@
           margin-top: 5px;
         }
       }
-      &[aria-expanded='true'] {
+      &:not(.collapsed) {
         .top-bar {
           transform: rotate(45deg);
           transform-origin: 10% 10%;
@@ -728,7 +731,7 @@
         position: fixed;
         width: 100%;
         left: 0px;
-        top: 4rem;
+        top: 63px;
         background-color: #ffffff;
         &.show {
           display: flex;
@@ -737,7 +740,7 @@
           align-items: flex-start;
         }
         @media screen and (max-width: 991px) {
-          height: calc(100vh - 67px) !important;
+          height: calc(100vh - 64px) !important;
           overflow: auto;
         }
       }

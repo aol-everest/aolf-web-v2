@@ -2,6 +2,7 @@
 import { pushRouteWithUTMQuery } from '@service';
 import { useSessionStorage } from '@uidotdev/usehooks';
 import { api, trimAndSplitName } from '@utils';
+import { useAnalytics } from 'use-analytics';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -12,12 +13,86 @@ import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import { PhoneInputNewCheckout } from '@components/checkout';
 
-const Step1 = () => {
+const humanizeNumber = (num) => {
+  var ones = [
+    '',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+    'ten',
+    'eleven',
+    'twelve',
+    'thirteen',
+    'fourteen',
+    'fifteen',
+    'sixteen',
+    'seventeen',
+    'eighteen',
+    'nineteen',
+  ];
+  var tens = [
+    '',
+    '',
+    'twenty',
+    'thirty',
+    'forty',
+    'fifty',
+    'sixty',
+    'seventy',
+    'eighty',
+    'ninety',
+  ];
+
+  var numString = num.toString();
+
+  if (num < 0) throw new Error('Negative numbers are not supported.');
+
+  if (num === 0) return 'zero';
+
+  //the case of 1 - 20
+  if (num < 20) {
+    return ones[num];
+  }
+
+  if (numString.length === 2) {
+    return tens[numString[0]] + ' ' + ones[numString[1]];
+  }
+
+  //100 and more
+  if (numString.length == 3) {
+    if (numString[1] === '0' && numString[2] === '0')
+      return ones[numString[0]] + ' hundred';
+    else
+      return (
+        ones[numString[0]] +
+        ' hundred and ' +
+        humanizeNumber(+(numString[1] + numString[2]))
+      );
+  }
+
+  if (numString.length === 4) {
+    var end = +(numString[1] + numString[2] + numString[3]);
+    if (end === 0) return ones[numString[0]] + ' thousand';
+    if (end < 100)
+      return ones[numString[0]] + ' thousand and ' + humanizeNumber(end);
+    return ones[numString[0]] + ' thousand ' + humanizeNumber(end);
+  }
+};
+
+const CourseFinder = () => {
   const router = useRouter();
+  const { track, page } = useAnalytics();
   const [loading, setLoading] = useState(false);
   const { showAlert } = useGlobalAlertContext();
   const [value, setValue] = useSessionStorage('center-finder', {});
   const [currentStep, setCurrentStep] = useState(1);
+  const [currentQuestionCount, setCurrentQuestionCount] = useState(1);
   const [showScientificStudies, setShowScientificStudies] = useState(false);
   const { totalSelectedOptions = [], scientificStudy } = value;
 
@@ -35,32 +110,59 @@ const Step1 = () => {
     },
   );
 
-  const { selectedIds, handleOptionSelect, currentStepData } =
-    useQuestionnaireSelection(questions, currentStep);
+  const {
+    selectedIds,
+    handleOptionSelect,
+    currentStepData,
+    isMultiStep,
+    isMultiSelectQuestion,
+    previousStepData,
+  } = useQuestionnaireSelection(questions, currentQuestionCount);
 
   const isUserDetailsForm = currentStepData?.questionType === 'Text';
+  const totalStepCount = questions?.reduce((total, element) => {
+    const stepCount = element.stepCount !== null ? element.stepCount : 1;
+    return total + stepCount;
+  }, 0);
 
   const handleNextStep = () => {
-    if (currentStep === 1 && !showScientificStudies) {
+    const answers = currentStepData.options.reduce(
+      (accumulator, currentValue) => {
+        if (selectedIds.includes(currentValue.optionId)) {
+          return [...accumulator, currentValue.optionText];
+        }
+        return accumulator;
+      },
+      [],
+    );
+    track(`question_${humanizeNumber(currentStep)}_click`, {
+      answer_chosen: answers.join(', '),
+    });
+    setCurrentStep((prevCount) => prevCount + 1);
+
+    if (isMultiStep && !showScientificStudies) {
       setShowScientificStudies(true);
     } else {
-      if (showScientificStudies) {
-        setShowScientificStudies(false);
-      }
-      setCurrentStep(currentStep + 1);
+      setShowScientificStudies(false);
+    }
+
+    if (!showScientificStudies) {
+      setCurrentQuestionCount(currentQuestionCount + 1);
     }
   };
 
   const handlePreviousStep = async () => {
-    if (currentStep === 1 && !showScientificStudies) {
+    if (currentStep === 1) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course-finder/welcome`,
       });
-    } else if (currentStep === 1 && showScientificStudies) {
-      setShowScientificStudies(false);
-    } else {
-      setCurrentStep(currentStep - 1);
+      return;
     }
+    const decreaseStep =
+      previousStepData?.stepCount > 1 && !showScientificStudies ? 2 : 1;
+    setCurrentStep((prevStep) => prevStep - decreaseStep);
+    setCurrentQuestionCount((prevCount) => prevCount - 1);
+    setShowScientificStudies(false);
   };
 
   const submitUserDetails = async (values) => {
@@ -97,6 +199,7 @@ const Step1 = () => {
           ...value,
           recommendationResponse: data,
         });
+        track(`questionnaire_submit`, {});
         pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course-finder/result`,
         });
@@ -238,6 +341,11 @@ const Step1 = () => {
     (item) => item?.questionSfid === currentStepData?.questionSfid,
   );
 
+  const stepHighlighters = Array.from(
+    { length: totalStepCount },
+    (_, index) => index + 1,
+  );
+
   return (
     <>
       {(isLoading || loading) && <div className="cover-spin"></div>}
@@ -274,17 +382,18 @@ const Step1 = () => {
                 Back
               </button>
             </div>
+
             {isUserDetailsForm ? (
               userDetails()
             ) : (
               <div className="question-box">
                 <div className="question-step-highlighter-wrap">
-                  {questions?.map((item, index) => {
+                  {stepHighlighters?.map((item, index) => {
                     return (
                       <div
                         key={index}
                         className={`question-step-highlighter ${
-                          currentStep >= item.sequence ? 'active' : ''
+                          currentStep >= item ? 'active' : ''
                         }`}
                       ></div>
                     );
@@ -330,7 +439,7 @@ const Step1 = () => {
                         __html: currentStepData?.question,
                       }}
                     ></h1>
-                    {currentStep === 3 && (
+                    {isMultiSelectQuestion && (
                       <div className="question-description">
                         * You can select up to 2 options
                       </div>
@@ -374,7 +483,9 @@ const Step1 = () => {
                   <button
                     className="btn-register"
                     onClick={handleNextStep}
-                    disabled={!selectedItem?.questionSfid}
+                    disabled={
+                      !selectedItem?.questionSfid && !showScientificStudies
+                    }
                   >
                     Continue
                   </button>
@@ -388,4 +499,4 @@ const Step1 = () => {
   );
 };
 
-export default Step1;
+export default CourseFinder;
