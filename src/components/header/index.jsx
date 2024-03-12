@@ -588,7 +588,9 @@ export const Header = () => {
         </Navbar>
         <div
           className={
-            navExpanded ? 'user-profile-link' : 'user-profile-link hide-link'
+            navExpanded && authenticated
+              ? 'user-profile-link'
+              : 'user-profile-link hide-link'
           }
         >
           <div className="UserprofileView">
