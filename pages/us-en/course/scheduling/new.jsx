@@ -65,8 +65,8 @@ const New = () => {
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [showLocationModal, setShowLocationModal] = useState(true);
-  const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(true);
   const [locationFilter, setLocationFilter] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -400,7 +400,7 @@ const New = () => {
     getUserLocation();
   }, []);
 
-  const workshopSelectModal = (handleCheckout) => {
+  const WorkshopSelectModal = (handleCheckout) => {
     const [selectedWorkshop, setSelectedWorkshop] = useState({});
 
     const handleWorkshopSelect = async (workshop) => {
@@ -422,31 +422,197 @@ const New = () => {
     const handleModalToggle = () => {
       setShowWorkshopSelectModal((prevState) => !prevState);
     };
+
     return (
       <Modal
         show={showWorkshopSelectModal}
         onHide={handleModalToggle}
         backdrop="static"
-        className="location-search bd-example-modal-lg"
+        className="available-time modal fade bd-example-modal-lg"
         dialogClassName="modal-dialog modal-dialog-centered modal-lg"
       >
-        <Modal.Header closeButton>Find courses near you</Modal.Header>
+        <Modal.Header closeButton>Available Time</Modal.Header>
         <Modal.Body>
-          <div className="form-item">
-            <ScheduleLocationFilterNew
-              handleLocationChange={setSelectedLocation}
-              value={locationFilter}
-              listClassName="result-list"
-            />
+          <div className="time-slot-changer">
+            <button className="prev-slot">
+              <img src="/img/chevron-left.svg" />
+            </button>
+            <div className="slot-info">January 18-21, 2024 PT</div>
+            <button className="next-slot">
+              <img src="/img/chevron-right.svg" />
+            </button>
           </div>
-          <button
-            type="button"
-            data-dismiss="modal"
-            className="btn btn-primary find-courses submit-btn"
-            onClick={findCourses}
-          >
-            Continue
-          </button>
+          <div className="slot-listing">
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">151W 30th Street, New York, NY</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">Online</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">151W 30th Street, New York, NY</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">151W 30th Street, New York, NY</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">151W 30th Street, New York, NY</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">151W 30th Street, New York, NY</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">151W 30th Street, New York, NY</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+            <div className="slot-item">
+              <div className="slot-type">
+                <div className="slot-info">151W 30th Street, New York, NY</div>
+                <div className="slot-select form-item">
+                  <input type="radio" />
+                </div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/18, Mon</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/19, Tue</div>
+                <div className="slot-time">12pm - 2:30 pm ET</div>
+              </div>
+              <div className="slot-timing">
+                <div className="slot-date">1/20, Wed</div>
+                <div className="slot-time">12pm - 2:30pm ET</div>
+              </div>
+            </div>
+          </div>
+          <div className="slot-action">
+            <button
+              type="button"
+              data-dismiss="modal"
+              className="btn btn-primary find-courses submit-btn"
+            >
+              Continue
+            </button>
+          </div>
         </Modal.Body>
       </Modal>
     );
@@ -1320,230 +1486,7 @@ const New = () => {
           locationFilter={locationFilter}
           handleLocationFilterChange={handleLocationFilterChange}
         />
-
-        <div
-          className="available-time modal fade bd-example-modal-lg"
-          id="availableTimeModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div
-            className="modal-dialog modal-dialog-centered modal-lg"
-            role="document"
-          >
-            <div className="modal-content">
-              <div className="modal-header">
-                <h2 className="title">Available Time</h2>
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="time-slot-changer">
-                  <button className="prev-slot">
-                    <img src="/img/chevron-left.svg" />
-                  </button>
-                  <div className="slot-info">January 18-21, 2024 PT</div>
-                  <button className="next-slot">
-                    <img src="/img/chevron-right.svg" />
-                  </button>
-                </div>
-                <div className="slot-listing">
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">
-                        151W 30th Street, New York, NY
-                      </div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">Online</div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">
-                        151W 30th Street, New York, NY
-                      </div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">
-                        151W 30th Street, New York, NY
-                      </div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">
-                        151W 30th Street, New York, NY
-                      </div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">
-                        151W 30th Street, New York, NY
-                      </div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">
-                        151W 30th Street, New York, NY
-                      </div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                  <div className="slot-item">
-                    <div className="slot-type">
-                      <div className="slot-info">
-                        151W 30th Street, New York, NY
-                      </div>
-                      <div className="slot-select form-item">
-                        <input type="radio" />
-                      </div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/18, Mon</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/19, Tue</div>
-                      <div className="slot-time">12pm - 2:30 pm ET</div>
-                    </div>
-                    <div className="slot-timing">
-                      <div className="slot-date">1/20, Wed</div>
-                      <div className="slot-time">12pm - 2:30pm ET</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="slot-action">
-                  <button
-                    type="button"
-                    data-dismiss="modal"
-                    className="btn btn-primary find-courses submit-btn"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <WorkshopSelectModal />
       </main>
     </>
   );
