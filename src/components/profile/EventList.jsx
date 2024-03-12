@@ -97,37 +97,23 @@ const renderEventMobile = (workshop, router) => {
       </div>
     );
   } else {
+    if (isSilentRetreatType) {
+      imageSrc = '/img/course-card-4.png';
+    } else if (isSKYType) {
+      imageSrc = '/img/course-card-2.png';
+    } else if (isSahajSamadhiMeditationType) {
+      imageSrc = '/img/course-card-5.png';
+    } else {
+      imageSrc = '/img/course-card-1.png';
+    }
     return (
       <div className="embla__slide" key={sfid} onClick={handleEventDetails}>
         <div className="profile-body_mobile__course">
-          {isSilentRetreatType && (
-            <img
-              className="profile-body_mobile__course-img"
-              src="/img/course-card-4.png"
-              alt="bg"
-            />
-          )}
-          {isSKYType && (
-            <img
-              className="profile-body_mobile__course-img"
-              src="/img/course-card-2.png"
-              alt="bg"
-            />
-          )}
-          {isSahajSamadhiMeditationType && (
-            <img
-              className="profile-body_mobile__course-img"
-              src="/img/course-card-5.png"
-              alt="bg"
-            />
-          )}
-          {isSilentRetreatType && isSKYType && isSahajSamadhiMeditationType && (
-            <img
-              className="profile-body_mobile__course-img"
-              src="/img/course-card-1.png"
-              alt="bg"
-            />
-          )}
+          <img
+            className="profile-body_mobile__course-img"
+            src={imageSrc}
+            alt="bg"
+          />
           {dayjs
             .utc(eventStartDate)
             .isSame(dayjs.utc(eventEndDate), 'month') && (

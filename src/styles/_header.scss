@@ -797,7 +797,9 @@
       order: 1;
       margin: unset;
       padding: 0;
-      display: none;
+      &.hide-link {
+        display: none;
+      }
     }
   }
   .resourceNav {
