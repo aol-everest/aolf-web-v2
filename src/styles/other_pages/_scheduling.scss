@@ -1,4 +1,7 @@
 .scheduling-page {
+  .flatpickr-input {
+    display: none;
+  }
   background: #fffaf5;
   .scheduling-top {
     padding-top: 60px;
@@ -37,6 +40,99 @@
       font-size: 16px;
     }
   }
+  .scheduling-stepper {
+    padding-bottom: 32px;
+    @media screen and (max-width: 991px) {
+      padding-bottom: 24px;
+    }
+    .container {
+      max-width: 1000px;
+    }
+    .step-wrapper {
+      display: flex;
+      gap: 16px;
+      .step {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        &.active {
+          .step-icon {
+            span {
+              box-shadow: 0px 0px 0px 4px #8cbaf13d;
+              border-color: #3d8be8;
+              background-color: #3d8be8;
+              outline-color: white;
+            }
+            &::before,
+            &::after {
+              background: #3d8be8;
+            }
+          }
+          .step-text {
+            color: #3d8be8;
+          }
+          & + .step .step-icon {
+            &::before {
+              background: #3d8be8;
+            }
+          }
+        }
+        &:first-child {
+          .step-icon::before {
+            opacity: 0;
+          }
+        }
+        &:last-child {
+          .step-icon::after {
+            opacity: 0;
+          }
+        }
+      }
+      .step-icon {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        &::before,
+        &::after {
+          height: 2px;
+          background: #e9e9e9;
+          width: 50%;
+          content: '';
+          display: block;
+        }
+        &::before {
+          margin-left: -8px;
+        }
+        &::after {
+          margin-right: -8px;
+        }
+
+        span {
+          background-color: white;
+          border: 2px solid #e9e9e9;
+          outline: 5px solid #e9e9e9;
+          outline-offset: -20px;
+          height: 28px;
+          width: 28px;
+          display: block;
+          border-radius: 100%;
+          flex-shrink: 0;
+        }
+      }
+      .step-text {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+        text-align: center;
+        @media screen and (max-width: 991px) {
+          font-size: 14px;
+          line-height: 16px;
+        }
+      }
+    }
+  }
   .calendar-section {
     .container {
       max-width: 1030px;
@@ -48,9 +144,11 @@
         flex-direction: column;
         gap: 32px;
       }
+      .first-col {
+        flex: 1;
+      }
       .second-col {
         width: 420px;
-        flex-shrink: 0;
         @media screen and (max-width: 991px) {
           width: auto;
         }
@@ -104,6 +202,7 @@
         .dayContainer {
           display: grid;
           grid-template-columns: repeat(7, auto);
+          column-gap: 16px;
         }
       }
       .event-type-pills {
@@ -231,6 +330,7 @@
       justify-content: space-between;
       background: #f7f7f7;
       display: flex;
+      align-items: center;
       label {
         font-size: 22px;
         line-height: 30px;
@@ -316,6 +416,16 @@
       }
       .submit-btn.gpay {
         background: #31364e;
+      }
+    }
+    &.center-one {
+      background: none;
+      box-shadow: none;
+      padding-left: 0;
+      padding-right: 0;
+      .payment-total-box {
+        box-shadow: 0px 4px 24px 8px #b1aaaa26;
+        background: white;
       }
     }
   }
