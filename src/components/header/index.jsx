@@ -418,6 +418,7 @@ export const Header = () => {
   });
 
   const loginAction = () => {
+    setNavExpanded(false);
     showModal(MODAL_TYPES.LOGIN_MODAL, {
       navigateTo: '/us-en/profile?' + queryString.stringify(router.query),
     });
@@ -585,7 +586,13 @@ export const Header = () => {
             </div>
           </Navbar.Collapse>
         </Navbar>
-        <div className="user-profile-link">
+        <div
+          className={
+            navExpanded && authenticated
+              ? 'user-profile-link'
+              : 'user-profile-link hide-link'
+          }
+        >
           <div className="UserprofileView">
             {!authenticated && (
               <button
@@ -601,7 +608,11 @@ export const Header = () => {
               <>
                 <span className="username">{first_name || last_name}</span>
                 <Link prefetch={false} href="/us-en/profile" legacyBehavior>
-                  <a className="header_profileHeaderImage" href="#">
+                  <a
+                    className="header_profileHeaderImage"
+                    href="#"
+                    onClick={() => setNavExpanded(false)}
+                  >
                     <p className="initials">{initials}</p>
                     {profilePic && (
                       <img
