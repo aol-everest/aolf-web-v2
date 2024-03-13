@@ -216,16 +216,14 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
           <div className="container">
             <div className="research-listing">
               <div className="research-list-item">
-                <h3>Resilience to Stress from COVID 19 Stress</h3>
+                <h3>RESILIENCE</h3>
                 <img
                   src="/img/research-count1.webp"
                   width="114"
                   height="119"
                   alt="research"
                 />
-                <div className="description">
-                  IMPROVED RESILIENCE IN 6 WEEKS
-                </div>
+                <div className="description">IMPROVED IN 6 WEEKS</div>
               </div>
               <div className="research-list-item">
                 <h3>
@@ -443,11 +441,11 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
               <iframe
                 width="669"
                 height="376"
-                src="https://www.youtube.com/embed/SgngEpwLzig?si=onJ4WD5nlAuDMIVt"
-                title="YouTube video player"
-                frameBorder="0"
+                src="https://www.youtube.com/embed/g4I9m_Od89w"
+                title="How healthcare Professionals Transform their Organizations"
+                frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
+                allowfullscreen
               ></iframe>
             </div>
             <div className="testimonial-slider-wrapper">
@@ -553,7 +551,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
               List of some of the organizations that have benefited from the Art
               of Living’s Healing Breaths SKY Programs
             </div>
-            <div className="benefitted-orgs-list">
+            {/* <div className="benefitted-orgs-list">
               <div className="org-list-item">
                 <img
                   src="/img/childrens-national-logo.webp"
@@ -681,6 +679,12 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                   width="149"
                   height="60"
                 />
+              </div>
+            </div> */}
+
+            <div className="benefitted-orgs-list">
+              <div>
+                <img src="/img/hb-logos-new.png" width="1300" height="512" />
               </div>
             </div>
           </div>
