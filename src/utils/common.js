@@ -206,6 +206,16 @@ export const joinPhoneNumbers = (...phoneNumbers) => {
   return formattedNumbers;
 };
 
+export const concatenateStrings = (stringArray, joinChar = ', ') => {
+  if (!Array.isArray(stringArray)) {
+    throw new Error('Input must be an array of strings');
+  }
+
+  return stringArray
+    .filter((str) => str !== null && str !== undefined) // Filter out null or undefined values
+    .join(joinChar);
+};
+
 export const findExistingQuestionnaire = (
   totalSelectedOptions,
   currentStepData,
