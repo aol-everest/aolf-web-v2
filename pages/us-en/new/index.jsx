@@ -8,7 +8,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img2.webp"
+                src="/img/all-course-img2.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -30,7 +30,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img1.webp"
+                src="/img/all-course-img1.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -52,7 +52,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img3.webp"
+                src="/img/all-course-img3.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -75,7 +75,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img12.webp"
+                src="/img/all-course-img12.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -103,7 +103,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img4.webp"
+                src="/img/all-course-img4.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -125,7 +125,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img5.webp"
+                src="/img/all-course-img5.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -148,7 +148,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img6.webp"
+                src="/img/all-course-img6.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -170,7 +170,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img7.webp"
+                src="/img/all-course-img7.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -193,7 +193,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img8.webp"
+                src="/img/all-course-img8.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -220,7 +220,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img9.webp"
+                src="/img/all-course-img9.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -243,7 +243,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img10.webp"
+                src="/img/all-course-img10.webp"
                 alt="course"
                 width="642"
                 height="240"
@@ -265,7 +265,7 @@ const Home = () => {
           <div class="course-item">
             <div class="course-img">
               <img
-                src="./img/all-course-img11.webp"
+                src="/img/all-course-img11.webp"
                 alt="course"
                 width="642"
                 height="240"
