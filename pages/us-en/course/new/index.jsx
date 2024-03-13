@@ -17,6 +17,8 @@ import { ABBRS, COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
+dayjs.extend(utc);
+
 async function queryInstructor({ queryKey: [_, term] }) {
   const response = await api.get({
     path: 'cf/teachers',
@@ -71,6 +73,7 @@ const CourseTile = ({ data, authenticated }) => {
     coTeacher1Name,
     coTeacher2Name,
     timings,
+    unitPrice,
   } = data || {};
 
   const getCourseDeration = () => {
@@ -106,7 +109,7 @@ const CourseTile = ({ data, authenticated }) => {
           <div class="course-duration">{getCourseDeration()}</div>
         </div>
         <div class="course-price">
-          <span>$100</span>
+          <span>${unitPrice}</span>
         </div>
       </div>
       <div class="course-instructors">
