@@ -5,13 +5,16 @@ import moment from 'moment';
 import {
   api,
   findCourseTypeByKey,
+  formatDateRange,
   getLatLangByZipCode,
   getUserTimeZoneAbbreviation,
   getZipCodeByLatLang,
+  tConvert,
 } from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import dayjs from 'dayjs';
+import { sortBy, values, omit } from 'lodash';
 import Flatpickr from 'react-flatpickr';
 import {
   ABBRS,
@@ -27,6 +30,7 @@ import { useEffectOnce } from 'react-use';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
+import Select from 'react-select';
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
@@ -65,8 +69,8 @@ const New = () => {
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(true);
+  const [showLocationModal, setShowLocationModal] = useState(true);
+  const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
   const [locationFilter, setLocationFilter] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -74,7 +78,6 @@ const New = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [zipCode, setZipCode] = useState('');
   const [timezoneFilter, setTimezoneFilter] = useState('EST');
-  const [isUserLocationShared, setIsUserLocationShared] = useState(false);
   const [value, setValue] = useSessionStorage('zipCode', '');
   const [selectedWorkshop, setSelectedWorkshop] = useState({});
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
@@ -94,6 +97,48 @@ const New = () => {
 
   const [teacherFilter] = useQueryState('teacher');
   const [cityFilter] = useQueryState('city');
+
+  const {
+    id: productId,
+    premiumRate = {},
+    otherPaymentOptions,
+    groupedAddOnProducts,
+    addOnProducts = [],
+    complianceQuestionnaire,
+    availableBundles,
+    usableCredit,
+    programQuestionnaire,
+    title,
+    productTypeId,
+    isCCNotRequired,
+    paymentMethod = {},
+    phone1,
+    eventEndDate,
+    eventStartDate,
+    primaryTeacherName,
+    coTeacher1Name,
+    coTeacher2Name,
+    phone2,
+    timings = [],
+    email: contactEmail,
+  } = selectedWorkshop;
+
+  useEffectOnce(() => {
+    page({
+      category: 'course_registration',
+      name: 'course_search_scheduling',
+      course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+    });
+
+    setTimezoneFilter(fillDefaultTimeZone());
+  });
+
+  useEffect(() => {
+    if (selectedDates?.length) {
+      setShowWorkshopSelectModal(true);
+      getWorkshops();
+    }
+  }, [selectedDates]);
 
   useEffect(() => {
     const getAddress = async () => {
@@ -117,7 +162,6 @@ const New = () => {
             const [zipCode] = await Promise.all([
               getZipCodeByLatLang(latitude, longitude),
             ]);
-            setIsUserLocationShared(true);
             setValue(zipCode);
             setZipCode(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
@@ -133,29 +177,48 @@ const New = () => {
     getUserLocation();
   }, []);
 
-  useEffectOnce(() => {
-    page({
-      category: 'course_registration',
-      name: 'course_search_scheduling',
-      course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
-    });
-
-    setTimezoneFilter(fillDefaultTimeZone());
-  });
-
   useEffect(() => {
     if (router?.query?.timezone) {
       setTimezoneFilter(router.query.timezone);
     }
   }, [router.query]);
 
-  const fillDefaultTimeZone = () => {
-    const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
-    if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
-      return userTimeZoneAbbreviation.toUpperCase();
-    }
-    return 'EST';
-  };
+  useEffect(() => {
+    const getAddress = async () => {
+      if (value) {
+        const latLng = await getLatLangByZipCode(value);
+        setZipCode(value);
+        if (latLng?.locationName) {
+          setLocationFilter(latLng);
+        }
+      }
+    };
+    getAddress();
+  }, [value]);
+
+  useEffect(() => {
+    const getUserLocation = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            const [zipCode] = await Promise.all([
+              getZipCodeByLatLang(latitude, longitude),
+            ]);
+            setValue(zipCode);
+            setZipCode(zipCode);
+            setLocationFilter({ lat: latitude, lng: longitude, zipCode });
+          },
+          (error) => {
+            console.error('Error getting location:', error.message);
+          },
+        );
+      } else {
+        console.error('Geolocation is not supported by your browser.');
+      }
+    };
+    getUserLocation();
+  }, []);
 
   const { data: dateAvailable = [], isLoading } = useQuery(
     [
@@ -207,15 +270,15 @@ const New = () => {
       });
       if (isInitialLoad) {
         const defaultDate =
-          response.data.length > 0 ? response.data[0].allDates : [];
-        if (fp?.current?.flatpickr && defaultDate.length > 0) {
-          setTimeout(() => {
-            fp.current.flatpickr.setDate(defaultDate, true);
-          }, 100);
+          //   response.data.length > 0 ? response.data[0].allDates : [];
+          // if (fp?.current?.flatpickr && defaultDate.length > 0) {
+          //   setTimeout(() => {
+          //     fp.current.flatpickr.setDate(defaultDate, true);
+          //   }, 100);
 
-          // fp.current.flatpickr.jumpToDate(defaultDate[0], true);
-        }
-        setIsInitialLoad(false);
+          //   // fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+          // }
+          setIsInitialLoad(false);
       }
       return response.data;
     },
@@ -223,6 +286,112 @@ const New = () => {
       refetchOnWindowFocus: false,
     },
   );
+
+  const { data: workshopMaster = {} } = useQuery(
+    ['workshopMaster', mode],
+    async () => {
+      let ctypeId = null;
+      if (
+        findCourseTypeByKey(courseTypeFilter)?.subTypes &&
+        findCourseTypeByKey(courseTypeFilter)?.subTypes[mode]
+      ) {
+        ctypeId = findCourseTypeByKey(courseTypeFilter)?.subTypes[mode];
+      } else {
+        const courseTypeValue =
+          findCourseTypeByKey(courseTypeFilter)?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+        ctypeId = courseTypeValue ? courseTypeValue.split(';')[0] : undefined;
+      }
+
+      let param = {
+        ctypeId,
+      };
+      const response = await api.get({
+        path: 'workshopMaster',
+        param,
+      });
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  let enableDates = dateAvailable.map((da) => {
+    return da.firstDate;
+  });
+
+  enableDates = [...enableDates, ...selectedDates];
+
+  const fillDefaultTimeZone = () => {
+    const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
+    if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
+      return userTimeZoneAbbreviation.toUpperCase();
+    }
+    return 'EST';
+  };
+
+  function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+  }
+
+  function calculateTotalDistance(event) {
+    const timings = sortBy(event.timings, (obj) => new Date(obj.startDate));
+    const earthRadius = 6371; // Earth radius in kilometers
+
+    const totalDistance = timings.reduce((acc, timing) => {
+      const eventLat = event.eventGeoLat;
+      const eventLon = event.eventGeoLon;
+      const targetLat = locationFilter?.lat;
+      const targetLon = locationFilter?.lng;
+
+      // Haversine formula for distance calculation
+      const dLat = toRadians(eventLat - targetLat);
+      const dLon = toRadians(eventLon - targetLon);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(targetLat)) *
+          Math.cos(toRadians(eventLat)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = earthRadius * c;
+
+      return acc + distance;
+    }, 0);
+
+    return totalDistance;
+  }
+
+  function getGroupedUniqueEventIds(response) {
+    const groupedEvents = response.data.reduce((acc, obj) => {
+      let timings = obj.timings;
+      timings = sortBy(timings, (obj) => new Date(obj.startDate));
+
+      const timingKey = timings.reduce((acc1, obj) => {
+        acc1 += '' + obj.startDate + '' + obj.startTime;
+        return acc1;
+      }, '');
+
+      const existingEvent = acc[timingKey];
+
+      if (
+        !existingEvent ||
+        calculateTotalDistance(obj) < calculateTotalDistance(existingEvent)
+      ) {
+        acc[timingKey] = obj;
+      }
+
+      return acc;
+    }, {});
+
+    const closestEventIds = Object.values(groupedEvents).map(
+      (event) => event.id,
+    );
+
+    return closestEventIds;
+  }
 
   const getWorkshops = async () => {
     setLoading(true);
@@ -235,9 +404,9 @@ const New = () => {
         COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
       random: true,
     };
-    if (mode !== COURSE_MODES.IN_PERSON.value) {
-      param = { ...param, timeZone: timezoneFilter };
-    }
+    // if (mode !== COURSE_MODES.IN_PERSON.value) {
+    //   param = { ...param, timeZone: timezoneFilter };
+    // }
     if (mode && mode !== COURSE_MODES_BOTH) {
       param = { ...param, mode };
     }
@@ -299,37 +468,6 @@ const New = () => {
     }
   };
 
-  const { data: workshopMaster = {} } = useQuery(
-    ['workshopMaster', mode],
-    async () => {
-      let ctypeId = null;
-      if (
-        findCourseTypeByKey(courseTypeFilter)?.subTypes &&
-        findCourseTypeByKey(courseTypeFilter)?.subTypes[mode]
-      ) {
-        ctypeId = findCourseTypeByKey(courseTypeFilter)?.subTypes[mode];
-      } else {
-        const courseTypeValue =
-          findCourseTypeByKey(courseTypeFilter)?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
-
-        ctypeId = courseTypeValue ? courseTypeValue.split(';')[0] : undefined;
-      }
-
-      let param = {
-        ctypeId,
-      };
-      const response = await api.get({
-        path: 'workshopMaster',
-        param,
-      });
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
-
   const handleLocationFilterChange = (value) => {
     resetCalender();
     setIsInitialLoad(true);
@@ -349,12 +487,6 @@ const New = () => {
     }
   };
 
-  let enableDates = dateAvailable.map((da) => {
-    return da.firstDate;
-  });
-
-  enableDates = [...enableDates, ...selectedDates];
-
   const handleModalToggle = () => {
     if (showLocationModal) {
       setIsInitialLoad(true);
@@ -362,52 +494,19 @@ const New = () => {
     setShowLocationModal(!showLocationModal);
   };
 
-  useEffect(() => {
-    const getAddress = async () => {
-      if (value) {
-        const latLng = await getLatLangByZipCode(value);
-        setZipCode(value);
-        if (latLng?.locationName) {
-          setLocationFilter(latLng);
-        }
-      }
-    };
-    getAddress();
-  }, [value]);
-
-  useEffect(() => {
-    const getUserLocation = async () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const { latitude, longitude } = position.coords;
-            const [zipCode] = await Promise.all([
-              getZipCodeByLatLang(latitude, longitude),
-            ]);
-            setIsUserLocationShared(true);
-            setValue(zipCode);
-            setZipCode(zipCode);
-            setLocationFilter({ lat: latitude, lng: longitude, zipCode });
-          },
-          (error) => {
-            console.error('Error getting location:', error.message);
-          },
-        );
-      } else {
-        console.error('Geolocation is not supported by your browser.');
-      }
-    };
-    getUserLocation();
-  }, []);
-
-  const WorkshopSelectModal = (handleCheckout) => {
-    const [selectedWorkshop, setSelectedWorkshop] = useState({});
-
+  const WorkshopSelectModal = () => {
+    const [localSelectedWorksop, setLocalSelectedWorksop] = useState(null);
     const handleWorkshopSelect = async (workshop) => {
-      setSelectedWorkshopId(workshop?.id);
-      const workshopDetail = await getWorkshopDetails(workshop?.id);
+      setLocalSelectedWorksop(workshop);
+    };
+
+    const goToCheckout = async () => {
+      setShowWorkshopSelectModal((prevValue) => !prevValue);
+      setSelectedWorkshop(localSelectedWorksop);
+      setSelectedWorkshopId(localSelectedWorksop?.id);
+      const workshopDetail = await getWorkshopDetails(localSelectedWorksop?.id);
       track('program_date_button', {
-        program_id: workshop?.id,
+        program_id: localSelectedWorksop?.id,
         program_name: workshopDetail?.title,
         program_date: workshopDetail?.eventStartDate,
         program_time: workshopDetail?.eventStartTime,
@@ -415,12 +514,8 @@ const New = () => {
       });
     };
 
-    const goToCheckout = () => {
-      handleCheckout(selectedWorkshop);
-    };
-
     const handleModalToggle = () => {
-      setShowWorkshopSelectModal((prevState) => !prevState);
+      setShowWorkshopSelectModal(false);
     };
 
     return (
@@ -437,178 +532,70 @@ const New = () => {
             <button className="prev-slot">
               <img src="/img/chevron-left.svg" />
             </button>
-            <div className="slot-info">January 18-21, 2024 PT</div>
+            <div className="slot-info">{formatDateRange(selectedDates)}</div>
             <button className="next-slot">
               <img src="/img/chevron-right.svg" />
             </button>
           </div>
           <div className="slot-listing">
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">151W 30th Street, New York, NY</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
+            {workshops?.map((workshop) => {
+              return (
+                <div
+                  className="slot-item"
+                  onClick={() => handleWorkshopSelect(workshop)}
+                  key={workshop?.sfid}
+                >
+                  <div className="slot-type">
+                    <div className="slot-info">
+                      {workshop?.mode === COURSE_MODES.ONLINE.name ? (
+                        workshop.mode
+                      ) : workshop.isLocationEmpty ? (
+                        <>
+                          {workshop?.city}, {workshop?.state}
+                        </>
+                      ) : (
+                        `${workshop.locationStreet || ''} ${
+                          workshop.locationCity || ''
+                        }
+                          ${workshop.locationProvince || ''} ${
+                            workshop.locationCountry || ''
+                          }`
+                      )}
+                    </div>
+                    <div className="slot-select form-item">
+                      <input
+                        type="radio"
+                        value={localSelectedWorksop?.id}
+                        defaultChecked={
+                          localSelectedWorksop?.id === workshop.id
+                        }
+                        checked={localSelectedWorksop?.id === workshop.id}
+                      />
+                    </div>
+                  </div>
+                  {workshop.timings.map((timing) => {
+                    return (
+                      <div className="slot-timing">
+                        <div className="slot-date">
+                          {dayjs.utc(timing.startDate).format('M/DD, ddd')}
+                        </div>
+                        <div className="slot-time">
+                          {tConvert(timing.startTime)}-
+                          {tConvert(timing.endTime)} {ABBRS[timing.timeZone]}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">Online</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
-                </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">151W 30th Street, New York, NY</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
-                </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">151W 30th Street, New York, NY</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
-                </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">151W 30th Street, New York, NY</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
-                </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">151W 30th Street, New York, NY</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
-                </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">151W 30th Street, New York, NY</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
-                </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
-            <div className="slot-item">
-              <div className="slot-type">
-                <div className="slot-info">151W 30th Street, New York, NY</div>
-                <div className="slot-select form-item">
-                  <input type="radio" />
-                </div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/18, Mon</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/19, Tue</div>
-                <div className="slot-time">12pm - 2:30 pm ET</div>
-              </div>
-              <div className="slot-timing">
-                <div className="slot-date">1/20, Wed</div>
-                <div className="slot-time">12pm - 2:30pm ET</div>
-              </div>
-            </div>
+              );
+            })}
           </div>
           <div className="slot-action">
             <button
               type="button"
               data-dismiss="modal"
               className="btn btn-primary find-courses submit-btn"
+              onClick={goToCheckout}
             >
               Continue
             </button>
@@ -658,31 +645,6 @@ const New = () => {
       </Modal>
     );
   };
-
-  const {
-    id: productId,
-    premiumRate = {},
-    otherPaymentOptions,
-    groupedAddOnProducts,
-    addOnProducts = [],
-    complianceQuestionnaire,
-    availableBundles,
-    usableCredit,
-    programQuestionnaire,
-    title,
-    productTypeId,
-    isCCNotRequired,
-    paymentMethod = {},
-    phone1,
-    eventEndDate,
-    eventStartDate,
-    primaryTeacherName,
-    coTeacher1Name,
-    coTeacher2Name,
-    phone2,
-    timings = [],
-    email: contactEmail,
-  } = selectedWorkshop;
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
     let isEventAvailable = false;
@@ -761,10 +723,7 @@ const New = () => {
     );
   };
 
-  const handleContinuePress = () => {
-    setShowWorkshopSelectModal((prevValue) => !prevValue);
-    getWorkshops();
-  };
+  const handleContinuePress = () => {};
 
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
@@ -834,11 +793,14 @@ const New = () => {
   };
 
   const handleCheckout = () => {
-    setShowWorkshopSelectModal((prevValue) => !prevValue);
     goToPaymentModal();
   };
 
-  console.log('works', workshopMaster);
+  const handleSelectMode = (value) => {
+    setLocationFilter(null);
+    setMode(value);
+    resetCalender();
+  };
 
   return (
     <>
@@ -847,13 +809,12 @@ const New = () => {
         <section className="scheduling-top">
           <div className="container">
             <h1 className="page-title">{workshopMaster?.title}</h1>
-            <div className="page-description">
-              <strong>
-                Join the 45 million individuals across 180 countries
-              </strong>{' '}
-              who have experienced the benefits of this distinctive 3-day course
-              (2.5 hours per day)
-            </div>
+            <div
+              className="page-description"
+              dangerouslySetInnerHTML={{
+                __html: workshopMaster?.calenderViewDescription,
+              }}
+            ></div>
           </div>
         </section>
         <section className="scheduling-stepper">
@@ -888,11 +849,13 @@ const New = () => {
                   <div className="form-item">
                     <label>Course type</label>
                     <select
-                      class="input-select"
+                      className="input-select"
                       id="courseType"
                       name="courseType"
+                      value={mode}
+                      onChange={(ev) => handleSelectMode(ev.target.value)}
                     >
-                      <option value="All">All</option>
+                      <option value="both">All</option>
                       <option value={COURSE_MODES.ONLINE.value}>Online</option>
                       <option value={COURSE_MODES.IN_PERSON.value}>
                         In-person
@@ -900,16 +863,11 @@ const New = () => {
                     </select>
                   </div>
                   <div className="form-item">
-                    <label>Enter a zip code of city</label>
-                    <input
-                      className="custom-input tw-mx-auto tw-mb-0 !tw-w-[85%] scheduling-address"
-                      type="text"
-                      autoComplete="off"
-                      role="combobox"
-                      aria-autoComplete="list"
-                      aria-expanded="false"
-                      placeholder="Filter by zip code or city"
-                      value=""
+                    <ScheduleLocationFilterNew
+                      handleLocationChange={handleLocationFilterChange}
+                      value={locationFilter}
+                      containerClass="location-container"
+                      listClassName="result-list"
                     />
                   </div>
                 </div>
@@ -957,7 +915,7 @@ const New = () => {
                   </div>
                 </div>
               </div>
-              <div className="second-col">
+              <div className={selectedWorkshop?.id ? 'second-col' : 'hide-col'}>
                 <div className="payment-box">
                   <div className="payment-total-box">
                     <label>Total:</label>
@@ -1298,56 +1256,67 @@ const New = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {mode === COURSE_MODES.ONLINE.name
-                            ? mode
-                            : (mode === COURSE_MODES.IN_PERSON.name ||
-                                mode ===
-                                  COURSE_MODES.DESTINATION_RETREATS.name) && (
-                                <>
-                                  {!workshop.isLocationEmpty && (
-                                    <a
-                                      href={`https://www.google.com/maps/search/?api=1&query=${
-                                        workshop.locationStreet || ''
-                                      }, ${workshop.locationCity} ${
-                                        workshop.locationProvince
-                                      } ${workshop.locationPostalCode} ${
-                                        workshop.locationCountry
-                                      }`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      {workshop.locationStreet &&
-                                        workshop.locationStreet}
-                                      {workshop.locationCity || ''}
-                                      {', '}
-                                      {workshop.locationProvince || ''}{' '}
-                                      {workshop.locationPostalCode || ''}
-                                    </a>
-                                  )}
-                                  {workshop.isLocationEmpty && (
-                                    <a
-                                      href={`https://www.google.com/maps/search/?api=1&query=${
-                                        workshop.streetAddress1 || ''
-                                      },${workshop.streetAddress2 || ''} ${
-                                        workshop.city
-                                      } ${workshop.state} ${workshop.zip} ${
-                                        workshop.country
-                                      }`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      {workshop.streetAddress1 &&
-                                        workshop.streetAddress1}
-                                      {workshop.streetAddress2 &&
-                                        workshop.streetAddress2}
-                                      {workshop.city || ''}
-                                      {', '}
-                                      {workshop.state || ''}{' '}
-                                      {workshop.zip || ''}
-                                    </a>
-                                  )}
-                                </>
-                              )}
+                          {mode === COURSE_MODES.ONLINE.name ? (
+                            mode
+                          ) : selectedWorkshop.isLocationEmpty ? (
+                            <>
+                              Location: {selectedWorkshop?.city},{' '}
+                              {selectedWorkshop?.state}
+                            </>
+                          ) : (
+                            (mode === COURSE_MODES.IN_PERSON.name ||
+                              mode ===
+                                COURSE_MODES.DESTINATION_RETREATS.name) &&
+                            selectedWorkshop && (
+                              <>
+                                {!selectedWorkshop.isLocationEmpty && (
+                                  <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${
+                                      selectedWorkshop.locationStreet || ''
+                                    }, ${selectedWorkshop.locationCity} ${
+                                      selectedWorkshop.locationProvince
+                                    } ${selectedWorkshop.locationPostalCode} ${
+                                      selectedWorkshop.locationCountry
+                                    }`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {selectedWorkshop.locationStreet &&
+                                      selectedWorkshop.locationStreet}
+                                    {selectedWorkshop.locationCity || ''}
+                                    {', '}
+                                    {selectedWorkshop.locationProvince ||
+                                      ''}{' '}
+                                    {selectedWorkshop.locationPostalCode || ''}
+                                  </a>
+                                )}
+                                {selectedWorkshop.isLocationEmpty && (
+                                  <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${
+                                      selectedWorkshop.streetAddress1 || ''
+                                    },${
+                                      selectedWorkshop.streetAddress2 || ''
+                                    } ${selectedWorkshop.city} ${
+                                      selectedWorkshop.state
+                                    } ${selectedWorkshop.zip} ${
+                                      selectedWorkshop.country
+                                    }`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {selectedWorkshop.streetAddress1 &&
+                                      selectedWorkshop.streetAddress1}
+                                    {selectedWorkshop.streetAddress2 &&
+                                      selectedWorkshop.streetAddress2}
+                                    {selectedWorkshop.city || ''}
+                                    {', '}
+                                    {selectedWorkshop.state || ''}{' '}
+                                    {selectedWorkshop.zip || ''}
+                                  </a>
+                                )}
+                              </>
+                            )
+                          )}
                         </div>
                       </div>
                       <div className="detail-item row">
@@ -1480,13 +1449,17 @@ const New = () => {
             </div>
           </div>
         </section>
-        <LocationSearchModal
-          handleModalToggle={handleModalToggle}
-          showLocationModal={showLocationModal}
-          locationFilter={locationFilter}
-          handleLocationFilterChange={handleLocationFilterChange}
-        />
-        <WorkshopSelectModal />
+        {!loading && !isLoading && (
+          <>
+            <LocationSearchModal
+              handleModalToggle={handleModalToggle}
+              showLocationModal={showLocationModal}
+              locationFilter={locationFilter}
+              handleLocationFilterChange={handleLocationFilterChange}
+            />
+            <WorkshopSelectModal handleCheckout={handleCheckout} />
+          </>
+        )}
       </main>
     </>
   );

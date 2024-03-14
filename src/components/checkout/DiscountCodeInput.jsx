@@ -62,8 +62,8 @@ export const DiscountCodeInput = ({
         ?.isExpenseAddOn
         ? []
         : formikProps.values.accommodation?.productSfid
-        ? [formikProps.values.accommodation?.productSfid]
-        : [];
+          ? [formikProps.values.accommodation?.productSfid]
+          : [];
 
       AddOnProductIds = [
         ...AddOnProductIds,

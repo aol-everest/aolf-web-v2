@@ -1,4 +1,5 @@
 import { COURSE_TYPES } from '@constants';
+import dayjs from 'dayjs';
 
 export const isSSR = !(
   typeof window !== 'undefined' && window.document?.createElement
@@ -206,6 +207,16 @@ export const joinPhoneNumbers = (...phoneNumbers) => {
   return formattedNumbers;
 };
 
+export const concatenateStrings = (stringArray, joinChar = ', ') => {
+  if (!Array.isArray(stringArray)) {
+    throw new Error('Input must be an array of strings');
+  }
+
+  return stringArray
+    .filter((str) => str !== null && str !== undefined) // Filter out null or undefined values
+    .join(joinChar);
+};
+
 export const findExistingQuestionnaire = (
   totalSelectedOptions,
   currentStepData,
@@ -244,3 +255,18 @@ export function trimAndSplitName(name) {
   let lastName = lastNameParts.join(' ');
   return [firstName, lastName];
 }
+
+export const formatDateRange = (dates) => {
+  // Parse the first and last date in the array
+  const startDate = dayjs(dates[0]);
+  const endDate = dayjs(dates[dates.length - 1]);
+
+  // Format the start and end dates
+  const formattedStartDate = startDate.format('MMMM DD');
+  const formattedEndDate = endDate.format('DD');
+
+  // Combine formatted dates with PT
+  const formattedDateRange = `${formattedStartDate}-${formattedEndDate}, ${startDate.year()} PT`;
+
+  return formattedDateRange;
+};

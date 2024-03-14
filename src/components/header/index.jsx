@@ -573,7 +573,7 @@ export const Header = () => {
                 </Nav.Link>
               </Nav.Item>
             </Nav>
-            <div class="mobile-menu-buttons">
+            <div className="mobile-menu-buttons">
               {!authenticated && (
                 <button
                   className="btn btn-outline header__button login-btn"
@@ -588,9 +588,7 @@ export const Header = () => {
         </Navbar>
         <div
           className={
-            navExpanded && authenticated
-              ? 'user-profile-link'
-              : 'user-profile-link hide-link'
+            authenticated ? 'user-profile-link' : 'user-profile-link hide-link'
           }
         >
           <div className="UserprofileView">
