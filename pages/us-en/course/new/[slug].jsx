@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
 import {
   api,
@@ -447,7 +448,7 @@ const Course = () => {
                 className="tw-p-6 tw-text-lg tw-text-center"
                 style={{ flex: '0 0 100%' }}
               >
-                No more data available to read.
+                That's all folks! No more data left to check out.
               </div>
             )}
           </div>
