@@ -192,6 +192,8 @@ export const COURSE_TYPES = {
     name: 'Art of Living Premium Program',
     value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || '',
     code: '10304000',
+    description:
+      'Find new levels of calm and energy for life in this powerful course that introduces SKY Breath Meditation and Sahaj Samadhi Meditation.',
     subTypes: {
       Online: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_ONLINE_CTYPE,
       'In Person': process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_IN_PERSON_CTYPE,
