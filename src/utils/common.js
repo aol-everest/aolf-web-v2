@@ -105,6 +105,24 @@ export const findCourseTypeByKey = (key) => {
   return null; // Return null if no match is found
 };
 
+export const findCourseTypeBySlug = (slug) => {
+  // First, check if the key matches a course name
+  for (const courseKey in COURSE_TYPES) {
+    if (courseKey === slug) {
+      return COURSE_TYPES[courseKey];
+    }
+  }
+
+  // If no match is found, check if the key matches a course code
+  for (const courseKey in COURSE_TYPES) {
+    if (COURSE_TYPES[courseKey].slug === slug) {
+      return COURSE_TYPES[courseKey];
+    }
+  }
+
+  return null; // Return null if no match is found
+};
+
 export const getZipCodeByLatLang = async (lat, lng) => {
   const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`;
   const data = await fetch(apiUrl);

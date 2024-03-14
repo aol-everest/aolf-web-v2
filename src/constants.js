@@ -83,11 +83,40 @@ export const SHARE_SITES = {
   ICAL: 'iCal',
 };
 
+export const COURSE_TYPES_MASTER = [
+  {
+    name: `Beginner's Courses`,
+    courseTypes: [
+      'SKY_BREATH_MEDITATION',
+      'SAHAJ_SAMADHI_MEDITATION',
+      'ART_OF_LIVING_PREMIUM_PROGRAM',
+      'SRI_SRI_YOGA_MEDITATION',
+    ],
+  },
+  {
+    name: `Advanced Courses`,
+    courseTypes: [
+      'SILENT_RETREAT',
+      'BLESSINGS_COURSE',
+      'CHAKRA_KRIYA',
+      'SANYAM_COURSE',
+      'SRI_SRI_YOGA_DEEP_DIVE',
+    ],
+  },
+  {
+    name: `Training Courses`,
+    courseTypes: ['VOLUNTEER_TRAINING_PROGRAM', 'MARMA_TRAINING'],
+  },
+];
+
 export const COURSE_TYPES = {
   SKY_BREATH_MEDITATION: {
+    slug: 'art-of-living-part-1',
     name: 'Art of Living Part 1',
     value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
     code: '10101000',
+    description:
+      'Discover SKY Breath Meditation, an evidence-based technique that quickly reduces stress, balances emotions, and restores calm.',
     subTypes: {
       Online: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_ONLINE_CTYPE,
       'In Person':
@@ -95,43 +124,61 @@ export const COURSE_TYPES = {
     },
   },
   SILENT_RETREAT: {
+    slug: 'art-of-living-part-2',
     name: 'Art of Living Part 2',
     code: '10203000',
     value: process.env.NEXT_PUBLIC_SILENT_RETREAT_CTYPE || '',
+    description:
+      'Unplug from the world for a few days to give yourself a true vacation for mind, body, and spirit with a silent retreat.',
   },
   SAHAJ_SAMADHI_MEDITATION: {
+    slug: 'sahaj-samadhi-meditation',
     name: 'Sahaj Samadhi Meditation',
     value: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_CTYPE || '',
     code: '10102000',
+    description:
+      'Learn how to let go of worries and enjoy deep rest with this practical, effective, and effortless meditation practice.',
     subTypes: {
       Online: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_ONLINE_CTYPE,
       'In Person': process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_IN_PERSON_CTYPE,
     },
   },
   SRI_SRI_YOGA_MEDITATION: {
-    name: 'Sri Sri Yoga',
+    slug: 'sri-sri-yoga-foundation',
+    name: 'Sri Sri Yoga Foundation',
     code: '10106000',
     value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE || '',
+    description:
+      'Improve your flexibility and nourish your spirit with this deeply relaxing style of yoga and its wealth of mind-body benefits.',
   },
   CHAKRA_KRIYA: {
+    slug: 'chakra-kriya',
     name: 'Chakra Kriya',
     code: '10207000',
     value: process.env.NEXT_PUBLIC_CHAKRA_KRIYA_CTYPE || '',
+    description:
+      'Boost your SKY practice with the energy of your chakras to experience new depths of meditation and rest.',
   },
   VOLUNTEER_TRAINING_PROGRAM: {
+    slug: 'volunteer-training-program',
     name: 'Volunteer Training Program',
     code: '10408000',
     value: process.env.NEXT_PUBLIC_VOLUNTEER_TRAINING_PROGRAM_CTYPE || '',
+    description:
+      'Grow professionally, personally, and spiritually. Overcome personal barriers and gain the skills to make a difference in your community.',
   },
   HEALING_BREATH: {
+    slug: 'healing-breath',
     name: 'Healing Breath',
     value: process.env.NEXT_PUBLIC_HEALING_BREATH_CTYPE || '',
   },
   HEALING_BREATH_SILENT: {
+    slug: 'healing-breath-silent',
     name: 'Healing Breath Silent',
     value: process.env.NEXT_PUBLIC_HEALING_BREATH_SILENT_CTYPE || '',
   },
   SKY_SILENT_RETREAT: {
+    slug: 'silent-retreat',
     name: 'Silent Retreat',
     value: process.env.NEXT_PUBLIC_SKY_SILENT_RETREAT_CTYPE || '',
     code: '10305000',
@@ -141,6 +188,7 @@ export const COURSE_TYPES = {
     },
   },
   ART_OF_LIVING_PREMIUM_PROGRAM: {
+    slug: 'art-of-living-premium-program',
     name: 'Art of Living Premium Program',
     value: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_CTYPE || '',
     code: '10304000',
@@ -150,46 +198,64 @@ export const COURSE_TYPES = {
     },
   },
   SKY_HAPPINESS_RETREAT: {
+    slug: 'sky-happiness-retreat',
     name: 'SKY Happiness Retreat',
     value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || '',
   },
   BLESSINGS_COURSE: {
+    slug: 'blessings-course',
     name: 'Blessings Course',
     code: '10209000',
     value: process.env.NEXT_PUBLIC_BLESSINGS_COURSE_CTYPE || '',
+    description:
+      'Immerse in a subtle yet transformative program designed to take you to a deep state of gratitude and fullness with a connection to innate healing.',
   },
   INSTITUTIONAL_COURSE: {
+    slug: 'institutional',
     name: 'Institutional',
     value: process.env.NEXT_PUBLIC_INSTITUTIONAL_CTYPE || '',
   },
   SKY_CAMPUS_HAPPINESS_RETREAT: {
+    slug: 'sky-happiness-retreat',
     name: 'SKY Happiness Retreat',
     value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || '',
   },
   SANYAM_COURSE: {
+    slug: 'sanyam-course',
     name: 'Sanyam Course',
     code: '10210000',
     value: process.env.NEXT_PUBLIC_SANYAM_COURSE_CTYPE || '',
+    description:
+      'Unlock the magic inside of you, open new doors to your meditation practice, and gain a profound understanding of yoga’s timeless wisdom.',
   },
   MEDITATION_DELUXE_COURSE: {
+    slug: 'meditation-deluxe-course',
     name: 'MEDITATION_DELUXE_COURSE',
     code: '10111000',
     value: process.env.NEXT_PUBLIC_MEDITATION_DELUXE_CTYPE || '',
   },
   GATEWAY_TO_INFINITY_COURSE: {
+    slug: 'gateway-to-infinity-course',
     name: 'GATEWAY_TO_INFINITY_COURSE',
     code: '10112000',
     value: process.env.NEXT_PUBLIC_GATEWAY_TO_INFINITY_CTYPE || '',
   },
   SRI_SRI_YOGA_DEEP_DIVE: {
+    slug: 'sri-sri-yoga-deep-dive',
     name: 'Sri Sri Yoga Deep Dive',
     value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_DEEP_DIVE_CTYPE || '',
+    description:
+      'Dive deep into yoga in a gentle yet profound, celebratory, and joyful way',
   },
   MARMA_TRAINING: {
-    name: 'Marma Training',
+    slug: 'sri-sri-marma-practitioner',
+    name: 'Sri Sri Marma Practitioner',
     value: process.env.NEXT_PUBLIC_MARMA_PRACTITIONER_CTYPE || '',
+    description:
+      'Learn how to heal yourself and others through Marma, the most restorative Ayurvedic treatment.',
   },
   DSN_COURSE: {
+    slug: 'dsn-course',
     name: 'DSN Course',
     value: process.env.NEXT_PUBLIC_DSN_CTYPE || '',
   },

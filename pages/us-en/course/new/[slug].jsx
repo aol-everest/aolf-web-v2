@@ -5,6 +5,7 @@ import {
   getUserTimeZoneAbbreviation,
   concatenateStrings,
   tConvert,
+  findCourseTypeBySlug,
 } from '@utils';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from 'react-query';
@@ -16,6 +17,7 @@ import { useIntersectionObserver, useQueryString } from '@hooks';
 import { ABBRS, COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
 
 dayjs.extend(utc);
 
@@ -139,6 +141,10 @@ const CourseTile = ({ data, authenticated }) => {
 const Course = () => {
   const seed = useUIDSeed();
   const { authenticated } = useAuth();
+  const router = useRouter();
+  const { slug } = router.query;
+
+  const courseTypeFilter = findCourseTypeBySlug(slug);
   const [activeFilterType, setActiveFilterType] = useQueryString('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryString('onlyWeekend', {
     defaultValue: false,
@@ -159,7 +165,6 @@ const Course = () => {
   const [locationFilter, setLocationFilter] = useQueryString('location', {
     parse: JSON.parse,
   });
-  const [courseTypeFilter, setCourseTypeFilter] = useQueryString('courseType');
   const [ctypesFilter, setCtypesFilter] = useQueryString('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryString('startEndDate');
@@ -214,10 +219,10 @@ const Course = () => {
             ...param,
             ctype: ctypesFilter,
           };
-        } else if (courseTypeFilter && COURSE_TYPES[courseTypeFilter]) {
+        } else if (courseTypeFilter) {
           param = {
             ...param,
-            ctype: COURSE_TYPES[courseTypeFilter].value,
+            ctype: courseTypeFilter.value,
           };
         }
         if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
@@ -304,11 +309,8 @@ const Course = () => {
   return (
     <main class="all-courses-find">
       <section class="title-header">
-        <h1 class="page-title">Sahaj Samadhi Meditation</h1>
-        <div class="page-description">
-          Learn how to let go of worries and enjoy deep rest with this
-          practical, effective, and effortless meditation practice.
-        </div>
+        <h1 class="page-title">{courseTypeFilter.name}</h1>
+        <div class="page-description">{courseTypeFilter.description}</div>
       </section>
       <section class="section-course-find">
         <div class="container">
