@@ -80,8 +80,8 @@ export const ScheduleAgreementForm = ({
               isIahv
                 ? 'https://members.us.iahv.org/policy/ppa-course'
                 : isCorporateEvent
-                ? '/policy/ppa-corporate'
-                : '/policy/ppa-course'
+                  ? '/policy/ppa-corporate'
+                  : '/policy/ppa-course'
             }
             legacyBehavior
           >

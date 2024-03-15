@@ -37,8 +37,8 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
     activeSlider === 0
       ? Style.sliderTransformFirst
       : activeSlider === 1
-      ? Style.sliderTransformSecond
-      : Style.sliderTransformThird;
+        ? Style.sliderTransformSecond
+        : Style.sliderTransformThird;
 
   return (
     <>

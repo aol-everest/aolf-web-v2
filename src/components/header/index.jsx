@@ -386,8 +386,8 @@ const MENU =
   orgConfig.name === 'AOL'
     ? AOL_MENU
     : orgConfig.name === 'IAHV'
-    ? IAHV_MENU
-    : HB_MENU;
+      ? IAHV_MENU
+      : HB_MENU;
 
 export const Header = () => {
   const router = useRouter();
@@ -483,9 +483,9 @@ export const Header = () => {
                                   menuItem.link === '/us-en/course'
                                     ? 'active'
                                     : menuItem.link ===
-                                      '/us-en/course-finder/welcome'
-                                    ? 'help'
-                                    : ''
+                                        '/us-en/course-finder/welcome'
+                                      ? 'help'
+                                      : ''
                                 }
                                 as={Link}
                               >
