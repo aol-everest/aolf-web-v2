@@ -1,36 +1,28 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
-import { useSessionStorage } from '@uidotdev/usehooks';
 import { useQueryState, parseAsString } from 'nuqs';
 import moment from 'moment';
 import {
   api,
   findCourseTypeByKey,
   formatDateRange,
-  getLatLangByZipCode,
   getUserTimeZoneAbbreviation,
   getZipCodeByLatLang,
   tConvert,
 } from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
+import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import Modal from 'react-bootstrap/Modal';
 import dayjs from 'dayjs';
 import { sortBy, values, omit } from 'lodash';
 import Flatpickr from 'react-flatpickr';
-import {
-  ABBRS,
-  ALERT_TYPES,
-  COURSE_MODES,
-  COURSE_TYPES,
-  PAYMENT_MODES,
-  PAYMENT_TYPES,
-  TIME_ZONE,
-} from '@constants';
+import { ABBRS, COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import Select from 'react-select';
+import { pushRouteWithUTMQuery } from '@service';
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
@@ -76,16 +68,13 @@ const New = () => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [workshops, setWorkshops] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [zipCode, setZipCode] = useState('');
   const [timezoneFilter, setTimezoneFilter] = useState('EST');
-  const [value, setValue] = useSessionStorage('zipCode', '');
-  const [selectedWorkshop, setSelectedWorkshop] = useState({});
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
     'ym',
     parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
   );
-  const [selectedWorkshopId, setSelectedWorkshopId] = useState();
-  const [activeWorkshop, setActiveWorkshop] = useState(null);
+  const [selectedWorkshopId, setSelectedWorkshopId] = useState('');
+  const [activeWorkshop, setActiveWorkshop] = useState({});
   const [courseTypeFilter] = useQueryState(
     'courseType',
     parseAsString.withDefault('SKY_BREATH_MEDITATION'),
@@ -99,19 +88,6 @@ const New = () => {
   const [cityFilter] = useQueryState('city');
 
   const {
-    id: productId,
-    premiumRate = {},
-    otherPaymentOptions,
-    groupedAddOnProducts,
-    addOnProducts = [],
-    complianceQuestionnaire,
-    availableBundles,
-    usableCredit,
-    programQuestionnaire,
-    title,
-    productTypeId,
-    isCCNotRequired,
-    paymentMethod = {},
     phone1,
     eventEndDate,
     eventStartDate,
@@ -121,7 +97,19 @@ const New = () => {
     phone2,
     timings = [],
     email: contactEmail,
-  } = selectedWorkshop;
+    isLocationEmpty,
+    city,
+    state,
+    locationStreet,
+    locationCity,
+    locationProvince,
+    locationPostalCode,
+    locationCountry,
+    streetAddress1,
+    streetAddress2,
+    zip,
+    country,
+  } = activeWorkshop;
 
   useEffectOnce(() => {
     page({
@@ -141,62 +129,12 @@ const New = () => {
   }, [selectedDates]);
 
   useEffect(() => {
-    const getAddress = async () => {
-      if (value) {
-        const latLng = await getLatLangByZipCode(value);
-        setZipCode(value);
-        if (latLng?.locationName) {
-          setLocationFilter(latLng);
-        }
-      }
-    };
-    getAddress();
-  }, [value]);
-
-  useEffect(() => {
-    const getUserLocation = async () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const { latitude, longitude } = position.coords;
-            const [zipCode] = await Promise.all([
-              getZipCodeByLatLang(latitude, longitude),
-            ]);
-            setValue(zipCode);
-            setZipCode(zipCode);
-            setLocationFilter({ lat: latitude, lng: longitude, zipCode });
-          },
-          (error) => {
-            console.error('Error getting location:', error.message);
-          },
-        );
-      } else {
-        console.error('Geolocation is not supported by your browser.');
-      }
-    };
-    getUserLocation();
-  }, []);
-
-  useEffect(() => {
     if (router?.query?.timezone) {
       setTimezoneFilter(router.query.timezone);
     }
   }, [router.query]);
 
   useEffect(() => {
-    const getAddress = async () => {
-      if (value) {
-        const latLng = await getLatLangByZipCode(value);
-        setZipCode(value);
-        if (latLng?.locationName) {
-          setLocationFilter(latLng);
-        }
-      }
-    };
-    getAddress();
-  }, [value]);
-
-  useEffect(() => {
     const getUserLocation = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -205,8 +143,6 @@ const New = () => {
             const [zipCode] = await Promise.all([
               getZipCodeByLatLang(latitude, longitude),
             ]);
-            setValue(zipCode);
-            setZipCode(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
           },
           (error) => {
@@ -270,15 +206,16 @@ const New = () => {
       });
       if (isInitialLoad) {
         const defaultDate =
-          //   response.data.length > 0 ? response.data[0].allDates : [];
-          // if (fp?.current?.flatpickr && defaultDate.length > 0) {
-          //   setTimeout(() => {
-          //     fp.current.flatpickr.setDate(defaultDate, true);
-          //   }, 100);
+          response.data.length > 0 ? response.data[0].allDates : [];
+        // if (fp?.current?.flatpickr && defaultDate.length > 0) {
+        //   setTimeout(() => {
+        //     fp.current.flatpickr.setDate(defaultDate, true);
+        //   }, 100);
 
-          //   // fp.current.flatpickr.jumpToDate(defaultDate[0], true);
-          // }
-          setIsInitialLoad(false);
+        //   //
+        // }
+        fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+        setIsInitialLoad(false);
       }
       return response.data;
     },
@@ -472,17 +409,8 @@ const New = () => {
     resetCalender();
     setIsInitialLoad(true);
     if (value) {
-      const zipCode = value.zipCode;
-      setValue(zipCode);
-      setZipCode(zipCode);
-      const updatedValue = omit(value, 'zipCode');
-      if (updatedValue && Object.keys(updatedValue).length > 0) {
-        setLocationFilter(updatedValue);
-      }
       setLocationFilter(value);
     } else {
-      setValue('');
-      setZipCode('');
       setLocationFilter(null);
     }
   };
@@ -500,11 +428,10 @@ const New = () => {
       setLocalSelectedWorksop(workshop);
     };
 
-    const goToCheckout = async () => {
+    const handleWorkshopSelectForCheckout = async () => {
       setShowWorkshopSelectModal((prevValue) => !prevValue);
-      setSelectedWorkshop(localSelectedWorksop);
-      setSelectedWorkshopId(localSelectedWorksop?.id);
       const workshopDetail = await getWorkshopDetails(localSelectedWorksop?.id);
+      setSelectedWorkshopId(workshopDetail?.id);
       track('program_date_button', {
         program_id: localSelectedWorksop?.id,
         program_name: workshopDetail?.title,
@@ -515,7 +442,24 @@ const New = () => {
     };
 
     const handleModalToggle = () => {
+      setSelectedDates([]);
       setShowWorkshopSelectModal(false);
+    };
+
+    const getSelectedAvailabelDate = () => {
+      const index = dateAvailable.findIndex((obj) => {
+        return obj.allDates.every((date) => selectedDates.includes(date));
+      });
+      return index;
+    };
+
+    const dateIndex = getSelectedAvailabelDate();
+
+    const handelGoBack = () => {
+      setSelectedDates(dateAvailable[dateIndex - 1]?.allDates);
+    };
+    const handelGoForward = () => {
+      setSelectedDates(dateAvailable[dateIndex + 1]?.allDates);
     };
 
     return (
@@ -529,11 +473,19 @@ const New = () => {
         <Modal.Header closeButton>Available Time</Modal.Header>
         <Modal.Body>
           <div className="time-slot-changer">
-            <button className="prev-slot">
+            <button
+              className="prev-slot"
+              disabled={dateIndex === 0}
+              onClick={handelGoBack}
+            >
               <img src="/img/chevron-left.svg" />
             </button>
             <div className="slot-info">{formatDateRange(selectedDates)}</div>
-            <button className="next-slot">
+            <button
+              className="next-slot"
+              disabled={dateIndex === dateAvailable?.length - 1}
+              onClick={handelGoForward}
+            >
               <img src="/img/chevron-right.svg" />
             </button>
           </div>
@@ -573,9 +525,9 @@ const New = () => {
                       />
                     </div>
                   </div>
-                  {workshop.timings.map((timing) => {
+                  {workshop.timings.map((timing, index) => {
                     return (
-                      <div className="slot-timing">
+                      <div className="slot-timing" key={index}>
                         <div className="slot-date">
                           {dayjs.utc(timing.startDate).format('M/DD, ddd')}
                         </div>
@@ -593,9 +545,9 @@ const New = () => {
           <div className="slot-action">
             <button
               type="button"
-              data-dismiss="modal"
+              disabled={!localSelectedWorksop}
               className="btn btn-primary find-courses submit-btn"
-              onClick={goToCheckout}
+              onClick={handleWorkshopSelectForCheckout}
             >
               Continue
             </button>
@@ -647,6 +599,8 @@ const New = () => {
   };
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
+    setActiveWorkshop({});
+    setSelectedWorkshopId(null);
     let isEventAvailable = false;
 
     if (selectedDates.length > 0 && dateStr !== 'update') {
@@ -711,7 +665,7 @@ const New = () => {
   };
 
   const resetCalender = () => {
-    setActiveWorkshop(null);
+    setActiveWorkshop({});
     setSelectedWorkshopId(null);
     setSelectedDates([]);
     fp.current.flatpickr.clear();
@@ -722,8 +676,6 @@ const New = () => {
       }`,
     );
   };
-
-  const handleContinuePress = () => {};
 
   const getWorkshopDetails = async (workshopId) => {
     setLoading(true);
@@ -802,6 +754,12 @@ const New = () => {
     resetCalender();
   };
 
+  const handelDayCreate = (dObj, dStr, fp, dayElem) => {
+    if (Math.random() < 0.15) {
+      dayElem.classList.add('event');
+    } else if (Math.random() > 0.85) dayElem.classList.add('busy');
+  };
+
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
@@ -826,7 +784,7 @@ const New = () => {
                 </div>
                 <div className="step-text">Select the date</div>
               </div>
-              <div className="step">
+              <div className={selectedWorkshopId ? 'step active' : 'step'}>
                 <div className="step-icon">
                   <span></span>
                 </div>
@@ -888,6 +846,7 @@ const New = () => {
                       minDate: 'today',
                       enable: enableDates || [],
                     }}
+                    onDayCreate={handelDayCreate}
                     onMonthChange={onMonthChangeAction}
                   />
                   <div className="event-type-pills">
@@ -915,7 +874,7 @@ const New = () => {
                   </div>
                 </div>
               </div>
-              <div className={selectedWorkshop?.id ? 'second-col' : 'hide-col'}>
+              <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
                 <div className="payment-box">
                   <div className="payment-total-box">
                     <label>Total:</label>
@@ -1258,60 +1217,46 @@ const New = () => {
                         <div className="value col-7">
                           {mode === COURSE_MODES.ONLINE.name ? (
                             mode
-                          ) : selectedWorkshop.isLocationEmpty ? (
+                          ) : isLocationEmpty ? (
                             <>
-                              Location: {selectedWorkshop?.city},{' '}
-                              {selectedWorkshop?.state}
+                              Location: {city}, {state}
                             </>
                           ) : (
                             (mode === COURSE_MODES.IN_PERSON.name ||
                               mode ===
                                 COURSE_MODES.DESTINATION_RETREATS.name) &&
-                            selectedWorkshop && (
+                            activeWorkshop && (
                               <>
-                                {!selectedWorkshop.isLocationEmpty && (
+                                {!isLocationEmpty && (
                                   <a
                                     href={`https://www.google.com/maps/search/?api=1&query=${
-                                      selectedWorkshop.locationStreet || ''
-                                    }, ${selectedWorkshop.locationCity} ${
-                                      selectedWorkshop.locationProvince
-                                    } ${selectedWorkshop.locationPostalCode} ${
-                                      selectedWorkshop.locationCountry
-                                    }`}
+                                      locationStreet || ''
+                                    }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
                                     target="_blank"
                                     rel="noreferrer"
                                   >
-                                    {selectedWorkshop.locationStreet &&
-                                      selectedWorkshop.locationStreet}
-                                    {selectedWorkshop.locationCity || ''}
+                                    {locationStreet && locationStreet}
+                                    {locationCity || ''}
                                     {', '}
-                                    {selectedWorkshop.locationProvince ||
-                                      ''}{' '}
-                                    {selectedWorkshop.locationPostalCode || ''}
+                                    {locationProvince || ''}{' '}
+                                    {locationPostalCode || ''}
                                   </a>
                                 )}
-                                {selectedWorkshop.isLocationEmpty && (
+                                {isLocationEmpty && (
                                   <a
                                     href={`https://www.google.com/maps/search/?api=1&query=${
-                                      selectedWorkshop.streetAddress1 || ''
+                                      streetAddress1 || ''
                                     },${
-                                      selectedWorkshop.streetAddress2 || ''
-                                    } ${selectedWorkshop.city} ${
-                                      selectedWorkshop.state
-                                    } ${selectedWorkshop.zip} ${
-                                      selectedWorkshop.country
-                                    }`}
+                                      streetAddress2 || ''
+                                    } ${city} ${state} ${zip} ${country}`}
                                     target="_blank"
                                     rel="noreferrer"
                                   >
-                                    {selectedWorkshop.streetAddress1 &&
-                                      selectedWorkshop.streetAddress1}
-                                    {selectedWorkshop.streetAddress2 &&
-                                      selectedWorkshop.streetAddress2}
-                                    {selectedWorkshop.city || ''}
+                                    {streetAddress1 && streetAddress1}
+                                    {streetAddress2 && streetAddress2}
+                                    {city || ''}
                                     {', '}
-                                    {selectedWorkshop.state || ''}{' '}
-                                    {selectedWorkshop.zip || ''}
+                                    {state || ''} {zip || ''}
                                   </a>
                                 )}
                               </>
@@ -1346,48 +1291,25 @@ const New = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="payment-agreements">
-                    <div className="form-item">
-                      <input type="checkbox" id="agreement1" />
-                      <label className="events-news" readOnly="agreement1">
-                        I agree to the{' '}
-                        <a href="#">
-                          Participant agreement including privacy and
-                          cancellation policy
-                        </a>
-                      </label>
-                    </div>
-                    <div className="form-item">
-                      <input type="checkbox" id="agreement2" />
-                      <label className="events-news" readOnly="agreement2">
-                        I represent that I am in good physical and mental
-                        condition, and fit to participate in this course. I
-                        particularly acknowledge that, if I am diagnosed with
-                        any mental and/or physical conditions (including complex
-                        PTSD, schizophrenia; schizoaffective, bipolar, or
-                        seizure disorders; pregnancy; or recent surgery), I will
-                        consult with my medical provider prior to participating
-                        in the course.
-                      </label>
-                    </div>
-                  </div>
+                  <div className="payment-agreements"></div>
                   <div className="payment-actions">
-                    <button className="submit-btn gpay">
-                      Buy with{' '}
-                      <img
-                        src="/img/Gpay-Payment-icon.webp"
-                        alt="gpay"
-                        height="24"
+                    {activeWorkshop && activeWorkshop.id && (
+                      <StripeExpressCheckoutElement
+                        workshop={activeWorkshop}
+                        goToPaymentModal={goToPaymentModal}
+                        selectedWorkshopId={selectedWorkshopId}
                       />
-                    </button>
-                    <button
-                      className="submit-btn"
-                      data-toggle="modal"
-                      data-target="#availableTimeModal"
-                      onClick={handleContinuePress}
-                    >
-                      Continue
-                    </button>
+                    )}
+
+                    {!activeWorkshop && (
+                      <button
+                        className="submit-btn"
+                        disabled={!selectedWorkshopId}
+                        onClick={goToPaymentModal}
+                      >
+                        Continue
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

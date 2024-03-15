@@ -57,7 +57,7 @@ export const ScheduleAgreementForm = ({
 
   return (
     <>
-      <div className="form-item checkbox mb-2">
+      <div className="form-item checkbox">
         <input
           type="checkbox"
           className={classNames('', {
@@ -72,26 +72,24 @@ export const ScheduleAgreementForm = ({
           name="ppaAgreement"
         />
 
-        <label htmlFor="privacy">
-          <span className="agreement__text">
-            I agree to the{' '}
-            <Link
-              prefetch={false}
-              href={
-                isIahv
-                  ? 'https://members.us.iahv.org/policy/ppa-course'
-                  : isCorporateEvent
-                    ? '/policy/ppa-corporate'
-                    : '/policy/ppa-course'
-              }
-              legacyBehavior
-            >
-              <a target="_blank" rel="noreferrer">
-                Program Participant agreement including privacy and cancellation
-                policy.
-              </a>
-            </Link>
-          </span>
+        <label htmlFor="privacy" className="events-news">
+          I agree to the{' '}
+          <Link
+            prefetch={false}
+            href={
+              isIahv
+                ? 'https://members.us.iahv.org/policy/ppa-course'
+                : isCorporateEvent
+                ? '/policy/ppa-corporate'
+                : '/policy/ppa-course'
+            }
+            legacyBehavior
+          >
+            <a target="_blank" rel="noreferrer">
+              Program Participant agreement including privacy and cancellation
+              policy.
+            </a>
+          </Link>
         </label>
       </div>
 

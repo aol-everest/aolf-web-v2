@@ -28,6 +28,7 @@ export const StripeExpressCheckoutElement = ({
   goToPaymentModal,
   selectedWorkshopId,
 }) => {
+  console.log('workshop', workshop);
   const stripePromise = loadStripe(workshop.publishableKey);
   const { fee } = priceCalculation({
     workshop,
@@ -39,7 +40,7 @@ export const StripeExpressCheckoutElement = ({
     appearance: {
       theme: 'stripe',
       variables: {
-        borderRadius: '8px',
+        borderRadius: '100px',
         height: '62.5px',
       },
     },
@@ -237,20 +238,17 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
           const hidePayMessage =
             formikProps?.values?.ppaAgreement &&
             formikProps?.values?.questionnaire?.some((item) => item.value);
+          console.log('hidePayMessage', hidePayMessage);
           return (
             <>
-              <div className="scheduling-modal__content-wrapper">
-                <p className="scheduling-modal__content-wrapper-form-checkbox">
-                  <ScheduleAgreementForm
-                    formikProps={formikProps}
-                    complianceQuestionnaire={workshop.complianceQuestionnaire}
-                    isCorporateEvent={false}
-                    questionnaireArray={questionnaireArray}
-                    workshop={workshop}
-                    screen="DESKTOP"
-                  />
-                </p>
-              </div>
+              <ScheduleAgreementForm
+                formikProps={formikProps}
+                complianceQuestionnaire={workshop.complianceQuestionnaire}
+                isCorporateEvent={false}
+                questionnaireArray={questionnaireArray}
+                workshop={workshop}
+                screen="DESKTOP"
+              />
 
               {!hidePayMessage && showMessage && (
                 <div className={Style.pay_message}>
@@ -273,10 +271,11 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                   options={options}
                   onConfirm={onConfirm}
                   onClick={expressCheckoutElementOnClick}
+                  disabled={!hidePayMessage}
                 />
                 <button
                   type="button"
-                  className="btn btn-continue tw-mt-5"
+                  className="submit-btn"
                   disabled={!selectedWorkshopId}
                   onClick={goToPaymentModal}
                 >

@@ -317,6 +317,16 @@
       margin: 0;
       width: 100% !important;
     }
+    .schedule-location-input {
+      box-shadow: 0px 1px 2px 0px #1018280d;
+      border: 1px solid #e9e9e9;
+      border-radius: 16px;
+      height: 44px;
+      width: 100%;
+      padding: 10px 14px;
+      background-color: #ffffff;
+      transition: all 0.3s ease-in-out;
+    }
 
     label {
       color: #6f7283;
@@ -456,6 +466,11 @@
     .payment-agreements {
       border-top: #e6e8ec 1px solid;
       padding-top: 20px;
+    }
+    .payment-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
       .form-item {
         display: flex;
         gap: 12px;
@@ -471,11 +486,7 @@
           }
         }
       }
-    }
-    .payment-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+
       .submit-btn {
         height: 54px;
         padding: 0 32px;
@@ -490,6 +501,8 @@
         font-weight: 600;
         line-height: 24px;
         border: none;
+        width: 100%;
+        margin-top: 12px;
       }
       .submit-btn.gpay {
         background: #31364e;
@@ -787,7 +800,7 @@
         border: 1px solid #e9e9e9;
         border-radius: 16px;
         height: 44px;
-        width: 100%;
+        width: 100% !important;
         padding: 10px 14px;
         margin-left: 0;
         margin-right: 0;
@@ -946,11 +959,12 @@
         justify-content: center;
         &:checked {
           border: 1px solid #ed994e;
+          padding: 1px;
           &::after {
             content: '';
             background-color: #ed994e;
-            width: 90%;
-            height: 90%;
+            width: 100%;
+            height: 100%;
             display: block;
             border-radius: 100%;
           }
@@ -1004,7 +1018,7 @@
     }
     .slot-listing {
       display: grid;
-      grid-template-columns: repeat(2, auto);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       max-height: 50vh;
       overflow: auto;

@@ -266,7 +266,7 @@ export const formatDateRange = (dates) => {
   const formattedEndDate = endDate.format('DD');
 
   // Combine formatted dates with PT
-  const formattedDateRange = `${formattedStartDate}-${formattedEndDate}, ${startDate.year()} PT`;
+  const formattedDateRange = `${formattedStartDate}-${formattedEndDate}, ${startDate.year()}`;
 
   return formattedDateRange;
 };
