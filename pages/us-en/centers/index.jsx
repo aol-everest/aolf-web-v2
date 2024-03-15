@@ -15,7 +15,6 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete';
-import { Loader } from '@googlemaps/js-api-loader';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
 
@@ -238,15 +237,6 @@ const Centers = () => {
   }, [latitude, longitude]);
 
   const placeholder = location.address || 'location';
-
-  useEffect(() => {
-    const loader = new Loader({
-      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
-      version: 'weekly',
-      libraries: ['places'],
-    });
-    loader.load().then(() => {});
-  }, []);
 
   const handleChange = (address) => {
     setLocation((prevLocation) => ({

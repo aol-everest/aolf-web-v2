@@ -23,17 +23,6 @@ export const AddressSearch = ({
   const [address, setAddress] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const loader = new Loader({
-      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
-      version: 'weekly',
-      libraries: ['places'],
-    });
-    loader.load().then(() => {
-      setIsLoading(false);
-    });
-  }, []);
-
   const handleChange = (address) => {
     setAddress(address);
   };
