@@ -1,16 +1,10 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { Loader } from '@googlemaps/js-api-loader';
 import { getZipCodeByLatLang } from '@utils';
 import { useEffect, useRef, useState } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete';
-
-// const scriptOptions = {
-//   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
-//   libraries: ["places"],
-// };
 
 export const AddressSearch = ({
   filter,
