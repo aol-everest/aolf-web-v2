@@ -105,7 +105,11 @@ export const COURSE_TYPES_MASTER = [
   },
   {
     name: `Training Courses`,
-    courseTypes: ['VOLUNTEER_TRAINING_PROGRAM', 'MARMA_TRAINING'],
+    courseTypes: [
+      'VOLUNTEER_TRAINING_PROGRAM',
+      'TEACHER_TRAINING',
+      'MARMA_TRAINING',
+    ],
   },
 ];
 

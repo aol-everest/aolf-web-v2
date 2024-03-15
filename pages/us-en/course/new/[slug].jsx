@@ -15,10 +15,20 @@ import { useQueryState } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import { useIntersectionObserver, useQueryString } from '@hooks';
-import { ABBRS, COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
+import {
+  ABBRS,
+  COURSE_MODES,
+  COURSE_TYPES,
+  TIME_ZONE,
+  MODAL_TYPES,
+} from '@constants';
+import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
+import { useAnalytics } from 'use-analytics';
+import { pushRouteWithUTMQuery } from '@service';
+import queryString from 'query-string';
 
 dayjs.extend(utc);
 
@@ -58,6 +68,9 @@ const ItemLoaderTile = () => {
 };
 
 const CourseTile = ({ data, authenticated }) => {
+  const router = useRouter();
+  const { track } = useAnalytics();
+  const { showModal } = useGlobalModalContext();
   const {
     title,
     mode,
@@ -78,6 +91,47 @@ const CourseTile = ({ data, authenticated }) => {
     timings,
     unitPrice,
   } = data || {};
+
+  const enrollAction = () => {
+    track('allcourses_enroll_click', {
+      course_format: data?.productTypeId,
+      course_name: data?.title,
+      course_id: data?.sfid,
+      course_price: data?.unitPrice,
+    });
+    if (isGuestCheckoutEnabled || authenticated) {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/checkout/${sfid}`,
+        query: {
+          ctype: productTypeId,
+          page: 'c-o',
+        },
+      });
+    } else {
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
+      });
+    }
+
+    // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
+  };
+
+  const detailAction = () => {
+    track('allcourses_details_click', {
+      course_format: data?.productTypeId,
+      course_name: data?.title,
+      course_id: data?.sfid,
+      course_price: data?.unitPrice,
+    });
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/${sfid}`,
+      query: {
+        ctype: productTypeId,
+      },
+    });
+  };
 
   const getCourseDeration = () => {
     if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'month')) {
@@ -132,8 +186,12 @@ const CourseTile = ({ data, authenticated }) => {
           })}
       </div>
       <div class="course-actions">
-        <button class="btn-secondary">Details</button>
-        <button class="btn-primary">Register</button>
+        <button class="btn-secondary" onClick={detailAction}>
+          Details
+        </button>
+        <button class="btn-primary" onClick={enrollAction}>
+          Register
+        </button>
       </div>
     </div>
   );
@@ -176,6 +234,7 @@ const Course = () => {
 
   const [cityFilter] = useQueryString('city');
   const [centerFilter] = useQueryString('center');
+  const [centerNameFilter] = useQueryString('centerName');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
@@ -310,8 +369,19 @@ const Course = () => {
   return (
     <main class="all-courses-find">
       <section class="title-header">
-        <h1 class="page-title">{courseTypeFilter.name}</h1>
-        <div class="page-description">{courseTypeFilter.description}</div>
+        {!centerFilter && (
+          <>
+            <h1 class="page-title">{courseTypeFilter.name}</h1>
+            <div class="page-description">{courseTypeFilter.description}</div>
+          </>
+        )}
+        {centerFilter && (
+          <>
+            <h1 class="page-title">
+              Courses offered by {centerNameFilter} center
+            </h1>
+          </>
+        )}
       </section>
       <section class="section-course-find">
         <div class="container">

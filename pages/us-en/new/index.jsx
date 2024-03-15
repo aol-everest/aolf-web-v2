@@ -8,9 +8,13 @@ const CourseTypeTile = ({ courseType }) => {
 
   const findCourseAction = (e) => {
     if (e) e.preventDefault();
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/new/${courseType.slug}`,
-    });
+    if (courseType.isExternal) {
+      router.push(courseType.link);
+    } else {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/new/${courseType.slug}`,
+      });
+    }
   };
 
   return (
@@ -38,6 +42,19 @@ const CourseTypeTile = ({ courseType }) => {
 
 const SectionComponent = ({ section }) => {
   const courses = section.courseTypes.reduce((accumulator, currentValue) => {
+    if (currentValue === 'TEACHER_TRAINING') {
+      accumulator = [
+        ...accumulator,
+        {
+          slug: 'teacher-training',
+          name: 'Teacher Training',
+          description:
+            'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
+          isExternal: true,
+          link: 'https://www.google.com/',
+        },
+      ];
+    }
     if (COURSE_TYPES[currentValue]) {
       accumulator = [...accumulator, COURSE_TYPES[currentValue]];
     }
