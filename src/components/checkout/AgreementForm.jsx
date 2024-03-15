@@ -69,8 +69,8 @@ export const AgreementForm = ({
                   isIahv
                     ? 'https://members.us.iahv.org/policy/ppa-course'
                     : isCorporateEvent
-                      ? '/policy/ppa-corporate'
-                      : '/policy/ppa-course'
+                    ? '/policy/ppa-corporate'
+                    : '/policy/ppa-course'
                 }
                 legacyBehavior
               >
@@ -197,8 +197,8 @@ export const AgreementForm = ({
                 isIahv
                   ? 'https://members.us.iahv.org/policy/ppa-course'
                   : isCorporateEvent
-                    ? '/policy/ppa-corporate'
-                    : '/policy/ppa-course'
+                  ? '/policy/ppa-corporate'
+                  : '/policy/ppa-course'
               }
               legacyBehavior
             >
