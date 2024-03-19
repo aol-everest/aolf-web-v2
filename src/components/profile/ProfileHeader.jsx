@@ -5,7 +5,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { api } from '@utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
@@ -15,18 +15,15 @@ export const ProfileHeader = ({
 }) => {
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
-  const { data: subsciptionCategories = [] } = useQuery(
-    'subsciption',
-    async () => {
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   const cancelMembershipAction = (modalSubscriptionId) => (e) => {
     if (e) e.preventDefault();

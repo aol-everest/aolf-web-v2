@@ -21,7 +21,7 @@ import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import ContentLoader from 'react-content-loader';
-import { useInfiniteQuery, useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useUIDSeed } from 'react-uid';
 
 /* export const getServerSideProps = async (context) => {
@@ -109,22 +109,19 @@ const LibrarySearch = () => {
 
   const [showFilterModal, setShowFilterModal] = useState(false);
 
-  const { data: meditationCategory = [] } = useQuery(
-    'meditationCategory',
-    async () => {
+  const { data: meditationCategory = [] } = useQuery({
+    queryKey: 'meditationCategory',
+    queryFn: async () => {
       const response = await api.get({
         path: 'meditationCategory',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: instructorList = [] } = useQuery(
-    'instructorList',
-    async () => {
+  const { data: instructorList = [] } = useQuery({
+    queryKey: 'instructorList',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getAllContentTeachers',
         param: {
@@ -133,37 +130,28 @@ const LibrarySearch = () => {
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: subsciptionCategories = [] } = useQuery(
-    'subsciption',
-    async () => {
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
-    useQuery(
-      'favouriteContents',
-      async () => {
+    useQuery({
+      queryKey: 'favouriteContents',
+      queryFn: async () => {
         const response = await api.get({
           path: 'getFavouriteContents',
         });
         return response.data;
       },
-      {
-        refetchOnWindowFocus: false,
-      },
-    );
+    });
 
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
@@ -252,8 +240,8 @@ const LibrarySearch = () => {
     fetchNextPage,
     hasNextPage,
     refetch,
-  } = useInfiniteQuery(
-    [
+  } = useInfiniteQuery({
+    queryKey: [
       'meditations',
       {
         topic,
@@ -262,7 +250,7 @@ const LibrarySearch = () => {
         folderName,
       },
     ],
-    async ({ pageParam = 1 }) => {
+    queryFn: async ({ pageParam = 1 }) => {
       let param = {
         page: pageParam,
         size: 12,
@@ -301,14 +289,13 @@ const LibrarySearch = () => {
       });
       return res;
     },
-    {
-      getNextPageParam: (page) => {
-        return page.currectPage === page.lastPage
-          ? undefined
-          : page.currectPage + 1;
-      },
+
+    getNextPageParam: (page) => {
+      return page.currectPage === page.lastPage
+        ? undefined
+        : page.currectPage + 1;
     },
-  );
+  });
 
   const loadMoreRef = React.useRef();
 

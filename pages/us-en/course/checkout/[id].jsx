@@ -20,7 +20,7 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
@@ -68,9 +68,9 @@ const Checkout = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'workshopDetail',
-    async () => {
+  } = useQuery({
+    queryKey: 'workshopDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',
         param: {
@@ -80,11 +80,8 @@ const Checkout = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!workshopId,
-    },
-  );
+    enabled: !!workshopId,
+  });
 
   useEffect(() => {
     if (workshop && !authenticated && !workshop.isGuestCheckoutEnabled) {

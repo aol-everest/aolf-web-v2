@@ -19,8 +19,8 @@ import { Auth, Compose, Talkable, api } from '@utils';
 import { DefaultSeo } from 'next-seo';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
 // import { SurveyRequest } from "@components/surveyRequest";
 
@@ -51,7 +51,13 @@ function App({ Component, pageProps }) {
     useState(null);
   const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
   const [isPendingAgreement, setIsPendingAgreement] = useState(false);
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false, // default: true
+      },
+    },
+  });
 
   useEffect(() => {
     fetchProfile();

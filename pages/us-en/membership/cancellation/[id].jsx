@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import Style from './MembershipCancellation.module.scss';
 
 /* export async function getServerSideProps({ req, resolvedUrl, query }) {
@@ -71,9 +71,9 @@ const MembershipCancellation = () => {
     isLoading,
     isError: apiError,
     error,
-  } = useQuery(
-    'cancelSubscription',
-    async () => {
+  } = useQuery({
+    queryKey: 'cancelSubscription',
+    queryFn: async () => {
       const response = await api.get({
         path: 'cancelSubscriptionStep1',
         param: {
@@ -82,10 +82,7 @@ const MembershipCancellation = () => {
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
   const [loading, setLoading] = useState(false);
 
   if (apiError) return <ErrorPage statusCode={500} title={error.message} />;

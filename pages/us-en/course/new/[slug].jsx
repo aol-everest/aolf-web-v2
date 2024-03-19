@@ -9,7 +9,7 @@ import {
   findCourseTypeBySlug,
 } from '@utils';
 import ContentLoader from 'react-content-loader';
-import { useInfiniteQuery, useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { useQueryState } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
@@ -29,6 +29,8 @@ import { useRouter } from 'next/router';
 import { useAnalytics } from 'use-analytics';
 import { pushRouteWithUTMQuery } from '@service';
 import queryString from 'query-string';
+import { useInView } from 'react-intersection-observer';
+import { PageLoading } from '@components';
 
 dayjs.extend(utc);
 
@@ -198,6 +200,10 @@ const CourseTile = ({ data, authenticated }) => {
 };
 
 const Course = () => {
+  const { ref, inView } = useInView({
+    /* Optional options */
+    threshold: 0.1,
+  });
   const seed = useUIDSeed();
   const { authenticated } = useAuth();
   const router = useRouter();
@@ -239,118 +245,118 @@ const Course = () => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
-      [
-        'workshops',
-        {
-          privateEvent,
-          otherCType,
-          locationFilter,
-          ctypesFilter,
-          courseTypeFilter,
-          filterStartEndDate,
-          timeZoneFilter,
-          instructorFilter,
-          activeFilterType,
-          onlyWeekend,
-          cityFilter,
-          centerFilter,
-        },
-      ],
-      async ({ pageParam = 1 }) => {
-        let param = {
-          page: pageParam,
-          size: 12,
-          timingsRequired: true,
-        };
-
-        if (activeFilterType && COURSE_MODES[activeFilterType]) {
-          param = {
-            ...param,
-            mode: COURSE_MODES[activeFilterType].value,
-          };
-        }
-        if (institutionalCourses) {
-          param = {
-            ...param,
-            ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
-          };
-        } else if (ctypesFilter) {
-          param = {
-            ...param,
-            ctype: ctypesFilter,
-          };
-        } else if (courseTypeFilter) {
-          param = {
-            ...param,
-            ctype: courseTypeFilter.value,
-          };
-        }
-        if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
-          param = {
-            ...param,
-            timeZone: TIME_ZONE[timeZoneFilter].value,
-          };
-        }
-        if (instructorFilter && instructorFilter.value) {
-          param = {
-            ...param,
-            teacherId: instructorFilter.value,
-          };
-        }
-        if (filterStartEndDate) {
-          const [startDate, endDate] = filterStartEndDate.split('|');
-          param = {
-            ...param,
-            sdate: startDate,
-            edate: endDate,
-          };
-        }
-        if (locationFilter) {
-          const { lat, lng } = locationFilter;
-          param = {
-            ...param,
-            lat,
-            lng,
-          };
-        }
-        if (otherCType) {
-          param = {
-            ...param,
-            other: 1,
-          };
-        }
-        if (privateEvent) {
-          param = {
-            ...param,
-            isPrivateEvent: 1,
-          };
-        }
-        if (onlyWeekend) {
-          param = {
-            ...param,
-            onlyWeekend: onlyWeekend,
-          };
-        }
-        if (cityFilter) {
-          param = {
-            ...param,
-            city: cityFilter,
-          };
-        }
-        if (centerFilter) {
-          param = {
-            ...param,
-            center: centerFilter,
-          };
-        }
-
-        const res = await api.get({
-          path: 'workshops',
-          param,
-        });
-        return res;
-      },
       {
+        queryKey: [
+          'workshops',
+          {
+            privateEvent,
+            otherCType,
+            locationFilter,
+            ctypesFilter,
+            courseTypeFilter,
+            filterStartEndDate,
+            timeZoneFilter,
+            instructorFilter,
+            activeFilterType,
+            onlyWeekend,
+            cityFilter,
+            centerFilter,
+          },
+        ],
+        queryFn: async ({ pageParam = 1 }) => {
+          let param = {
+            page: pageParam,
+            size: 12,
+            timingsRequired: true,
+          };
+
+          if (activeFilterType && COURSE_MODES[activeFilterType]) {
+            param = {
+              ...param,
+              mode: COURSE_MODES[activeFilterType].value,
+            };
+          }
+          if (institutionalCourses) {
+            param = {
+              ...param,
+              ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
+            };
+          } else if (ctypesFilter) {
+            param = {
+              ...param,
+              ctype: ctypesFilter,
+            };
+          } else if (courseTypeFilter) {
+            param = {
+              ...param,
+              ctype: courseTypeFilter.value,
+            };
+          }
+          if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
+            param = {
+              ...param,
+              timeZone: TIME_ZONE[timeZoneFilter].value,
+            };
+          }
+          if (instructorFilter && instructorFilter.value) {
+            param = {
+              ...param,
+              teacherId: instructorFilter.value,
+            };
+          }
+          if (filterStartEndDate) {
+            const [startDate, endDate] = filterStartEndDate.split('|');
+            param = {
+              ...param,
+              sdate: startDate,
+              edate: endDate,
+            };
+          }
+          if (locationFilter) {
+            const { lat, lng } = locationFilter;
+            param = {
+              ...param,
+              lat,
+              lng,
+            };
+          }
+          if (otherCType) {
+            param = {
+              ...param,
+              other: 1,
+            };
+          }
+          if (privateEvent) {
+            param = {
+              ...param,
+              isPrivateEvent: 1,
+            };
+          }
+          if (onlyWeekend) {
+            param = {
+              ...param,
+              onlyWeekend: onlyWeekend,
+            };
+          }
+          if (cityFilter) {
+            param = {
+              ...param,
+              city: cityFilter,
+            };
+          }
+          if (centerFilter) {
+            param = {
+              ...param,
+              center: centerFilter,
+            };
+          }
+
+          const res = await api.get({
+            path: 'workshops',
+            param,
+          });
+          return res;
+        },
         getNextPageParam: (page) => {
           return page.currectPage === page.lastPage
             ? undefined
@@ -360,16 +366,17 @@ const Course = () => {
       // { initialData: workshops },
     );
 
-  const loadMoreRef = React.useRef();
-  useIntersectionObserver({
-    target: loadMoreRef,
-    onIntersect: fetchNextPage,
-    enabled: hasNextPage,
-  });
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
+  console.log(courseTypeFilter);
+  if (!router.isReady) return <PageLoading />;
   return (
     <main class="all-courses-find">
       <section class="title-header">
-        {!centerFilter && (
+        {!centerFilter && courseTypeFilter && (
           <>
             <h1 class="page-title">{courseTypeFilter.name}</h1>
             <div class="page-description">{courseTypeFilter.description}</div>
@@ -512,7 +519,7 @@ const Course = () => {
                 ))}
               </>
             )}
-            <div ref={loadMoreRef} style={{ flex: '0 0 100%' }}></div>
+            <div ref={ref} style={{ flex: '0 0 100%' }}></div>
             {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
               <div
                 className="tw-p-6 tw-text-lg tw-text-center"

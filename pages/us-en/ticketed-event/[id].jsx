@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import React, { useEffect, useState, useRef } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
@@ -27,9 +27,9 @@ function TicketedEvent() {
   const { id: workshopId } = router.query;
   const formRef = useRef();
 
-  const { data: workshop, isLoading } = useQuery(
-    'getTicketedEvent',
-    async () => {
+  const { data: workshop, isLoading } = useQuery({
+    queryKey: 'getTicketedEvent',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEvent',
         param: {
@@ -38,11 +38,8 @@ function TicketedEvent() {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!workshopId,
-    },
-  );
+    enabled: !!workshopId,
+  });
 
   const {
     eventStartTime,

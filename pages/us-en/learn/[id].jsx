@@ -20,7 +20,7 @@ import classNames from 'classnames';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   BigPlayButton,
   ControlBar,
@@ -85,9 +85,9 @@ export default function Learn() {
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const { id: courseId } = router.query;
-  const { data, isLoading, isError, error } = useQuery(
-    'courseDetail',
-    async () => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: 'courseDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'courseDetail',
         param: {
@@ -101,11 +101,9 @@ export default function Learn() {
       }
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: router.isReady,
-    },
-  );
+
+    enabled: router.isReady,
+  });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
