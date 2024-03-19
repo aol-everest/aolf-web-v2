@@ -361,7 +361,7 @@
           height: 100%;
           display: flex;
           justify-content: center;
-          align-items: self-end;
+          align-items: center;
           border-radius: 4px;
         }
       }
@@ -477,9 +477,15 @@
         margin-bottom: 12px;
         label {
           color: #31364e;
-          font-size: 12px;
+          font-size: 14px;
           line-height: 16px;
           font-weight: 400;
+          span,
+          p {
+            font-size: 14px !important;
+            color: #31364e;
+            line-height: 21px;
+          }
           a {
             color: #ed994e;
             text-decoration: none;
