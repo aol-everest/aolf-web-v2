@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Flatpickr from 'react-flatpickr';
 import Select2 from 'react-select2-wrapper';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import 'flatpickr/dist/flatpickr.min.css';
 import { ScheduleLocationFilter } from '@components/scheduleLocationFilter/ScheduleLocationFilter';
@@ -199,8 +199,8 @@ const SchedulingRange = () => {
     return 'EST';
   };
 
-  const { data: dateAvailable = [], isLoading } = useQuery(
-    [
+  const { data: dateAvailable = [], isLoading } = useQuery({
+    queryKey: [
       'workshopMonthCalendar',
       currentMonthYear,
       courseTypeFilter,
@@ -208,7 +208,7 @@ const SchedulingRange = () => {
       mode,
       locationFilter,
     ],
-    async () => {
+    queryFn: async () => {
       let param = {
         ctype:
           findCourseTypeByKey(courseTypeFilter)?.value ||
@@ -261,13 +261,10 @@ const SchedulingRange = () => {
       }
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: workshops = [], isLoading: isLoadingWorkshops } = useQuery(
-    [
+  const { data: workshops = [], isLoading: isLoadingWorkshops } = useQuery({
+    queryKey: [
       'workshops',
       selectedDates,
       timezoneFilter,
@@ -275,7 +272,7 @@ const SchedulingRange = () => {
       milesFilter,
       locationFilter,
     ],
-    async () => {
+    queryFn: async () => {
       let param = {
         sdate:
           mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
@@ -349,11 +346,11 @@ const SchedulingRange = () => {
         return finalWorkshops;
       }
     },
-  );
+  });
 
-  const { data: workshopMaster = {} } = useQuery(
-    ['workshopMaster', mode],
-    async () => {
+  const { data: workshopMaster = {} } = useQuery({
+    queryKey: ['workshopMaster', mode],
+    queryFn: async () => {
       let ctypeId = null;
       if (
         findCourseTypeByKey(courseTypeFilter)?.subTypes &&
@@ -377,10 +374,7 @@ const SchedulingRange = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   useEffect(() => {
     if (workshopMaster && JSON.stringify(workshopMaster) !== '{}')

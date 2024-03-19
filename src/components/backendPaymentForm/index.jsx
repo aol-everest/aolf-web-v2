@@ -20,7 +20,7 @@ import Style from './BackendPaymentForm.module.scss';
 import { EmailField } from './EmailField';
 import { PriceCalculationComponent } from './PriceCalculationComponent';
 import { Radiobox } from './Radiobox';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { FieldWrapper } from '@components/checkout';
 import { InputDropDown } from '@components/checkout';
@@ -83,18 +83,15 @@ export const BackendPaymentForm = ({
     data: corporates,
     isLoading,
     error,
-  } = useQuery(
-    'corporates',
-    async () => {
+  } = useQuery({
+    queryKey: 'corporates',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getCorporates',
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   const paymentOptionChangeAction = (mode) => {
     setPaymentMode(mode);

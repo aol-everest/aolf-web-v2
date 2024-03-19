@@ -1,16 +1,16 @@
 import { api } from '@utils';
 // import { useRouter } from 'next/router';
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useLocalStorage } from 'react-use';
 
 export default function Tickets() {
   // const router = useRouter();
   const [value] = useLocalStorage('ticket-events');
 
-  const { data } = useQuery(
-    'getTicketedEvent',
-    async () => {
+  const { data } = useQuery({
+    queryKey: 'getTicketedEvent',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEventAttendees',
         param: {
@@ -19,11 +19,8 @@ export default function Tickets() {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!value?.orderId,
-    },
-  );
+    enabled: !!value?.orderId,
+  });
   const { attendees = [] } = data || {};
 
   // console.log('attendees', attendees);

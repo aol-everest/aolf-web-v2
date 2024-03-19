@@ -8,7 +8,7 @@ import { COURSE_TYPES } from '@constants';
 import { useAuth } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { NextSeo } from 'next-seo';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { A11y, Navigation, Scrollbar } from 'swiper';
 import { useAnalytics } from 'use-analytics';
 
@@ -103,9 +103,9 @@ function CourseDetail() {
   const router = useRouter();
   const { id: workshopId, mode = '' } = router.query;
   const { track, page } = useAnalytics();
-  const { data, isLoading, isError, error } = useQuery(
-    'workshopDetail',
-    async () => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: 'workshopDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',
         param: {
@@ -114,11 +114,8 @@ function CourseDetail() {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: router.isReady,
-    },
-  );
+    enabled: router.isReady,
+  });
   useEffect(() => {
     if (!authenticated || !data) return;
 

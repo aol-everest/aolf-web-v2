@@ -129,6 +129,7 @@ export const PaymentFormNew = ({
     phone2,
     timings = [],
     email: contactEmail,
+    contactName,
   } = workshop;
 
   const questionnaireArray = complianceQuestionnaire
@@ -1782,6 +1783,8 @@ export const PaymentFormNew = ({
                                 Contact details:
                               </div>
                               <div className="value col-7">
+                                <span>{contactName}</span>
+                                <br />
                                 <a href={`tel:${phone1}`}>{phone1}</a>
                                 <br />
                                 {phone2 && (

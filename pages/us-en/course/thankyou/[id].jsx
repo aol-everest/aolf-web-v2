@@ -24,7 +24,7 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useQueryString } from '@hooks';
 import { useAnalytics } from 'use-analytics';
 
@@ -111,9 +111,9 @@ const Thankyou = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'attendeeRecord',
-    async () => {
+  } = useQuery({
+    queryKey: 'attendeeRecord',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getWorkshopByAttendee',
         param: {
@@ -124,11 +124,9 @@ const Thankyou = () => {
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!attendeeId,
-    },
-  );
+
+    enabled: !!attendeeId,
+  });
 
   useEffect(() => {
     if (!result || hasCookie(orderExternalId)) return;

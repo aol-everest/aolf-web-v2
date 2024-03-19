@@ -21,7 +21,7 @@ import { Auth, isEmpty, phoneRegExp } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import * as Yup from 'yup';
 
 import { Loader } from '@components';
@@ -94,18 +94,15 @@ export const PaymentFormHB = ({
     data: corporates,
     isLoading,
     error,
-  } = useQuery(
-    'corporates',
-    async () => {
+  } = useQuery({
+    queryKey: 'corporates',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getCorporates',
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   useEffect(() => {
     if (programQuestionnaireResult?.length > 0) {

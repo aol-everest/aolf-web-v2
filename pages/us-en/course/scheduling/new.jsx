@@ -14,12 +14,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import Modal from 'react-bootstrap/Modal';
 import dayjs from 'dayjs';
-import { sortBy, values, omit } from 'lodash';
+import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
 import { ABBRS, COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
@@ -28,47 +28,20 @@ dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = 'both';
 
-const TIMEZONES = [
-  {
-    timezone: 'US/Eastern',
-    text: 'Eastern Time - US & Canada',
-    id: 'EST',
-  },
-  {
-    timezone: 'US/Central',
-    text: 'Central Time - US & Canada',
-    id: 'CST',
-  },
-  {
-    timezone: 'US/Mountain',
-    text: 'Mountain Time - US & Canada',
-    id: 'MST',
-  },
-  {
-    timezone: 'America/Los_Angeles',
-    text: 'Pacific Time - US & Canada',
-    id: 'PST',
-  },
-  {
-    timezone: 'US/Western',
-    text: 'Hawaii Time - US & Canada',
-    id: 'HST',
-  },
-];
-
 const New = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const router = useRouter();
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [showLocationModal, setShowLocationModal] = useState(true);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
   const [locationFilter, setLocationFilter] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
   const [workshops, setWorkshops] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [timezoneFilter, setTimezoneFilter] = useState('EST');
+  const [isLocationFetchComplete, setIsLocationFetchComplete] = useState(false);
+  const [timezoneFilter, setTimezoneFilter] = useState('');
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
     'ym',
     parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
@@ -117,12 +90,18 @@ const New = () => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
-
-    setTimezoneFilter(fillDefaultTimeZone());
   });
 
   useEffect(() => {
+    if (isLocationFetchComplete) {
+      console.log('caledd');
+      setShowLocationModal(true);
+    }
+  }, [isLocationFetchComplete]);
+
+  useEffect(() => {
     if (selectedDates?.length) {
+      console.log('callingUse');
       setShowWorkshopSelectModal(true);
       getWorkshops();
     }
@@ -130,6 +109,7 @@ const New = () => {
 
   useEffect(() => {
     if (router?.query?.timezone) {
+      console.log('callingUse2');
       setTimezoneFilter(router.query.timezone);
     }
   }, [router.query]);
@@ -144,20 +124,26 @@ const New = () => {
               getZipCodeByLatLang(latitude, longitude),
             ]);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
+            setIsLocationFetchComplete(true);
           },
           (error) => {
+            console.log('calldLocationError');
+            setIsLocationFetchComplete(true);
             console.error('Error getting location:', error.message);
           },
         );
       } else {
+        console.log('calldLocation');
+        setIsLocationFetchComplete(true);
         console.error('Geolocation is not supported by your browser.');
       }
     };
+    console.log('callingUse3');
     getUserLocation();
   }, []);
 
-  const { data: dateAvailable = [], isLoading } = useQuery(
-    [
+  const { data: dateAvailable = [], isLoading } = useQuery({
+    queryKey: [
       'workshopMonthCalendar',
       currentMonthYear,
       courseTypeFilter,
@@ -165,7 +151,7 @@ const New = () => {
       mode,
       locationFilter,
     ],
-    async () => {
+    queryFn: async () => {
       let param = {
         ctype:
           findCourseTypeByKey(courseTypeFilter)?.value ||
@@ -200,33 +186,25 @@ const New = () => {
       if (mode === COURSE_MODES.ONLINE.value && !timezoneFilter) {
         return [];
       }
-      const response = await api.get({
-        path: 'workshopMonthCalendar',
-        param,
-      });
-      if (isInitialLoad) {
-        const defaultDate =
-          response.data.length > 0 ? response.data[0].allDates : [];
-        // if (fp?.current?.flatpickr && defaultDate.length > 0) {
-        //   setTimeout(() => {
-        //     fp.current.flatpickr.setDate(defaultDate, true);
-        //   }, 100);
-
-        //   //
-        // }
-        fp.current.flatpickr.jumpToDate(defaultDate[0], true);
-        setIsInitialLoad(false);
+      if (isLocationFetchComplete) {
+        const response = await api.get({
+          path: 'workshopMonthCalendar',
+          param,
+        });
+        if (isInitialLoad) {
+          const defaultDate =
+            response.data.length > 0 ? response.data[0].allDates : [];
+          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+          setIsInitialLoad(false);
+        }
+        return response.data;
       }
-      return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: workshopMaster = {} } = useQuery(
-    ['workshopMaster', mode],
-    async () => {
+  const { data: workshopMaster = {} } = useQuery({
+    queryKey: ['workshopMaster', mode],
+    queryFn: async () => {
       let ctypeId = null;
       if (
         findCourseTypeByKey(courseTypeFilter)?.subTypes &&
@@ -250,24 +228,13 @@ const New = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   let enableDates = dateAvailable.map((da) => {
     return da.firstDate;
   });
 
   enableDates = [...enableDates, ...selectedDates];
-
-  const fillDefaultTimeZone = () => {
-    const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
-    if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
-      return userTimeZoneAbbreviation.toUpperCase();
-    }
-    return 'EST';
-  };
 
   function toRadians(degrees) {
     return degrees * (Math.PI / 180);
@@ -341,9 +308,9 @@ const New = () => {
         COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
       random: true,
     };
-    // if (mode !== COURSE_MODES.IN_PERSON.value) {
-    //   param = { ...param, timeZone: timezoneFilter };
-    // }
+    if (mode !== COURSE_MODES.IN_PERSON.value) {
+      param = { ...param, timeZone: timezoneFilter };
+    }
     if (mode && mode !== COURSE_MODES_BOTH) {
       param = { ...param, mode };
     }
@@ -419,6 +386,7 @@ const New = () => {
     if (showLocationModal) {
       setIsInitialLoad(true);
     }
+    console.log('egttingCalled');
     setShowLocationModal(!showLocationModal);
   };
 
@@ -813,7 +781,7 @@ const New = () => {
                       value={mode}
                       onChange={(ev) => handleSelectMode(ev.target.value)}
                     >
-                      <option value="both">All</option>
+                      <option value="both">All courses</option>
                       <option value={COURSE_MODES.ONLINE.value}>Online</option>
                       <option value={COURSE_MODES.IN_PERSON.value}>
                         In-person
@@ -1371,17 +1339,15 @@ const New = () => {
             </div>
           </div>
         </section>
-        {!loading && !isLoading && (
-          <>
-            <LocationSearchModal
-              handleModalToggle={handleModalToggle}
-              showLocationModal={showLocationModal}
-              locationFilter={locationFilter}
-              handleLocationFilterChange={handleLocationFilterChange}
-            />
-            <WorkshopSelectModal handleCheckout={handleCheckout} />
-          </>
+        {showLocationModal && isLocationFetchComplete && (
+          <LocationSearchModal
+            handleModalToggle={handleModalToggle}
+            showLocationModal={showLocationModal}
+            locationFilter={locationFilter}
+            handleLocationFilterChange={handleLocationFilterChange}
+          />
         )}
+        <WorkshopSelectModal handleCheckout={handleCheckout} />
       </main>
     </>
   );

@@ -23,7 +23,7 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useAnalytics } from 'use-analytics';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
@@ -54,9 +54,9 @@ const WebinarSkyCheckout = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'workshops',
-    async () => {
+  } = useQuery({
+    queryKey: 'workshops',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshops',
         param: {
@@ -66,10 +66,7 @@ const WebinarSkyCheckout = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   const [mbsy_source] = useQueryString('mbsy_source');
   const [campaignid] = useQueryString('campaignid');

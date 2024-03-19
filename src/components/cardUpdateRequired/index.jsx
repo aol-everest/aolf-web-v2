@@ -4,7 +4,7 @@ import { useGlobalAlertContext } from '@contexts';
 import { api } from '@utils';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export const CardUpdateRequiredModal = (allSubscriptions) => {
   return (
@@ -23,18 +23,15 @@ export const CardUpdateRequired = () => {
   const router = useRouter();
   const { showAlert } = useGlobalAlertContext();
 
-  const { data: subsciptionCategories = [] } = useQuery(
-    'subsciption',
-    async () => {
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   useEffect(() => {
     if (!router.isReady || subsciptionCategories.length === 0) return;

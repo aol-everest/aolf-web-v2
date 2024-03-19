@@ -431,6 +431,15 @@ main.checkout-aol {
       }
     }
   }
+  .health-confirmation {
+    label,
+    span,
+    p {
+      font-size: 14px !important;
+      color: #31364e;
+      line-height: 21px;
+    }
+  }
   label.events-news {
     font-size: 14px;
     color: #31364e;

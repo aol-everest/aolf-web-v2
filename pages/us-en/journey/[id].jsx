@@ -2,7 +2,7 @@ import { PageLoading } from '@components';
 import { api, isSSR } from '@utils';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { A11y, Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -52,9 +52,9 @@ import 'swiper/css/scrollbar';
 function Journey() {
   const router = useRouter();
   const { id: challengeSfid } = router.query;
-  const { data, isLoading, isError, error } = useQuery(
-    'journeyBySfid',
-    async () => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: 'journeyBySfid',
+    queryFn: async () => {
       const response = await api.get({
         path: 'journeyBySfid',
         param: {
@@ -63,10 +63,7 @@ function Journey() {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
   let slidesPerView = 5;
   if (!isSSR) {
     const screenWidth = window.innerWidth;

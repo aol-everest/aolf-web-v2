@@ -19,7 +19,7 @@ import moment from 'moment';
 import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useQueryString } from '@hooks';
 import { useEffectOnce } from 'react-use';
 import { useAnalytics } from 'use-analytics';
@@ -91,9 +91,9 @@ const Thankyou = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'workshopDetail',
-    async () => {
+  } = useQuery({
+    queryKey: 'workshopDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',
         param: {
@@ -104,11 +104,8 @@ const Thankyou = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!workshopId,
-    },
-  );
+    enabled: !!workshopId,
+  });
 
   useEffect(() => {
     if (workshop) {

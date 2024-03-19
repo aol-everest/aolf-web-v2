@@ -3,7 +3,7 @@ import { api, emailRegExp, tConvert } from '@utils';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import moment from 'moment';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
@@ -71,9 +71,9 @@ const TicketCongratulations = () => {
     setTicketData(newTicketData);
   });
 
-  const { data: workshop, isLoading } = useQuery(
-    'getTicketedEvent',
-    async () => {
+  const { data: workshop, isLoading } = useQuery({
+    queryKey: 'getTicketedEvent',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEvent',
         param: {
@@ -82,11 +82,8 @@ const TicketCongratulations = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!selectedWorkshop?.id,
-    },
-  );
+    enabled: !!selectedWorkshop?.id,
+  });
 
   useEffect(() => {
     if (selectedTickets.length > 0) {

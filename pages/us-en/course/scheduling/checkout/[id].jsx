@@ -24,7 +24,7 @@ import { useRouter } from 'next/router';
 import { useRef, useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import ErrorPage from 'next/error';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { DiscountInputNew } from '@components/discountInputNew';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
@@ -68,9 +68,9 @@ const SchedulingPayment = (props) => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'workshopDetail',
-    async () => {
+  } = useQuery({
+    queryKey: 'workshopDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',
         param: {
@@ -81,11 +81,8 @@ const SchedulingPayment = (props) => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!workshopId,
-    },
-  );
+    enabled: !!workshopId,
+  });
 
   useEffectOnce(() => {
     page({
@@ -283,6 +280,7 @@ const SchedulingPaymentForm = ({
     mode,
     phone2,
     timings = [],
+    contactName,
   } = workshop;
 
   const {
@@ -1102,6 +1100,8 @@ const SchedulingPaymentForm = ({
                               Contact details:
                             </div>
                             <div className="value col-7">
+                              <span>{contactName}</span>
+                              <br />
                               <a href={`tel:${phone1}`}>{phone1}</a>
                               <br />
                               {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}

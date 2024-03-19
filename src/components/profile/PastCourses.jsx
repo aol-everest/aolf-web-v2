@@ -1,15 +1,15 @@
 import { api } from '@utils';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { COURSE_TYPES } from '@constants';
 
 export const PastCourses = ({ isMobile }) => {
   const [pastWorkshops, setPastWorkshops] = useState([]);
   const [workshopOrderAsc, setWorkshopOrderAsc] = useState(true);
 
-  const { data = [] } = useQuery(
-    'userPastCourses',
-    async () => {
+  const { data = [] } = useQuery({
+    queryKey: 'userPastCourses',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getUserPastCourses',
       });
@@ -20,10 +20,7 @@ export const PastCourses = ({ isMobile }) => {
       });
       return updatedResponse;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   useEffect(() => {
     if (data.length > 0) {

@@ -14,7 +14,7 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useAnalytics } from 'use-analytics';
 
 const stripePromise = loadStripe(
@@ -117,9 +117,9 @@ function MembershipCheckout() {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'subsciption',
-    async () => {
+  } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
         param: {
@@ -134,11 +134,8 @@ function MembershipCheckout() {
       }
       return result;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: router.isReady,
-    },
-  );
+    enabled: router.isReady,
+  });
   const { track } = useAnalytics();
   const [couponCode] = useQueryString('coupon');
   const [offeringId] = useQueryString('ofid');

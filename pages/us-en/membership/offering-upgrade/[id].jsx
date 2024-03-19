@@ -12,7 +12,7 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useAnalytics } from 'use-analytics';
 
 const stripePromise = loadStripe(
@@ -115,9 +115,9 @@ function OfferingUpgradeCheckout() {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'subsciption',
-    async () => {
+  } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
         param: {
@@ -132,10 +132,7 @@ function OfferingUpgradeCheckout() {
       }
       return result;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
   const [couponCode] = useQueryString('coupon');
   const [offeringId] = useQueryString('ofid');
   const [courseId] = useQueryString('cid', {

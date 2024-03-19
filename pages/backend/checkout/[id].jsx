@@ -8,7 +8,7 @@ import { api } from '@utils';
 import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 const BackEndCheckout = () => {
   const router = useRouter();
@@ -19,9 +19,9 @@ const BackEndCheckout = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'bcWorkshopDetail',
-    async () => {
+  } = useQuery({
+    queryKey: 'bcWorkshopDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',
         param: {
@@ -31,10 +31,7 @@ const BackEndCheckout = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !workshopId) return <PageLoading />;
 
