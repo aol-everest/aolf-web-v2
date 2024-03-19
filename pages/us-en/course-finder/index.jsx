@@ -6,7 +6,7 @@ import { useAnalytics } from 'use-analytics';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import * as Yup from 'yup';
 import useQuestionnaireSelection from 'src/hooks/useQuestionnaireSelection';
 import { useGlobalAlertContext } from '@contexts';
@@ -96,19 +96,16 @@ const CourseFinder = () => {
   const [showScientificStudies, setShowScientificStudies] = useState(false);
   const { totalSelectedOptions = [], scientificStudy } = value;
 
-  const { data: questions, isLoading } = useQuery(
-    'getOnBoardingQuestions',
-    async () => {
+  const { data: questions, isLoading } = useQuery({
+    queryKey: 'getOnBoardingQuestions',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getOnBoardingQuestions',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: true,
-    },
-  );
+    enabled: true,
+  });
 
   const {
     selectedIds,

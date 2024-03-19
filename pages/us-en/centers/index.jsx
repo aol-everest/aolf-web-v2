@@ -2,7 +2,7 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { PageLoading } from '@components';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
@@ -276,9 +276,9 @@ const Centers = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    ['allCenters', location.latitude, location.longitude],
-    async () => {
+  } = useQuery({
+    queryKey: ['allCenters', location.latitude, location.longitude],
+    queryFn: async () => {
       const response = await api.get({
         path: 'getAllCenters',
         param: {
@@ -291,10 +291,7 @@ const Centers = () => {
       });
       return data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   const search = (items) => {
     return items?.filter((item) => {

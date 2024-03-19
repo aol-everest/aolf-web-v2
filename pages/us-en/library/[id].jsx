@@ -2,7 +2,7 @@ import { api, isSSR } from '@utils';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 // import { DesignOne, DesignTwo } from "@components/content";
 import { Loader, PageLoading } from '@components';
 import { MODAL_TYPES } from '@constants';
@@ -89,9 +89,9 @@ export default function Library() {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    ['library', folderId],
-    async () => {
+  } = useQuery({
+    queryKey: ['library', folderId],
+    queryFn: async () => {
       const response = await api.get({
         path: 'library',
         param: {
@@ -104,12 +104,8 @@ export default function Library() {
       }
       return rootFolder;
     },
-    {
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
-      enabled: router.isReady,
-    },
-  );
+    enabled: router.isReady,
+  });
 
   //SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
   const { showModal, hideModal } = useGlobalModalContext();
@@ -123,49 +119,41 @@ export default function Library() {
   const [loading, setLoading] = useState(false);
 
   const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
-    useQuery(
-      'favouriteContents',
-      async () => {
+    useQuery({
+      queryKey: 'favouriteContents',
+      queryFn: async () => {
         const response = await api.get({
           path: 'getFavouriteContents',
         });
         return response.data;
       },
-      {
-        refetchOnWindowFocus: false,
-        enabled: authenticated,
-      },
-    );
 
-  const { data: meditationCategory = [], isSuccess } = useQuery(
-    'meditationCategory',
-    async () => {
+      enabled: authenticated,
+    });
+
+  const { data: meditationCategory = [], isSuccess } = useQuery({
+    queryKey: 'meditationCategory',
+    queryFn: async () => {
       const response = await api.get({
         path: 'meditationCategory',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: subsciptionCategories = [] } = useQuery(
-    'subsciption',
-    async () => {
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: instructorList = [] } = useQuery(
-    'instructorList',
-    async () => {
+  const { data: instructorList = [] } = useQuery({
+    queryKey: 'instructorList',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getAllContentTeachers',
         param: {
@@ -174,10 +162,7 @@ export default function Library() {
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   let backgroundIterator = -1;
   const pickCategoryImage = (i) => {

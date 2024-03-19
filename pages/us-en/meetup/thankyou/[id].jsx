@@ -17,7 +17,7 @@ import moment from 'moment';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useAnalytics } from 'use-analytics';
 
 dayjs.extend(utc);
@@ -71,9 +71,9 @@ const Thankyou = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'attendeeRecord',
-    async () => {
+  } = useQuery({
+    queryKey: 'attendeeRecord',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getWorkshopByAttendee',
         param: {
@@ -83,10 +83,7 @@ const Thankyou = () => {
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   useEffect(() => {
     if (!authenticated || !result) return;

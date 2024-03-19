@@ -19,7 +19,7 @@ import Flatpickr from 'react-flatpickr';
 import { ABBRS, COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
@@ -142,8 +142,8 @@ const New = () => {
     getUserLocation();
   }, []);
 
-  const { data: dateAvailable = [], isLoading } = useQuery(
-    [
+  const { data: dateAvailable = [], isLoading } = useQuery({
+    queryKey: [
       'workshopMonthCalendar',
       currentMonthYear,
       courseTypeFilter,
@@ -151,7 +151,7 @@ const New = () => {
       mode,
       locationFilter,
     ],
-    async () => {
+    queryFn: async () => {
       let param = {
         ctype:
           findCourseTypeByKey(courseTypeFilter)?.value ||
@@ -200,14 +200,11 @@ const New = () => {
         return response.data;
       }
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: workshopMaster = {} } = useQuery(
-    ['workshopMaster', mode],
-    async () => {
+  const { data: workshopMaster = {} } = useQuery({
+    queryKey: ['workshopMaster', mode],
+    queryFn: async () => {
       let ctypeId = null;
       if (
         findCourseTypeByKey(courseTypeFilter)?.subTypes &&
@@ -231,10 +228,7 @@ const New = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   let enableDates = dateAvailable.map((da) => {
     return da.firstDate;

@@ -137,20 +137,6 @@ const Profile = ({ tab }) => {
   let initials = `${first_name || ''} ${last_name || ''}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
 
-  // const { data = {}, isSuccess } = useQuery(
-  //   "userPastCourses",
-  //   async () => {
-  //     const response = await api.get({
-  //       path: "getUserPastCourses",
-  //     });
-  //     return response;
-  //   },
-  //   {
-  //     refetchOnWindowFocus: false,
-  //   },
-  // );
-  // console.log("userPastCourses", data);
-
   const switchTab = (tab) => (e) => {
     if (e) e.preventDefault();
     setActiveTab(tab);

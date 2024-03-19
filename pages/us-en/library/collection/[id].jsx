@@ -19,7 +19,7 @@ import classNames from 'classnames';
 import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -140,9 +140,9 @@ function Collection() {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'library',
-    async () => {
+  } = useQuery({
+    queryKey: 'library',
+    queryFn: async () => {
       const response = await api.get({
         path: 'library',
         param: {
@@ -155,44 +155,36 @@ function Collection() {
       }
       return rootFolder;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: router.isReady,
-    },
-  );
+
+    enabled: router.isReady,
+  });
 
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
 
-  const { data: subsciptionCategories = [] } = useQuery(
-    'subsciption',
-    async () => {
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   const { data: favouriteContents = [], refetch: refetchFavouriteContents } =
-    useQuery(
-      'favouriteContents',
-      async () => {
+    useQuery({
+      queryKey: 'favouriteContents',
+      queryFn: async () => {
         const response = await api.get({
           path: 'getFavouriteContents',
         });
 
         return response.data;
       },
-      {
-        refetchOnWindowFocus: false,
-      },
-    );
+    });
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
