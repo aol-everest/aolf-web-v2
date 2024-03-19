@@ -28,7 +28,6 @@ export const StripeExpressCheckoutElement = ({
   goToPaymentModal,
   selectedWorkshopId,
 }) => {
-  console.log('workshop', workshop);
   const stripePromise = loadStripe(workshop.publishableKey);
   const { fee } = priceCalculation({
     workshop,
