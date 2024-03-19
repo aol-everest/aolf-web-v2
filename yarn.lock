@@ -865,7 +865,7 @@
   resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.8.1.tgz#c1ddb040429c6d21d38cc945fe75c818cfb68e17"
   integrity sha512-W2P2c/VRW1/1tLox0mVUalvnWXxavmv/Oum2aPsRcoDJuob75FC3Y8FbpfLwUegRcxINtGUMPq0tFCvYNTBXNA==
 
-"@emotion/react@^11.1.5", "@emotion/react@^11.8.1":
+"@emotion/react@^11.1.5", "@emotion/react@^11.11.4", "@emotion/react@^11.8.1":
   version "11.11.4"
   resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.11.4.tgz#3a829cac25c1f00e126408fab7f891f00ecc3c1d"
   integrity sha512-t8AjMlF0gHpvvxk5mAtCqR4vmxiGHCeJBaQO6gncUSdklELOgtwjerNY2yuJNfwnc6vi16U/+uMF+afIawJ9iw==
@@ -6385,6 +6385,14 @@ raw-body@2.5.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-awesome-reveal@^4.2.8:
+  version "4.2.8"
+  resolved "https://registry.yarnpkg.com/react-awesome-reveal/-/react-awesome-reveal-4.2.8.tgz#e770330592ee5143e71cfeccf91bc3dd4f9c054f"
+  integrity sha512-G961DVTMwFbkmg7z+M5omz8Y+iicLc9gKm8hmtwJ/lFnYx9fEg7lSY/AyaNZFXYKNfAS5lv/WzL72kNRMCJDZA==
+  dependencies:
+    react-intersection-observer "^9.6.0"
+    react-is "^18.2.0"
+
 react-bootstrap@1.6.7:
   version "1.6.7"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-1.6.7.tgz#7afea926cada8175d67df07b893dbad2998ae463"
@@ -6498,7 +6506,7 @@ react-image-crop@^11.0.5:
   resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-11.0.5.tgz#c7abcf9cae28305d253d55d481158a594a937867"
   integrity sha512-A/Y/kspOzki1zDL/bSgwWIY1X3CQ9F1QwpdnncWLBVAktnKfAZDIQnWmjXzuzEjZHDMsBlArytIcPBVi6DNklg==
 
-react-intersection-observer@^9.8.1:
+react-intersection-observer@^9.6.0, react-intersection-observer@^9.8.1:
   version "9.8.1"
   resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-9.8.1.tgz#9c3631c0c9acd624a2af1c192318752ea73b5d91"
   integrity sha512-QzOFdROX8D8MH3wE3OVKH0f3mLjKTtEN1VX/rkNuECCff+aKky0pIjulDhr3Ewqj5el/L+MhBkM3ef0Tbt+qUQ==
@@ -6507,6 +6515,11 @@ react-is@^16.13.1, react-is@^16.3.2, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-is@^18.2.0:
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
+  integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -6583,13 +6596,6 @@ react-popper@^2.3.0:
   dependencies:
     react-fast-compare "^3.0.1"
     warning "^4.0.2"
-
-react-reveal@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/react-reveal/-/react-reveal-1.2.2.tgz#f47fbc44debc4c185ae2163a215a9e822c7adfef"
-  integrity sha512-JCv3fAoU6Z+Lcd8U48bwzm4pMZ79qsedSXYwpwt6lJNtj/v5nKJYZZbw3yhaQPPgYePo3Y0NOCoYOq/jcsisuw==
-  dependencies:
-    prop-types "^15.5.10"
 
 react-scroll@^1.9.0:
   version "1.9.0"

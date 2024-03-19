@@ -1,4 +1,4 @@
-import Fade from 'react-reveal/Fade';
+import { Fade } from 'react-awesome-reveal';
 
 const messages = [
   'Balancing chakras and aligning energies...',
