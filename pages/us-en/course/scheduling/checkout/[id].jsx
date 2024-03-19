@@ -283,6 +283,7 @@ const SchedulingPaymentForm = ({
     mode,
     phone2,
     timings = [],
+    contactName,
   } = workshop;
 
   const {
@@ -1102,6 +1103,8 @@ const SchedulingPaymentForm = ({
                               Contact details:
                             </div>
                             <div className="value col-7">
+                              <span>{contactName}</span>
+                              <br />
                               <a href={`tel:${phone1}`}>{phone1}</a>
                               <br />
                               {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}
