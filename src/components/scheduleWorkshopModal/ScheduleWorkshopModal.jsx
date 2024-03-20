@@ -137,8 +137,104 @@ const WorkshopSelectModal = React.memo(
                     return (
                       <div className="slot-timing" key={index}>
                         <div className="slot-date">
+                          <svg
+                            className="detailsIcon icon-calendar"
+                            viewBox="0 0 34 32"
+                          >
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="10"
+                              strokeWidth="2.4"
+                              d="M10.889 2.667v4"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="10"
+                              strokeWidth="2.4"
+                              d="M21.555 2.667v4"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="10"
+                              strokeWidth="2.4"
+                              d="M4.889 12.12h22.667"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="10"
+                              strokeWidth="2.4"
+                              d="M28.222 11.333v11.333c0 4-2 6.667-6.667 6.667h-10.667c-4.667 0-6.667-2.667-6.667-6.667v-11.333c0-4 2-6.667 6.667-6.667h10.667c4.667 0 6.667 2.667 6.667 6.667z"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="4"
+                              strokeWidth="3.2"
+                              d="M21.148 18.267h0.012"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="4"
+                              strokeWidth="3.2"
+                              d="M21.148 22.267h0.012"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="4"
+                              strokeWidth="3.2"
+                              d="M16.216 18.267h0.012"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="4"
+                              strokeWidth="3.2"
+                              d="M16.216 22.267h0.012"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="4"
+                              strokeWidth="3.2"
+                              d="M11.281 18.267h0.012"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="#3d8be8"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeMiterlimit="4"
+                              strokeWidth="3.2"
+                              d="M11.281 22.267h0.012"
+                            ></path>
+                          </svg>
                           {dayjs.utc(timing.startDate).format('M/DD, ddd')}
                         </div>
+
                         <div className="slot-time">
                           {tConvert(timing.startTime)}-
                           {tConvert(timing.endTime)} {ABBRS[timing.timeZone]}

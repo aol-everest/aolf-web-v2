@@ -638,7 +638,15 @@ const New = () => {
                 <div className="payment-box center-one">
                   <div className="payment-total-box">
                     <label>Total:</label>
-                    <div className="amount">${workshopMaster.unitPrice}</div>
+                    <div className="amount">
+                      $
+                      {`${
+                        activeWorkshop.unitPrice
+                          ? activeWorkshop.unitPrice.toFixed(2) ||
+                            '0'.toFixed(2)
+                          : workshopMaster.unitPrice
+                      }`}
+                    </div>
                   </div>
                   <div className="payment-details">
                     <div className="payby">
@@ -658,7 +666,15 @@ const New = () => {
                 <div className="payment-box">
                   <div className="payment-total-box">
                     <label>Total:</label>
-                    <div className="amount">${workshopMaster.unitPrice}</div>
+                    <div className="amount">
+                      $
+                      {`${
+                        activeWorkshop.unitPrice
+                          ? activeWorkshop.unitPrice.toFixed(2) ||
+                            '0'.toFixed(2)
+                          : workshopMaster.unitPrice
+                      }`}
+                    </div>
                   </div>
                   <div className="payment-details">
                     <div className="payby">
