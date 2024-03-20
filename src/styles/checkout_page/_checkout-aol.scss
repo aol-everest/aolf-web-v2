@@ -203,6 +203,7 @@ main.checkout-aol {
       }
       .select-box__input-text {
         width: calc(100% - 20px);
+        padding: 0;
       }
     }
     input:not(
