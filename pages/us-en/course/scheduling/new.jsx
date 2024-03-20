@@ -269,18 +269,22 @@ const New = () => {
       let timings = obj.timings;
       timings = sortBy(timings, (obj) => new Date(obj.startDate));
 
+      const modeKey = obj.mode || '';
+
       const timingKey = timings.reduce((acc1, obj) => {
         acc1 += '' + obj.startDate + '' + obj.startTime;
         return acc1;
       }, '');
 
-      const existingEvent = acc[timingKey];
+      const groupKey = `${timingKey}-${modeKey}`;
+      const existingEvent = acc[groupKey];
 
       if (
         !existingEvent ||
-        calculateTotalDistance(obj) < calculateTotalDistance(existingEvent)
+        (calculateTotalDistance(obj) < calculateTotalDistance(existingEvent) &&
+          obj.mode === existingEvent.mode)
       ) {
-        acc[timingKey] = obj;
+        acc[groupKey] = obj;
       }
 
       return acc;
