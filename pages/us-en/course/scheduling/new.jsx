@@ -6,7 +6,6 @@ import {
   api,
   findCourseTypeByKey,
   formatDateRange,
-  getUserTimeZoneAbbreviation,
   getZipCodeByLatLang,
   tConvert,
 } from '@utils';
