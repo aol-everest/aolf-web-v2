@@ -371,7 +371,6 @@ const Course = () => {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage]);
-  console.log(courseTypeFilter);
   if (!router.isReady) return <PageLoading />;
   return (
     <main class="all-courses-find">

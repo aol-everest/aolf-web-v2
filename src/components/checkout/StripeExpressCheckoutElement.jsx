@@ -237,7 +237,6 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
           const hidePayMessage =
             formikProps?.values?.ppaAgreement &&
             formikProps?.values?.questionnaire?.some((item) => item.value);
-          console.log('hidePayMessage', hidePayMessage);
           return (
             <>
               <ScheduleAgreementForm
