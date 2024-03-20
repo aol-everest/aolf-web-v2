@@ -75,12 +75,49 @@ main.all-courses-find {
       .filter-save-button {
         display: none;
       }
+      .search_course_form_mobile {
+        .datepicker-block {
+          .rs-picker-toggle-wrapper {
+            display: block;
+          }
+          input {
+            border-width: 0px;
+          }
+          .rs-input-group-addon {
+            display: none;
+          }
+        }
+      }
       #courses-filters {
         display: flex;
         flex-direction: column;
         align-items: flex-start !important;
         padding: 0;
+
         .courses-filter {
+          .rs-input::placeholder {
+            color: #31364e;
+          }
+          .rs-input {
+            color: #31364e;
+            border-width: 0px;
+          }
+          .rs-picker-error > .rs-input-group {
+            border-color: transparent;
+          }
+          .rs-picker-daterange.rs-picker-subtle .rs-input-group {
+            border-color: transparent;
+            background-color: transparent;
+          }
+          .rs-input-group-addon {
+            display: none;
+          }
+          .rs-picker-error > .rs-input-group {
+            border-width: 0px;
+          }
+          .courses-filter__button.date-picker {
+            padding: 0px;
+          }
           flex-direction: column;
           display: flex;
           flex: 1;

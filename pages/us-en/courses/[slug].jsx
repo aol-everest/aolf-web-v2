@@ -10,11 +10,23 @@ import {
 } from '@utils';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
-import { useQueryState } from 'nuqs';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  useQueryState,
+  parseAsString,
+  parseAsInteger,
+  parseAsFloat,
+  parseAsBoolean,
+  parseAsTimestamp,
+  parseAsIsoDateTime,
+  parseAsArrayOf,
+  parseAsJson,
+  parseAsStringEnum,
+  parseAsStringLiteral,
+  parseAsNumberLiteral,
+} from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
-import { useIntersectionObserver, useQueryString } from '@hooks';
 import {
   ABBRS,
   COURSE_MODES,
@@ -31,6 +43,14 @@ import { pushRouteWithUTMQuery } from '@service';
 import queryString from 'query-string';
 import { useInView } from 'react-intersection-observer';
 import { PageLoading } from '@components';
+import { usePopper } from 'react-popper';
+import classNames from 'classnames';
+import { orgConfig } from '@org';
+import dynamic from 'next/dynamic';
+import DateRangePicker from 'rsuite/DateRangePicker';
+
+// (Optional) Import component styles. If you are using Less, import the `index.less` file.
+import 'rsuite/DateRangePicker/styles/index.css';
 
 dayjs.extend(utc);
 
@@ -43,6 +63,352 @@ async function queryInstructor({ queryKey: [_, term] }) {
   });
   return response;
 }
+
+const {
+  allowedMaxDays,
+  allowedDays,
+  allowedRange,
+  beforeToday,
+  afterToday,
+  combine,
+} = DateRangePicker;
+
+const SmartInput = ({
+  dataList,
+  containerClass = 'smart-input',
+  inputClassName = '',
+  placeholder = 'Search',
+  closeHandler,
+  onSearchKeyChange,
+  value,
+}) => {
+  const [isHidden, setIsHidden] = useState(true);
+  const [searchKey, setSearchKey] = useState(value);
+
+  const handleChange = (event) => {
+    if (onSearchKeyChange) {
+      onSearchKeyChange(event.target.value);
+    }
+    if (event.target.value) {
+      setIsHidden(false);
+    }
+    setSearchKey(event.target.value);
+  };
+
+  const closeHandlerInner = (data) => (event) => {
+    if (closeHandler) {
+      setSearchKey(data.label);
+      //onSearchKeyChange("");
+      closeHandler(data)();
+    }
+    setIsHidden(true);
+  };
+
+  return (
+    <div className={classNames(containerClass, { active: !isHidden })}>
+      <input
+        placeholder={placeholder}
+        type="text"
+        className={classNames('custom-input', inputClassName)}
+        value={searchKey}
+        onChange={handleChange}
+      />
+      <div className="smart-input--list">
+        {dataList &&
+          dataList.map((data) => {
+            return (
+              <p
+                key={data.value}
+                className="smart-input--list-item"
+                onClick={closeHandlerInner(data)}
+              >
+                {data.label}
+              </p>
+            );
+          })}
+      </div>
+    </div>
+  );
+};
+
+const SmartDropDown = (props) => {
+  const { buttonText, children, value, containerClass = '' } = props;
+  const [visible, setVisibility] = useState(false);
+
+  function handleDropdownClick(event) {
+    setVisibility(!visible);
+  }
+
+  function closeHandler(value) {
+    return function () {
+      if (props.closeEvent) {
+        props.closeEvent(value);
+      }
+      setVisibility(false);
+    };
+  }
+  return (
+    <div className="dropdown">
+      <button
+        className="custom-dropdown"
+        type="button"
+        id="dropdownCourseButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        onClick={handleDropdownClick}
+      >
+        {buttonText}
+      </button>
+      <ul className={classNames('dropdown-menu', { show: visible })}>
+        {visible &&
+          children({
+            props,
+            closeHandler,
+          })}
+      </ul>
+    </div>
+  );
+};
+
+const MobileFilterModal = (props) => {
+  const [isHidden, setIsHidden] = useState(true);
+
+  const showModal = () => {
+    setIsHidden(false);
+    document.body.classList.add('overflow-hidden');
+  };
+
+  const hideModal = () => {
+    setIsHidden(true);
+    document.body.classList.remove('overflow-hidden');
+  };
+
+  const clearAction = () => {
+    if (props.clearEvent) {
+      props.clearEvent();
+    }
+    setIsHidden(true);
+    document.body.classList.remove('overflow-hidden');
+  };
+
+  const { label, value, children } = props;
+  return (
+    <>
+      <label>{label}</label>
+      <div
+        class="btn_outline_box btn-modal_dropdown full-btn mt-3"
+        onClick={showModal}
+      >
+        <a class="btn" href="#">
+          {value || label}
+        </a>
+      </div>
+      <div
+        className={classNames('mobile-modal', {
+          active: !isHidden,
+        })}
+      >
+        <div class="mobile-modal--header">
+          <div
+            id="course-close_mobile"
+            class="mobile-modal--close"
+            onClick={hideModal}
+          >
+            <img src="/img/ic-close.svg" alt="close" />
+          </div>
+          <h2 class="mobile-modal--title">{label}</h2>
+          {children}
+        </div>
+        <div class="mobile-modal--body">
+          <div class="row m-0 align-items-center justify-content-between">
+            <div class="clear" onClick={clearAction}>
+              Clear
+            </div>
+            <div
+              class="filter-save-button btn_box_primary select-btn"
+              onClick={hideModal}
+            >
+              Select
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const Popup = (props) => {
+  const {
+    buttonText,
+    tabindex,
+    children,
+    value,
+    containerClassName = '',
+    showId,
+    parentClassName = '',
+    buttonTextclassName = '',
+    showList = true,
+    label,
+  } = props;
+
+  const [visible, setVisibility] = useState(false);
+  const referenceRef = useRef(null);
+  const popperRef = useRef(null);
+  const arrowRef = useRef(null);
+
+  const { styles, attributes } = usePopper(
+    referenceRef.current,
+    popperRef.current,
+    {
+      placement: 'bottom',
+      modifiers: [
+        {
+          name: 'arrow',
+          enabled: true,
+          options: {
+            element: arrowRef.current,
+          },
+        },
+        {
+          name: 'offset',
+          enabled: true,
+          options: {
+            offset: [0, 10],
+          },
+        },
+      ],
+    },
+  );
+  useEffect(() => {
+    // listen for clicks and close dropdown on body
+    document.addEventListener('mousedown', handleDocumentClick);
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentClick);
+    };
+  }, []);
+
+  function handleDropdownClick() {
+    setVisibility(!visible);
+  }
+
+  function handleSelectFilter() {
+    props.closeEvent(!value ? true : null);
+  }
+
+  function handleDocumentClick(event) {
+    if (
+      referenceRef.current.contains(event.target) ||
+      popperRef?.current?.contains(event.target)
+    ) {
+      return;
+    }
+    setVisibility(false);
+  }
+
+  function closeHandler(value) {
+    return function () {
+      if (props.closeEvent) {
+        props.closeEvent(value);
+      }
+      setVisibility(false);
+    };
+  }
+
+  return (
+    <>
+      <div
+        class="courses-filter"
+        data-filter="event-type"
+        ref={referenceRef}
+        tabIndex={tabindex}
+        className={classNames('courses-filter', parentClassName, {
+          active: visible,
+          'with-selected': value,
+        })}
+      >
+        {value && (
+          <button
+            class="courses-filter__remove"
+            data-filter="event-type"
+            data-placeholder="Online"
+            onClick={closeHandler(null)}
+          >
+            <svg
+              width="20"
+              height="21"
+              viewBox="0 0 20 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0.5"
+                y="1"
+                width="19"
+                height="19"
+                rx="9.5"
+                fill="#ABB1BA"
+              />
+              <rect
+                x="0.5"
+                y="1"
+                width="19"
+                height="19"
+                rx="9.5"
+                stroke="white"
+              />
+              <path
+                d="M13.5 7L6.5 14"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M13.5 14L6.5 7"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        )}
+        <label>{label}</label>
+        <button
+          class="courses-filter__button"
+          data-filter="event-type"
+          onClick={!showList ? handleSelectFilter : handleDropdownClick}
+        >
+          {buttonText || label}
+        </button>
+        {showList && (
+          <div className="courses-filter__wrapper-list">
+            <ul
+              id={showId ? 'time-tooltip' : ''}
+              className={classNames(
+                'courses-filter__list',
+                containerClassName,
+                {
+                  active: visible,
+                },
+              )}
+              data-filter="event-type"
+              ref={popperRef}
+              {...attributes.popper}
+            >
+              {visible &&
+                children({
+                  props,
+                  closeHandler,
+                })}
+            </ul>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
 
 const ItemLoaderTile = () => {
   return (
@@ -210,37 +576,39 @@ const Course = () => {
   const { slug } = router.query;
 
   const courseTypeFilter = findCourseTypeBySlug(slug);
-  const [activeFilterType, setActiveFilterType] = useQueryString('mode');
-  const [onlyWeekend, setOnlyWeekend] = useQueryString('onlyWeekend', {
-    defaultValue: false,
-    parse: stringToBoolean,
-  });
-  const [otherCType] = useQueryString('other-ctype', {
-    defaultValue: false,
-    parse: stringToBoolean,
-  });
-  const [institutionalCourses] = useQueryString('ic-type', {
-    defaultValue: false,
-    parse: stringToBoolean,
-  });
-  const [privateEvent] = useQueryString('private-event', {
-    defaultValue: false,
-    parse: stringToBoolean,
-  });
-  const [locationFilter, setLocationFilter] = useQueryString('location', {
-    parse: JSON.parse,
-  });
-  const [ctypesFilter, setCtypesFilter] = useQueryString('ctypes');
+  const [activeFilterType, setActiveFilterType] = useQueryState('mode');
+  const [onlyWeekend, setOnlyWeekend] = useQueryState(
+    'onlyWeekend',
+    parseAsBoolean.withDefault(false),
+  );
+  const [otherCType] = useQueryState(
+    'other-ctype',
+    parseAsBoolean.withDefault(false),
+  );
+  const [institutionalCourses] = useQueryState(
+    'ic-type',
+    parseAsBoolean.withDefault(false),
+  );
+  const [privateEvent] = useQueryState(
+    'private-event',
+    parseAsBoolean.withDefault(false),
+  );
+  const [locationFilter, setLocationFilter] = useQueryState(
+    'location',
+    parseAsJson,
+  );
+  const [ctypesFilter, setCtypesFilter] = useQueryState('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
-    useQueryString('startEndDate');
+    useQueryState('startEndDate');
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
-  const [instructorFilter, setInstructorFilter] = useQueryString('instructor', {
-    parse: JSON.parse,
-  });
+  const [instructorFilter, setInstructorFilter] = useQueryState(
+    'instructor',
+    parseAsJson,
+  );
 
-  const [cityFilter] = useQueryString('city');
-  const [centerFilter] = useQueryString('center');
-  const [centerNameFilter] = useQueryString('centerName');
+  const [cityFilter] = useQueryState('city');
+  const [centerFilter] = useQueryState('center');
+  const [centerNameFilter] = useQueryState('centerName');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
@@ -276,17 +644,7 @@ const Course = () => {
               mode: COURSE_MODES[activeFilterType].value,
             };
           }
-          if (institutionalCourses) {
-            param = {
-              ...param,
-              ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
-            };
-          } else if (ctypesFilter) {
-            param = {
-              ...param,
-              ctype: ctypesFilter,
-            };
-          } else if (courseTypeFilter) {
+          if (courseTypeFilter) {
             param = {
               ...param,
               ctype: courseTypeFilter.value,
@@ -351,6 +709,10 @@ const Course = () => {
             };
           }
 
+          if (!courseTypeFilter) {
+            return { data: null };
+          }
+
           const res = await api.get({
             path: 'workshops',
             param,
@@ -358,7 +720,7 @@ const Course = () => {
           return res;
         },
         getNextPageParam: (page) => {
-          return page.currectPage === page.lastPage
+          return page.currectPage >= page.lastPage
             ? undefined
             : page.currectPage + 1;
         },
@@ -366,12 +728,159 @@ const Course = () => {
       // { initialData: workshops },
     );
 
+  let instructorResult = useQuery({
+    queryKey: ['instructor', searchKey],
+    queryFn: queryInstructor,
+    // only fetch search terms longer than 2 characters
+    enabled: searchKey.length > 0,
+    // refresh cache after 10 seconds (watch the network tab!)
+    staleTime: 10 * 1000,
+  });
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage]);
   if (!router.isReady) return <PageLoading />;
+
+  const onFilterChange = (field) => async (value) => {
+    switch (field) {
+      case 'courseTypeFilter':
+        //setCtypesFilter(null);
+        //setCourseTypeFilter(value);
+        break;
+      case 'activeFilterType':
+        setActiveFilterType(value);
+        break;
+      case 'onlyWeekend':
+        setOnlyWeekend(value);
+        break;
+      case 'locationFilter':
+        if (value) {
+          setLocationFilter(JSON.stringify(value));
+        } else {
+          setLocationFilter(null);
+        }
+        break;
+      case 'timeZoneFilter':
+        setTimeZoneFilter(value);
+        break;
+      case 'instructorFilter':
+        if (value) {
+          setInstructorFilter(JSON.stringify(value));
+        } else {
+          setInstructorFilter(null);
+        }
+        break;
+    }
+  };
+
+  const onFilterClearEvent = (field) => async (e) => {
+    if (e) e.preventDefault();
+    switch (field) {
+      case 'courseTypeFilter':
+        // setCourseTypeFilter(null);
+        break;
+      case 'activeFilterType':
+        setActiveFilterType(null);
+        break;
+      case 'onlyWeekend':
+        setOnlyWeekend(null);
+        break;
+      case 'locationFilter':
+        setLocationFilter(null);
+        break;
+      case 'timeZoneFilter':
+        setTimeZoneFilter(null);
+        break;
+      case 'instructorFilter':
+        setInstructorFilter(null);
+        break;
+    }
+  };
+
+  const onFilterChangeEvent = (field) => (value) => async (e) => {
+    if (e) e.preventDefault();
+    switch (field) {
+      case 'courseTypeFilter':
+        setCtypesFilter(null);
+        // setCourseTypeFilter(value);
+        break;
+      case 'activeFilterType':
+        setActiveFilterType(value);
+        break;
+      case 'onlyWeekend':
+        setOnlyWeekend(value);
+        break;
+      case 'locationFilter':
+        if (value) {
+          setLocationFilter(JSON.stringify(value));
+        } else {
+          setLocationFilter(null);
+        }
+        break;
+      case 'timeZoneFilter':
+        setTimeZoneFilter(value);
+        break;
+      case 'instructorFilter':
+        if (value) {
+          setInstructorFilter(JSON.stringify(value));
+        } else {
+          setInstructorFilter(null);
+        }
+        break;
+    }
+  };
+
+  const onDatesChange = async (date) => {
+    console.log(date);
+    if (Array.isArray(date)) {
+      const [startDate, endDate] = date || [];
+      setFilterStartEndDate(
+        startDate
+          ? dayjs.utc(startDate).format('YYYY-MM-DD') +
+              '|' +
+              dayjs.utc(endDate).format('YYYY-MM-DD')
+          : null,
+      );
+    } else {
+      setFilterStartEndDate(null);
+    }
+  };
+
+  const toggleFilter = (e) => {
+    if (e) e.preventDefault();
+    setShowFilterModal((showFilterModal) => !showFilterModal);
+  };
+
+  let filterCount = 0;
+  if (locationFilter) {
+    filterCount++;
+  }
+  if (courseTypeFilter) {
+    filterCount++;
+  }
+  if (filterStartEndDate) {
+    filterCount++;
+  }
+  if (timeZoneFilter) {
+    filterCount++;
+  }
+  if (instructorFilter) {
+    filterCount++;
+  }
+
+  const filterStartEndDateArr = filterStartEndDate
+    ? filterStartEndDate.split('|').map((d) => new Date(d))
+    : null;
+
+  let instructorList = instructorResult?.data?.map(({ id, name }) => ({
+    value: id,
+    label: name,
+  }));
+  instructorList = (instructorList || []).slice(0, 5);
+
   return (
     <main class="all-courses-find">
       <section class="title-header">
@@ -392,106 +901,474 @@ const Course = () => {
       <section class="section-course-find">
         <div class="container">
           <div class="course-filter-wrap">
-            <button id="course-filter-btn" class="course-filter-btn">
-              View Filters
-            </button>
-            <div class="course-filter-listing">
-              <button class="filter-cancel-button"></button>
+            <div
+              id="courses-filters"
+              class="course-filter-listing search-form col-12 d-flex align-items-center"
+            >
               <button class="filter-save-button">Save Changes</button>
-              <div class="form-item">
-                <label for="center-select">Center</label>
-                <select
-                  class="form-select form-select-lg mb-3"
-                  id="center-select"
-                  aria-label=".form-select-lg"
-                >
-                  <option selected>Select...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+              <Popup
+                tabIndex="1"
+                value={COURSE_MODES[activeFilterType] && activeFilterType}
+                buttonText={
+                  activeFilterType && COURSE_MODES[activeFilterType]
+                    ? COURSE_MODES[activeFilterType].name
+                    : null
+                }
+                closeEvent={onFilterChange('activeFilterType')}
+                label="Course Format"
+              >
+                {({ closeHandler }) => (
+                  <>
+                    {orgConfig.courseModes.map((courseMode, index) => {
+                      return (
+                        <li
+                          key={index}
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(courseMode)}
+                        >
+                          {COURSE_MODES[courseMode].name}
+                        </li>
+                      );
+                    })}
+                  </>
+                )}
+              </Popup>
+              <Popup
+                tabIndex="2"
+                value={courseTypeFilter}
+                buttonText={
+                  courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                    ? COURSE_TYPES[courseTypeFilter].name
+                    : null
+                }
+                closeEvent={onFilterChange('courseTypeFilter')}
+                label="Course Type"
+              >
+                {({ closeHandler }) => (
+                  <>
+                    {otherCType && (
+                      <>
+                        {orgConfig.otherCourseTypes.map((courseType, index) => {
+                          return (
+                            <li
+                              className="courses-filter__list-item"
+                              key={index}
+                              onClick={closeHandler(courseType)}
+                            >
+                              {COURSE_TYPES[courseType].name}
+                            </li>
+                          );
+                        })}
+                      </>
+                    )}
+                    {!otherCType && (
+                      <>
+                        {orgConfig.courseTypes.map((courseType, index) => {
+                          return (
+                            <li
+                              className="courses-filter__list-item"
+                              key={index}
+                              onClick={closeHandler(courseType)}
+                            >
+                              {COURSE_TYPES[courseType].name}
+                            </li>
+                          );
+                        })}
+                      </>
+                    )}
+                  </>
+                )}
+              </Popup>
+
+              <div
+                class="courses-filter"
+                data-filter="timezone"
+                className={classNames('courses-filter', {
+                  'with-selected': filterStartEndDate,
+                })}
+              >
+                <button class="courses-filter__remove" onClick={onDatesChange}>
+                  <svg
+                    width="20"
+                    height="21"
+                    viewBox="0 0 20 21"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="0.5"
+                      y="1"
+                      width="19"
+                      height="19"
+                      rx="9.5"
+                      fill="#ABB1BA"
+                    />
+                    <rect
+                      x="0.5"
+                      y="1"
+                      width="19"
+                      height="19"
+                      rx="9.5"
+                      stroke="white"
+                    />
+                    <path
+                      d="M13.5 7L6.5 14"
+                      stroke="white"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M13.5 14L6.5 7"
+                      stroke="white"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <label>Dates</label>
+                <div class="courses-filter__button date-picker">
+                  <DateRangePicker
+                    placeholder="Dates"
+                    appearance="subtle"
+                    showHeader={false}
+                    onChange={onDatesChange}
+                    value={filterStartEndDateArr}
+                    shouldDisableDate={combine(
+                      allowedMaxDays(14),
+                      beforeToday(),
+                    )}
+                    ranges={[]}
+                  />
+                </div>
               </div>
-              <div class="form-item">
-                <label for="center-format">Course format</label>
-                <select
-                  class="form-select form-select-lg mb-3"
-                  id="center-format"
-                  aria-label=".form-select-lg"
-                >
-                  <option selected>Select...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="form-item">
-                <label for="center-type">Course type</label>
-                <select
-                  class="form-select form-select-lg mb-3"
-                  id="center-type"
-                  aria-label=".form-select-lg"
-                >
-                  <option selected>Select...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="form-item">
-                <label for="dates">Dates</label>
-                <select
-                  class="form-select form-select-lg mb-3"
-                  id="dates"
-                  aria-label=".form-select-lg"
-                >
-                  <option selected>Select...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="form-item">
-                <label for="weekend-courses">Weekend courses</label>
-                <select
-                  class="form-select form-select-lg mb-3"
-                  id="weekend-courses"
-                  aria-label=".form-select-lg"
-                >
-                  <option selected>Select...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="form-item">
-                <label for="time-zone">Time zone</label>
-                <select
-                  class="form-select form-select-lg mb-3"
-                  id="time-zone"
-                  aria-label=".form-select-lg"
-                >
-                  <option selected>Select...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="form-item">
-                <label for="instructor">Instructor</label>
-                <select
-                  class="form-select form-select-lg mb-3"
-                  id="instructor"
-                  aria-label=".form-select-lg"
-                >
-                  <option selected>Select...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+              <Popup
+                tabIndex="2"
+                value={onlyWeekend}
+                closeEvent={onFilterChange('onlyWeekend')}
+                showList={false}
+                label="Weekend courses"
+              ></Popup>
+
+              <Popup
+                tabIndex="4"
+                value={TIME_ZONE[timeZoneFilter] ? timeZoneFilter : null}
+                buttonText={
+                  timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                    ? TIME_ZONE[timeZoneFilter].name
+                    : null
+                }
+                closeEvent={onFilterChange('timeZoneFilter')}
+                label="Time Zone"
+              >
+                {({ closeHandler }) => (
+                  <>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.EST.value)}
+                    >
+                      {TIME_ZONE.EST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.CST.value)}
+                    >
+                      {TIME_ZONE.CST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.MST.value)}
+                    >
+                      {TIME_ZONE.MST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.PST.value)}
+                    >
+                      {TIME_ZONE.PST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.HST.value)}
+                    >
+                      {TIME_ZONE.HST.name}
+                    </li>
+                  </>
+                )}
+              </Popup>
+              <Popup
+                tabIndex="5"
+                value={instructorFilter ? instructorFilter.label : null}
+                buttonText={instructorFilter ? instructorFilter.label : null}
+                closeEvent={onFilterChange('instructorFilter')}
+                label="Instructor"
+              >
+                {({ closeHandler }) => (
+                  <SmartInput
+                    onSearchKeyChange={(value) => setSearchKey(value)}
+                    dataList={instructorList}
+                    closeHandler={closeHandler}
+                    value={searchKey}
+                  ></SmartInput>
+                )}
+              </Popup>
+            </div>
+            <div class="search_course_form_mobile d-lg-none d-block">
+              <div>
+                <div>
+                  <div class="filter">
+                    <div
+                      className={classNames('filter--button d-flex', {
+                        active: showFilterModal,
+                      })}
+                      onClick={toggleFilter}
+                    >
+                      View Filters
+                      <span id="filter-count">{filterCount}</span>
+                    </div>
+                  </div>
+                </div>
+                {showFilterModal && (
+                  <div class="filter--box">
+                    <button
+                      class="filter-cancel-button"
+                      onClick={toggleFilter}
+                    ></button>
+                    <label class="mt-4">Course format</label>
+                    <div
+                      id="switch-mobile-filter"
+                      class="btn_outline_box full-btn mt-3"
+                    >
+                      <a class="btn" href="#" data-swicth-active="true">
+                        Online
+                      </a>
+                      <a class="btn" href="#" data-swicth-active="false">
+                        In-Person
+                      </a>
+                    </div>
+                    <MobileFilterModal
+                      label="Course Type"
+                      value={
+                        courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                          ? COURSE_TYPES[courseTypeFilter].name
+                          : 'Course Type'
+                      }
+                      clearEvent={onFilterClearEvent('courseTypeFilter')}
+                    >
+                      <div className="dropdown">
+                        <SmartDropDown
+                          value={courseTypeFilter}
+                          buttonText={
+                            courseTypeFilter && COURSE_TYPES[courseTypeFilter]
+                              ? COURSE_TYPES[courseTypeFilter].name
+                              : 'Select Course'
+                          }
+                          closeEvent={onFilterChange('courseTypeFilter')}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              {otherCType && (
+                                <>
+                                  {orgConfig.otherCourseTypes.map(
+                                    (courseType, index) => {
+                                      return (
+                                        <li
+                                          key={index}
+                                          className="dropdown-item"
+                                          onClick={closeHandler(courseType)}
+                                        >
+                                          {COURSE_TYPES[courseType].name}
+                                        </li>
+                                      );
+                                    },
+                                  )}
+                                </>
+                              )}
+                              {!otherCType && (
+                                <>
+                                  {orgConfig.courseTypes.map(
+                                    (courseType, index) => {
+                                      return (
+                                        <li
+                                          key={index}
+                                          className="dropdown-item"
+                                          onClick={closeHandler(courseType)}
+                                        >
+                                          {COURSE_TYPES[courseType].name}
+                                        </li>
+                                      );
+                                    },
+                                  )}
+                                </>
+                              )}
+                            </>
+                          )}
+                        </SmartDropDown>
+                      </div>
+                    </MobileFilterModal>
+
+                    <MobileFilterModal
+                      label="Dates"
+                      value={
+                        filterStartEndDate
+                          ? filterStartEndDate.split('|').join(' ~ ')
+                          : null
+                      }
+                      clearEvent={onDatesChange}
+                    >
+                      <div class="datepicker-block">
+                        <DateRangePicker
+                          placeholder="Dates"
+                          showHeader={false}
+                          onChange={onDatesChange}
+                          showOneCalendar
+                          ranges={[]}
+                          value={filterStartEndDateArr}
+                        />
+                      </div>
+                    </MobileFilterModal>
+
+                    <MobileFilterModal
+                      label="Time Zone"
+                      value={
+                        timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                          ? TIME_ZONE[timeZoneFilter].name
+                          : null
+                      }
+                      clearEvent={onFilterClearEvent('timeZoneFilter')}
+                    >
+                      <div className="dropdown">
+                        <SmartDropDown
+                          value={timeZoneFilter}
+                          buttonText={
+                            timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                              ? TIME_ZONE[timeZoneFilter].name
+                              : 'Select Timezone'
+                          }
+                          closeEvent={onFilterChange('timeZoneFilter')}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.EST.value)}
+                              >
+                                {TIME_ZONE.EST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.CST.value)}
+                              >
+                                {TIME_ZONE.CST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.MST.value)}
+                              >
+                                {TIME_ZONE.MST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.PST.value)}
+                              >
+                                {TIME_ZONE.PST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.HST.value)}
+                              >
+                                {TIME_ZONE.HST.name}
+                              </li>
+                            </>
+                          )}
+                        </SmartDropDown>
+                      </div>
+                    </MobileFilterModal>
+
+                    <MobileFilterModal
+                      label="Instructor"
+                      value={instructorFilter ? instructorFilter.label : null}
+                      clearEvent={onFilterClearEvent('instructorFilter')}
+                    >
+                      <SmartInput
+                        containerClassName="smart-input-mobile"
+                        placeholder="Search Instructor"
+                        value={searchKey}
+                        onSearchKeyChange={(value) => setSearchKey(value)}
+                        dataList={instructorList}
+                        closeHandler={onFilterChangeEvent('instructorFilter')}
+                      ></SmartInput>
+                    </MobileFilterModal>
+
+                    <label>Location</label>
+                    <div
+                      class="btn_outline_box btn-modal_dropdown full-btn mt-3"
+                      id="location-button_mobile"
+                      data-swicth-active="false"
+                    >
+                      <a class="btn" href="#">
+                        Location
+                      </a>
+                    </div>
+                    <div
+                      id="location-modal_mobile"
+                      data-location="null"
+                      data-location-initial="Location"
+                      class="mobile-modal"
+                    >
+                      <div class="mobile-modal--header">
+                        <div
+                          id="location-close_mobile"
+                          class="mobile-modal--close"
+                        >
+                          <img src="./img/ic-close.svg" alt="close" />
+                        </div>
+                        <h2 class="mobile-modal--title">Location</h2>
+                        <div
+                          class="smart-input-mobile"
+                          id="location-mobile-input"
+                        >
+                          <input
+                            placeholder="Search location"
+                            type="text"
+                            name="location"
+                            class="custom-input"
+                          />
+                          <div class="smart-input--list">
+                            <p class="smart-input--list-item">Los Altos</p>
+                            <p class="smart-input--list-item">Los Angeles</p>
+                            <p class="smart-input--list-item">Los Gatos</p>
+                            <p class="smart-input--list-item">Los Mochis</p>
+                            <p class="smart-input--list-item">Los Banos</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mobile-modal--body">
+                        <div class="row m-0 align-items-center justify-content-between">
+                          <div class="clear">Clear</div>
+                          <div
+                            id="location-search"
+                            class="filter-save-button btn_box_primary select-btn"
+                          >
+                            Select
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
           <div class="course-listing">
+            {/* <div class="selected-filter-wrap">
+              <div class="selected-filter-item">Tampa, FL</div>
+              <div class="selected-filter-item">Eastern</div>
+              <div class="selected-filter-item">Online</div>
+              <div class="selected-filter-item">Cameron Williamson</div>
+              <div class="selected-filter-item clear">Clear All</div>
+            </div> */}
             {!isSuccess && (
               <>
                 {[...Array(6)].map((e, i) => (
