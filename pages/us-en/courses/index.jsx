@@ -12,7 +12,7 @@ const CourseTypeTile = ({ courseType }) => {
       router.push(courseType.link);
     } else {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/new/${courseType.slug}`,
+        pathname: `/us-en/courses/${courseType.slug}`,
       });
     }
   };

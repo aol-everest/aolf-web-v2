@@ -379,10 +379,9 @@ export const MeetupPaymentForm = ({
     eventTimeZone,
     memberPrice,
     meetupStartDate,
-    primaryTeacherMobilePhone,
-    primaryTeacherPhone,
-    primaryTeacherEmail,
+    contactName,
     mode,
+    email: contactEmail,
     isSubscriptionOfferingUsed,
   } = meetup;
 
@@ -965,23 +964,19 @@ export const MeetupPaymentForm = ({
                       </ul>
                       <ul className="info__list mt-3">
                         <h2 className="info__title">Contact details:</h2>
-                        <li>
-                          <a href={`tel:${primaryTeacherMobilePhone}`}>
-                            {primaryTeacherMobilePhone}
-                          </a>
-                        </li>
-                        {primaryTeacherPhone && (
+                        <li>{contactName}</li>
+                        {phone1 && (
                           <li>
-                            <a href={`tel:${primaryTeacherPhone}`}>
-                              {primaryTeacherPhone}
-                            </a>
+                            <a href={`tel:${phone1}`}>{phone1}</a>
                           </li>
                         )}
-                        {/* <li>{contactPersonName1}</li> */}
+                        {phone2 && (
+                          <li>
+                            <a href={`tel:${phone2}`}>{phone2}</a>
+                          </li>
+                        )}
                         <li className="meetup-emial">
-                          <a href={`mailto:${primaryTeacherEmail}`}>
-                            {primaryTeacherEmail}
-                          </a>
+                          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
                         </li>
                       </ul>
                       {meetup.mode === 'In Person' && (
