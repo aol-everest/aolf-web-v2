@@ -7,7 +7,7 @@ export const ScheduleLocationFilterNew = ({
   containerClass = '',
   listClassName = '',
 }) => {
-  const removeCoupon = (e) => {
+  const removeLocation = (e) => {
     if (e) e.preventDefault();
     handleLocationChange(null);
   };
@@ -31,7 +31,7 @@ export const ScheduleLocationFilterNew = ({
           {value.locationName && (
             <a
               className={classNames('react-tag-remove')}
-              onClick={removeCoupon}
+              onClick={removeLocation}
             >
               ×
             </a>
