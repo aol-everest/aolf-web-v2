@@ -225,15 +225,6 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                 />
                 <div className="description">IMPROVED IN 6 WEEKS</div>
               </div>
-              {/* <div className="research-list-item">
-                <img
-                    src="/img/resilience.png"
-                    width="150"
-                    height="280"
-                    alt="research"
-                  />
-              </div> */}
-
               <div className="research-list-item">
                 <h3>
                   CORTISOL
