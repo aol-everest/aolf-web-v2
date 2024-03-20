@@ -371,7 +371,6 @@ const Course = () => {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage]);
-  console.log(courseTypeFilter);
   if (!router.isReady) return <PageLoading />;
   return (
     <main class="all-courses-find">
@@ -520,12 +519,17 @@ const Course = () => {
               </>
             )}
             <div ref={ref} style={{ flex: '0 0 100%' }}></div>
+            {isSuccess &&
+              data?.pages[0].data.length === 0 &&
+              !isFetchingNextPage && (
+                <div class="no-course-found-wrap">
+                  <h2>No course found</h2>
+                  <p>Please change your search criteria</p>
+                </div>
+              )}
             {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
-              <div
-                className="tw-p-6 tw-text-lg tw-text-center"
-                style={{ flex: '0 0 100%' }}
-              >
-                That's all folks! No more data left to check out.
+              <div class="no-course-found-wrap">
+                <p>That's all folks! No more data left to check out.</p>
               </div>
             )}
           </div>

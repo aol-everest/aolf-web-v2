@@ -311,7 +311,6 @@ function PodcastPage() {
     queryKey: 'yt-playlist',
     queryFn: async () => {
       const result = await youtube.getPlaylistDetails(PLAYLIST_ID);
-      console.log(result);
       return result;
     },
   });
