@@ -191,17 +191,20 @@
       .flatpickr-weekdaycontainer {
         background: none;
         display: grid;
-        grid-template-columns: repeat(7, auto);
+        grid-template-columns: repeat(7, 1fr);
+        padding: 0;
+        column-gap: 14px;
         .flatpickr-weekday {
           font-size: 14px;
           line-height: 20px;
           color: #31364e;
           text-transform: unset;
           max-width: unset;
-          width: auto;
+          width: 100%;
         }
       }
       .flatpickr-days {
+        padding: 0;
         .dayContainer {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
@@ -1030,6 +1033,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        &[disabled] {
+          opacity: 0.3;
+        }
         img {
           height: 14px;
           svg {
@@ -1093,5 +1099,17 @@
         }
       }
     }
+  }
+}
+.specific-teacher-text {
+  padding-top: 24px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+  a {
+    color: #ed7347;
+    font-weight: 600;
+    text-decoration: none;
   }
 }

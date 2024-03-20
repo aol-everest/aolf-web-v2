@@ -525,10 +525,6 @@ const New = () => {
     });
   };
 
-  const handleCheckout = () => {
-    goToPaymentModal();
-  };
-
   const handleSelectMode = (value) => {
     setMode(value);
     resetCalender();
@@ -634,7 +630,10 @@ const New = () => {
                     <div className="inPerson">In person</div>
                   </div>
                 </div>
-
+                <div class="specific-teacher-text">
+                  Are you looking for a course with a specific teacher?{' '}
+                  <a href="/us-en/course">Click here</a>
+                </div>
                 <div className="payment-box center-one">
                   <div className="payment-total-box">
                     <label>Total:</label>
@@ -1170,12 +1169,14 @@ const New = () => {
           </div>
         </section>
 
-        <LocationSearchModal
-          handleModalToggle={handleModalToggle}
-          showLocationModal={showLocationModal}
-          locationFilter={locationFilter}
-          handleLocationFilterChange={handleLocationFilterChange}
-        />
+        {!locationFilter?.lat && (
+          <LocationSearchModal
+            handleModalToggle={handleModalToggle}
+            showLocationModal={showLocationModal}
+            locationFilter={locationFilter}
+            handleLocationFilterChange={handleLocationFilterChange}
+          />
+        )}
 
         <WorkshopSelectModal
           setShowWorkshopSelectModal={setShowWorkshopSelectModal}

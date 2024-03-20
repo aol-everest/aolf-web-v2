@@ -246,6 +246,10 @@ const WorkshopSelectModal = React.memo(
               );
             })}
           </div>
+          <div class="specific-teacher-text">
+            Are you looking for a course with a specific teacher?{' '}
+            <a href="/us-en/course">Click here</a>
+          </div>
           <div className="slot-action">
             <button
               type="button"
