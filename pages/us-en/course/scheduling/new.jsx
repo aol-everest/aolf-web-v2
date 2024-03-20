@@ -94,14 +94,12 @@ const New = () => {
 
   useEffect(() => {
     if (isLocationFetchComplete) {
-      console.log('caledd');
       setShowLocationModal(true);
     }
   }, [isLocationFetchComplete]);
 
   useEffect(() => {
     if (selectedDates?.length) {
-      console.log('callingUse');
       setShowWorkshopSelectModal(true);
       getWorkshops();
     }
@@ -109,7 +107,6 @@ const New = () => {
 
   useEffect(() => {
     if (router?.query?.timezone) {
-      console.log('callingUse2');
       setTimezoneFilter(router.query.timezone);
     }
   }, [router.query]);
@@ -127,18 +124,15 @@ const New = () => {
             setIsLocationFetchComplete(true);
           },
           (error) => {
-            console.log('calldLocationError');
             setIsLocationFetchComplete(true);
             console.error('Error getting location:', error.message);
           },
         );
       } else {
-        console.log('calldLocation');
         setIsLocationFetchComplete(true);
         console.error('Geolocation is not supported by your browser.');
       }
     };
-    console.log('callingUse3');
     getUserLocation();
   }, []);
 
@@ -150,6 +144,7 @@ const New = () => {
       timezoneFilter,
       mode,
       locationFilter,
+      isLocationFetchComplete,
     ],
     queryFn: async () => {
       let param = {
@@ -186,6 +181,7 @@ const New = () => {
       if (mode === COURSE_MODES.ONLINE.value && !timezoneFilter) {
         return [];
       }
+      console.log('isLocationFetchComplete', isLocationFetchComplete);
       if (isLocationFetchComplete) {
         const response = await api.get({
           path: 'workshopMonthCalendar',
