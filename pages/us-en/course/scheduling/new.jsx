@@ -5,24 +5,23 @@ import moment from 'moment';
 import {
   api,
   findCourseTypeByKey,
-  formatDateRange,
-  getUserTimeZoneAbbreviation,
   getZipCodeByLatLang,
   tConvert,
 } from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
-import Modal from 'react-bootstrap/Modal';
 import dayjs from 'dayjs';
 import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
-import { ABBRS, COURSE_MODES, COURSE_TYPES, TIME_ZONE } from '@constants';
+import { ABBRS, COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
+import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
+import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
@@ -39,7 +38,6 @@ const New = () => {
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
   const [workshops, setWorkshops] = useState([]);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isLocationFetchComplete, setIsLocationFetchComplete] = useState(false);
   const [timezoneFilter, setTimezoneFilter] = useState('');
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
@@ -82,6 +80,7 @@ const New = () => {
     streetAddress2,
     zip,
     country,
+    contactName,
   } = activeWorkshop;
 
   useEffectOnce(() => {
@@ -100,7 +99,12 @@ const New = () => {
 
   useEffect(() => {
     if (selectedDates?.length) {
-      setShowWorkshopSelectModal(true);
+      if (workshops?.length > 0) {
+        setWorkshops([]);
+      }
+      if (!showWorkshopSelectModal) {
+        setShowWorkshopSelectModal(true);
+      }
       getWorkshops();
     }
   }, [selectedDates]);
@@ -178,21 +182,15 @@ const New = () => {
           };
         }
       }
-      if (mode === COURSE_MODES.ONLINE.value && !timezoneFilter) {
-        return [];
-      }
-      console.log('isLocationFetchComplete', isLocationFetchComplete);
       if (isLocationFetchComplete) {
         const response = await api.get({
           path: 'workshopMonthCalendar',
           param,
         });
-        if (isInitialLoad) {
-          const defaultDate =
-            response.data.length > 0 ? response.data[0].allDates : [];
-          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
-          setIsInitialLoad(false);
-        }
+        const defaultDate =
+          response.data.length > 0 ? response.data[0].allDates : [];
+        fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+
         return response.data;
       }
     },
@@ -370,7 +368,6 @@ const New = () => {
 
   const handleLocationFilterChange = (value) => {
     resetCalender();
-    setIsInitialLoad(true);
     if (value) {
       setLocationFilter(value);
     } else {
@@ -379,187 +376,7 @@ const New = () => {
   };
 
   const handleModalToggle = () => {
-    if (showLocationModal) {
-      setIsInitialLoad(true);
-    }
-    console.log('egttingCalled');
     setShowLocationModal(!showLocationModal);
-  };
-
-  const WorkshopSelectModal = () => {
-    const [localSelectedWorksop, setLocalSelectedWorksop] = useState(null);
-    const handleWorkshopSelect = async (workshop) => {
-      setLocalSelectedWorksop(workshop);
-    };
-
-    const handleWorkshopSelectForCheckout = async () => {
-      setShowWorkshopSelectModal((prevValue) => !prevValue);
-      const workshopDetail = await getWorkshopDetails(localSelectedWorksop?.id);
-      setSelectedWorkshopId(workshopDetail?.id);
-      track('program_date_button', {
-        program_id: localSelectedWorksop?.id,
-        program_name: workshopDetail?.title,
-        program_date: workshopDetail?.eventStartDate,
-        program_time: workshopDetail?.eventStartTime,
-        category: 'All',
-      });
-    };
-
-    const handleModalToggle = () => {
-      setSelectedDates([]);
-      setShowWorkshopSelectModal(false);
-    };
-
-    const getSelectedAvailabelDate = () => {
-      const index = dateAvailable.findIndex((obj) => {
-        return obj.allDates.every((date) => selectedDates.includes(date));
-      });
-      return index;
-    };
-
-    const dateIndex = getSelectedAvailabelDate();
-
-    const handelGoBack = () => {
-      setSelectedDates(dateAvailable[dateIndex - 1]?.allDates);
-    };
-    const handelGoForward = () => {
-      setSelectedDates(dateAvailable[dateIndex + 1]?.allDates);
-    };
-
-    return (
-      <Modal
-        show={showWorkshopSelectModal}
-        onHide={handleModalToggle}
-        backdrop="static"
-        className="available-time modal fade bd-example-modal-lg"
-        dialogClassName="modal-dialog modal-dialog-centered modal-lg"
-      >
-        <Modal.Header closeButton>Available Time</Modal.Header>
-        <Modal.Body>
-          <div className="time-slot-changer">
-            <button
-              className="prev-slot"
-              disabled={dateIndex === 0}
-              onClick={handelGoBack}
-            >
-              <img src="/img/chevron-left.svg" />
-            </button>
-            <div className="slot-info">{formatDateRange(selectedDates)}</div>
-            <button
-              className="next-slot"
-              disabled={dateIndex === dateAvailable?.length - 1}
-              onClick={handelGoForward}
-            >
-              <img src="/img/chevron-right.svg" />
-            </button>
-          </div>
-          <div className="slot-listing">
-            {workshops?.map((workshop) => {
-              return (
-                <div
-                  className="slot-item"
-                  onClick={() => handleWorkshopSelect(workshop)}
-                  key={workshop?.sfid}
-                >
-                  <div className="slot-type">
-                    <div className="slot-info">
-                      {workshop?.mode === COURSE_MODES.ONLINE.name ? (
-                        workshop.mode
-                      ) : workshop.isLocationEmpty ? (
-                        <>
-                          {workshop?.city}, {workshop?.state}
-                        </>
-                      ) : (
-                        `${workshop.locationStreet || ''} ${
-                          workshop.locationCity || ''
-                        }
-                          ${workshop.locationProvince || ''} ${
-                            workshop.locationCountry || ''
-                          }`
-                      )}
-                    </div>
-                    <div className="slot-select form-item">
-                      <input
-                        type="radio"
-                        value={localSelectedWorksop?.id}
-                        defaultChecked={
-                          localSelectedWorksop?.id === workshop.id
-                        }
-                        checked={localSelectedWorksop?.id === workshop.id}
-                      />
-                    </div>
-                  </div>
-                  {workshop.timings.map((timing, index) => {
-                    return (
-                      <div className="slot-timing" key={index}>
-                        <div className="slot-date">
-                          {dayjs.utc(timing.startDate).format('M/DD, ddd')}
-                        </div>
-                        <div className="slot-time">
-                          {tConvert(timing.startTime)}-
-                          {tConvert(timing.endTime)} {ABBRS[timing.timeZone]}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
-          <div className="slot-action">
-            <button
-              type="button"
-              disabled={!localSelectedWorksop}
-              className="btn btn-primary find-courses submit-btn"
-              onClick={handleWorkshopSelectForCheckout}
-            >
-              Continue
-            </button>
-          </div>
-        </Modal.Body>
-      </Modal>
-    );
-  };
-
-  const LocationSearchModal = ({
-    handleModalToggle,
-    showLocationModal,
-    locationFilter,
-    handleLocationFilterChange,
-  }) => {
-    const [selectedLocation, setSelectedLocation] = useState(locationFilter);
-    const findCourses = () => {
-      handleLocationFilterChange(selectedLocation);
-      handleModalToggle();
-    };
-    return (
-      <Modal
-        show={showLocationModal}
-        onHide={handleModalToggle}
-        backdrop="static"
-        className="location-search bd-example-modal-lg"
-        dialogClassName="modal-dialog modal-dialog-centered modal-lg"
-      >
-        <Modal.Header closeButton>Find courses near you</Modal.Header>
-        <Modal.Body>
-          <div className="form-item">
-            <ScheduleLocationFilterNew
-              handleLocationChange={setSelectedLocation}
-              value={locationFilter}
-              listClassName="result-list"
-            />
-          </div>
-          <button
-            type="button"
-            data-dismiss="modal"
-            className="btn btn-primary find-courses submit-btn"
-            onClick={findCourses}
-          >
-            Continue
-          </button>
-        </Modal.Body>
-      </Modal>
-    );
   };
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
@@ -713,7 +530,6 @@ const New = () => {
   };
 
   const handleSelectMode = (value) => {
-    setLocationFilter(null);
     setMode(value);
     resetCalender();
   };
@@ -1179,8 +995,8 @@ const New = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {mode === COURSE_MODES.ONLINE.name ? (
-                            mode
+                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name ? (
+                            activeWorkshop?.mode
                           ) : isLocationEmpty ? (
                             <>
                               Location: {city}, {state}
@@ -1247,6 +1063,8 @@ const New = () => {
                           Contact details:
                         </div>
                         <div className="value col-7">
+                          <span>{contactName}</span>
+                          <br />
                           <a href={`tel:${phone1}`}>{phone1}</a>
                           <br />
                           {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}
@@ -1335,15 +1153,25 @@ const New = () => {
             </div>
           </div>
         </section>
-        {showLocationModal && isLocationFetchComplete && (
-          <LocationSearchModal
-            handleModalToggle={handleModalToggle}
-            showLocationModal={showLocationModal}
-            locationFilter={locationFilter}
-            handleLocationFilterChange={handleLocationFilterChange}
-          />
-        )}
-        <WorkshopSelectModal handleCheckout={handleCheckout} />
+
+        <LocationSearchModal
+          handleModalToggle={handleModalToggle}
+          showLocationModal={showLocationModal}
+          locationFilter={locationFilter}
+          handleLocationFilterChange={handleLocationFilterChange}
+        />
+
+        <WorkshopSelectModal
+          setShowWorkshopSelectModal={setShowWorkshopSelectModal}
+          getWorkshopDetails={getWorkshopDetails}
+          setSelectedWorkshopId={setSelectedWorkshopId}
+          setSelectedDates={setSelectedDates}
+          setShowLocationModal={setShowLocationModal}
+          dateAvailable={dateAvailable}
+          selectedDates={selectedDates}
+          showWorkshopSelectModal={showWorkshopSelectModal}
+          workshops={workshops}
+        />
       </main>
     </>
   );
