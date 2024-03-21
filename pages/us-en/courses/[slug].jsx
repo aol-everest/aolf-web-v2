@@ -1462,7 +1462,7 @@ const Course = () => {
               ))}
             {(isFetchingNextPage || !isSuccess) && (
               <>
-                {[...Array(6)].map((e, i) => (
+                {[...Array(8)].map((e, i) => (
                   <ItemLoaderTile key={i}></ItemLoaderTile>
                 ))}
               </>
