@@ -2,7 +2,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import {
   api,
-  stringToBoolean,
   getUserTimeZoneAbbreviation,
   concatenateStrings,
   tConvert,
@@ -49,10 +48,15 @@ import { usePopper } from 'react-popper';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
+import dynamic from 'next/dynamic';
+import { useEffectOnce } from 'react-use';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
-import { isWeekend } from '@components/dateRangePicker/utils/dates';
+
+const AddressSearch = dynamic(() =>
+  import('@components').then((mod) => mod.AddressSearch),
+);
 
 dayjs.extend(utc);
 
@@ -64,6 +68,15 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
     },
   });
   return response;
+};
+
+const fillDefaultTimeZone = () => {
+  const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
+  // console.log('User timezone abbreviation:', userTimeZoneAbbreviation);
+  if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
+    return userTimeZoneAbbreviation.toUpperCase();
+  }
+  return null;
 };
 
 const parseAsStartEndDate = createParser({
@@ -158,7 +171,7 @@ const SmartInput = ({
 };
 
 const SmartDropDown = (props) => {
-  const { buttonText, children, value, containerClass = '' } = props;
+  const { buttonText, children, value } = props;
   const [visible, setVisibility] = useState(false);
 
   function handleDropdownClick(event) {
@@ -595,6 +608,7 @@ const CourseTile = ({ data, authenticated }) => {
 };
 
 const Course = () => {
+  const { track, page } = useAnalytics();
   const { ref, inView } = useInView({
     /* Optional options */
     threshold: 0.1,
@@ -768,6 +782,21 @@ const Course = () => {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    page({
+      category: 'course_registration',
+      name: 'course_search',
+    });
+    track('Product List Viewed', {
+      category: 'Course',
+    });
+    if (orgConfig.name === 'AOL' && !timeZoneFilter) {
+      setTimeZoneFilter(fillDefaultTimeZone());
+    }
+  }, [router.isReady]);
+
   if (!router.isReady) return <PageLoading />;
 
   const onClearAllFilter = () => {
@@ -882,7 +911,6 @@ const Course = () => {
   };
 
   const onDatesChange = async (date) => {
-    console.log(date);
     if (Array.isArray(date)) {
       setFilterStartEndDate(date);
     } else {
@@ -954,6 +982,22 @@ const Course = () => {
               <button class="filter-save-button">Save Changes</button>
               <Popup
                 tabIndex="1"
+                value={locationFilter}
+                buttonText={
+                  locationFilter ? `${locationFilter.locationName}` : null
+                }
+                closeEvent={onFilterChange('locationFilter')}
+                label="Location"
+              >
+                {({ closeHandler }) => (
+                  <AddressSearch
+                    closeHandler={closeHandler}
+                    placeholder="Search for Location"
+                  />
+                )}
+              </Popup>
+              <Popup
+                tabIndex="2"
                 value={COURSE_MODES[courseModeFilter] && courseModeFilter}
                 buttonText={
                   courseModeFilter && COURSE_MODES[courseModeFilter]
@@ -979,8 +1023,9 @@ const Course = () => {
                   </>
                 )}
               </Popup>
+
               <Popup
-                tabIndex="2"
+                tabIndex="3"
                 value={courseTypeFilter}
                 buttonText={
                   courseTypeFilter && courseTypeFilter.name
@@ -1166,18 +1211,57 @@ const Course = () => {
                       class="filter-cancel-button"
                       onClick={toggleFilter}
                     ></button>
-                    <label class="mt-4">Course format</label>
-                    <div
-                      id="switch-mobile-filter"
-                      class="btn_outline_box full-btn mt-3"
+                    <MobileFilterModal
+                      label="Location"
+                      value={
+                        locationFilter ? `${locationFilter.locationName}` : null
+                      }
+                      clearEvent={onFilterClearEvent('locationFilter')}
                     >
-                      <a class="btn" href="#" data-swicth-active="true">
-                        Online
-                      </a>
-                      <a class="btn" href="#" data-swicth-active="false">
-                        In-Person
-                      </a>
-                    </div>
+                      <AddressSearch
+                        closeHandler={onFilterChange('locationFilter')}
+                        placeholder="Search for Location"
+                      />
+                    </MobileFilterModal>
+                    <MobileFilterModal
+                      label="Course format"
+                      value={
+                        courseModeFilter && COURSE_MODES[courseModeFilter]
+                          ? COURSE_MODES[courseModeFilter].name
+                          : null
+                      }
+                      closeEvent={onFilterClearEvent('courseModeFilter')}
+                    >
+                      <div className="dropdown">
+                        <SmartDropDown
+                          value={courseModeFilter}
+                          buttonText={
+                            courseModeFilter && COURSE_MODES[courseModeFilter]
+                              ? COURSE_MODES[courseModeFilter].name
+                              : null
+                          }
+                          closeEvent={onFilterChange('courseModeFilter')}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              {orgConfig.courseModes.map(
+                                (courseMode, index) => {
+                                  return (
+                                    <li
+                                      key={index}
+                                      className="dropdown-item"
+                                      onClick={closeHandler(courseMode)}
+                                    >
+                                      {COURSE_MODES[courseMode].name}
+                                    </li>
+                                  );
+                                },
+                              )}
+                            </>
+                          )}
+                        </SmartDropDown>
+                      </div>
+                    </MobileFilterModal>
                     <MobileFilterModal
                       label="Course Type"
                       value={
@@ -1218,7 +1302,6 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-
                     <MobileFilterModal
                       label="Dates"
                       value={
@@ -1238,7 +1321,6 @@ const Course = () => {
                         />
                       </div>
                     </MobileFilterModal>
-
                     <MobileFilterModal
                       label="Time Zone"
                       value={
@@ -1295,7 +1377,6 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-
                     <MobileFilterModal
                       label="Instructor"
                       value={instructorFilter ? instructorFilter.label : null}
@@ -1310,62 +1391,6 @@ const Course = () => {
                         closeHandler={onFilterChangeEvent('instructorFilter')}
                       ></SmartInput>
                     </MobileFilterModal>
-
-                    <label>Location</label>
-                    <div
-                      class="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                      id="location-button_mobile"
-                      data-swicth-active="false"
-                    >
-                      <a class="btn" href="#">
-                        Location
-                      </a>
-                    </div>
-                    <div
-                      id="location-modal_mobile"
-                      data-location="null"
-                      data-location-initial="Location"
-                      class="mobile-modal"
-                    >
-                      <div class="mobile-modal--header">
-                        <div
-                          id="location-close_mobile"
-                          class="mobile-modal--close"
-                        >
-                          <img src="./img/ic-close.svg" alt="close" />
-                        </div>
-                        <h2 class="mobile-modal--title">Location</h2>
-                        <div
-                          class="smart-input-mobile"
-                          id="location-mobile-input"
-                        >
-                          <input
-                            placeholder="Search location"
-                            type="text"
-                            name="location"
-                            class="custom-input"
-                          />
-                          <div class="smart-input--list">
-                            <p class="smart-input--list-item">Los Altos</p>
-                            <p class="smart-input--list-item">Los Angeles</p>
-                            <p class="smart-input--list-item">Los Gatos</p>
-                            <p class="smart-input--list-item">Los Mochis</p>
-                            <p class="smart-input--list-item">Los Banos</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="mobile-modal--body">
-                        <div class="row m-0 align-items-center justify-content-between">
-                          <div class="clear">Clear</div>
-                          <div
-                            id="location-search"
-                            class="filter-save-button btn_box_primary select-btn"
-                          >
-                            Select
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 )}
               </div>
