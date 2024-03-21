@@ -33,6 +33,7 @@ import {
   COURSE_TYPES,
   TIME_ZONE,
   MODAL_TYPES,
+  COURSE_TYPES_MASTER,
 } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
@@ -46,7 +47,6 @@ import { PageLoading } from '@components';
 import { usePopper } from 'react-popper';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
-import dynamic from 'next/dynamic';
 import DateRangePicker from 'rsuite/DateRangePicker';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
@@ -192,7 +192,7 @@ const MobileFilterModal = (props) => {
     document.body.classList.remove('overflow-hidden');
   };
 
-  const { label, value, children } = props;
+  const { label, value, children, hideClearOption = false } = props;
   return (
     <>
       <label>{label}</label>
@@ -222,9 +222,11 @@ const MobileFilterModal = (props) => {
         </div>
         <div class="mobile-modal--body">
           <div class="row m-0 align-items-center justify-content-between">
-            <div class="clear" onClick={clearAction}>
-              Clear
-            </div>
+            {!hideClearOption && (
+              <div class="clear" onClick={clearAction}>
+                Clear
+              </div>
+            )}
             <div
               class="filter-save-button btn_box_primary select-btn"
               onClick={hideModal}
@@ -250,6 +252,7 @@ const Popup = (props) => {
     buttonTextclassName = '',
     showList = true,
     label,
+    hideClearOption = false,
   } = props;
 
   const [visible, setVisibility] = useState(false);
@@ -327,7 +330,7 @@ const Popup = (props) => {
           'with-selected': value,
         })}
       >
-        {value && (
+        {value && !hideClearOption && (
           <button
             class="courses-filter__remove"
             data-filter="event-type"
@@ -581,23 +584,10 @@ const Course = () => {
     'onlyWeekend',
     parseAsBoolean.withDefault(false),
   );
-  const [otherCType] = useQueryState(
-    'other-ctype',
-    parseAsBoolean.withDefault(false),
-  );
-  const [institutionalCourses] = useQueryState(
-    'ic-type',
-    parseAsBoolean.withDefault(false),
-  );
-  const [privateEvent] = useQueryState(
-    'private-event',
-    parseAsBoolean.withDefault(false),
-  );
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
     parseAsJson,
   );
-  const [ctypesFilter, setCtypesFilter] = useQueryState('ctypes');
   const [filterStartEndDate, setFilterStartEndDate] =
     useQueryState('startEndDate');
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
@@ -605,22 +595,44 @@ const Course = () => {
     'instructor',
     parseAsJson,
   );
+  console.log(instructorFilter);
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
   const [centerNameFilter] = useQueryState('centerName');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
+
+  const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
+    (accumulator, currentValue) => {
+      const courseTypes = currentValue.courseTypes.reduce(
+        (courseTypes, courseTypeCurrent) => {
+          if (COURSE_TYPES[courseTypeCurrent]) {
+            return {
+              ...courseTypes,
+              [COURSE_TYPES[courseTypeCurrent].slug]:
+                COURSE_TYPES[courseTypeCurrent],
+            };
+          } else {
+            return courseTypes;
+          }
+        },
+        {},
+      );
+      return { ...accumulator, ...courseTypes };
+    },
+    {},
+  );
+
+  console.log(COURSE_TYPES_OPTIONS, courseTypeFilter);
+
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
       {
         queryKey: [
           'workshops',
           {
-            privateEvent,
-            otherCType,
             locationFilter,
-            ctypesFilter,
             courseTypeFilter,
             filterStartEndDate,
             timeZoneFilter,
@@ -678,18 +690,7 @@ const Course = () => {
               lng,
             };
           }
-          if (otherCType) {
-            param = {
-              ...param,
-              other: 1,
-            };
-          }
-          if (privateEvent) {
-            param = {
-              ...param,
-              isPrivateEvent: 1,
-            };
-          }
+
           if (onlyWeekend) {
             param = {
               ...param,
@@ -747,7 +748,6 @@ const Course = () => {
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'courseTypeFilter':
-        //setCtypesFilter(null);
         //setCourseTypeFilter(value);
         break;
       case 'activeFilterType':
@@ -804,7 +804,6 @@ const Course = () => {
     if (e) e.preventDefault();
     switch (field) {
       case 'courseTypeFilter':
-        setCtypesFilter(null);
         // setCourseTypeFilter(value);
         break;
       case 'activeFilterType':
@@ -831,6 +830,21 @@ const Course = () => {
         }
         break;
     }
+  };
+
+  const changeCourseType = (courseType) => {
+    const { slug, ...rest } = router.query;
+    router.push(
+      {
+        ...router,
+        query: {
+          slug: courseType.slug,
+          ...rest,
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
   };
 
   const onDatesChange = async (date) => {
@@ -880,6 +894,8 @@ const Course = () => {
     label: name,
   }));
   instructorList = (instructorList || []).slice(0, 5);
+
+  console.log(instructorFilter);
 
   return (
     <main class="all-courses-find">
@@ -937,44 +953,28 @@ const Course = () => {
                 tabIndex="2"
                 value={courseTypeFilter}
                 buttonText={
-                  courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                    ? COURSE_TYPES[courseTypeFilter].name
+                  courseTypeFilter && courseTypeFilter.name
+                    ? courseTypeFilter.name
                     : null
                 }
-                closeEvent={onFilterChange('courseTypeFilter')}
                 label="Course Type"
+                hideClearOption
+                closeEvent={changeCourseType}
               >
                 {({ closeHandler }) => (
                   <>
-                    {otherCType && (
-                      <>
-                        {orgConfig.otherCourseTypes.map((courseType, index) => {
-                          return (
-                            <li
-                              className="courses-filter__list-item"
-                              key={index}
-                              onClick={closeHandler(courseType)}
-                            >
-                              {COURSE_TYPES[courseType].name}
-                            </li>
-                          );
-                        })}
-                      </>
-                    )}
-                    {!otherCType && (
-                      <>
-                        {orgConfig.courseTypes.map((courseType, index) => {
-                          return (
-                            <li
-                              className="courses-filter__list-item"
-                              key={index}
-                              onClick={closeHandler(courseType)}
-                            >
-                              {COURSE_TYPES[courseType].name}
-                            </li>
-                          );
-                        })}
-                      </>
+                    {Object.values(COURSE_TYPES_OPTIONS).map(
+                      (courseType, index) => {
+                        return (
+                          <li
+                            className="courses-filter__list-item"
+                            key={index}
+                            onClick={closeHandler(courseType)}
+                          >
+                            {courseType.name}
+                          </li>
+                        );
+                      },
                     )}
                   </>
                 )}
@@ -1150,57 +1150,37 @@ const Course = () => {
                     <MobileFilterModal
                       label="Course Type"
                       value={
-                        courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                          ? COURSE_TYPES[courseTypeFilter].name
-                          : 'Course Type'
+                        courseTypeFilter && courseTypeFilter.name
+                          ? courseTypeFilter.name
+                          : null
                       }
-                      clearEvent={onFilterClearEvent('courseTypeFilter')}
+                      hideClearOption
+                      closeEvent={changeCourseType}
                     >
                       <div className="dropdown">
                         <SmartDropDown
                           value={courseTypeFilter}
                           buttonText={
-                            courseTypeFilter && COURSE_TYPES[courseTypeFilter]
-                              ? COURSE_TYPES[courseTypeFilter].name
-                              : 'Select Course'
+                            courseTypeFilter && courseTypeFilter.name
+                              ? courseTypeFilter.name
+                              : null
                           }
-                          closeEvent={onFilterChange('courseTypeFilter')}
+                          closeEvent={changeCourseType}
                         >
                           {({ closeHandler }) => (
                             <>
-                              {otherCType && (
-                                <>
-                                  {orgConfig.otherCourseTypes.map(
-                                    (courseType, index) => {
-                                      return (
-                                        <li
-                                          key={index}
-                                          className="dropdown-item"
-                                          onClick={closeHandler(courseType)}
-                                        >
-                                          {COURSE_TYPES[courseType].name}
-                                        </li>
-                                      );
-                                    },
-                                  )}
-                                </>
-                              )}
-                              {!otherCType && (
-                                <>
-                                  {orgConfig.courseTypes.map(
-                                    (courseType, index) => {
-                                      return (
-                                        <li
-                                          key={index}
-                                          className="dropdown-item"
-                                          onClick={closeHandler(courseType)}
-                                        >
-                                          {COURSE_TYPES[courseType].name}
-                                        </li>
-                                      );
-                                    },
-                                  )}
-                                </>
+                              {Object.values(COURSE_TYPES_OPTIONS).map(
+                                (courseType, index) => {
+                                  return (
+                                    <li
+                                      className="dropdown-item"
+                                      key={index}
+                                      onClick={closeHandler(courseType)}
+                                    >
+                                      {courseType.name}
+                                    </li>
+                                  );
+                                },
                               )}
                             </>
                           )}

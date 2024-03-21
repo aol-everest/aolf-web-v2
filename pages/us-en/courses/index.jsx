@@ -2,6 +2,7 @@
 import { COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
+import { orgConfig } from '@org';
 
 const CourseTypeTile = ({ courseType }) => {
   const router = useRouter();
@@ -61,8 +62,6 @@ const SectionComponent = ({ section }) => {
     return accumulator;
   }, []);
 
-  console.log(courses);
-
   return (
     <section class="beginner-courses">
       <h1 class="section-title">{section.name}</h1>
@@ -80,9 +79,12 @@ const SectionComponent = ({ section }) => {
 const Home = () => {
   return (
     <main class="all-courses">
-      {COURSE_TYPES_MASTER.map((section, i) => {
-        return <SectionComponent key={i} section={section}></SectionComponent>;
-      })}
+      {COURSE_TYPES_MASTER[orgConfig.name] &&
+        COURSE_TYPES_MASTER[orgConfig.name].map((section, i) => {
+          return (
+            <SectionComponent key={i} section={section}></SectionComponent>
+          );
+        })}
     </main>
   );
 };

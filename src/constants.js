@@ -83,35 +83,95 @@ export const SHARE_SITES = {
   ICAL: 'iCal',
 };
 
-export const COURSE_TYPES_MASTER = [
-  {
-    name: `Beginner's Courses`,
-    courseTypes: [
-      'SKY_BREATH_MEDITATION',
-      'SAHAJ_SAMADHI_MEDITATION',
-      'ART_OF_LIVING_PREMIUM_PROGRAM',
-      'SRI_SRI_YOGA_MEDITATION',
-    ],
-  },
-  {
-    name: `Advanced Courses`,
-    courseTypes: [
-      'SILENT_RETREAT',
-      'BLESSINGS_COURSE',
-      'CHAKRA_KRIYA',
-      'SANYAM_COURSE',
-      'SRI_SRI_YOGA_DEEP_DIVE',
-    ],
-  },
-  {
-    name: `Training Courses`,
-    courseTypes: [
-      'VOLUNTEER_TRAINING_PROGRAM',
-      'TEACHER_TRAINING',
-      'MARMA_TRAINING',
-    ],
-  },
-];
+export const COURSE_TYPES_MASTER = {
+  AOL: [
+    {
+      name: `Beginner's Courses`,
+      courseTypes: [
+        'SKY_BREATH_MEDITATION',
+        'SAHAJ_SAMADHI_MEDITATION',
+        'ART_OF_LIVING_PREMIUM_PROGRAM',
+        'SRI_SRI_YOGA_MEDITATION',
+      ],
+    },
+    {
+      name: `Advanced Courses`,
+      courseTypes: [
+        'SILENT_RETREAT',
+        'BLESSINGS_COURSE',
+        'CHAKRA_KRIYA',
+        'SANYAM_COURSE',
+        'SRI_SRI_YOGA_DEEP_DIVE',
+      ],
+    },
+    {
+      name: `Training Courses`,
+      courseTypes: [
+        'VOLUNTEER_TRAINING_PROGRAM',
+        'TEACHER_TRAINING',
+        'MARMA_TRAINING',
+      ],
+    },
+  ],
+  HB: [
+    {
+      name: `Beginner's Courses`,
+      courseTypes: [
+        'SKY_BREATH_MEDITATION',
+        'SAHAJ_SAMADHI_MEDITATION',
+        'ART_OF_LIVING_PREMIUM_PROGRAM',
+        'SRI_SRI_YOGA_MEDITATION',
+      ],
+    },
+    {
+      name: `Advanced Courses`,
+      courseTypes: [
+        'SILENT_RETREAT',
+        'BLESSINGS_COURSE',
+        'CHAKRA_KRIYA',
+        'SANYAM_COURSE',
+        'SRI_SRI_YOGA_DEEP_DIVE',
+      ],
+    },
+    {
+      name: `Training Courses`,
+      courseTypes: [
+        'VOLUNTEER_TRAINING_PROGRAM',
+        'TEACHER_TRAINING',
+        'MARMA_TRAINING',
+      ],
+    },
+  ],
+  IAHV: [
+    {
+      name: `Beginner's Courses`,
+      courseTypes: [
+        'SKY_BREATH_MEDITATION',
+        'SAHAJ_SAMADHI_MEDITATION',
+        'ART_OF_LIVING_PREMIUM_PROGRAM',
+        'SRI_SRI_YOGA_MEDITATION',
+      ],
+    },
+    {
+      name: `Advanced Courses`,
+      courseTypes: [
+        'SILENT_RETREAT',
+        'BLESSINGS_COURSE',
+        'CHAKRA_KRIYA',
+        'SANYAM_COURSE',
+        'SRI_SRI_YOGA_DEEP_DIVE',
+      ],
+    },
+    {
+      name: `Training Courses`,
+      courseTypes: [
+        'VOLUNTEER_TRAINING_PROGRAM',
+        'TEACHER_TRAINING',
+        'MARMA_TRAINING',
+      ],
+    },
+  ],
+};
 
 export const COURSE_TYPES = {
   SKY_BREATH_MEDITATION: {
