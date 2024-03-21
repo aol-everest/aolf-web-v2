@@ -535,16 +535,16 @@ const New = () => {
   enableDates = [...enableDates, ...selectedDates];
 
   const handelDayCreate = (dObj, dStr, fp, dayElem) => {
-    const day = dayElem.innerHTML.toString().padStart(2, '0');
-    const parsedDate = `${moment(currentMonthYear).format('YYYY-MM')}-${day}`;
+    const day = dayElem.innerHTML?.toString()?.padStart(2, '0');
+    const parsedDate = `${moment(currentMonthYear)?.format('YYYY-MM')}-${day}`;
 
     dateAvailable.map((da) => {
-      if (da.firstDate === parsedDate) {
-        if (da.mode.includes('Online') && da.mode.includes('In Person')) {
+      if (da?.firstDate === parsedDate) {
+        if (da?.mode?.includes('Online') && da?.mode?.includes('In Person')) {
           dayElem.classList.add('online in-person ');
-        } else if (da.mode.includes('Online')) {
+        } else if (da?.mode.includes('Online')) {
           dayElem.classList.add('online');
-        } else if (da.mode.includes('In Person')) {
+        } else if (da?.mode.includes('In Person')) {
           dayElem.classList.add('in-person');
         }
       }
