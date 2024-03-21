@@ -927,6 +927,9 @@ const Course = () => {
   if (locationFilter) {
     filterCount++;
   }
+  if (courseModeFilter) {
+    filterCount++;
+  }
   if (onlyWeekend) {
     filterCount++;
   }
