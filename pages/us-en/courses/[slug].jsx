@@ -24,6 +24,7 @@ import {
   parseAsStringEnum,
   parseAsStringLiteral,
   parseAsNumberLiteral,
+  createParser,
 } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
@@ -51,10 +52,11 @@ import DateRangePicker from 'rsuite/DateRangePicker';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
+import { isWeekend } from '@components/dateRangePicker/utils/dates';
 
 dayjs.extend(utc);
 
-async function queryInstructor({ queryKey: [_, term] }) {
+const queryInstructor = async ({ queryKey: [_, term] }) => {
   const response = await api.get({
     path: 'cf/teachers',
     param: {
@@ -62,7 +64,31 @@ async function queryInstructor({ queryKey: [_, term] }) {
     },
   });
   return response;
-}
+};
+
+const parseAsStartEndDate = createParser({
+  parse(queryValue) {
+    if (queryValue && queryValue.includes('|')) {
+      const filterStartEndDateArr = queryValue
+        .split('|')
+        .map((d) => dayjs.utc(d));
+      return filterStartEndDateArr;
+    } else {
+      return null;
+    }
+  },
+  serialize(value) {
+    console.log(value);
+    if (Array.isArray(value) && value.length === 2) {
+      return (
+        dayjs.utc(value[0]).format('YYYY-MM-DD') +
+        '|' +
+        dayjs.utc(value[1]).format('YYYY-MM-DD')
+      );
+    }
+    return null;
+  },
+});
 
 const {
   allowedMaxDays,
@@ -579,23 +605,24 @@ const Course = () => {
   const { slug } = router.query;
 
   const courseTypeFilter = findCourseTypeBySlug(slug);
-  const [activeFilterType, setActiveFilterType] = useQueryState('mode');
+  const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
     parseAsBoolean.withDefault(false),
   );
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson,
+    parseAsJson(),
   );
-  const [filterStartEndDate, setFilterStartEndDate] =
-    useQueryState('startEndDate');
+  const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
+    'startEndDate',
+    parseAsStartEndDate,
+  );
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson,
+    parseAsJson(),
   );
-  console.log(instructorFilter);
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
@@ -624,8 +651,6 @@ const Course = () => {
     {},
   );
 
-  console.log(COURSE_TYPES_OPTIONS, courseTypeFilter);
-
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
       {
@@ -637,7 +662,7 @@ const Course = () => {
             filterStartEndDate,
             timeZoneFilter,
             instructorFilter,
-            activeFilterType,
+            courseModeFilter,
             onlyWeekend,
             cityFilter,
             centerFilter,
@@ -650,10 +675,10 @@ const Course = () => {
             timingsRequired: true,
           };
 
-          if (activeFilterType && COURSE_MODES[activeFilterType]) {
+          if (courseModeFilter && COURSE_MODES[courseModeFilter]) {
             param = {
               ...param,
-              mode: COURSE_MODES[activeFilterType].value,
+              mode: COURSE_MODES[courseModeFilter].value,
             };
           }
           if (courseTypeFilter) {
@@ -675,7 +700,7 @@ const Course = () => {
             };
           }
           if (filterStartEndDate) {
-            const [startDate, endDate] = filterStartEndDate.split('|');
+            const [startDate, endDate] = filterStartEndDate;
             param = {
               ...param,
               sdate: startDate,
@@ -745,20 +770,29 @@ const Course = () => {
   }, [inView, fetchNextPage, hasNextPage]);
   if (!router.isReady) return <PageLoading />;
 
+  const onClearAllFilter = () => {
+    setCourseModeFilter(null);
+    setOnlyWeekend(null);
+    setLocationFilter(null);
+    setTimeZoneFilter(null);
+    setInstructorFilter(null);
+    setFilterStartEndDate(null);
+  };
+
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'courseTypeFilter':
         //setCourseTypeFilter(value);
         break;
-      case 'activeFilterType':
-        setActiveFilterType(value);
+      case 'courseModeFilter':
+        setCourseModeFilter(value);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(value);
         break;
       case 'locationFilter':
         if (value) {
-          setLocationFilter(JSON.stringify(value));
+          setLocationFilter(value);
         } else {
           setLocationFilter(null);
         }
@@ -768,7 +802,7 @@ const Course = () => {
         break;
       case 'instructorFilter':
         if (value) {
-          setInstructorFilter(JSON.stringify(value));
+          setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
         }
@@ -782,8 +816,8 @@ const Course = () => {
       case 'courseTypeFilter':
         // setCourseTypeFilter(null);
         break;
-      case 'activeFilterType':
-        setActiveFilterType(null);
+      case 'courseModeFilter':
+        setCourseModeFilter(null);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(null);
@@ -806,15 +840,15 @@ const Course = () => {
       case 'courseTypeFilter':
         // setCourseTypeFilter(value);
         break;
-      case 'activeFilterType':
-        setActiveFilterType(value);
+      case 'courseModeFilter':
+        setCourseModeFilter(value);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(value);
         break;
       case 'locationFilter':
         if (value) {
-          setLocationFilter(JSON.stringify(value));
+          setLocationFilter(value);
         } else {
           setLocationFilter(null);
         }
@@ -824,7 +858,7 @@ const Course = () => {
         break;
       case 'instructorFilter':
         if (value) {
-          setInstructorFilter(JSON.stringify(value));
+          setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
         }
@@ -850,14 +884,7 @@ const Course = () => {
   const onDatesChange = async (date) => {
     console.log(date);
     if (Array.isArray(date)) {
-      const [startDate, endDate] = date || [];
-      setFilterStartEndDate(
-        startDate
-          ? dayjs.utc(startDate).format('YYYY-MM-DD') +
-              '|' +
-              dayjs.utc(endDate).format('YYYY-MM-DD')
-          : null,
-      );
+      setFilterStartEndDate(date);
     } else {
       setFilterStartEndDate(null);
     }
@@ -872,7 +899,7 @@ const Course = () => {
   if (locationFilter) {
     filterCount++;
   }
-  if (courseTypeFilter) {
+  if (onlyWeekend) {
     filterCount++;
   }
   if (filterStartEndDate) {
@@ -885,17 +912,20 @@ const Course = () => {
     filterCount++;
   }
 
-  const filterStartEndDateArr = filterStartEndDate
-    ? filterStartEndDate.split('|').map((d) => new Date(d))
-    : null;
-
   let instructorList = instructorResult?.data?.map(({ id, name }) => ({
     value: id,
     label: name,
   }));
   instructorList = (instructorList || []).slice(0, 5);
 
-  console.log(instructorFilter);
+  const filterStartEndDateStr =
+    filterStartEndDate &&
+    Array.isArray(filterStartEndDate) &&
+    filterStartEndDate.length === 2
+      ? dayjs.utc(filterStartEndDate[0]).format('YYYY-MM-DD') +
+        ' ~ ' +
+        dayjs.utc(filterStartEndDate[1]).format('YYYY-MM-DD')
+      : null;
 
   return (
     <main class="all-courses-find">
@@ -924,13 +954,13 @@ const Course = () => {
               <button class="filter-save-button">Save Changes</button>
               <Popup
                 tabIndex="1"
-                value={COURSE_MODES[activeFilterType] && activeFilterType}
+                value={COURSE_MODES[courseModeFilter] && courseModeFilter}
                 buttonText={
-                  activeFilterType && COURSE_MODES[activeFilterType]
-                    ? COURSE_MODES[activeFilterType].name
+                  courseModeFilter && COURSE_MODES[courseModeFilter]
+                    ? COURSE_MODES[courseModeFilter].name
                     : null
                 }
-                closeEvent={onFilterChange('activeFilterType')}
+                closeEvent={onFilterChange('courseModeFilter')}
                 label="Course Format"
               >
                 {({ closeHandler }) => (
@@ -1034,12 +1064,13 @@ const Course = () => {
                     appearance="subtle"
                     showHeader={false}
                     onChange={onDatesChange}
-                    value={filterStartEndDateArr}
+                    value={filterStartEndDate}
                     shouldDisableDate={combine(
                       allowedMaxDays(14),
                       beforeToday(),
                     )}
                     ranges={[]}
+                    editable={false}
                   />
                 </div>
               </div>
@@ -1191,9 +1222,7 @@ const Course = () => {
                     <MobileFilterModal
                       label="Dates"
                       value={
-                        filterStartEndDate
-                          ? filterStartEndDate.split('|').join(' ~ ')
-                          : null
+                        filterStartEndDateStr ? filterStartEndDateStr : null
                       }
                       clearEvent={onDatesChange}
                     >
@@ -1204,7 +1233,8 @@ const Course = () => {
                           onChange={onDatesChange}
                           showOneCalendar
                           ranges={[]}
-                          value={filterStartEndDateArr}
+                          editable={false}
+                          value={filterStartEndDate}
                         />
                       </div>
                     </MobileFilterModal>
@@ -1342,20 +1372,57 @@ const Course = () => {
             </div>
           </div>
           <div class="course-listing">
-            {/* <div class="selected-filter-wrap">
-              <div class="selected-filter-item">Tampa, FL</div>
-              <div class="selected-filter-item">Eastern</div>
-              <div class="selected-filter-item">Online</div>
-              <div class="selected-filter-item">Cameron Williamson</div>
-              <div class="selected-filter-item clear">Clear All</div>
-            </div> */}
-            {!isSuccess && (
-              <>
-                {[...Array(6)].map((e, i) => (
-                  <ItemLoaderTile key={i}></ItemLoaderTile>
-                ))}
-              </>
-            )}
+            <div class="selected-filter-wrap">
+              {courseModeFilter && (
+                <div
+                  class="selected-filter-item"
+                  onClick={onFilterClearEvent('courseModeFilter')}
+                >
+                  {COURSE_MODES[courseModeFilter].value}
+                </div>
+              )}
+
+              {filterStartEndDateStr && (
+                <div class="selected-filter-item" onClick={onDatesChange}>
+                  {filterStartEndDateStr}
+                </div>
+              )}
+
+              {onlyWeekend && (
+                <div
+                  class="selected-filter-item"
+                  onClick={onFilterClearEvent('onlyWeekend')}
+                >
+                  Weekend Courses
+                </div>
+              )}
+
+              {timeZoneFilter && (
+                <div
+                  class="selected-filter-item"
+                  onClick={onFilterClearEvent('timeZoneFilter')}
+                >
+                  {TIME_ZONE[timeZoneFilter].name}
+                </div>
+              )}
+
+              {instructorFilter && (
+                <div
+                  class="selected-filter-item"
+                  onClick={onFilterClearEvent('instructorFilter')}
+                >
+                  {instructorFilter.label}
+                </div>
+              )}
+              {filterCount > 1 && (
+                <div
+                  class="selected-filter-item clear"
+                  onClick={onClearAllFilter}
+                >
+                  Clear All
+                </div>
+              )}
+            </div>
             {isSuccess &&
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
@@ -1368,7 +1435,7 @@ const Course = () => {
                   ))}
                 </React.Fragment>
               ))}
-            {isFetchingNextPage && (
+            {(isFetchingNextPage || !isSuccess) && (
               <>
                 {[...Array(6)].map((e, i) => (
                   <ItemLoaderTile key={i}></ItemLoaderTile>
