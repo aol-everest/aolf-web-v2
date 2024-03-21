@@ -200,7 +200,9 @@ const New = () => {
     queryKey: ['workshopMaster', mode],
     queryFn: async () => {
       let ctypeId = null;
-      if (
+      if (mode === 'both' && findCourseTypeByKey(courseTypeFilter)?.subTypes) {
+        ctypeId = findCourseTypeByKey(courseTypeFilter)?.subTypes['Online'];
+      } else if (
         findCourseTypeByKey(courseTypeFilter)?.subTypes &&
         findCourseTypeByKey(courseTypeFilter)?.subTypes[mode]
       ) {
