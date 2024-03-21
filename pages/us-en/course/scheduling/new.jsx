@@ -224,12 +224,6 @@ const New = () => {
     },
   });
 
-  let enableDates = dateAvailable.map((da) => {
-    return da.firstDate;
-  });
-
-  enableDates = [...enableDates, ...selectedDates];
-
   function toRadians(degrees) {
     return degrees * (Math.PI / 180);
   }
@@ -534,10 +528,27 @@ const New = () => {
     resetCalender();
   };
 
+  let enableDates = dateAvailable.map((da) => {
+    return da.firstDate;
+  });
+
+  enableDates = [...enableDates, ...selectedDates];
+
   const handelDayCreate = (dObj, dStr, fp, dayElem) => {
-    if (Math.random() < 0.15) {
-      dayElem.classList.add('event');
-    } else if (Math.random() > 0.85) dayElem.classList.add('busy');
+    const day = dayElem.innerHTML?.toString()?.padStart(2, '0');
+    const parsedDate = `${moment(currentMonthYear)?.format('YYYY-MM')}-${day}`;
+
+    dateAvailable.map((da) => {
+      if (da?.firstDate === parsedDate) {
+        if (da?.mode?.includes('Online') && da?.mode?.includes('In Person')) {
+          dayElem.classList.add('online in-person ');
+        } else if (da?.mode.includes('Online')) {
+          dayElem.classList.add('online');
+        } else if (da?.mode.includes('In Person')) {
+          dayElem.classList.add('in-person');
+        }
+      }
+    });
   };
 
   return (
