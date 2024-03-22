@@ -916,6 +916,9 @@
       }
     }
     .modal-header {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 36px;
       .title {
         font-size: 28px;
         font-weight: 500;
@@ -946,7 +949,7 @@
       }
     }
     .modal-body {
-      padding: 24px 0 0 0;
+      padding: 12px 0 0 0;
       margin: 0;
       .form-item {
         margin-bottom: 24px;
@@ -1066,8 +1069,9 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
-      height: 350px;
+      height: 316px;
       overflow: auto;
+      align-items: flex-start;
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
       }
