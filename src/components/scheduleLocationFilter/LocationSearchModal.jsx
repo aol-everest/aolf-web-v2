@@ -20,6 +20,7 @@ const LocationSearchModal = React.memo(
         show={showLocationModal}
         onHide={handleModalToggle}
         backdrop="static"
+        keyboard={false}
         className="location-search bd-example-modal-lg"
         dialogClassName="modal-dialog modal-dialog-centered modal-lg"
       >
