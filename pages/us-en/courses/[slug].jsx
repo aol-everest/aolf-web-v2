@@ -639,7 +639,7 @@ const Course = () => {
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
-  const [centerNameFilter] = useQueryState('centerName');
+  const [centerNameFilter] = useQueryState('center-name');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -1400,7 +1400,7 @@ const Course = () => {
           </div>
           <div class="course-listing">
             <div class="selected-filter-wrap">
-              {courseModeFilter && (
+              {courseModeFilter && COURSE_MODES[courseModeFilter] && (
                 <div
                   class="selected-filter-item"
                   onClick={onFilterClearEvent('courseModeFilter')}
@@ -1424,7 +1424,7 @@ const Course = () => {
                 </div>
               )}
 
-              {timeZoneFilter && (
+              {timeZoneFilter && TIME_ZONE[timeZoneFilter] && (
                 <div
                   class="selected-filter-item"
                   onClick={onFilterClearEvent('timeZoneFilter')}
