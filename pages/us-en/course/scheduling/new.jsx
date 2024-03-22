@@ -1223,6 +1223,7 @@ const New = () => {
           setWorkshops={setWorkshops}
           currentMonthYear={currentMonthYear}
           loading={loading || isLoading}
+          setActiveWorkshop={setActiveWorkshop}
         />
       </main>
     </>

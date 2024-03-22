@@ -24,6 +24,7 @@ const WorkshopSelectModal = React.memo(
     currentMonthYear,
     setWorkshops,
     loading,
+    setActiveWorkshop,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorksop, setLocalSelectedWorksop] = useState(null);
@@ -47,6 +48,8 @@ const WorkshopSelectModal = React.memo(
 
     const handleModalToggle = () => {
       setSelectedDates([]);
+      setActiveWorkshop({});
+      setSelectedWorkshopId(null);
       setLocalSelectedWorksop(null);
       setShowWorkshopSelectModal(false);
       setShowLocationModal(false);
