@@ -412,6 +412,22 @@
     .form-item {
       flex: 1;
     }
+    .smart-input {
+      position: relative;
+      .result-list {
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        border: #f7f7f7 1px solid;
+        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
+      }
+    }
+    select,
+    input.custom-input {
+      background: #ffffff url(/img/chevron-down.svg) no-repeat calc(100% - 14px)
+        center;
+      -webkit-appearance: none;
+    }
   }
   .payment-box {
     box-shadow: 4px 6px 25.100000381469727px 0px #6e6b6824;
@@ -1050,7 +1066,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
-      max-height: 50vh;
+      max-height: 360px;
       overflow: auto;
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
