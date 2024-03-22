@@ -56,7 +56,7 @@ const New = () => {
   );
 
   const [teacherFilter] = useQueryState('teacher');
-  const [cityFilter] = useQueryState('city');
+  const [cityFilter, setCityFilter] = useQueryState('city');
 
   const {
     phone1,
@@ -92,7 +92,7 @@ const New = () => {
   });
 
   useEffect(() => {
-    if (isLocationFetchComplete) {
+    if (isLocationFetchComplete && !cityFilter) {
       setShowLocationModal(true);
     }
   }, [isLocationFetchComplete]);
@@ -189,8 +189,9 @@ const New = () => {
         });
         const defaultDate =
           response.data.length > 0 ? response.data[0].allDates : [];
-        fp.current.flatpickr.jumpToDate(defaultDate[0], true);
-
+        if (fp?.current?.flatpickr && defaultDate.length > 0) {
+          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+        }
         return response.data;
       }
     },
@@ -368,6 +369,7 @@ const New = () => {
 
   const handleLocationFilterChange = (value) => {
     resetCalender();
+    setCityFilter(null);
     if (value) {
       setLocationFilter(value);
     } else {
@@ -551,6 +553,16 @@ const New = () => {
         }
       }
     });
+  };
+
+  const handleWorkshopModalCalendarMonthChange = (backPressed = false) => {
+    const parsedDate = moment(currentMonthYear, 'YYYY-M');
+    const newMonthDate = backPressed
+      ? parsedDate.subtract(1, 'month')
+      : parsedDate.add(1, 'month');
+    const formattedDate = newMonthDate.format('YYYY-M');
+    setCurrentMonthYear(formattedDate);
+    fp.current.flatpickr.changeMonth(backPressed ? -1 : 1);
   };
 
   return (
@@ -1205,6 +1217,12 @@ const New = () => {
           selectedDates={selectedDates}
           showWorkshopSelectModal={showWorkshopSelectModal}
           workshops={workshops}
+          handleWorkshopModalCalendarMonthChange={
+            handleWorkshopModalCalendarMonthChange
+          }
+          setWorkshops={setWorkshops}
+          currentMonthYear={currentMonthYear}
+          loading={loading || isLoading}
         />
       </main>
     </>

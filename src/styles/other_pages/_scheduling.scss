@@ -1066,11 +1066,10 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
-      max-height: 360px;
+      height: 350px;
       overflow: auto;
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
-        max-height: calc(100vh - 250px);
       }
       .slot-item {
         background: #f7f7f7;
