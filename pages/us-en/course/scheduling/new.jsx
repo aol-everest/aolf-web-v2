@@ -545,7 +545,7 @@ const New = () => {
     dateAvailable.map((da) => {
       if (da?.firstDate === parsedDate) {
         if (da?.mode?.includes('Online') && da?.mode?.includes('In Person')) {
-          dayElem.classList.add('online in-person ');
+          dayElem?.classList?.add('online', 'in-person');
         } else if (da?.mode.includes('Online')) {
           dayElem.classList.add('online');
         } else if (da?.mode.includes('In Person')) {
@@ -643,6 +643,7 @@ const New = () => {
                     value={selectedDates}
                     options={{
                       allowInput: false,
+                      altInput: false,
                       inline: true,
                       mode: 'single',
                       enableTime: false,
