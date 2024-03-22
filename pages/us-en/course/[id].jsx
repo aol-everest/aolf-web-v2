@@ -140,6 +140,47 @@ function CourseDetail() {
 
   useEffect(() => {
     if (!router.isReady || !data) return;
+
+    track(
+      'view_item',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: data?.unitPrice,
+          course_format: data?.productTypeId,
+          course_name: data?.title,
+          items: [
+            {
+              item_id: data?.id,
+              item_name: data?.title,
+              affiliation: 'NA',
+              coupon: '',
+              discount: 0.0,
+              index: 0,
+              item_brand: data?.businessOrg,
+              item_category: data?.title,
+              item_category2: data?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: data?.productTypeId,
+              item_list_name: data?.title,
+              item_variant: data?.workshopTotalHours,
+              location_id: data?.locationCity,
+              price: data?.unitPrice,
+              quantity: 1,
+            },
+          ],
+        },
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
+        },
+      },
+    );
+
     if (
       !isSKYType &&
       !isSilentRetreatType &&
