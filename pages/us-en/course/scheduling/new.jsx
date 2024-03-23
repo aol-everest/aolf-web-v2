@@ -1199,14 +1199,12 @@ const New = () => {
           </div>
         </section>
 
-        {!locationFilter?.lat && (
-          <LocationSearchModal
-            handleModalToggle={handleModalToggle}
-            showLocationModal={showLocationModal}
-            locationFilter={locationFilter}
-            handleLocationFilterChange={handleLocationFilterChange}
-          />
-        )}
+        <LocationSearchModal
+          handleModalToggle={handleModalToggle}
+          showLocationModal={showLocationModal}
+          locationFilter={locationFilter}
+          handleLocationFilterChange={handleLocationFilterChange}
+        />
 
         <WorkshopSelectModal
           setShowWorkshopSelectModal={setShowWorkshopSelectModal}
