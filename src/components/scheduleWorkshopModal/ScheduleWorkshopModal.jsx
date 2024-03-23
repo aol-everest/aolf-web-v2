@@ -101,6 +101,9 @@ const WorkshopSelectModal = React.memo(
 
     useEffect(() => {
       if (dateAvailable.length > 0 && showWorkshopSelectModal && backPressed) {
+        // This logic is when we come back to previous month,
+        //rather than showing the first workshop of the month
+        // we are showing the workshop which is last in the month.
         let maxDateObject = null;
         let maxDate = null;
         const newMonthDate = moment(currentMonthYear, 'YYYY-M').format(
@@ -116,7 +119,7 @@ const WorkshopSelectModal = React.memo(
             }
           }
         });
-        setSelectedDates(maxDateObject?.allDates);
+        setSelectedDates(maxDateObject?.allDates || []);
         setBackPressed(false);
       }
     }, [dateAvailable]);

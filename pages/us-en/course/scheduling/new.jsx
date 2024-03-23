@@ -540,7 +540,7 @@ const New = () => {
 
   const handelDayCreate = (dObj, dStr, fp, dayElem) => {
     const day = dayElem.innerHTML?.toString()?.padStart(2, '0');
-    const parsedDate = `${moment(currentMonthYear)?.format('YYYY-MM')}-${day}`;
+    const parsedDate = `${moment(currentMonthYear, 'YYYY-MM')?.format('YYYY-MM')}-${day}`;
 
     dateAvailable.map((da) => {
       if (da?.firstDate === parsedDate) {
