@@ -40,7 +40,7 @@ export const ScheduleLocationFilterNew = ({
       ) : (
         <AddressSearch
           closeHandler={handleLocationFilterChange}
-          placeholder="Filter by zip code or city"
+          placeholder="Zip code or city"
           parentClass="scheduling-address"
           listClassName={listClassName}
           value={value}
