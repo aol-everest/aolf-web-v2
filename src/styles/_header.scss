@@ -509,6 +509,11 @@
               color: #9f9f9f;
               font-weight: 400;
             }
+            @media screen and (min-width: 991px) {
+              & + .dropdown-item {
+                width: 250px;
+              }
+            }
           }
           .dropdown-item {
             font-size: 16px;
@@ -517,6 +522,7 @@
             margin: 4px 0;
             line-height: 24px;
             color: #31364e;
+            cursor: pointer;
             & + .dropdown-item {
               margin-top: 8px;
             }
@@ -545,11 +551,11 @@
               display: flex !important;
 
               .dropdown-menu-col {
-                min-width: 251px;
+                /*min-width: 251px;*/
                 padding: 0;
               }
               .dropdown-item {
-                white-space: normal;
+                white-space: nowrap;
                 & + .dropdown-item {
                   margin-top: 8px;
                 }
