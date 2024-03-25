@@ -434,19 +434,34 @@ export const Header = () => {
     }
     if (menu.submenu) {
       return (
-        <div className="dropdown-menu-col">
-          {menu.submenu.map((submenu) => {
-            return (
-              <NavDropdown.Item
-                href={submenu.link}
-                key={submenu.name}
-                as={Link}
-              >
-                {submenu.name}
-              </NavDropdown.Item>
-            );
-          })}
-        </div>
+        <>
+          <button
+            className="back-link dropdown-toggle"
+            href="#"
+            id="navbarCoursesDropdown"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              src="/img/BackArrow.svg"
+              className="past-courses__cards__arrow back-link"
+            />
+          </button>
+          <div className="dropdown-menu-col">
+            {menu.submenu.map((submenu) => {
+              return (
+                <NavDropdown.Item
+                  href={submenu.link}
+                  key={submenu.name}
+                  as={Link}
+                >
+                  {submenu.name}
+                </NavDropdown.Item>
+              );
+            })}
+          </div>
+        </>
       );
     }
     if (menu.subHeading) {
