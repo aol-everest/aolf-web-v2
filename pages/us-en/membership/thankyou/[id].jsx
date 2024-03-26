@@ -11,7 +11,7 @@ import utc from 'dayjs/plugin/utc';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 dayjs.extend(utc);
 
@@ -81,9 +81,9 @@ const MembershipThankyou = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'getSubscriptionOrderDetails',
-    async () => {
+  } = useQuery({
+    queryKey: 'getSubscriptionOrderDetails',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getSubscriptionOrderDetails',
         param: {
@@ -92,11 +92,8 @@ const MembershipThankyou = () => {
       });
       return response.order;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: router.isReady,
-    },
-  );
+    enabled: router.isReady,
+  });
   useEffect(() => {
     if (!authenticated || !order) return;
     reloadProfile();
@@ -111,9 +108,9 @@ const MembershipThankyou = () => {
   const { afterBuyMessageBody, afterBuyMessageHeader, subscriptionMasterSfid } =
     order || {};
 
-  const { data: workshopDetail = [] } = useQuery(
-    'workshopDetail',
-    async () => {
+  const { data: workshopDetail = [] } = useQuery({
+    queryKey: 'workshopDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',
         param: {
@@ -122,15 +119,13 @@ const MembershipThankyou = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!courseId,
-    },
-  );
 
-  const { data: meetupDetail = [] } = useQuery(
-    'meetupDetail',
-    async () => {
+    enabled: !!courseId,
+  });
+
+  const { data: meetupDetail = [] } = useQuery({
+    queryKey: 'meetupDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'meetupDetail',
         param: {
@@ -139,11 +134,8 @@ const MembershipThankyou = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!meetupId,
-    },
-  );
+    enabled: !!meetupId,
+  });
 
   const courseDetail = courseId ? workshopDetail : meetupDetail;
 

@@ -57,8 +57,8 @@ const AudioPlayer = () => {
       (hours == 0
         ? ''
         : hours > 0 && hours.toString().length < 2
-        ? '0' + hours + ':'
-        : hours + ':') +
+          ? '0' + hours + ':'
+          : hours + ':') +
       (minutes.toString().length < 2 ? '0' + minutes : minutes) +
       ':' +
       (seconds.toString().length < 2 ? '0' + seconds : seconds)

@@ -197,12 +197,14 @@ main.checkout-aol {
         padding: 10px 14px;
         border: none;
         line-height: unset;
+        height: 44px;
         &::after {
           right: 10px;
         }
       }
       .select-box__input-text {
         width: calc(100% - 20px);
+        padding: 0;
       }
     }
     input:not(
@@ -429,6 +431,15 @@ main.checkout-aol {
         display: flex;
         align-items: center;
       }
+    }
+  }
+  .health-confirmation {
+    label,
+    span,
+    p {
+      font-size: 14px !important;
+      color: #31364e;
+      line-height: 21px;
     }
   }
   label.events-news {

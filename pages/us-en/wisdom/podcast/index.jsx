@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { youtube } from '@service';
 import { PageLoading } from '@components';
 import ErrorPage from 'next/error';
@@ -307,17 +307,13 @@ function PodcastPage() {
   const [q, setQ] = useState('');
   const [playerCount, setPlayerCount] = useState(0);
 
-  const { data, isLoading, isError, error } = useQuery(
-    'yt-playlist',
-    async () => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: 'yt-playlist',
+    queryFn: async () => {
       const result = await youtube.getPlaylistDetails(PLAYLIST_ID);
-      console.log(result);
       return result;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
   const [first, second, third, ...restData] = data?.all || [];
 
   const playVideo = () => {

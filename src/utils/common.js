@@ -1,4 +1,5 @@
 import { COURSE_TYPES } from '@constants';
+import dayjs from 'dayjs';
 
 export const isSSR = !(
   typeof window !== 'undefined' && window.document?.createElement
@@ -98,6 +99,24 @@ export const findCourseTypeByKey = (key) => {
   // If no match is found, check if the key matches a course code
   for (const courseKey in COURSE_TYPES) {
     if (COURSE_TYPES[courseKey].code === key) {
+      return COURSE_TYPES[courseKey];
+    }
+  }
+
+  return null; // Return null if no match is found
+};
+
+export const findCourseTypeBySlug = (slug) => {
+  // First, check if the key matches a course name
+  for (const courseKey in COURSE_TYPES) {
+    if (courseKey === slug) {
+      return COURSE_TYPES[courseKey];
+    }
+  }
+
+  // If no match is found, check if the key matches a course code
+  for (const courseKey in COURSE_TYPES) {
+    if (COURSE_TYPES[courseKey].slug === slug) {
       return COURSE_TYPES[courseKey];
     }
   }
@@ -206,6 +225,16 @@ export const joinPhoneNumbers = (...phoneNumbers) => {
   return formattedNumbers;
 };
 
+export const concatenateStrings = (stringArray, joinChar = ', ') => {
+  if (!Array.isArray(stringArray)) {
+    throw new Error('Input must be an array of strings');
+  }
+
+  return stringArray
+    .filter((str) => str !== null && str !== undefined) // Filter out null or undefined values
+    .join(joinChar);
+};
+
 export const findExistingQuestionnaire = (
   totalSelectedOptions,
   currentStepData,
@@ -244,3 +273,18 @@ export function trimAndSplitName(name) {
   let lastName = lastNameParts.join(' ');
   return [firstName, lastName];
 }
+
+export const formatDateRange = (dates) => {
+  // Parse the first and last date in the array
+  const startDate = dayjs(dates[0]);
+  const endDate = dayjs(dates[dates.length - 1]);
+
+  // Format the start and end dates
+  const formattedStartDate = startDate.format('MMMM DD');
+  const formattedEndDate = endDate.format('DD');
+
+  // Combine formatted dates with PT
+  const formattedDateRange = `${formattedStartDate}-${formattedEndDate}, ${startDate.year()}`;
+
+  return formattedDateRange;
+};

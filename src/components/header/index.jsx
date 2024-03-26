@@ -386,8 +386,8 @@ const MENU =
   orgConfig.name === 'AOL'
     ? AOL_MENU
     : orgConfig.name === 'IAHV'
-    ? IAHV_MENU
-    : HB_MENU;
+      ? IAHV_MENU
+      : HB_MENU;
 
 export const Header = () => {
   const router = useRouter();
@@ -434,19 +434,34 @@ export const Header = () => {
     }
     if (menu.submenu) {
       return (
-        <div className="dropdown-menu-col">
-          {menu.submenu.map((submenu) => {
-            return (
-              <NavDropdown.Item
-                href={submenu.link}
-                key={submenu.name}
-                as={Link}
-              >
-                {submenu.name}
-              </NavDropdown.Item>
-            );
-          })}
-        </div>
+        <>
+          <button
+            className="back-link dropdown-toggle"
+            href="#"
+            id="navbarCoursesDropdown"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              src="/img/BackArrow.svg"
+              className="past-courses__cards__arrow back-link"
+            />
+          </button>
+          <div className="dropdown-menu-col">
+            {menu.submenu.map((submenu) => {
+              return (
+                <NavDropdown.Item
+                  href={submenu.link}
+                  key={submenu.name}
+                  as={Link}
+                >
+                  {submenu.name}
+                </NavDropdown.Item>
+              );
+            })}
+          </div>
+        </>
       );
     }
     if (menu.subHeading) {
@@ -483,9 +498,9 @@ export const Header = () => {
                                   menuItem.link === '/us-en/course'
                                     ? 'active'
                                     : menuItem.link ===
-                                      '/us-en/course-finder/welcome'
-                                    ? 'help'
-                                    : ''
+                                        '/us-en/course-finder/welcome'
+                                      ? 'help'
+                                      : ''
                                 }
                                 as={Link}
                               >
@@ -573,7 +588,7 @@ export const Header = () => {
                 </Nav.Link>
               </Nav.Item>
             </Nav>
-            <div class="mobile-menu-buttons">
+            <div className="mobile-menu-buttons">
               {!authenticated && (
                 <button
                   className="btn btn-outline header__button login-btn"

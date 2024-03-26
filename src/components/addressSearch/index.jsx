@@ -1,16 +1,10 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { Loader } from '@googlemaps/js-api-loader';
 import { getZipCodeByLatLang } from '@utils';
 import { useEffect, useRef, useState } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete';
-
-// const scriptOptions = {
-//   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
-//   libraries: ["places"],
-// };
 
 export const AddressSearch = ({
   filter,
@@ -21,18 +15,6 @@ export const AddressSearch = ({
   isDefaultLocation = false,
 }) => {
   const [address, setAddress] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loader = new Loader({
-      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
-      version: 'weekly',
-      libraries: ['places'],
-    });
-    loader.load().then(() => {
-      setIsLoading(false);
-    });
-  }, []);
 
   const handleChange = (address) => {
     setAddress(address);
@@ -59,66 +41,59 @@ export const AddressSearch = ({
 
   return (
     <>
-      {!isLoading && (
-        <PlacesAutocomplete
-          value={address}
-          onChange={handleChange}
-          onSelect={handleSelect}
-          searchOptions={{
-            types: ['(regions)'],
-            componentRestrictions: { country: 'us' },
-          }}
-        >
-          {({
-            getInputProps,
-            suggestions,
-            getSuggestionItemProps,
-            loading,
-          }) => (
-            <div className="smart-input">
-              <input
-                className={[
-                  `custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%] ${parentClass}`,
-                ]}
-                {...getInputProps({
-                  placeholder,
-                })}
-              />
+      <PlacesAutocomplete
+        value={address}
+        onChange={handleChange}
+        onSelect={handleSelect}
+        searchOptions={{
+          types: ['(regions)'],
+          componentRestrictions: { country: 'us' },
+        }}
+      >
+        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div className="smart-input">
+            <input
+              className={[
+                `custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%] ${parentClass}`,
+              ]}
+              {...getInputProps({
+                placeholder,
+              })}
+            />
 
-              {suggestions.length > 0 && (
-                <div style={{ zIndex: 9 }} className={listClassName}>
-                  {suggestions.map((suggestion) => {
-                    const className = suggestion.active
-                      ? 'suggestion-item--active smart-input--list-item'
-                      : 'suggestion-item smart-input--list-item';
-                    // inline style for demonstration purpose
-                    const style = suggestion.active
-                      ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                      : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                    return (
-                      <>
-                        <div
-                          {...getSuggestionItemProps(suggestion, {
-                            className,
-                            style,
-                          })}
-                        >
-                          <strong>
-                            {suggestion.formattedSuggestion.mainText}
-                          </strong>{' '}
-                          <small>
-                            {suggestion.formattedSuggestion.secondaryText}
-                          </small>
-                        </div>
-                      </>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-        </PlacesAutocomplete>
-      )}
+            {suggestions.length > 0 && (
+              <div style={{ zIndex: 9 }} className={listClassName}>
+                {suggestions.map((suggestion) => {
+                  const className = suggestion.active
+                    ? 'suggestion-item--active smart-input--list-item'
+                    : 'suggestion-item smart-input--list-item';
+                  // inline style for demonstration purpose
+                  const style = suggestion.active
+                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                  return (
+                    <>
+                      <div
+                        {...getSuggestionItemProps(suggestion, {
+                          className,
+                          style,
+                        })}
+                      >
+                        <strong>
+                          {suggestion.formattedSuggestion.mainText}
+                        </strong>{' '}
+                        <small>
+                          {suggestion.formattedSuggestion.secondaryText}
+                        </small>
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+      </PlacesAutocomplete>
     </>
   );
 };

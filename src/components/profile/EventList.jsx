@@ -3,7 +3,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { tConvert } from '@utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useEmblaCarousel } from 'embla-carousel/react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { useRouter } from 'next/router';
 
 dayjs.extend(utc);

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { Field, Formik } from 'formik';
 import ErrorPage from 'next/error';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { WithContext as ReactTags } from 'react-tag-input';
 import * as Yup from 'yup';
 
@@ -267,18 +267,15 @@ export const CouponStack = () => {
   const [newCouponCode, setNewCouponCode] = useState(null);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const { status, data, isLoading, isError, error } = useQuery(
-    'myTalkableCoupons',
-    async () => {
+  const { status, data, isLoading, isError, error } = useQuery({
+    queryKey: 'myTalkableCoupons',
+    queryFn: async () => {
       const response = await api.get({
         path: 'myTalkableCoupons',
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   useEffect(() => {
     if (

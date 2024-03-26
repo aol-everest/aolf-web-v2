@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { uniqBy } from 'lodash';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const timeConvert = (data) => {
@@ -38,31 +38,25 @@ export const DesignOne = ({
   onFilterClearEvent,
 }) => {
   const router = useRouter();
-  const { data: randomMeditate = {} } = useQuery(
-    'randomMeditation',
-    async () => {
+  const { data: randomMeditate = {} } = useQuery({
+    queryKey: 'randomMeditation',
+    queryFn: async () => {
       const response = await api.get({
         path: 'randomMeditation',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
-  const { data: dailyPractice = [] } = useQuery(
-    'dailyPractice',
-    async () => {
+  const { data: dailyPractice = [] } = useQuery({
+    queryKey: 'dailyPractice',
+    queryFn: async () => {
       const response = await api.get({
         path: 'dailyPractice',
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   let favouriteContentOnly = [];
   const contentFolders = data.folder.map((folder) => {

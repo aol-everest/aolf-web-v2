@@ -51,7 +51,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { api, priceCalculation, tConvert } from '@utils';
 import Style from './PaymentFormGeneric.module.scss';
 import { AttendanceFormIAHV } from '@components/checkout/AttendanceFormIAHV';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 const createOptions = {
   style: {
@@ -102,18 +102,15 @@ export const PaymentFormGeneric = ({
 
   const router = useRouter();
 
-  const { data: corporates } = useQuery(
-    'corporates',
-    async () => {
+  const { data: corporates } = useQuery({
+    queryKey: 'corporates',
+    queryFn: async () => {
       const response = await api.get({
         path: 'getCorporates',
       });
       return response;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   useEffect(() => {
     if (programQuestionnaireResult?.length > 0) {

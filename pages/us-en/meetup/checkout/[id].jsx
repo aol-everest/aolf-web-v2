@@ -10,7 +10,7 @@ import { api } from '@utils';
 import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -71,9 +71,9 @@ const Checkout = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(
-    'meetupDetail',
-    async () => {
+  } = useQuery({
+    queryKey: 'meetupDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'meetupDetail',
         param: {
@@ -82,10 +82,7 @@ const Checkout = () => {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  });
 
   const [mbsy_source] = useQueryString('mbsy_source');
   const [campaignid] = useQueryString('campaignid');

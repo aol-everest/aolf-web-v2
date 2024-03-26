@@ -216,20 +216,18 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
           <div className="container">
             <div className="research-listing">
               <div className="research-list-item">
-                <h3>Resilience to Stress from COVID 19 Stress</h3>
+                <h3>RESILIENCE</h3>
                 <img
                   src="/img/research-count1.webp"
                   width="114"
                   height="119"
                   alt="research"
                 />
-                <div className="description">
-                  IMPROVED RESILIENCE IN 6 WEEKS
-                </div>
+                <div className="description">IMPROVED IN 6 WEEKS</div>
               </div>
               <div className="research-list-item">
                 <h3>
-                  Cortisol
+                  CORTISOL
                   <br />
                   Stress hormone
                 </h3>
@@ -242,7 +240,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                 <div className="description">IN 2 WEEKS</div>
               </div>
               <div className="research-list-item">
-                <h3>Anxiety</h3>
+                <h3>ANXIENTY</h3>
                 <img
                   src="/img/research-count3.webp"
                   width="114"
@@ -253,7 +251,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
               </div>
               <div className="research-list-item">
                 <h3>
-                  Sleep
+                  SLEEP
                   <br />
                   Slow Wave Sleep
                 </h3>
@@ -265,7 +263,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                 />
               </div>
               <div className="research-list-item">
-                <h3>Life Satisfaction</h3>
+                <h3>LIFE SATISFACTION</h3>
                 <img
                   src="/img/research-count5.webp"
                   width="114"
@@ -443,11 +441,11 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
               <iframe
                 width="669"
                 height="376"
-                src="https://www.youtube.com/embed/SgngEpwLzig?si=onJ4WD5nlAuDMIVt"
-                title="YouTube video player"
-                frameBorder="0"
+                src="https://www.youtube.com/embed/g4I9m_Od89w"
+                title="How healthcare Professionals Transform their Organizations"
+                frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
+                allowfullscreen
               ></iframe>
             </div>
             <div className="testimonial-slider-wrapper">
@@ -553,134 +551,10 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
               List of some of the organizations that have benefited from the Art
               of Living’s Healing Breaths SKY Programs
             </div>
+
             <div className="benefitted-orgs-list">
-              <div className="org-list-item">
-                <img
-                  src="/img/childrens-national-logo.webp"
-                  alt="children's natinoal"
-                  width="214"
-                  height="112"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/akron-childrens-hospital.webp"
-                  alt="Akron Children's Hopsital"
-                  width="151"
-                  height="65"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/franciscan-missionaries-of-our-lady.webp"
-                  alt="Franciscan missionaries of our lady"
-                  width="172"
-                  height="74"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/lcmc-health.webp"
-                  alt="LCMC Health"
-                  width="152"
-                  height="85"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/montefiore.webp"
-                  alt="montefiore"
-                  width="192"
-                  height="66"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/medstar-health.webp"
-                  alt="medstar health"
-                  width="200"
-                  height="57"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/cigna.webp"
-                  alt="Cigna"
-                  width="189"
-                  height="70"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/bayhealth.webp"
-                  alt="bayhealth"
-                  width="178"
-                  height="60"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/momentum-for-health.webp"
-                  alt="Momentum for health"
-                  width="127"
-                  height="93"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/transitions-group.webp"
-                  alt="Transitions Group"
-                  width="188"
-                  height="83"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/mindpath-care-center.webp"
-                  alt="Mindpath"
-                  width="198"
-                  height="60"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/bluecross-blueshields.webp"
-                  alt="bluecross blueshields"
-                  width="213"
-                  height="55"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/penn-medicine.webp"
-                  alt="Penn Medicine"
-                  width="233"
-                  height="50"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/metrowest-medical-center.webp"
-                  alt="Metrowest"
-                  width="198"
-                  height="60"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/pediatrix.webp"
-                  alt="Pediatrix"
-                  width="213"
-                  height="57"
-                />
-              </div>
-              <div className="org-list-item">
-                <img
-                  src="/img/tulane.webp"
-                  alt="Tulane"
-                  width="149"
-                  height="60"
-                />
+              <div>
+                <img src="/img/hb-logos-new.png" width="1300" height="512" />
               </div>
             </div>
           </div>

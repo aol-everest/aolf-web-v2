@@ -51,3 +51,6 @@ main {
   line-height: 1;
   text-rendering: auto;
 }
+.rs-picker-popup.rs-picker-popup-daterange {
+  z-index: 9999;
+}

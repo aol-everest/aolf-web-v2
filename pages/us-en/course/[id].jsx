@@ -8,7 +8,7 @@ import { COURSE_TYPES } from '@constants';
 import { useAuth } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { NextSeo } from 'next-seo';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { A11y, Navigation, Scrollbar } from 'swiper';
 import { useAnalytics } from 'use-analytics';
 
@@ -103,9 +103,9 @@ function CourseDetail() {
   const router = useRouter();
   const { id: workshopId, mode = '' } = router.query;
   const { track, page } = useAnalytics();
-  const { data, isLoading, isError, error } = useQuery(
-    'workshopDetail',
-    async () => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: 'workshopDetail',
+    queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',
         param: {
@@ -114,11 +114,8 @@ function CourseDetail() {
       });
       return response.data;
     },
-    {
-      refetchOnWindowFocus: false,
-      enabled: router.isReady,
-    },
-  );
+    enabled: router.isReady,
+  });
   useEffect(() => {
     if (!authenticated || !data) return;
 
@@ -143,6 +140,47 @@ function CourseDetail() {
 
   useEffect(() => {
     if (!router.isReady || !data) return;
+
+    track(
+      'view_item',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: data?.unitPrice,
+          course_format: data?.productTypeId,
+          course_name: data?.title,
+          items: [
+            {
+              item_id: data?.id,
+              item_name: data?.title,
+              affiliation: 'NA',
+              coupon: '',
+              discount: 0.0,
+              index: 0,
+              item_brand: data?.businessOrg,
+              item_category: data?.title,
+              item_category2: data?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: data?.productTypeId,
+              item_list_name: data?.title,
+              item_variant: data?.workshopTotalHours,
+              location_id: data?.locationCity,
+              price: data?.unitPrice,
+              quantity: 1,
+            },
+          ],
+        },
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
+        },
+      },
+    );
+
     if (
       !isSKYType &&
       !isSilentRetreatType &&
