@@ -717,22 +717,6 @@ const New = () => {
                       <div className="payment-tenure">for 12 months</div>
                     </div>
                   </div>
-                  <div className="offer-box">
-                    <h2 className="title">
-                      <span className="icon-wrap">
-                        <img
-                          src="/img/stars-02.svg"
-                          width="20"
-                          height="20"
-                          alt=""
-                        />
-                      </span>
-                      19,820 people took the course in this city
-                    </h2>
-                    <div className="offer-text">
-                      You can become part of the community at our center!
-                    </div>
-                  </div>
                   <div className="checkout-details">
                     <div className="section__body">
                       <svg
