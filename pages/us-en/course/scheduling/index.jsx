@@ -700,8 +700,11 @@ const New = () => {
                     </div>
                     <div className="price-breakup">
                       <div className="price-per-month">
-                        {mode === COURSE_MODES.IN_PERSON.value ? '$37' : '$27'}/
-                        <span>month</span>
+                        {activeWorkshop?.mode ||
+                        workshopMaster?.mode === COURSE_MODES.IN_PERSON.value
+                          ? '$37'
+                          : '$27'}
+                        /<span>month</span>
                       </div>
                       <div className="payment-tenure">for 12 months</div>
                     </div>
@@ -729,8 +732,11 @@ const New = () => {
                     </div>
                     <div className="price-breakup">
                       <div className="price-per-month">
-                        {mode === COURSE_MODES.IN_PERSON.value ? '$37' : '$27'}/
-                        <span>month</span>
+                        {activeWorkshop?.mode ||
+                        workshopMaster?.mode === COURSE_MODES.IN_PERSON.value
+                          ? '$37'
+                          : '$27'}
+                        /<span>month</span>
                       </div>
                       <div className="payment-tenure">for 12 months</div>
                     </div>
