@@ -88,6 +88,7 @@ const New = () => {
   useEffect(() => {
     const getAddress = async () => {
       if (value) {
+        setShowLocationModal(false);
         const latLng = await getLatLangByZipCode(value);
         if (latLng?.locationName) {
           setLocationFilter(latLng);
@@ -131,7 +132,7 @@ const New = () => {
 
   useEffect(() => {
     const getUserLocation = async () => {
-      if (navigator.geolocation) {
+      if (navigator.geolocation && !value) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
