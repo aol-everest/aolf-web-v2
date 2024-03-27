@@ -1000,6 +1000,7 @@ const SchedulingPaymentForm = ({
                               {primaryTeacherName && primaryTeacherName}
                               <br />
                               {coTeacher1Name && coTeacher1Name}
+                              <br />
                               {coTeacher2Name && coTeacher2Name}
                             </div>
                           </div>
