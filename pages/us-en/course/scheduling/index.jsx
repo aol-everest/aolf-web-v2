@@ -1043,53 +1043,44 @@ const New = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name ? (
-                            activeWorkshop?.mode
-                          ) : isLocationEmpty ? (
-                            <>
-                              Location: {city}, {state}
-                            </>
-                          ) : (
-                            (mode === COURSE_MODES.IN_PERSON.name ||
-                              mode ===
-                                COURSE_MODES.DESTINATION_RETREATS.name) &&
-                            activeWorkshop && (
-                              <>
-                                {!isLocationEmpty && (
-                                  <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${
-                                      locationStreet || ''
-                                    }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    {locationStreet && locationStreet}
-                                    {locationCity || ''}
-                                    {', '}
-                                    {locationProvince || ''}{' '}
-                                    {locationPostalCode || ''}
-                                  </a>
-                                )}
-                                {isLocationEmpty && (
-                                  <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${
-                                      streetAddress1 || ''
-                                    },${
-                                      streetAddress2 || ''
-                                    } ${city} ${state} ${zip} ${country}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    {streetAddress1 && streetAddress1}
-                                    {streetAddress2 && streetAddress2}
-                                    {city || ''}
-                                    {', '}
-                                    {state || ''} {zip || ''}
-                                  </a>
-                                )}
-                              </>
-                            )
-                          )}
+                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name
+                            ? activeWorkshop?.mode
+                            : activeWorkshop && (
+                                <>
+                                  {!isLocationEmpty && (
+                                    <a
+                                      href={`https://www.google.com/maps/search/?api=1&query=${
+                                        locationStreet || ''
+                                      }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {locationStreet && locationStreet}
+                                      {locationCity || ''}
+                                      {', '}
+                                      {locationProvince || ''}{' '}
+                                      {locationPostalCode || ''}
+                                    </a>
+                                  )}
+                                  {isLocationEmpty && (
+                                    <a
+                                      href={`https://www.google.com/maps/search/?api=1&query=${
+                                        streetAddress1 || ''
+                                      },${
+                                        streetAddress2 || ''
+                                      } ${city} ${state} ${zip} ${country}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {streetAddress1 && streetAddress1}
+                                      {streetAddress2 && streetAddress2}
+                                      {city || ''}
+                                      {', '}
+                                      {state || ''} {zip || ''}
+                                    </a>
+                                  )}
+                                </>
+                              )}
                         </div>
                       </div>
                       <div className="detail-item row">
