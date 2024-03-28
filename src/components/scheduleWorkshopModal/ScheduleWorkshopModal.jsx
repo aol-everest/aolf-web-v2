@@ -57,7 +57,7 @@ const WorkshopSelectModal = React.memo(
 
     const getSelectedAvailabelDate = () => {
       const index = dateAvailable.findIndex((obj) => {
-        return obj.allDates.every((date) => selectedDates.includes(date));
+        return obj.allDates.every((date) => selectedDates?.includes(date));
       });
       return index;
     };
@@ -143,7 +143,7 @@ const WorkshopSelectModal = React.memo(
               <img src="/img/chevron-left.svg" />
             </button>
             <div className="slot-info">
-              {selectedDates.length > 0 && formatDateRange(selectedDates)}
+              {selectedDates?.length > 0 && formatDateRange(selectedDates)}
             </div>
             <button
               className="next-slot"
