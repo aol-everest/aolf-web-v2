@@ -491,8 +491,10 @@ const CourseTile = ({ data, authenticated }) => {
     eventEndDate,
     eventTimeZone,
     sfid,
+    locationPostalCode,
     locationCity,
     locationProvince,
+    locationStreet,
     centerName,
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
@@ -568,9 +570,14 @@ const CourseTile = ({ data, authenticated }) => {
       <div class="course-item-header">
         <div class="course-title-duration">
           <div class="course-title">
-            {locationCity
-              ? concatenateStrings([locationCity, locationProvince])
-              : centerName}
+            {mode !== 'Online' && (
+              <>
+                {locationCity
+                  ? concatenateStrings([locationCity, locationProvince])
+                  : centerName}
+              </>
+            )}
+            {mode === 'Online' && <>Online</>}
           </div>
           <div class="course-duration">{getCourseDeration()}</div>
         </div>
@@ -578,6 +585,16 @@ const CourseTile = ({ data, authenticated }) => {
           <span>${unitPrice}</span>
         </div>
       </div>
+      {mode !== 'Online' && locationCity && (
+        <div class="course-location">
+          {concatenateStrings([
+            locationStreet,
+            locationCity,
+            locationProvince,
+            locationPostalCode,
+          ])}
+        </div>
+      )}
       <div class="course-instructors">
         {concatenateStrings([primaryTeacherName, coTeacher1Name])}
       </div>
@@ -1400,6 +1417,15 @@ const Course = () => {
           </div>
           <div class="course-listing">
             <div class="selected-filter-wrap">
+              {locationFilter && (
+                <div
+                  class="selected-filter-item"
+                  onClick={onFilterClearEvent('locationFilter')}
+                >
+                  {locationFilter.locationName}
+                </div>
+              )}
+
               {courseModeFilter && COURSE_MODES[courseModeFilter] && (
                 <div
                   class="selected-filter-item"
