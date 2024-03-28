@@ -5,6 +5,7 @@ import moment from 'moment';
 import {
   api,
   findCourseTypeByKey,
+  getLatLangByZipCode,
   getZipCodeByLatLang,
   tConvert,
 } from '@utils';
@@ -22,6 +23,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
 import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
+import { useSessionStorage } from '@uidotdev/usehooks';
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
@@ -31,14 +33,14 @@ const New = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const router = useRouter();
+  const [value, setValue] = useSessionStorage('zipCode', '');
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(true);
   const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
   const [locationFilter, setLocationFilter] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
   const [workshops, setWorkshops] = useState([]);
-  const [isLocationFetchComplete, setIsLocationFetchComplete] = useState(false);
   const [timezoneFilter, setTimezoneFilter] = useState('');
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
     'ym',
@@ -83,6 +85,19 @@ const New = () => {
     contactName,
   } = activeWorkshop;
 
+  useEffect(() => {
+    const getAddress = async () => {
+      if (value) {
+        setShowLocationModal(false);
+        const latLng = await getLatLangByZipCode(value);
+        if (latLng?.locationName) {
+          setLocationFilter(latLng);
+        }
+      }
+    };
+    getAddress();
+  }, [value]);
+
   useEffectOnce(() => {
     page({
       category: 'course_registration',
@@ -92,10 +107,10 @@ const New = () => {
   });
 
   useEffect(() => {
-    if (isLocationFetchComplete && !cityFilter) {
-      setShowLocationModal(true);
+    if (cityFilter) {
+      setShowLocationModal(false);
     }
-  }, [isLocationFetchComplete]);
+  }, [cityFilter]);
 
   useEffect(() => {
     if (selectedDates?.length) {
@@ -117,23 +132,21 @@ const New = () => {
 
   useEffect(() => {
     const getUserLocation = async () => {
-      if (navigator.geolocation) {
+      if (navigator.geolocation && !value) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
             const [zipCode] = await Promise.all([
               getZipCodeByLatLang(latitude, longitude),
             ]);
+            setValue(zipCode);
             setLocationFilter({ lat: latitude, lng: longitude, zipCode });
-            setIsLocationFetchComplete(true);
           },
           (error) => {
-            setIsLocationFetchComplete(true);
             console.error('Error getting location:', error.message);
           },
         );
       } else {
-        setIsLocationFetchComplete(true);
         console.error('Geolocation is not supported by your browser.');
       }
     };
@@ -147,8 +160,7 @@ const New = () => {
       courseTypeFilter,
       timezoneFilter,
       mode,
-      locationFilter,
-      isLocationFetchComplete,
+      locationFilter || {},
     ],
     queryFn: async () => {
       let param = {
@@ -182,7 +194,7 @@ const New = () => {
           };
         }
       }
-      if (isLocationFetchComplete) {
+      if (locationFilter?.lat) {
         const response = await api.get({
           path: 'workshopMonthCalendar',
           param,
@@ -194,6 +206,7 @@ const New = () => {
         }
         return response.data;
       }
+      return [];
     },
   });
 
@@ -371,8 +384,11 @@ const New = () => {
     resetCalender();
     setCityFilter(null);
     if (value) {
+      const zipCode = value.zipCode;
+      setValue(zipCode);
       setLocationFilter(value);
     } else {
+      setValue('');
       setLocationFilter(null);
     }
   };
@@ -565,6 +581,10 @@ const New = () => {
     fp.current.flatpickr.changeMonth(backPressed ? -1 : 1);
   };
 
+  const isInPersonMode =
+    activeWorkshop?.mode === COURSE_MODES.IN_PERSON.value ||
+    workshopMaster?.mode === COURSE_MODES.IN_PERSON.value;
+
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
@@ -684,7 +704,7 @@ const New = () => {
                     </div>
                     <div className="price-breakup">
                       <div className="price-per-month">
-                        $27/<span>month</span>
+                        {isInPersonMode ? '$36' : '$27'}/<span>month</span>
                       </div>
                       <div className="payment-tenure">for 12 months</div>
                     </div>
@@ -712,11 +732,12 @@ const New = () => {
                     </div>
                     <div className="price-breakup">
                       <div className="price-per-month">
-                        $27/<span>month</span>
+                        {isInPersonMode ? '$36' : '$27'}/<span>month</span>
                       </div>
                       <div className="payment-tenure">for 12 months</div>
                     </div>
                   </div>
+
                   <div className="checkout-details">
                     <div className="section__body">
                       <svg
@@ -1024,53 +1045,44 @@ const New = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name ? (
-                            activeWorkshop?.mode
-                          ) : isLocationEmpty ? (
-                            <>
-                              Location: {city}, {state}
-                            </>
-                          ) : (
-                            (mode === COURSE_MODES.IN_PERSON.name ||
-                              mode ===
-                                COURSE_MODES.DESTINATION_RETREATS.name) &&
-                            activeWorkshop && (
-                              <>
-                                {!isLocationEmpty && (
-                                  <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${
-                                      locationStreet || ''
-                                    }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    {locationStreet && locationStreet}
-                                    {locationCity || ''}
-                                    {', '}
-                                    {locationProvince || ''}{' '}
-                                    {locationPostalCode || ''}
-                                  </a>
-                                )}
-                                {isLocationEmpty && (
-                                  <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${
-                                      streetAddress1 || ''
-                                    },${
-                                      streetAddress2 || ''
-                                    } ${city} ${state} ${zip} ${country}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    {streetAddress1 && streetAddress1}
-                                    {streetAddress2 && streetAddress2}
-                                    {city || ''}
-                                    {', '}
-                                    {state || ''} {zip || ''}
-                                  </a>
-                                )}
-                              </>
-                            )
-                          )}
+                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name
+                            ? activeWorkshop?.mode
+                            : activeWorkshop && (
+                                <>
+                                  {!isLocationEmpty && (
+                                    <a
+                                      href={`https://www.google.com/maps/search/?api=1&query=${
+                                        locationStreet || ''
+                                      }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {locationStreet && locationStreet}
+                                      {locationCity || ''}
+                                      {', '}
+                                      {locationProvince || ''}{' '}
+                                      {locationPostalCode || ''}
+                                    </a>
+                                  )}
+                                  {isLocationEmpty && (
+                                    <a
+                                      href={`https://www.google.com/maps/search/?api=1&query=${
+                                        streetAddress1 || ''
+                                      },${
+                                        streetAddress2 || ''
+                                      } ${city} ${state} ${zip} ${country}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {streetAddress1 && streetAddress1}
+                                      {streetAddress2 && streetAddress2}
+                                      {city || ''}
+                                      {', '}
+                                      {state || ''} {zip || ''}
+                                    </a>
+                                  )}
+                                </>
+                              )}
                         </div>
                       </div>
                       <div className="detail-item row">

@@ -540,6 +540,7 @@ main.all-courses-find {
         font-weight: 600;
         line-height: 28px;
       }
+      .course-location,
       .course-instructors {
         margin-bottom: 14px;
         padding: 14px 0;
@@ -560,6 +561,19 @@ main.all-courses-find {
           flex-shrink: 0;
           margin-left: 4px;
           margin-right: 12px;
+        }
+      }
+      .course-location {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        &::before {
+          background: url(/img/blue-icon-location.png) no-repeat center;
+          background-size: 16px;
+        }
+        & + .course-instructors {
+          padding-top: 12px;
+          border-top: none;
         }
       }
       .course-timing {
