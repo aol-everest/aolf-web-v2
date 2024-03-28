@@ -581,6 +581,10 @@ const New = () => {
     fp.current.flatpickr.changeMonth(backPressed ? -1 : 1);
   };
 
+  const isInPersonMode =
+    activeWorkshop?.mode === COURSE_MODES.IN_PERSON.value ||
+    workshopMaster?.mode === COURSE_MODES.IN_PERSON.value;
+
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
@@ -700,11 +704,7 @@ const New = () => {
                     </div>
                     <div className="price-breakup">
                       <div className="price-per-month">
-                        {activeWorkshop?.mode ||
-                        workshopMaster?.mode === COURSE_MODES.IN_PERSON.value
-                          ? '$37'
-                          : '$27'}
-                        /<span>month</span>
+                        {isInPersonMode ? '$36' : '$27'}/<span>month</span>
                       </div>
                       <div className="payment-tenure">for 12 months</div>
                     </div>
@@ -732,11 +732,7 @@ const New = () => {
                     </div>
                     <div className="price-breakup">
                       <div className="price-per-month">
-                        {activeWorkshop?.mode ||
-                        workshopMaster?.mode === COURSE_MODES.IN_PERSON.value
-                          ? '$37'
-                          : '$27'}
-                        /<span>month</span>
+                        {isInPersonMode ? '$36' : '$27'}/<span>month</span>
                       </div>
                       <div className="payment-tenure">for 12 months</div>
                     </div>
