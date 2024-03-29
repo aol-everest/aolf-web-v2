@@ -187,7 +187,7 @@ export const COURSE_TYPES_MASTER = {
       courseTypes: {
         SKY_BREATH_MEDITATION: {
           slug: 'art-of-living-part-1',
-          name: 'Art of Living Part 1',
+          name: 'SKY Happiness Retreat',
         },
         SAHAJ_SAMADHI_MEDITATION: {
           slug: 'sahaj-samadhi-meditation',
@@ -195,7 +195,7 @@ export const COURSE_TYPES_MASTER = {
         },
         ART_OF_LIVING_PREMIUM_PROGRAM: {
           slug: 'art-of-living-premium-program',
-          name: 'Art of Living Premium Program',
+          name: 'SKY Premium Meditation',
         },
         SRI_SRI_YOGA_MEDITATION: {
           slug: 'sri-sri-yoga-foundation',
