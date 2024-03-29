@@ -42,25 +42,17 @@ const CourseTypeTile = ({ courseType }) => {
 };
 
 const SectionComponent = ({ section }) => {
-  const courses = section.courseTypes.reduce((accumulator, currentValue) => {
-    if (currentValue === 'TEACHER_TRAINING') {
-      accumulator = [
-        ...accumulator,
-        {
-          slug: 'teacher-training',
-          name: 'Teacher Training',
-          description:
-            'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
-          isExternal: true,
-          link: 'https://www.google.com/',
-        },
-      ];
-    }
-    if (COURSE_TYPES[currentValue]) {
-      accumulator = [...accumulator, COURSE_TYPES[currentValue]];
-    }
-    return accumulator;
-  }, []);
+  const courses = Object.entries(section.courseTypes).reduce(
+    (accumulator, [key, value]) => {
+      if (COURSE_TYPES[key]) {
+        accumulator = [...accumulator, { ...COURSE_TYPES[key], ...value }];
+      } else {
+        accumulator = [...accumulator, { ...value }];
+      }
+      return accumulator;
+    },
+    [],
+  );
 
   return (
     <section class="beginner-courses">

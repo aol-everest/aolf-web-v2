@@ -87,88 +87,167 @@ export const COURSE_TYPES_MASTER = {
   AOL: [
     {
       name: `Beginner's Courses`,
-      courseTypes: [
-        'SKY_BREATH_MEDITATION',
-        'SAHAJ_SAMADHI_MEDITATION',
-        'ART_OF_LIVING_PREMIUM_PROGRAM',
-        'SRI_SRI_YOGA_MEDITATION',
-      ],
+      courseTypes: {
+        SKY_BREATH_MEDITATION: {
+          slug: 'art-of-living-part-1',
+          name: 'Art of Living Part 1',
+        },
+        SAHAJ_SAMADHI_MEDITATION: {
+          slug: 'sahaj-samadhi-meditation',
+          name: 'Sahaj Samadhi Meditation',
+        },
+        ART_OF_LIVING_PREMIUM_PROGRAM: {
+          slug: 'art-of-living-premium-program',
+          name: 'Art of Living Premium Program',
+        },
+        SRI_SRI_YOGA_MEDITATION: {
+          slug: 'sri-sri-yoga-foundation',
+          name: 'Sri Sri Yoga Foundation',
+        },
+      },
     },
     {
       name: `Advanced Courses`,
-      courseTypes: [
-        'SILENT_RETREAT',
-        'BLESSINGS_COURSE',
-        'CHAKRA_KRIYA',
-        'SANYAM_COURSE',
-        'SRI_SRI_YOGA_DEEP_DIVE',
-      ],
+      courseTypes: {
+        SILENT_RETREAT: {
+          slug: 'art-of-living-part-2',
+          name: 'Art of Living Part 2',
+        },
+        BLESSINGS_COURSE: {
+          slug: 'blessings-course',
+          name: 'Blessings Course',
+        },
+        CHAKRA_KRIYA: {
+          slug: 'chakra-kriya',
+          name: 'Chakra Kriya',
+        },
+        SANYAM_COURSE: {
+          slug: 'sanyam-course',
+          name: 'Sanyam Course',
+        },
+        SRI_SRI_YOGA_DEEP_DIVE: {
+          slug: 'sri-sri-yoga-deep-dive',
+          name: 'Sri Sri Yoga Deep Dive',
+        },
+      },
     },
     {
       name: `Training Courses`,
-      courseTypes: [
-        'VOLUNTEER_TRAINING_PROGRAM',
-        'TEACHER_TRAINING',
-        'MARMA_TRAINING',
-      ],
+      courseTypes: {
+        VOLUNTEER_TRAINING_PROGRAM: {
+          slug: 'volunteer-training-program',
+          name: 'Volunteer Training Program',
+        },
+        TEACHER_TRAINING: {
+          slug: 'teacher-training',
+          name: 'Teacher Training',
+          isExternal: true,
+          link: 'https://www.google.com/',
+          description:
+            'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
+        },
+        MARMA_TRAINING: {
+          slug: 'sri-sri-marma-practitioner',
+          name: 'Sri Sri Marma Practitioner',
+        },
+      },
     },
   ],
   HB: [
     {
       name: `Beginner's Courses`,
-      courseTypes: [
-        'SKY_BREATH_MEDITATION',
-        'SAHAJ_SAMADHI_MEDITATION',
-        'ART_OF_LIVING_PREMIUM_PROGRAM',
-        'SRI_SRI_YOGA_MEDITATION',
-      ],
+      courseTypes: {
+        SKY_BREATH_MEDITATION: {
+          slug: 'art-of-living-part-1',
+          name: 'SKY Program',
+        },
+        SAHAJ_SAMADHI_MEDITATION: {
+          slug: 'sahaj-samadhi-meditation',
+          name: 'Sahaj Samadhi - Signature Meditation Program',
+        },
+        ART_OF_LIVING_PREMIUM_PROGRAM: {
+          slug: 'art-of-living-premium-program',
+          name: 'SKY Breath + Sahaj Meditation Combo',
+        },
+      },
     },
     {
       name: `Advanced Courses`,
-      courseTypes: [
-        'SILENT_RETREAT',
-        'BLESSINGS_COURSE',
-        'CHAKRA_KRIYA',
-        'SANYAM_COURSE',
-        'SRI_SRI_YOGA_DEEP_DIVE',
-      ],
-    },
-    {
-      name: `Training Courses`,
-      courseTypes: [
-        'VOLUNTEER_TRAINING_PROGRAM',
-        'TEACHER_TRAINING',
-        'MARMA_TRAINING',
-      ],
+      courseTypes: {
+        SILENT_RETREAT: {
+          slug: 'art-of-living-part-2',
+          name: 'Healing Breaths- Silent Retreat',
+        },
+      },
     },
   ],
   IAHV: [
     {
       name: `Beginner's Courses`,
-      courseTypes: [
-        'SKY_BREATH_MEDITATION',
-        'SAHAJ_SAMADHI_MEDITATION',
-        'ART_OF_LIVING_PREMIUM_PROGRAM',
-        'SRI_SRI_YOGA_MEDITATION',
-      ],
+      courseTypes: {
+        SKY_BREATH_MEDITATION: {
+          slug: 'art-of-living-part-1',
+          name: 'Art of Living Part 1',
+        },
+        SAHAJ_SAMADHI_MEDITATION: {
+          slug: 'sahaj-samadhi-meditation',
+          name: 'Sahaj Samadhi Meditation',
+        },
+        ART_OF_LIVING_PREMIUM_PROGRAM: {
+          slug: 'art-of-living-premium-program',
+          name: 'Art of Living Premium Program',
+        },
+        SRI_SRI_YOGA_MEDITATION: {
+          slug: 'sri-sri-yoga-foundation',
+          name: 'Sri Sri Yoga Foundation',
+        },
+      },
     },
     {
       name: `Advanced Courses`,
-      courseTypes: [
-        'SILENT_RETREAT',
-        'BLESSINGS_COURSE',
-        'CHAKRA_KRIYA',
-        'SANYAM_COURSE',
-        'SRI_SRI_YOGA_DEEP_DIVE',
-      ],
+      courseTypes: {
+        SILENT_RETREAT: {
+          slug: 'art-of-living-part-2',
+          name: 'Art of Living Part 2',
+        },
+        BLESSINGS_COURSE: {
+          slug: 'blessings-course',
+          name: 'Blessings Course',
+        },
+        CHAKRA_KRIYA: {
+          slug: 'chakra-kriya',
+          name: 'Chakra Kriya',
+        },
+        SANYAM_COURSE: {
+          slug: 'sanyam-course',
+          name: 'Sanyam Course',
+        },
+        SRI_SRI_YOGA_DEEP_DIVE: {
+          slug: 'sri-sri-yoga-deep-dive',
+          name: 'Sri Sri Yoga Deep Dive',
+        },
+      },
     },
     {
       name: `Training Courses`,
-      courseTypes: [
-        'VOLUNTEER_TRAINING_PROGRAM',
-        'TEACHER_TRAINING',
-        'MARMA_TRAINING',
-      ],
+      courseTypes: {
+        VOLUNTEER_TRAINING_PROGRAM: {
+          slug: 'volunteer-training-program',
+          name: 'Volunteer Training Program',
+        },
+        TEACHER_TRAINING: {
+          slug: 'teacher-training',
+          name: 'Teacher Training',
+          isExternal: true,
+          link: 'https://www.google.com/',
+          description:
+            'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
+        },
+        MARMA_TRAINING: {
+          slug: 'sri-sri-marma-practitioner',
+          name: 'Sri Sri Marma Practitioner',
+        },
+      },
     },
   ],
 };

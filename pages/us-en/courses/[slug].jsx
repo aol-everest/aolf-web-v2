@@ -90,7 +90,6 @@ const parseAsStartEndDate = createParser({
     }
   },
   serialize(value) {
-    console.log(value);
     if (Array.isArray(value) && value.length === 2) {
       return (
         dayjs.utc(value[0]).format('YYYY-MM-DD') +
@@ -623,6 +622,26 @@ const CourseTile = ({ data, authenticated }) => {
   );
 };
 
+const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
+  (accumulator, currentValue) => {
+    const courseTypes = Object.entries(currentValue.courseTypes).reduce(
+      (courseTypes, [key, value]) => {
+        if (COURSE_TYPES[key]) {
+          return {
+            ...courseTypes,
+            [COURSE_TYPES[key].slug]: { ...COURSE_TYPES[key], ...value },
+          };
+        } else {
+          return courseTypes;
+        }
+      },
+      {},
+    );
+    return { ...accumulator, ...courseTypes };
+  },
+  {},
+);
+
 const Course = () => {
   const { track, page } = useAnalytics();
   const { ref, inView } = useInView({
@@ -634,7 +653,7 @@ const Course = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const courseTypeFilter = findCourseTypeBySlug(slug);
+  const courseTypeFilter = COURSE_TYPES_OPTIONS[slug];
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
@@ -659,27 +678,6 @@ const Course = () => {
   const [centerNameFilter] = useQueryState('center-name');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
-
-  const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
-    (accumulator, currentValue) => {
-      const courseTypes = currentValue.courseTypes.reduce(
-        (courseTypes, courseTypeCurrent) => {
-          if (COURSE_TYPES[courseTypeCurrent]) {
-            return {
-              ...courseTypes,
-              [COURSE_TYPES[courseTypeCurrent].slug]:
-                COURSE_TYPES[courseTypeCurrent],
-            };
-          } else {
-            return courseTypes;
-          }
-        },
-        {},
-      );
-      return { ...accumulator, ...courseTypes };
-    },
-    {},
-  );
 
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
@@ -1479,7 +1477,7 @@ const Course = () => {
             {isSuccess &&
               data.pages.map((page) => (
                 <React.Fragment key={seed(page)}>
-                  {page.data.map((course) => (
+                  {page.data?.map((course) => (
                     <CourseTile
                       key={course.sfid}
                       data={course}
@@ -1497,7 +1495,7 @@ const Course = () => {
             )}
             <div ref={ref} style={{ flex: '0 0 100%' }}></div>
             {isSuccess &&
-              data?.pages[0].data.length === 0 &&
+              data?.pages[0].data?.length === 0 &&
               !isFetchingNextPage && (
                 <div class="no-course-found-wrap">
                   <h2>No course found</h2>
