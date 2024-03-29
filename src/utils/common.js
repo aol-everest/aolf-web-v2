@@ -278,10 +278,15 @@ export const formatDateRange = (dates) => {
   // Parse the first and last date in the array
   const startDate = dayjs(dates[0]);
   const endDate = dayjs(dates[dates.length - 1]);
+  const bothDateMonthSame = dayjs
+    .utc(startDate)
+    .isSame(dayjs.utc(endDate), 'month');
 
   // Format the start and end dates
   const formattedStartDate = startDate.format('MMMM DD');
-  const formattedEndDate = endDate.format('DD');
+  const formattedEndDate = bothDateMonthSame
+    ? endDate.format('MMMM DD')
+    : endDate.format('DD');
 
   // Combine formatted dates with PT
   const formattedDateRange = `${formattedStartDate}-${formattedEndDate}, ${startDate.year()}`;
