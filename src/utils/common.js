@@ -285,8 +285,8 @@ export const formatDateRange = (dates) => {
   // Format the start and end dates
   const formattedStartDate = startDate.format('MMMM DD');
   const formattedEndDate = bothDateMonthSame
-    ? endDate.format('MMMM DD')
-    : endDate.format('DD');
+    ? endDate.format('DD')
+    : endDate.format('MMMM DD');
 
   // Combine formatted dates with PT
   const formattedDateRange = `${formattedStartDate}-${formattedEndDate}, ${startDate.year()}`;

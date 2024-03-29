@@ -92,7 +92,7 @@ const New = () => {
   });
 
   useEffect(() => {
-    if (cityFilter) {
+    if (cityFilter || locationFilter?.locationName) {
       setShowLocationModal(false);
     }
   }, [cityFilter]);
