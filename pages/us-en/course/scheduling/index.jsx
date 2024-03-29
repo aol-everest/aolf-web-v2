@@ -156,7 +156,7 @@ const New = () => {
           };
         }
       }
-      if (locationFilter?.lat) {
+      if (locationFilter?.lat || cityFilter) {
         const response = await api.get({
           path: 'workshopMonthCalendar',
           param,
