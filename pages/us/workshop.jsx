@@ -4,7 +4,7 @@ export const getServerSideProps = async (context) => {
   return {
     redirect: {
       permanent: false,
-      destination: `/us-en/course`,
+      destination: `/us-en/courses`,
     },
     props: {},
   };
