@@ -3,18 +3,14 @@ import { COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import { orgConfig } from '@org';
+import Link from '@components/linkWithUTM';
 
 const CourseTypeTile = ({ courseType }) => {
-  const router = useRouter();
-
-  const findCourseAction = (e) => {
-    if (e) e.preventDefault();
+  const findCourseAction = () => {
     if (courseType.isExternal) {
-      router.push(courseType.link);
+      return courseType.link;
     } else {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/courses/${courseType.slug}`,
-      });
+      return `/us-en/courses/${courseType.slug}`;
     }
   };
 
@@ -32,9 +28,11 @@ const CourseTypeTile = ({ courseType }) => {
         <div class="course-title">{courseType.name}</div>
         <div class="course-desc">{courseType.description}</div>
         <div class="course-action">
-          <a class="course-link" href="#" onClick={findCourseAction}>
-            Find a course
-          </a>
+          <Link href={findCourseAction()} legacyBehavior>
+            <a class="course-link" href="#">
+              Find a course
+            </a>
+          </Link>
         </div>
       </div>
     </div>
