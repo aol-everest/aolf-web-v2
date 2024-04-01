@@ -116,6 +116,7 @@ export const COURSE_TYPES_MASTER = {
         BLESSINGS_COURSE: {
           slug: 'blessings-course',
           name: 'Blessings Course',
+          isAvailableInPersonOnly: true,
         },
         CHAKRA_KRIYA: {
           slug: 'chakra-kriya',
@@ -149,6 +150,7 @@ export const COURSE_TYPES_MASTER = {
         MARMA_TRAINING: {
           slug: 'sri-sri-marma-practitioner',
           name: 'Sri Sri Marma Practitioner',
+          isAvailableInPersonOnly: true,
         },
       },
     },

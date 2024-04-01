@@ -972,6 +972,71 @@ const Course = () => {
         dayjs.utc(filterStartEndDate[1]).format('YYYY-MM-DD')
       : null;
 
+  const renderCourseList = () => {
+    if (
+      courseTypeFilter.isAvailableInPersonOnly &&
+      courseModeFilter &&
+      courseModeFilter !== 'IN_PERSON'
+    ) {
+      return (
+        <div class="no-course-found-wrap">
+          <h2 className="tw-text-center">
+            The {courseTypeFilter.name} is not available online it is offered In
+            Person only
+          </h2>
+          <p>
+            Please check out our{' '}
+            <a
+              href="#"
+              className="link v2"
+              onClick={onFilterChangeEvent('courseModeFilter')('IN_PERSON')}
+            >
+              in-person offerings
+            </a>
+            .
+          </p>
+        </div>
+      );
+    }
+    if (isSuccess && data?.pages[0].data?.length === 0 && !isFetchingNextPage) {
+      return (
+        <div class="no-course-found-wrap">
+          <h2>No course found</h2>
+          <p>Please change your search criteria</p>
+        </div>
+      );
+    }
+    return (
+      <>
+        {isSuccess &&
+          data.pages.map((page) => (
+            <React.Fragment key={seed(page)}>
+              {page.data?.map((course) => (
+                <CourseTile
+                  key={course.sfid}
+                  data={course}
+                  authenticated={authenticated}
+                />
+              ))}
+            </React.Fragment>
+          ))}
+        {(isFetchingNextPage || !isSuccess) && (
+          <>
+            {[...Array(8)].map((e, i) => (
+              <ItemLoaderTile key={i}></ItemLoaderTile>
+            ))}
+          </>
+        )}
+        <div ref={ref} style={{ flex: '0 0 100%' }}></div>
+        {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
+          <div class="no-course-found-wrap">
+            <p>That's all folks! No more data left to check out.</p>
+          </div>
+        )}
+      </>
+    );
+  };
+
   return (
     <main class="all-courses-find">
       <section class="title-header">
@@ -1474,39 +1539,7 @@ const Course = () => {
                 </div>
               )}
             </div>
-            {isSuccess &&
-              data.pages.map((page) => (
-                <React.Fragment key={seed(page)}>
-                  {page.data?.map((course) => (
-                    <CourseTile
-                      key={course.sfid}
-                      data={course}
-                      authenticated={authenticated}
-                    />
-                  ))}
-                </React.Fragment>
-              ))}
-            {(isFetchingNextPage || !isSuccess) && (
-              <>
-                {[...Array(8)].map((e, i) => (
-                  <ItemLoaderTile key={i}></ItemLoaderTile>
-                ))}
-              </>
-            )}
-            <div ref={ref} style={{ flex: '0 0 100%' }}></div>
-            {isSuccess &&
-              data?.pages[0].data?.length === 0 &&
-              !isFetchingNextPage && (
-                <div class="no-course-found-wrap">
-                  <h2>No course found</h2>
-                  <p>Please change your search criteria</p>
-                </div>
-              )}
-            {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
-              <div class="no-course-found-wrap">
-                <p>That's all folks! No more data left to check out.</p>
-              </div>
-            )}
+            {renderCourseList()}
           </div>
         </div>
       </section>
