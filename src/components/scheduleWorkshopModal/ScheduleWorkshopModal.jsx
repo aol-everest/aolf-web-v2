@@ -25,6 +25,7 @@ const WorkshopSelectModal = React.memo(
     setWorkshops,
     loading,
     setActiveWorkshop,
+    handleAutoScrollForMobile,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorksop, setLocalSelectedWorksop] = useState(null);
@@ -44,6 +45,7 @@ const WorkshopSelectModal = React.memo(
         program_time: workshopDetail?.eventStartTime,
         category: 'All',
       });
+      handleAutoScrollForMobile();
     };
 
     const handleModalToggle = () => {
