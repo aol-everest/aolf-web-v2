@@ -540,6 +540,18 @@ const New = () => {
     fp.current.flatpickr.changeMonth(backPressed ? -1 : 1);
   };
 
+  const handleAutoScrollForMobile = () => {
+    setTimeout(() => {
+      const timeContainer = document.querySelector('.second-col');
+      if (timeContainer) {
+        timeContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 100);
+  };
+
   const isInPersonMode =
     activeWorkshop?.mode === COURSE_MODES.IN_PERSON.value ||
     workshopMaster?.mode === COURSE_MODES.IN_PERSON.value;
@@ -643,32 +655,34 @@ const New = () => {
                   Are you looking for a course with a specific teacher?{' '}
                   <a href="/us-en/course">Click here</a>
                 </div>
-                <div className="payment-box center-one">
-                  <div className="payment-total-box">
-                    <label>Total:</label>
-                    <div className="amount">
-                      $
-                      {`${
-                        activeWorkshop.unitPrice
-                          ? activeWorkshop.unitPrice.toFixed(2) ||
-                            '0'.toFixed(2)
-                          : workshopMaster.unitPrice
-                      }`}
-                    </div>
-                  </div>
-                  <div className="payment-details">
-                    <div className="payby">
-                      Pay As Low As{' '}
-                      <img src="/img/logo-affirm.webp" height="22" />
-                    </div>
-                    <div className="price-breakup">
-                      <div className="price-per-month">
-                        {isInPersonMode ? '$36' : '$27'}/<span>month</span>
+                {!selectedWorkshopId && (
+                  <div className="payment-box center-one">
+                    <div className="payment-total-box">
+                      <label>Total:</label>
+                      <div className="amount">
+                        $
+                        {`${
+                          activeWorkshop.unitPrice
+                            ? activeWorkshop.unitPrice.toFixed(2) ||
+                              '0'.toFixed(2)
+                            : workshopMaster.unitPrice
+                        }`}
                       </div>
-                      <div className="payment-tenure">for 12 months</div>
+                    </div>
+                    <div className="payment-details">
+                      <div className="payby">
+                        Pay As Low As{' '}
+                        <img src="/img/logo-affirm.webp" height="22" />
+                      </div>
+                      <div className="price-breakup">
+                        <div className="price-per-month">
+                          {isInPersonMode ? '$36' : '$27'}/<span>month</span>
+                        </div>
+                        <div className="payment-tenure">for 12 months</div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
               <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
                 <div className="payment-box">
@@ -1178,6 +1192,7 @@ const New = () => {
           currentMonthYear={currentMonthYear}
           loading={loading || isLoading}
           setActiveWorkshop={setActiveWorkshop}
+          handleAutoScrollForMobile={handleAutoScrollForMobile}
         />
       </main>
     </>
