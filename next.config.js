@@ -71,7 +71,7 @@ const moduleExports = {
       {
         source: '/us-en/course',
         destination: '/us-en/courses',
-        permanent: true,
+        permanent: false,
       },
     ];
   },
