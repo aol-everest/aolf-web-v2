@@ -60,12 +60,12 @@ const moduleExports = {
     return [
       {
         source: '/',
-        destination: '/us-en/course',
+        destination: '/us-en/courses',
         permanent: true,
       },
       {
         source: '/us-en',
-        destination: '/us-en/course',
+        destination: '/us-en/courses',
         permanent: true,
       },
       {
