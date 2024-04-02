@@ -408,6 +408,327 @@ export const COURSE_TYPES = {
   },
 };
 
+export const YOUTH_EVENTS_MASTER = {
+  AOL: [
+    {
+      name: `Junior's Courses`,
+      courseTypes: {
+        SKY_BREATH_MEDITATION: {
+          slug: 'art-of-living-part-1',
+          name: 'Art of Living Part 1',
+        },
+        SAHAJ_SAMADHI_MEDITATION: {
+          slug: 'sahaj-samadhi-meditation',
+          name: 'Sahaj Samadhi Meditation',
+        },
+        ART_OF_LIVING_PREMIUM_PROGRAM: {
+          slug: 'art-of-living-premium-program',
+          name: 'Art of Living Premium Program',
+        },
+        SRI_SRI_YOGA_MEDITATION: {
+          slug: 'sri-sri-yoga-foundation',
+          name: 'Sri Sri Yoga Foundation',
+        },
+      },
+    },
+    {
+      name: `Junior Courses`,
+      courseTypes: {
+        SILENT_RETREAT: {
+          slug: 'art-of-living-part-2',
+          name: 'Art of Living Part 2',
+        },
+        BLESSINGS_COURSE: {
+          slug: 'blessings-course',
+          name: 'Blessings Course',
+        },
+        CHAKRA_KRIYA: {
+          slug: 'chakra-kriya',
+          name: 'Chakra Kriya',
+        },
+        SANYAM_COURSE: {
+          slug: 'sanyam-course',
+          name: 'Sanyam Course',
+        },
+        SRI_SRI_YOGA_DEEP_DIVE: {
+          slug: 'sri-sri-yoga-deep-dive',
+          name: 'Sri Sri Yoga Deep Dive',
+        },
+      },
+    },
+    {
+      name: `Training Courses`,
+      courseTypes: {
+        VOLUNTEER_TRAINING_PROGRAM: {
+          slug: 'volunteer-training-program',
+          name: 'Volunteer Training Program',
+        },
+        TEACHER_TRAINING: {
+          slug: 'teacher-training',
+          name: 'Teacher Training',
+          isExternal: true,
+          link: 'https://www.google.com/',
+          description:
+            'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
+        },
+        MARMA_TRAINING: {
+          slug: 'sri-sri-marma-practitioner',
+          name: 'Sri Sri Marma Practitioner',
+        },
+      },
+    },
+  ],
+  IAHV: [
+    {
+      name: `Juniors`,
+      courseTypes: {
+        Angels: {
+          slug: 'angels',
+          name: 'Angels',
+        },
+        WisdomandRelaxation: {
+          slug: 'wisdom-and-relaxation',
+          name: 'Wisdom and Relaxation : 3 Days',
+        },
+        WisdomandRelaxation4: {
+          slug: 'wisdom-and-relaxation',
+          name: 'Wisdom and Relaxation : 4 Days',
+        },
+        IntuitiveProcessJuniors: {
+          slug: 'intuitive-process-seniors',
+          name: 'Intuitive Process Juniors',
+        },
+        Juniors: {
+          slug: 'juniors',
+          name: 'Juniors',
+        },
+      },
+    },
+    {
+      name: `SKY Kids`,
+      courseTypes: {
+        SKYKids: {
+          slug: 'sky-kids',
+          name: 'SKY Kids',
+        },
+        WisdomandRelaxation: {
+          slug: 'wisdom-and-relaxation',
+          name: 'Wisdom and Relaxation',
+        },
+        IntuitiveProcessSeniors: {
+          slug: 'intuitive-process-seniors',
+          name: 'Intuitive Process Seniors',
+        },
+      },
+    },
+    {
+      name: `SKY TEENS`,
+      courseTypes: {
+        SKYTeensYogaFoundations: {
+          slug: 'sky-teens-yoga-foundations',
+          name: 'SKY Teens Yoga Foundations',
+        },
+        SKYTeens: {
+          slug: 'sky-teens',
+          name: 'SKY-Teens',
+        },
+        SKYTeensPart2: {
+          slug: 'teens-part2',
+          name: 'SKY Teens Part 2',
+        },
+        WisdomandRelaxation: {
+          slug: 'wisdom-and-relaxation',
+          name: 'Wisdom and Relaxation',
+        },
+        TeensSahaj: {
+          slug: 'teens-sahaj',
+          name: 'Teens Sahaj',
+        },
+        IntuitiveProcessSeniors: {
+          slug: 'intuitive-process-seniors',
+          name: 'Intuitive Process Seniors',
+        },
+      },
+    },
+    {
+      name: `Parents`,
+      courseTypes: {
+        KnowYourChild: {
+          slug: 'know-your-child',
+          name: 'Know Your Child (KYC)',
+        },
+        KnowYourTeen: {
+          slug: 'know-your-teen',
+          name: 'Know Your Teen (KYT)',
+        },
+      },
+    },
+  ],
+  HB: [
+    {
+      name: `Beginner's Courses`,
+      courseTypes: {
+        SKY_BREATH_MEDITATION: {
+          slug: 'art-of-living-part-1',
+          name: 'Art of Living Part 1',
+        },
+        SAHAJ_SAMADHI_MEDITATION: {
+          slug: 'sahaj-samadhi-meditation',
+          name: 'Sahaj Samadhi Meditation',
+        },
+        ART_OF_LIVING_PREMIUM_PROGRAM: {
+          slug: 'art-of-living-premium-program',
+          name: 'Art of Living Premium Program',
+        },
+        SRI_SRI_YOGA_MEDITATION: {
+          slug: 'sri-sri-yoga-foundation',
+          name: 'Sri Sri Yoga Foundation',
+        },
+      },
+    },
+    {
+      name: `Advanced Courses`,
+      courseTypes: {
+        SILENT_RETREAT: {
+          slug: 'art-of-living-part-2',
+          name: 'Art of Living Part 2',
+        },
+        BLESSINGS_COURSE: {
+          slug: 'blessings-course',
+          name: 'Blessings Course',
+        },
+        CHAKRA_KRIYA: {
+          slug: 'chakra-kriya',
+          name: 'Chakra Kriya',
+        },
+        SANYAM_COURSE: {
+          slug: 'sanyam-course',
+          name: 'Sanyam Course',
+        },
+        SRI_SRI_YOGA_DEEP_DIVE: {
+          slug: 'sri-sri-yoga-deep-dive',
+          name: 'Sri Sri Yoga Deep Dive',
+        },
+      },
+    },
+    {
+      name: `Training Courses`,
+      courseTypes: {
+        VOLUNTEER_TRAINING_PROGRAM: {
+          slug: 'volunteer-training-program',
+          name: 'Volunteer Training Program',
+        },
+        TEACHER_TRAINING: {
+          slug: 'teacher-training',
+          name: 'Teacher Training',
+          isExternal: true,
+          link: 'https://www.google.com/',
+          description:
+            'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
+        },
+        MARMA_TRAINING: {
+          slug: 'sri-sri-marma-practitioner',
+          name: 'Sri Sri Marma Practitioner',
+        },
+      },
+    },
+  ],
+};
+export const YOUTH_EVENTS_TYPES = {
+  KnowYourChild: {
+    slug: 'know-your-child',
+    name: 'Know Your Child',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      'Know Your Child is a two hour workshop that uses ancient wisdom to shed some light on our interactions with children, their behavior and the issues that affect them.',
+  },
+  KnowYourTeen: {
+    slug: 'know-your-teen',
+    name: 'Know Your Teen',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      'Know Your Teen is a special two hour workshop for parents and guardians, filled with effective strategies to understand the unique needs and challenges teenagers face',
+  },
+  SKYKids: {
+    slug: 'sky-kids',
+    name: 'SKY Kids',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      "The SKY Kids program gives children the tools they need to thrive and meet life's challenges with a smile.",
+  },
+  Angels: {
+    slug: 'angels',
+    name: 'Angels',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description: 'Test description',
+  },
+  Juniors: {
+    slug: 'juniors',
+    name: 'Juniors',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description: 'Test description',
+  },
+  SKYTeensYogaFoundations: {
+    slug: 'sky-teens-yoga-foundations',
+    name: 'SKYTeensYogaFoundations',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description: 'Test Description',
+  },
+  SKYTeensSKY: {
+    slug: 'sky-teens',
+    name: 'SKYTeensSKY',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      'The SKY Teens programs helps students discover greater self-confidence, resilience and a set of tools that will carry them through all of life’s ups and downs.',
+  },
+  TeensPart2: {
+    slug: 'teens-part2',
+    name: 'TeensPart2',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      'The SKY Teens 2 is an advanced meditation and leadership workshop for students who have already taken the SKY Teens program and want to go deeper with their experience',
+  },
+  WisdomandRelaxation: {
+    slug: 'wisdom-and-relaxation',
+    name: 'WisdomandRelaxation',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      'The Wisdom & Relaxation sessions help children maintain a strong connection to themselves and introduces them to a growth mindset in an atmosphere of fun, teamwork, and exciting challenges.',
+  },
+  WisdomandRelaxation4: {
+    slug: 'wisdom-and-relaxation',
+    name: 'WisdomandRelaxation',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      'The Wisdom & Relaxation sessions help children maintain a strong connection to themselves and introduces them to a growth mindset in an atmosphere of fun, teamwork, and exciting challenges.',
+  },
+  TeensSahaj: {
+    slug: 'teens-sahaj',
+    name: 'TeensSahaj',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description:
+      'Sahaj Samadhi meditation is a personalized  technique that trains the conscious mind to experience the silent depths of its own nature.',
+  },
+  IntuitiveProcessSeniors: {
+    slug: 'intuitive-process-seniors',
+    name: 'IntuitiveProcessSeniors',
+    value: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_CTYPE || '',
+    code: '10101000',
+    description: 'Give your child a powerful edge with the Intuition Process.',
+  },
+};
+
 export const WORKSHOP_MODE = {
   VIEW: 'view',
 };
