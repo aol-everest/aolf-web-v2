@@ -19,8 +19,8 @@ const CourseTypeTile = ({ courseType }) => {
   };
 
   return (
-    <div class="course-item">
-      <div class="course-img">
+    <div className="course-item">
+      <div className="course-img">
         <img
           // src={`/img/courses/${courseType.slug}.webp`}
           src={`/img/courses/art-of-living-part-1.webp`}
@@ -29,11 +29,11 @@ const CourseTypeTile = ({ courseType }) => {
           height="240"
         />
       </div>
-      <div class="course-info">
-        <div class="course-title">{courseType.name}</div>
-        <div class="course-desc">{courseType.description}</div>
-        <div class="course-action">
-          <a class="course-link" href="#" onClick={findCourseAction}>
+      <div className="course-info">
+        <div className="course-title">{courseType.name}</div>
+        <div className="course-desc">{courseType.description}</div>
+        <div className="course-action">
+          <a className="course-link" href="#" onClick={findCourseAction}>
             Find a course
           </a>
         </div>
@@ -59,9 +59,9 @@ const SectionComponent = ({ section }) => {
   );
 
   return (
-    <section class="beginner-courses">
-      <h1 class="section-title">{section.name}</h1>
-      <div class="courses-listing">
+    <section className="beginner-courses">
+      <h1 className="section-title">{section.name}</h1>
+      <div className="courses-listing">
         {courses.map((courseType, i) => {
           return (
             <CourseTypeTile courseType={courseType} key={i}></CourseTypeTile>
@@ -73,14 +73,12 @@ const SectionComponent = ({ section }) => {
 };
 
 const Home = () => {
+  const sections = YOUTH_EVENTS_MASTER[orgConfig.name] || [];
   return (
-    <main class="all-courses">
-      {YOUTH_EVENTS_MASTER[orgConfig.name] &&
-        YOUTH_EVENTS_MASTER[orgConfig.name].map((section, i) => {
-          return (
-            <SectionComponent key={i} section={section}></SectionComponent>
-          );
-        })}
+    <main className="all-courses">
+      {sections.map((section, i) => (
+        <SectionComponent key={i} section={section}></SectionComponent>
+      ))}
     </main>
   );
 };
