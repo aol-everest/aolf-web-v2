@@ -68,6 +68,11 @@ const moduleExports = {
         destination: '/us-en/course',
         permanent: true,
       },
+      {
+        source: '/us-en/course',
+        destination: '/us-en/courses',
+        permanent: false,
+      },
     ];
   },
   async headers() {

@@ -12,7 +12,7 @@ import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
 const HB_MENU = [
   {
     name: 'Courses',
-    link: '/us-en/course',
+    link: '/us-en/courses',
   },
   {
     name: 'Services',
@@ -148,7 +148,7 @@ const AOL_MENU = [
           },
           {
             name: 'All Courses',
-            link: '/us-en/course',
+            link: '/us-en/courses',
           },
           {
             name: 'Help me choose',
@@ -271,7 +271,7 @@ const IAHV_MENU = [
       },
       {
         name: 'All Courses',
-        link: '/us-en/course',
+        link: '/us-en/courses',
       },
     ],
   },
@@ -495,7 +495,7 @@ export const Header = () => {
                                 href={menuItem.link}
                                 key={menuItem.name}
                                 className={
-                                  menuItem.link === '/us-en/course'
+                                  menuItem.link === '/us-en/courses'
                                     ? 'active'
                                     : menuItem.link ===
                                         '/us-en/course-finder/welcome'

@@ -33,7 +33,6 @@ import { useEffectOnce } from 'react-use';
 import { useAnalytics } from 'use-analytics';
 import isUrl from 'is-url';
 import { UserInfoFormNewCheckout } from '@components/checkout';
-import { useSessionStorage } from '@uidotdev/usehooks';
 
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -261,7 +260,6 @@ const SchedulingPaymentForm = ({
   const { user = {} } = useAuth();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
-  const [, setValue] = useSessionStorage('zipCode', '');
   const stripe = useStripe();
   const elements = useElements();
 
@@ -511,7 +509,6 @@ const SchedulingPaymentForm = ({
             throw new Error(result.error.message);
           }
         } else {
-          setValue(null);
           replaceRouteWithUTMQuery(router, {
             pathname: `/us-en/course/thankyou/${data.attendeeId}`,
             query: {

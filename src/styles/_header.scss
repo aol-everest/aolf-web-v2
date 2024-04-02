@@ -455,6 +455,7 @@
   }
   .navbar {
     padding: 0;
+    z-index: 1;
     .navbar-nav {
       gap: 28px;
       @media screen and (max-width: 991px) {

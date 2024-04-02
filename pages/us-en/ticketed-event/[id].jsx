@@ -23,6 +23,7 @@ function TicketedEvent() {
   const { showAlert } = useGlobalAlertContext();
   const [selectedIds, setSelectedIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalTicketsQuantity, setTotalTicketsQuantity] = useState(0);
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const formRef = useRef();
@@ -71,6 +72,7 @@ function TicketedEvent() {
     state,
     zip,
     country,
+    maxTicketsWithOneOrder,
   } = workshop || {};
 
   useEffect(() => {
@@ -82,6 +84,7 @@ function TicketedEvent() {
       totalTicketQuantity = totalTicketQuantity + item.numberOfTickets;
     });
     setTotalPrice(totalPrice);
+    setTotalTicketsQuantity(totalTicketQuantity);
   }, [selectedTickets]);
 
   const handleTicketSelect = (e, type, item) => {
@@ -131,6 +134,12 @@ function TicketedEvent() {
   const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
 
   const handleTicketCheckout = (values) => {
+    if (totalTicketsQuantity > maxTicketsWithOneOrder) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: `Exceeded maximum tickets limit. Max allowed ${maxTicketsWithOneOrder}`,
+      });
+      return;
+    }
     setValue({
       selectedTickets: selectedTickets,
       delfee: totalOrderAmountNew,

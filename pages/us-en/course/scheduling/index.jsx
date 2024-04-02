@@ -1,14 +1,8 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
-import { useQueryState, parseAsString } from 'nuqs';
+import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import moment from 'moment';
-import {
-  api,
-  findCourseTypeByKey,
-  getLatLangByZipCode,
-  getZipCodeByLatLang,
-  tConvert,
-} from '@utils';
+import { api, findCourseTypeByKey, tConvert } from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import dayjs from 'dayjs';
@@ -23,7 +17,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
 import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
-import { useSessionStorage } from '@uidotdev/usehooks';
 var advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
@@ -33,13 +26,18 @@ const New = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const router = useRouter();
-  const [value, setValue] = useSessionStorage('zipCode', '');
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
   const [showLocationModal, setShowLocationModal] = useState(true);
   const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
-  const [locationFilter, setLocationFilter] = useState(null);
+  const [locationFilter, setLocationFilter] = useQueryState(
+    'location',
+    parseAsJson(),
+  );
   const [loading, setLoading] = useState(false);
-  const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedDates, setSelectedDates] = useQueryState(
+    'selectedDate',
+    parseAsJson([]),
+  );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
   const [currentMonthYear, setCurrentMonthYear] = useQueryState(
@@ -85,19 +83,6 @@ const New = () => {
     contactName,
   } = activeWorkshop;
 
-  useEffect(() => {
-    const getAddress = async () => {
-      if (value) {
-        setShowLocationModal(false);
-        const latLng = await getLatLangByZipCode(value);
-        if (latLng?.locationName) {
-          setLocationFilter(latLng);
-        }
-      }
-    };
-    getAddress();
-  }, [value]);
-
   useEffectOnce(() => {
     page({
       category: 'course_registration',
@@ -107,7 +92,7 @@ const New = () => {
   });
 
   useEffect(() => {
-    if (cityFilter) {
+    if (cityFilter || locationFilter?.locationName) {
       setShowLocationModal(false);
     }
   }, [cityFilter]);
@@ -129,29 +114,6 @@ const New = () => {
       setTimezoneFilter(router.query.timezone);
     }
   }, [router.query]);
-
-  useEffect(() => {
-    const getUserLocation = async () => {
-      if (navigator.geolocation && !value) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const { latitude, longitude } = position.coords;
-            const [zipCode] = await Promise.all([
-              getZipCodeByLatLang(latitude, longitude),
-            ]);
-            setValue(zipCode);
-            setLocationFilter({ lat: latitude, lng: longitude, zipCode });
-          },
-          (error) => {
-            console.error('Error getting location:', error.message);
-          },
-        );
-      } else {
-        console.error('Geolocation is not supported by your browser.');
-      }
-    };
-    getUserLocation();
-  }, []);
 
   const { data: dateAvailable = [], isLoading } = useQuery({
     queryKey: [
@@ -194,7 +156,7 @@ const New = () => {
           };
         }
       }
-      if (locationFilter?.lat) {
+      if (locationFilter?.lat || cityFilter) {
         const response = await api.get({
           path: 'workshopMonthCalendar',
           param,
@@ -384,11 +346,8 @@ const New = () => {
     resetCalender();
     setCityFilter(null);
     if (value) {
-      const zipCode = value.zipCode;
-      setValue(zipCode);
       setLocationFilter(value);
     } else {
-      setValue('');
       setLocationFilter(null);
     }
   };
@@ -402,7 +361,7 @@ const New = () => {
     setSelectedWorkshopId(null);
     let isEventAvailable = false;
 
-    if (selectedDates.length > 0 && dateStr !== 'update') {
+    if (selectedDates?.length > 0 && dateStr !== 'update') {
       const today = moment(selectedDates[0]);
       let intervalSelected = [];
       for (const enableItem of dateAvailable) {
@@ -552,7 +511,7 @@ const New = () => {
     return da.firstDate;
   });
 
-  enableDates = [...enableDates, ...selectedDates];
+  enableDates = [...enableDates, ...(selectedDates || [])];
 
   const handelDayCreate = (dObj, dStr, fp, dayElem) => {
     const day = dayElem.innerHTML?.toString()?.padStart(2, '0');
@@ -579,6 +538,18 @@ const New = () => {
     const formattedDate = newMonthDate.format('YYYY-M');
     setCurrentMonthYear(formattedDate);
     fp.current.flatpickr.changeMonth(backPressed ? -1 : 1);
+  };
+
+  const handleAutoScrollForMobile = () => {
+    setTimeout(() => {
+      const timeContainer = document.querySelector('.second-col');
+      if (timeContainer) {
+        timeContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 100);
   };
 
   const isInPersonMode =
@@ -684,32 +655,34 @@ const New = () => {
                   Are you looking for a course with a specific teacher?{' '}
                   <a href="/us-en/course">Click here</a>
                 </div>
-                <div className="payment-box center-one">
-                  <div className="payment-total-box">
-                    <label>Total:</label>
-                    <div className="amount">
-                      $
-                      {`${
-                        activeWorkshop.unitPrice
-                          ? activeWorkshop.unitPrice.toFixed(2) ||
-                            '0'.toFixed(2)
-                          : workshopMaster.unitPrice
-                      }`}
-                    </div>
-                  </div>
-                  <div className="payment-details">
-                    <div className="payby">
-                      Pay As Low As{' '}
-                      <img src="/img/logo-affirm.webp" height="22" />
-                    </div>
-                    <div className="price-breakup">
-                      <div className="price-per-month">
-                        {isInPersonMode ? '$36' : '$27'}/<span>month</span>
+                {!selectedWorkshopId && (
+                  <div className="payment-box center-one">
+                    <div className="payment-total-box">
+                      <label>Total:</label>
+                      <div className="amount">
+                        $
+                        {`${
+                          activeWorkshop.unitPrice
+                            ? activeWorkshop.unitPrice.toFixed(2) ||
+                              '0'.toFixed(2)
+                            : workshopMaster.unitPrice
+                        }`}
                       </div>
-                      <div className="payment-tenure">for 12 months</div>
+                    </div>
+                    <div className="payment-details">
+                      <div className="payby">
+                        Pay As Low As{' '}
+                        <img src="/img/logo-affirm.webp" height="22" />
+                      </div>
+                      <div className="price-breakup">
+                        <div className="price-per-month">
+                          {isInPersonMode ? '$36' : '$27'}/<span>month</span>
+                        </div>
+                        <div className="payment-tenure">for 12 months</div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
               <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
                 <div className="payment-box">
@@ -1219,6 +1192,7 @@ const New = () => {
           currentMonthYear={currentMonthYear}
           loading={loading || isLoading}
           setActiveWorkshop={setActiveWorkshop}
+          handleAutoScrollForMobile={handleAutoScrollForMobile}
         />
       </main>
     </>

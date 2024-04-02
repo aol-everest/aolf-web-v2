@@ -3,18 +3,14 @@ import { COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import { orgConfig } from '@org';
+import Link from '@components/linkWithUTM';
 
 const CourseTypeTile = ({ courseType }) => {
-  const router = useRouter();
-
-  const findCourseAction = (e) => {
-    if (e) e.preventDefault();
+  const findCourseAction = () => {
     if (courseType.isExternal) {
-      router.push(courseType.link);
+      return courseType.link;
     } else {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/courses/${courseType.slug}`,
-      });
+      return `/us-en/courses/${courseType.slug}`;
     }
   };
 
@@ -32,9 +28,11 @@ const CourseTypeTile = ({ courseType }) => {
         <div class="course-title">{courseType.name}</div>
         <div class="course-desc">{courseType.description}</div>
         <div class="course-action">
-          <a class="course-link" href="#" onClick={findCourseAction}>
-            Find a course
-          </a>
+          <Link href={findCourseAction()} legacyBehavior>
+            <a class="course-link" href="#">
+              Find a course
+            </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -42,25 +40,17 @@ const CourseTypeTile = ({ courseType }) => {
 };
 
 const SectionComponent = ({ section }) => {
-  const courses = section.courseTypes.reduce((accumulator, currentValue) => {
-    if (currentValue === 'TEACHER_TRAINING') {
-      accumulator = [
-        ...accumulator,
-        {
-          slug: 'teacher-training',
-          name: 'Teacher Training',
-          description:
-            'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
-          isExternal: true,
-          link: 'https://www.google.com/',
-        },
-      ];
-    }
-    if (COURSE_TYPES[currentValue]) {
-      accumulator = [...accumulator, COURSE_TYPES[currentValue]];
-    }
-    return accumulator;
-  }, []);
+  const courses = Object.entries(section.courseTypes).reduce(
+    (accumulator, [key, value]) => {
+      if (COURSE_TYPES[key]) {
+        accumulator = [...accumulator, { ...COURSE_TYPES[key], ...value }];
+      } else {
+        accumulator = [...accumulator, { ...value }];
+      }
+      return accumulator;
+    },
+    [],
+  );
 
   return (
     <section class="beginner-courses">

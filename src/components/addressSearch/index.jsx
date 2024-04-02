@@ -26,13 +26,11 @@ export const AddressSearch = ({
       const res = await geocodeByAddress(selected);
       const [locationResult] = res;
       const { lat, lng } = await getLatLng(locationResult);
-      const zipCode = await getZipCodeByLatLang(lat, lng);
 
       closeHandler({
         lat,
         lng,
         locationName: locationResult.formatted_address,
-        zipCode: zipCode,
       })();
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
