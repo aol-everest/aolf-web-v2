@@ -95,7 +95,7 @@ const Checkout = () => {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
-    if (!user || !workshop) return;
+    if (!workshop) return;
 
     const {
       title,
@@ -157,6 +157,46 @@ const Checkout = () => {
         },
       },
     });
+
+    track(
+      'begin_checkout',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: workshop?.unitPrice,
+          course_format: workshop?.productTypeId,
+          course_name: workshop?.title,
+          items: [
+            {
+              item_id: workshop?.id,
+              item_name: workshop?.title,
+              affiliation: 'NA',
+              coupon: '',
+              discount: 0.0,
+              index: 0,
+              item_brand: workshop?.businessOrg,
+              item_category: workshop?.title,
+              item_category2: workshop?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: workshop?.productTypeId,
+              item_list_name: workshop?.title,
+              item_variant: workshop?.workshopTotalHours,
+              location_id: workshop?.locationCity,
+              price: workshop?.unitPrice,
+              quantity: 1,
+            },
+          ],
+        },
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
+        },
+      },
+    );
 
     if (isPreRequisiteCompleted === false && firstPreRequisiteFailedReason) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
