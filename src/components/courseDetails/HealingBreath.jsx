@@ -108,7 +108,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
               <div className="right-section">
                 <CourseDetailsCard
                   workshop={data}
-                  courseType={COURSE_TYPES.HEALING_BREATH}
+                  courseType={COURSE_TYPES.SKY_BREATH_MEDITATION}
                   courseViewMode={courseViewMode}
                 ></CourseDetailsCard>
               </div>
