@@ -347,11 +347,6 @@ export const COURSE_TYPES = {
     description:
       'Immerse in a subtle yet transformative program designed to take you to a deep state of gratitude and fullness with a connection to innate healing.',
   },
-  SKY_CAMPUS_HAPPINESS_RETREAT: {
-    slug: 'sky-happiness-retreat',
-    name: 'SKY Happiness Retreat',
-    value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || '',
-  },
   SANYAM_COURSE: {
     slug: 'sanyam-course',
     name: 'Sanyam Course',

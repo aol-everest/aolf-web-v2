@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
+import { orgConfig } from '@org';
 
 dayjs.extend(utc);
 
@@ -33,6 +34,7 @@ export const RegisterPanel = ({ workshop }) => {
     isGuestCheckoutEnabled = false,
   } = workshop || {};
 
+  const isIAHV = orgConfig.name === 'IAHV';
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
     0;
@@ -45,10 +47,7 @@ export const RegisterPanel = ({ workshop }) => {
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(
       workshop.productTypeId,
     ) >= 0;
-  const isSKYCampusHappinessRetreat =
-    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
-      workshop.productTypeId,
-    ) >= 0;
+
   const isSanyamCourse =
     COURSE_TYPES.SANYAM_COURSE.value.indexOf(workshop.productTypeId) >= 0;
   const isBlessingsCourse =
@@ -211,7 +210,7 @@ export const RegisterPanel = ({ workshop }) => {
       </div>
     );
   }
-  if (isSKYCampusHappinessRetreat) {
+  if (isIAHV && isSKYType) {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
