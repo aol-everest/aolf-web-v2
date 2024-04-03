@@ -190,7 +190,6 @@ function CourseDetail() {
       !isVolunteerTrainingProgram &&
       !isSKYSilentRetreatType &&
       !isBlessingsCourse &&
-      !isSKYCampusHappinessRetreat &&
       !isSanyamCourse &&
       !isSKYWithSahaj &&
       !isSriSriYogaDeepDiveType &&
@@ -255,6 +254,7 @@ function CourseDetail() {
   if (isLoading || !router.isReady) return <PageLoading />;
 
   const isHealingBreath = orgConfig.name === 'HB';
+  const isIAHV = orgConfig.name === 'IAHV';
 
   const isSKYType =
     COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(data.productTypeId) >= 0;
@@ -272,10 +272,7 @@ function CourseDetail() {
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
   const isBlessingsCourse =
     COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0;
-  const isSKYCampusHappinessRetreat =
-    COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(
-      data.productTypeId,
-    ) >= 0;
+
   const isSanyamCourse =
     COURSE_TYPES.SANYAM_COURSE.value.indexOf(data.productTypeId) >= 0;
 
@@ -311,6 +308,9 @@ function CourseDetail() {
       if (isHealingBreath) {
         return <HealingBreath {...props} />;
       }
+      if (isIAHV) {
+        return <SKYHappinessRetreat {...props} />;
+      }
       return <SKYBreathMeditation {...props} />;
     }
     if (isSilentRetreatType) {
@@ -329,9 +329,7 @@ function CourseDetail() {
     if (isBlessingsCourse) {
       return <BlessingsCourse {...props} />;
     }
-    if (isSKYCampusHappinessRetreat) {
-      return <SKYHappinessRetreat {...props} />;
-    }
+
     if (isSanyamCourse) {
       return <SanyamCourse {...props} />;
     }
