@@ -178,7 +178,7 @@ export const COURSE_TYPES_MASTER = {
       courseTypes: {
         SILENT_RETREAT: {
           slug: 'art-of-living-part-2',
-          name: 'Healing Breaths- Silent Retreat',
+          name: 'Art of Silence Program - Healing Breath',
         },
       },
     },
