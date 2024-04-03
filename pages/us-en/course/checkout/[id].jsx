@@ -136,7 +136,7 @@ const Checkout = () => {
       amount: unitPrice,
       requestType: 'Detail',
       hitType: 'paymentpage',
-      user: user.profile.id,
+      user: user?.profile?.id,
     });
 
     track('eec.checkout', {
@@ -147,7 +147,7 @@ const Checkout = () => {
       amount: unitPrice,
       requestType: 'Detail',
       hitType: 'paymentpage',
-      user: user.profile.id,
+      user: user?.profile?.id,
       ecommerce: {
         checkout: {
           actionField: {
