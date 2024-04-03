@@ -312,9 +312,11 @@ function MembershipCheckout() {
             <div className="row">
               <div className="col-lg-4">
                 <div className="information__blcok">
-                  <h2 className="information__tile">Silent Retreat Waiver+</h2>
+                  <h2 className="information__tile">
+                    {COURSE_TYPES.SILENT_RETREAT.name} Waiver+
+                  </h2>
                   <p className="information__text">
-                    $400 waiver on your first silent retreat.
+                    $400 waiver on your first art of living part 2.
                   </p>
                 </div>
               </div>
@@ -322,7 +324,7 @@ function MembershipCheckout() {
                 <div className="information__blcok">
                   <h2 className="information__tile">More Discounts</h2>
                   <p className="information__text">
-                    Receive $200 off additional silent retreats*
+                    Receive $200 off additional art of living part 2*
                   </p>
                 </div>
               </div>

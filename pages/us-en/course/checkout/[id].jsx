@@ -25,6 +25,7 @@ import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { PaymentFormNew } from '@components/paymentFormNew';
+import { orgConfig } from '@org';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
@@ -292,27 +293,21 @@ const Checkout = () => {
 
   const stripePromise = loadStripe(workshop.publishableKey);
 
-  const isHealingBreathProgram =
-    COURSE_TYPES.HEALING_BREATH.value.indexOf(workshop.productTypeId) >= 0;
+  const isHealingBreath = orgConfig.name === 'HB';
 
-  const isHealingBreathSilentType =
-    COURSE_TYPES.HEALING_BREATH_SILENT.value.indexOf(workshop.productTypeId) >=
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
     0;
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
 
   const isSkyHappinessRetreat =
     COURSE_TYPES.SKY_HAPPINESS_RETREAT.value.indexOf(workshop.productTypeId) >=
     0;
 
-  const isInstitutionalProgram =
-    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(workshop.productTypeId) >=
-    0;
-
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 
-  const isHBCheckoutPage =
-    isHealingBreathProgram ||
-    isInstitutionalProgram ||
-    isHealingBreathSilentType;
+  const isHBCheckoutPage = isHealingBreath;
 
   const renderPaymentForm = () => {
     if (isHBCheckoutPage) {

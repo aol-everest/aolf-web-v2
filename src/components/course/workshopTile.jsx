@@ -66,9 +66,6 @@ export const WorkshopTile = ({ data, authenticated }) => {
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.SRI_SRI_YOGA_MEDITATION.value.indexOf(productTypeId) >= 0 ||
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(productTypeId) >= 0 ||
-    COURSE_TYPES.HEALING_BREATH.value.indexOf(data.productTypeId) >= 0 ||
-    COURSE_TYPES.HEALING_BREATH_SILENT.value.indexOf(data.productTypeId) >= 0 ||
-    COURSE_TYPES.INSTITUTIONAL_COURSE.value.indexOf(data.productTypeId) >= 0 ||
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0 ||
     COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(data.productTypeId) >= 0 ||
     COURSE_TYPES.SKY_CAMPUS_HAPPINESS_RETREAT.value.indexOf(productTypeId) >=

@@ -1,4 +1,4 @@
-import { MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
+import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
 import { pushRouteWithUTMQuery } from '@service';
@@ -248,8 +248,7 @@ const subscriptionBuyBtnPanel = (
   if (!userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value]) {
     let message = null;
     if (userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
-      message =
-        'Take your journey deeper with a special offering for silent retreats.';
+      message = `Take your journey deeper with a special offering for ${COURSE_TYPES.SILENT_RETREAT.name}.`;
     } else {
       message =
         'Take your journey deeper with two options for additional content and support';
