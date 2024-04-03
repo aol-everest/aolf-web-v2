@@ -232,7 +232,7 @@ export const CourseDetailsCard = ({
         </button>
       )}
 
-      <hr style={{ margin: 0 }} />
+      {/* <hr style={{ margin: 0 }} />
 
       <p className="course-details__text">Looking for another date?</p>
 
@@ -327,7 +327,7 @@ export const CourseDetailsCard = ({
             </>
           )}
         </Popup>
-      </div>
+      </div> */}
 
       {!corporateName && (
         <div className="course-details__submit">

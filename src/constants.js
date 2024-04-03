@@ -312,16 +312,6 @@ export const COURSE_TYPES = {
     description:
       'Grow professionally, personally, and spiritually. Overcome personal barriers and gain the skills to make a difference in your community.',
   },
-  HEALING_BREATH: {
-    slug: 'healing-breath',
-    name: 'Healing Breath',
-    value: process.env.NEXT_PUBLIC_HEALING_BREATH_CTYPE || '',
-  },
-  HEALING_BREATH_SILENT: {
-    slug: 'healing-breath-silent',
-    name: 'Healing Breath Silent',
-    value: process.env.NEXT_PUBLIC_HEALING_BREATH_SILENT_CTYPE || '',
-  },
   SKY_SILENT_RETREAT: {
     slug: 'silent-retreat',
     name: 'Silent Retreat',
@@ -356,16 +346,6 @@ export const COURSE_TYPES = {
     value: process.env.NEXT_PUBLIC_BLESSINGS_COURSE_CTYPE || '',
     description:
       'Immerse in a subtle yet transformative program designed to take you to a deep state of gratitude and fullness with a connection to innate healing.',
-  },
-  INSTITUTIONAL_COURSE: {
-    slug: 'institutional',
-    name: 'Institutional',
-    value: process.env.NEXT_PUBLIC_INSTITUTIONAL_CTYPE || '',
-  },
-  SKY_CAMPUS_HAPPINESS_RETREAT: {
-    slug: 'sky-happiness-retreat',
-    name: 'SKY Happiness Retreat',
-    value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || '',
   },
   SANYAM_COURSE: {
     slug: 'sanyam-course',
