@@ -601,7 +601,9 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                   <span>${fee}</span>
                 </div>
               </div>
-              <button className="enroll-btn">Enroll Now →</button>
+              <button className="enroll-btn" onClick={handleRegister}>
+                Enroll Now →
+              </button>
             </div>
           </div>
         </section>
