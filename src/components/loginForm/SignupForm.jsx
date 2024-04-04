@@ -16,7 +16,13 @@ const schema = object().shape({
   lastName: string().required('Last Name is required'),
 });
 
-export const SignupForm = ({ signUp, showMessage, message }) => {
+export const SignupForm = ({
+  signUp,
+  showMessage,
+  message,
+  toSignInMode,
+  children,
+}) => {
   const {
     register,
     control,
@@ -27,70 +33,87 @@ export const SignupForm = ({ signUp, showMessage, message }) => {
   });
 
   return (
-    <form
-      id="signup-form"
-      className="active show"
-      onSubmit={handleSubmit(signUp)}
-    >
-      <input
-        {...register('username')}
-        type="email"
-        className={classNames({ validate: errors.username })}
-        placeholder="Email"
-      />
-      {errors.username && (
-        <p className="validation-input">{errors.username.message}</p>
-      )}
-      <input
-        {...register('password')}
-        type="password"
-        placeholder="Password"
-        className={classNames({ validate: errors.password })}
-      />
-      {errors.password && (
-        <p className="validation-input">{errors.password.message}</p>
-      )}
-      <input
-        {...register('firstName')}
-        type="text"
-        placeholder="First Name"
-        className={classNames({ validate: errors.firstName })}
-      />
-      {errors.firstName && (
-        <p className="validation-input">{errors.firstName.message}</p>
-      )}
-      <input
-        {...register('lastName')}
-        type="text"
-        placeholder="Last Name"
-        className={classNames({ validate: errors.lastName })}
-      />
-      {errors.lastName && (
-        <p className="validation-input">{errors.lastName.message}</p>
-      )}
-      <div className="checkbox-wrapper">
-        <p className="checkbox-text">
-          By signing up, I agree to{' '}
-          <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
-            <a target="_blank" className="link">
-              Terms of Service
-            </a>
-          </Link>{' '}
-          and{' '}
-          <a
-            href="https://www.artofliving.org/us-en/privacy-policy"
-            target="_blank"
-            className="link"
-            rel="noreferrer"
-          >
-            Privacy Policy
-          </a>
-        </p>
-      </div>
-      {showMessage && <p className="validation-input">{message}</p>}
-      <button className="mt-4 modal-window__btn btn-primary" type="submit">
-        Sign Up
-      </button>
+    <form onSubmit={handleSubmit(signUp)}>
+      <section class="section-login-register">
+        <div class="container">
+          <h1 class="page-title">Create an account</h1>
+          {children}
+          <div class="form-login-register">
+            <div class="form-item">
+              <label for="fname">First name</label>
+              <input
+                {...register('firstName')}
+                type="text"
+                class="input-field"
+                placeholder="First name"
+              />
+            </div>
+            <div class="form-item">
+              <label for="lname">Last name</label>
+              <input
+                {...register('lastName')}
+                type="text"
+                class="input-field"
+                placeholder="Last name"
+              />
+            </div>
+            <div class="form-item">
+              <label for="email">Email address</label>
+              <input
+                {...register('username')}
+                type="email"
+                class="input-field"
+                placeholder="Email address"
+              />
+            </div>
+            <div class="form-item password">
+              <label for="pass">Password</label>
+              <input
+                {...register('password')}
+                type="password"
+                class="input-field password"
+                placeholder="Password"
+              />
+              <button class="showPassBtn">
+                <img
+                  src="/img/PasswordEye.svg"
+                  width="16"
+                  height="16"
+                  alt="Show Password"
+                />
+              </button>
+            </div>
+            <div class="form-item checkbox">
+              <input type="checkbox" id="toc" />
+              <label class="toc" for="toc">
+                By signing up, I agree to{' '}
+                <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
+                  <a target="_blank">Terms of Service</a>
+                </Link>{' '}
+                and{' '}
+                <a
+                  href="https://www.artofliving.org/us-en/privacy-policy"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Privacy Policy
+                </a>
+              </label>
+            </div>
+            <div class="form-action">
+              <button class="submit-btn" type="submit">
+                Sign up
+              </button>
+            </div>
+            <div class="form-other-info">
+              Already have an account?{' '}
+              <a href="#" onClick={toSignInMode}>
+                Log in
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
       <DevTool control={control} />
     </form>
   );

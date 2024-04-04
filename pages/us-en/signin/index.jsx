@@ -1,79 +1,296 @@
-/* eslint-disable react/no-unescaped-entities */
-import { NextSeo } from 'next-seo';
+import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from '@constants';
+import { useAuth, useGlobalModalContext } from '@contexts';
+import { pushRouteWithUTMQuery } from '@service';
+import { Auth, api } from '@utils';
+import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { FaCheckCircle } from 'react-icons/fa';
+import { useAnalytics } from 'use-analytics';
+import {
+  ChangePasswordForm,
+  NewPasswordForm,
+  ResetPasswordForm,
+  SigninForm,
+  SignupForm,
+} from '@components/loginForm';
+import {
+  useQueryState,
+  parseAsString,
+  parseAsInteger,
+  parseAsFloat,
+  parseAsBoolean,
+  parseAsTimestamp,
+  parseAsIsoDateTime,
+  parseAsArrayOf,
+  parseAsJson,
+  parseAsStringEnum,
+  parseAsStringLiteral,
+  parseAsNumberLiteral,
+  createParser,
+} from 'nuqs';
+
+const SIGN_IN_MODE = 's-in';
+const SIGN_UP_MODE = 's-up';
+const RESET_PASSWORD_REQUEST = 'RESET_PASSWORD_REQUEST';
+const NEW_PASSWORD_REQUEST = 'NEW_PASSWORD_REQUEST';
+const CHANGE_PASSWORD_REQUEST = 'CHANGE_PASSWORD_REQUEST';
+
+const MESSAGE_SIGNUP_SUCCESS = 'Sign up completed successfully.';
+const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
+  'A verification code has been emailed to you. Please use the verification code and reset your password.';
+
+const encodeFormData = (data) => {
+  return Object.keys(data)
+    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
+};
 
 function LoginPage() {
   const router = useRouter();
+  const { setUser } = useAuth();
+  const { identify } = useAnalytics();
+  const { hideModal, store } = useGlobalModalContext();
+  const { modalProps } = store || {};
 
-  return (
-    <main class="login-register-page">
-      <section class="section-login-register">
-        <div class="container">
-          <h1 class="page-title">Log in to your account</h1>
-          <div class="page-description">
-            Welcome back! Please enter your details.
-          </div>
-          <div class="login-options">
-            <button class="google-icon">
-              <img src="/img/google-icon.svg" />
-            </button>
-            <button class="facebook-icon">
-              <img src="/img/facebook-icon.svg" />
-            </button>
-            <button
-              class="apple-icon"
-              data-toggle="modal"
-              data-target="#login-appleID"
-            >
-              <img src="/img/apple-icon.svg" />
-            </button>
-          </div>
-          <div class="or-separator">
-            <span>OR</span>
-          </div>
-          <div class="form-login-register">
-            <div class="form-item">
-              <label for="email">Email address</label>
-              <input
-                id="email"
-                type="email"
-                class="input-field"
-                placeholder="Email address"
-              />
-            </div>
-            <div class="form-item password">
-              <label for="pass">Password</label>
-              <input
-                id="email"
-                type="password"
-                class="input-field password"
-                placeholder="Password"
-              />
-              <button class="showPassBtn">
-                <img
-                  src="/img/PasswordEye.svg"
-                  width="16"
-                  height="16"
-                  alt="Show Password"
-                />
-              </button>
-            </div>
-            <div class="form-item">
-              <a href="#" class="forgot-pass">
-                Forgot password
-              </a>
-            </div>
-            <div class="form-action">
-              <button class="submit-btn">Log in</button>
-            </div>
-            <div class="form-other-info">
-              Don't have an account? <a href="#">Sign up</a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [showMessage, setShowMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [mode, setMode] = useQueryState(
+    'mode',
+    parseAsString.withDefault(SIGN_IN_MODE),
   );
+  const [navigateTo] = useQueryState('next');
+  const [username, setUsername] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const switchView = (view) => (e) => {
+    if (e) e.preventDefault();
+    setMode(view);
+  };
+
+  const getActualMessage = (message) => {
+    if (!message) {
+      return null;
+    }
+    const matches = message.match(/\[(.*?)\]/);
+    if (matches) {
+      return matches[1];
+    }
+    return message;
+  };
+
+  const validateStudentEmail = (email) => {
+    const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
+    const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
+    return isStudentEmail;
+  };
+
+  const signIn = async ({ username, password, isStudent = false }) => {
+    setLoading(true);
+    setShowMessage(false);
+    try {
+      const { newPasswordRequired } = await Auth.authenticateUser(
+        username,
+        password,
+      );
+      if (newPasswordRequired) {
+        setCurrentUser({ username, password });
+        setMode(NEW_PASSWORD_REQUEST);
+        setLoading(false);
+      } else {
+        const userInfo = await Auth.reFetchProfile();
+        setUser(userInfo);
+        identify(userInfo.profile.email, {
+          id: userInfo.profile.username,
+          sfid: userInfo.profile.id,
+          email: userInfo.profile.email,
+          first_name: userInfo.profile.first_name,
+          last_name: userInfo.profile.last_name,
+          subscriptions: userInfo.profile.subscriptions,
+          sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
+          sahaj_flag: userInfo.profile.isSahajGraduate,
+          silence_course_count: userInfo.profile.aosCountTotal,
+        });
+
+        if (isStudent) {
+          await api.post({
+            path: 'verify-email',
+            body: {
+              email: username,
+            },
+          });
+          setShowSuccessMessage(true);
+          setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
+          setTimeout(() => {
+            setLoading(false);
+            setShowSuccessMessage(false);
+            setSuccessMessage(null);
+            hideModal();
+            if (navigateTo) {
+              return pushRouteWithUTMQuery(router, navigateTo);
+            } else {
+              router.reload(window.location.pathname);
+            }
+          }, 3000);
+        } else {
+          setLoading(false);
+          hideModal();
+          if (navigateTo) {
+            return pushRouteWithUTMQuery(router, navigateTo);
+          } else {
+            router.reload(window.location.pathname);
+          }
+        }
+        // const user = await Auth.signIn(username, password);
+        // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
+        //   setCurrentUser(user);
+        //   setMode(NEW_PASSWORD_REQUEST);
+        //   setLoading(false);
+        // } else {
+        //   const token = user.signInUserSession.idToken.jwtToken;
+        //   await api.get({
+        //     path: "profile",
+        //     token,
+        //   });
+
+        //   setLoading(false);
+        //   hideModal();
+        //   if (navigateTo) {
+        //     return pushRouteWithUTMQuery(router,navigateTo);
+        //   } else {
+        //     router.reload(window.location.pathname);
+        //   }
+        // }
+      }
+    } catch (ex) {
+      // await Auth.signOut();
+      const data = ex.response?.data;
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
+      const { message, statusCode } = data || {};
+      if (statusCode === 500) {
+        setMessage(
+          message ? `Error: Unable to login. (${message})` : errorMessage,
+        );
+      } else {
+        setMessage(
+          message ? `Error: ${message} (${statusCode})` : errorMessage,
+        );
+      }
+      console.error(ex);
+      setShowMessage(true);
+      setLoading(false);
+    }
+  };
+
+  const fbLogin = () => {
+    const params = {
+      state: navigateTo || router.asPath,
+      identity_provider: 'Facebook',
+      redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
+      client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+      response_type: 'CODE',
+      scope: 'email phone profile aws.cognito.signin.user.admin openid',
+    };
+    window.location.replace(
+      `https://${
+        process.env.NEXT_PUBLIC_COGNITO_DOMAIN
+      }/oauth2/authorize?${encodeFormData(params)}`,
+    );
+  };
+
+  const googleLogin = () => {
+    const params = {
+      state: navigateTo || router.asPath,
+      identity_provider: 'Google',
+      redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
+      client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+      response_type: 'CODE',
+      scope: 'email phone profile aws.cognito.signin.user.admin openid',
+    };
+    window.location.replace(
+      `https://${
+        process.env.NEXT_PUBLIC_COGNITO_DOMAIN
+      }/oauth2/authorize?${encodeFormData(params)}`,
+    );
+  };
+
+  const signUp = async ({ username, password, firstName, lastName }) => {
+    setLoading(true);
+    setShowMessage(false);
+    const isStudentFlowEnabled =
+      process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === 'true';
+    try {
+      await Auth.signup({ email: username, password, firstName, lastName });
+      const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
+      await signIn({ username, password, isStudent });
+    } catch (ex) {
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
+      setShowMessage(true);
+    }
+    setLoading(false);
+  };
+
+  const socialLoginRender = () => {
+    return (
+      <div class="login-options">
+        <button class="google-icon">
+          <img src="/img/google-icon.svg" onClick={googleLogin} />
+        </button>
+        <button class="facebook-icon" onClick={fbLogin}>
+          <img src="/img/facebook-icon.svg" />
+        </button>
+        <button class="apple-icon">
+          <img src="/img/apple-icon.svg" />
+        </button>
+      </div>
+    );
+  };
+
+  const renderForm = () => {
+    switch (mode) {
+      case SIGN_UP_MODE:
+        return (
+          <SignupForm
+            signUp={signUp}
+            showMessage={showMessage}
+            message={getActualMessage(message)}
+            toSignInMode={switchView(SIGN_IN_MODE)}
+          >
+            {socialLoginRender()}
+          </SignupForm>
+        );
+      default:
+        return (
+          <SigninForm
+            signIn={signIn}
+            forgotPassword={switchView(RESET_PASSWORD_REQUEST)}
+            toSignUpMode={switchView(SIGN_UP_MODE)}
+            showMessage={showMessage}
+            message={getActualMessage(message)}
+          >
+            {socialLoginRender()}
+          </SigninForm>
+        );
+    }
+  };
+
+  return <main class="login-register-page">{renderForm()}</main>;
 }
 LoginPage.hideFooter = true;
 
