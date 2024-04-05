@@ -1,0 +1,85 @@
+@font-face {
+  font-family: 'iconaol';
+  src: url('/fonts/iconaol/iconaol.eot?4cen0s');
+  src:
+    url('/fonts/iconaol/iconaol.eot?4cen0s#iefix') format('embedded-opentype'),
+    url('/fonts/iconaol/iconaol.ttf?4cen0s') format('truetype'),
+    url('/fonts/iconaol/iconaol.woff?4cen0s') format('woff'),
+    url('/fonts/iconaol/iconaol.svg?4cen0s#iconaol') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.icon-aol {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'iconaol' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconaol-call-bold:before {
+  content: '\e911';
+}
+.iconaol-info-circle-bold:before {
+  content: '\e912';
+}
+.iconaol-info-circle:before {
+  content: '\e90e';
+}
+.iconaol-monitor-mobile:before {
+  content: '\e90f';
+}
+.iconaol-profile-users:before {
+  content: '\e910';
+}
+.iconaol-calendar:before {
+  content: '\e90a';
+}
+.iconaol-location:before {
+  content: '\e90b';
+}
+.iconaol-profile:before {
+  content: '\e90c';
+}
+.iconaol-clock:before {
+  content: '\e90d';
+}
+.iconaol-input-search:before {
+  content: '\e900';
+}
+.iconaol-ascetic:before {
+  content: '\e901';
+}
+.iconaol-death:before {
+  content: '\e902';
+}
+.iconaol-finance:before {
+  content: '\e903';
+}
+.iconaol-health-care:before {
+  content: '\e904';
+}
+.iconaol-hindu-god:before {
+  content: '\e905';
+}
+.iconaol-idea:before {
+  content: '\e906';
+}
+.iconaol-lotus:before {
+  content: '\e907';
+}
+.iconaol-meditation:before {
+  content: '\e908';
+}
+.iconaol-relationship:before {
+  content: '\e909';
+}

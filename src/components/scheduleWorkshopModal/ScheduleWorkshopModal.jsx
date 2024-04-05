@@ -314,12 +314,46 @@ const WorkshopSelectModal = React.memo(
                   );
                 })
               : !loading && (
-                  <div class="specific-teacher-text">
+                  <div className="specific-teacher-text">
                     No Workshops available
                   </div>
                 )}
           </div>
-          <div class="specific-teacher-text">
+          <div className="event-type-pills">
+            <div className="online">
+              <span className="icon-aol iconaol-monitor-mobile"></span>
+              Online
+              <span className="icon-aol iconaol-info-circle"></span>
+              <div className="tooltip">
+                <h4>
+                  <span className="icon-aol iconaol-monitor-mobile"></span>
+                  Online
+                </h4>
+                <p>
+                  Enjoy your experience from the comfort of your own home (or
+                  anywhere quiet you choose). A more flexible choice for busy
+                  folks!
+                </p>
+              </div>
+            </div>
+            <div className="inPerson">
+              <span className="icon-aol iconaol-profile-users"></span>
+              In person
+              <span className="icon-aol iconaol-info-circle"></span>
+              <div className="tooltip">
+                <h4>
+                  <span className="icon-aol iconaol-profile-users"></span>In
+                  person{' '}
+                </h4>
+                <p>
+                  Within a relaxing venue, you’ll leave everyday distractions
+                  and stresses behind, enabling an immersive journey and
+                  connection to a like-minded community in real life.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="specific-teacher-text">
             Are you looking for a course with a specific teacher?{' '}
             <a href="/us-en/course">Click here</a>
           </div>
