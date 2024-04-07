@@ -5,26 +5,11 @@ import {
   getUserTimeZoneAbbreviation,
   concatenateStrings,
   tConvert,
-  findCourseTypeBySlug,
 } from '@utils';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  useQueryState,
-  parseAsString,
-  parseAsInteger,
-  parseAsFloat,
-  parseAsBoolean,
-  parseAsTimestamp,
-  parseAsIsoDateTime,
-  parseAsArrayOf,
-  parseAsJson,
-  parseAsStringEnum,
-  parseAsStringLiteral,
-  parseAsNumberLiteral,
-  createParser,
-} from 'nuqs';
+import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import {

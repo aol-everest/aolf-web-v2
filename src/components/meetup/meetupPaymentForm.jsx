@@ -62,6 +62,7 @@ export const MeetupPaymentForm = ({
   meetup = {},
   profile = {},
   enrollmentCompletionAction = () => {},
+  isReferBySameSite,
 }) => {
   const { setUser } = useAuth();
   const { showAlert } = useGlobalAlertContext();
@@ -409,6 +410,38 @@ export const MeetupPaymentForm = ({
 
   const isRegularPrice = priceType === null || priceType === 'regular';
 
+  const {
+    first_name,
+    last_name,
+    email,
+    personMailingPostalCode,
+    personMailingState,
+    personMobilePhone,
+    personMailingStreet,
+    personMailingCity,
+    isRegisteredStripeCustomer,
+    cardLast4Digit,
+  } = profile;
+
+  console.log('complianceQuestionnaire', complianceQuestionnaire);
+  console.log('isReferBySameSite', isReferBySameSite);
+
+  const questionnaire = complianceQuestionnaire
+    ? complianceQuestionnaire.map((current) => ({
+        key: current.questionSfid,
+        value: isReferBySameSite,
+      }))
+    : [];
+
+  const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
+  const day = meetupStartDateTime && meetupStartDateTime.split(',')[0];
+
+  const hasGroupedAddOnProducts =
+    groupedAddOnProducts &&
+    !isEmpty(groupedAddOnProducts) &&
+    'Residential Add On' in groupedAddOnProducts &&
+    groupedAddOnProducts['Residential Add On'].length > 0;
+
   const toggleDetailMobileModal = () => {
     showModal(MODAL_TYPES.EMPTY_MODAL, {
       children: (handleModalToggle) => {
@@ -425,46 +458,6 @@ export const MeetupPaymentForm = ({
     });
   };
 
-  const {
-    first_name,
-    last_name,
-    email,
-    personMailingPostalCode,
-    personMailingState,
-    personMobilePhone,
-    personMailingStreet,
-    personMailingCity,
-    isRegisteredStripeCustomer,
-    cardLast4Digit,
-  } = profile;
-  const questionnaire = complianceQuestionnaire
-    ? complianceQuestionnaire.map((current) => ({
-        key: current.questionSfid,
-        value: false,
-      }))
-    : [];
-
-  const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
-  const day = meetupStartDateTime && meetupStartDateTime.split(',')[0];
-
-  const hasGroupedAddOnProducts =
-    groupedAddOnProducts &&
-    !isEmpty(groupedAddOnProducts) &&
-    'Residential Add On' in groupedAddOnProducts &&
-    groupedAddOnProducts['Residential Add On'].length > 0;
-
-  // const residentialAddOnRequired =
-  //   hasGroupedAddOnProducts &&
-  //   groupedAddOnProducts["Residential Add On"].some(
-  //     (residentialAddOn) => residentialAddOn.isAddOnSelectionRequired,
-  //   );
-
-  // const isAccommodationRequired =
-  //   hasGroupedAddOnProducts && residentialAddOnRequired;
-
-  // const isCourseOptionRequired =
-  //   hasGroupedAddOnProducts || addOnProducts.length > 0;
-
   return (
     <Formik
       initialValues={{
@@ -478,7 +471,7 @@ export const MeetupPaymentForm = ({
         contactZip: personMailingPostalCode || '',
         couponCode: discount ? discount : '',
         questionnaire: questionnaire,
-        ppaAgreement: false,
+        ppaAgreement: isReferBySameSite,
         paymentOption: PAYMENT_TYPES.FULL,
         paymentMode:
           otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') > -1

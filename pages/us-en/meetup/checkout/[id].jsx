@@ -11,58 +11,27 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
+import isUrl from 'is-url';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
 
-/* export const getServerSideProps = async (context) => {
-  const { query, req, res, resolvedUrl } = context;
-  const { id } = query;
-  let props = {};
-  let token = "";
-  try {
-    const { Auth } = await withSSRContext({ req });
-    const user = await Auth.currentAuthenticatedUser();
-    const currentSession = await Auth.currentSession();
-    token = currentSession.idToken.jwtToken;
-    const res = await api.get({
-      path: "profile",
-      token,
-    });
-    props = {
-      authenticated: true,
-      username: user.username,
-      profile: res,
-      token,
-    };
-  } catch (err) {
-    console.error(err);
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login?next=${resolvedUrl}`,
-      },
-      props: {},
-    };
+function getDomainFromUrl(url) {
+  if (!isUrl(url)) {
+    return url;
   }
-  const meetupDetail = await api.get({
-    path: "meetupDetail",
-    token,
-    param: {
-      id,
-    },
-  });
-  props = {
-    ...props,
-    meetup: meetupDetail.data,
-  };
+  const domain = new URL(url);
+  return domain.origin;
+}
 
-  // Pass data to the page via props
-  return { props };
-}; */
+export const getServerSideProps = async (context) => {
+  const referringURL = context.req.headers.referer || '';
+  const requestingURL = context.req.reqPath || '';
+  return { props: { referringURL, requestingURL } };
+};
 
-const Checkout = () => {
+const Checkout = (props) => {
   const { user, authenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId } = router.query;
@@ -83,6 +52,12 @@ const Checkout = () => {
       return response.data;
     },
   });
+
+  console.log('props', props);
+
+  const isReferBySameSite =
+    getDomainFromUrl(props.referringURL) ===
+    getDomainFromUrl(process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT);
 
   const [mbsy_source] = useQueryString('mbsy_source');
   const [campaignid] = useQueryString('campaignid');
@@ -125,6 +100,7 @@ const Checkout = () => {
                 meetup={meetup}
                 profile={user.profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
+                isReferBySameSite={isReferBySameSite}
               />
             </Elements>
           </div>
