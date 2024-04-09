@@ -2,7 +2,12 @@
 import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
 import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import moment from 'moment';
-import { api, findCourseTypeByKey, tConvert } from '@utils';
+import {
+  api,
+  findCourseTypeByKey,
+  findSlugByProductTypeId,
+  tConvert,
+} from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import dayjs from 'dayjs';
@@ -556,6 +561,9 @@ const New = () => {
     activeWorkshop?.mode === COURSE_MODES.IN_PERSON.value ||
     workshopMaster?.mode === COURSE_MODES.IN_PERSON.value;
 
+  const productTypeId = workshopMaster?.productTypeId;
+  const slug = findSlugByProductTypeId(productTypeId);
+
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
@@ -684,7 +692,7 @@ const New = () => {
                 </div>
                 <div className="specific-teacher-text">
                   Are you looking for a course with a specific teacher?{' '}
-                  <a href="/us-en/course">Click here</a>
+                  <a href={`/us-en/courses/${slug}`}>Click here</a>
                 </div>
                 {!selectedWorkshopId && (
                   <div className="payment-box center-one">
@@ -1224,6 +1232,7 @@ const New = () => {
           loading={loading || isLoading}
           setActiveWorkshop={setActiveWorkshop}
           handleAutoScrollForMobile={handleAutoScrollForMobile}
+          slug={slug}
         />
       </main>
     </>
