@@ -500,6 +500,7 @@ const CourseTile = ({ data, authenticated }) => {
     coTeacher2Name,
     timings,
     unitPrice,
+    listPrice,
   } = data || {};
 
   const enrollAction = () => {
@@ -572,7 +573,7 @@ const CourseTile = ({ data, authenticated }) => {
           <div class="course-duration">{getCourseDeration()}</div>
         </div>
         <div class="course-price">
-          <s>${unitPrice}</s> <span>${unitPrice}</span>
+          <s>${listPrice}</s> <span>${unitPrice}</span>
         </div>
       </div>
       {mode !== 'Online' && locationCity && (
