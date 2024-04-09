@@ -568,20 +568,11 @@ const CourseTile = ({ data, authenticated }) => {
     <div class="course-item">
       <div class="course-item-header">
         <div class="course-title-duration">
-          <div class="course-title">
-            {mode !== 'Online' && (
-              <>
-                {locationCity
-                  ? concatenateStrings([locationCity, locationProvince])
-                  : centerName}
-              </>
-            )}
-            {mode === 'Online' && <>Online</>}
-          </div>
+          <div class="course-title">{mode}</div>
           <div class="course-duration">{getCourseDeration()}</div>
         </div>
         <div class="course-price">
-          <span>${unitPrice}</span>
+          <s>${unitPrice}</s> <span>${unitPrice}</span>
         </div>
       </div>
       {mode !== 'Online' && locationCity && (
