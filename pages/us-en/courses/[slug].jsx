@@ -573,7 +573,13 @@ const CourseTile = ({ data, authenticated }) => {
           <div class="course-duration">{getCourseDeration()}</div>
         </div>
         <div class="course-price">
-          <s>${listPrice}</s> <span>${unitPrice}</span>
+          {listPrice === unitPrice ? (
+            <span>${unitPrice}</span>
+          ) : (
+            <>
+              <s>${listPrice}</s> <span>${unitPrice}</span>
+            </>
+          )}
         </div>
       </div>
       {mode !== 'Online' && locationCity && (
