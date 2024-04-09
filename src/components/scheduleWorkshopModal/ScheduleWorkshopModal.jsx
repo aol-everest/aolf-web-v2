@@ -26,6 +26,7 @@ const WorkshopSelectModal = React.memo(
     loading,
     setActiveWorkshop,
     handleAutoScrollForMobile,
+    slug,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorksop, setLocalSelectedWorksop] = useState(null);
@@ -355,7 +356,7 @@ const WorkshopSelectModal = React.memo(
           </div>
           <div className="specific-teacher-text">
             Are you looking for a course with a specific teacher?{' '}
-            <a href="/us-en/course">Click here</a>
+            <a href={`/us-en/courses/${slug}`}>Click here</a>
           </div>
           <div className="slot-action">
             <button
