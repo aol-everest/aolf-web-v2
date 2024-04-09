@@ -631,8 +631,11 @@ const TicketCheckoutForm = ({ router }) => {
                     <div className="tickets-modal__checkout-footer">
                       <p className="tickets-modal__footer-terms">
                         By selecting Apple Pay, I agree to the{' '}
-                        <a href="#" className="tickets-modal__footer-link">
-                          Eventbrite Terms of Service
+                        <a
+                          href="/policy/ppa-course"
+                          className="tickets-modal__footer-link"
+                        >
+                          Terms of Service
                         </a>
                       </p>
 
