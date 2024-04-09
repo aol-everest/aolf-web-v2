@@ -143,7 +143,7 @@ export const COURSE_TYPES_MASTER = {
           slug: 'teacher-training',
           name: 'Teacher Training',
           isExternal: true,
-          link: 'https://www.google.com/',
+          link: '/us-en/lp/teacher-training-course',
           description:
             'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
         },
