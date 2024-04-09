@@ -130,6 +130,10 @@ export const COURSE_TYPES_MASTER = {
           slug: 'sri-sri-yoga-deep-dive',
           name: 'Sri Sri Yoga Deep Dive',
         },
+        DSN_COURSE: {
+          slug: 'dsn-course',
+          name: 'DSN Course',
+        },
       },
     },
     {
