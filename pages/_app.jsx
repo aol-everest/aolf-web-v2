@@ -22,6 +22,9 @@ import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
+import { Amplify } from 'aws-amplify';
+import { PasswordlessContextProvider } from '@components/passwordLessAuth/hooks';
+import { Passwordless } from '@components/passwordLessAuth/passwordless';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -41,6 +44,49 @@ const ClevertapAnalytics = dynamic(
     ssr: false,
   },
 );
+
+Passwordless.configure({
+  clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+  userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
+  cognitoIdpEndpoint: process.env.NEXT_PUBLIC_COGNITO_REGION,
+  fido2: {
+    baseUrl: 'https://dct6odo817.execute-api.us-east-2.amazonaws.com/v1/',
+    authenticatorSelection: {
+      userVerification: 'required',
+    },
+  },
+  debug: console.debug,
+});
+
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      //  Amazon Cognito User Pool ID
+      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
+      // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
+      userPoolClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+      // OPTIONAL - This is used when autoSignIn is enabled for Auth.signUp
+      // 'code' is used for Auth.confirmSignUp, 'link' is used for email link verification
+      signUpVerificationMethod: 'code', // 'code' | 'link'
+      loginWith: {
+        // OPTIONAL - Hosted UI configuration
+        oauth: {
+          domain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
+          scopes: [
+            'phone',
+            'email',
+            'profile',
+            'openid',
+            'aws.cognito.signin.user.admin',
+          ],
+          redirectSignIn: [process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN],
+          redirectSignOut: [process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT],
+          responseType: 'code',
+        },
+      },
+    },
+  },
+});
 
 function App({ Component, pageProps }) {
   const [user, setUser] = useState(null);
@@ -154,38 +200,40 @@ function App({ Component, pageProps }) {
           reloadProfile={fetchProfile}
           authenticated={!!user}
         >
-          <Compose
-            components={[
-              GlobalModal,
-              GlobalAlert,
-              GlobalAudioPlayer,
-              GlobalVideoPlayer,
-              GlobalLoading,
-              GlobalBottomBanner,
-            ]}
-          >
-            <Layout
-              hideHeader={Component.hideHeader}
-              noHeader={Component.noHeader}
-              hideFooter={Component.hideFooter}
-              wcfHeader={Component.wcfHeader}
+          <PasswordlessContextProvider enableLocalUserCache={true}>
+            <Compose
+              components={[
+                GlobalModal,
+                GlobalAlert,
+                GlobalAudioPlayer,
+                GlobalVideoPlayer,
+                GlobalLoading,
+                GlobalBottomBanner,
+              ]}
             >
-              <DefaultSeo {...SEO} />
-              {/* <UsePagesViews /> */}
-              {/* <TopProgressBar /> */}
-              {isReInstateRequired && (
-                <ReInstate subscription={reinstateRequiredSubscription} />
-              )}
-              {/* {pendingSurveyInvite && (
+              <Layout
+                hideHeader={Component.hideHeader}
+                noHeader={Component.noHeader}
+                hideFooter={Component.hideFooter}
+                wcfHeader={Component.wcfHeader}
+              >
+                <DefaultSeo {...SEO} />
+                {/* <UsePagesViews /> */}
+                {/* <TopProgressBar /> */}
+                {isReInstateRequired && (
+                  <ReInstate subscription={reinstateRequiredSubscription} />
+                )}
+                {/* {pendingSurveyInvite && (
                 <SurveyRequest surveyInvite={pendingSurveyInvite} />
               )} */}
-              {isCCUpdateRequired && <CardUpdateRequired />}
-              {isPendingAgreement && <PendingAgreement />}
-              <Component {...pageProps} />
-              <ClevertapAnalytics></ClevertapAnalytics>
-              <ReactQueryDevtools initialIsOpen={false} />
-            </Layout>
-          </Compose>
+                {isCCUpdateRequired && <CardUpdateRequired />}
+                {isPendingAgreement && <PendingAgreement />}
+                <Component {...pageProps} />
+                <ClevertapAnalytics></ClevertapAnalytics>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </Layout>
+            </Compose>
+          </PasswordlessContextProvider>
         </AuthProvider>
       </QueryClientProvider>
     </AnalyticsProvider>
