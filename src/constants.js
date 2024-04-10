@@ -133,6 +133,7 @@ export const COURSE_TYPES_MASTER = {
         DSN_COURSE: {
           slug: 'dsn-course',
           name: 'DSN Course',
+          isAvailableInPersonOnly: true,
         },
       },
     },

@@ -5,26 +5,11 @@ import {
   getUserTimeZoneAbbreviation,
   concatenateStrings,
   tConvert,
-  findCourseTypeBySlug,
 } from '@utils';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  useQueryState,
-  parseAsString,
-  parseAsInteger,
-  parseAsFloat,
-  parseAsBoolean,
-  parseAsTimestamp,
-  parseAsIsoDateTime,
-  parseAsArrayOf,
-  parseAsJson,
-  parseAsStringEnum,
-  parseAsStringLiteral,
-  parseAsNumberLiteral,
-  createParser,
-} from 'nuqs';
+import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import {
@@ -101,14 +86,7 @@ const parseAsStartEndDate = createParser({
   },
 });
 
-const {
-  allowedMaxDays,
-  allowedDays,
-  allowedRange,
-  beforeToday,
-  afterToday,
-  combine,
-} = DateRangePicker;
+const { allowedMaxDays, beforeToday, combine } = DateRangePicker;
 
 const SmartInput = ({
   dataList,
@@ -286,7 +264,6 @@ const Popup = (props) => {
     containerClassName = '',
     showId,
     parentClassName = '',
-    buttonTextclassName = '',
     showList = true,
     label,
     hideClearOption = false,
@@ -480,10 +457,7 @@ const CourseTile = ({ data, authenticated }) => {
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
   const {
-    title,
     mode,
-    isPurchased,
-    isEventFull,
     primaryTeacherName,
     productTypeId,
     eventStartDate,
@@ -494,10 +468,8 @@ const CourseTile = ({ data, authenticated }) => {
     locationCity,
     locationProvince,
     locationStreet,
-    centerName,
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
-    coTeacher2Name,
     timings,
     unitPrice,
     listPrice,
@@ -980,7 +952,7 @@ const Course = () => {
         <div class="no-course-found-wrap">
           <h2 className="tw-text-center">
             The {courseTypeFilter.name} is not available online it is offered In
-            Person only
+            Person only.
           </h2>
           <p>
             Please check out our{' '}
