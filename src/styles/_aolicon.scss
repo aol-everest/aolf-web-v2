@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'iconaol';
-  src: url('/fonts/iconaol/iconaol.eot?4cen0s');
+  src: url('/fonts/iconaol/iconaol.eot?2tctq0');
   src:
-    url('/fonts/iconaol/iconaol.eot?4cen0s#iefix') format('embedded-opentype'),
-    url('/fonts/iconaol/iconaol.ttf?4cen0s') format('truetype'),
-    url('/fonts/iconaol/iconaol.woff?4cen0s') format('woff'),
-    url('/fonts/iconaol/iconaol.svg?4cen0s#iconaol') format('svg');
+    url('/fonts/iconaol/iconaol.eot?2tctq0#iefix') format('embedded-opentype'),
+    url('/fonts/iconaol/iconaol.ttf?2tctq0') format('truetype'),
+    url('/fonts/iconaol/iconaol.woff?2tctq0') format('woff'),
+    url('/fonts/iconaol/iconaol.svg?2tctq0#iconaol') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -24,6 +24,10 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.iconaol-setting:before {
+  content: '\e913';
 }
 
 .iconaol-call-bold:before {
