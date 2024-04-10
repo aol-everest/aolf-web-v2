@@ -320,7 +320,7 @@ export const PriceCard = ({
           </div>
 
           <div className="col-md-8">
-            <div className="select-date-timezone">
+            {/* <div className="select-date-timezone">
               <span className="title">Looking for another date?</span>
               <div className="actions search-form d-flex align-items-center">
                 <Popup
@@ -415,12 +415,6 @@ export const PriceCard = ({
                     </>
                   )}
                 </Popup>
-                {/* <button className="select-button">
-                <FaCalendarDays /> Dates
-              </button>
-              <button className="select-button">
-                <FaClock /> Time Zone
-              </button> */}
               </div>
             </div>
             {!isSearchDatesDisabled && (
@@ -432,7 +426,7 @@ export const PriceCard = ({
                   Search <FaSearchengin />
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
         {(earlyBirdFeeIncreasing ||

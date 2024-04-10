@@ -366,12 +366,7 @@ const Course = () => {
               mode: COURSE_MODES[activeFilterType].value,
             };
           }
-          if (institutionalCourses) {
-            param = {
-              ...param,
-              ctype: COURSE_TYPES.INSTITUTIONAL_COURSE.value,
-            };
-          } else if (ctypesFilter) {
+          if (ctypesFilter) {
             param = {
               ...param,
               ctype: ctypesFilter,
@@ -1021,18 +1016,18 @@ const Course = () => {
         <div className="container upcoming_course">
           <div className="row">
             <div className="col-12">
-              {!institutionalCourses && (
+              {
                 <p className="title mb-1 mt-lg-5 mt-3">
                   {COURSE_MODES[activeFilterType]
                     ? `Upcoming ${COURSE_MODES[activeFilterType].name} courses`
                     : `Upcoming courses`}
                 </p>
-              )}
-              {institutionalCourses && (
+              }
+              {/* {institutionalCourses && (
                 <p className="title mb-1 mt-lg-5 mt-3">
                   Upcoming {COURSE_TYPES.INSTITUTIONAL_COURSE.name} courses
                 </p>
-              )}
+              )} */}
             </div>
           </div>
           <div className="upcoming_list">

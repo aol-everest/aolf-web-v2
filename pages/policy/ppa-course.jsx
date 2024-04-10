@@ -51,9 +51,9 @@ const PPACourse = () => {
             </center>
             <br />
             <p>
-              This Program Participant Agreement is entered into by and
-              between Art of Living Foundation on behalf of itself and its
-              affiliates, group companies, related entities, and licensors (the
+              This Program Participant Agreement is entered into by and between
+              Art of Living Foundation on behalf of itself and its affiliates,
+              group companies, related entities, and licensors (the
               “Organization”), and you as a participant in one or more programs
               of learning administered by the Organization (the “program” or
               “programs”), or, for our applicable programs for children, you as
@@ -160,30 +160,98 @@ const PPACourse = () => {
             <p>
               This Agreement is governed by the laws of Commonwealth of Virginia
               and shall be subject to the exclusive jurisdiction of the Courts
-              in Commonweath of Virginia. Any failure to enforce any provision
+              in Commonwealth of Virginia. Any failure to enforce any provision
               of this agreement shall not constitute a waiver thereof or of any
               other provision hereof.
             </p>
             <strong>Refund Policy</strong>
-            <p>
-              You will have thirty (30) days from the date you purchase any
-              non-subscription based products or services governed by this
-              Agreement to cancel and receive a refund, less a cancellation fee
-              of $50.00 to cover our administrative costs (“Cancellation
-              Period”). Notwithstanding the foregoing, once a non-subscription
-              based program begins, your purchase of that program is
-              non-refundable, even if the Cancellation Period has not yet
-              expired. You can cancel by contacting
-              app.support@us.artofliving.org. After the Cancellation Period has
-              ended, or upon commencement of the program, your purchase is
-              non-refundable. If you cancel a month to month subscription-based
-              product or service, which includes Digital, Journey Premium, Basic
-              or Plus, you will charged through the end of the month in which
-              you cancel. If the Silent Retreat waiver is used and Journey
-              Premium or Journey Plus is cancelled within 12 months of joining,
-              the remaining membership balance will be charged to the card on
-              file.
-            </p>
+            <ol type="1">
+              <li>
+                <strong>Subscription Based Products and Services</strong>
+                <br />
+                If you cancel a month to month term or annual term
+                subscription-based product or service, which includes Digital,
+                Journey Premium, Basic or Plus membership, you will be charged
+                through the end of the term in which you cancel. Any
+                subscription purchased through the app can be canceled via the
+                app 'Manage Subscription' screen of the app. Any subscription
+                purchased on the web can be canceled via the cancellation screen
+                on your profile menu. If you cancel your Journey Premium or
+                Journey Plus membership within 12 months of joining and if you
+                have attended an Art of Living Part 2 Course in that time, the
+                remaining membership balance will be charged to the card on
+                file.
+              </li>
+              <li>
+                <strong>Online Non-subscription Based</strong>
+                <br />
+                You will have up to one day before the start of the
+                non-subscription based program that you registered for and which
+                is governed by this Agreement, to cancel and receive a refund,
+                less a cancellation fee of $50.00 to cover our administrative
+                costs. You can cancel by emailing
+                app.support@us.artofliving.org. If you cancel on the day of
+                commencement of the program, or if you do not show up for the
+                program or leave early from the program for any reason, your
+                purchase is non-refundable. Transfer to a program of the same
+                course type at a future date is available free of cost for up to
+                6 months from the start date of the current program that you
+                have registered for. After 6 months you will have to pay a
+                transfer fee of $50 each time you transfer to cover our
+                administrative costs. You must request the transfer at least 1
+                day before the start of the course you are registered for else
+                your entire course fee will be forfeited.
+              </li>
+              <li>
+                <strong>In-person Non-subscription Based Programs</strong>
+                <br />
+                <ol type="1" start="a">
+                  <li>
+                    For Art of Living Part 1, Sahaj Samadhi Meditation, Art of
+                    Living Premium program, SKY Happiness Retreat: You will have
+                    up to fifteen (15) days before the start of the
+                    non-subscription based program that you registered for and
+                    which is governed by this Agreement, to cancel and receive a
+                    refund, less a cancellation fee of $50.00 to cover our
+                    administrative costs. You can cancel by emailing
+                    app.support@us.artofliving.org. If you cancel between 14
+                    days to 1 day before the start of the program, you will
+                    receive a refund, minus a cancellation fee of 25% of the
+                    program fees, or $50, whichever is greater. Your purchase is
+                    non-refundable if you cancel on the day the program
+                    commences, or do not show up for the program or leave the
+                    program early for any reason. Transfer to a program of the
+                    same course type at a future date is available free of cost
+                    for up to 6 months from the start date of the current
+                    program that you have registered for. After 6 months you
+                    will have to pay a transfer fee of $50 per each time you
+                    transfer to cover our administrative costs. You must request
+                    the transfer at least 1 day before the start of the course
+                    you are registered for else your entire course fee will be
+                    forfeited.
+                  </li>
+                  <li>
+                    For all Other Programs: You will have up to fifteen (15)
+                    days before the start of the non-subscription based program
+                    that you registered for and which is governed by this
+                    Agreement, to cancel and receive a refund, less a
+                    cancellation fee of $50.00 to cover our administrative
+                    costs. You can cancel by emailing
+                    app.support@us.artofliving.org. If you cancel between 14
+                    days to 1 day before the start of the program, you will
+                    receive a refund, minus a cancellation fee that is equal to
+                    $50 plus 75% of the expense fees paid in connection with the
+                    program. Your purchase is non-refundable if you cancel on
+                    the day the program commences, or do not show up for the
+                    program or leave the program early for any reason. Transfer
+                    to another program at a future date is not available.
+                  </li>
+                </ol>
+                I fully accept and assume all Risks and all responsibility for
+                losses, costs, and damages I may incur as a result of my
+                participation in Organization programs.
+              </li>
+            </ol>
             <strong>
               Waiver of Liability, Assumption of Risk, Indemnity Agreement, and
               Release

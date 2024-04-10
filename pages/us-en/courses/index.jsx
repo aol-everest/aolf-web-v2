@@ -1,7 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import { COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
-import { pushRouteWithUTMQuery } from '@service';
-import { useRouter } from 'next/router';
 import { orgConfig } from '@org';
 import Link from '@components/linkWithUTM';
 
