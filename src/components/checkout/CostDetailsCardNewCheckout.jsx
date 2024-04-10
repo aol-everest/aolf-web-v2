@@ -271,11 +271,25 @@ export const CostDetailsCardNewCheckout = ({
                   <span className="radio-text">Regular Tuition:</span>
                   <span className="radio-value">
                     {delfee && <s>${delfee}</s>} {`$${fee}`}
-                    {expenseAddOn?.unitPrice && ' +expenses'}
                   </span>
                 </label>
               </div>
             </div>
+            {expenseAddOn?.unitPrice && (
+              <div className="offer-type">
+                <div className="form-item radio">
+                  <label htmlFor="payment-lg-regular-card">
+                    <span className="radio-text">Expense:</span>
+                    <span className="radio-value">
+                      {`$${expenseAddOn?.unitPrice}`}
+                    </span>
+                  </label>
+                </div>
+              </div>
+            )}
+            {expenseAddOn?.unitPrice && !hasGroupedAddOnProducts && (
+              <div className="note">Note: *Expense includes meals</div>
+            )}
             {!isUsableCreditAvailable && isSilentRetreatType && (
               <div className="offer-type">
                 <div className="form-item radio">
