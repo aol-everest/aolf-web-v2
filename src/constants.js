@@ -388,6 +388,8 @@ export const COURSE_TYPES = {
   DSN_COURSE: {
     slug: 'dsn-course',
     name: 'DSN Course',
+    description:
+      'Break through your fears, inhibitions, and worry to access inner stability and power, for yourself and the world at large.',
     value: process.env.NEXT_PUBLIC_DSN_CTYPE || '',
   },
 };
