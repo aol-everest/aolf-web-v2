@@ -715,7 +715,7 @@ const New = () => {
                       </div>
                       <div className="price-breakup">
                         <div className="price-per-month">
-                          {isInPersonMode ? '$36' : '$27'}/<span>month</span>
+                          ${workshopMaster?.instalmentAmount}/<span>month</span>
                         </div>
                         <div className="payment-tenure">for 12 months</div>
                       </div>
