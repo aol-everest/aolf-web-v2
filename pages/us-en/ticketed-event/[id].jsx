@@ -134,7 +134,10 @@ function TicketedEvent() {
   const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
 
   const handleTicketCheckout = (values) => {
-    if (totalTicketsQuantity > maxTicketsWithOneOrder) {
+    if (
+      maxTicketsWithOneOrder &&
+      totalTicketsQuantity > maxTicketsWithOneOrder
+    ) {
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: `Exceeded maximum tickets limit. Max allowed ${maxTicketsWithOneOrder}`,
       });
