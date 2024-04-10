@@ -297,7 +297,7 @@ export const formatDateRange = (dates) => {
 export const findSlugByProductTypeId = (productTypeId) => {
   for (const courseKey in COURSE_TYPES) {
     const course = COURSE_TYPES[courseKey];
-    if (course.value.indexOf(productTypeId)) {
+    if (course.value.indexOf(productTypeId) >= 0) {
       return course.slug;
     }
   }
