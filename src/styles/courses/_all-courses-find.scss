@@ -384,6 +384,7 @@ main.all-courses-find {
           margin-right: 0;
           margin-top: 6px !important;
           margin-bottom: 20px;
+          justify-content: flex-start;
           &::after {
             display: none;
           }
@@ -429,6 +430,9 @@ main.all-courses-find {
             }
           }
         }
+        .btn_outline_box {
+          width: 100%;
+        }
         #switch-mobile-filter {
           padding: 3px;
           a.btn {
@@ -445,6 +449,22 @@ main.all-courses-find {
                 #ffd16f -37.89%,
                 #ff865b 100.28%
               );
+            }
+          }
+        }
+        .courses-filter {
+          &.with-selected {
+            .btn_outline_box {
+              border: #ed994e 1px solid;
+            }
+            .courses-filter__remove {
+              background: none;
+              padding: 0;
+              height: 20px;
+              width: 20px;
+              top: 0;
+              bottom: auto;
+              right: -7px;
             }
           }
         }

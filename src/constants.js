@@ -130,6 +130,11 @@ export const COURSE_TYPES_MASTER = {
           slug: 'sri-sri-yoga-deep-dive',
           name: 'Sri Sri Yoga Deep Dive',
         },
+        DSN_COURSE: {
+          slug: 'dsn-course',
+          name: 'DSN Course',
+          isAvailableInPersonOnly: true,
+        },
       },
     },
     {
@@ -143,7 +148,7 @@ export const COURSE_TYPES_MASTER = {
           slug: 'teacher-training',
           name: 'Teacher Training',
           isExternal: true,
-          link: 'https://www.google.com/',
+          link: '/us-en/lp/teacher-training-course',
           description:
             'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
         },
@@ -384,6 +389,8 @@ export const COURSE_TYPES = {
   DSN_COURSE: {
     slug: 'dsn-course',
     name: 'DSN Course',
+    description:
+      'Break through your fears, inhibitions, and worry to access inner stability and power, for yourself and the world at large.',
     value: process.env.NEXT_PUBLIC_DSN_CTYPE || '',
   },
 };

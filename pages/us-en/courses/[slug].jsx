@@ -86,14 +86,7 @@ const parseAsStartEndDate = createParser({
   },
 });
 
-const {
-  allowedMaxDays,
-  allowedDays,
-  allowedRange,
-  beforeToday,
-  afterToday,
-  combine,
-} = DateRangePicker;
+const { allowedMaxDays, beforeToday, combine } = DateRangePicker;
 
 const SmartInput = ({
   dataList,
@@ -271,7 +264,6 @@ const Popup = (props) => {
     containerClassName = '',
     showId,
     parentClassName = '',
-    buttonTextclassName = '',
     showList = true,
     label,
     hideClearOption = false,
@@ -465,10 +457,7 @@ const CourseTile = ({ data, authenticated }) => {
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
   const {
-    title,
     mode,
-    isPurchased,
-    isEventFull,
     primaryTeacherName,
     productTypeId,
     eventStartDate,
@@ -479,12 +468,11 @@ const CourseTile = ({ data, authenticated }) => {
     locationCity,
     locationProvince,
     locationStreet,
-    centerName,
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
-    coTeacher2Name,
     timings,
     unitPrice,
+    listPrice,
   } = data || {};
 
   const enrollAction = () => {
@@ -553,20 +541,17 @@ const CourseTile = ({ data, authenticated }) => {
     <div class="course-item">
       <div class="course-item-header">
         <div class="course-title-duration">
-          <div class="course-title">
-            {mode !== 'Online' && (
-              <>
-                {locationCity
-                  ? concatenateStrings([locationCity, locationProvince])
-                  : centerName}
-              </>
-            )}
-            {mode === 'Online' && <>Online</>}
-          </div>
+          <div class="course-title">{mode}</div>
           <div class="course-duration">{getCourseDeration()}</div>
         </div>
         <div class="course-price">
-          <span>${unitPrice}</span>
+          {listPrice === unitPrice ? (
+            <span>${unitPrice}</span>
+          ) : (
+            <>
+              <s>${listPrice}</s> <span>${unitPrice}</span>
+            </>
+          )}
         </div>
       </div>
       {mode !== 'Online' && locationCity && (
@@ -967,7 +952,7 @@ const Course = () => {
         <div class="no-course-found-wrap">
           <h2 className="tw-text-center">
             The {courseTypeFilter.name} is not available online it is offered In
-            Person only
+            Person only.
           </h2>
           <p>
             Please check out our{' '}
@@ -1329,6 +1314,70 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
+                    <label>Weekend courses</label>
+                    <div
+                      className={classNames('courses-filter', {
+                        'with-selected': onlyWeekend,
+                      })}
+                    >
+                      <button
+                        class="btn_outline_box btn-modal_dropdown full-btn mt-3"
+                        data-filter="weekend-mobile-courses"
+                        data-type="checkbox"
+                        onClick={() => {
+                          setOnlyWeekend(!onlyWeekend ? true : null);
+                        }}
+                      >
+                        Weekend courses
+                      </button>
+                      <button
+                        class="courses-filter__remove"
+                        data-filter="weekend-mobile-courses"
+                        data-placeholder="Online"
+                        onClick={() => {
+                          setOnlyWeekend(null);
+                        }}
+                      >
+                        <svg
+                          width="20"
+                          height="21"
+                          viewBox="0 0 20 21"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="0.5"
+                            y="1"
+                            width="19"
+                            height="19"
+                            rx="9.5"
+                            fill="#ABB1BA"
+                          />
+                          <rect
+                            x="0.5"
+                            y="1"
+                            width="19"
+                            height="19"
+                            rx="9.5"
+                            stroke="white"
+                          />
+                          <path
+                            d="M13.5 7L6.5 14"
+                            stroke="white"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M13.5 14L6.5 7"
+                            stroke="white"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                     <MobileFilterModal
                       label="Course Type"
                       value={
@@ -1384,6 +1433,10 @@ const Course = () => {
                           showOneCalendar
                           ranges={[]}
                           editable={false}
+                          shouldDisableDate={combine(
+                            allowedMaxDays(14),
+                            beforeToday(),
+                          )}
                           value={filterStartEndDate}
                         />
                       </div>
