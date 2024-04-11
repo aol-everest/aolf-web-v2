@@ -164,7 +164,7 @@ const PPACourse = () => {
               of this agreement shall not constitute a waiver thereof or of any
               other provision hereof.
             </p>
-            <strong>Refund Policy</strong>
+            <strong>Refund & Cancellation Policy</strong>
             <ol type="1">
               <li>
                 <strong>Subscription Based Products and Services</strong>
@@ -183,7 +183,7 @@ const PPACourse = () => {
                 file.
               </li>
               <li>
-                <strong>Online Non-subscription Based</strong>
+                <strong>Online Non-subscription Based Programs</strong>
                 <br />
                 You will have up to one day before the start of the
                 non-subscription based program that you registered for and which
@@ -247,9 +247,6 @@ const PPACourse = () => {
                     to another program at a future date is not available.
                   </li>
                 </ol>
-                I fully accept and assume all Risks and all responsibility for
-                losses, costs, and damages I may incur as a result of my
-                participation in Organization programs.
               </li>
             </ol>
             <strong>
