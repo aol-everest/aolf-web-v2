@@ -20,7 +20,6 @@ export const SearchResults = ({
   setQuery,
   setDebouncedQuery,
 }) => {
-  console.log('results', results);
   const handlePredefinedElements = useCallback(
     (query) => {
       setQuery(query);

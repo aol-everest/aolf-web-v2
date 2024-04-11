@@ -10,6 +10,7 @@ export default function AskGurudev() {
   const [query, setQuery] = useQueryString('query');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function AskGurudev() {
 
   useEffect(() => {
     const getApiData = async (query) => {
+      setLoading(true);
       try {
         const apiUrl = `https://aolf-ask-gurudev-41c0d69b7bde.herokuapp.com/search?query=${query}`;
         const response = await fetch(apiUrl);
@@ -38,6 +40,8 @@ export default function AskGurudev() {
         setResults(result);
       } catch (error) {
         console.log('error', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -84,7 +88,7 @@ export default function AskGurudev() {
             isEmpty={isEmpty}
             debouncedQuery={debouncedQuery}
             error={false}
-            isLoading={false}
+            isLoading={loading}
             results={results}
           />
         </div>
