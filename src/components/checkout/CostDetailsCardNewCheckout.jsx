@@ -271,6 +271,7 @@ export const CostDetailsCardNewCheckout = ({
                   <span className="radio-text">Regular Tuition:</span>
                   <span className="radio-value">
                     {delfee && <s>${delfee}</s>} {`$${fee}`}
+                    {expenseAddOn?.unitPrice && ' +expenses'}
                   </span>
                 </label>
               </div>

@@ -130,6 +130,11 @@ export const COURSE_TYPES_MASTER = {
           slug: 'sri-sri-yoga-deep-dive',
           name: 'Sri Sri Yoga Deep Dive',
         },
+        DSN_COURSE: {
+          slug: 'dsn-course',
+          name: 'DSN Course',
+          isAvailableInPersonOnly: true,
+        },
       },
     },
     {
@@ -178,7 +183,7 @@ export const COURSE_TYPES_MASTER = {
       courseTypes: {
         SILENT_RETREAT: {
           slug: 'art-of-living-part-2',
-          name: 'Healing Breaths- Silent Retreat',
+          name: 'Art of Silence Program - Healing Breath',
         },
       },
     },
@@ -384,6 +389,8 @@ export const COURSE_TYPES = {
   DSN_COURSE: {
     slug: 'dsn-course',
     name: 'DSN Course',
+    description:
+      'Break through your fears, inhibitions, and worry to access inner stability and power, for yourself and the world at large.',
     value: process.env.NEXT_PUBLIC_DSN_CTYPE || '',
   },
 };

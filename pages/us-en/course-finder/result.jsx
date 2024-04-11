@@ -76,7 +76,6 @@ export default function CourseFinderResult() {
                       src={recommendationResponse?.thinkificImageURL}
                       alt="result"
                     />
-                    {/* <div className="picture-title">The Art of Meditation</div> */}
                   </Link>
                 </div>
               </div>
@@ -93,12 +92,6 @@ export default function CourseFinderResult() {
                   calm.
                 </div>
                 <ul className="recommended-course-info">
-                  {/* <li>
-                    <div className="label">Course</div>
-                    <div className="value">
-                      3 days with 2.5 hours of live sessions
-                    </div>
-                  </li> */}
                   <li>
                     <div className="label">Course format:</div>
                     <div className="value">Online / In Person</div>
@@ -115,7 +108,8 @@ export default function CourseFinderResult() {
                       />
                     </span>
                     <span className="price">
-                      $27<sub>/month</sub>
+                      ${recommendationResponse?.workshopInfo?.instalmentAmount}
+                      <sub>/month</sub>
                     </span>
                     <span className="desc">for 12 months</span>
                   </a>

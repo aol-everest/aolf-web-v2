@@ -2,7 +2,12 @@
 import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
 import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import moment from 'moment';
-import { api, findCourseTypeByKey, tConvert } from '@utils';
+import {
+  api,
+  findCourseTypeByKey,
+  findSlugByProductTypeId,
+  tConvert,
+} from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import dayjs from 'dayjs';
@@ -556,6 +561,9 @@ const New = () => {
     activeWorkshop?.mode === COURSE_MODES.IN_PERSON.value ||
     workshopMaster?.mode === COURSE_MODES.IN_PERSON.value;
 
+  const productTypeId = workshopMaster?.productTypeId;
+  const slug = findSlugByProductTypeId(productTypeId);
+
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
@@ -647,13 +655,44 @@ const New = () => {
                     onMonthChange={onMonthChangeAction}
                   />
                   <div className="event-type-pills">
-                    <div className="online">Online</div>
-                    <div className="inPerson">In person</div>
+                    <div className="online">
+                      <span className="icon-aol iconaol-monitor-mobile"></span>
+                      Online
+                      <span className="icon-aol iconaol-info-circle"></span>
+                      <div className="tooltip">
+                        <h4>
+                          <span className="icon-aol iconaol-monitor-mobile"></span>
+                          Online
+                        </h4>
+                        <p>
+                          Enjoy your experience from the comfort of your own
+                          home (or anywhere quiet you choose). A more flexible
+                          choice for busy folks!
+                        </p>
+                      </div>
+                    </div>
+                    <div className="inPerson">
+                      <span className="icon-aol iconaol-profile-users"></span>
+                      In person
+                      <span className="icon-aol iconaol-info-circle"></span>
+                      <div className="tooltip">
+                        <h4>
+                          <span className="icon-aol iconaol-profile-users"></span>
+                          In person{' '}
+                        </h4>
+                        <p>
+                          Within a relaxing venue, you’ll leave everyday
+                          distractions and stresses behind, enabling an
+                          immersive journey and connection to a like-minded
+                          community in real life.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="specific-teacher-text">
+                <div className="specific-teacher-text">
                   Are you looking for a course with a specific teacher?{' '}
-                  <a href="/us-en/course">Click here</a>
+                  <a href={`/us-en/courses/${slug}`}>Click here</a>
                 </div>
                 {!selectedWorkshopId && (
                   <div className="payment-box center-one">
@@ -676,7 +715,7 @@ const New = () => {
                       </div>
                       <div className="price-breakup">
                         <div className="price-per-month">
-                          {isInPersonMode ? '$36' : '$27'}/<span>month</span>
+                          ${workshopMaster?.instalmentAmount}/<span>month</span>
                         </div>
                         <div className="payment-tenure">for 12 months</div>
                       </div>
@@ -705,7 +744,7 @@ const New = () => {
                     </div>
                     <div className="price-breakup">
                       <div className="price-per-month">
-                        {isInPersonMode ? '$36' : '$27'}/<span>month</span>
+                        ${activeWorkshop?.instalmentAmount}/<span>month</span>
                       </div>
                       <div className="payment-tenure">for 12 months</div>
                     </div>
@@ -1193,6 +1232,7 @@ const New = () => {
           loading={loading || isLoading}
           setActiveWorkshop={setActiveWorkshop}
           handleAutoScrollForMobile={handleAutoScrollForMobile}
+          slug={slug}
         />
       </main>
     </>
