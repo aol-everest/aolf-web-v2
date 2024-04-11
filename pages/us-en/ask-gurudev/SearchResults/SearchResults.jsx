@@ -3,11 +3,9 @@
 import React, { useCallback } from 'react';
 import { SearchResultsList } from '../SearchResultsList/SearchResultsList';
 
-import styles from './styles.module.css';
-
 export const EmptyResults = () => {
   return (
-    <div className={styles.emptyResults}>
+    <div className="emptyResults">
       <p>No results found. Try broadening your search.</p>
     </div>
   );
@@ -22,6 +20,7 @@ export const SearchResults = ({
   setQuery,
   setDebouncedQuery,
 }) => {
+  console.log('results', results);
   const handlePredefinedElements = useCallback(
     (query) => {
       setQuery(query);
@@ -158,22 +157,24 @@ export const SearchResults = ({
               </button>
             </div>
           </nav>
-          <div
-            className="tab-content categories-tab-content"
-            id="nav-tabContent"
-          >
+          {results && isEmpty && debouncedQuery && <EmptyResults />}
+          {results && !isEmpty && (
             <div
-              className="tab-pane fade show active"
-              id="nav-relation"
-              role="tabpanel"
-              aria-labelledby="nav-home-tab"
+              className="tab-content categories-tab-content"
+              id="nav-tabContent"
             >
-              <div className="ask-gurudev-videos-list">
-                {results && isEmpty && debouncedQuery && <EmptyResults />}
-                <SearchResultsList results={results} />
+              <div
+                className="tab-pane fade show active"
+                id="nav-relation"
+                role="tabpanel"
+                aria-labelledby="nav-home-tab"
+              >
+                <div className="ask-gurudev-videos-list">
+                  <SearchResultsList results={results} />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </>

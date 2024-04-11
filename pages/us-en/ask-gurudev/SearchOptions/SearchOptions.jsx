@@ -1,6 +1,5 @@
 'use client';
 import React, { useCallback, useRef, useEffect } from 'react';
-import styles from './styles.module.css';
 
 const SearchOptions = ({ query, onChangeQuery, setQuery }) => {
   const queryInputRef = useRef(null);
@@ -16,7 +15,7 @@ const SearchOptions = ({ query, onChangeQuery, setQuery }) => {
   }, []);
 
   return (
-    <form className={styles.searchOptions} onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
       <section className="ask-gurudev-main-search">
         <div className="container">
           <div className="main-search-area">

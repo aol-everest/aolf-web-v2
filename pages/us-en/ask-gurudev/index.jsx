@@ -7,8 +7,9 @@ import { useRouter } from 'next/router';
 import { useQueryString } from '@hooks';
 
 export default function AskGurudev() {
-  const [query, setQuery] = useQueryString('');
+  const [query, setQuery] = useQueryString('query');
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [results, setResults] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,6 +29,23 @@ export default function AskGurudev() {
     [query],
   );
 
+  useEffect(() => {
+    const getApiData = async (query) => {
+      try {
+        const apiUrl = `https://aolf-ask-gurudev-41c0d69b7bde.herokuapp.com/search?query=${query}`;
+        const response = await fetch(apiUrl);
+        const result = await response.json();
+        setResults(result);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    if (debouncedQuery) {
+      getApiData(debouncedQuery);
+    }
+  }, [debouncedQuery]);
+
   const onChangeQuery = useCallback((event) => {
     setQuery(event.target.value);
   }, []);
@@ -40,21 +58,6 @@ export default function AskGurudev() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
-  // Update the route's searchParams to match local query state
-  useEffect(() => {
-    const newQuery = {
-      ...router.query,
-      query: debouncedQuery,
-    };
-
-    if (!debouncedQuery) {
-      delete newQuery.query;
-    }
-
-    setQuery(newQuery?.query || null);
-  }, [router, debouncedQuery]);
-
-  const results = [];
   const isEmpty = results && !results.length;
 
   return (

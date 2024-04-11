@@ -4,6 +4,103 @@
   @media screen and (max-width: 991px) {
     margin-top: 0 !important;
   }
+  .emptyResults {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .emptyResults p {
+    margin: 1em;
+  }
+
+  .frame {
+    position: relative;
+    display: block;
+  }
+
+  .thumbnail {
+    min-width: 210px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+  }
+
+  .searchResult {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2em;
+  }
+
+  .searchResult p {
+    font-size: 15px;
+  }
+
+  :global(.dark) .searchResult p {
+    color: #d1d5db;
+  }
+
+  :global(.dark) .thumbnail {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .youtubeButton {
+    display: block;
+    position: relative;
+    width: 68px;
+    height: 48px;
+    cursor: pointer;
+    background-color: transparent;
+    background-image: url('/img/youtube.svg');
+    transition: filter 0.1s cubic-bezier(0, 0, 0.2, 1);
+    border: none;
+  }
+
+  // .youtubeButton:hover,
+  // .youtubeButton:focus {
+  //   filter: none;
+  // }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+  }
+
+  .overlay:hover,
+  .overlay:focus {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+
+  @media (max-width: 700px) {
+    .thumbnail {
+      max-width: calc(min(400px, 100vw - 24px));
+    }
+
+    .searchResult {
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    .frame {
+      order: 1;
+    }
+
+    .lhs {
+      order: 2;
+    }
+  }
   .ask-gurudev-top {
     padding-top: 60px;
     padding-bottom: 32px;
@@ -59,7 +156,7 @@
         font-weight: 500;
         padding: 0 32px 0 68px;
         max-width: 814px;
-        background: #fff url(../img/map-search-input-icon.svg) no-repeat 32px
+        background: #fff url('/img/map-search-input-icon.svg') no-repeat 32px
           center;
         @media screen and (max-width: 991px) {
           background-position: 16px center;
