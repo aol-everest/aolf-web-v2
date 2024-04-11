@@ -280,39 +280,6 @@
           }
         }
       }
-      .event-type-pills {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-        padding-top: 20px;
-        > div {
-          border: #e9e9e9 1px solid;
-          border-radius: 16px;
-          width: 100px;
-          height: 28px;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 20px;
-          text-align: center;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          &::before {
-            display: block;
-            content: '';
-            height: 6px;
-            width: 6px;
-            background: #ed994e;
-            border-radius: 6px;
-          }
-          &.inPerson {
-            &::before {
-              background: #3d8be8;
-            }
-          }
-        }
-      }
     }
   }
   .form-item {
@@ -427,6 +394,17 @@
       background: #ffffff url(/img/chevron-down.svg) no-repeat calc(100% - 14px)
         center;
       -webkit-appearance: none;
+    }
+  }
+  .specific-teacher-text {
+    padding-top: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    a {
+      color: #ed7347;
+      font-weight: 600;
     }
   }
   .payment-box {
@@ -951,11 +929,44 @@
     .modal-body {
       padding: 12px 0 0 0;
       margin: 0;
+      display: flex;
+      flex-direction: column;
       .form-item {
         margin-bottom: 24px;
       }
       .submit-btn {
         width: 100%;
+      }
+      @media screen and (max-width: 991px) {
+        .time-slot-changer {
+          order: 0;
+        }
+        .event-type-pills {
+          order: 1;
+          padding-top: 0;
+          margin-bottom: 12px;
+          .tooltip {
+            bottom: auto;
+            top: calc(100% + 10px);
+            &::after {
+              @media screen and (max-width: 991px) {
+                bottom: 100%;
+                top: auto;
+                border-bottom-color: #fff;
+                border-top-color: transparent;
+              }
+            }
+          }
+        }
+        .slot-listing {
+          order: 2;
+        }
+        .specific-teacher-text {
+          order: 3;
+        }
+        .slot-action {
+          order: 4;
+        }
       }
     }
     .form-item {
@@ -1130,5 +1141,135 @@
     color: #ed7347;
     font-weight: 600;
     text-decoration: none;
+  }
+}
+
+.event-type-pills {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding-top: 20px;
+  @media screen and (max-width: 991px) {
+    gap: 6px;
+  }
+  > div {
+    border-radius: 32px;
+    height: 44px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #fffaf5;
+    padding: 6px;
+    position: relative;
+    @media screen and (max-width: 991px) {
+      height: 40px;
+    }
+    @media screen and (max-width: 767px) {
+      flex: 1;
+      justify-content: flex-start;
+      .iconaol-info-circle {
+        margin-left: auto !important;
+      }
+    }
+    &.inPerson {
+      background: #edf5fc;
+      .tooltip {
+        @media screen and (max-width: 767px) {
+          right: 0;
+          left: auto;
+          width: calc(100vw - 92px);
+          &::after {
+            left: auto;
+            right: 50px;
+          }
+        }
+      }
+    }
+    .iconaol-monitor-mobile,
+    .iconaol-profile-users {
+      font-size: 20px;
+      background: linear-gradient(102.78deg, #ffd16f -37.89%, #ff865b 100.28%);
+      border-radius: 32px;
+      height: 32px;
+      width: 32px;
+      line-height: 32px;
+      color: #fff;
+      @media screen and (max-width: 991px) {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+        line-height: 28px;
+      }
+    }
+    .iconaol-profile-users {
+      background: linear-gradient(102.78deg, #3d8be8 -37.89%, #89beec 100.28%);
+    }
+    .iconaol-info-circle {
+      font-size: 20px;
+      margin-left: 4px;
+    }
+    .tooltip {
+      background: #ffffff;
+      border-radius: 32px;
+      box-shadow: 4px 6px 25.100000381469727px 0px #6e6b6824;
+      padding: 16px 20px;
+      width: 324px;
+      bottom: calc(100% + 14px);
+      display: none;
+      @media screen and (max-width: 991px) {
+        border-radius: 16px;
+        padding: 12px;
+      }
+      @media screen and (max-width: 767px) {
+        left: 0;
+        width: calc(100vw - 92px);
+      }
+      &:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: '';
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(255, 255, 255, 0);
+        border-top-color: #fff;
+        border-width: 10px;
+        margin-left: -10px;
+        @media screen and (max-width: 767px) {
+          left: 50px;
+        }
+      }
+      h4 {
+        font-family: Work Sans;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 12px;
+        .icon-aol {
+          text-align: center;
+        }
+      }
+      p {
+        font-family: Work Sans;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+      }
+    }
+    &:hover .tooltip {
+      opacity: 1;
+      z-index: 2;
+      display: block;
+    }
   }
 }

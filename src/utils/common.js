@@ -293,3 +293,13 @@ export const formatDateRange = (dates) => {
 
   return formattedDateRange;
 };
+
+export const findSlugByProductTypeId = (productTypeId) => {
+  for (const courseKey in COURSE_TYPES) {
+    const course = COURSE_TYPES[courseKey];
+    if (course.value.indexOf(productTypeId) >= 0) {
+      return course.slug;
+    }
+  }
+  return 'art-of-living-part-1';
+};
