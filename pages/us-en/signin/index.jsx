@@ -102,13 +102,35 @@ function LoginPage() {
   };
 
   const signInAction = async ({ username, password, isStudent = false }) => {
+    setLoading(true);
+    setShowMessage(false);
     try {
       await signOut({ global: true });
       const { isSignedIn, nextStep } = await signIn({ username, password });
       console.log(isSignedIn, nextStep);
     } catch (ex) {
       console.log(ex);
+      const data = ex.response?.data;
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
+      const { message, statusCode } = data || {};
+      if (statusCode === 500) {
+        setMessage(
+          message ? `Error: Unable to login. (${message})` : errorMessage,
+        );
+      } else {
+        setMessage(
+          message ? `Error: ${message} (${statusCode})` : errorMessage,
+        );
+      }
+
+      setShowMessage(true);
     }
+    setLoading(false);
     // setLoading(true);
     // setShowMessage(false);
     // try {
@@ -386,6 +408,17 @@ function LoginPage() {
             {socialLoginRender()}
           </SignupForm>
         );
+      case RESET_PASSWORD_REQUEST:
+        return (
+          <ResetPasswordForm
+            signUp={signUpAction}
+            showMessage={showMessage}
+            message={getActualMessage(message)}
+            toSignInMode={switchView(SIGN_IN_MODE)}
+          >
+            {socialLoginRender()}
+          </ResetPasswordForm>
+        );
       default:
         return (
           <SigninForm
@@ -394,6 +427,8 @@ function LoginPage() {
             toSignUpMode={switchView(SIGN_UP_MODE)}
             showMessage={showMessage}
             message={getActualMessage(message)}
+            setUsername={setUsername}
+            username={username}
           >
             {socialLoginRender()}
           </SigninForm>
@@ -414,6 +449,12 @@ function LoginPage() {
         }}
       ></PasswordlessComponent>
       <Fido2Toast />
+      {loading && (
+        <div class="loading-overlay">
+          <div class="overlay-loader"></div>
+          <div class="loading-text">Please wait...</div>
+        </div>
+      )}
     </main>
   );
 }

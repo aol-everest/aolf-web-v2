@@ -50,7 +50,7 @@ Passwordless.configure({
   userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
   cognitoIdpEndpoint: process.env.NEXT_PUBLIC_COGNITO_REGION,
   fido2: {
-    baseUrl: 'https://dct6odo817.execute-api.us-east-2.amazonaws.com/v1/',
+    baseUrl: 'https://xd4lrlop5f.execute-api.us-east-2.amazonaws.com/v1/',
     authenticatorSelection: {
       userVerification: 'required',
     },

@@ -96,9 +96,8 @@ export const signOut = (props) => {
       throw err;
     }
   };
-  signedOut();
   return {
-    signedOut,
+    signedOut: signedOut(),
     abort: () => abort.abort(),
   };
 };
