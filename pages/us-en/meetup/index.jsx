@@ -10,7 +10,13 @@ import {
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
-import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
+import {
+  useQueryState,
+  parseAsBoolean,
+  parseAsJson,
+  createParser,
+  parseAsString,
+} from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
@@ -734,7 +740,9 @@ const Meetup = () => {
   const { authenticated } = useAuth();
   const router = useRouter();
   const [meetupTypeFilter, setMeetupTypeFilter] = useQueryState('meetupType');
-  const [meetupModeFilter, setMeetupModeFilter] = useQueryState('mode');
+  const [meetupModeFilter, setMeetupModeFilter] = useQueryState('mode', {
+    defaultValue: 'ONLINE',
+  });
   const [privateEvent] = useQueryString('private-event', {
     defaultValue: false,
     parse: stringToBoolean,
@@ -756,6 +764,8 @@ const Meetup = () => {
     'instructor',
     parseAsJson(),
   );
+
+  console.log('meetupModeFilter', meetupModeFilter);
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
@@ -1021,6 +1031,11 @@ const Meetup = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
+  const toggleActiveFilter = (newType) => (e) => {
+    if (e) e.preventDefault();
+    setMeetupModeFilter(newType);
+  };
+
   let filterCount = 0;
   if (locationFilter) {
     filterCount++;
@@ -1109,22 +1124,24 @@ const Meetup = () => {
               className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
               <button className="filter-save-button">Save Changes</button>
-              <Popup
-                tabIndex="1"
-                value={locationFilter}
-                buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : null
-                }
-                closeEvent={onFilterChange('locationFilter')}
-                label="Location"
-              >
-                {({ closeHandler }) => (
-                  <AddressSearch
-                    closeHandler={closeHandler}
-                    placeholder="Search for Location"
-                  />
-                )}
-              </Popup>
+              {meetupModeFilter === 'IN_PERSON' && (
+                <Popup
+                  tabIndex="1"
+                  value={locationFilter}
+                  buttonText={
+                    locationFilter ? `${locationFilter.locationName}` : null
+                  }
+                  closeEvent={onFilterChange('locationFilter')}
+                  label="Location"
+                >
+                  {({ closeHandler }) => (
+                    <AddressSearch
+                      closeHandler={closeHandler}
+                      placeholder="Search for Location"
+                    />
+                  )}
+                </Popup>
+              )}
               <Popup
                 tabIndex="2"
                 value={COURSE_MODES[meetupModeFilter] && meetupModeFilter}
@@ -1339,58 +1356,45 @@ const Meetup = () => {
                       className="filter-cancel-button"
                       onClick={toggleFilter}
                     ></button>
-                    <MobileFilterModal
-                      label="Location"
-                      value={
-                        locationFilter ? `${locationFilter.locationName}` : null
-                      }
-                      clearEvent={onFilterClearEvent('locationFilter')}
+                    <label class="mt-4">Course format</label>
+                    <div
+                      id="switch-mobile-filter"
+                      className="btn_outline_box full-btn mt-3"
                     >
-                      <AddressSearch
-                        closeHandler={onFilterChange('locationFilter')}
-                        placeholder="Search for Location"
-                      />
-                    </MobileFilterModal>
+                      <a
+                        className="btn"
+                        href="#"
+                        data-swicth-active={meetupModeFilter === 'ONLINE'}
+                        onClick={toggleActiveFilter('ONLINE')}
+                      >
+                        Online
+                      </a>
+                      <a
+                        className="btn"
+                        href="#"
+                        data-swicth-active={meetupModeFilter === 'IN_PERSON'}
+                        onClick={toggleActiveFilter('IN_PERSON')}
+                      >
+                        In Person
+                      </a>
+                    </div>
+                    {meetupModeFilter === 'IN_PERSON' && (
+                      <MobileFilterModal
+                        label="Location"
+                        value={
+                          locationFilter
+                            ? `${locationFilter.locationName}`
+                            : null
+                        }
+                        clearEvent={onFilterClearEvent('locationFilter')}
+                      >
+                        <AddressSearch
+                          closeHandler={onFilterChange('locationFilter')}
+                          placeholder="Search for Location"
+                        />
+                      </MobileFilterModal>
+                    )}
 
-                    <MobileFilterModal
-                      label="Meetup format"
-                      value={
-                        meetupModeFilter && COURSE_MODES[meetupModeFilter]
-                          ? COURSE_MODES[meetupModeFilter].name
-                          : null
-                      }
-                      closeEvent={onFilterClearEvent('meetupModeFilter')}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={meetupModeFilter}
-                          buttonText={
-                            meetupModeFilter && COURSE_MODES[meetupModeFilter]
-                              ? COURSE_MODES[meetupModeFilter].name
-                              : null
-                          }
-                          closeEvent={onFilterChange('meetupModeFilter')}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              {orgConfig.courseModes.map(
-                                (courseMode, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      className="dropdown-item"
-                                      onClick={closeHandler(courseMode)}
-                                    >
-                                      {COURSE_MODES[courseMode].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
                     <MobileFilterModal
                       label="Meetup Type"
                       value={
