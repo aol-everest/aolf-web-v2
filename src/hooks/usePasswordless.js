@@ -12,23 +12,23 @@
  * ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-import { signOut } from './common.js';
-import { parseJwtPayload, setTimeoutWallClock } from './util.js';
-import { signInWithLink, requestSignInLink } from './magic-link.js';
+import { signOut } from '@passwordLess/common.js';
+import { parseJwtPayload, setTimeoutWallClock } from '@passwordLess/util.js';
+import { signInWithLink, requestSignInLink } from '@passwordLess/magic-link.js';
 import {
   fido2CreateCredential,
   fido2DeleteCredential,
   fido2ListCredentials,
   fido2UpdateCredential,
   authenticateWithFido2,
-} from './fido2.js';
-import { authenticateWithSRP } from './srp.js';
-import { authenticateWithPlaintextPassword } from './plaintext.js';
-import { stepUpAuthenticationWithSmsOtp } from './sms-otp-stepup.js';
-import { configure } from './config.js';
-import { retrieveTokens, storeTokens } from './storage.js';
-import { busyState } from './model.js';
-import { scheduleRefresh, refreshTokens } from './refresh.js';
+} from '@passwordLess/fido2.js';
+import { authenticateWithSRP } from '@passwordLess/srp.js';
+import { authenticateWithPlaintextPassword } from '@passwordLess/plaintext.js';
+import { stepUpAuthenticationWithSmsOtp } from '@passwordLess/sms-otp-stepup.js';
+import { configure } from '@passwordLess/config.js';
+import { retrieveTokens, storeTokens } from '@passwordLess/storage.js';
+import { busyState } from '@passwordLess/model.js';
+import { scheduleRefresh, refreshTokens } from '@passwordLess/refresh.js';
 import React, {
   useState,
   useEffect,

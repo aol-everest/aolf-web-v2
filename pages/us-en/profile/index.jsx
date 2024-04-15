@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FaCamera } from 'react-icons/fa';
 import { NextSeo } from 'next-seo';
+import { usePasswordless } from '@hooks';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -99,10 +100,11 @@ const MESSAGE_ALREADY_CASE_REGISTERED_ERROR = `We have already received your req
 // }
 
 const Profile = ({ tab }) => {
+  const { signOut } = usePasswordless();
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const { user, setUser, reloadProfile, authenticated } = useAuth();
+  const { profile, setUser, reloadProfile, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useQueryString('tab', {
     defaultValue: tab || UPCOMING_EVENTS,
   });
@@ -123,7 +125,7 @@ const Profile = ({ tab }) => {
     upcomingWorkshop = [],
     upcomingMeetup = [],
     subscriptions = [],
-  } = user?.profile || {};
+  } = profile || {};
   const upcomingEvents = [...upcomingWorkshop, ...upcomingMeetup];
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
@@ -149,8 +151,8 @@ const Profile = ({ tab }) => {
   const logoutAction = async () => {
     setLoading(true);
     await Auth.logout();
+    await signOut();
     setLoading(false);
-    setUser(null);
     pushRouteWithUTMQuery(router, '/us-en');
   };
 
@@ -198,7 +200,7 @@ const Profile = ({ tab }) => {
       setEditCardDetail(false);
     }
   };
-  if (!authenticated) {
+  if (!isAuthenticated) {
     return null;
   }
 
@@ -472,7 +474,7 @@ const Profile = ({ tab }) => {
               >
                 <ChangeProfile
                   updateCompleteAction={updateCompleteAction}
-                  profile={user.profile}
+                  profile={profile}
                 ></ChangeProfile>
               </div>
               <div
@@ -528,7 +530,7 @@ const Profile = ({ tab }) => {
                 {!editCardDetail && (
                   <ViewCardDetail
                     switchCardDetailView={switchCardDetailView}
-                    profile={user.profile}
+                    profile={profile}
                   ></ViewCardDetail>
                 )}
                 {editCardDetail && (
@@ -662,7 +664,7 @@ const Profile = ({ tab }) => {
                     <ChangeProfile
                       isMobile
                       updateCompleteAction={updateCompleteAction}
-                      profile={user.profile}
+                      profile={profile}
                     ></ChangeProfile>
                   </div>
                 </div>
@@ -716,7 +718,7 @@ const Profile = ({ tab }) => {
                       <ViewCardDetail
                         isMobile
                         switchCardDetailView={switchCardDetailView}
-                        profile={user.profile}
+                        profile={profile}
                       ></ViewCardDetail>
                     )}
                     {editCardDetail && (

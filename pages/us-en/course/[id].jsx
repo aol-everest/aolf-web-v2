@@ -100,7 +100,7 @@ const MarmaTraining = dynamic(() =>
 };
  */
 function CourseDetail() {
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId, mode = '' } = router.query;
   const { track, page } = useAnalytics();
@@ -118,7 +118,7 @@ function CourseDetail() {
     enabled: router.isReady,
   });
   useEffect(() => {
-    if (!authenticated || !data) return;
+    if (!isAuthenticated || !data) return;
 
     const { title, productTypeId, unitPrice, id: courseId } = data;
     page({
@@ -127,7 +127,7 @@ function CourseDetail() {
       amount: unitPrice,
       title,
       ctype: productTypeId,
-      user: user.profile,
+      user: profile,
     });
     track('workshopview', {
       viewType: 'workshop',
@@ -135,9 +135,9 @@ function CourseDetail() {
       amount: unitPrice,
       title,
       ctype: productTypeId,
-      user: user.profile,
+      user: profile,
     });
-  }, [authenticated, data]);
+  }, [isAuthenticated, data]);
 
   useEffect(() => {
     if (!router.isReady || !data) return;

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -15,7 +15,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
     setLoading(true);
     try {
       await Auth.changePassword({
-        email: user.profile.email,
+        email: profile.email,
         oldPassword,
         newPassword,
       });

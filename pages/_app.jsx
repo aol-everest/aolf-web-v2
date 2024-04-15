@@ -23,7 +23,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
 import { Amplify } from 'aws-amplify';
-import { PasswordlessContextProvider } from '@components/passwordLessAuth/hooks';
+import { PasswordlessContextProvider } from '@hooks';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 // import { SurveyRequest } from "@components/surveyRequest";
 
@@ -194,12 +194,7 @@ function App({ Component, pageProps }) {
   return (
     <AnalyticsProvider instance={analytics}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider
-          userInfo={user}
-          setUserInfo={setUser}
-          reloadProfile={fetchProfile}
-          authenticated={!!user}
-        >
+        <AuthProvider>
           <PasswordlessContextProvider enableLocalUserCache={true}>
             <Compose
               components={[

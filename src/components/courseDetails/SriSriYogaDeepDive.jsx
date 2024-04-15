@@ -3,25 +3,27 @@
 
 import { MODAL_TYPES, COURSE_TYPES } from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import queryString from 'query-string';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { PriceCard } from './PriceCard';
+import { navigateToLogin } from '@utils';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
   const router = useRouter();
-  const { authenticated = false } = useAuth();
+  const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const [activeInstructor, setActiveInstructor] = useState('');
 
   const handleRegister = (e) => {
     e.preventDefault();
     if (sfid) {
-      if (authenticated || isGuestCheckoutEnabled) {
+      if (isAuthenticated || isGuestCheckoutEnabled) {
         pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/checkout/${sfid}`,
           query: {
@@ -30,12 +32,12 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
           },
         });
       } else {
-        showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+        navigateToLogin(
+          router,
+          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
             router.query,
           )}`,
-          defaultView: 'SIGNUP_MODE',
-        });
+        );
       }
     } else {
       pushRouteWithUTMQuery(router, {

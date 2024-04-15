@@ -75,7 +75,7 @@ export const MembershipCheckoutStripe = ({
   couponCode,
   profile,
   completeCheckoutCallback,
-  authenticated,
+  isAuthenticated,
   closeRetreatPrerequisiteWarning,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -221,7 +221,7 @@ export const MembershipCheckoutStripe = ({
         utm: filterAllowedParams(router.query),
       };
 
-      if (!authenticated) {
+      if (!isAuthenticated) {
         payLoad = {
           ...payLoad,
           user: {

@@ -63,7 +63,7 @@ const stripePromise = loadStripe(
 }; */
 
 const Checkout = () => {
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId } = router.query;
   const {
@@ -123,7 +123,7 @@ const Checkout = () => {
             >
               <MeetupPaymentForm
                 meetup={meetup}
-                profile={user.profile}
+                profile={profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
               />
             </Elements>

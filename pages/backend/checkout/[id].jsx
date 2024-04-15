@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 
 const BackEndCheckout = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { id: workshopId, coupon } = router.query;
   const {
     data: workshop = {},
@@ -65,7 +65,7 @@ const BackEndCheckout = () => {
           >
             <BackendPaymentForm
               useWorkshop={workshop}
-              profile={user.profile}
+              profile={profile}
               coupon={coupon}
             />
           </Elements>

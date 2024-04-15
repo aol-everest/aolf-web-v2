@@ -24,6 +24,7 @@ import {
 import { Auth, api } from '@utils';
 import { TicketPhoneInput } from '@components/ticketPhoneInput';
 import { Loader } from '@components/loader';
+import { navigateToLogin } from '@utils';
 
 export default function TicketCheckout() {
   const router = useRouter();
@@ -109,7 +110,7 @@ export default function TicketCheckout() {
 
 const TicketCheckoutForm = ({ router }) => {
   const [selectedPaymentType, setSelectedPaymentType] = useState('');
-  const { user, authenticated: isUserLoggedIn, setUser } = useAuth();
+  const { profile, isAuthenticated: isUserLoggedIn, setUser } = useAuth();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const { id: workshopId } = router.query;
@@ -130,10 +131,10 @@ const TicketCheckoutForm = ({ router }) => {
 
   const { eventImageUrl } = workshop;
 
-  const { first_name, last_name, email } = user?.profile || {};
+  const { first_name, last_name, email } = profile || {};
 
   const login = () => {
-    showModal(MODAL_TYPES.LOGIN_MODAL);
+    navigateToLogin(router);
   };
 
   const setFormInitialValues = () => {

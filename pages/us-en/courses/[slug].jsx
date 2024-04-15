@@ -34,6 +34,7 @@ import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import dynamic from 'next/dynamic';
+import { navigateToLogin } from '@utils';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
@@ -452,7 +453,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, authenticated }) => {
+const CourseTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -482,7 +483,7 @@ const CourseTile = ({ data, authenticated }) => {
       course_id: data?.sfid,
       course_price: data?.unitPrice,
     });
-    if (isGuestCheckoutEnabled || authenticated) {
+    if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
@@ -491,11 +492,12 @@ const CourseTile = ({ data, authenticated }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-      });
+      );
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
@@ -619,7 +621,7 @@ const Course = () => {
     threshold: 0.1,
   });
   const seed = useUIDSeed();
-  const { authenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { slug } = router.query;
 
@@ -985,7 +987,7 @@ const Course = () => {
                 <CourseTile
                   key={course.sfid}
                   data={course}
-                  authenticated={authenticated}
+                  isAuthenticated={isAuthenticated}
                 />
               ))}
             </React.Fragment>

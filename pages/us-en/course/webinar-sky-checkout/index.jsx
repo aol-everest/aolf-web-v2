@@ -47,7 +47,7 @@ const validateStudentEmail = (email) => {
 
 const WebinarSkyCheckout = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { profile } = useAuth();
 
   const {
     data: workshops,
@@ -87,7 +87,7 @@ const WebinarSkyCheckout = () => {
   }, [workshops]);
 
   useEffect(() => {
-    if (!user && !workshop.id) return;
+    if (!profile && !workshop.id) return;
     const {
       title,
       name,
@@ -122,7 +122,7 @@ const WebinarSkyCheckout = () => {
       amount: unitPrice,
       requestType: 'Detail',
       hitType: 'paymentpage',
-      user: user.profile.id,
+      user: profile.id,
       ecommerce: {
         checkout: {
           actionField: {
@@ -132,10 +132,10 @@ const WebinarSkyCheckout = () => {
         },
       },
     });
-  }, [user, workshop]);
+  }, [profile, workshop]);
 
   useEffect(() => {
-    if (!user && !workshop.id) return;
+    if (!profile && !workshop.id) return;
     const { businessRules = [], isPreRequisiteCompleted } = workshop;
 
     const firstPreRequisiteFailedReason = businessRules.find(
@@ -230,7 +230,7 @@ const WebinarSkyCheckout = () => {
         selectedWorkshopId={selectedWorkshopId}
         handleWorkshopSelectionChange={handleWorkshopSelectionChange}
         workshops={workshops}
-        profile={user.profile}
+        profile={profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
       />
     );
@@ -241,7 +241,7 @@ const WebinarSkyCheckout = () => {
     isStudentVerified,
     studentVerificationDate,
     studentVerificationExpiryDate,
-  } = user.profile;
+  } = profile;
 
   const handleVerifyStudentEmail = async () => {
     setLoading(true);

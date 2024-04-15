@@ -175,7 +175,7 @@ const fillDefaultTimeZone = () => {
 
 const Course = () => {
   const seed = useUIDSeed();
-  const { authenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [activeFilterType, setActiveFilterType] = useQueryString('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryString('onlyWeekend', {
     defaultValue: false,
@@ -1070,7 +1070,7 @@ const Course = () => {
                     <WorkshopTile
                       key={workshop.sfid}
                       data={workshop}
-                      authenticated={authenticated}
+                      isAuthenticated={isAuthenticated}
                     />
                   ))}
                 </React.Fragment>

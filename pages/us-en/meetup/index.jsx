@@ -40,6 +40,7 @@ import React, { useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useUIDSeed } from 'react-uid';
+import { navigateToLogin } from '@utils';
 import Style from './Meetup.module.scss';
 
 const DATE_PICKER_CONFIG = {
@@ -105,7 +106,7 @@ const RetreatPrerequisiteWarning = ({ meetup }) => {
 
 const Meetup = () => {
   const seed = useUIDSeed();
-  const { authenticated, user } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
@@ -294,7 +295,7 @@ const Meetup = () => {
       productTypeId,
       complianceQuestionnaire,
     } = selectedMeetup;
-    const { subscriptions = [] } = user.profile;
+    const { subscriptions = [] } = profile;
     hideAlert();
     hideModal();
 
@@ -338,7 +339,7 @@ const Meetup = () => {
           personMailingStreet,
           personMailingState,
           personMailingPostalCode,
-        } = user.profile || {};
+        } = profile || {};
 
         setLoading(true);
         let payLoad = {
@@ -367,7 +368,7 @@ const Meetup = () => {
           utm: filterAllowedParams(router.query),
         };
 
-        if (!authenticated) {
+        if (!isAuthenticated) {
           payLoad = {
             ...payLoad,
             user: {
@@ -429,10 +430,10 @@ const Meetup = () => {
 
   const openEnrollPage = (selectedMeetup) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
-      if (!user.profile.isMandatoryWorkshopAttended) {
+      if (!profile.isMandatoryWorkshopAttended) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
           className: 'retreat-prerequisite-big meditation-digital-membership',
           title: 'Prerequisite',

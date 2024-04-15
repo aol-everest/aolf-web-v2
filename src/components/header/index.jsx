@@ -3,11 +3,11 @@ import Link from '@components/linkWithUTM';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
 import { useRouter } from 'next/router';
-import queryString from 'query-string';
 import React, { useState } from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
 import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
+import { navigateToLogin } from '@utils';
 
 const HB_MENU = [
   {
@@ -391,15 +391,11 @@ const MENU =
 
 export const Header = () => {
   const router = useRouter();
-  const { authenticated = false, user } = useAuth();
+  const { isAuthenticated = false, profile } = useAuth();
   const [navExpanded, setNavExpanded] = useState(false);
 
   const { showModal } = useGlobalModalContext();
-  const {
-    userProfilePic: profilePic,
-    first_name,
-    last_name,
-  } = user?.profile || {};
+  const { userProfilePic: profilePic, first_name, last_name } = profile || {};
   let initials = `${first_name || ''} ${last_name || ''}`.match(/\b\w/g) || [];
   initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
 
@@ -419,9 +415,9 @@ export const Header = () => {
 
   const loginAction = () => {
     setNavExpanded(false);
-    showModal(MODAL_TYPES.LOGIN_MODAL, {
-      navigateTo: '/us-en/profile?' + queryString.stringify(router.query),
-    });
+    if (router.pathname !== '/us-en/signin') {
+      navigateToLogin(router);
+    }
   };
 
   const onToggleNav = () => {
@@ -589,7 +585,7 @@ export const Header = () => {
               </Nav.Item>
             </Nav>
             <div className="mobile-menu-buttons">
-              {!authenticated && (
+              {!isAuthenticated && (
                 <button
                   className="btn btn-outline header__button login-btn"
                   type="button"
@@ -603,11 +599,13 @@ export const Header = () => {
         </Navbar>
         <div
           className={
-            authenticated ? 'user-profile-link' : 'user-profile-link hide-link'
+            isAuthenticated
+              ? 'user-profile-link'
+              : 'user-profile-link hide-link'
           }
         >
           <div className="UserprofileView">
-            {!authenticated && (
+            {!isAuthenticated && (
               <button
                 className="btn btn-outline header__button"
                 type="button"
@@ -617,7 +615,7 @@ export const Header = () => {
               </button>
             )}
 
-            {authenticated && (
+            {isAuthenticated && (
               <>
                 <span className="username">{first_name || last_name}</span>
                 <Link prefetch={false} href="/us-en/profile" legacyBehavior>

@@ -303,3 +303,25 @@ export const findSlugByProductTypeId = (productTypeId) => {
   }
   return 'art-of-living-part-1';
 };
+
+export function getFullPathWithQueryParams(router) {
+  // Get pathname
+  const { pathname } = router;
+
+  // Get query parameters
+  const { query } = router;
+
+  // Combine pathname and query parameters
+  const fullPath = `${pathname}${Object.keys(query).length > 0 ? '?' + new URLSearchParams(query).toString() : ''}`;
+
+  return fullPath;
+}
+
+export function navigateToLogin(router, next) {
+  router.push({
+    pathname: '/us-en/signin',
+    query: {
+      next: next || getFullPathWithQueryParams(router),
+    },
+  });
+}

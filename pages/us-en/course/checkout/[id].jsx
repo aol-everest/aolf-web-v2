@@ -26,6 +26,7 @@ import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { PaymentFormNew } from '@components/paymentFormNew';
 import { orgConfig } from '@org';
+import { navigateToLogin } from '@utils';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
@@ -46,7 +47,7 @@ const validateStudentEmail = (email) => {
 
 const Checkout = () => {
   const router = useRouter();
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const { id: workshopId, coupon } = router.query;
   const [mbsy_source] = useQueryString('mbsy_source', {
     defaultValue: null,
@@ -85,7 +86,7 @@ const Checkout = () => {
   });
 
   useEffect(() => {
-    if (workshop && !authenticated && !workshop.isGuestCheckoutEnabled) {
+    if (workshop && !isAuthenticated && !workshop.isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: '/login',
         query: {
@@ -137,7 +138,7 @@ const Checkout = () => {
       amount: unitPrice,
       requestType: 'Detail',
       hitType: 'paymentpage',
-      user: user?.profile?.id,
+      user: profile?.id,
     });
 
     track('eec.checkout', {
@@ -148,7 +149,7 @@ const Checkout = () => {
       amount: unitPrice,
       requestType: 'Detail',
       hitType: 'paymentpage',
-      user: user?.profile?.id,
+      user: profile?.id,
       ecommerce: {
         checkout: {
           actionField: {
@@ -225,7 +226,7 @@ const Checkout = () => {
         ),
       });
     }
-  }, [user, workshop]);
+  }, [profile, workshop]);
 
   const closeRetreatPrerequisiteWarning =
     (firstPreRequisiteFailedReason) => (e) => {
@@ -277,7 +278,7 @@ const Checkout = () => {
   };
 
   const login = () => {
-    showModal(MODAL_TYPES.LOGIN_MODAL);
+    navigateToLogin(router);
   };
 
   const handleCouseSelection = (selectedId) => {
@@ -316,12 +317,12 @@ const Checkout = () => {
           <PaymentFormHB
             isStripeIntentPayment={isStripeIntentPayment}
             workshop={workshop}
-            profile={user?.profile}
+            profile={profile}
             enrollmentCompletionAction={enrollmentCompletionAction}
             enrollmentCompletionLink={enrollmentCompletionLink}
             handleCouseSelection={handleCouseSelection}
             login={login}
-            isLoggedUser={authenticated}
+            isLoggedUser={isAuthenticated}
           />
         </div>
       );
@@ -332,12 +333,12 @@ const Checkout = () => {
           <PaymentFormGeneric
             isStripeIntentPayment={isStripeIntentPayment}
             workshop={workshop}
-            profile={user?.profile}
+            profile={profile}
             enrollmentCompletionAction={enrollmentCompletionAction}
             enrollmentCompletionLink={enrollmentCompletionLink}
             handleCouseSelection={handleCouseSelection}
             login={login}
-            isLoggedUser={authenticated}
+            isLoggedUser={isAuthenticated}
           />
         </div>
       );
@@ -347,12 +348,12 @@ const Checkout = () => {
         <PaymentFormNew
           isStripeIntentPayment={isStripeIntentPayment}
           workshop={workshop}
-          profile={user?.profile}
+          profile={profile}
           enrollmentCompletionAction={enrollmentCompletionAction}
           enrollmentCompletionLink={enrollmentCompletionLink}
           handleCouseSelection={handleCouseSelection}
           login={login}
-          isLoggedUser={authenticated}
+          isLoggedUser={isAuthenticated}
         />
       </div>
     );
@@ -363,7 +364,7 @@ const Checkout = () => {
     isStudentVerified,
     studentVerificationDate,
     studentVerificationExpiryDate,
-  } = user?.profile || {};
+  } = profile || {};
 
   const handleVerifyStudentEmail = async () => {
     setLoading(true);
@@ -405,7 +406,7 @@ const Checkout = () => {
   };
 
   const showVerifyStudentStatus =
-    user?.profile &&
+    profile &&
     validateStudentEmail(email) &&
     workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||

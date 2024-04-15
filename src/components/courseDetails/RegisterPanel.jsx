@@ -8,11 +8,12 @@ import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import { orgConfig } from '@org';
+import { navigateToLogin } from '@utils';
 
 dayjs.extend(utc);
 
 export const RegisterPanel = ({ workshop }) => {
-  const { authenticated = false, user } = useAuth();
+  const { isAuthenticated = false, profile } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
   const { fee, delfee } = priceCalculation({ workshop });
@@ -55,7 +56,7 @@ export const RegisterPanel = ({ workshop }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated || isGuestCheckoutEnabled) {
+    if (isAuthenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
@@ -64,12 +65,12 @@ export const RegisterPanel = ({ workshop }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: 'SIGNUP_MODE',
-      });
+      );
     }
   };
 
@@ -81,7 +82,7 @@ export const RegisterPanel = ({ workshop }) => {
     });
   };
 
-  const { subscriptions = [], isStudentVerified } = user?.profile || {};
+  const { subscriptions = [], isStudentVerified } = profile || {};
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
       return {
@@ -375,7 +376,7 @@ export const RegisterPanel = ({ workshop }) => {
     );
   }
 
-  if (authenticated && (isJourneyPremium || isJourneyPlus)) {
+  if (isAuthenticated && (isJourneyPremium || isJourneyPlus)) {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>

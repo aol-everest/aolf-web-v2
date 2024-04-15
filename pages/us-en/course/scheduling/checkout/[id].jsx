@@ -257,7 +257,7 @@ const SchedulingPaymentForm = ({
   courseType,
   isReferBySameSite,
 }) => {
-  const { user = {} } = useAuth();
+  const { profile = {} } = useAuth();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
@@ -292,7 +292,7 @@ const SchedulingPaymentForm = ({
     personMobilePhone,
     personMailingStreet,
     personMailingCity,
-  } = user?.profile || {};
+  } = profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({

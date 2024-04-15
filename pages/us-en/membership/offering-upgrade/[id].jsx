@@ -107,7 +107,7 @@ const RetreatPrerequisiteWarning = () => {
 }; */
 
 function OfferingUpgradeCheckout() {
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const router = useRouter();
   const { id, ofid, cid } = router.query;
   const {
@@ -168,7 +168,7 @@ function OfferingUpgradeCheckout() {
       amount: activeSubscription.price || '',
       requestType: 'Detail',
       hitType: 'paymentpage',
-      user: user.profile.id,
+      user: profile.id,
       ecommerce: {
         checkout: {
           actionField: {
@@ -181,7 +181,7 @@ function OfferingUpgradeCheckout() {
 
     if (
       MEMBERSHIP_TYPES.JOURNEY_PLUS.value === sfid &&
-      !user.profile.isMandatoryWorkshopAttended
+      !profile.isMandatoryWorkshopAttended
     ) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: 'retreat-prerequisite-big meditation-digital-membership',
@@ -256,8 +256,8 @@ function OfferingUpgradeCheckout() {
                 subsciption={subsciption}
                 activeSubscription={activeSubscription}
                 couponCode={couponCode}
-                profile={user.profile}
-                authenticated={authenticated}
+                profile={profile}
+                isAuthenticated={isAuthenticated}
                 completeCheckoutCallback={completeCheckoutCallback}
                 closeRetreatPrerequisiteWarning={
                   closeRetreatPrerequisiteWarning

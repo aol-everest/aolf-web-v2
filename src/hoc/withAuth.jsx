@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 export const withAuth = (Component = null, options = {}) => {
   const AuthenticatedRoute = (props) => {
     const router = useRouter();
-    const { authenticated, user } = useAuth();
-    if (authenticated) {
+    const { isAuthenticated, profile } = useAuth();
+    if (isAuthenticated) {
       if (options.role) {
-        if (options.role.includes(user.profile.userType)) {
+        if (options.role.includes(profile.userType)) {
           return <Component {...props} />;
         } else {
           pushRouteWithUTMQuery(router, {

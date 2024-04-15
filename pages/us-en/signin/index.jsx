@@ -429,6 +429,7 @@ function LoginPage() {
             message={getActualMessage(message)}
             setUsername={setUsername}
             username={username}
+            setLoading={setLoading}
           >
             {socialLoginRender()}
           </SigninForm>

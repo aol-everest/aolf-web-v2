@@ -13,32 +13,32 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
+  const fetchCurrentUser = async () => {
+    try {
+      const user = await getCurrentUser();
+      const session = await fetchAuthSession();
+
+      const profile = await api.get({
+        path: 'profile',
+        token: session.tokens.accessToken,
+      });
+      const userInfo = {
+        user,
+        session,
+        profile,
+        token: session.tokens.accessToken,
+        isAuthenticated: !!user,
+        reloadProfile: fetchCurrentUser,
+      };
+      console.log(userInfo);
+      setCurrentUser(userInfo);
+    } catch (error) {
+      setCurrentUser({ isAuthenticated: false });
+      console.log('Error fetching current user:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const user = await getCurrentUser();
-        console.log(user);
-        const session = await fetchAuthSession();
-
-        const profile = await api.get({
-          path: 'profile',
-          token: session.tokens.accessToken,
-        });
-        const userInfo = {
-          user,
-          session,
-          profile,
-          token: session.tokens.accessToken,
-          isAuthenticated: !!user,
-        };
-        console.log(userInfo);
-        setCurrentUser(userInfo);
-      } catch (error) {
-        setCurrentUser({ isAuthenticated: false });
-        console.log('Error fetching current user:', error);
-      }
-    };
-
     fetchCurrentUser();
 
     // Subscribe to Hub events for authentication
