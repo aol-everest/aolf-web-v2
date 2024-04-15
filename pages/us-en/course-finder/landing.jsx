@@ -83,4 +83,6 @@ const Home = () => {
   );
 };
 
+Home.hideFooter = true;
+
 export default Home;
