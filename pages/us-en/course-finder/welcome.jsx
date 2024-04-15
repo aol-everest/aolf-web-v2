@@ -3,7 +3,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-const Step1 = () => {
+const Welcome = () => {
   const router = useRouter();
 
   const NavigateToStep1 = () => {
@@ -52,4 +52,5 @@ const Step1 = () => {
   );
 };
 
-export default Step1;
+Welcome.hideFooter = true;
+export default Welcome;
