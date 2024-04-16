@@ -29,18 +29,22 @@ const WorkshopSelectModal = React.memo(
     slug,
   }) => {
     const { track } = useAnalytics();
-    const [localSelectedWorksop, setLocalSelectedWorksop] = useState(null);
+    const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
     const [backPressed, setBackPressed] = useState(false);
     const handleWorkshopSelect = async (workshop) => {
-      setLocalSelectedWorksop(workshop);
+      setLocalSelectedWorkshop(workshop);
+      track('cmodal_course_select');
     };
 
     const handleWorkshopSelectForCheckout = async () => {
+      track('cmodal_course_continue');
       setShowWorkshopSelectModal((prevValue) => !prevValue);
-      const workshopDetail = await getWorkshopDetails(localSelectedWorksop?.id);
+      const workshopDetail = await getWorkshopDetails(
+        localSelectedWorkshop?.id,
+      );
       setSelectedWorkshopId(workshopDetail?.id);
       track('program_date_button', {
-        program_id: localSelectedWorksop?.id,
+        program_id: localSelectedWorkshop?.id,
         program_name: workshopDetail?.title,
         program_date: workshopDetail?.eventStartDate,
         program_time: workshopDetail?.eventStartTime,
@@ -53,7 +57,7 @@ const WorkshopSelectModal = React.memo(
       setSelectedDates([]);
       setActiveWorkshop({});
       setSelectedWorkshopId(null);
-      setLocalSelectedWorksop(null);
+      setLocalSelectedWorkshop(null);
       setShowWorkshopSelectModal(false);
       setShowLocationModal(false);
     };
@@ -80,7 +84,7 @@ const WorkshopSelectModal = React.memo(
         setSelectedDates(dateAvailable[dateIndex - 1]?.allDates);
       } else {
         setSelectedDates([]);
-        setLocalSelectedWorksop(null);
+        setLocalSelectedWorkshop(null);
         setWorkshops([]);
       }
       if (parsedDate !== currentMonthYear) {
@@ -193,11 +197,11 @@ const WorkshopSelectModal = React.memo(
                         <div className="slot-select form-item">
                           <input
                             type="radio"
-                            value={localSelectedWorksop?.id}
+                            value={localSelectedWorkshop?.id}
                             defaultChecked={
-                              localSelectedWorksop?.id === workshop.id
+                              localSelectedWorkshop?.id === workshop.id
                             }
-                            checked={localSelectedWorksop?.id === workshop.id}
+                            checked={localSelectedWorkshop?.id === workshop.id}
                           />
                         </div>
                       </div>
@@ -361,7 +365,7 @@ const WorkshopSelectModal = React.memo(
           <div className="slot-action">
             <button
               type="button"
-              disabled={!localSelectedWorksop}
+              disabled={!localSelectedWorkshop}
               className="btn btn-primary find-courses submit-btn"
               onClick={handleWorkshopSelectForCheckout}
             >

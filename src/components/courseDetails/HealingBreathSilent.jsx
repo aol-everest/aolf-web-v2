@@ -408,7 +408,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
         </section>
         <section className="healing-breaths">
           <div className="container">
-            <h2 className="title">Healing Breaths</h2>
+            <h2 className="title">Some Of Our Partners</h2>
             <div className="org-text">
               List of some of the organizations that have benefited from the Art
               of Living’s Healing Breaths SKY Programs

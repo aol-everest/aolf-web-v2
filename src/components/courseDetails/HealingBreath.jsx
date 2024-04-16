@@ -80,11 +80,8 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                 <div className="banner-title">{title}</div>
                 <div className="banner-features">
                   <ul>
-                    <li>
-                      Alleviate stress & anxiety:
-                      <br />
-                      Reconnect to the joy in medicine
-                    </li>
+                    <li>Alleviate stress & anxiety</li>
+                    <li>Reconnect to the joy in medicine</li>
                     <li>Boost energy & alertness</li>
                     <li>
                       Cultivate inner calm & connectedness with self & others{' '}
@@ -171,10 +168,10 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
           <div className="container">
             <h2 className="title">Gain evidence-based techniques to thrive</h2>
             <div className="content">
-              During the 3-day SKY Program, you’ll gain research-backed
-              techniques and more, including the world-renowned SKY Breath
-              Meditation, shown to significantly reduce stress, improve sleep,
-              and enhance overall wellness.
+              During the SKY Program, you’ll gain research-backed techniques and
+              more, including the world-renowned SKY Breath Meditation, shown to
+              significantly reduce stress, improve sleep, and enhance overall
+              wellness.
             </div>
           </div>
         </section>
@@ -309,8 +306,8 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                       mind-body health significantly.
                     </li>
                     <li>
-                      Discover further tangible breathing techniques that will
-                      increase your energy and reduce stress.
+                      Discover additional tangible breathing techniques that
+                      will increase your energy and reduce stress.
                     </li>
                     <li>
                       Identify and optimize your sources of energy to maximize
@@ -366,7 +363,9 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                     alt="icon"
                   />
                 </div>
-                <div className="text">2.5-hour daily live online sessions</div>
+                <div className="text">
+                  Max 3 hours daily live online sessions
+                </div>
               </div>
               <div className="included-list-item">
                 <div className="check-icon">
@@ -547,7 +546,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
         </section>
         <section className="healing-breaths">
           <div className="container">
-            <h2 className="title">Healing Breaths</h2>
+            <h2 className="title">Some Of Our Partners</h2>
             <div className="org-text">
               List of some of the organizations that have benefited from the Art
               of Living’s Healing Breaths SKY Programs

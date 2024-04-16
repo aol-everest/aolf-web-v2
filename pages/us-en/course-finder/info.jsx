@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 
-const Step6 = () => {
+const UserInfo = () => {
   const router = useRouter();
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
@@ -250,4 +250,5 @@ const Step6 = () => {
   );
 };
 
-export default Step6;
+UserInfo.hideFooter = true;
+export default UserInfo;
