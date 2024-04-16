@@ -722,6 +722,12 @@ const New = () => {
                     </div>
                   </div>
                 )}
+                <div className="question-call">
+                  <a href="tel:(855)2024400" className="call-cta">
+                    Still have questions?{' '}
+                    <strong>Call us at (855) 202-4400</strong>
+                  </a>
+                </div>
               </div>
               <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
                 <div className="payment-box">
