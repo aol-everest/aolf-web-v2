@@ -19,7 +19,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FaCamera } from 'react-icons/fa';
 import { NextSeo } from 'next-seo';
-import { usePasswordless } from '@hooks';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -100,11 +99,12 @@ const MESSAGE_ALREADY_CASE_REGISTERED_ERROR = `We have already received your req
 // }
 
 const Profile = ({ tab }) => {
-  const { signOut } = usePasswordless();
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const { profile, setUser, reloadProfile, isAuthenticated } = useAuth();
+  const { profile, setUser, reloadProfile, isAuthenticated, passwordLess } =
+    useAuth();
+  const { signOut } = passwordLess;
   const [activeTab, setActiveTab] = useQueryString('tab', {
     defaultValue: tab || UPCOMING_EVENTS,
   });

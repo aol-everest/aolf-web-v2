@@ -23,7 +23,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
 import { Amplify } from 'aws-amplify';
-import { PasswordlessContextProvider } from '@hooks';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 // import { SurveyRequest } from "@components/surveyRequest";
 
@@ -37,13 +36,6 @@ import '@styles/style.scss';
 import '@styles/old-design/style.scss';
 
 import SEO from '../next-seo.config';
-
-const ClevertapAnalytics = dynamic(
-  () => import('@components/clevertapAnalytics'),
-  {
-    ssr: false,
-  },
-);
 
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
@@ -61,6 +53,7 @@ Passwordless.configure({
 Amplify.configure({
   Auth: {
     Cognito: {
+      region: process.env.NEXT_PUBLIC_COGNITO_REGION,
       //  Amazon Cognito User Pool ID
       userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
       // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
@@ -89,7 +82,7 @@ Amplify.configure({
 });
 
 function App({ Component, pageProps }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({ isAuthenticated: false });
   const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
   // const [pendingSurveyInvite, setPendingSurveyInvite] = useState(null);
@@ -111,7 +104,7 @@ function App({ Component, pageProps }) {
 
   const fetchProfile = async () => {
     try {
-      const userInfo = await Auth.reFetchProfile();
+      const userInfo = await Auth.fetchUserProfile();
       setUser(userInfo);
 
       const pendingAgreementRes = await api.get({
@@ -194,41 +187,39 @@ function App({ Component, pageProps }) {
   return (
     <AnalyticsProvider instance={analytics}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <PasswordlessContextProvider enableLocalUserCache={true}>
-            <Compose
-              components={[
-                GlobalModal,
-                GlobalAlert,
-                GlobalAudioPlayer,
-                GlobalVideoPlayer,
-                GlobalLoading,
-                GlobalBottomBanner,
-              ]}
+        <AuthProvider userInfo={user} enableLocalUserCache={true}>
+          <Compose
+            components={[
+              GlobalModal,
+              GlobalAlert,
+              GlobalAudioPlayer,
+              GlobalVideoPlayer,
+              GlobalLoading,
+              GlobalBottomBanner,
+            ]}
+          >
+            <Layout
+              hideHeader={Component.hideHeader}
+              noHeader={Component.noHeader}
+              hideFooter={Component.hideFooter}
+              wcfHeader={Component.wcfHeader}
             >
-              <Layout
-                hideHeader={Component.hideHeader}
-                noHeader={Component.noHeader}
-                hideFooter={Component.hideFooter}
-                wcfHeader={Component.wcfHeader}
-              >
-                <DefaultSeo {...SEO} />
-                {/* <UsePagesViews /> */}
-                {/* <TopProgressBar /> */}
-                {isReInstateRequired && (
-                  <ReInstate subscription={reinstateRequiredSubscription} />
-                )}
-                {/* {pendingSurveyInvite && (
+              <DefaultSeo {...SEO} />
+              {/* <UsePagesViews /> */}
+              {/* <TopProgressBar /> */}
+              {isReInstateRequired && (
+                <ReInstate subscription={reinstateRequiredSubscription} />
+              )}
+              {/* {pendingSurveyInvite && (
                 <SurveyRequest surveyInvite={pendingSurveyInvite} />
               )} */}
-                {isCCUpdateRequired && <CardUpdateRequired />}
-                {isPendingAgreement && <PendingAgreement />}
-                <Component {...pageProps} />
-                <ClevertapAnalytics></ClevertapAnalytics>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </Layout>
-            </Compose>
-          </PasswordlessContextProvider>
+              {isCCUpdateRequired && <CardUpdateRequired />}
+              {isPendingAgreement && <PendingAgreement />}
+              <Component {...pageProps} />
+              {/* <ClevertapAnalytics></ClevertapAnalytics> */}
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Layout>
+          </Compose>
         </AuthProvider>
       </QueryClientProvider>
     </AnalyticsProvider>

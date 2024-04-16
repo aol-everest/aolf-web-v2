@@ -17,7 +17,14 @@ export async function throwIfNot2xx(res) {
   throw err;
 }
 
+function isObject(value) {
+  return value !== null && typeof value === 'object';
+}
+
 export function parseJwtPayload(jwt) {
+  if (isObject(jwt)) {
+    return jwt;
+  }
   const parts = jwt.split('.');
   const payload = parts[1];
   if (!payload) {

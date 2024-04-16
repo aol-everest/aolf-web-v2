@@ -14,7 +14,7 @@
  */
 'use client';
 import React, { useState, useEffect } from 'react';
-import { usePasswordless, useAwaitableState, useLocalUserCache } from '@hooks';
+import { useAuth, useAwaitableState, useLocalUserCache } from '@contexts';
 import { configure } from './config.js';
 
 function timeAgo(now, historicDate) {
@@ -57,7 +57,7 @@ export const Passwordless = ({ brand, children } = {}) => {
     signOut,
     toggleShowAuthenticatorManager,
     showAuthenticatorManager,
-  } = usePasswordless();
+  } = useAuth().passwordLess;
 
   const [newUsername, setNewUsername] = useState('');
   const [showSignInOptionsForUser, setShowSignInOptionsForUser] =
@@ -405,7 +405,7 @@ export const Passwordless = ({ brand, children } = {}) => {
 
 function Fido2Recommendation() {
   const { fido2CreateCredential, showAuthenticatorManager, signInStatus } =
-    usePasswordless();
+    useAuth().passwordLess;
   const { currentUser, updateFidoPreference } = useLocalUserCache();
   const [error, setError] = useState();
   const [status, setStatus] = useState('IDLE');
@@ -539,7 +539,7 @@ function AuthenticatorsManager() {
     showAuthenticatorManager,
     toggleShowAuthenticatorManager,
     signInStatus,
-  } = usePasswordless();
+  } = useAuth().passwordLess;
   const { updateFidoPreference } = useLocalUserCache();
   const [error, setError] = useState();
   const [addingAuthenticatorStatus, setAddingAuthenticatorStatus] =

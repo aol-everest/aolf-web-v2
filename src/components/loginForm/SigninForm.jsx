@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 import { useState } from 'react';
-import { usePasswordless, useLocalUserCache } from '@hooks';
+import { useAuth, useLocalUserCache } from '@contexts';
 import { configure } from '@components/passwordLessAuth/config';
 import { Passwordless as NewPasswordlessComponent } from '@components/passwordLessAuth/NewComp';
 
@@ -143,11 +143,6 @@ const StepInputPassword = ({
             Sign in
           </button>
         </div>
-        <div class="form-other-info">
-          <a href="#" onClick={updateStep(0)}>
-            Sign-in as another user
-          </a>
-        </div>
       </div>
     </form>
   );
@@ -161,6 +156,7 @@ export const SigninForm = ({
   toSignUpMode,
   setUsername,
   username,
+  loading,
   setLoading,
   children,
 }) => {
@@ -176,7 +172,7 @@ export const SigninForm = ({
     signOut,
     toggleShowAuthenticatorManager,
     showAuthenticatorManager,
-  } = usePasswordless();
+  } = useAuth().passwordLess;
   const [step, setStep] = useState(0);
   const [newUsername, setNewUsername] = useState(username);
   const [showSignInOptionsForUser, setShowSignInOptionsForUser] =
@@ -232,7 +228,7 @@ export const SigninForm = ({
     );
   }
 
-  if (setLoading) {
+  if (setLoading && !loading) {
     setLoading(
       signingInStatus === 'REQUESTING_SIGNIN_LINK' ||
         signingInStatus === 'STARTING_SIGN_IN_WITH_FIDO2',
@@ -322,6 +318,10 @@ export const SigninForm = ({
         ? lastUser
         : undefined;
 
+  if (user) {
+    setUsername(user.email);
+  }
+
   const updateStep = (stepNumber) => (e) => {
     if (e) e.preventDefault();
     setStep(stepNumber);
@@ -346,6 +346,12 @@ export const SigninForm = ({
     setUserNameAction(1);
   };
 
+  const signInWithAnotherUserAction = (e) => {
+    if (e) e.preventDefault();
+    setShowSignInOptionsForUser('NEW_USER_ENTRY');
+    updateStep(0);
+  };
+
   const renderStep = () => {
     if (step === 0) {
       return (
@@ -353,6 +359,11 @@ export const SigninForm = ({
           {signInStatus === 'NOT_SIGNED_IN' && user && (
             <>
               <div class="page-description">Welcome back {user.email}!</div>
+              <div class="form-action">
+                <button class="submit-btn" onClick={updateStep(2)}>
+                  Continue with password
+                </button>
+              </div>
               <div class="form-action">
                 <button
                   class="submit-btn"
@@ -379,10 +390,7 @@ export const SigninForm = ({
                 </button>
               </div>
               <div class="form-other-info">
-                <a
-                  href="#"
-                  onClick={() => setShowSignInOptionsForUser('NEW_USER_ENTRY')}
-                >
+                <a href="#" onClick={signInWithAnotherUserAction}>
                   Sign-in as another user
                 </a>
               </div>
@@ -471,7 +479,7 @@ export const SigninForm = ({
             ></NewPasswordlessComponent>
 
             <div class="form-other-info">
-              <a href="#" onClick={updateStep(0)}>
+              <a href="#" onClick={signInWithAnotherUserAction}>
                 Sign-in as another user
               </a>
             </div>
@@ -481,14 +489,21 @@ export const SigninForm = ({
     }
     if (step === 2) {
       return (
-        <StepInputPassword
-          username={username}
-          showMessage={showMessage}
-          message={message}
-          onSubmit={signInWithPasswordAction}
-          forgotPassword={forgotPassword}
-          updateStep={updateStep}
-        />
+        <>
+          <StepInputPassword
+            username={username}
+            showMessage={showMessage}
+            message={message}
+            onSubmit={signInWithPasswordAction}
+            forgotPassword={forgotPassword}
+            updateStep={updateStep}
+          />
+          <div class="form-other-info">
+            <a href="#" onClick={signInWithAnotherUserAction}>
+              Sign-in as another user
+            </a>
+          </div>
+        </>
       );
     }
   };

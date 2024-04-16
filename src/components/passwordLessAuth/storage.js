@@ -66,12 +66,14 @@ export async function storeTokens(tokens) {
   promises.push(
     storage.setItem(`${amplifyKeyPrefix}.${username}.tokenScopesString`, scope),
   );
-  promises.push(
-    storage.setItem(
-      `${customKeyPrefix}.${username}.expireAt`,
-      tokens.expireAt.toISOString(),
-    ),
-  );
+  if (tokens.expireAt) {
+    promises.push(
+      storage.setItem(
+        `${customKeyPrefix}.${username}.expireAt`,
+        tokens.expireAt.toISOString(),
+      ),
+    );
+  }
   await Promise.all(promises.filter((p) => !!p));
 }
 

@@ -108,6 +108,11 @@ function LoginPage() {
       await signOut({ global: true });
       const { isSignedIn, nextStep } = await signIn({ username, password });
       console.log(isSignedIn, nextStep);
+      if (navigateTo) {
+        router.push(navigateTo);
+      } else {
+        router.push('/');
+      }
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;
@@ -131,105 +136,6 @@ function LoginPage() {
       setShowMessage(true);
     }
     setLoading(false);
-    // setLoading(true);
-    // setShowMessage(false);
-    // try {
-    //   const { newPasswordRequired } = await Auth.authenticateUser(
-    //     username,
-    //     password,
-    //   );
-    //   if (newPasswordRequired) {
-    //     setCurrentUser({ username, password });
-    //     setMode(NEW_PASSWORD_REQUEST);
-    //     setLoading(false);
-    //   } else {
-    //     const userInfo = await Auth.reFetchProfile();
-    //     setUser(userInfo);
-    //     identify(userInfo.profile.email, {
-    //       id: userInfo.profile.username,
-    //       sfid: userInfo.profile.id,
-    //       email: userInfo.profile.email,
-    //       first_name: userInfo.profile.first_name,
-    //       last_name: userInfo.profile.last_name,
-    //       subscriptions: userInfo.profile.subscriptions,
-    //       sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
-    //       sahaj_flag: userInfo.profile.isSahajGraduate,
-    //       silence_course_count: userInfo.profile.aosCountTotal,
-    //     });
-
-    //     if (isStudent) {
-    //       await api.post({
-    //         path: 'verify-email',
-    //         body: {
-    //           email: username,
-    //         },
-    //       });
-    //       setShowSuccessMessage(true);
-    //       setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
-    //       setTimeout(() => {
-    //         setLoading(false);
-    //         setShowSuccessMessage(false);
-    //         setSuccessMessage(null);
-    //         hideModal();
-    //         if (navigateTo) {
-    //           return pushRouteWithUTMQuery(router, navigateTo);
-    //         } else {
-    //           router.reload(window.location.pathname);
-    //         }
-    //       }, 3000);
-    //     } else {
-    //       setLoading(false);
-    //       hideModal();
-    //       if (navigateTo) {
-    //         return pushRouteWithUTMQuery(router, navigateTo);
-    //       } else {
-    //         router.reload(window.location.pathname);
-    //       }
-    //     }
-    //     // const user = await Auth.signIn(username, password);
-    //     // if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-    //     //   setCurrentUser(user);
-    //     //   setMode(NEW_PASSWORD_REQUEST);
-    //     //   setLoading(false);
-    //     // } else {
-    //     //   const token = user.signInUserSession.idToken.jwtToken;
-    //     //   await api.get({
-    //     //     path: "profile",
-    //     //     token,
-    //     //   });
-
-    //     //   setLoading(false);
-    //     //   hideModal();
-    //     //   if (navigateTo) {
-    //     //     return pushRouteWithUTMQuery(router,navigateTo);
-    //     //   } else {
-    //     //     router.reload(window.location.pathname);
-    //     //   }
-    //     // }
-    //   }
-    // } catch (ex) {
-    //   // await Auth.signOut();
-    //   const data = ex.response?.data;
-    //   let errorMessage = ex.message.match(/\[(.*)\]/);
-    //   if (errorMessage) {
-    //     errorMessage = errorMessage[1];
-    //   } else {
-    //     errorMessage = ex.message;
-    //   }
-    //   const { message, statusCode } = data || {};
-    //   if (statusCode === 500) {
-    //     setMessage(
-    //       message ? `Error: Unable to login. (${message})` : errorMessage,
-    //     );
-    //   } else {
-    //     setMessage(
-    //       message ? `Error: ${message} (${statusCode})` : errorMessage,
-    //     );
-    //   }
-    //   console.error(ex);
-    //   setShowMessage(true);
-    //   setLoading(false);
-    // }
   };
 
   const resetPasswordAction = async ({ username }) => {
@@ -430,6 +336,7 @@ function LoginPage() {
             setUsername={setUsername}
             username={username}
             setLoading={setLoading}
+            loading={loading}
           >
             {socialLoginRender()}
           </SigninForm>
