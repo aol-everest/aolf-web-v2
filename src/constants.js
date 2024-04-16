@@ -122,6 +122,11 @@ export const COURSE_TYPES_MASTER = {
           slug: 'chakra-kriya',
           name: 'Chakra Kriya',
         },
+        DSN_COURSE: {
+          slug: 'dsn-course',
+          name: 'DSN Course',
+          isAvailableInPersonOnly: true,
+        },
         SANYAM_COURSE: {
           slug: 'sanyam-course',
           name: 'Sanyam Course',
@@ -129,11 +134,6 @@ export const COURSE_TYPES_MASTER = {
         SRI_SRI_YOGA_DEEP_DIVE: {
           slug: 'sri-sri-yoga-deep-dive',
           name: 'Sri Sri Yoga Deep Dive',
-        },
-        DSN_COURSE: {
-          slug: 'dsn-course',
-          name: 'DSN Course',
-          isAvailableInPersonOnly: true,
         },
       },
     },
