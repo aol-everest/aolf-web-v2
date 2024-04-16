@@ -365,6 +365,7 @@ const New = () => {
     setActiveWorkshop({});
     setSelectedWorkshopId(null);
     let isEventAvailable = false;
+    track('cmodal_date_pick');
 
     if (selectedDates?.length > 0 && dateStr !== 'update') {
       const today = moment(selectedDates[0]);
@@ -508,6 +509,7 @@ const New = () => {
   };
 
   const handleSelectMode = (value) => {
+    track('course_type_change');
     setMode(value);
     resetCalender();
   };
