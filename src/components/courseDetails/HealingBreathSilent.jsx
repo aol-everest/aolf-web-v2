@@ -151,9 +151,11 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
               </h2>
               <p>
                 The Art of Living's Healing Breaths Silence Retreat course
-                builds on your Healing Breaths SKY Program experience* with a
-                unique blend of advanced breathwork, signature guided
-                meditations, daily yoga, and profound insights into the mind.
+                builds on your Healing Breaths SKY Program experience. Engage
+                with advanced breathwork, signature guided meditations, daily
+                yoga, and profound insights into the mind.
+              </p>
+              <p>
                 This is all designed to{' '}
                 <strong>
                   provide an optimal environment to break free from a busy mind
@@ -409,8 +411,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
           <div className="container">
             <h2 className="title">Some Of Our Partners</h2>
             <div className="org-text">
-              List of some of the organizations that have benefited from the Art
-              of Living’s Healing Breaths SKY Programs
+              Working together to build a brighter future for healthcare.
             </div>
             <div className="benefitted-orgs-list">
               <div>
