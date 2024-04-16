@@ -25,8 +25,8 @@ export const StripeExpressCheckoutTicket = ({ workshop }) => {
     appearance: {
       theme: 'stripe',
       variables: {
-        borderRadius: '8px',
-        height: '62.5px',
+        borderRadius: '44px',
+        height: '62px',
       },
     },
   };

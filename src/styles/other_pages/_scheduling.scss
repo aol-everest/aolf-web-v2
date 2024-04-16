@@ -633,6 +633,27 @@
     }
   }
 
+  .question-call {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .call-cta {
+      color: #ed994e;
+      border-radius: 16px;
+      border: 1px #ed994e solid;
+      padding: 8px 12px;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      background: white;
+      text-decoration: none;
+      text-align: center;
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+
   .time-slot-changer {
     display: flex;
     justify-content: center;
