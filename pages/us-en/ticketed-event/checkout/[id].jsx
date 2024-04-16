@@ -136,7 +136,6 @@ const TicketCheckoutForm = ({ router }) => {
     discountResponse: discount,
     totalDiscount,
     productTypeId,
-    discountCode,
   } = value;
 
   const {
@@ -387,7 +386,9 @@ const TicketCheckoutForm = ({ router }) => {
           contactCity: personMailingCity || '',
           contactState: personMailingState || '',
           contactZip: personMailingPostalCode || '',
-          couponCode: discountCode ? discountCode : '',
+          couponCode: discountResponse?.couponCode
+            ? discountResponse.couponCode
+            : '',
           contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
