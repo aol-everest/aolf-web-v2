@@ -13,6 +13,7 @@ import { useLocalStorage } from 'react-use';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
+import { DiscountInputNew } from '@components/discountInputNew';
 
 dayjs.extend(utc);
 
@@ -150,6 +151,7 @@ function TicketedEvent() {
       totalPrice: totalPrice,
       workshop: workshop,
       totalDiscount: totalDiscount,
+      discountCode: values?.discount,
     });
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/ticketed-event/checkout/${workshopId}`,
@@ -187,222 +189,26 @@ function TicketedEvent() {
       {(formikProps) => {
         const { handleSubmit } = formikProps;
         return (
-          <form onSubmit={handleSubmit}>
-            <div className="tickets-modal">
-              <div className="tickets-modal__container products">
-                <div className="tickets-modal__left-column">
-                  <div className="tickets-modal__section-products">
-                    <h2 className="tickets-modal__title">{title}</h2>
-                    <p className="tickets-modal__date">
-                      {`${dayjs
-                        .utc(eventStartDate)
-                        .format('ddd, MMM DD, YYYY')}`}{' '}
-                      -{' '}
-                      {`${dayjs.utc(eventEndDate).format('ddd, MMM DD, YYYY')}`}
-                    </p>
-                    <p className="tickets-modal__date">
-                      {tConvert(eventStartTime, true)} -{' '}
-                      {tConvert(eventEndTime, true)}{' '}
-                      {' ' + ABBRS[eventTimeZone]}
-                    </p>
-
-                    <div className="tickets-modal__promo">
-                      <label className="tickets-modal__promo-label" htmlFor="">
-                        promo code
-                      </label>
-
-                      <div className="tickets-modal__promo-wrapper">
-                        <DiscountCodeInput
-                          placeholder="Discount Code"
-                          formikProps={formikProps}
-                          formikKey="couponCode"
-                          product={productId}
-                          applyDiscount={applyDiscount}
-                          addOnProducts={addOnProducts}
-                          inputClass="tickets-modal__input"
-                          tagClass="tickets-modal__input ticket-discount"
-                          isTicketDiscount
-                          selectedTickets={selectedTickets}
-                          productType="ticketed_event"
-                        ></DiscountCodeInput>
-                      </div>
-                    </div>
-
-                    <div className="tickets-modal__list">
-                      {pricingTiers?.map((item, index) => {
-                        const selectedValue = selectedTickets.find(
-                          (ticket) =>
-                            ticket.pricingTierId === item.pricingTierId,
-                        );
-                        return (
-                          <div
-                            className="tickets-modal__card"
-                            key={item.pricingTierId}
-                          >
-                            <div className="tickets-modal__card-head">
-                              <h3 className="tickets-modal__card-name">
-                                {item.pricingTierName}
-                              </h3>
-
-                              <div className="tickets-modal__counter">
-                                <button
-                                  className="tickets-modal__counter-button"
-                                  data-counter="decrease"
-                                  data-product={`product-${index + 1}`}
-                                  type="button"
-                                  disabled={
-                                    !selectedValue ||
-                                    selectedValue?.numberOfTickets === 0
-                                  }
-                                  onClick={(e) =>
-                                    handleTicketSelect(e, 'remove', item)
-                                  }
-                                >
-                                  -
-                                </button>
-                                <input
-                                  className="tickets-modal__counter-input"
-                                  type="number"
-                                  name={item.pricingTierId}
-                                  id={item.pricingTierId}
-                                  value={selectedValue?.numberOfTickets || 0}
-                                  min="0"
-                                  onChange={handleTicketSelect}
-                                />
-                                <button
-                                  className="tickets-modal__counter-button"
-                                  data-counter="increase"
-                                  data-product={`product-${index + 1}`}
-                                  type="button"
-                                  disabled={
-                                    selectedValue?.numberOfTickets >=
-                                    item.availableSeats
-                                  }
-                                  onClick={(e) =>
-                                    handleTicketSelect(e, 'add', item)
-                                  }
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-                            <div className="tickets-modal__card-left">
-                              <h4 className="tickets-modal__card-amount">
-                                ${item.price.toFixed(2)}
-                                {/* <span>+ $3.31 Fee</span> */}
-                              </h4>
-                              <h4 className="tickets-modal__card-left">
-                                * {item.availableSeats} left
-                              </h4>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="tickets-modal__language"></div>
-
-                    <div className="tickets-modal__footer">
-                      {workshop && (
-                        <div className="tickets-modal__footer-button-link">
-                          <StripeExpressCheckoutTicket workshop={workshop} />
-                        </div>
-                      )}
-                      <button
-                        id="next-step"
-                        className="tickets-modal__footer-button"
-                        type="submit"
-                        disabled={selectedTickets.length === 0}
-                      >
-                        Pay Another Way
-                      </button>
-                    </div>
-                    {isLoading && <Loader />}
-                  </div>
-                </div>
-                <div className="tickets-modal__right-container">
-                  <div className="tickets-modal__right-column">
-                    {/* <img className="tickets-modal__photo" src={workshop?.coverImage} alt="" /> */}
-                    <img
-                      className="tickets-modal__photo"
-                      src={eventImageUrl}
-                      alt=""
-                    />
-
-                    <div className="tickets-modal__cart-empty">
-                      <img src="/img/empty-cart.svg" alt="violet" />
-                    </div>
-
-                    <div className="tickets-modal__cart">
-                      <h2 className="tickets-modal__cart-summary">
-                        Order Summary
-                      </h2>
-                      {selectedTickets.map((item) => {
-                        return (
-                          <p
-                            className="tickets-modal__cart-product"
-                            key={item.pricingTierId}
-                          >
-                            x{item?.numberOfTickets} {item.pricingTierName}{' '}
-                            <span>
-                              ${(item.price * item?.numberOfTickets).toFixed(2)}
-                            </span>
-                          </p>
-                        );
-                      })}
-
-                      <p className="tickets-modal__cart-subtotal">
-                        Subtotal
-                        <span>${parseFloat(totalPrice).toFixed(2)}</span>
+          <main className="checkout-aol">
+            <form onSubmit={handleSubmit}>
+              <div className="tickets-modal">
+                <div className="tickets-modal__container products">
+                  <div className="tickets-modal__left-column">
+                    <div className="tickets-modal__section-products">
+                      <h2 className="tickets-modal__title">{title}</h2>
+                      <p className="tickets-modal__date">
+                        {`${dayjs
+                          .utc(eventStartDate)
+                          .format('ddd, MMM DD, YYYY')}`}{' '}
+                        -{' '}
+                        {`${dayjs.utc(eventEndDate).format('ddd, MMM DD, YYYY')}`}
                       </p>
-                      {totalDiscount > 0 && (
-                        <p className="tickets-modal__cart-discount">
-                          Discount(-)
-                          <span>${parseFloat(totalDiscount).toFixed(2)}</span>
-                        </p>
-                      )}
-
-                      <p className="tickets-modal__cart-total">
-                        Total
-                        <span>
-                          ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
-                        </span>
+                      <p className="tickets-modal__date">
+                        {tConvert(eventStartTime, true)} -{' '}
+                        {tConvert(eventEndTime, true)}{' '}
+                        {' ' + ABBRS[eventTimeZone]}
                       </p>
-                    </div>
-                  </div>
-
-                  <div className="tickets-modal__contact-info">
-                    <h2 className="section-title">
-                      <i
-                        className="fa fa-address-book-o"
-                        aria-hidden="true"
-                      ></i>{' '}
-                      Contact Details:
-                    </h2>
-                    <ul className="event-items-list">
-                      <li className="event-item">
-                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
-                        <span>Name: </span>
-                        {contactName}
-                      </li>
-                      <li className="event-item">
-                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
-                        <span>Call: </span>
-                        {phone1 || phone2}
-                      </li>
-                      <li className="event-item">
-                        <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
-                        <span>Email: </span>
-                        {email}
-                      </li>
-                      <li className="event-item">
-                        <i className="fa fa-phone" aria-hidden="true"></i>{' '}
-                        <span>Teacher Name: </span>
-                        {primaryTeacherName}
-                      </li>
-                      <li className="event-item">
-                        <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
-                        <span>Location: </span>
+                      <p className="tickets-modal__location">
                         {mode === COURSE_MODES.ONLINE.name
                           ? mode
                           : (mode === COURSE_MODES.IN_PERSON.name ||
@@ -410,46 +216,202 @@ function TicketedEvent() {
                                 COURSE_MODES.DESTINATION_RETREATS.name) && (
                               <>
                                 {!isLocationEmpty && (
-                                  <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${
-                                      locationStreet || ''
-                                    }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
+                                  <span>
                                     {locationStreet && locationStreet}
                                     {locationCity || ''}
                                     {', '}
                                     {locationProvince || ''}{' '}
                                     {locationPostalCode || ''}
-                                  </a>
+                                  </span>
                                 )}
                                 {isLocationEmpty && (
-                                  <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${
-                                      streetAddress1 || ''
-                                    },${
-                                      streetAddress2 || ''
-                                    } ${city} ${state} ${zip} ${country}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
+                                  <span>
                                     {streetAddress1 && streetAddress1}
                                     {streetAddress2 && streetAddress2}
                                     {city || ''}
                                     {', '}
                                     {state || ''} {zip || ''}
-                                  </a>
+                                  </span>
                                 )}
                               </>
                             )}
-                      </li>
-                    </ul>
+                      </p>
+
+                      <div className="tickets-modal__list">
+                        {pricingTiers?.map((item, index) => {
+                          const selectedValue = selectedTickets.find(
+                            (ticket) =>
+                              ticket.pricingTierId === item.pricingTierId,
+                          );
+                          return (
+                            <div
+                              className="tickets-modal__card"
+                              key={item.pricingTierId}
+                            >
+                              <div className="tickets-modal__card-head">
+                                <h3 className="tickets-modal__card-name">
+                                  {item.pricingTierName}
+                                </h3>
+
+                                <div className="tickets-modal__counter">
+                                  <button
+                                    className="tickets-modal__counter-button"
+                                    data-counter="decrease"
+                                    data-product={`product-${index + 1}`}
+                                    type="button"
+                                    disabled={
+                                      !selectedValue ||
+                                      selectedValue?.numberOfTickets === 0
+                                    }
+                                    onClick={(e) =>
+                                      handleTicketSelect(e, 'remove', item)
+                                    }
+                                  >
+                                    -
+                                  </button>
+                                  <input
+                                    className="tickets-modal__counter-input"
+                                    type="number"
+                                    name={item.pricingTierId}
+                                    id={item.pricingTierId}
+                                    value={selectedValue?.numberOfTickets || 0}
+                                    min="0"
+                                    onChange={handleTicketSelect}
+                                  />
+                                  <button
+                                    className="tickets-modal__counter-button"
+                                    data-counter="increase"
+                                    data-product={`product-${index + 1}`}
+                                    type="button"
+                                    disabled={
+                                      selectedValue?.numberOfTickets >=
+                                      item.availableSeats
+                                    }
+                                    onClick={(e) =>
+                                      handleTicketSelect(e, 'add', item)
+                                    }
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="tickets-modal__card-left">
+                                <p className="tickets-modal__card-heading">
+                                  Price
+                                </p>
+                                <p className="tickets-modal__card-amount">
+                                  ${item.price.toFixed(2)}
+                                  {/* <span>+ $3.31 Fee</span> */}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="tickets-modal__language"></div>
+                    </div>
+                  </div>
+                  <div className="tickets-modal__right-container ticketed-event">
+                    <div className="tickets-modal__right-column">
+                      {/* <img className="tickets-modal__photo" src={workshop?.coverImage} alt="" /> */}
+                      <img
+                        className="tickets-modal__photo"
+                        src={eventImageUrl}
+                        alt=""
+                      />
+
+                      <div className="tickets-modal__cart-empty">
+                        <img src="/img/empty-cart.svg" alt="violet" />
+                      </div>
+                      <div className="tickets-modal__promo">
+                        <div className="tickets-modal__promo-wrapper">
+                          <div className="section__body">
+                            <div className="form-item required">
+                              <DiscountInputNew
+                                placeholder="Discount Code"
+                                formikProps={formikProps}
+                                formikKey="couponCode"
+                                product={productId}
+                                applyDiscount={applyDiscount}
+                                addOnProducts={addOnProducts}
+                                containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                                selectedTickets={selectedTickets}
+                                productType="ticketed_event"
+                                inputClass="tickets-modal__input"
+                                tagClass="tickets-modal__input ticket-discount"
+                                isTicketDiscount
+                              ></DiscountInputNew>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="tickets-modal__cart">
+                        <div className="tickets-container">
+                          {selectedTickets.map((item) => {
+                            return (
+                              <div className="tickets" key={item.pricingTierId}>
+                                <div className="label">
+                                  {item.pricingTierName} x
+                                  {item?.numberOfTickets}{' '}
+                                </div>
+                                <div className="value">
+                                  $
+                                  {(item.price * item?.numberOfTickets).toFixed(
+                                    2,
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div className="tickets">
+                            <div className="label">Subtotal</div>
+                            <div className="value">
+                              ${parseFloat(totalPrice).toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
+
+                        {totalDiscount > 0 && (
+                          <p className="tickets-modal__cart-discount">
+                            Discount(-)
+                            <span>${parseFloat(totalDiscount).toFixed(2)}</span>
+                          </p>
+                        )}
+
+                        <div className="total">
+                          <div className="label">Total:</div>
+                          <div className="value">
+                            $
+                            {(parseFloat(totalPrice) - totalDiscount).toFixed(
+                              2,
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="tickets-modal__footer">
+                        {workshop && (
+                          <div className="tickets-modal__footer-button-link">
+                            <StripeExpressCheckoutTicket workshop={workshop} />
+                          </div>
+                        )}
+                        <button
+                          id="next-step"
+                          className="tickets-modal__footer-button"
+                          type="submit"
+                          disabled={selectedTickets.length === 0}
+                        >
+                          Pay Another Way
+                        </button>
+                      </div>
+                      {isLoading && <Loader />}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </main>
         );
       }}
     </Formik>
