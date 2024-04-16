@@ -1,5 +1,5 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useLocalStorage } from 'react-use';
 import {
@@ -7,9 +7,9 @@ import {
   useGlobalAlertContext,
   useGlobalModalContext,
 } from '@contexts';
-import { ALERT_TYPES, MODAL_TYPES, PAYMENT_MODES } from '@constants';
+import { NextSeo } from 'next-seo';
+import { ABBRS, ALERT_TYPES, COURSE_MODES, MODAL_TYPES } from '@constants';
 import { Formik } from 'formik';
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as Yup from 'yup';
 import { loadStripe } from '@stripe/stripe-js';
 import { useAnalytics } from 'use-analytics';
@@ -21,9 +21,10 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { Auth, api } from '@utils';
-import { TicketPhoneInput } from '@components/ticketPhoneInput';
-import { Loader } from '@components/loader';
+import { Auth, api, phoneRegExp, tConvert } from '@utils';
+import { UserInfoFormNewCheckout } from '@components/checkout';
+import dayjs from 'dayjs';
+import { DiscountInputNew } from '@components/discountInputNew';
 
 export default function TicketCheckout() {
   const router = useRouter();
@@ -101,48 +102,76 @@ export default function TicketCheckout() {
   };
 
   return (
-    <Elements stripe={stripePromise} options={elementsOptions}>
-      <TicketCheckoutForm router={router} track={track} />
-    </Elements>
+    <>
+      <header className="checkout-header">
+        <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
+      </header>
+
+      <main className="checkout-aol">
+        <Elements stripe={stripePromise} options={elementsOptions}>
+          <TicketCheckoutForm router={router} track={track} />
+        </Elements>
+      </main>
+    </>
   );
 }
 
 const TicketCheckoutForm = ({ router }) => {
-  const [selectedPaymentType, setSelectedPaymentType] = useState('');
   const { user, authenticated: isUserLoggedIn, setUser } = useAuth();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
+  const formRef = useRef();
   const { id: workshopId } = router.query;
 
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
+  const [discountResponse, setDiscountResponse] = useState(null);
   const [value, setValue] = useLocalStorage('ticket-events');
   const {
     selectedTickets,
     delfee,
     totalPrice,
     workshop,
-    discountResponse,
+    discountResponse: discount,
     totalDiscount,
     productTypeId,
   } = value;
 
-  const { eventImageUrl } = workshop;
+  const {
+    eventImageUrl,
+    eventEndDate,
+    eventStartDate,
+    primaryTeacherName,
+    coTeacher1Name,
+    coTeacher2Name,
+    mode,
+    phone2,
+    timings = [],
+    contactName,
+    phone1,
+    email: contactEmail,
+    id: productId,
+    addOnProducts,
+  } = workshop;
 
-  const { first_name, last_name, email } = user?.profile || {};
+  const {
+    first_name,
+    last_name,
+    email,
+    personMailingPostalCode,
+    personMailingState,
+    personMobilePhone,
+    personMailingStreet,
+    personMailingCity,
+  } = user?.profile || {};
+
+  useEffect(() => {
+    setDiscountResponse(discount);
+  }, [discount]);
 
   const login = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL);
-  };
-
-  const setFormInitialValues = () => {
-    return {
-      firstName: first_name || '',
-      lastName: last_name || '',
-      email: email || '',
-      contactPhone: '',
-    };
   };
 
   const completeEnrollmentAction = async (
@@ -277,28 +306,6 @@ const TicketCheckoutForm = ({ router }) => {
     }
   };
 
-  const paypalBuyAcknowledgement = async (paypalData) => {
-    setLoading(true);
-    const {
-      data,
-      status,
-      error: errorMessage,
-      isError,
-    } = await api.post({
-      path: 'paypalBuyAcknowledgement',
-      body: { orderID: paypalData.orderID },
-    });
-
-    setLoading(false);
-    if (status === 400 || isError) {
-      throw new Error(errorMessage);
-    } else if (data) {
-      showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-        children: 'You have successfully purchased ticket',
-      });
-    }
-  };
-
   const formikOnChange = (values) => {
     if (!stripe || !elements) {
       return;
@@ -331,10 +338,6 @@ const TicketCheckoutForm = ({ router }) => {
     }
   };
 
-  const handlePaymentSelect = (ev) => {
-    setSelectedPaymentType(ev.target.name);
-  };
-
   const logout = async (event) => {
     await Auth.logout();
     setUser(null);
@@ -344,45 +347,93 @@ const TicketCheckoutForm = ({ router }) => {
     // );
   };
 
+  const paymentElementOptions = {
+    layout: {
+      type: 'accordion',
+      defaultCollapsed: true,
+      radios: true,
+      spacedAccordionItems: false,
+    },
+    defaultValues: {
+      billingDetails: {
+        email: email || '',
+        name: (first_name || '') + (last_name || ''),
+        phone: personMobilePhone || '',
+      },
+    },
+  };
+
+  const handleFormSubmit = () => {
+    if (formRef.current) {
+      formRef.current.submitForm();
+    }
+  };
+
+  const applyDiscount = (discount) => {
+    setDiscountResponse(discount);
+  };
+
   return (
-    <Formik
-      enableReinitialize
-      initialValues={setFormInitialValues()}
-      validationSchema={Yup.object().shape({
-        firstName: Yup.string().required('First Name is required!'),
-        lastName: Yup.string().required('Last Name is required!'),
-        email: Yup.string()
-          .email('Email is invalid!')
-          .required('Email is required!'),
-        contactPhone: Yup.string().required('Phone is required'),
-      })}
-      onSubmit={async (values, { setSubmitting, resetForm }) => {
-        await completeEnrollmentAction(values, resetForm);
-      }}
-    >
-      {(formikProps) => {
-        const { values, handleChange, handleBlur, handleSubmit, resetForm } =
-          formikProps;
-        formikOnChange(values);
+    <>
+      <NextSeo title={'Ticketed Checkout'} />
+      {loading && <div className="cover-spin"></div>}
+      <Formik
+        initialValues={{
+          firstName: first_name || '',
+          lastName: last_name || '',
+          email: email || '',
+          contactAddress: personMailingStreet || '',
+          contactCity: personMailingCity || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
+          couponCode: discountResponse?.couponCode
+            ? discountResponse.couponCode
+            : '',
+          contactPhone: '',
+        }}
+        validationSchema={Yup.object().shape({
+          firstName: Yup.string()
+            .required('First Name is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
+          lastName: Yup.string()
+            .required('Last Name is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
+          email: Yup.string()
+            .email('Email is invalid!')
+            .required('Email is required!')
+            .email(),
+          contactPhone: Yup.string()
+            .required('Phone number required')
+            .matches(phoneRegExp, 'Phone number is not valid'),
+          contactAddress: Yup.string().required('Address is required'),
+          contactCity: Yup.string().required('City is required'),
+          contactState: Yup.string().required('State is required'),
+          contactZip: Yup.string()
+            .required('Zip is required!')
+            //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+            .min(2, 'Zip is invalid')
+            .max(10, 'Zip is invalid'),
+        })}
+        innerRef={formRef}
+        onSubmit={async (values) => {
+          await completeEnrollmentAction(values);
+        }}
+      >
+        {(formikProps) => {
+          const { values, handleChange, handleBlur, handleSubmit, resetForm } =
+            formikProps;
+          formikOnChange(values);
 
-        return (
-          <form
-            name="workshopEnroll"
-            onSubmit={handleSubmit}
-            className="workshopEnroll tw-bg-white tw-shadow-lg"
-          >
-            <div className="tickets-modal">
-              <div className="tickets-modal__container products">
-                <div className="tickets-modal__left-column">
-                  <div className="tickets-modal__section-checkout">
-                    <h2 className="tickets-modal__title">Checkout</h2>
-                    {/* <p className="tickets-modal__date">Time left 19:55</p> */}
-
-                    <div className="tickets-modal__billing">
-                      <h3 className="tickets-modal__subtitle">
-                        Billing information
-                      </h3>
-
+          return (
+            <section>
+              <div className="container ticketed-event">
+                <div className="row">
+                  <div className="col-12 col-lg-7">
+                    <div className="section--title">
+                      <h1 className="page-title">Checkout</h1>
+                    </div>
+                    <div className="section-box account-details">
+                      <h2 className="section__title">Billing Information</h2>
                       <p className="tickets-modal__billing-login">
                         {isUserLoggedIn ? (
                           <span className="tickets-modal__billing-login_main">
@@ -413,307 +464,442 @@ const TicketCheckoutForm = ({ router }) => {
                           Required
                         </span>
                       </p>
-
-                      <div className="tickets-modal__form-person">
-                        <label
-                          className="tickets-modal__input-label"
-                          htmlFor="firstName"
-                        >
-                          <input
-                            className="tickets-modal__input"
-                            type="text"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.firstName}
-                            name="firstName"
-                            id="firstName"
-                            required
-                            placeholder="First name"
-                          />
-                          <span className="tickets-modal__input-placeholder">
-                            First name{' '}
-                            <span className="tickets-modal--accent">*</span>
-                          </span>
-                        </label>
-
-                        <label
-                          className="tickets-modal__input-label"
-                          htmlFor="lastName"
-                        >
-                          <input
-                            className="tickets-modal__input"
-                            type="text"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.lastName}
-                            id="lastName"
-                            name="lastName"
-                            required
-                            placeholder="Last name"
-                          />
-                          <span className="tickets-modal__input-placeholder">
-                            Last name{' '}
-                            <span className="tickets-modal--accent">*</span>
-                          </span>
-                        </label>
-
-                        <label
-                          className="tickets-modal__input-label"
-                          htmlFor="email"
-                        >
-                          <input
-                            className="tickets-modal__input"
-                            type="email"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.email}
-                            id="email"
-                            name="email"
-                            required
-                            placeholder="email@example.com"
-                          />
-                          <span className="tickets-modal__input-placeholder">
-                            Email address{' '}
-                            <span className="tickets-modal--accent">*</span>
-                          </span>
-                        </label>
-
-                        <label
-                          className="tickets-modal__input-label scheduling-modal__content-wrapper-form-list-row"
-                          htmlFor="confirmEmail"
-                        >
-                          <TicketPhoneInput
-                            formikProps={formikProps}
-                            formikKey="contactPhone"
-                            label="Mobile Number"
-                            placeholder="Mobile Number"
-                            type="tel"
-                          />
-                        </label>
+                      <div className="section__body">
+                        <form id="my-form">
+                          <UserInfoFormNewCheckout formikProps={formikProps} />
+                        </form>
                       </div>
                     </div>
-
-                    <div className="tickets-modal__pay">
-                      <h3 className="tickets-modal__subtitle">Pay with</h3>
-
-                      <div
-                        className="tickets-modal__payment-dropdown"
-                        data-dropdown-htmlFor="creditCard"
-                      >
-                        <label
-                          className="tickets-modal__payment-label"
-                          htmlFor="creditCard"
-                        >
-                          <input
-                            className="tickets-modal__payment-input"
-                            type="radio"
-                            name={PAYMENT_MODES.STRIPE_PAYMENT_MODE}
-                            onClick={handlePaymentSelect}
-                            id="creditCard"
-                            value={
-                              selectedPaymentType ===
-                              PAYMENT_MODES.STRIPE_PAYMENT_MODE
-                            }
-                            checked={
-                              selectedPaymentType ===
-                              PAYMENT_MODES.STRIPE_PAYMENT_MODE
-                            }
-                          />
-
-                          <p className="tickets-modal__payment-checkbox">
-                            Credit or debit card
-                          </p>
-
-                          <div className="tickets-modal__payment-border"></div>
-
-                          <span className="tickets-modal__payment-icon">
-                            <img src="/img/card-icon.svg" alt="violet" />
-                          </span>
-                        </label>
-                      </div>
-
-                      <label
-                        className="tickets-modal__payment-label"
-                        htmlFor="payPal"
-                      >
-                        <input
-                          className="tickets-modal__payment-input"
-                          type="radio"
-                          name={PAYMENT_MODES.PAYPAL_PAYMENT_MODE}
-                          id="payPal"
-                          onClick={handlePaymentSelect}
-                          value={
-                            selectedPaymentType ===
-                            PAYMENT_MODES.PAYPAL_PAYMENT_MODE
-                          }
-                          checked={
-                            selectedPaymentType ===
-                            PAYMENT_MODES.PAYPAL_PAYMENT_MODE
-                          }
-                        />
-
-                        <p className="tickets-modal__payment-checkbox">
-                          PayPal
-                        </p>
-                        <div className="tickets-modal__payment-border"></div>
-
-                        <span className="tickets-modal__payment-icon">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="32"
-                            height="32"
-                            viewBox="0 0 32 32"
-                            fill="none"
-                          >
-                            <path
-                              d="M23.5968 5.82527C22.4687 4.54743 20.4272 4 17.8155 4H10.2362C9.70236 4 9.24869 4.38562 9.16401 4.90734L6.00802 24.7645C5.94602 25.1562 6.25149 25.5101 6.65072 25.5101H11.3296L12.5046 18.1152L12.4683 18.3481C12.5515 17.8264 13.0036 17.4408 13.5374 17.4408H15.7604C20.1293 17.4408 23.5485 15.6805 24.548 10.5888C24.5783 10.4376 24.6252 10.1472 24.6252 10.1472C24.9094 8.26299 24.6236 6.98516 23.5968 5.82527Z"
-                              fill="#FF9E1B"
-                            />
-                            <path
-                              d="M25.8092 11.1121C24.7234 16.1251 21.2588 18.7776 15.7603 18.7776H13.7672L12.2792 28.1958H15.5123C15.9796 28.1958 16.3773 27.8586 16.4499 27.4004L16.4877 27.2007L17.2317 22.5264L17.2801 22.2693C17.3527 21.8111 17.7504 21.4739 18.2162 21.4739H18.8075C22.6289 21.4739 25.6201 19.9344 26.4942 15.4809C26.845 13.6934 26.6757 12.1948 25.8092 11.1121Z"
-                              fill="#FF9E1B"
-                            />
-                          </svg>
-                        </span>
-                      </label>
-                      {selectedPaymentType ===
-                        PAYMENT_MODES.STRIPE_PAYMENT_MODE && <PaymentElement />}
-
-                      {selectedPaymentType ===
-                        PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
+                    <div className="section-box">
+                      {totalPrice > 0 && (
                         <>
-                          <div className="paypal-info__sign-in tw-relative tw-z-0">
-                            <PayPalScriptProvider
-                              options={{
-                                clientId:
-                                  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                                debug: true,
-                                currency: 'USD',
-                              }}
-                            >
-                              <PayPalButtons
-                                style={{
-                                  layout: 'horizontal',
-                                  color: 'blue',
-                                  shape: 'pill',
-                                  height: 40,
-                                  tagline: false,
-                                  label: 'pay',
-                                }}
-                                fundingSource="paypal"
-                                forceReRender={[formikProps.values]}
-                                disabled={
-                                  !(formikProps.isValid && formikProps.dirty)
-                                }
-                                createOrder={async (data, actions) => {
-                                  return await completeEnrollmentAction(
-                                    formikProps.values,
-                                    resetForm,
-                                    true,
-                                  );
-                                }}
-                                onApprove={paypalBuyAcknowledgement}
-                              />
-                            </PayPalScriptProvider>
-                          </div>
-                          <div className="paypal-info__sign-out d-none">
-                            <button
-                              type="button"
-                              className="paypal-info__link sign-out-paypal"
-                            >
-                              Log out from Paypal
-                            </button>
+                          <h2 className="section__title d-flex">
+                            Pay with
+                            <span className="ssl-info">
+                              <svg
+                                width="20"
+                                height="21"
+                                viewBox="0 0 20 21"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M15.4497 3.93312L10.8663 2.21646C10.3913 2.04146 9.61634 2.04146 9.14134 2.21646L4.55801 3.93312C3.67467 4.26645 2.95801 5.29979 2.95801 6.24145V12.9915C2.95801 13.6665 3.39967 14.5581 3.94134 14.9581L8.52467 18.3831C9.33301 18.9915 10.658 18.9915 11.4663 18.3831L16.0497 14.9581C16.5913 14.5498 17.033 13.6665 17.033 12.9915V6.24145C17.0413 5.29979 16.3247 4.26645 15.4497 3.93312ZM12.8997 8.59979L9.31634 12.1831C9.19134 12.3081 9.03301 12.3665 8.87467 12.3665C8.71634 12.3665 8.55801 12.3081 8.43301 12.1831L7.09967 10.8331C6.85801 10.5915 6.85801 10.1915 7.09967 9.94979C7.34134 9.70812 7.74134 9.70812 7.98301 9.94979L8.88301 10.8498L12.0247 7.70812C12.2663 7.46645 12.6663 7.46645 12.908 7.70812C13.1497 7.94979 13.1497 8.35812 12.8997 8.59979Z"
+                                  fill="#31364E"
+                                />
+                              </svg>
+                              SSL Secured
+                            </span>
+                          </h2>
+                          <div className="section__body">
+                            <PaymentElement options={paymentElementOptions} />
                           </div>
                         </>
                       )}
                     </div>
-
-                    <div className="tickets-modal__checkout-footer">
-                      <p className="tickets-modal__footer-terms">
-                        By selecting Apple Pay, I agree to the{' '}
-                        <a
-                          href="/policy/ppa-course"
-                          className="tickets-modal__footer-link"
-                        >
-                          Terms of Service
-                        </a>
-                      </p>
-
-                      {loading && <Loader />}
-
-                      <button
-                        className={`tickets-modal__footer-button ${
-                          loading || !(formikProps.isValid && formikProps.dirty)
-                            ? 'disabled'
-                            : ''
-                        }`}
-                        disabled={
-                          loading || !(formikProps.isValid && formikProps.dirty)
-                        }
-                        type="submit"
-                      >
-                        Place order
-                      </button>
-                    </div>
                   </div>
-                </div>
+                  <div className="col-12 col-lg-5">
+                    <div className="checkout-sidebar">
+                      <div className="room-board-pricing">
+                        <img
+                          className="tickets-modal__photo"
+                          src={eventImageUrl}
+                          alt=""
+                        />
+                        <div className="tickets-modal__promo">
+                          <div className="tickets-modal__promo-wrapper">
+                            <div className="section__body">
+                              <div className="form-item required">
+                                <DiscountInputNew
+                                  placeholder="Discount Code"
+                                  formikProps={formikProps}
+                                  formikKey="couponCode"
+                                  product={productId}
+                                  applyDiscount={applyDiscount}
+                                  addOnProducts={addOnProducts}
+                                  containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                                  selectedTickets={selectedTickets}
+                                  productType="ticketed_event"
+                                  inputClass="tickets-modal__input"
+                                  tagClass="tickets-modal__input ticket-discount"
+                                  isTicketDiscount
+                                ></DiscountInputNew>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="tickets-container">
+                          {selectedTickets.map((item) => {
+                            return (
+                              <div className="tickets" key={item.pricingTierId}>
+                                <div className="label">
+                                  {item.pricingTierName} x
+                                  {item?.numberOfTickets}{' '}
+                                </div>
+                                <div className="value">
+                                  $
+                                  {(item.price * item?.numberOfTickets).toFixed(
+                                    2,
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div className="tickets">
+                            <div className="label">Subtotal</div>
+                            <div className="value">
+                              ${parseFloat(totalPrice).toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
 
-                <div className="tickets-modal__right-container">
-                  <div className="tickets-modal__right-column">
-                    <img
-                      className="tickets-modal__photo"
-                      src={eventImageUrl}
-                      alt=""
-                    />
+                        <div className="total">
+                          <div className="label">Total:</div>
+                          <div className="value">
+                            {' '}
+                            {discountResponse && delfee && (
+                              <span className="discount">
+                                ${delfee.toFixed(2)}
+                              </span>
+                            )}{' '}
+                            ${totalPrice.toFixed(2) || '0'.toFixed(2)}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="section-box checkout-details">
+                        <h2 className="section__title">Details:</h2>
+                        <div className="section__body">
+                          <div className="detail-item row">
+                            <div className="label col-5">
+                              <svg
+                                className="detailsIcon icon-calendar"
+                                viewBox="0 0 34 32"
+                              >
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="2.4"
+                                  d="M29.556 16c0 7.36-5.973 13.333-13.333 13.333s-13.333-5.973-13.333-13.333c0-7.36 5.973-13.333 13.333-13.333s13.333 5.973 13.333 13.333z"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="2.4"
+                                  d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
+                                ></path>
+                              </svg>{' '}
+                              Date:
+                            </div>
+                            <div className="value col-7">
+                              {dayjs
+                                .utc(eventStartDate)
+                                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                `${dayjs
+                                  .utc(eventStartDate)
+                                  .format('MMM DD')}-${dayjs
+                                  .utc(eventEndDate)
+                                  .format('DD, YYYY')}`}
 
-                    <div className="tickets-modal__cart-empty">
-                      <img src="/img/empty-cart.svg" alt="violet" />
-                    </div>
-
-                    <div className="tickets-modal__cart">
-                      <h2 className="tickets-modal__cart-summary">
-                        Order Summary
-                      </h2>
-                      {selectedTickets.map((item) => {
-                        return (
-                          <p
-                            className="tickets-modal__cart-product"
-                            key={item.pricingTierId}
-                          >
-                            x{item?.numberOfTickets} {item.pricingTierName}{' '}
-                            <span>
-                              ${(item.price * item?.numberOfTickets).toFixed(2)}
-                            </span>
-                          </p>
-                        );
-                      })}
-
-                      <p className="tickets-modal__cart-subtotal">
-                        Subtotal
-                        <span>${parseFloat(totalPrice).toFixed(2)}</span>
-                      </p>
-
-                      {totalDiscount > 0 && (
-                        <p className="tickets-modal__cart-discount">
-                          Discount(-)
-                          <span>${parseFloat(totalDiscount).toFixed(2)}</span>
-                        </p>
-                      )}
-
-                      <p className="tickets-modal__cart-total">
-                        Total
-                        <span>
-                          ${parseFloat(delfee || totalPrice).toFixed(2)}
-                        </span>
-                      </p>
+                              {!dayjs
+                                .utc(eventStartDate)
+                                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                `${dayjs
+                                  .utc(eventStartDate)
+                                  .format('MMM DD')}-${dayjs
+                                  .utc(eventEndDate)
+                                  .format('MMM DD, YYYY')}`}
+                            </div>
+                          </div>
+                          <div className="detail-item row">
+                            <div className="label col-5">
+                              <svg
+                                className="detailsIcon icon-calendar"
+                                viewBox="0 0 34 32"
+                              >
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M10.889 2.667v4"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M21.555 2.667v4"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M4.889 12.12h22.667"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M28.222 11.333v11.333c0 4-2 6.667-6.667 6.667h-10.667c-4.667 0-6.667-2.667-6.667-6.667v-11.333c0-4 2-6.667 6.667-6.667h10.667c4.667 0 6.667 2.667 6.667 6.667z"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M21.148 18.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M21.148 22.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M16.216 18.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M16.216 22.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M11.281 18.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M11.281 22.267h0.012"
+                                ></path>
+                              </svg>{' '}
+                              Timing:
+                            </div>
+                            <div className="value col-7">
+                              {timings &&
+                                timings.map((time) => {
+                                  return (
+                                    <div key={time.startDate}>
+                                      {dayjs.utc(time.startDate).format('dd')}:{' '}
+                                      {tConvert(time.startTime)}-
+                                      {tConvert(time.endTime)}{' '}
+                                      {ABBRS[time.timeZone]}
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          </div>
+                          <div className="detail-item row">
+                            <div className="label col-5">
+                              <svg
+                                className="detailsIcon icon-calendar"
+                                viewBox="0 0 34 32"
+                              >
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="2.4"
+                                  d="M16.435 14.493c-0.133-0.013-0.293-0.013-0.44 0-3.173-0.107-5.693-2.707-5.693-5.907 0-3.267 2.64-5.92 5.92-5.92 3.267 0 5.92 2.653 5.92 5.92-0.013 3.2-2.533 5.8-5.707 5.907z"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="2.4"
+                                  d="M9.768 19.413c-3.227 2.16-3.227 5.68 0 7.827 3.667 2.453 9.68 2.453 13.347 0 3.227-2.16 3.227-5.68 0-7.827-3.653-2.44-9.667-2.44-13.347 0z"
+                                ></path>
+                              </svg>{' '}
+                              Instructor(s):
+                            </div>
+                            <div className="value col-7">
+                              {primaryTeacherName && primaryTeacherName}
+                              <br />
+                              {coTeacher1Name && coTeacher1Name}
+                              <br />
+                              {coTeacher2Name && coTeacher2Name}
+                            </div>
+                          </div>
+                          <div className="detail-item row">
+                            <div className="label col-5">
+                              <svg
+                                className="detailsIcon icon-calendar"
+                                viewBox="0 0 34 32"
+                              >
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="miter"
+                                  strokeLinecap="butt"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="2.4"
+                                  d="M16.223 17.907c2.297 0 4.16-1.863 4.16-4.16s-1.863-4.16-4.16-4.16c-2.298 0-4.16 1.863-4.16 4.16s1.863 4.16 4.16 4.16z"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="miter"
+                                  strokeLinecap="butt"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="2.4"
+                                  d="M5.049 11.32c2.627-11.547 19.733-11.533 22.347 0.013 1.533 6.773-2.68 12.507-6.373 16.053-2.68 2.587-6.92 2.587-9.613 0-3.68-3.547-7.893-9.293-6.36-16.067z"
+                                ></path>
+                              </svg>{' '}
+                              Location:
+                            </div>
+                            <div className="value col-7">
+                              {mode === COURSE_MODES.ONLINE.name
+                                ? mode
+                                : (mode === COURSE_MODES.IN_PERSON.name ||
+                                    mode ===
+                                      COURSE_MODES.DESTINATION_RETREATS
+                                        .name) && (
+                                    <>
+                                      {!workshop.isLocationEmpty && (
+                                        <a
+                                          href={`https://www.google.com/maps/search/?api=1&query=${
+                                            workshop.locationStreet || ''
+                                          }, ${workshop.locationCity} ${
+                                            workshop.locationProvince
+                                          } ${workshop.locationPostalCode} ${
+                                            workshop.locationCountry
+                                          }`}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          {workshop.locationStreet &&
+                                            workshop.locationStreet}
+                                          {workshop.locationCity || ''}
+                                          {', '}
+                                          {workshop.locationProvince || ''}{' '}
+                                          {workshop.locationPostalCode || ''}
+                                        </a>
+                                      )}
+                                      {workshop.isLocationEmpty && (
+                                        <a
+                                          href={`https://www.google.com/maps/search/?api=1&query=${
+                                            workshop.streetAddress1 || ''
+                                          },${workshop.streetAddress2 || ''} ${
+                                            workshop.city
+                                          } ${workshop.state} ${workshop.zip} ${
+                                            workshop.country
+                                          }`}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          {workshop.streetAddress1 &&
+                                            workshop.streetAddress1}
+                                          {workshop.streetAddress2 &&
+                                            workshop.streetAddress2}
+                                          {workshop.city || ''}
+                                          {', '}
+                                          {workshop.state || ''}{' '}
+                                          {workshop.zip || ''}
+                                        </a>
+                                      )}
+                                    </>
+                                  )}
+                            </div>
+                          </div>
+                          <div className="detail-item row">
+                            <div className="label col-5">
+                              <svg
+                                className="detailsIcon icon-calendar"
+                                viewBox="0 0 34 32"
+                              >
+                                <path
+                                  fill="none"
+                                  stroke="#9598a6"
+                                  strokeLinejoin="miter"
+                                  strokeLinecap="butt"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M29.516 24.44c0 0.48-0.107 0.973-0.333 1.453s-0.52 0.933-0.907 1.36c-0.653 0.72-1.373 1.24-2.187 1.573-0.8 0.333-1.667 0.507-2.6 0.507-1.36 0-2.813-0.32-4.347-0.973s-3.067-1.533-4.587-2.64c-1.533-1.12-2.987-2.36-4.373-3.733-1.373-1.387-2.613-2.84-3.72-4.36-1.093-1.52-1.973-3.040-2.613-4.547-0.64-1.52-0.96-2.973-0.96-4.36 0-0.907 0.16-1.773 0.48-2.573 0.32-0.813 0.827-1.56 1.533-2.227 0.853-0.84 1.787-1.253 2.773-1.253 0.373 0 0.747 0.080 1.080 0.24 0.347 0.16 0.653 0.4 0.893 0.747l3.093 4.36c0.24 0.333 0.413 0.64 0.533 0.933 0.12 0.28 0.187 0.56 0.187 0.813 0 0.32-0.093 0.64-0.28 0.947-0.173 0.307-0.427 0.627-0.747 0.947l-1.013 1.053c-0.147 0.147-0.213 0.32-0.213 0.533 0 0.107 0.013 0.2 0.040 0.307 0.040 0.107 0.080 0.187 0.107 0.267 0.24 0.44 0.653 1.013 1.24 1.707 0.6 0.693 1.24 1.4 1.933 2.107 0.72 0.707 1.413 1.36 2.12 1.96 0.693 0.587 1.267 0.987 1.72 1.227 0.067 0.027 0.147 0.067 0.24 0.107 0.107 0.040 0.213 0.053 0.333 0.053 0.227 0 0.4-0.080 0.547-0.227l1.013-1c0.333-0.333 0.653-0.587 0.96-0.747 0.307-0.187 0.613-0.28 0.947-0.28 0.253 0 0.52 0.053 0.813 0.173s0.6 0.293 0.933 0.52l4.413 3.133c0.347 0.24 0.587 0.52 0.733 0.853 0.133 0.333 0.213 0.667 0.213 1.040z"
+                                ></path>
+                              </svg>{' '}
+                              Contact details:
+                            </div>
+                            <div className="value col-7">
+                              <span>{contactName}</span>
+                              <br />
+                              <a href={`tel:${phone1}`}>{phone1}</a>
+                              <br />
+                              {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}
+                              <a href={`mailto:${contactEmail}`}>
+                                {contactEmail}
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="section-box confirm-submit">
+                        <div className="section__body">
+                          <div className="form-item submit-item">
+                            <button
+                              className="submit-btn"
+                              id="pay-button"
+                              type="button"
+                              disabled={loading}
+                              form="my-form"
+                              onClick={handleFormSubmit}
+                            >
+                              Confirm and Pay
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
-        );
-      }}
-    </Formik>
+            </section>
+          );
+        }}
+      </Formik>
+    </>
   );
 };
