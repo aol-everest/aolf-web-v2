@@ -160,14 +160,15 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 <strong>
                   provide an optimal environment to break free from a busy mind
                 </strong>
-                , dive deep within, and experience transformative shifts—fresh
-                perspective, deep insights, and clarity. These moments
+                , This is all designed to provide an optional environment to
+                break free from a busy mind. Dive deeply within to experience a
+                new fresh perspective, insights and clarity. These moments will
                 supercharge the rest of your year, making it more vibrant,
                 productive, and full of energy. As you emerge, you feel
-                centered, recharged, and ready to embrace life with renewed
-                focus and joy. This retreat is your avenue to rekindle your
-                connection with Healing Breaths SKY Program, elevating your
-                energy to new heights.
+                centered, ready to embrace life with restored focus and joy.
+                This retreat is your avenue to rekindle your connection with the
+                Healing Breaths SKY Program, elevating your energy to new
+                heights.
               </p>
 
               <p>
