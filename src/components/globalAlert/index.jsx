@@ -5,12 +5,14 @@ import { CustomAlert } from './CustomAlert';
 import { ErrorAlert } from './ErrorAlert';
 import { SuccessAlert } from './SuccessAlert';
 import { WarningAlert } from './WarningAlert';
+import { NewAlert } from './NewAlert';
 
 const ALERT_COMPONENTS = {
   [ALERT_TYPES.SUCCESS_ALERT]: SuccessAlert,
   [ALERT_TYPES.CUSTOM_ALERT]: CustomAlert,
   [ALERT_TYPES.ERROR_ALERT]: ErrorAlert,
   [ALERT_TYPES.WARNING_ALERT]: WarningAlert,
+  [ALERT_TYPES.NEW_ALERT]: NewAlert,
 };
 
 export const GlobalAlert = ({ children }) => {

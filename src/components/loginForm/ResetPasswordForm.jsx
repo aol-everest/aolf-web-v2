@@ -77,7 +77,7 @@ export const ResetPasswordForm = ({
   const resendOTP = (e) => {
     if (e) e.preventDefault();
     if (minutes <= 0 && seconds <= 0) {
-      setMinutes(1);
+      setMinutes(2);
       setSeconds(30);
       resetCodeAction();
     }
@@ -180,23 +180,25 @@ export const ResetPasswordForm = ({
             </div>
             <div class="form-item">
               {seconds > 0 || minutes > 0 ? (
-                <p>
-                  Time Remaining:{' '}
-                  <span class="tw-font-bold">
+                <a
+                  href="#"
+                  className={classNames('forgot-pass', {
+                    '!tw-text-slate-300': seconds > 0 || minutes > 0,
+                  })}
+                  onClick={resendOTP}
+                >
+                  Resend code in{' '}
+                  <span class="tw-font-bold tw-text-slate-400">
                     {minutes < 10 ? `0${minutes}` : minutes}:
                     {seconds < 10 ? `0${seconds}` : seconds}
-                  </span>
-                </p>
-              ) : null}
-              <a
-                href="#"
-                className={classNames('forgot-pass', {
-                  '!tw-text-slate-300': seconds > 0 || minutes > 0,
-                })}
-                onClick={resendOTP}
-              >
-                Resend code
-              </a>
+                  </span>{' '}
+                  minutes
+                </a>
+              ) : (
+                <a href="#" className="forgot-pass" onClick={resendOTP}>
+                  Resend code
+                </a>
+              )}
             </div>
             {showMessage && <div class="common-error-message">{message}</div>}
             <div class="form-action">

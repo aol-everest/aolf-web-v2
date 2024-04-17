@@ -1,5 +1,5 @@
-import { MESSAGE_EMAIL_VERIFICATION_SUCCESS } from '@constants';
-import { useAuth, useGlobalModalContext } from '@contexts';
+import { MESSAGE_EMAIL_VERIFICATION_SUCCESS, ALERT_TYPES } from '@constants';
+import { useAuth, useGlobalAlertContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { Auth, api } from '@utils';
 import classNames from 'classnames';
@@ -61,10 +61,60 @@ const encodeFormData = (data) => {
     .join('&');
 };
 
+const VerificationCodeMessage = () => (
+  <div class="confirmation-message-info">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40px"
+      height="40px"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <path
+        d="M8.5 12.5L10.5 14.5L15.5 9.5"
+        stroke="#ff865b"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <br />
+    <br />A verification code has been emailed to you. Please use the
+    verification code and reset your password.
+  </div>
+);
+
+const PasswordChangeSuccessMessage = () => (
+  <div class="confirmation-message-info">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40px"
+      height="40px"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <path
+        d="M8.5 12.5L10.5 14.5L15.5 9.5"
+        stroke="#ff865b"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <br />
+    <br />
+    Your password has been successfully updated. Your account is now secured
+    with the new password.
+  </div>
+);
+
 function LoginPage() {
   const router = useRouter();
   const { setUser } = useAuth();
   const { identify } = useAnalytics();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -162,6 +212,7 @@ function LoginPage() {
   };
 
   const handleResetPasswordNextSteps = (output) => {
+    console.log(output);
     const { nextStep } = output;
     switch (nextStep.resetPasswordStep) {
       case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
@@ -170,6 +221,10 @@ function LoginPage() {
         console.log(
           `Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`,
         );
+
+        showAlert(ALERT_TYPES.NEW_ALERT, {
+          children: <VerificationCodeMessage />,
+        });
         // Collect the confirmation code from the user and pass to confirmResetPassword.
         break;
       case 'DONE':
@@ -182,13 +237,15 @@ function LoginPage() {
     setLoading(true);
     setShowMessage(false);
     try {
-      const result = await confirmResetPassword({
+      await confirmResetPassword({
         username,
         confirmationCode: '' + code,
         newPassword: password,
       });
-      console.log(result);
       setMode(SIGN_IN_MODE);
+      showAlert(ALERT_TYPES.NEW_ALERT, {
+        children: <PasswordChangeSuccessMessage />,
+      });
     } catch (ex) {
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {

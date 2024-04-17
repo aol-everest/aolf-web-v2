@@ -241,6 +241,7 @@
 .modal {
   padding-left: 15px;
   padding-right: 15px;
+  display: block;
   &.login-appleID,
   &.confirmation-message {
     .modal-dialog {
