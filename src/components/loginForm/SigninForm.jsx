@@ -115,7 +115,9 @@ const StepInputPassword = ({
           <label for="pass">Password</label>
           <input
             type={type}
-            class="input-field password"
+            className={classNames('input-field password', {
+              validate: errors.password,
+            })}
             placeholder="Password"
             required
             autoComplete="current-password"
@@ -131,6 +133,9 @@ const StepInputPassword = ({
               alt="Show Password"
             />
           </button>
+          {errors.password && (
+            <div class="validation-input">{errors.password.message}</div>
+          )}
         </div>
         {showMessage && <div class="common-error-message">{message}</div>}
         <div class="form-item">
@@ -348,8 +353,9 @@ export const SigninForm = ({
 
   const signInWithAnotherUserAction = (e) => {
     if (e) e.preventDefault();
+    console.log('IIIIIIII');
     setShowSignInOptionsForUser('NEW_USER_ENTRY');
-    updateStep(0);
+    setStep(0);
   };
 
   const renderStep = () => {

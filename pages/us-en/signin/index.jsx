@@ -77,11 +77,13 @@ function LoginPage() {
   );
   const [navigateTo] = useQueryState('next');
   const [username, setUsername] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
 
   const switchView = (view) => (e) => {
     if (e) e.preventDefault();
     setMode(view);
+    if (view === RESET_PASSWORD_REQUEST) {
+      resetPasswordAction();
+    }
   };
 
   const getActualMessage = (message) => {
@@ -138,23 +140,12 @@ function LoginPage() {
     setLoading(false);
   };
 
-  const resetPasswordAction = async ({ username }) => {
+  const resetPasswordAction = async () => {
     setLoading(true);
     setShowMessage(false);
     try {
       const output = await resetPassword({ username });
       handleResetPasswordNextSteps(output);
-      // const { resendTemporaryPassword } = await Auth.sendCode({
-      //   email: username,
-      // });
-      // setUsername(username);
-      // setShowSuccessMessage(true);
-      // setSuccessMessage(MESSAGE_VERIFICATION_CODE_SENT_SUCCESS);
-      // setTimeout(() => {
-      //   setMode(resendTemporaryPassword ? LOGIN_MODE : CHANGE_PASSWORD_REQUEST);
-      //   setShowSuccessMessage(false);
-      //   setSuccessMessage(null);
-      // }, 3000);
     } catch (ex) {
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {
@@ -187,16 +178,30 @@ function LoginPage() {
     }
   };
 
-  const handleConfirmResetPassword = async ({
-    username,
-    confirmationCode,
-    newPassword,
-  }) => {
+  const handleConfirmResetPassword = async ({ code, password }) => {
+    setLoading(true);
+    setShowMessage(false);
     try {
-      await confirmResetPassword({ username, confirmationCode, newPassword });
-    } catch (error) {
-      console.log(error);
+      const result = await confirmResetPassword({
+        username,
+        confirmationCode: '' + code,
+        newPassword: password,
+      });
+      console.log(result);
+      setMode(SIGN_IN_MODE);
+    } catch (ex) {
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
+      setShowMessage(true);
     }
+    setLoading(false);
   };
 
   const handleUpdatePassword = async (oldPassword, newPassword) => {
@@ -317,10 +322,12 @@ function LoginPage() {
       case RESET_PASSWORD_REQUEST:
         return (
           <ResetPasswordForm
-            signUp={signUpAction}
+            resetPassword={handleConfirmResetPassword}
             showMessage={showMessage}
             message={getActualMessage(message)}
             toSignInMode={switchView(SIGN_IN_MODE)}
+            username={username}
+            resetCodeAction={resetPasswordAction}
           >
             {socialLoginRender()}
           </ResetPasswordForm>
