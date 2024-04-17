@@ -120,7 +120,7 @@ export function Footer() {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link href="/us-en/course">All Courses</Link>
+                    <Link href="/us-en/courses">All Courses</Link>
                   </li>
                   <li className="nav-item">
                     <Link href="/us-en/lp/advanced-courses">
