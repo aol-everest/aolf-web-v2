@@ -71,13 +71,17 @@ main.all-courses-find {
       gap: 12px;
       max-width: 316px;
       flex: 1;
-      .filter-cancel-button,
       .filter-save-button {
         display: none;
       }
       .search_course_form_mobile {
         @media screen and (max-width: 720px) {
           margin-bottom: 0;
+          .courses-filter {
+            button.btn_outline_box {
+              color: #000000;
+            }
+          }
         }
       }
       .courses-filter__wrapper-list {
@@ -278,7 +282,8 @@ main.all-courses-find {
           right: 10px;
           z-index: 1;
           border-radius: 32px;
-          margin: -40px 0 0 0;
+          bottom: calc(70vh + 8px);
+          z-index: 101;
           &::after,
           &::before {
             content: '';
@@ -383,12 +388,16 @@ main.all-courses-find {
         flex-direction: column;
         border-radius: 20px 20px 0 0;
         padding: 0px 16px 90px;
+        &[style='display: none;'] + .filter-cancel-button {
+          display: none;
+        }
         .selected-filter-wrap {
           display: flex;
           margin-top: 30px;
           align-items: flex-start;
           gap: 12px;
           flex-basis: unset;
+          margin-bottom: 16px;
         }
 
         .filter-cancel-button + label {
