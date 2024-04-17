@@ -22,8 +22,8 @@ function isObject(value) {
 }
 
 export function parseJwtPayload(jwt) {
-  if (isObject(jwt)) {
-    return jwt;
+  if (isObject(jwt) && jwt.payload) {
+    return jwt.payload;
   }
   const parts = jwt.split('.');
   const payload = parts[1];

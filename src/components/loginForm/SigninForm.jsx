@@ -268,44 +268,24 @@ export const SigninForm = ({
     //if (children) return <>{children}</>;
     return (
       <Container>
-        <div className="passwordless-flex-col">
-          <div>
-            You&apos;re currently signed-in as:{' '}
-            <span className="passwordless-username">
-              {tokensParsed?.idToken.email}
-            </span>
-          </div>
-          <div className="passwordless-flex">
-            <a
-              href={`https://jwtinspector.kevhak.people.aws.dev/inspect#token=${tokens.idToken}&tab=payload`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              ID token
-            </a>
-            <a
-              href={`https://jwtinspector.kevhak.people.aws.dev/inspect#token=${tokens.accessToken}&tab=payload`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Access token
-            </a>
-          </div>
-          <div className="passwordless-flex">
-            <button
-              className="passwordless-button passwordless-button-sign-out"
-              onClick={toggleShowAuthenticatorManager}
-              disabled={showAuthenticatorManager}
-            >
-              Manage authenticators
-            </button>
-            <button
-              className="passwordless-button passwordless-button-sign-out"
-              onClick={signOut}
-            >
-              Sign out
-            </button>
-          </div>
+        <div class="page-description">
+          You&apos;re currently signed-in as:{' '}
+          <span className="tw-font-semibold">
+            {tokensParsed?.idToken.email}
+          </span>
+        </div>
+
+        <div class="form-action">
+          <button
+            class="submit-btn"
+            onClick={toggleShowAuthenticatorManager}
+            disabled={showAuthenticatorManager}
+          >
+            Manage authenticators
+          </button>
+          <button class="submit-btn" onClick={signOut}>
+            Sign out
+          </button>
         </div>
       </Container>
     );

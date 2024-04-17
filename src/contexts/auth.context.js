@@ -7,7 +7,6 @@ import React, {
   useRef,
   createContext,
 } from 'react';
-import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import { Hub } from 'aws-amplify/utils';
 import { Auth } from '@utils';
 import { signOut } from '@passwordLess/common.js';
@@ -41,7 +40,7 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
 
   const fetchCurrentUser = async () => {
     try {
-      const userInfo = Auth.fetchUserProfile();
+      const userInfo = await Auth.fetchUserProfile();
       setCurrentUser(userInfo);
     } catch (error) {
       setCurrentUser({ isAuthenticated: false });
@@ -53,12 +52,12 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
     // fetchCurrentUser();
 
     // Subscribe to Hub events for authentication
-    const hubListenerCancelToken = Hub.listen('auth', ({ payload }) => {
-      console.log(payload);
+    const hubListenerCancelToken = Hub.listen('auth', async ({ payload }) => {
+      console.log('hubListener', payload);
       switch (payload.event) {
         case 'signedIn':
           console.log('user have been signedIn successfully.');
-          fetchCurrentUser();
+          await fetchCurrentUser();
           break;
         case 'signedOut':
           console.log('user have been signedOut successfully.');
@@ -125,6 +124,7 @@ function _usePasswordless(fetchCurrentUser) {
   ] = useState(true);
   const [tokens, _setTokens] = useState();
   const [tokensParsed, setTokensParsed] = useState();
+  console.log(tokens, tokensParsed, initiallyRetrievingTokensFromStorage);
   const setTokens = useCallback((reactSetStateAction) => {
     _setTokens((prevState) => {
       const newTokens =

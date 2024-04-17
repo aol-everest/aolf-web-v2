@@ -383,7 +383,7 @@ function Fido2Recommendation() {
   if (!show) return null;
   return (
     <div>
-      <div className="passwordless-fido-recommendation">
+      <div className="passwordless-fido-recommendation-new">
         {(status === 'IDLE' || status === 'STARTING') && (
           <>
             <div className="passwordless-fido-recommendation-text">
@@ -391,7 +391,7 @@ function Fido2Recommendation() {
               face or touch unlock for this website.
             </div>
             <button
-              className="passwordless-button passwordless-button-add-face-touch-unlock"
+              className="passwordless-button-new passwordless-button-add-face-touch-unlock"
               disabled={status === 'STARTING'}
               onClick={() => {
                 setStatus('STARTING');
@@ -416,7 +416,7 @@ function Fido2Recommendation() {
                 updateFidoPreference({ useFido: 'NO' });
                 reset();
               }}
-              className="passwordless-link"
+              className="passwordless-link-new"
             >
               close
             </div>
@@ -444,14 +444,14 @@ function Fido2Recommendation() {
               onChange={(e) => setFriendlyName(e.target.value)}
             />
             <button
-              className="passwordless-button passwordless-button-finish"
+              className="passwordless-button-new passwordless-button-finish"
               type="submit"
               disabled={!friendlyName || status === 'COMPLETING'}
             >
               Finish
             </button>
             <div
-              className="passwordless-link"
+              className="passwordless-link-new"
               onClick={() => {
                 updateFidoPreference({ useFido: 'NO' });
                 reset();
@@ -469,7 +469,7 @@ function Fido2Recommendation() {
                 ? `Failed to activate face or touch unlock: ${error.message}`
                 : 'Face or touch unlock activated successfully'}
             </div>
-            <div onClick={reset} className="passwordless-link">
+            <div onClick={reset} className="passwordless-link-new">
               close
             </div>
           </>
@@ -591,7 +591,7 @@ function AuthenticatorsManager() {
                             }
                           />
                           <button
-                            className="passwordless-button passwordless-button-save"
+                            className="passwordless-button-new passwordless-button-save"
                             type="submit"
                             disabled={
                               credential.busy ||
@@ -602,7 +602,7 @@ function AuthenticatorsManager() {
                             Save
                           </button>
                           <button
-                            className="passwordless-button passwordless-button-cancel"
+                            className="passwordless-button-new passwordless-button-cancel"
                             onClick={() => setEditFriendlyNameRowIndex(-1)}
                             disabled={credential.busy}
                           >
@@ -625,7 +625,7 @@ function AuthenticatorsManager() {
                           </span>
                           <div>
                             <button
-                              className="passwordless-button passwordless-button-save"
+                              className="passwordless-button-new passwordless-button-save"
                               onClick={() => {
                                 setError(undefined);
                                 credential.delete().then(reset).catch(setError);
@@ -635,7 +635,7 @@ function AuthenticatorsManager() {
                               Yes
                             </button>
                             <button
-                              className="passwordless-button passwordless-button-cancel"
+                              className="passwordless-button-new passwordless-button-cancel"
                               onClick={() => {
                                 setError(undefined);
                                 setConfirmDeleteRowIndex(-1);
@@ -684,7 +684,7 @@ function AuthenticatorsManager() {
                       </td>
                       <td className="passwordless-table-col-delete">
                         <button
-                          className="passwordless-button passwordless-button-outlined passwordless-button-delete"
+                          className="passwordless-button-new passwordless-button-outlined passwordless-button-delete"
                           onClick={() => {
                             setError(undefined);
                             setConfirmDeleteRowIndex(index);
@@ -717,7 +717,7 @@ function AuthenticatorsManager() {
         {(addingAuthenticatorStatus === 'IDLE' ||
           addingAuthenticatorStatus === 'STARTING') && (
           <button
-            className="passwordless-button passwordless-button-add-authenticator"
+            className="passwordless-button-new passwordless-button-add-authenticator"
             onClick={() => {
               setAddingAuthenticatorStatus('STARTING');
               setError(undefined);
@@ -767,7 +767,7 @@ function AuthenticatorsManager() {
               onChange={(e) => setFriendlyName(e.target.value)}
             />
             <button
-              className="passwordless-button passwordless-button-finish"
+              className="passwordless-button-new passwordless-button-finish"
               type="submit"
               disabled={
                 !friendlyName || addingAuthenticatorStatus === 'COMPLETING'

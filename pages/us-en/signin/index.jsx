@@ -38,10 +38,8 @@ import {
   confirmResetPassword,
   updatePassword,
 } from 'aws-amplify/auth';
-import {
-  Passwordless as PasswordlessComponent,
-  Fido2Toast,
-} from '@components/passwordLessAuth';
+import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
+import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
 
 import 'amazon-cognito-passwordless-auth/passwordless.css';
 
@@ -160,11 +158,11 @@ function LoginPage() {
       await signOut({ global: true });
       const { isSignedIn, nextStep } = await signIn({ username, password });
       console.log(isSignedIn, nextStep);
-      if (navigateTo) {
-        router.push(navigateTo);
-      } else {
-        router.push('/');
-      }
+      // if (navigateTo) {
+      //   router.push(navigateTo);
+      // } else {
+      //   router.push('/');
+      // }
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;
