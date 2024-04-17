@@ -5,7 +5,7 @@ import { useSessionStorage } from '@uidotdev/usehooks';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-export default function CourseFinderResult() {
+function CourseFinderResult() {
   const router = useRouter();
   const [value, setValue] = useSessionStorage('center-finder', {});
   const {
@@ -260,3 +260,7 @@ export default function CourseFinderResult() {
     </main>
   );
 }
+
+CourseFinderResult.hideFooter = true;
+
+export default CourseFinderResult;

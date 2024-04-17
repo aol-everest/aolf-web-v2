@@ -122,18 +122,22 @@ export const COURSE_TYPES_MASTER = {
           slug: 'chakra-kriya',
           name: 'Chakra Kriya',
         },
-        SANYAM_COURSE: {
-          slug: 'sanyam-course',
-          name: 'Sanyam Course',
-        },
-        SRI_SRI_YOGA_DEEP_DIVE: {
-          slug: 'sri-sri-yoga-deep-dive',
-          name: 'Sri Sri Yoga Deep Dive',
-        },
         DSN_COURSE: {
           slug: 'dsn-course',
           name: 'DSN Course',
           isAvailableInPersonOnly: true,
+        },
+        SANYAM_COURSE: {
+          slug: 'sanyam-course',
+          name: 'Sanyam Course',
+        },
+        SHAKTI_KRIYA: {
+          slug: 'shakti-kriya',
+          name: 'Shakti Kriya',
+        },
+        SRI_SRI_YOGA_DEEP_DIVE: {
+          slug: 'sri-sri-yoga-deep-dive',
+          name: 'Sri Sri Yoga Deep Dive',
         },
       },
     },
@@ -392,6 +396,13 @@ export const COURSE_TYPES = {
     description:
       'Break through your fears, inhibitions, and worry to access inner stability and power, for yourself and the world at large.',
     value: process.env.NEXT_PUBLIC_DSN_CTYPE || '',
+  },
+  SHAKTI_KRIYA: {
+    slug: 'shakti-kriya',
+    name: 'Shakti Kriya',
+    description:
+      'Get Shaktified and tap into a profound reservoir of energy from within. Discover the full, powerful you!',
+    value: process.env.NEXT_PUBLIC_SHAKTI_KRIYA_CTYPE || '',
   },
 };
 

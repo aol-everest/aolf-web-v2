@@ -496,4 +496,6 @@ const CourseFinder = () => {
   );
 };
 
+CourseFinder.hideFooter = true;
+
 export default CourseFinder;
