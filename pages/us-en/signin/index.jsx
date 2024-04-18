@@ -37,6 +37,7 @@ import {
   resetPassword,
   confirmResetPassword,
   updatePassword,
+  confirmSignIn,
 } from 'aws-amplify/auth';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
@@ -48,12 +49,6 @@ const SIGN_UP_MODE = 's-up';
 const RESET_PASSWORD_REQUEST = 'spr';
 const NEW_PASSWORD_REQUEST = 'npr';
 const CHANGE_PASSWORD_REQUEST = 'cpr';
-
-const encodeFormData = (data) => {
-  return Object.keys(data)
-    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-    .join('&');
-};
 
 const VerificationCodeMessage = () => (
   <div class="confirmation-message-info">
@@ -106,7 +101,6 @@ const PasswordChangeSuccessMessage = () => (
 
 function LoginPage() {
   const router = useRouter();
-  const { setUser } = useAuth();
   const { identify } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
 
@@ -163,10 +157,18 @@ function LoginPage() {
       await signOut({ global: true });
       const { isSignedIn, nextStep } = await signIn({ username, password });
       console.log(isSignedIn, nextStep);
-      if (navigateTo) {
-        router.push(navigateTo);
-      } else {
-        router.push('/us-en');
+      switch (nextStep.signInStep) {
+        case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
+          setMode(NEW_PASSWORD_REQUEST);
+          // Collect the confirmation code from the user and pass to confirmResetPassword.
+          break;
+        case 'DONE':
+          if (navigateTo) {
+            router.push(navigateTo);
+          } else {
+            router.push('/us-en');
+          }
+          break;
       }
     } catch (ex) {
       console.log(ex);
@@ -232,6 +234,11 @@ function LoginPage() {
         break;
       case 'DONE':
         console.log('Successfully reset password.');
+        if (navigateTo) {
+          router.push(navigateTo);
+        } else {
+          router.push('/us-en');
+        }
         break;
     }
   };
@@ -264,12 +271,34 @@ function LoginPage() {
     setLoading(false);
   };
 
-  const handleUpdatePassword = async (oldPassword, newPassword) => {
+  const handleUpdatePassword = async ({ password }) => {
+    setLoading(true);
+    setShowMessage(false);
     try {
-      await updatePassword({ oldPassword, newPassword });
-    } catch (err) {
-      console.log(err);
+      const { isSignedIn, nextStep } = await confirmSignIn({
+        challengeResponse: password,
+      });
+      console.log(isSignedIn, nextStep);
+      if (isSignedIn && nextStep.signInStep === 'DONE') {
+        if (navigateTo) {
+          router.push(navigateTo);
+        } else {
+          router.push('/us-en');
+        }
+      }
+    } catch (ex) {
+      let errorMessage = ex.message.match(/\[(.*)\]/);
+      if (errorMessage) {
+        errorMessage = errorMessage[1];
+      } else {
+        errorMessage = ex.message;
+      }
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
+      setShowMessage(true);
     }
+    setLoading(false);
   };
 
   const fbLogin = async () => {
@@ -388,9 +417,16 @@ function LoginPage() {
             toSignInMode={switchView(SIGN_IN_MODE)}
             username={username}
             resetCodeAction={resetPasswordAction}
-          >
-            {socialLoginRender()}
-          </ResetPasswordForm>
+          ></ResetPasswordForm>
+        );
+      case NEW_PASSWORD_REQUEST:
+        return (
+          <NewPasswordForm
+            completeNewPassword={handleUpdatePassword}
+            showMessage={showMessage}
+            message={getActualMessage(message)}
+            toSignInMode={switchView(SIGN_IN_MODE)}
+          ></NewPasswordForm>
         );
       default:
         return (
