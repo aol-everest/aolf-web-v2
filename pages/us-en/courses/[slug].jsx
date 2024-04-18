@@ -1262,10 +1262,6 @@ const Course = () => {
                 </div>
                 {showFilterModal && (
                   <div class="filter--box">
-                    <button
-                      class="filter-cancel-button"
-                      onClick={toggleFilter}
-                    ></button>
                     <div class="selected-filter-wrap">
                       {locationFilter && (
                         <div
@@ -1579,6 +1575,12 @@ const Course = () => {
                       ></SmartInput>
                     </MobileFilterModal>
                   </div>
+                )}
+                {showFilterModal && (
+                  <button
+                    class="filter-cancel-button"
+                    onClick={toggleFilter}
+                  ></button>
                 )}
               </div>
             </div>

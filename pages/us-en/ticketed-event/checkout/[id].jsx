@@ -30,10 +30,10 @@ import { navigateToLogin } from '@utils';
 export default function TicketCheckout() {
   const router = useRouter();
   const { track } = useAnalytics();
+  const [value] = useLocalStorage('ticket-events');
+  const { workshop } = value;
 
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-  );
+  const stripePromise = loadStripe(workshop.publishableKey);
 
   const elementsOptions = {
     mode: 'payment',
