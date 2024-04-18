@@ -100,6 +100,7 @@ export const SignupForm = ({
                 </a>
               </label>
             </div>
+            {showMessage && <div class="common-error-message">{message}</div>}
             <div class="form-action">
               <button class="submit-btn" type="submit">
                 Sign up

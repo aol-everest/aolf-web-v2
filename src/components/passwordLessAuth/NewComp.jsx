@@ -779,7 +779,7 @@ function AuthenticatorsManager() {
         )}
         <div
           onClick={() => toggleShowAuthenticatorManager()}
-          className="passwordless-link"
+          className="passwordless-link-new"
         >
           close
         </div>

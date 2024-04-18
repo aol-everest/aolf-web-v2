@@ -158,11 +158,11 @@ function LoginPage() {
       await signOut({ global: true });
       const { isSignedIn, nextStep } = await signIn({ username, password });
       console.log(isSignedIn, nextStep);
-      // if (navigateTo) {
-      //   router.push(navigateTo);
-      // } else {
-      //   router.push('/');
-      // }
+      if (navigateTo) {
+        router.push(navigateTo);
+      } else {
+        router.push('/us-en');
+      }
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;
@@ -329,7 +329,7 @@ function LoginPage() {
       console.log(isSignUpComplete, userId, nextStep);
       // await Auth.signup({ email: username, password, firstName, lastName });
       const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
-      // await signInAction({ username, password, isStudent });
+      await signInAction({ username, password, isStudent });
     } catch (ex) {
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {

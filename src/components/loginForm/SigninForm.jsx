@@ -233,11 +233,15 @@ export const SigninForm = ({
     );
   }
 
-  if (setLoading && !loading) {
-    setLoading(
-      signingInStatus === 'REQUESTING_SIGNIN_LINK' ||
-        signingInStatus === 'STARTING_SIGN_IN_WITH_FIDO2',
-    );
+  if (setLoading) {
+    if (!loading) {
+      setLoading(
+        signingInStatus === 'REQUESTING_SIGNIN_LINK' ||
+          signingInStatus === 'STARTING_SIGN_IN_WITH_FIDO2',
+      );
+    } else if (signingInStatus === 'SIGNIN_LINK_REQUESTED') {
+      setLoading(false);
+    }
   }
 
   if (signingInStatus === 'SIGNIN_LINK_REQUESTED') {
@@ -345,6 +349,48 @@ export const SigninForm = ({
           {signInStatus === 'NOT_SIGNED_IN' && user && (
             <>
               <div class="page-description">Welcome back {user.email}!</div>
+              <div className="passwordless-flex">
+                {signingInStatus === 'SIGNIN_LINK_EXPIRED' && (
+                  <div className="passwordless-flex passwordless-flex-align-start">
+                    <svg
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="rotate-45"
+                    >
+                      <path d="M18,11.1 L12.9,11.1 L12.9,6 L11.1,6 L11.1,11.1 L6,11.1 L6,12.9 L11.1,12.9 L11.1,17.9988281 L12.9,17.9988281 L12.9,12.9 L18,12.9 L18,11.1 Z M12,24 C5.38359372,24 0,18.6164063 0,12 C0,5.38300776 5.38359372,0 12,0 C18.6164063,0 24,5.38300776 24,12 C24,18.6164063 18.6164063,24 12,24 Z M12,1.8 C6.37617192,1.8 1.8,6.37558596 1.8,12 C1.8,17.6238281 6.37617192,22.2 12,22.2 C17.6238281,22.2 22.2,17.6238281 22.2,12 C22.2,6.37558596 17.6238281,1.8 12,1.8 Z"></path>
+                    </svg>
+                    <div>
+                      <div className="passwordless-text-left">
+                        <strong>Authentication error.</strong>
+                      </div>
+                      <div>
+                        The sign-in link you tried to use is no longer valid
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {signingInStatus === 'REQUESTING_SIGNIN_LINK' && (
+                  <>
+                    <div className="passwordless-loading-spinner" />
+                    <div>Starting sign-in...</div>
+                  </>
+                )}
+                {signingInStatus === 'STARTING_SIGN_IN_WITH_FIDO2' && (
+                  <>
+                    <div className="passwordless-loading-spinner" />
+                    <div>Starting sign-in...</div>
+                  </>
+                )}
+                {signingInStatus === 'COMPLETING_SIGN_IN_WITH_FIDO2' && (
+                  <>
+                    <div className="passwordless-loading-spinner" />
+                    <div>Completing your sign-in...</div>
+                  </>
+                )}
+              </div>
               <div class="form-action">
                 <button class="submit-btn" onClick={updateStep(2)}>
                   Continue with password
@@ -403,49 +449,6 @@ export const SigninForm = ({
               </div> */}
             </>
           )}
-
-          <div className="passwordless-flex">
-            {signingInStatus === 'SIGNIN_LINK_EXPIRED' && (
-              <div className="passwordless-flex passwordless-flex-align-start">
-                <svg
-                  width="24px"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="rotate-45"
-                >
-                  <path d="M18,11.1 L12.9,11.1 L12.9,6 L11.1,6 L11.1,11.1 L6,11.1 L6,12.9 L11.1,12.9 L11.1,17.9988281 L12.9,17.9988281 L12.9,12.9 L18,12.9 L18,11.1 Z M12,24 C5.38359372,24 0,18.6164063 0,12 C0,5.38300776 5.38359372,0 12,0 C18.6164063,0 24,5.38300776 24,12 C24,18.6164063 18.6164063,24 12,24 Z M12,1.8 C6.37617192,1.8 1.8,6.37558596 1.8,12 C1.8,17.6238281 6.37617192,22.2 12,22.2 C17.6238281,22.2 22.2,17.6238281 22.2,12 C22.2,6.37558596 17.6238281,1.8 12,1.8 Z"></path>
-                </svg>
-                <div>
-                  <div className="passwordless-text-left">
-                    <strong>Authentication error.</strong>
-                  </div>
-                  <div>
-                    The sign-in link you tried to use is no longer valid
-                  </div>
-                </div>
-              </div>
-            )}
-            {signingInStatus === 'REQUESTING_SIGNIN_LINK' && (
-              <>
-                <div className="passwordless-loading-spinner" />
-                <div>Starting sign-in...</div>
-              </>
-            )}
-            {signingInStatus === 'STARTING_SIGN_IN_WITH_FIDO2' && (
-              <>
-                <div className="passwordless-loading-spinner" />
-                <div>Starting sign-in...</div>
-              </>
-            )}
-            {signingInStatus === 'COMPLETING_SIGN_IN_WITH_FIDO2' && (
-              <>
-                <div className="passwordless-loading-spinner" />
-                <div>Completing your sign-in...</div>
-              </>
-            )}
-          </div>
         </>
       );
     }
