@@ -138,6 +138,10 @@ const AOL_MENU = [
             link: '/us-en/lp/sanyam',
           },
           {
+            name: 'Sanyam',
+            link: '/us-en/lp/shakti-kriya',
+          },
+          {
             name: 'Sri Sri Yoga Deep Dive',
             link: '/us-en/lp/srisriyoga-deepdiveretreat',
           },
