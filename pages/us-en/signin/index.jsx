@@ -409,15 +409,7 @@ function LoginPage() {
   return (
     <main class="login-register-page">
       {renderForm()}
-      <PasswordlessComponent
-        brand={{
-          backgroundImageUrl:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Manhattan_in_the_distance_%28Unsplash%29.jpg/2880px-Manhattan_in_the_distance_%28Unsplash%29.jpg',
-          customerName: 'Amazon Web Services',
-          customerLogoUrl:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1280px-Amazon_Web_Services_Logo.svg.png',
-        }}
-      ></PasswordlessComponent>
+
       <Fido2Toast />
       {loading && (
         <div class="loading-overlay">
