@@ -38,20 +38,16 @@ import {
   confirmResetPassword,
   updatePassword,
 } from 'aws-amplify/auth';
-import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
+// import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
 
 import 'amazon-cognito-passwordless-auth/passwordless.css';
 
 const SIGN_IN_MODE = 's-in';
 const SIGN_UP_MODE = 's-up';
-const RESET_PASSWORD_REQUEST = 'RESET_PASSWORD_REQUEST';
-const NEW_PASSWORD_REQUEST = 'NEW_PASSWORD_REQUEST';
-const CHANGE_PASSWORD_REQUEST = 'CHANGE_PASSWORD_REQUEST';
-
-const MESSAGE_SIGNUP_SUCCESS = 'Sign up completed successfully.';
-const MESSAGE_VERIFICATION_CODE_SENT_SUCCESS =
-  'A verification code has been emailed to you. Please use the verification code and reset your password.';
+const RESET_PASSWORD_REQUEST = 'spr';
+const NEW_PASSWORD_REQUEST = 'npr';
+const CHANGE_PASSWORD_REQUEST = 'cpr';
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -149,6 +145,15 @@ function LoginPage() {
     const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
     const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
     return isStudentEmail;
+  };
+
+  const backToFlowAction = (e) => {
+    if (e) e.preventDefault();
+    if (navigateTo) {
+      router.push(navigateTo);
+    } else {
+      router.push('/us-en');
+    }
   };
 
   const signInAction = async ({ username, password, isStudent = false }) => {
@@ -399,6 +404,7 @@ function LoginPage() {
             username={username}
             setLoading={setLoading}
             loading={loading}
+            backToFlowAction={backToFlowAction}
           >
             {socialLoginRender()}
           </SigninForm>

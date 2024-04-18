@@ -163,6 +163,7 @@ export const SigninForm = ({
   username,
   loading,
   setLoading,
+  backToFlowAction,
   children,
 }) => {
   const {
@@ -186,6 +187,11 @@ export const SigninForm = ({
   const showFido2AuthOption = !!configure().fido2;
 
   console.log(signingInStatus);
+
+  const toggleShowAuthenticatorManagerAction = (e) => {
+    if (e) e.preventDefault();
+    toggleShowAuthenticatorManager();
+  };
 
   if (signInStatus === 'SIGNED_IN') {
     // reset state fields for entering new username
@@ -278,18 +284,20 @@ export const SigninForm = ({
             {tokensParsed?.idToken.email}
           </span>
         </div>
-
         <div class="form-action">
-          <button
-            class="submit-btn"
-            onClick={toggleShowAuthenticatorManager}
-            disabled={showAuthenticatorManager}
-          >
+          <button class="submit-btn" onClick={backToFlowAction}>
+            Back to flow
+          </button>
+        </div>
+        <div class="form-other-info">
+          <a href="#" onClick={toggleShowAuthenticatorManagerAction}>
             Manage authenticators
-          </button>
-          <button class="submit-btn" onClick={signOut}>
+          </a>
+        </div>
+        <div class="form-other-info">
+          <a href="#" onClick={signOut}>
             Sign out
-          </button>
+          </a>
         </div>
       </Container>
     );
