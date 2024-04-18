@@ -138,7 +138,7 @@ const AOL_MENU = [
             link: '/us-en/lp/sanyam',
           },
           {
-            name: 'Sanyam',
+            name: 'Shakti Kriya',
             link: '/us-en/lp/shakti-kriya',
           },
           {
