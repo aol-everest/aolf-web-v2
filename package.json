@@ -64,6 +64,7 @@
     "express": "^4.18.3",
     "formik": "^2.4.5",
     "formik-wizard-form": "^2.1.0",
+    "framer-motion": "^11.0.24",
     "gsap": "^3.12.5",
     "helmet": "^7.1.0",
     "heroku-ssl-redirect": "^0.1.1",
