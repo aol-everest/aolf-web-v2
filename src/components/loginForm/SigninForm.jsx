@@ -44,39 +44,41 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
     },
   });
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
       <div class="page-description">
         Welcome back! Please enter your details.
       </div>
       {children}
-      <div class="form-login-register">
-        <div class="form-item">
-          <label for="email">Email address</label>
-          <input
-            id="email"
-            type="email"
-            className={classNames('input-field', {
-              validate: errors.username,
-            })}
-            placeholder="Email address"
-            {...register('username')}
-          />
-          {errors.username && (
-            <div class="validation-input">{errors.username.message}</div>
-          )}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div class="form-login-register">
+          <div class="form-item">
+            <label for="email">Email address</label>
+            <input
+              id="email"
+              type="email"
+              className={classNames('input-field', {
+                validate: errors.username,
+              })}
+              placeholder="Email address"
+              {...register('username')}
+            />
+            {errors.username && (
+              <div class="validation-input">{errors.username.message}</div>
+            )}
+          </div>
+          {showMessage && <div class="common-error-message">{message}</div>}
+          <div class="form-action">
+            <button
+              class="submit-btn"
+              type="submit"
+              disabled={errors.username?.message}
+            >
+              Next
+            </button>
+          </div>
         </div>
-        {showMessage && <div class="common-error-message">{message}</div>}
-        <div class="form-action">
-          <button
-            class="submit-btn"
-            type="submit"
-            disabled={errors.username?.message}
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 
@@ -186,11 +188,14 @@ export const SigninForm = ({
   const { lastSignedInUsers } = useLocalUserCache();
   const showFido2AuthOption = !!configure().fido2;
 
-  console.log(signingInStatus);
-
   const toggleShowAuthenticatorManagerAction = (e) => {
     if (e) e.preventDefault();
     toggleShowAuthenticatorManager();
+  };
+
+  const signOutAction = (e) => {
+    if (e) e.preventDefault();
+    signOut();
   };
 
   if (signInStatus === 'SIGNED_IN') {
@@ -295,7 +300,7 @@ export const SigninForm = ({
           </a>
         </div>
         <div class="form-other-info">
-          <a href="#" onClick={signOut}>
+          <a href="#" onClick={signOutAction}>
             Sign out
           </a>
         </div>
@@ -303,7 +308,7 @@ export const SigninForm = ({
     );
   }
 
-  const lastUser = lastSignedInUsers.at(0);
+  const lastUser = lastSignedInUsers.find((u) => u.email);
   const user =
     newUsername && showSignInOptionsForUser === 'NEW_USER'
       ? {
@@ -345,10 +350,11 @@ export const SigninForm = ({
 
   const signInWithAnotherUserAction = (e) => {
     if (e) e.preventDefault();
-    console.log('IIIIIIII');
     setShowSignInOptionsForUser('NEW_USER_ENTRY');
     setStep(0);
   };
+
+  console.log(user);
 
   const renderStep = () => {
     if (step === 0) {
@@ -356,7 +362,10 @@ export const SigninForm = ({
         <>
           {signInStatus === 'NOT_SIGNED_IN' && user && (
             <>
-              <div class="page-description">Welcome back {user.email}!</div>
+              <div class="page-description">
+                Welcome back{' '}
+                <span className="tw-font-semibold">{user.email}</span>!
+              </div>
               <div className="passwordless-flex">
                 {signingInStatus === 'SIGNIN_LINK_EXPIRED' && (
                   <div className="passwordless-flex passwordless-flex-align-start">
@@ -463,7 +472,9 @@ export const SigninForm = ({
     if (step === 1) {
       return (
         <>
-          <div class="page-description">Welcome back {username}!</div>
+          <div class="page-description">
+            Welcome back <span className="tw-font-semibold">{username}</span>!
+          </div>
           <div class="form-login-register">
             {showMessage && <div class="common-error-message">{message}</div>}
             <div class="form-action">

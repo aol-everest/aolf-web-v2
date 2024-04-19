@@ -7,8 +7,6 @@ const fetchUserProfile = async () => {
   const session = await fetchAuthSession();
   await storeTokens(session.tokens);
   const data = await retrieveTokens();
-  console.log(session);
-  console.log(data);
 
   const profile = await api.get({
     path: 'profile',
@@ -21,7 +19,6 @@ const fetchUserProfile = async () => {
     isAuthenticated: !!user,
     reloadProfile: fetchUserProfile,
   };
-  console.log(userInfo);
   return userInfo;
 };
 

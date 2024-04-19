@@ -17,7 +17,6 @@ import { configure } from './config.js';
 
 export async function storeTokens(tokens) {
   const { clientId, storage } = configure();
-  console.log(parseJwtPayload(tokens.idToken));
   const {
     sub,
     email,

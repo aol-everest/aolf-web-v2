@@ -629,7 +629,14 @@ export const Header = () => {
 
             {isAuthenticated && (
               <>
-                <span className="username">{first_name || last_name}</span>
+                <Link href="/us-en/profile" legacyBehavior>
+                  <a
+                    href="#"
+                    className="tw-no-underline tw-text-black hover:tw-text-black hover:tw-no-underline"
+                  >
+                    <span className="username">{first_name || last_name}</span>
+                  </a>
+                </Link>
                 <Link prefetch={false} href="/us-en/profile" legacyBehavior>
                   <a
                     className="header_profileHeaderImage"

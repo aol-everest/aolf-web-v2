@@ -4,7 +4,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { Auth, api } from '@utils';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import { useAnalytics } from 'use-analytics';
 import {
@@ -41,6 +41,7 @@ import {
 } from 'aws-amplify/auth';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
+import { Hub } from 'aws-amplify/utils';
 
 import 'amazon-cognito-passwordless-auth/passwordless.css';
 
@@ -101,14 +102,12 @@ const PasswordChangeSuccessMessage = () => (
 
 function LoginPage() {
   const router = useRouter();
-  const { identify } = useAnalytics();
-  const { showAlert, hideAlert } = useGlobalAlertContext();
+  // const { identify } = useAnalytics();
+  const { showAlert } = useGlobalAlertContext();
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [mode, setMode] = useQueryState(
     'mode',
     parseAsString.withDefault(SIGN_IN_MODE),
@@ -217,7 +216,6 @@ function LoginPage() {
   };
 
   const handleResetPasswordNextSteps = (output) => {
-    console.log(output);
     const { nextStep } = output;
     switch (nextStep.resetPasswordStep) {
       case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
@@ -302,43 +300,21 @@ function LoginPage() {
   };
 
   const fbLogin = async () => {
-    // const params = {
-    //   state: navigateTo || router.asPath,
-    //   identity_provider: 'Facebook',
-    //   redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
-    //   client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-    //   response_type: 'CODE',
-    //   scope: 'email phone profile aws.cognito.signin.user.admin openid',
-    // };
+    setLoading(true);
+    setShowMessage(false);
     await signInWithRedirect({
       provider: 'Facebook',
-      customState: navigateTo || router.asPath,
+      customState: navigateTo,
     });
-    // window.location.replace(
-    //   `https://${
-    //     process.env.NEXT_PUBLIC_COGNITO_DOMAIN
-    //   }/oauth2/authorize?${encodeFormData(params)}`,
-    // );
   };
 
   const googleLogin = async () => {
-    // const params = {
-    //   state: navigateTo || router.asPath,
-    //   identity_provider: 'Google',
-    //   redirect_uri: process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN,
-    //   client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-    //   response_type: 'CODE',
-    //   scope: 'email phone profile aws.cognito.signin.user.admin openid',
-    // };
+    setLoading(true);
+    setShowMessage(false);
     await signInWithRedirect({
       provider: 'Google',
-      customState: navigateTo || router.asPath,
+      customState: navigateTo,
     });
-    // window.location.replace(
-    //   `https://${
-    //     process.env.NEXT_PUBLIC_COGNITO_DOMAIN
-    //   }/oauth2/authorize?${encodeFormData(params)}`,
-    // );
   };
 
   const signUpAction = async ({ username, password, firstName, lastName }) => {

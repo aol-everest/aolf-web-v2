@@ -37,6 +37,7 @@ export const useAuth = () => useContext(AuthContext);
 // AuthProvider component
 export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
   const [currentUser, setCurrentUser] = useState(userInfo);
+  const [error, setError] = useState(null);
 
   const fetchCurrentUser = async () => {
     try {
@@ -54,6 +55,7 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
     // Subscribe to Hub events for authentication
     const hubListenerCancelToken = Hub.listen('auth', async ({ payload }) => {
       console.log('hubListener', payload);
+      setError(null);
       switch (payload.event) {
         case 'signedIn':
           console.log('user have been signedIn successfully.');
@@ -67,23 +69,30 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
           console.log('auth tokens have been refreshed.');
           break;
         case 'tokenRefresh_failure':
+          setError('An error has occurred during token refresh.');
           console.log('failure while refreshing auth tokens.');
           break;
         case 'signInWithRedirect':
           console.log('signInWithRedirect API has successfully been resolved.');
+          await fetchCurrentUser();
           break;
         case 'signInWithRedirect_failure':
+          setError('An error has occurred during the Oauth flow.');
           console.log(
             'failure while trying to resolve signInWithRedirect API.',
           );
           break;
         case 'customOAuthState':
+          // eslint-disable-next-line no-case-declarations
+          const state = payload.data; // this will be customState provided on signInWithRedirect function
+          console.log(state);
           console.info('custom state returned from CognitoHosted UI');
           break;
       }
     });
 
     return () => {
+      console.log('hubListenerCancelToken');
       hubListenerCancelToken();
     };
   }, []);
@@ -93,6 +102,7 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
       value={{
         passwordLess: _usePasswordless(fetchCurrentUser),
         ...currentUser,
+        error,
       }}
     >
       {enableLocalUserCache ? (
@@ -124,7 +134,6 @@ function _usePasswordless(fetchCurrentUser) {
   ] = useState(true);
   const [tokens, _setTokens] = useState();
   const [tokensParsed, setTokensParsed] = useState();
-  console.log(tokens, tokensParsed, initiallyRetrievingTokensFromStorage);
   const setTokens = useCallback((reactSetStateAction) => {
     _setTokens((prevState) => {
       const newTokens =
@@ -577,9 +586,10 @@ function _useLocalUserCache() {
     }
     const user = {
       username: idToken['cognito:username'],
-      email:
-        idToken.email && idToken.email_verified ? idToken.email : undefined,
+      email: idToken.email,
     };
+    console.log(idToken);
+    console.log(user);
     if (lastSignedInUsers) {
       const found = lastSignedInUsers.find(
         (lastUser) =>
