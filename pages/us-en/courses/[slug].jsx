@@ -1252,17 +1252,78 @@ const Course = () => {
                       })}
                       onClick={toggleFilter}
                     >
-                      View Filters
+                      <span class="icon-aol iconaol-setting"></span>
+                      Filter
                       <span id="filter-count">{filterCount}</span>
                     </div>
                   </div>
                 </div>
                 {showFilterModal && (
                   <div class="filter--box">
-                    <button
-                      class="filter-cancel-button"
-                      onClick={toggleFilter}
-                    ></button>
+                    <div class="selected-filter-wrap">
+                      {locationFilter && (
+                        <div
+                          class="selected-filter-item"
+                          onClick={onFilterClearEvent('locationFilter')}
+                        >
+                          {locationFilter.locationName}
+                        </div>
+                      )}
+
+                      {courseModeFilter && COURSE_MODES[courseModeFilter] && (
+                        <div
+                          class="selected-filter-item"
+                          onClick={onFilterClearEvent('courseModeFilter')}
+                        >
+                          {COURSE_MODES[courseModeFilter].value}
+                        </div>
+                      )}
+
+                      {filterStartEndDateStr && (
+                        <div
+                          class="selected-filter-item"
+                          onClick={onDatesChange}
+                        >
+                          {filterStartEndDateStr}
+                        </div>
+                      )}
+
+                      {onlyWeekend && (
+                        <div
+                          class="selected-filter-item"
+                          onClick={onFilterClearEvent('onlyWeekend')}
+                        >
+                          Weekend Courses
+                        </div>
+                      )}
+
+                      {timeZoneFilter && TIME_ZONE[timeZoneFilter] && (
+                        <div
+                          class="selected-filter-item"
+                          onClick={onFilterClearEvent('timeZoneFilter')}
+                        >
+                          {TIME_ZONE[timeZoneFilter].name}
+                        </div>
+                      )}
+
+                      {instructorFilter && (
+                        <div
+                          class="selected-filter-item"
+                          onClick={onFilterClearEvent('instructorFilter')}
+                        >
+                          {instructorFilter.label}
+                        </div>
+                      )}
+                      {filterCount > 1 && (
+                        <div
+                          class="selected-filter-item clear"
+                          onClick={onClearAllFilter}
+                        >
+                          Clear All
+                        </div>
+                      )}
+                    </div>
+
                     <MobileFilterModal
                       label="Location"
                       value={
@@ -1512,6 +1573,12 @@ const Course = () => {
                       ></SmartInput>
                     </MobileFilterModal>
                   </div>
+                )}
+                {showFilterModal && (
+                  <button
+                    class="filter-cancel-button"
+                    onClick={toggleFilter}
+                  ></button>
                 )}
               </div>
             </div>

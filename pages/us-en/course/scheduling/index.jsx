@@ -109,6 +109,45 @@ const New = () => {
       }
       if (!showWorkshopSelectModal) {
         setShowWorkshopSelectModal(true);
+        track(
+          'view_item',
+          {
+            ecommerce: {
+              currency: 'USD',
+              value: workshopMaster?.unitPrice,
+              course_format: workshopMaster?.productTypeId,
+              course_name: workshopMaster?.title,
+              items: [
+                {
+                  item_id: 'NA',
+                  item_name: workshopMaster?.title,
+                  affiliation: 'NA',
+                  coupon: '',
+                  discount: 0.0,
+                  index: 0,
+                  item_brand: workshopMaster?.orgnization,
+                  item_category: workshopMaster?.title,
+                  item_category2: workshopMaster?.mode,
+                  item_category3: 'paid',
+                  item_category4: 'NA',
+                  item_category5: 'NA',
+                  item_list_id: workshopMaster?.productTypeId,
+                  item_list_name: workshopMaster?.title,
+                  item_variant: 'NA',
+                  location_id: 'NA',
+                  price: workshopMaster?.unitPrice,
+                  quantity: 1,
+                },
+              ],
+            },
+          },
+          {
+            plugins: {
+              all: false,
+              'gtm-ecommerce-plugin': true,
+            },
+          },
+        );
       }
       getWorkshops();
     }
@@ -365,6 +404,7 @@ const New = () => {
     setActiveWorkshop({});
     setSelectedWorkshopId(null);
     let isEventAvailable = false;
+    track('cmodal_date_pick');
 
     if (selectedDates?.length > 0 && dateStr !== 'update') {
       const today = moment(selectedDates[0]);
@@ -508,6 +548,7 @@ const New = () => {
   };
 
   const handleSelectMode = (value) => {
+    track('course_type_change');
     setMode(value);
     resetCalender();
   };
@@ -722,6 +763,12 @@ const New = () => {
                     </div>
                   </div>
                 )}
+                <div className="question-call">
+                  <a href="tel:(855)2024400" className="call-cta">
+                    Still have questions?{' '}
+                    <strong>Call us at (855) 202-4400</strong>
+                  </a>
+                </div>
               </div>
               <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
                 <div className="payment-box">
