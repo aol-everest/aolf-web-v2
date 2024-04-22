@@ -90,6 +90,7 @@ export default function AskGurudev() {
             error={false}
             isLoading={loading}
             results={results}
+            query={query}
           />
         </div>
       </div>

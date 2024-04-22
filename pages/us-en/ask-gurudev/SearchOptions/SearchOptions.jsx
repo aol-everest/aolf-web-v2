@@ -33,23 +33,23 @@ const SearchOptions = ({ query, onChangeQuery, setQuery }) => {
             <div className="search-tags">
               <div
                 className="search-tag"
-                onClick={() => setQuery('How to always be happy in life')}
+                onClick={() => setQuery('How to always be happy in life?')}
               >
                 How to always be happy in life?
               </div>
               <div
                 className="search-tag"
                 onClick={() =>
-                  setQuery('Why am I born? What is the purpose of my life')
+                  setQuery('Why am I born? What is the purpose of my life?')
                 }
               >
-                Why am I born? What is the purpose of my life
+                Why am I born? What is the purpose of my life?
               </div>
               <div
                 className="search-tag"
-                onClick={() => setQuery('How can I get enlightened')}
+                onClick={() => setQuery('How can I get enlightened?')}
               >
-                How can I get enlightened
+                How can I get enlightened?
               </div>
             </div>
           </div>

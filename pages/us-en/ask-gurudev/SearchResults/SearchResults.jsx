@@ -19,6 +19,7 @@ const SearchResults = ({
   isLoading,
   setQuery,
   setDebouncedQuery,
+  query,
 }) => {
   const handlePredefinedElements = useCallback(
     (query) => {
@@ -32,12 +33,14 @@ const SearchResults = ({
     return <div>Error loading results</div>;
   }
 
+  console.log('query', query);
+
   return (
     <>
       {isLoading && <div className="cover-spin"></div>}
       <section className="search-results-area">
         <div className="container">
-          <h2 className="section-title">How can I get enlightened</h2>
+          <h2 className="section-title">{query}</h2>
           <nav className="category-tabs-wrap">
             <div
               className="nav nav-tabs category-tabs"
@@ -59,6 +62,7 @@ const SearchResults = ({
                 Relationship
               </button>
               <button
+                onClick={() => handlePredefinedElements('Finance')}
                 className="nav-link"
                 id="nav-finance-tab"
                 data-bs-toggle="tab"
@@ -71,6 +75,7 @@ const SearchResults = ({
                 <span className="icon-aol iconaol-finance"></span>Finance
               </button>
               <button
+                onClick={() => handlePredefinedElements('Health')}
                 className="nav-link"
                 id="nav-health-tab"
                 data-bs-toggle="tab"
@@ -83,6 +88,7 @@ const SearchResults = ({
                 <span className="icon-aol iconaol-health-care"></span>Health
               </button>
               <button
+                onClick={() => handlePredefinedElements('Enlightment')}
                 className="nav-link"
                 id="nav-enlight-tab"
                 data-bs-toggle="tab"
@@ -95,6 +101,7 @@ const SearchResults = ({
                 <span className="icon-aol iconaol-idea"></span>Enlightment
               </button>
               <button
+                onClick={() => handlePredefinedElements('Guru')}
                 className="nav-link"
                 id="nav-guru-tab"
                 data-bs-toggle="tab"
@@ -107,6 +114,7 @@ const SearchResults = ({
                 <span className="icon-aol iconaol-ascetic"></span>Guru
               </button>
               <button
+                onClick={() => handlePredefinedElements('Karma')}
                 className="nav-link"
                 id="nav-karma-tab"
                 data-bs-toggle="tab"
@@ -119,6 +127,7 @@ const SearchResults = ({
                 <span className="icon-aol iconaol-lotus"></span>Karma
               </button>
               <button
+                onClick={() => handlePredefinedElements('God')}
                 className="nav-link"
                 id="nav-god-tab"
                 data-bs-toggle="tab"
@@ -131,6 +140,7 @@ const SearchResults = ({
                 <span className="icon-aol iconaol-hindu-god"></span>God
               </button>
               <button
+                onClick={() => handlePredefinedElements('Meditation')}
                 className="nav-link"
                 id="nav-meditation-tab"
                 data-bs-toggle="tab"
@@ -143,6 +153,7 @@ const SearchResults = ({
                 <span className="icon-aol iconaol-meditation"></span>Meditation
               </button>
               <button
+                onClick={() => handlePredefinedElements('Death')}
                 className="nav-link"
                 id="nav-death-tab"
                 data-bs-toggle="tab"
