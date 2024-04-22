@@ -847,5 +847,5 @@ const Centers = () => {
 
 // Course.requiresAuth = true;
 // Course.redirectUnauthenticated = "/login";
-
+Centers.sideGetStartedAction = true;
 export default Centers;
