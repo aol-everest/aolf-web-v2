@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-css-tags */
 /* eslint-disable no-inline-styles/no-inline-styles */
+/* eslint-disable @next/next/no-sync-scripts */
+
 import { orgConfig } from '@org';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import Script from 'next/script';
