@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useCallback, useState, useEffect } from 'react';
 import SearchOptions from './SearchOptions/SearchOptions';
-import { SearchResults } from './SearchResults/SearchResults';
+import SearchResults from './SearchResults/SearchResults';
 import { useDebounce } from 'react-use';
 import { useRouter } from 'next/router';
 import { useQueryString } from '@hooks';

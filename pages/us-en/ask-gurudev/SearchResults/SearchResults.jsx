@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { SearchResultsList } from '../SearchResultsList/SearchResultsList';
+import SearchResultsList from '../SearchResultsList/SearchResultsList';
 
 export const EmptyResults = () => {
   return (
@@ -11,7 +11,7 @@ export const EmptyResults = () => {
   );
 };
 
-export const SearchResults = ({
+const SearchResults = ({
   results,
   debouncedQuery,
   error,
@@ -179,3 +179,5 @@ export const SearchResults = ({
     </>
   );
 };
+
+export default SearchResults;
