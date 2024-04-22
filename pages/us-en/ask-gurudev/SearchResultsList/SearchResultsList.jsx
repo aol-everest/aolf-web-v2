@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { SearchResult } from '../SearchResult/SearchResult';
+import SearchResult from '../SearchResult/SearchResult';
 
-export const SearchResultsList = ({ results }) => {
+const SearchResultsList = ({ results }) => {
   return (
     <AnimatePresence mode="popLayout" initial={false}>
       {results?.map((result) => (
@@ -11,3 +11,5 @@ export const SearchResultsList = ({ results }) => {
     </AnimatePresence>
   );
 };
+
+export default SearchResultsList;

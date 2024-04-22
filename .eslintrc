@@ -32,7 +32,7 @@
     "jsx-a11y/alt-text": "off",
     "react-hooks/exhaustive-deps": "off",
     "jsx-a11y/aria-proptypes": "off",
-    "@tanstack/query/exhaustive-deps": "warn",
+    "@tanstack/query/exhaustive-deps": "off",
     "@tanstack/query/no-rest-destructuring": "warn",
     "@tanstack/query/stable-query-client": "error",
   },
