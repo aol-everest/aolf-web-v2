@@ -1191,7 +1191,7 @@ const New = () => {
                         disabled={!selectedWorkshopId}
                         onClick={goToPaymentModal}
                       >
-                        Continue
+                        Checkout
                       </button>
                     )}
                   </div>
