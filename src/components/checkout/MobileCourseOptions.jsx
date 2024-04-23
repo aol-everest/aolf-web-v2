@@ -57,6 +57,9 @@ export const MobileCourseOptions = ({
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
 
+  const isCMESelected = formikProps.values['CME'];
+  const updatedTotal = isCMESelected ? cmeAddOn.unitPrice + totalFee : totalFee;
+
   const CMEInputCmp = ({ formikProps }) => {
     const onPopupChangeEvent = (formikProps, field) => (value) => {
       formikProps.setFieldValue(field, value?.name || '');
@@ -859,7 +862,7 @@ export const MobileCourseOptions = ({
       </>
       <div className="reciept__total">
         <span>Total</span>
-        <span>${totalFee}</span>
+        <span>${updatedTotal}</span>
       </div>
     </div>
   );
