@@ -1124,24 +1124,22 @@ const Meetup = () => {
               className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
               <button className="filter-save-button">Save Changes</button>
-              {meetupModeFilter === 'IN_PERSON' && (
-                <Popup
-                  tabIndex="1"
-                  value={locationFilter}
-                  buttonText={
-                    locationFilter ? `${locationFilter.locationName}` : null
-                  }
-                  closeEvent={onFilterChange('locationFilter')}
-                  label="Location"
-                >
-                  {({ closeHandler }) => (
-                    <AddressSearch
-                      closeHandler={closeHandler}
-                      placeholder="Search for Location"
-                    />
-                  )}
-                </Popup>
-              )}
+              <Popup
+                tabIndex="1"
+                value={locationFilter}
+                buttonText={
+                  locationFilter ? `${locationFilter.locationName}` : null
+                }
+                closeEvent={onFilterChange('locationFilter')}
+                label="Location"
+              >
+                {({ closeHandler }) => (
+                  <AddressSearch
+                    closeHandler={closeHandler}
+                    placeholder="Search for Location"
+                  />
+                )}
+              </Popup>
               <Popup
                 tabIndex="2"
                 value={COURSE_MODES[meetupModeFilter] && meetupModeFilter}
@@ -1169,7 +1167,6 @@ const Meetup = () => {
                   </>
                 )}
               </Popup>
-
               <Popup
                 tabIndex="3"
                 value={meetupTypeFilter}
@@ -1197,7 +1194,6 @@ const Meetup = () => {
                   </>
                 )}
               </Popup>
-
               <div
                 data-filter="timezone"
                 className={classNames('courses-filter', {
@@ -1264,13 +1260,6 @@ const Meetup = () => {
                   />
                 </div>
               </div>
-              <Popup
-                tabIndex="2"
-                value={onlyWeekend}
-                closeEvent={onFilterChange('onlyWeekend')}
-                showList={false}
-                label="Weekend courses"
-              ></Popup>
 
               <Popup
                 tabIndex="4"
@@ -1281,7 +1270,7 @@ const Meetup = () => {
                     : null
                 }
                 closeEvent={onFilterChange('timeZoneFilter')}
-                label="Time Zone"
+                label="Time"
               >
                 {({ closeHandler }) => (
                   <>
@@ -1345,40 +1334,102 @@ const Meetup = () => {
                       })}
                       onClick={toggleFilter}
                     >
-                      View Filters
+                      <span class="icon-aol iconaol-setting"></span>
+                      Filter
                       <span id="filter-count">{filterCount}</span>
                     </div>
                   </div>
                 </div>
                 {showFilterModal && (
-                  <div className="filter--box">
-                    <button
-                      className="filter-cancel-button"
-                      onClick={toggleFilter}
-                    ></button>
-                    <label class="mt-4">Course format</label>
-                    <div
-                      id="switch-mobile-filter"
-                      className="btn_outline_box full-btn mt-3"
-                    >
-                      <a
-                        className="btn"
-                        href="#"
-                        data-swicth-active={meetupModeFilter === 'ONLINE'}
-                        onClick={toggleActiveFilter('ONLINE')}
+                  <>
+                    <div className="filter--box">
+                      <div class="selected-filter-wrap">
+                        {locationFilter && (
+                          <div
+                            className="selected-filter-item"
+                            onClick={onFilterClearEvent('locationFilter')}
+                          >
+                            {locationFilter.locationName}
+                          </div>
+                        )}
+
+                        {meetupTypeFilter &&
+                          meetupMasters[meetupTypeFilter] && (
+                            <div
+                              className="selected-filter-item"
+                              onClick={onFilterClearEvent('meetupTypeFilter')}
+                            >
+                              {meetupMasters[meetupTypeFilter].name}
+                            </div>
+                          )}
+
+                        {meetupModeFilter && COURSE_MODES[meetupModeFilter] && (
+                          <div
+                            className="selected-filter-item"
+                            onClick={onFilterClearEvent('meetupModeFilter')}
+                          >
+                            {COURSE_MODES[meetupModeFilter].value}
+                          </div>
+                        )}
+
+                        {filterStartEndDateStr && (
+                          <div
+                            className="selected-filter-item"
+                            onClick={onDatesChange}
+                          >
+                            {filterStartEndDateStr}
+                          </div>
+                        )}
+
+                        {timeZoneFilter && TIME_ZONE[timeZoneFilter] && (
+                          <div
+                            className="selected-filter-item"
+                            onClick={onFilterClearEvent('timeZoneFilter')}
+                          >
+                            {TIME_ZONE[timeZoneFilter].name}
+                          </div>
+                        )}
+
+                        {instructorFilter && (
+                          <div
+                            className="selected-filter-item"
+                            onClick={onFilterClearEvent('instructorFilter')}
+                          >
+                            {instructorFilter.label}
+                          </div>
+                        )}
+                        {filterCount > 1 && (
+                          <div
+                            className="selected-filter-item clear"
+                            onClick={onClearAllFilter}
+                          >
+                            Clear All
+                          </div>
+                        )}
+                      </div>
+                      <label class="mt-4">Meetup format</label>
+                      <div
+                        id="switch-mobile-filter"
+                        className="btn_outline_box full-btn mt-3"
                       >
-                        Online
-                      </a>
-                      <a
-                        className="btn"
-                        href="#"
-                        data-swicth-active={meetupModeFilter === 'IN_PERSON'}
-                        onClick={toggleActiveFilter('IN_PERSON')}
-                      >
-                        In Person
-                      </a>
-                    </div>
-                    {meetupModeFilter === 'IN_PERSON' && (
+                        <a
+                          className="btn"
+                          href="#"
+                          data-swicth-active={meetupModeFilter === 'ONLINE'}
+                          onClick={toggleActiveFilter('ONLINE')}
+                        >
+                          Online
+                        </a>
+                        <a
+                          className="btn"
+                          href="#"
+                          data-swicth-active={meetupModeFilter === 'IN_PERSON'}
+                          onClick={toggleActiveFilter('IN_PERSON')}
+                        >
+                          In Person
+                        </a>
+                      </div>
+
                       <MobileFilterModal
                         label="Location"
                         value={
@@ -1393,136 +1444,141 @@ const Meetup = () => {
                           placeholder="Search for Location"
                         />
                       </MobileFilterModal>
-                    )}
 
-                    <MobileFilterModal
-                      label="Meetup Type"
-                      value={
-                        meetupTypeFilter && meetupMasters[meetupTypeFilter]
-                          ? meetupMasters[meetupTypeFilter].name
-                          : 'Select Meetup'
-                      }
-                      hideClearOption
-                      closeEvent={onFilterChange('meetupTypeFilter')}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={meetupTypeFilter}
-                          buttonText={
-                            meetupTypeFilter && meetupMasters[meetupTypeFilter]
-                              ? meetupMasters[meetupTypeFilter].name
-                              : 'Select Meetup'
-                          }
-                          closeEvent={onFilterChange('meetupTypeFilter')}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              {allMeetupMaster?.map((mtype, index) => {
-                                return (
-                                  <li
-                                    className="dropdown-item"
-                                    key={index}
-                                    onClick={closeHandler(mtype.id)}
-                                  >
-                                    {mtype.name}
-                                  </li>
-                                );
-                              })}
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Dates"
-                      value={
-                        filterStartEndDateStr ? filterStartEndDateStr : null
-                      }
-                      clearEvent={onDatesChange}
-                    >
-                      <div className="datepicker-block">
-                        <DateRangePicker
-                          placeholder="Dates"
-                          showHeader={false}
-                          onChange={onDatesChange}
-                          showOneCalendar
-                          ranges={[]}
-                          editable={false}
-                          value={filterStartEndDate}
-                        />
-                      </div>
-                    </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Time Zone"
-                      value={
-                        timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                          ? TIME_ZONE[timeZoneFilter].name
-                          : null
-                      }
-                      clearEvent={onFilterClearEvent('timeZoneFilter')}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={timeZoneFilter}
-                          buttonText={
-                            timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                              ? TIME_ZONE[timeZoneFilter].name
-                              : 'Select Timezone'
-                          }
-                          closeEvent={onFilterChange('timeZoneFilter')}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.EST.value)}
-                              >
-                                {TIME_ZONE.EST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.CST.value)}
-                              >
-                                {TIME_ZONE.CST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.MST.value)}
-                              >
-                                {TIME_ZONE.MST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.PST.value)}
-                              >
-                                {TIME_ZONE.PST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.HST.value)}
-                              >
-                                {TIME_ZONE.HST.name}
-                              </li>
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Instructor"
-                      value={instructorFilter ? instructorFilter.label : null}
-                      clearEvent={onFilterClearEvent('instructorFilter')}
-                    >
-                      <SmartInput
-                        containerClassName="smart-input-mobile"
-                        placeholder="Search Instructor"
-                        value={searchKey}
-                        onSearchKeyChange={(value) => setSearchKey(value)}
-                        dataList={instructorList}
-                        closeHandler={onFilterChangeEvent('instructorFilter')}
-                      ></SmartInput>
-                    </MobileFilterModal>
-                  </div>
+                      <MobileFilterModal
+                        label="Meetup Type"
+                        value={
+                          meetupTypeFilter && meetupMasters[meetupTypeFilter]
+                            ? meetupMasters[meetupTypeFilter].name
+                            : 'Select Meetup'
+                        }
+                        hideClearOption
+                        closeEvent={onFilterChange('meetupTypeFilter')}
+                      >
+                        <div className="dropdown">
+                          <SmartDropDown
+                            value={meetupTypeFilter}
+                            buttonText={
+                              meetupTypeFilter &&
+                              meetupMasters[meetupTypeFilter]
+                                ? meetupMasters[meetupTypeFilter].name
+                                : 'Select Meetup'
+                            }
+                            closeEvent={onFilterChange('meetupTypeFilter')}
+                          >
+                            {({ closeHandler }) => (
+                              <>
+                                {allMeetupMaster?.map((mtype, index) => {
+                                  return (
+                                    <li
+                                      className="dropdown-item"
+                                      key={index}
+                                      onClick={closeHandler(mtype.id)}
+                                    >
+                                      {mtype.name}
+                                    </li>
+                                  );
+                                })}
+                              </>
+                            )}
+                          </SmartDropDown>
+                        </div>
+                      </MobileFilterModal>
+                      <MobileFilterModal
+                        label="Dates"
+                        value={
+                          filterStartEndDateStr ? filterStartEndDateStr : null
+                        }
+                        clearEvent={onDatesChange}
+                      >
+                        <div className="datepicker-block">
+                          <DateRangePicker
+                            placeholder="Dates"
+                            showHeader={false}
+                            onChange={onDatesChange}
+                            showOneCalendar
+                            ranges={[]}
+                            editable={false}
+                            value={filterStartEndDate}
+                          />
+                        </div>
+                      </MobileFilterModal>
+                      <MobileFilterModal
+                        label="Time Zone"
+                        value={
+                          timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                            ? TIME_ZONE[timeZoneFilter].name
+                            : null
+                        }
+                        clearEvent={onFilterClearEvent('timeZoneFilter')}
+                      >
+                        <div className="dropdown">
+                          <SmartDropDown
+                            value={timeZoneFilter}
+                            buttonText={
+                              timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                                ? TIME_ZONE[timeZoneFilter].name
+                                : 'Select Timezone'
+                            }
+                            closeEvent={onFilterChange('timeZoneFilter')}
+                          >
+                            {({ closeHandler }) => (
+                              <>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(TIME_ZONE.EST.value)}
+                                >
+                                  {TIME_ZONE.EST.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(TIME_ZONE.CST.value)}
+                                >
+                                  {TIME_ZONE.CST.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(TIME_ZONE.MST.value)}
+                                >
+                                  {TIME_ZONE.MST.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(TIME_ZONE.PST.value)}
+                                >
+                                  {TIME_ZONE.PST.name}
+                                </li>
+                                <li
+                                  className="dropdown-item"
+                                  onClick={closeHandler(TIME_ZONE.HST.value)}
+                                >
+                                  {TIME_ZONE.HST.name}
+                                </li>
+                              </>
+                            )}
+                          </SmartDropDown>
+                        </div>
+                      </MobileFilterModal>
+                      <MobileFilterModal
+                        label="Instructor"
+                        value={instructorFilter ? instructorFilter.label : null}
+                        clearEvent={onFilterClearEvent('instructorFilter')}
+                      >
+                        <SmartInput
+                          containerClassName="smart-input-mobile"
+                          placeholder="Search Instructor"
+                          value={searchKey}
+                          onSearchKeyChange={(value) => setSearchKey(value)}
+                          dataList={instructorList}
+                          closeHandler={onFilterChangeEvent('instructorFilter')}
+                        ></SmartInput>
+                      </MobileFilterModal>
+                    </div>
+                    <button
+                      className="filter-cancel-button"
+                      onClick={toggleFilter}
+                    ></button>
+                  </>
                 )}
               </div>
             </div>
@@ -1559,15 +1615,6 @@ const Meetup = () => {
               {filterStartEndDateStr && (
                 <div className="selected-filter-item" onClick={onDatesChange}>
                   {filterStartEndDateStr}
-                </div>
-              )}
-
-              {onlyWeekend && (
-                <div
-                  className="selected-filter-item"
-                  onClick={onFilterClearEvent('onlyWeekend')}
-                >
-                  Weekend Courses
                 </div>
               )}
 
