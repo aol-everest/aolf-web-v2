@@ -404,7 +404,9 @@ const New = () => {
     setActiveWorkshop({});
     setSelectedWorkshopId(null);
     let isEventAvailable = false;
-    track('cmodal_date_pick');
+    if (dateStr && dateStr !== '') {
+      track('cmodal_date_pick');
+    }
 
     if (selectedDates?.length > 0 && dateStr !== 'update') {
       const today = moment(selectedDates[0]);
