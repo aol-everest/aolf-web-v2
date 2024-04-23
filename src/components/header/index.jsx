@@ -130,8 +130,20 @@ const AOL_MENU = [
             link: '/us-en/lp/chakra-kriya',
           },
           {
+            name: 'DSN',
+            link: '/us-en/courses/dsn-course',
+          },
+          {
             name: 'Sanyam',
             link: '/us-en/lp/sanyam',
+          },
+          {
+            name: 'Shakti Kriya',
+            link: '/us-en/lp/shakti-kriya',
+          },
+          {
+            name: 'Sri Sri Yoga Deep Dive',
+            link: '/us-en/lp/srisriyoga-deepdiveretreat',
           },
         ],
       },

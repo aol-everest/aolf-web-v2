@@ -1,3 +1,4 @@
+/* eslint-disable @tanstack/query/exhaustive-deps*/
 import { PageLoading } from '@components';
 import { BackendPaymentForm } from '@components/backendPaymentForm';
 import { useAuth } from '@contexts';

@@ -76,5 +76,5 @@ const Home = () => {
     </main>
   );
 };
-
+Home.sideGetStartedAction = true;
 export default Home;

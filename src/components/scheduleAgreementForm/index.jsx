@@ -121,9 +121,9 @@ export const ScheduleAgreementForm = ({
                   return (
                     <input
                       type="checkbox"
-                      id="health"
+                      id={`health${compliance.questionSfid}`}
                       name="health"
-                      className={classNames('', {
+                      className={classNames({
                         error:
                           formikProps.errors.questionnaire &&
                           formikProps.touched.questionnaire,
@@ -132,7 +132,7 @@ export const ScheduleAgreementForm = ({
                         (v) => v.key === compliance.questionSfid && v.value,
                       )}
                       value={compliance.questionSfid}
-                      onChange={() => {
+                      onClick={() => {
                         track('health_agreement_button_click', {
                           program_id: workshop?.id,
                           program_name: workshop?.title,
@@ -157,7 +157,7 @@ export const ScheduleAgreementForm = ({
                   );
                 }}
               </Field>
-              <label htmlFor="health">
+              <label htmlFor={`health${compliance.questionSfid}`}>
                 {compliance.question && (
                   <span
                     dangerouslySetInnerHTML={{ __html: compliance.question }}
