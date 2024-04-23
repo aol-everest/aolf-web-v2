@@ -867,7 +867,8 @@ export const PaymentFormHB = ({
             ) => {
               if (!isExpenseAddOn) {
                 if (
-                  (!isAddOnSelectionRequired && values[productName]) ||
+                  (!isAddOnSelectionRequired &&
+                    (values[productName] || values['CME'])) ||
                   isAddOnSelectionRequired
                 ) {
                   return previousValue + unitPrice;
