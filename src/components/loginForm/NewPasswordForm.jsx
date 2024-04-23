@@ -73,7 +73,7 @@ export const NewPasswordForm = ({
                 pattern=".{6,}"
               />
 
-              <button class="showPassBtn" onClick={handleToggle}>
+              <button class="showPassBtn" type="button" onClick={handleToggle}>
                 <img
                   src="/img/PasswordEye.svg"
                   width="16"
@@ -100,7 +100,11 @@ export const NewPasswordForm = ({
                 pattern=".{6,}"
               />
 
-              <button class="showPassBtn" onClick={handleToggleCPassword}>
+              <button
+                class="showPassBtn"
+                type="button"
+                onClick={handleToggleCPassword}
+              >
                 <img
                   src="/img/PasswordEye.svg"
                   width="16"

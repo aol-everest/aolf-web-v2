@@ -74,7 +74,7 @@ export const SignupForm = ({
                 class="input-field password"
                 placeholder="Password"
               />
-              <button class="showPassBtn">
+              <button class="showPassBtn" type="button">
                 <img
                   src="/img/PasswordEye.svg"
                   width="16"

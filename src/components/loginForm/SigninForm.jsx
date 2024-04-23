@@ -121,13 +121,12 @@ const StepInputPassword = ({
               validate: errors.password,
             })}
             placeholder="Password"
-            required
             autoComplete="current-password"
             autocapitalize="off"
             autocorrect="off"
             {...register('password')}
           />
-          <button class="showPassBtn" onClick={handleToggle}>
+          <button class="showPassBtn" type="button" onClick={handleToggle}>
             <img
               src="/img/PasswordEye.svg"
               width="16"
