@@ -252,8 +252,12 @@ const CourseFinder = () => {
             >
               <div className="question-box">
                 <h1 className="question-title mt-0">
-                  Where can we send your personalized recommendation?
+                  Your personalized recommendation is ready!
                 </h1>
+                <h2 className="question-subtitle mt-0">
+                  Get access to a free mini video series tailored to your
+                  journey.
+                </h2>
                 <div className="recommendation-form">
                   <div className="form-item">
                     <label htmlFor="name">Name</label>
@@ -323,7 +327,7 @@ const CourseFinder = () => {
 
                 <div className="question-action">
                   <button type="submit" className="btn-register">
-                    Continue
+                    Submit
                   </button>
                 </div>
               </div>
