@@ -37,7 +37,7 @@ export const PostCostDetailsCard = ({
   } = workshop || {};
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
-  const isCMESelected = formikProps.values['CME'];
+
   const isSilentRetreatType =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
   const isJourneyPremium =
@@ -45,8 +45,6 @@ export const PostCostDetailsCard = ({
   const isJourneyPlus = userSubscriptions[MEMBERSHIP_TYPES.JOURNEY_PLUS.value];
   const isBasicMember =
     userSubscriptions[MEMBERSHIP_TYPES.BASIC_MEMBERSHIP.value];
-  const updatedTotal = isCMESelected ? cmeAddOn.unitPrice + totalFee : totalFee;
-
   if (isCourseOptionRequired) {
     return (
       <>
@@ -449,7 +447,7 @@ export const PostCostDetailsCard = ({
         </div>
         <div className="reciept__total">
           <span>Total</span>
-          <span>${updatedTotal}</span>
+          <span>${totalFee}</span>
         </div>
       </>
     );
