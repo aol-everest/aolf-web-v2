@@ -437,7 +437,7 @@ export const PaymentFormHB = ({
       let addOnProductsList = addOnProducts
         ? addOnProducts.map((product) => {
             if (!product.isAddOnSelectionRequired) {
-              const value = values[product.productName];
+              const value = values[product.productName] || values['CME'];
               if (value) {
                 return product.productSfid;
               } else {
@@ -761,6 +761,7 @@ export const PaymentFormHB = ({
     <>
       <Formik
         initialValues={{
+          CME: true,
           firstName: first_name || '',
           lastName: last_name || '',
           email: email || '',
@@ -867,7 +868,8 @@ export const PaymentFormHB = ({
             ) => {
               if (!isExpenseAddOn) {
                 if (
-                  (!isAddOnSelectionRequired && values[productName]) ||
+                  (!isAddOnSelectionRequired &&
+                    (values[productName] || values['CME'])) ||
                   isAddOnSelectionRequired
                 ) {
                   return previousValue + unitPrice;

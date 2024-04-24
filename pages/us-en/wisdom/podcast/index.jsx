@@ -487,4 +487,5 @@ function PodcastPage() {
   );
 }
 
+PodcastPage.sideGetStartedAction = true;
 export default PodcastPage;
