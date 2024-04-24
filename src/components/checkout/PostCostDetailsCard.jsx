@@ -333,8 +333,8 @@ export const PostCostDetailsCard = ({
                       {cmeAddOn && (
                         <>
                           <p className="tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e]">
-                            To claim CME credits, please check the box and fill
-                            in the requested additional information.
+                            Please uncheck the box, if you do not want to claim
+                            CME credits.
                           </p>
 
                           {formikProps.values['CME'] && (
