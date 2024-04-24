@@ -437,7 +437,7 @@ export const PaymentFormHB = ({
       let addOnProductsList = addOnProducts
         ? addOnProducts.map((product) => {
             if (!product.isAddOnSelectionRequired) {
-              const value = values[product.productName];
+              const value = values[product.productName] || values['CME'];
               if (value) {
                 return product.productSfid;
               } else {
