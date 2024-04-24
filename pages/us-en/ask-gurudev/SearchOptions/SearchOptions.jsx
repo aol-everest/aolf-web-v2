@@ -1,7 +1,14 @@
 'use client';
 import React, { useCallback, useRef, useEffect } from 'react';
 
-const SearchOptions = ({ query, onChangeQuery, setQuery }) => {
+const SearchOptions = ({
+  query,
+  onChangeQuery,
+  setQuery,
+  setDebouncedQuery,
+  isLoading,
+  setResults,
+}) => {
   const queryInputRef = useRef(null);
 
   useEffect(() => {
@@ -14,6 +21,13 @@ const SearchOptions = ({ query, onChangeQuery, setQuery }) => {
     event.preventDefault();
   }, []);
 
+  const clearInput = () => {
+    setResults([]);
+    setQuery('');
+    setDebouncedQuery('');
+    queryInputRef.current.value = '';
+  };
+
   return (
     <form onSubmit={onSubmit}>
       <section className="ask-gurudev-main-search">
@@ -25,10 +39,15 @@ const SearchOptions = ({ query, onChangeQuery, setQuery }) => {
                 placeholder="Ask a question..."
                 name="query"
                 id="query"
+                disabled={isLoading}
                 value={query}
                 onChange={onChangeQuery}
                 ref={queryInputRef}
+                className={`${query ? 'input has-value' : ''}`}
               />
+              <button class="clear-button" onClick={clearInput}>
+                <img src="/img/ic-close.svg" alt="close" />
+              </button>
             </div>
             <div className="search-tags">
               <div
