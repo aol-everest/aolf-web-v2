@@ -733,10 +733,12 @@ const New = () => {
                     </div>
                   </div>
                 </div>
-                <div className="specific-teacher-text">
-                  Are you looking for a course with a specific teacher?{' '}
-                  <a href={`/us-en/courses/${slug}`}>Click here</a>
-                </div>
+                {!activeWorkshop?.id && (
+                  <div className="specific-teacher-text">
+                    Are you looking for a course with a specific teacher?{' '}
+                    <a href={`/us-en/courses/${slug}`}>Click here</a>
+                  </div>
+                )}
                 {!selectedWorkshopId && (
                   <div className="payment-box center-one">
                     <div className="payment-total-box">
@@ -1287,5 +1289,5 @@ const New = () => {
     </>
   );
 };
-
+New.hideFooter = true;
 export default New;
