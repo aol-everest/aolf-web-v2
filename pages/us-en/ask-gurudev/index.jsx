@@ -77,7 +77,10 @@ export default function AskGurudev() {
       <SearchOptions
         onChangeQuery={onChangeQuery}
         setQuery={setQuery}
+        setDebouncedQuery={setDebouncedQuery}
         query={query}
+        isLoading={loading}
+        setResults={setResults}
       />
 
       <div className="homePage">

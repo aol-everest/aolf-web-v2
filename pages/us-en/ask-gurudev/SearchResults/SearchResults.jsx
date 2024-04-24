@@ -33,7 +33,9 @@ const SearchResults = ({
     return <div>Error loading results</div>;
   }
 
-  console.log('query', query);
+  const isSelectedItem = (element) => {
+    return query?.toLowerCase() === element.toLowerCase();
+  };
 
   return (
     <>
@@ -49,7 +51,7 @@ const SearchResults = ({
             >
               <button
                 onClick={() => handlePredefinedElements('Relationship')}
-                className="nav-link active"
+                className={`nav-link ${isSelectedItem('Relationship') ? 'active' : ''}`}
                 id="nav-relation-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-relation"
@@ -63,7 +65,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('Finance')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('Finance') ? 'active' : ''}`}
                 id="nav-finance-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-finance"
@@ -76,7 +78,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('Health')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('Health') ? 'active' : ''}`}
                 id="nav-health-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-health"
@@ -89,7 +91,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('Enlightment')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('Enlightment') ? 'active' : ''}`}
                 id="nav-enlight-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-enlight"
@@ -102,7 +104,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('Guru')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('Guru') ? 'active' : ''}`}
                 id="nav-guru-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-guru"
@@ -115,7 +117,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('Karma')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('Karma') ? 'active' : ''}`}
                 id="nav-karma-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-karma"
@@ -128,7 +130,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('God')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('God') ? 'active' : ''}`}
                 id="nav-god-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-god"
@@ -141,7 +143,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('Meditation')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('Meditation') ? 'active' : ''}`}
                 id="nav-meditation-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-meditation"
@@ -154,7 +156,7 @@ const SearchResults = ({
               </button>
               <button
                 onClick={() => handlePredefinedElements('Death')}
-                className="nav-link"
+                className={`nav-link ${isSelectedItem('Death') ? 'active' : ''}`}
                 id="nav-death-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-death"
