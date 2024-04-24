@@ -89,6 +89,23 @@ main.find-meetup {
           label {
             margin-bottom: 6px;
           }
+          &.instructor {
+            @media screen and (min-width: 992px) {
+              .courses-filter__wrapper-list {
+                width: 100%;
+                padding: 8px;
+                .courses-filter__list {
+                  width: 100%;
+                }
+                .smart-input {
+                  width: 100%;
+                  .smart-input--list:empty {
+                    display: none;
+                  }
+                }
+              }
+            }
+          }
           &__button {
             border: #e9e9e9 1px solid;
             padding: 10px 14px;
@@ -107,6 +124,9 @@ main.find-meetup {
           }
           .rs-input-group-addon {
             display: none;
+          }
+          input::placeholder {
+            color: #000; /* Change to your desired placeholder color */
           }
           .rs-input {
             color: #31364e;
@@ -205,9 +225,8 @@ main.find-meetup {
           right: 10px;
           z-index: 1;
           border-radius: 32px;
-          bottom: calc(70vh + 8px);
+          bottom: calc(75vh + 8px);
           z-index: 101;
-          top: 192px;
           cursor: pointer;
           &::after,
           &::before {

@@ -740,6 +740,7 @@ const Meetup = () => {
   const { authenticated } = useAuth();
   const router = useRouter();
   const [meetupTypeFilter, setMeetupTypeFilter] = useQueryState('meetupType');
+  const [timesOfDayFilter, setTimesOfDayFilter] = useQueryString('timesOfDay');
   const [meetupModeFilter, setMeetupModeFilter] = useQueryState('mode', {
     defaultValue: 'ONLINE',
   });
@@ -1313,6 +1314,7 @@ const Meetup = () => {
                 buttonText={instructorFilter ? instructorFilter.label : null}
                 closeEvent={onFilterChange('instructorFilter')}
                 label="Instructor"
+                parentClassName="instructor"
               >
                 {({ closeHandler }) => (
                   <SmartInput
@@ -1503,8 +1505,9 @@ const Meetup = () => {
                           />
                         </div>
                       </MobileFilterModal>
+
                       <MobileFilterModal
-                        label="Time Zone"
+                        label="Time"
                         value={
                           timeZoneFilter && TIME_ZONE[timeZoneFilter]
                             ? TIME_ZONE[timeZoneFilter].name
@@ -1513,6 +1516,76 @@ const Meetup = () => {
                         clearEvent={onFilterClearEvent('timeZoneFilter')}
                       >
                         <div className="dropdown">
+                          <h2>Time Range</h2>
+                          <div className="checkbox-list">
+                            <div className="checkbox-wrapper">
+                              <input
+                                className="custom-checkbox"
+                                type="checkbox"
+                                name="morning"
+                                id="morning"
+                                checked={
+                                  timesOfDayFilter
+                                    ? timesOfDayFilter === 'Morning'
+                                    : false
+                                }
+                                onClick={onFilterChangeEvent(
+                                  'timesOfDayFilter',
+                                )('Morning')}
+                              />
+                              <label
+                                className="checkbox-text"
+                                htmlFor="morning"
+                              >
+                                Morning
+                              </label>
+                            </div>
+                            <div className="checkbox-wrapper">
+                              <input
+                                className="custom-checkbox"
+                                type="checkbox"
+                                name="afternoon"
+                                id="afternoon"
+                                checked={
+                                  timesOfDayFilter
+                                    ? timesOfDayFilter === 'Afternoon'
+                                    : false
+                                }
+                                onClick={onFilterChangeEvent(
+                                  'timesOfDayFilter',
+                                )('Afternoon')}
+                              />
+                              <label
+                                className="checkbox-text"
+                                htmlFor="afternoon"
+                              >
+                                Afternoon
+                              </label>
+                            </div>
+                            <div className="checkbox-wrapper">
+                              <input
+                                className="custom-checkbox"
+                                type="checkbox"
+                                name="evening"
+                                id="evening"
+                                checked={
+                                  timesOfDayFilter
+                                    ? timesOfDayFilter === 'Evening'
+                                    : false
+                                }
+                                onClick={onFilterChangeEvent(
+                                  'timesOfDayFilter',
+                                )('Evening')}
+                              />
+                              <label
+                                className="checkbox-text"
+                                htmlFor="evening"
+                              >
+                                Evening
+                              </label>
+                            </div>
+                          </div>
+                          <h2>Time zone</h2>
                           <SmartDropDown
                             value={timeZoneFilter}
                             buttonText={
