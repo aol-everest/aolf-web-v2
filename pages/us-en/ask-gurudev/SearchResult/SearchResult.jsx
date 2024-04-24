@@ -6,7 +6,8 @@ import Link from 'next/link';
 const SearchResult = React.forwardRef(function SearchResult({ result }, ref) {
   const time = result.metadata.start.split('.')[0];
   const youtubeUrl = `https://youtube.com/watch?v=${result.metadata.videoId}&t=${time}`;
-  const thumbnailUrl = `https://img.youtube.com/vi/${result.metadata.videoId}/maxresdefault.jpg`;
+  // const thumbnailUrl = `https://img.youtube.com/vi/${result.metadata.videoId}/maxresdefault.jpg`;
+  const thumbnailUrl = result.metadata.thumbnail;
 
   // const MAX_WORDS = 30;
 

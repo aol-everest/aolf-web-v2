@@ -203,6 +203,7 @@ function App({ Component, pageProps }) {
               noHeader={Component.noHeader}
               hideFooter={Component.hideFooter}
               wcfHeader={Component.wcfHeader}
+              sideGetStartedAction={Component.sideGetStartedAction}
             >
               <DefaultSeo {...SEO} />
               {/* <UsePagesViews /> */}
