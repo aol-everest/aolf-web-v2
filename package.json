@@ -112,7 +112,7 @@
     "swiper": "^9.4.1",
     "use-analytics": "^1.1.0",
     "video-react": "^0.16.0",
-    "yup": "^0.32.11"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
