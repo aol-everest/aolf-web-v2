@@ -761,6 +761,7 @@ export const PaymentFormHB = ({
     <>
       <Formik
         initialValues={{
+          CME: true,
           firstName: first_name || '',
           lastName: last_name || '',
           email: email || '',
