@@ -14,33 +14,89 @@ import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressC
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
 import { DiscountInputNew } from '@components/discountInputNew';
+import { useQueryState, parseAsBoolean, parseAsJson } from 'nuqs';
+import ErrorPage from 'next/error';
+import { PageLoading } from '@components';
 
 dayjs.extend(utc);
 
+const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
+  let count = 0;
+  if (item.pricingTierId in selectedTickets) {
+    count = selectedTickets[item.pricingTierId];
+  }
+  return (
+    <div className="tickets-modal__card" key={item.pricingTierId}>
+      <div className="tickets-modal__card-head">
+        <h3 className="tickets-modal__card-name">{item.pricingTierName}</h3>
+
+        <div className="tickets-modal__counter">
+          <button
+            className="tickets-modal__counter-button"
+            type="button"
+            disabled={!count === 0}
+            onClick={handleTicketSelect('remove', item)}
+          >
+            -
+          </button>
+          <input
+            className="tickets-modal__counter-input"
+            type="number"
+            name={item.pricingTierId}
+            id={item.pricingTierId}
+            value={count}
+            min="0"
+            onChange={handleTicketSelect('input', item)}
+          />
+          <button
+            className="tickets-modal__counter-button"
+            type="button"
+            disabled={count >= item.availableSeats}
+            onClick={handleTicketSelect('add', item)}
+          >
+            +
+          </button>
+        </div>
+      </div>
+      <div className="tickets-modal__card-left">
+        <p className="tickets-modal__card-heading">Price</p>
+        <p className="tickets-modal__card-amount">
+          ${item.price.toFixed(2)}
+          {/* <span>+ $3.31 Fee</span> */}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 function TicketedEvent() {
   const router = useRouter();
-  const [, setValue] = useLocalStorage('ticket-events', {}, { raw: true });
-  const [selectedTickets, setSelectedTickets] = useState([]);
+  const [selectedTickets, setSelectedTickets] = useQueryState(
+    'ticket',
+    parseAsJson().withDefault({}),
+  );
   const { showAlert } = useGlobalAlertContext();
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalTicketsQuantity, setTotalTicketsQuantity] = useState(0);
   const [discountResponse, setDiscountResponse] = useState(null);
-  const { id: workshopId } = router.query;
+  const { id: eventId } = router.query;
   const formRef = useRef();
 
-  const { data: workshop, isLoading } = useQuery({
+  const {
+    data: event,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: 'getTicketedEvent',
     queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEvent',
         param: {
-          id: workshopId,
+          id: eventId,
         },
       });
       return response.data;
     },
-    enabled: !!workshopId,
+    enabled: !!eventId,
   });
 
   const {
@@ -74,89 +130,7 @@ function TicketedEvent() {
     zip,
     country,
     maxTicketsWithOneOrder,
-  } = workshop || {};
-
-  useEffect(() => {
-    let totalPrice = 0;
-    let totalTicketQuantity = 0;
-
-    selectedTickets.map((item) => {
-      totalPrice = totalPrice + item.price * item.numberOfTickets;
-      totalTicketQuantity = totalTicketQuantity + item.numberOfTickets;
-    });
-    setTotalPrice(totalPrice);
-    setTotalTicketsQuantity(totalTicketQuantity);
-  }, [selectedTickets]);
-
-  const handleTicketSelect = (e, type, item) => {
-    if (item) {
-      let selectedIdsLocal = [...selectedIds];
-      const selectedTicketsCopy = !selectedIdsLocal.includes(
-        item?.pricingTierId,
-      )
-        ? [...selectedTickets, item]
-        : [...selectedTickets];
-
-      const filteredItems = [];
-      selectedTicketsCopy.forEach((newItem) => {
-        if (newItem.pricingTierId === item?.pricingTierId) {
-          if (type === 'add') {
-            selectedIdsLocal = [...selectedIdsLocal, item.pricingTierId];
-            newItem.numberOfTickets = (newItem.numberOfTickets || 0) + 1;
-            filteredItems.push(newItem);
-          } else {
-            if (newItem.numberOfTickets === 1) {
-              const filteredIds = selectedIdsLocal.filter(
-                (id) => id !== item.pricingTierId,
-              );
-
-              selectedIdsLocal = [...filteredIds];
-            }
-            newItem.numberOfTickets = newItem.numberOfTickets
-              ? newItem.numberOfTickets - 1
-              : newItem.numberOfTickets;
-            if (newItem.numberOfTickets) {
-              filteredItems.push(newItem);
-            }
-          }
-        } else {
-          filteredItems.push(newItem);
-        }
-      });
-      setSelectedIds(selectedIdsLocal);
-      setSelectedTickets(filteredItems);
-    }
-  };
-
-  const applyDiscount = (discount) => {
-    setDiscountResponse(discount);
-  };
-
-  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
-
-  const handleTicketCheckout = (values) => {
-    if (
-      maxTicketsWithOneOrder &&
-      totalTicketsQuantity > maxTicketsWithOneOrder
-    ) {
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: `Exceeded maximum tickets limit. Max allowed ${maxTicketsWithOneOrder}`,
-      });
-      return;
-    }
-    setValue({
-      selectedTickets: selectedTickets,
-      delfee: totalOrderAmountNew,
-      discountResponse: discountResponse,
-      totalPrice: totalPrice,
-      workshop: workshop,
-      totalDiscount: totalDiscount,
-      discountCode: values?.discount,
-    });
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/checkout/${workshopId}`,
-    });
-  };
+  } = event || {};
 
   useEffect(() => {
     if (isEventFull) {
@@ -173,7 +147,117 @@ function TicketedEvent() {
         console.log('error', error);
       }
     }
-  }, [workshop]);
+  }, [event]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
+
+  const handleTicketSelect = (type, item) => (e) => {
+    if (!item) {
+      console.error('Item is missing');
+      return;
+    }
+
+    const selectedTicketsCopy = { ...selectedTickets };
+
+    const { pricingTierId } = item;
+    if (!(pricingTierId in selectedTicketsCopy)) {
+      selectedTicketsCopy[pricingTierId] = 0;
+    }
+    if (type === 'input') {
+      selectedTicketsCopy[pricingTierId] = Math.abs(e.target.value);
+    } else if (type === 'add') {
+      selectedTicketsCopy[pricingTierId]++;
+    } else if (type === 'remove') {
+      selectedTicketsCopy[pricingTierId]--;
+    }
+
+    const updatedSelectedTickets = Object.fromEntries(
+      Object.entries(selectedTicketsCopy).filter(([key, value]) => value > 0),
+    );
+
+    setSelectedTickets(updatedSelectedTickets);
+  };
+
+  const applyDiscount = (discount) => {
+    setDiscountResponse(discount);
+  };
+
+  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
+
+  const handleTicketCheckout = (values) => {
+    const totalTicketsQuantity = Object.entries(selectedTickets).reduce(
+      (accumulator, [key, value]) => {
+        accumulator = accumulator + value;
+        return accumulator;
+      },
+      0,
+    );
+    if (
+      maxTicketsWithOneOrder &&
+      totalTicketsQuantity > maxTicketsWithOneOrder
+    ) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: `Exceeded maximum tickets limit. Max allowed ${maxTicketsWithOneOrder}`,
+      });
+      return;
+    }
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/ticketed-event/checkout/${eventId}`,
+      query: {
+        ticket: JSON.stringify(selectedTickets),
+      },
+    });
+  };
+
+  const renderSummery = () => {
+    let pricingTiersLocal = pricingTiers.filter((p) => {
+      return p.pricingTierId in selectedTickets;
+    });
+    pricingTiersLocal = pricingTiersLocal.map((p) => {
+      p.numberOfTickets = selectedTickets[p.pricingTierId];
+      return p;
+    });
+    const total = pricingTiersLocal.reduce((accumulator, item) => {
+      accumulator = accumulator + item.price * item?.numberOfTickets;
+      return accumulator;
+    }, 0);
+    return (
+      <>
+        <div className="tickets-container">
+          {pricingTiersLocal.map((item) => {
+            return (
+              <div className="tickets" key={item.pricingTierId}>
+                <div className="label">
+                  {item.pricingTierName} x{item?.numberOfTickets}{' '}
+                </div>
+                <div className="value">
+                  ${(item.price * item?.numberOfTickets).toFixed(2)}
+                </div>
+              </div>
+            );
+          })}
+          <div className="tickets">
+            <div className="label">Subtotal</div>
+            <div className="value">${parseFloat(total).toFixed(2)}</div>
+          </div>
+        </div>
+        {totalDiscount > 0 && (
+          <p className="tickets-modal__cart-discount">
+            Discount(-)
+            <span>${parseFloat(totalDiscount).toFixed(2)}</span>
+          </p>
+        )}
+
+        <div className="total">
+          <div className="label">Total:</div>
+          <div className="value">
+            ${(parseFloat(total) - totalDiscount).toFixed(2)}
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <Formik
@@ -238,75 +322,14 @@ function TicketedEvent() {
                       </p>
 
                       <div className="tickets-modal__list">
-                        {pricingTiers?.map((item, index) => {
-                          const selectedValue = selectedTickets.find(
-                            (ticket) =>
-                              ticket.pricingTierId === item.pricingTierId,
-                          );
-                          return (
-                            <div
-                              className="tickets-modal__card"
-                              key={item.pricingTierId}
-                            >
-                              <div className="tickets-modal__card-head">
-                                <h3 className="tickets-modal__card-name">
-                                  {item.pricingTierName}
-                                </h3>
-
-                                <div className="tickets-modal__counter">
-                                  <button
-                                    className="tickets-modal__counter-button"
-                                    data-counter="decrease"
-                                    data-product={`product-${index + 1}`}
-                                    type="button"
-                                    disabled={
-                                      !selectedValue ||
-                                      selectedValue?.numberOfTickets === 0
-                                    }
-                                    onClick={(e) =>
-                                      handleTicketSelect(e, 'remove', item)
-                                    }
-                                  >
-                                    -
-                                  </button>
-                                  <input
-                                    className="tickets-modal__counter-input"
-                                    type="number"
-                                    name={item.pricingTierId}
-                                    id={item.pricingTierId}
-                                    value={selectedValue?.numberOfTickets || 0}
-                                    min="0"
-                                    onChange={handleTicketSelect}
-                                  />
-                                  <button
-                                    className="tickets-modal__counter-button"
-                                    data-counter="increase"
-                                    data-product={`product-${index + 1}`}
-                                    type="button"
-                                    disabled={
-                                      selectedValue?.numberOfTickets >=
-                                      item.availableSeats
-                                    }
-                                    onClick={(e) =>
-                                      handleTicketSelect(e, 'add', item)
-                                    }
-                                  >
-                                    +
-                                  </button>
-                                </div>
-                              </div>
-                              <div className="tickets-modal__card-left">
-                                <p className="tickets-modal__card-heading">
-                                  Price
-                                </p>
-                                <p className="tickets-modal__card-amount">
-                                  ${item.price.toFixed(2)}
-                                  {/* <span>+ $3.31 Fee</span> */}
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        })}
+                        {pricingTiers?.map((item, index) => (
+                          <TicketLineItem
+                            key={item.pricingTierId}
+                            item={item}
+                            handleTicketSelect={handleTicketSelect}
+                            selectedTickets={selectedTickets}
+                          ></TicketLineItem>
+                        ))}
                       </div>
 
                       <div className="tickets-modal__language"></div>
@@ -348,52 +371,12 @@ function TicketedEvent() {
                       </div>
 
                       <div className="tickets-modal__cart">
-                        <div className="tickets-container">
-                          {selectedTickets.map((item) => {
-                            return (
-                              <div className="tickets" key={item.pricingTierId}>
-                                <div className="label">
-                                  {item.pricingTierName} x
-                                  {item?.numberOfTickets}{' '}
-                                </div>
-                                <div className="value">
-                                  $
-                                  {(item.price * item?.numberOfTickets).toFixed(
-                                    2,
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-                          <div className="tickets">
-                            <div className="label">Subtotal</div>
-                            <div className="value">
-                              ${parseFloat(totalPrice).toFixed(2)}
-                            </div>
-                          </div>
-                        </div>
-
-                        {totalDiscount > 0 && (
-                          <p className="tickets-modal__cart-discount">
-                            Discount(-)
-                            <span>${parseFloat(totalDiscount).toFixed(2)}</span>
-                          </p>
-                        )}
-
-                        <div className="total">
-                          <div className="label">Total:</div>
-                          <div className="value">
-                            $
-                            {(parseFloat(totalPrice) - totalDiscount).toFixed(
-                              2,
-                            )}
-                          </div>
-                        </div>
+                        {renderSummery()}
                       </div>
                       <div className="tickets-modal__footer">
-                        {workshop && (
+                        {event && (
                           <div className="tickets-modal__footer-button-link">
-                            <StripeExpressCheckoutTicket workshop={workshop} />
+                            <StripeExpressCheckoutTicket workshop={event} />
                           </div>
                         )}
                         <button
