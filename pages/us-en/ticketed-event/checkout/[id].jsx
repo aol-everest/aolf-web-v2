@@ -33,7 +33,6 @@ import { PageLoading } from '@components';
 function TicketCheckout() {
   const router = useRouter();
   const { id: eventId } = router.query;
-  // const { workshop } = value;
 
   const {
     data: event,
@@ -127,17 +126,11 @@ function TicketCheckout() {
   };
 
   return (
-    <>
-      {/* <header className="checkout-header">
-        <img className="checkout-header__logo" src="/img/ic-logo.svg" alt="" />
-      </header> */}
-
-      <main className="checkout-aol">
-        <Elements stripe={stripePromise} options={elementsOptions}>
-          <TicketCheckoutForm event={event} />
-        </Elements>
-      </main>
-    </>
+    <main className="checkout-aol">
+      <Elements stripe={stripePromise} options={elementsOptions}>
+        <TicketCheckoutForm event={event} />
+      </Elements>
+    </main>
   );
 }
 
@@ -152,15 +145,11 @@ const TicketCheckoutForm = ({ event }) => {
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
   const [discountResponse, setDiscountResponse] = useState(null);
-  const [value, setValue] = useLocalStorage('ticket-events');
-  const {
-    selectedTickets,
-    delfee,
-    totalPrice,
-    discountResponse: discount,
-    productTypeId,
-  } = value;
-
+  const [couponCode] = useQueryState('coupon');
+  const [selectedTickets] = useQueryState(
+    'ticket',
+    parseAsJson().withDefault({}),
+  );
   const {
     eventImageUrl,
     eventEndDate,
@@ -176,7 +165,20 @@ const TicketCheckoutForm = ({ event }) => {
     email: contactEmail,
     id: productId,
     addOnProducts,
+    pricingTiers,
   } = event;
+
+  let pricingTiersLocal = pricingTiers.filter((p) => {
+    return p.pricingTierId in selectedTickets;
+  });
+  pricingTiersLocal = pricingTiersLocal.map((p) => {
+    p.numberOfTickets = selectedTickets[p.pricingTierId];
+    return p;
+  });
+  const totalPrice = pricingTiersLocal.reduce((accumulator, item) => {
+    accumulator = accumulator + item.price * item?.numberOfTickets;
+    return accumulator;
+  }, 0);
 
   const {
     first_name,
@@ -190,8 +192,39 @@ const TicketCheckoutForm = ({ event }) => {
   } = user?.profile || {};
 
   useEffect(() => {
-    setDiscountResponse(discount);
-  }, [discount]);
+    validateCoupon();
+  }, [couponCode]);
+
+  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
+
+  const validateCoupon = async () => {
+    try {
+      let payLoad = {
+        shoppingRequest: {
+          products: {
+            productType: 'ticketed_event',
+            productSfId: productId,
+          },
+          couponCode: couponCode,
+        },
+        userId: null,
+      };
+      let results = await api.post({
+        path: 'applyCoupon',
+        body: payLoad,
+      });
+      if (results.status !== 200) {
+        throw new Error(results.error || 'Internal Server error.');
+      }
+      setLoading(false);
+
+      setDiscountResponse(results);
+    } catch (ex) {
+      const data = ex.response?.data;
+      setLoading(false);
+      applyDiscount(null);
+    }
+  };
 
   const login = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL);
@@ -222,6 +255,13 @@ const TicketCheckoutForm = ({ event }) => {
 
     const { firstName, lastName, email, contactPhone } = values;
 
+    const tickets = Object.entries(selectedTickets).map(([key, value]) => {
+      return {
+        numberOfTickets: value,
+        pricingTierId: key,
+      };
+    });
+
     try {
       setLoading(true);
 
@@ -242,7 +282,7 @@ const TicketCheckoutForm = ({ event }) => {
           products,
           isStripeIntentPayment: true,
           isPaypalPayment: false,
-          tickets: selectedTickets,
+          tickets: tickets,
         },
       };
       if (isPaypal) {
@@ -282,20 +322,7 @@ const TicketCheckoutForm = ({ event }) => {
       }
 
       if (data || paypalObj) {
-        setValue({
-          ...value,
-          orderId: data?.orderId,
-          attendeeId: data?.attendeeId,
-          attendeeDetails: {
-            lastName: lastName,
-            firstName: firstName,
-            email: email,
-            contactPhone: contactPhone,
-          },
-        });
         let filteredParams = {
-          ctype: productTypeId,
-          page: 'ty',
           referral: 'ticketed_event_checkout',
           ...filterAllowedParams(router.query),
         };
@@ -394,6 +421,55 @@ const TicketCheckoutForm = ({ event }) => {
 
   const applyDiscount = (discount) => {
     setDiscountResponse(discount);
+  };
+
+  const renderSummery = () => {
+    let pricingTiersLocal = pricingTiers.filter((p) => {
+      return p.pricingTierId in selectedTickets;
+    });
+    pricingTiersLocal = pricingTiersLocal.map((p) => {
+      p.numberOfTickets = selectedTickets[p.pricingTierId];
+      return p;
+    });
+    const total = pricingTiersLocal.reduce((accumulator, item) => {
+      accumulator = accumulator + item.price * item?.numberOfTickets;
+      return accumulator;
+    }, 0);
+    return (
+      <>
+        <div className="tickets-container">
+          {pricingTiersLocal.map((item) => {
+            return (
+              <div className="tickets" key={item.pricingTierId}>
+                <div className="label">
+                  {item.pricingTierName} x{item?.numberOfTickets}{' '}
+                </div>
+                <div className="value">
+                  ${(item.price * item?.numberOfTickets).toFixed(2)}
+                </div>
+              </div>
+            );
+          })}
+          <div className="tickets">
+            <div className="label">Subtotal</div>
+            <div className="value">${parseFloat(total).toFixed(2)}</div>
+          </div>
+        </div>
+        {totalDiscount > 0 && (
+          <p className="tickets-modal__cart-discount">
+            Discount(-)
+            <span>${parseFloat(totalDiscount).toFixed(2)}</span>
+          </p>
+        )}
+
+        <div className="total">
+          <div className="label">Total:</div>
+          <div className="value">
+            ${(parseFloat(total) - totalDiscount).toFixed(2)}
+          </div>
+        </div>
+      </>
+    );
   };
 
   return (
@@ -554,46 +630,7 @@ const TicketCheckoutForm = ({ event }) => {
                               </div>
                             </div>
                           </div>
-                          <div className="tickets-container">
-                            {selectedTickets.map((item) => {
-                              return (
-                                <div
-                                  className="tickets"
-                                  key={item.pricingTierId}
-                                >
-                                  <div className="label">
-                                    {item.pricingTierName} x
-                                    {item?.numberOfTickets}{' '}
-                                  </div>
-                                  <div className="value">
-                                    $
-                                    {(
-                                      item.price * item?.numberOfTickets
-                                    ).toFixed(2)}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                            <div className="tickets">
-                              <div className="label">Subtotal</div>
-                              <div className="value">
-                                ${parseFloat(totalPrice).toFixed(2)}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="total">
-                            <div className="label">Total:</div>
-                            <div className="value">
-                              {' '}
-                              {discountResponse && delfee && (
-                                <span className="discount">
-                                  ${delfee.toFixed(2)}
-                                </span>
-                              )}{' '}
-                              ${totalPrice.toFixed(2) || '0'.toFixed(2)}
-                            </div>
-                          </div>
+                          {renderSummery()}
                         </div>
                         <div className="section-box checkout-details">
                           <h2 className="section__title">Details:</h2>
