@@ -27,7 +27,7 @@ dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = 'both';
 
-const New = () => {
+const Scheduling = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const router = useRouter();
@@ -1289,5 +1289,5 @@ const New = () => {
     </>
   );
 };
-New.hideFooter = true;
-export default New;
+Scheduling.hideFooter = true;
+export default Scheduling;
