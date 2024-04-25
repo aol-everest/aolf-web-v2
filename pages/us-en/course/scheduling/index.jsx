@@ -27,7 +27,7 @@ dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = 'both';
 
-const New = () => {
+const Scheduling = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const router = useRouter();
@@ -733,10 +733,12 @@ const New = () => {
                     </div>
                   </div>
                 </div>
-                <div className="specific-teacher-text">
-                  Are you looking for a course with a specific teacher?{' '}
-                  <a href={`/us-en/courses/${slug}`}>Click here</a>
-                </div>
+                {!activeWorkshop?.id && (
+                  <div className="specific-teacher-text">
+                    Are you looking for a course with a specific teacher?{' '}
+                    <a href={`/us-en/courses/${slug}`}>Click here</a>
+                  </div>
+                )}
                 {!selectedWorkshopId && (
                   <div className="payment-box center-one">
                     <div className="payment-total-box">
@@ -1182,6 +1184,7 @@ const New = () => {
                         workshop={activeWorkshop}
                         goToPaymentModal={goToPaymentModal}
                         selectedWorkshopId={selectedWorkshopId}
+                        btnText="Checkout"
                       />
                     )}
 
@@ -1287,5 +1290,5 @@ const New = () => {
     </>
   );
 };
-
-export default New;
+Scheduling.hideFooter = true;
+export default Scheduling;
