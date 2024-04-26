@@ -11,6 +11,14 @@ export const EmptyResults = () => {
   );
 };
 
+export const IncorrectResults = () => {
+  return (
+    <div className="emptyResults">
+      <p>For relavent results, try broadening your search.</p>
+    </div>
+  );
+};
+
 const SearchResults = ({
   results,
   debouncedQuery,
@@ -20,6 +28,7 @@ const SearchResults = ({
   setQuery,
   setDebouncedQuery,
   query,
+  incorrectResponse,
 }) => {
   const handlePredefinedElements = useCallback(
     (query) => {
@@ -187,6 +196,7 @@ const SearchResults = ({
               </div>
             </div>
           )}
+          {results && incorrectResponse && !isEmpty && <IncorrectResults />}
         </div>
       </section>
     </>
