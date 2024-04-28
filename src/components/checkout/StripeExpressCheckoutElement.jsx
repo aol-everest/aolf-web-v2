@@ -277,7 +277,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                   disabled={!selectedWorkshopId}
                   onClick={goToPaymentModal}
                 >
-                  Continue
+                  Checkout
                 </button>
               </div>
             </>
