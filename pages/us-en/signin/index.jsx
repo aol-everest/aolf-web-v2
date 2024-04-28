@@ -339,8 +339,8 @@ function LoginPage() {
   const socialLoginRender = () => {
     return (
       <div class="login-options">
-        <button class="google-icon">
-          <img src="/img/google-icon.svg" onClick={googleLogin} />
+        <button class="google-icon" onClick={googleLogin}>
+          <img src="/img/google-icon.svg" />
         </button>
         <button class="facebook-icon" onClick={fbLogin}>
           <img src="/img/facebook-icon.svg" />
