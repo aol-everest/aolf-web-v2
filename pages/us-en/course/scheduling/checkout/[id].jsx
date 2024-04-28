@@ -144,9 +144,7 @@ const SchedulingPayment = (props) => {
     discount: discountResponse,
   });
 
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-  );
+  const stripePromise = loadStripe(workshop.publishableKey);
 
   const applyDiscount = (discount) => {
     setDiscountResponse(discount);
@@ -281,6 +279,7 @@ const SchedulingPaymentForm = ({
     phone2,
     timings = [],
     contactName,
+    isGenericWorkshop,
   } = workshop;
 
   const {
@@ -493,9 +492,13 @@ const SchedulingPaymentForm = ({
             ...filterAllowedParams(router.query),
           };
           filteredParams = removeNull(filteredParams);
-          const returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+          let returnUrl = `${window.location.origin}/us-en/course/thankyou/${
             data.attendeeId
           }?${queryString.stringify(filteredParams)}`;
+          if (isGenericWorkshop) {
+            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=data.attendeeId&${queryString.stringify(filteredParams)}`;
+          }
+
           const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element
             elements,
