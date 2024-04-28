@@ -2,6 +2,7 @@ import { useAuth } from '@contexts';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { api } from '@utils';
 import { useState } from 'react';
+import { Loader, PageLoading } from '@components';
 
 const createOptions = {
   style: {
@@ -60,7 +61,7 @@ export const ChangeCardDetail = ({ updateCompleteAction }) => {
   };
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <form className="profile-update__form" onSubmit={handleSubmit}>
         <div className="profile-update__form-header d-flex justify-content-between align-items-center">
           <h6 className="profile-update__title m-0">Card Details:</h6>

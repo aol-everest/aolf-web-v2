@@ -1,11 +1,7 @@
-import { MESSAGE_EMAIL_VERIFICATION_SUCCESS, ALERT_TYPES } from '@constants';
-import { useAuth, useGlobalAlertContext } from '@contexts';
-import { pushRouteWithUTMQuery } from '@service';
-import { Auth, api } from '@utils';
-import classNames from 'classnames';
+import { ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
 import { useAnalytics } from 'use-analytics';
 import {
   ChangePasswordForm,
@@ -14,21 +10,7 @@ import {
   SigninForm,
   SignupForm,
 } from '@components/loginForm';
-import {
-  useQueryState,
-  parseAsString,
-  parseAsInteger,
-  parseAsFloat,
-  parseAsBoolean,
-  parseAsTimestamp,
-  parseAsIsoDateTime,
-  parseAsArrayOf,
-  parseAsJson,
-  parseAsStringEnum,
-  parseAsStringLiteral,
-  parseAsNumberLiteral,
-  createParser,
-} from 'nuqs';
+import { useQueryState, parseAsString } from 'nuqs';
 import {
   signIn,
   signOut,
@@ -41,7 +23,6 @@ import {
 } from 'aws-amplify/auth';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
-import { Hub } from 'aws-amplify/utils';
 
 import 'amazon-cognito-passwordless-auth/passwordless.css';
 
@@ -364,9 +345,9 @@ function LoginPage() {
         <button class="facebook-icon" onClick={fbLogin}>
           <img src="/img/facebook-icon.svg" />
         </button>
-        <button class="apple-icon">
+        {/* <button class="apple-icon">
           <img src="/img/apple-icon.svg" />
-        </button>
+        </button> */}
       </div>
     );
   };

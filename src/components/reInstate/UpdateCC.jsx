@@ -3,6 +3,7 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { api } from '@utils';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { Loader } from '@components';
 
 const createOptions = {
   style: {
@@ -111,7 +112,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
   };
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <form name="profile-edit" onSubmit={handleSubmit}>
         <span>Current Balance due - {amount}</span>
         <div className="input_card">

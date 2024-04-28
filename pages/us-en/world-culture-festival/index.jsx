@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useAnalytics } from 'use-analytics';
 import * as Yup from 'yup';
+import { Loader } from '@components';
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -169,7 +170,7 @@ function WorldCultureFestival() {
         <title>World Culture Festival</title>
       </Head>
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <FormikWizard
         initialValues={formInitialValue}
         onSubmit={handleSubmit}

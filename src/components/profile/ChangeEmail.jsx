@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaCheckCircle } from 'react-icons/fa';
 import { object, string } from 'yup';
+import { Loader } from '@components';
 
 const ChangeEmailStep = ({
   onSubmit,
@@ -178,7 +179,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
           <div className="close-line"></div>
           <div className="close-line"></div>
         </div>
-        {loading && <div className="cover-spin"></div>}
+        {loading && <Loader />}
         <ChangeEmailStep
           onSubmit={onChangeEmailSubmitted}
           existingEmail={existingEmail}

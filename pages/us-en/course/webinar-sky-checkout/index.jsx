@@ -1,4 +1,4 @@
-import { PageLoading } from '@components';
+import { Loader, PageLoading } from '@components';
 import { PaymentFormWebinar } from '@components/PaymentFormWebinar';
 import {
   ALERT_TYPES,
@@ -293,7 +293,7 @@ const WebinarSkyCheckout = () => {
   return (
     <>
       <NextSeo title={workshop.title} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <main>
         {showTopMessage && (
           <aside className="tw-relative tw-whitespace-normal tw-text-center">

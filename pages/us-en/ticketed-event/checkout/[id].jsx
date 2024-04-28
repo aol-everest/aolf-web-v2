@@ -26,6 +26,7 @@ import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
 import { navigateToLogin } from '@utils';
+import { Loader } from '@components';
 
 export default function TicketCheckout() {
   const router = useRouter();
@@ -378,7 +379,7 @@ const TicketCheckoutForm = ({ router }) => {
   return (
     <>
       <NextSeo title={'Ticketed Checkout'} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: first_name || '',

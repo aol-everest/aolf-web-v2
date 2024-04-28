@@ -21,6 +21,7 @@ import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
+import { Loader } from '@components';
 import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 
@@ -652,7 +653,7 @@ const Scheduling = () => {
 
   return (
     <>
-      {(loading || isLoading) && <div className="cover-spin"></div>}
+      {(loading || isLoading) && <Loader />}
       <main className="scheduling-page calendar-online">
         <section className="scheduling-top">
           {(!attendeeId || activeWorkshop?.id) && (

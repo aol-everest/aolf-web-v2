@@ -2,6 +2,7 @@ import { api } from '@utils';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
+import { Loader } from '@components';
 import 'react-image-crop/dist/ReactCrop.css';
 
 const TO_RADIANS = Math.PI / 180;
@@ -197,7 +198,7 @@ export const ProfilePicCrop = ({ src, closeDetailAction }) => {
     <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
       <div className=" modal-dialog modal-dialog-centered active">
         <div className="modal-content">
-          {loading && <div className="cover-spin"></div>}
+          {loading && <Loader />}
           <h2 className="modal-content-title">Edit Profile Pic</h2>
           <table id="prodile-pic-crop-wrapper">
             <tbody>

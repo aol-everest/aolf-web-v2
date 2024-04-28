@@ -40,7 +40,9 @@ import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import { useRef } from 'react';
 import { PayWithNewCheckout } from '@components/checkout/PayWithNewCheckout';
 import CostDetailsCardNewCheckout from '@components/checkout/CostDetailsCardNewCheckout';
-var advancedFormat = require('dayjs/plugin/advancedFormat');
+import { Loader } from '@components';
+
+const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
 const createOptions = {
@@ -1041,7 +1043,7 @@ export const PaymentFormNew = ({
 
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: first_name || '',

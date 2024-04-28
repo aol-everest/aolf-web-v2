@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
+import { Loader } from '@components';
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
   const { profile } = useAuth();
@@ -34,7 +35,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
   };
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         enableReinitialize
         initialValues={{

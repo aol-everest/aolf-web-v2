@@ -1,4 +1,9 @@
-import { PageLoading, PaymentFormGeneric, PaymentFormHB } from '@components';
+import {
+  Loader,
+  PageLoading,
+  PaymentFormGeneric,
+  PaymentFormHB,
+} from '@components';
 import {
   ALERT_TYPES,
   COURSE_TYPES,
@@ -465,7 +470,7 @@ const Checkout = () => {
   return (
     <>
       <NextSeo title={workshop.title} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <main>
         {showTopMessage && (
           <aside className="tw-relative tw-whitespace-normal tw-text-center">

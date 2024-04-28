@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { PageLoading } from '@components';
+import { Loader, PageLoading } from '@components';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { useQueryString } from '@hooks';
 import queryString from 'query-string';
@@ -600,7 +600,7 @@ const SchedulingPaymentForm = ({
   return (
     <>
       <NextSeo title={title + ' Course Checkout'} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: '',
