@@ -890,6 +890,7 @@ main.find-meetup {
           display: flex;
           align-items: center;
           gap: 8px;
+          flex-shrink: 0;
           @media screen and (max-width: 991px) {
             flex-shrink: 0;
             width: 165px;
