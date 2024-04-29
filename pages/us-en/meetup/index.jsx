@@ -1125,22 +1125,7 @@ const Meetup = () => {
               className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
               <button className="filter-save-button">Save Changes</button>
-              <Popup
-                tabIndex="1"
-                value={locationFilter}
-                buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : null
-                }
-                closeEvent={onFilterChange('locationFilter')}
-                label="Location"
-              >
-                {({ closeHandler }) => (
-                  <AddressSearch
-                    closeHandler={closeHandler}
-                    placeholder="Search for Location"
-                  />
-                )}
-              </Popup>
+
               <Popup
                 tabIndex="2"
                 value={COURSE_MODES[meetupModeFilter] && meetupModeFilter}
@@ -1166,6 +1151,22 @@ const Meetup = () => {
                       );
                     })}
                   </>
+                )}
+              </Popup>
+              <Popup
+                tabIndex="1"
+                value={locationFilter}
+                buttonText={
+                  locationFilter ? `${locationFilter.locationName}` : null
+                }
+                closeEvent={onFilterChange('locationFilter')}
+                label="Location"
+              >
+                {({ closeHandler }) => (
+                  <AddressSearch
+                    closeHandler={closeHandler}
+                    placeholder="Search for Location"
+                  />
                 )}
               </Popup>
               <Popup
