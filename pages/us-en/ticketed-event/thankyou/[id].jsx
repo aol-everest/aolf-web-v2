@@ -219,7 +219,7 @@ const TicketCongratulations = () => {
   const handleSubmitAttendees = async () => {
     setLoading(true);
     let allFieldsValid = true;
-    if (selectedTickets.length !== Object.keys(ticketData).length) {
+    if (totalNoOfTickets !== Object.keys(ticketData).length) {
       allFieldsValid = false;
       showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: "Please input all attendee details. Details can't be empty",
