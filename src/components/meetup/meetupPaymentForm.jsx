@@ -423,9 +423,6 @@ export const MeetupPaymentForm = ({
     cardLast4Digit,
   } = profile;
 
-  console.log('complianceQuestionnaire', complianceQuestionnaire);
-  console.log('isReferBySameSite', isReferBySameSite);
-
   const questionnaire = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
         key: current.questionSfid,

@@ -45,7 +45,7 @@ const SearchOptions = ({
                 ref={queryInputRef}
                 className={`${query ? 'input has-value' : ''}`}
               />
-              <button class="clear-button" onClick={clearInput}>
+              <button className="clear-button" onClick={clearInput}>
                 <img src="/img/ic-close.svg" alt="close" />
               </button>
             </div>

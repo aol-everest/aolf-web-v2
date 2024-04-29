@@ -65,7 +65,6 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
 
 const fillDefaultTimeZone = () => {
   const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
-  // console.log('User timezone abbreviation:', userTimeZoneAbbreviation);
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
@@ -766,8 +765,6 @@ const Meetup = () => {
     parseAsJson(),
   );
 
-  console.log('meetupModeFilter', meetupModeFilter);
-
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
   const [searchKey, setSearchKey] = useState('');
@@ -1337,7 +1334,7 @@ const Meetup = () => {
                       })}
                       onClick={toggleFilter}
                     >
-                      <span class="icon-aol iconaol-setting"></span>
+                      <span className="icon-aol iconaol-setting"></span>
                       Filter
                       <span id="filter-count">{filterCount}</span>
                     </div>
@@ -1346,7 +1343,7 @@ const Meetup = () => {
                 {showFilterModal && (
                   <>
                     <div className="filter--box">
-                      <div class="selected-filter-wrap">
+                      <div className="selected-filter-wrap">
                         {locationFilter && (
                           <div
                             className="selected-filter-item"
@@ -1410,7 +1407,7 @@ const Meetup = () => {
                           </div>
                         )}
                       </div>
-                      <label class="mt-4">Meetup format</label>
+                      <label className="mt-4">Meetup format</label>
                       <div
                         id="switch-mobile-filter"
                         className="btn_outline_box full-btn mt-3"

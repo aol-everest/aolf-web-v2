@@ -53,8 +53,6 @@ const Checkout = (props) => {
     },
   });
 
-  console.log('props', props);
-
   const isReferBySameSite =
     getDomainFromUrl(props.referringURL) ===
     getDomainFromUrl(process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT);
