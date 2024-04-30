@@ -64,6 +64,21 @@ export default function AskGurudev() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
+  useEffect(() => {
+    const handleEnterKey = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission
+        // Perform your search or other action here
+      }
+    };
+
+    document.addEventListener('keydown', handleEnterKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleEnterKey);
+    };
+  }, []);
+
   const isEmpty = results && !results.length;
 
   return (

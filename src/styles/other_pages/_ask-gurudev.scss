@@ -226,11 +226,8 @@
   }
   .search-results-area {
     .container {
-      padding-top: 80px;
+      padding-top: 40px;
       max-width: 1304px;
-      @media screen and (max-width: 991px) {
-        padding-top: 60px;
-      }
     }
   }
   .search-results-area {

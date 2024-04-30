@@ -219,9 +219,6 @@ const TicketCongratulations = () => {
   const handleSubmitAttendees = async () => {
     setLoading(true);
     let allFieldsValid = true;
-    console.log('ticketData', ticketData);
-    console.log('selectedTickets', selectedTickets);
-    console.log('totalNoOfTickets', totalNoOfTickets);
     if (totalNoOfTickets !== Object.keys(ticketData).length) {
       allFieldsValid = false;
       showAlert(ALERT_TYPES.ERROR_ALERT, {

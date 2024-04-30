@@ -26,6 +26,7 @@ import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
+import { replaceRouteWithUTMQuery } from '@service';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
@@ -167,6 +168,7 @@ const TicketCheckoutForm = ({ event }) => {
     addOnProducts,
     pricingTiers,
     title,
+    productTypeId,
   } = event;
 
   let pricingTiersLocal = pricingTiers.filter((p) => {
@@ -323,13 +325,26 @@ const TicketCheckoutForm = ({ event }) => {
       }
 
       if (data || paypalObj) {
+        // setValue({
+        //   ...value,
+        //   orderId: data?.orderId,
+        //   attendeeId: data?.attendeeId,
+        //   attendeeDetails: {
+        //     lastName: lastName,
+        //     firstName: firstName,
+        //     email: email,
+        //     contactPhone: contactPhone,
+        //   },
+        // });
         let filteredParams = {
+          ctype: productTypeId,
+          page: 'ty',
           referral: 'ticketed_event_checkout',
           ...filterAllowedParams(router.query),
         };
         const returnUrl = `${
           window.location.origin
-        }/us-en/ticketed-event/thankyou/${event.sfid}?${queryString.stringify(
+        }/us-en/ticketed-event/thankyou/${event.id}?${queryString.stringify(
           filteredParams,
         )}`;
         const result = await stripe.confirmPayment({
