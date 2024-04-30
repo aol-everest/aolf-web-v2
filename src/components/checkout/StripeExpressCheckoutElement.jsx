@@ -126,7 +126,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
+      }/us-en/course/scheduling/thankyou/${data.attendeeId}?${queryString.stringify(
         filteredParams,
       )}`;
 

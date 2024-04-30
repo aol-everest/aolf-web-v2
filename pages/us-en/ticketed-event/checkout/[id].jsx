@@ -344,7 +344,7 @@ const TicketCheckoutForm = ({ event }) => {
         };
         const returnUrl = `${
           window.location.origin
-        }/us-en/ticketed-event/thankyou/${event.id}?${queryString.stringify(
+        }/us-en/ticketed-event/thankyou/${data.attendeeId}?${queryString.stringify(
           filteredParams,
         )}`;
         const result = await stripe.confirmPayment({
