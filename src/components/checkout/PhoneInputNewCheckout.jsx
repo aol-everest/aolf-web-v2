@@ -63,13 +63,9 @@ export const PhoneInputNewCheckout = ({
         international={true}
       />
 
-      {tooltip && (
-        <div className={classNames('input-tooltip', { active: showTooltip })}>
-          <div className="tooltip-arrow"></div>
-          {tooltip}
-        </div>
+      {formikProps.errors[formikKey] && (
+        <div className="validation-input">{formikProps.errors[formikKey]}</div>
       )}
-      {tip && <p className="agreement__text !tw-ml-0 tw-w-[249px]">{tip}</p>}
     </div>
   );
 };

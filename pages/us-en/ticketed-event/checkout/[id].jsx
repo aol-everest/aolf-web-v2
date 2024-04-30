@@ -166,6 +166,7 @@ const TicketCheckoutForm = ({ event }) => {
     id: productId,
     addOnProducts,
     pricingTiers,
+    title,
   } = event;
 
   let pricingTiersLocal = pricingTiers.filter((p) => {
@@ -530,33 +531,26 @@ const TicketCheckoutForm = ({ event }) => {
                   <div className="row">
                     <div className="col-12 col-lg-7">
                       <div className="section--title">
-                        <h1 className="page-title">Checkout</h1>
+                        <h1 className="page-title">{title}</h1>
                       </div>
                       <div className="section-box account-details">
-                        <h2 className="section__title">Billing Information</h2>
+                        <h2 className="section__title">Account Details</h2>
                         <p className="tickets-modal__billing-login">
-                          {isUserLoggedIn ? (
-                            <span className="tickets-modal__billing-login_main">
+                          {isUserLoggedIn && (
+                            <p className="details__content">
                               This is not your account?{' '}
-                              <a
-                                href="#"
-                                className="tickets-modal--accent"
-                                onClick={logout}
-                              >
+                              <a href="#" className="link" onClick={logout}>
                                 Logout
                               </a>
-                            </span>
-                          ) : (
-                            <span className="tickets-modal__billing-login_main">
-                              <a
-                                href="#"
-                                className="tickets-modal--accent"
-                                onClick={login}
-                              >
-                                Login{' '}
+                            </p>
+                          )}
+                          {!isUserLoggedIn && (
+                            <p className="details__content">
+                              Already have an Account?{' '}
+                              <a href="#" className="link" onClick={login}>
+                                Login
                               </a>
-                              for a faster experience
-                            </span>
+                            </p>
                           )}
 
                           <span className="tickets-modal__billing-login_required">

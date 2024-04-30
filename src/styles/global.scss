@@ -82,3 +82,10 @@ main {
     content: counters(item, '.') ' ';
   }
 }
+.validation-input {
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.33;
+  color: #fa5a67;
+  margin-bottom: 15px;
+}

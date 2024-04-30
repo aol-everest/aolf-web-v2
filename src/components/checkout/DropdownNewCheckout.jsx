@@ -26,6 +26,8 @@ export const DropdownNewCheckout = ({
       <div
         className={classNames('select-box state-dropdown', {
           'order__card__payment-select': !innerFullWidth,
+          error:
+            formikProps.errors[formikKey] && formikProps.touched[formikKey],
         })}
       >
         <div tabIndex="1" className="select-box__current">
