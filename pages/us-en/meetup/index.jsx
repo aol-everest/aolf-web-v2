@@ -740,9 +740,7 @@ const Meetup = () => {
   const router = useRouter();
   const [meetupTypeFilter, setMeetupTypeFilter] = useQueryState('meetupType');
   const [timesOfDayFilter, setTimesOfDayFilter] = useQueryString('timesOfDay');
-  const [meetupModeFilter, setMeetupModeFilter] = useQueryState('mode', {
-    defaultValue: 'ONLINE',
-  });
+  const [meetupModeFilter, setMeetupModeFilter] = useQueryState('mode');
   const [privateEvent] = useQueryString('private-event', {
     defaultValue: false,
     parse: stringToBoolean,
