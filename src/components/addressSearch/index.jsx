@@ -52,7 +52,7 @@ export const AddressSearch = ({
           <div className="smart-input">
             <input
               className={[
-                `custom-input tw-mx-auto tw-mb-0 tw-mt-1 !tw-w-[85%] ${parentClass}`,
+                `custom-input tw-mx-auto tw-mb-0 tw-mt-1 ${parentClass}`,
               ]}
               {...getInputProps({
                 placeholder,

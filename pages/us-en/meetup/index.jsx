@@ -799,6 +799,7 @@ const Meetup = () => {
             onlyWeekend,
             cityFilter,
             centerFilter,
+            locationFilter,
           },
         ],
         queryFn: async ({ pageParam = 1 }) => {
@@ -1158,6 +1159,7 @@ const Meetup = () => {
                 }
                 closeEvent={onFilterChange('locationFilter')}
                 label="Location"
+                parentClassName="location"
               >
                 {({ closeHandler }) => (
                   <AddressSearch
