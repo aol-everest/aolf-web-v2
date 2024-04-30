@@ -747,10 +747,6 @@ const Meetup = () => {
     defaultValue: false,
     parse: stringToBoolean,
   });
-  const [onlyWeekend, setOnlyWeekend] = useQueryState(
-    'onlyWeekend',
-    parseAsBoolean.withDefault(false),
-  );
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
     parseAsJson(),
@@ -796,7 +792,6 @@ const Meetup = () => {
             timeZoneFilter,
             instructorFilter,
             meetupModeFilter,
-            onlyWeekend,
             cityFilter,
             centerFilter,
             locationFilter,
@@ -853,13 +848,6 @@ const Meetup = () => {
             param = {
               ...param,
               isPrivateEvent: 1,
-            };
-          }
-
-          if (onlyWeekend) {
-            param = {
-              ...param,
-              onlyWeekend: onlyWeekend,
             };
           }
           if (cityFilter) {
@@ -923,7 +911,6 @@ const Meetup = () => {
 
   const onClearAllFilter = () => {
     setMeetupModeFilter(null);
-    setOnlyWeekend(null);
     setLocationFilter(null);
     setTimeZoneFilter(null);
     setInstructorFilter(null);
@@ -937,9 +924,6 @@ const Meetup = () => {
         break;
       case 'meetupModeFilter':
         setMeetupModeFilter(value);
-        break;
-      case 'onlyWeekend':
-        setOnlyWeekend(value);
         break;
       case 'locationFilter':
         if (value) {
@@ -970,9 +954,6 @@ const Meetup = () => {
       case 'meetupModeFilter':
         setMeetupModeFilter(null);
         break;
-      case 'onlyWeekend':
-        setOnlyWeekend(null);
-        break;
       case 'locationFilter':
         setLocationFilter(null);
         break;
@@ -993,9 +974,6 @@ const Meetup = () => {
         break;
       case 'meetupModeFilter':
         setMeetupModeFilter(value);
-        break;
-      case 'onlyWeekend':
-        setOnlyWeekend(value);
         break;
       case 'locationFilter':
         if (value) {
@@ -1040,9 +1018,6 @@ const Meetup = () => {
     filterCount++;
   }
   if (meetupModeFilter) {
-    filterCount++;
-  }
-  if (onlyWeekend) {
     filterCount++;
   }
   if (filterStartEndDate) {
