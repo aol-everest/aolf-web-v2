@@ -27,7 +27,7 @@ export default function AskGurudev() {
     () => {
       setDebouncedQuery(query);
     },
-    500,
+    2000,
     [query],
   );
 
