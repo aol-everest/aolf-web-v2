@@ -23,8 +23,6 @@ export default function Tickets() {
   });
   const { attendees = [] } = data || {};
 
-  // console.log('attendees', attendees);
-
   return (
     <main className="course-filter calendar-online">
       <section className="calendar-top-section">
