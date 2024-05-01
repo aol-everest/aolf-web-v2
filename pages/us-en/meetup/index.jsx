@@ -10,13 +10,7 @@ import {
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  useQueryState,
-  parseAsBoolean,
-  parseAsJson,
-  createParser,
-  parseAsString,
-} from 'nuqs';
+import { useQueryState, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
@@ -26,6 +20,7 @@ import {
   MODAL_TYPES,
   ALERT_TYPES,
   MEMBERSHIP_TYPES,
+  COURSE_TYPES,
 } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
@@ -481,11 +476,9 @@ const MeetupTile = ({ data, authenticated }) => {
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
     hideAlert();
+    hideModal();
     pushRouteWithUTMQuery(router, {
-      pathname: '/us-en',
-      query: {
-        courseType: 'SKY_BREATH_MEDITATION',
-      },
+      pathname: `/us-en/courses/art-of-living-part-1`,
     });
   };
 
@@ -633,11 +626,21 @@ const MeetupTile = ({ data, authenticated }) => {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
       if (!user.profile.isMandatoryWorkshopAttended) {
+        const warningPayload = {
+          message: (
+            <>
+              Our records indicate that you have not yet taken the prerequisite
+              for the {data.meetupTitle} which is{' '}
+              <strong>{COURSE_TYPES.SKY_BREATH_MEDITATION.name}</strong>.
+            </>
+          ),
+        };
         showModal(MODAL_TYPES.EMPTY_MODAL, {
           children: () => {
             return (
               <RetreatPrerequisiteWarning
                 meetup={data}
+                warningPayload={warningPayload}
                 closeRetreatPrerequisiteWarning={
                   closeRetreatPrerequisiteWarning
                 }
