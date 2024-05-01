@@ -325,17 +325,6 @@ const TicketCheckoutForm = ({ event }) => {
       }
 
       if (data || paypalObj) {
-        // setValue({
-        //   ...value,
-        //   orderId: data?.orderId,
-        //   attendeeId: data?.attendeeId,
-        //   attendeeDetails: {
-        //     lastName: lastName,
-        //     firstName: firstName,
-        //     email: email,
-        //     contactPhone: contactPhone,
-        //   },
-        // });
         let filteredParams = {
           ctype: productTypeId,
           page: 'ty',
@@ -344,7 +333,7 @@ const TicketCheckoutForm = ({ event }) => {
         };
         const returnUrl = `${
           window.location.origin
-        }/us-en/ticketed-event/thankyou/${data.attendeeId}?${queryString.stringify(
+        }/us-en/ticketed-event/thankyou/${data.orderId}?${queryString.stringify(
           filteredParams,
         )}`;
         const result = await stripe.confirmPayment({

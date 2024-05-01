@@ -9,7 +9,6 @@ import utc from 'dayjs/plugin/utc';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { DiscountCodeInput } from '@components/checkout';
 import { pushRouteWithUTMQuery } from '@service';
-import { useLocalStorage } from 'react-use';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
