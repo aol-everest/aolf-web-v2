@@ -913,6 +913,7 @@ const Meetup = () => {
     setTimeZoneFilter(null);
     setInstructorFilter(null);
     setFilterStartEndDate(null);
+    setMeetupTypeFilter(null);
   };
 
   const onFilterChange = (field) => async (value) => {
@@ -938,6 +939,7 @@ const Meetup = () => {
           setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
+          setSearchKey('');
         }
         break;
     }
@@ -1027,6 +1029,9 @@ const Meetup = () => {
   if (instructorFilter) {
     filterCount++;
   }
+  if (meetupTypeFilter) {
+    filterCount++;
+  }
 
   let instructorList = instructorResult?.data?.map(({ id, name }) => ({
     value: id,
@@ -1110,7 +1115,7 @@ const Meetup = () => {
               >
                 {({ closeHandler }) => (
                   <>
-                    {orgConfig.courseModes.map((courseMode, index) => {
+                    {orgConfig.meetupModes?.map((courseMode, index) => {
                       return (
                         <li
                           key={index}
@@ -1244,7 +1249,7 @@ const Meetup = () => {
                     : null
                 }
                 closeEvent={onFilterChange('timeZoneFilter')}
-                label="Time"
+                label="TimeZone"
               >
                 {({ closeHandler }) => (
                   <>
@@ -1480,7 +1485,7 @@ const Meetup = () => {
                       </MobileFilterModal>
 
                       <MobileFilterModal
-                        label="Time"
+                        label="TimeZone"
                         value={
                           timeZoneFilter && TIME_ZONE[timeZoneFilter]
                             ? TIME_ZONE[timeZoneFilter].name
