@@ -67,6 +67,7 @@ const TicketCongratulations = () => {
           };
         }),
       );
+      setExpanded(attendeeDetail?.attendees[0].attendeeRecordExternalId);
     }
   }, [attendeeDetail]);
 
@@ -213,7 +214,7 @@ const TicketCongratulations = () => {
     if (e) e.preventDefault();
     hideAlert();
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/tickets/${attendeeDetail.ticketedEvent?.id}`,
+      pathname: `/us-en/ticketed-event/tickets/${attendeeId}`,
     });
   };
 
@@ -228,6 +229,7 @@ const TicketCongratulations = () => {
       });
     }
     ticketData.forEach((item) => {
+      console.log(item);
       if (!item || !item.firstName || !item.lastName) {
         allFieldsValid = false;
         setLoading(false);
@@ -242,7 +244,7 @@ const TicketCongratulations = () => {
           children:
             'Please input correct email address. Email address is not valid',
         });
-      } else if (item.contactPhone.length < 11) {
+      } else if (!item.contactPhone || item.contactPhone.length < 11) {
         allFieldsValid = false;
         setLoading(false);
         return showAlert(ALERT_TYPES.ERROR_ALERT, {
@@ -328,8 +330,7 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}
-                    <span>Order Total: </span> $
-                    {/* {parseFloat(delfee || totalPrice).toFixed(2)} */}
+                    <span>Order Total: </span> ${attendeeDetail.totalAmountPaid}
                   </li>
                 </ul>
                 <div className="bottom-info">

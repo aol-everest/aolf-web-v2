@@ -1,27 +1,35 @@
 import { api } from '@utils';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useLocalStorage } from 'react-use';
+import { PageLoading } from '@components';
+import ErrorPage from 'next/error';
 
 export default function Tickets() {
-  // const router = useRouter();
-  const [value] = useLocalStorage('ticket-events');
+  const router = useRouter();
+  const { id: attendeeId } = router.query;
 
-  const { data } = useQuery({
-    queryKey: 'getTicketedEvent',
+  const {
+    data: attendeeDetail,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: 'getTicketedEventAttendees',
     queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEventAttendees',
         param: {
-          orderId: value?.orderId,
+          orderId: attendeeId,
         },
       });
       return response.data;
     },
-    enabled: !!value?.orderId,
+    enabled: !!attendeeId,
   });
-  const { attendees = [] } = data || {};
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   return (
     <main className="course-filter calendar-online">
@@ -32,7 +40,7 @@ export default function Tickets() {
               <h2 className="section-title">Thank You!!</h2>
               <p>Attendee Information is accepted.</p>
               <div className="tickets-accepted">
-                {attendees.map((item, index) => {
+                {attendeeDetail.attendees.map((item, index) => {
                   return (
                     <div
                       className="ticket-box"
