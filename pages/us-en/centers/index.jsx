@@ -81,7 +81,6 @@ const SEARCH_PARAM_WITHOUT_ADDRESS = [
 const CenterListItem = ({ center, search }) => {
   const router = useRouter();
   const goFindCourse = () => {
-    console.log(center);
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/courses/art-of-living-part-1`,
       query: {

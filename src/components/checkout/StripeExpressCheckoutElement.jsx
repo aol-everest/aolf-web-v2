@@ -17,7 +17,7 @@ import {
 import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import queryString from 'query-string';
-import { filterAllowedParams, removeNull } from '@utils/utmParam';
+import { removeNull } from '@utils/utmParam';
 import { useRouter } from 'next/router';
 import Style from './StripeExpressCheckoutElement.module.scss';
 import { BiErrorCircle } from 'react-icons/bi';
@@ -27,6 +27,11 @@ export const StripeExpressCheckoutElement = ({
   workshop,
   goToPaymentModal,
   selectedWorkshopId,
+  btnText = 'Continue',
+  loading = false,
+  buttonClass,
+  showHealthLink = false,
+  parentStyle,
 }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const { fee } = priceCalculation({
@@ -50,6 +55,11 @@ export const StripeExpressCheckoutElement = ({
         workshop={workshop}
         goToPaymentModal={goToPaymentModal}
         selectedWorkshopId={selectedWorkshopId}
+        btnText={btnText}
+        buttonClass={buttonClass}
+        loading={loading}
+        showHealthLink={showHealthLink}
+        parentStyle={parentStyle}
       />
     </Elements>
   );
@@ -67,7 +77,16 @@ const options = {
   paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
-const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
+const CheckoutPage = ({
+  workshop,
+  goToPaymentModal,
+  selectedWorkshopId,
+  btnText,
+  loading: buttonLoading,
+  buttonClass,
+  showHealthLink,
+  parentStyle,
+}) => {
   const { track, page } = useAnalytics();
   const stripe = useStripe();
   const elements = useElements();
@@ -247,6 +266,14 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                 workshop={workshop}
                 screen="DESKTOP"
               />
+              {showHealthLink && (
+                <div className="rsvp-note">
+                  For any health related questions, please contact us at{' '}
+                  <a href="mailto:healthinfo@us.artofliving.org">
+                    healthinfo@us.artofliving.org
+                  </a>
+                </div>
+              )}
 
               {!hidePayMessage && showMessage && (
                 <div className={Style.pay_message}>
@@ -256,7 +283,7 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                 </div>
               )}
 
-              <div className="tw-relative">
+              <div className="tw-relative" style={parentStyle}>
                 <div
                   className={
                     !formikProps.isValid || !formikProps.dirty
@@ -273,11 +300,20 @@ const CheckoutPage = ({ workshop, goToPaymentModal, selectedWorkshopId }) => {
                 />
                 <button
                   type="button"
-                  className="submit-btn"
+                  className={buttonClass ? buttonClass : 'submit-btn'}
                   disabled={!selectedWorkshopId}
                   onClick={goToPaymentModal}
                 >
-                  Checkout
+                  {buttonLoading && (
+                    <div className="loaded tw-px-7 tw-py-0">
+                      <div className="loader">
+                        <div className="loader-inner ball-clip-rotate">
+                          <div />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {!buttonLoading && btnText}
                 </button>
               </div>
             </>

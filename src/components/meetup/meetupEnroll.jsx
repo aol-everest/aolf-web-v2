@@ -1,11 +1,12 @@
-import { Loader } from '@components';
+/* eslint-disable no-inline-styles/no-inline-styles */
+import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import { ABBRS, COURSE_MODES } from '@constants';
 import { pushRouteWithUTMQuery } from '@service';
 import { tConvert } from '@utils';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
+import { useCallback, useRef } from 'react';
 
 dayjs.extend(utc);
 
@@ -13,10 +14,10 @@ export const MeetupEnroll = ({
   checkoutMeetup,
   closeDetailAction,
   selectedMeetup,
-  loading,
   checkoutLoading,
 }) => {
   const router = useRouter();
+  const backdropRef = useRef(null);
 
   const {
     meetupTitle,
@@ -51,47 +52,73 @@ export const MeetupEnroll = ({
     });
   };
 
-  return (
-    <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
-      <div className=" modal-dialog modal-dialog-centered active">
-        <div className="modal-content">
-          <div className="logo">
-            <img src="/img/ic-logo.svg" alt="logo" />
-          </div>
-          <div className="close-modal d-lg-none" onClick={closeDetailAction}>
-            <div className="close-line"></div>
-            <div className="close-line"></div>
-          </div>
-          <div className="mobile-wrapper">
-            <div className="modal-header">
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                onClick={closeDetailAction}
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <span className="modal-title">RSVP for {meetupTitle}</span>
-            </div>
-            <div className="modal-body">
-              {description && (
-                <div
-                  className="description"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                ></div>
-              )}
+  const handleClick = useCallback(
+    (event) => {
+      // Check if the clicked element is the backdrop or one of its descendants
+      if (event.target === backdropRef.current) {
+        // If the clicked element is the backdrop itself, close the modal
+        closeDetailAction();
+      }
+    },
+    [closeDetailAction],
+  );
 
-              <p className="date">
-                {`${dayjs.utc(meetupStartDate).format('MMMM DD')}, `}
-                {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
-              </p>
-              <ul>
-                <li>Session Length: {meetupDuration} minutes</li>
-                <li>Instructor: {primaryTeacherName}</li>
-                {mode === COURSE_MODES.IN_PERSON.name ? (
-                  <li>
+  return (
+    <div
+      className="meetup-rsvp modal modal-window modal-window_no-log fade bd-example-modal-lg show"
+      ref={backdropRef}
+      onClick={handleClick}
+    >
+      <div className=" modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2 className="title">RSVP for {meetupTitle}</h2>
+            <button
+              type="button"
+              className="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              onClick={closeDetailAction}
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <div
+              className="modal-main-text"
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></div>
+            <div className="rsvp-details">
+              <div className="rsvp-detail-item">
+                <label>
+                  <span className="icon-aol iconaol-clock"></span>Date:
+                </label>
+                <div className="rsvp-detail-text">
+                  {' '}
+                  {`${dayjs.utc(meetupStartDate).format('MMMM DD')}, `}
+                  {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
+                </div>
+              </div>
+              <div className="rsvp-detail-item">
+                <label>
+                  <span className="icon-aol iconaol-calendar"></span>Session
+                  Length:
+                </label>
+                <div className="rsvp-detail-text">{meetupDuration} minutes</div>
+              </div>
+              <div className="rsvp-detail-item">
+                <label>
+                  <span className="icon-aol iconaol-profile"></span>
+                  Instructor(s)
+                </label>
+                <div className="rsvp-detail-text">{primaryTeacherName}</div>
+              </div>
+              <div className="rsvp-detail-item">
+                <label>
+                  <span className="icon-aol iconaol-location"></span>Location:
+                </label>
+                <div className="rsvp-detail-text">
+                  {mode === COURSE_MODES.IN_PERSON.name ? (
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${
                         locationStreet || ''
@@ -106,131 +133,90 @@ export const MeetupEnroll = ({
                         {', '}
                         {locationProvince || ''} {locationPostalCode || ''}
                       </span>
-                    </a>{' '}
-                  </li>
-                ) : (
-                  <li>Livestreaming from {centerName} </li>
-                )}
-              </ul>
-            </div>
-
-            <div className="card-wrapper">
-              <>
-                {isSubscriptionOfferingUsed && (
-                  <div className={classNames('card full card-preffered')}>
-                    <div className="card-body">
-                      <p className="card-title">For members</p>
-                      <p className="card-text">
-                        {loading && <Loader />}
-                        {!loading && (
-                          <>
-                            {listPrice !== unitPrice && (
-                              <>
-                                <span className="prev-price">${listPrice}</span>{' '}
-                                ${unitPrice}
-                              </>
-                            )}
-                            {listPrice === unitPrice && <>${unitPrice}</>}
-                          </>
-                        )}
-                      </p>
-                      <button
-                        className="btn btn-preffered"
-                        onClick={checkoutMeetup}
-                      >
-                        {checkoutLoading && (
-                          <div className="loaded tw-px-7 tw-py-0">
-                            <div className="loader">
-                              <div className="loader-inner ball-clip-rotate">
-                                <div />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        {!checkoutLoading && `RSVP`}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {!isSubscriptionOfferingUsed && (
-                  <div
-                    className={classNames(
-                      freeWithSubscription?.subscriptionName
-                        ? 'card'
-                        : 'card full',
-                    )}
-                  >
-                    <div className="card-body">
-                      <p className="card-title">For non-members</p>
-                      <p className="card-text">
-                        {loading && <Loader />}
-                        {!loading && (
-                          <>
-                            {listPrice !== unitPrice && (
-                              <>
-                                <span className="prev-price">${listPrice}</span>{' '}
-                                ${unitPrice}
-                              </>
-                            )}
-                            {listPrice === unitPrice && <>${unitPrice}</>}
-                          </>
-                        )}
-                      </p>
-                      <button
-                        className={
-                          !freeWithSubscription ? 'btn btn-preffered' : 'btn'
-                        }
-                        onClick={checkoutMeetup}
-                      >
-                        {checkoutLoading && (
-                          <div className="loaded tw-px-7 tw-py-0">
-                            <div className="loader">
-                              <div className="loader-inner ball-clip-rotate">
-                                <div />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        {!checkoutLoading && `RSVP`}
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {!isSubscriptionOfferingUsed &&
-                  freeWithSubscription?.subscriptionName && (
-                    <div className="card card-preffered">
-                      <div className="card-body">
-                        <p className="card-title">
-                          {`For ${freeWithSubscription?.subscriptionName} members`}
-                        </p>
-                        <p className="card-text">
-                          {/* {loading && <Spinner />} */}
-                          {!loading && (
-                            <>
-                              <span className="prev-price">${listPrice}</span> $
-                              {0}
-                            </>
-                          )}
-                        </p>
-                        <button
-                          className="btn btn-preffered"
-                          onClick={goToCheckout}
-                        >
-                          {`Join and RSVP`}
-                        </button>
-                      </div>
-                    </div>
+                    </a>
+                  ) : (
+                    <span>Livestreaming from {centerName}</span>
                   )}
-              </>
+                </div>
+              </div>
             </div>
-          </div>
-          <div
-            className="close-modal d-none d-lg-flex"
-            onClick={closeDetailAction}
-          >
-            <div className="close-line"></div>
-            <div className="close-line"></div>
+            {isSubscriptionOfferingUsed && (
+              <div className="rsvp-price-info">
+                <label>For members:</label>
+                <div className="rsvp-price">
+                  <>
+                    {listPrice !== unitPrice && (
+                      <>
+                        <s>${listPrice}</s>${unitPrice}
+                      </>
+                    )}
+                    {listPrice === unitPrice && <>${unitPrice}</>}
+                  </>
+                </div>
+              </div>
+            )}
+            {!isSubscriptionOfferingUsed && (
+              <div className="rsvp-member-types">
+                <div className="member-detail non-member">
+                  <div className="for-member">For non-members</div>
+                  <div className="membership-price">
+                    <>
+                      {listPrice !== unitPrice && (
+                        <>
+                          <s>${listPrice}</s> ${unitPrice}
+                        </>
+                      )}
+                      {listPrice === unitPrice && <>${unitPrice}</>}
+                    </>
+                  </div>
+                  <button className="member-btn" onClick={checkoutMeetup}>
+                    {checkoutLoading && (
+                      <div className="loaded tw-px-7 tw-py-0">
+                        <div className="loader">
+                          <div className="loader-inner ball-clip-rotate">
+                            <div />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {!checkoutLoading && `RSVP`}
+                  </button>
+                </div>
+                {freeWithSubscription?.subscriptionName && (
+                  <div className="member-detail plus-member">
+                    <div className="for-member">
+                      {' '}
+                      {`For ${freeWithSubscription?.subscriptionName} members`}
+                    </div>
+                    <div className="membership-price">
+                      <s>${listPrice}</s>$0
+                    </div>
+                    <button className="member-btn" onClick={goToCheckout}>
+                      {`Join and RSVP`}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+            {isSubscriptionOfferingUsed && (
+              <>
+                <div className="payment-agreements"></div>
+                <div className="payment-actions modal-actions">
+                  {selectedMeetup && selectedMeetup.sfid && (
+                    <StripeExpressCheckoutElement
+                      workshop={selectedMeetup}
+                      goToPaymentModal={checkoutMeetup}
+                      selectedWorkshopId={selectedMeetup.sfid}
+                      btnText="RSVP"
+                      loading={checkoutLoading}
+                      showHealthLink={true}
+                      buttonClass="btn btn-primary find-courses submit-btn"
+                      parentStyle={{ display: 'flex' }}
+                    />
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

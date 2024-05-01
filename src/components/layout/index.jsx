@@ -33,25 +33,34 @@ export const Layout = ({
       {hideHeader && wcfHeader && <WCFHeader />}
       {children}
       {sideGetStartedAction && (
-        <div class="get-started-floating">
+        <div className="get-started-floating">
           <ul>
             <li>
-              <a class="help-link" id="gs-help-link" onClick={showFindCourse}>
+              <a
+                className="help-link"
+                id="gs-help-link"
+                onClick={showFindCourse}
+              >
                 Get Started
               </a>
               <div
-                class={classNames('find-course', { show: isShowingFindCourse })}
+                className={classNames('find-course', {
+                  show: isShowingFindCourse,
+                })}
               >
-                <div class="title">Find the right course for you</div>
-                <div class="desc">Answer a few quick questions...</div>
-                <div class="actions">
+                <div className="title">Find the right course for you</div>
+                <div className="desc">Answer a few quick questions...</div>
+                <div className="actions">
                   <button
-                    class="btn btn-primary"
+                    className="btn btn-primary"
                     onClick={navigateToGetStartAction}
                   >
                     Get started
                   </button>
-                  <button class="btn btn-secondary" onClick={hideFindCourse}>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={hideFindCourse}
+                  >
                     Not now
                   </button>
                 </div>
