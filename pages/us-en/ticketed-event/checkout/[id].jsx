@@ -1,7 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useLocalStorage } from 'react-use';
 import {
   useAuth,
   useGlobalAlertContext,
