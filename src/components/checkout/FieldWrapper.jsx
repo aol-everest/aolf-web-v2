@@ -16,9 +16,7 @@ export const FieldWrapper = ({
   >
     {children}
     {formikProps.errors[formikKey] && (
-      <div className="validation-message validation-mobile-message show tw-max-w-[250px]">
-        {formikProps.errors[formikKey]}
-      </div>
+      <div className="validation-input">{formikProps.errors[formikKey]}</div>
     )}
   </div>
 );

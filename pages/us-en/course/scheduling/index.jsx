@@ -1244,6 +1244,7 @@ const Scheduling = () => {
                         workshop={activeWorkshop}
                         goToPaymentModal={goToPaymentModal}
                         selectedWorkshopId={selectedWorkshopId}
+                        btnText="Checkout"
                       />
                     )}
                     {attendeeId && (

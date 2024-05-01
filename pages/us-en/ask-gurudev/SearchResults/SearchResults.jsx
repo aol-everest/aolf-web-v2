@@ -7,7 +7,7 @@ import { Loader, PageLoading } from '@components';
 export const EmptyResults = () => {
   return (
     <div className="emptyResults">
-      <p>No results found. Try broadening your search.</p>
+      <h5>No results found, please refine your search criteria.</h5>
     </div>
   );
 };
@@ -15,7 +15,7 @@ export const EmptyResults = () => {
 export const IncorrectResults = () => {
   return (
     <div className="emptyResults">
-      <p>For relavent results, try broadening your search.</p>
+      <h5>For relavent results, please refine your search criteria.</h5>
     </div>
   );
 };
@@ -52,7 +52,7 @@ const SearchResults = ({
       {isLoading && <Loader />}
       <section className="search-results-area">
         <div className="container">
-          <h2 className="section-title">{query}</h2>
+          {results && incorrectResponse && !isEmpty && <IncorrectResults />}
           <nav className="category-tabs-wrap">
             <div
               className="nav nav-tabs category-tabs"
@@ -179,6 +179,7 @@ const SearchResults = ({
               </button>
             </div>
           </nav>
+
           {results && isEmpty && debouncedQuery && <EmptyResults />}
           {results && !isEmpty && (
             <div
@@ -197,7 +198,6 @@ const SearchResults = ({
               </div>
             </div>
           )}
-          {results && incorrectResponse && !isEmpty && <IncorrectResults />}
         </div>
       </section>
     </>

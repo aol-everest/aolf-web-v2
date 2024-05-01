@@ -496,7 +496,7 @@ const SchedulingPaymentForm = ({
             data.attendeeId
           }?${queryString.stringify(filteredParams)}`;
           if (isGenericWorkshop) {
-            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=data.attendeeId&${queryString.stringify(filteredParams)}`;
+            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
           }
 
           const result = await stripe.confirmPayment({

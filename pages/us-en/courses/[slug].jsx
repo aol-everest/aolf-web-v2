@@ -57,7 +57,6 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
 
 const fillDefaultTimeZone = () => {
   const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
-  // console.log('User timezone abbreviation:', userTimeZoneAbbreviation);
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
@@ -213,10 +212,10 @@ const MobileFilterModal = (props) => {
     <>
       <label>{label}</label>
       <div
-        class="btn_outline_box btn-modal_dropdown full-btn mt-3"
+        className="btn_outline_box btn-modal_dropdown full-btn mt-3"
         onClick={showModal}
       >
-        <a class="btn" href="#">
+        <a className="btn" href="#">
           {value || label}
         </a>
       </div>
@@ -225,26 +224,26 @@ const MobileFilterModal = (props) => {
           active: !isHidden,
         })}
       >
-        <div class="mobile-modal--header">
+        <div className="mobile-modal--header">
           <div
             id="course-close_mobile"
-            class="mobile-modal--close"
+            className="mobile-modal--close"
             onClick={hideModal}
           >
             <img src="/img/ic-close.svg" alt="close" />
           </div>
-          <h2 class="mobile-modal--title">{label}</h2>
+          <h2 className="mobile-modal--title">{label}</h2>
           {children}
         </div>
-        <div class="mobile-modal--body">
-          <div class="row m-0 align-items-center justify-content-between">
+        <div className="mobile-modal--body">
+          <div className="row m-0 align-items-center justify-content-between">
             {!hideClearOption && (
-              <div class="clear" onClick={clearAction}>
+              <div className="clear" onClick={clearAction}>
                 Clear
               </div>
             )}
             <div
-              class="filter-save-button btn_box_primary select-btn"
+              className="filter-save-button btn_box_primary select-btn"
               onClick={hideModal}
             >
               Select
@@ -336,7 +335,6 @@ const Popup = (props) => {
   return (
     <>
       <div
-        class="courses-filter"
         data-filter="event-type"
         ref={referenceRef}
         tabIndex={tabindex}
@@ -347,7 +345,7 @@ const Popup = (props) => {
       >
         {value && !hideClearOption && (
           <button
-            class="courses-filter__remove"
+            className="courses-filter__remove"
             data-filter="event-type"
             data-placeholder="Online"
             onClick={closeHandler(null)}
@@ -394,7 +392,7 @@ const Popup = (props) => {
         )}
         <label>{label}</label>
         <button
-          class="courses-filter__button"
+          className="courses-filter__button"
           data-filter="event-type"
           onClick={!showList ? handleSelectFilter : handleDropdownClick}
         >
@@ -430,7 +428,7 @@ const Popup = (props) => {
 
 const ItemLoaderTile = () => {
   return (
-    <div class="course-item">
+    <div className="course-item">
       <ContentLoader
         backgroundColor="#f3f3f3"
         foregroundColor="#c2c2c2"
@@ -540,13 +538,13 @@ const CourseTile = ({ data, isAuthenticated }) => {
   };
 
   return (
-    <div class="course-item">
-      <div class="course-item-header">
-        <div class="course-title-duration">
-          <div class="course-title">{mode}</div>
-          <div class="course-duration">{getCourseDeration()}</div>
+    <div className="course-item">
+      <div className="course-item-header">
+        <div className="course-title-duration">
+          <div className="course-title">{mode}</div>
+          <div className="course-duration">{getCourseDeration()}</div>
         </div>
-        <div class="course-price">
+        <div className="course-price">
           {listPrice === unitPrice ? (
             <span>${unitPrice}</span>
           ) : (
@@ -557,7 +555,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
         </div>
       </div>
       {mode !== 'Online' && locationCity && (
-        <div class="course-location">
+        <div className="course-location">
           {concatenateStrings([
             locationStreet,
             locationCity,
@@ -566,14 +564,14 @@ const CourseTile = ({ data, isAuthenticated }) => {
           ])}
         </div>
       )}
-      <div class="course-instructors">
+      <div className="course-instructors">
         {concatenateStrings([primaryTeacherName, coTeacher1Name])}
       </div>
-      <div class="course-timings">
+      <div className="course-timings">
         {timings?.length > 0 &&
           timings.map((time, i) => {
             return (
-              <div class="course-timing" key={i}>
+              <div className="course-timing" key={i}>
                 <span>{dayjs.utc(time.startDate).format('M/D dddd')}</span>
                 {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
                   ABBRS[time.timeZone]
@@ -582,11 +580,11 @@ const CourseTile = ({ data, isAuthenticated }) => {
             );
           })}
       </div>
-      <div class="course-actions">
-        <button class="btn-secondary" onClick={detailAction}>
+      <div className="course-actions">
+        <button className="btn-secondary" onClick={detailAction}>
           Details
         </button>
-        <button class="btn-primary" onClick={enrollAction}>
+        <button className="btn-primary" onClick={enrollAction}>
           Register
         </button>
       </div>
@@ -951,7 +949,7 @@ const Course = () => {
       courseModeFilter !== 'IN_PERSON'
     ) {
       return (
-        <div class="no-course-found-wrap">
+        <div className="no-course-found-wrap">
           <h2 className="tw-text-center">
             The {courseTypeFilter.name} is not available online it is offered In
             Person only.
@@ -972,7 +970,7 @@ const Course = () => {
     }
     if (isSuccess && data?.pages[0].data?.length === 0 && !isFetchingNextPage) {
       return (
-        <div class="no-course-found-wrap">
+        <div className="no-course-found-wrap">
           <h2>No course found</h2>
           <p>Please change your search criteria</p>
         </div>
@@ -1001,7 +999,7 @@ const Course = () => {
         )}
         <div ref={ref} style={{ flex: '0 0 100%' }}></div>
         {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
-          <div class="no-course-found-wrap">
+          <div className="no-course-found-wrap">
             <p>That's all folks! No more data left to check out.</p>
           </div>
         )}
@@ -1010,30 +1008,32 @@ const Course = () => {
   };
 
   return (
-    <main class="all-courses-find">
-      <section class="title-header">
+    <main className="all-courses-find">
+      <section className="title-header">
         {!centerFilter && courseTypeFilter && (
           <>
-            <h1 class="page-title">{courseTypeFilter.name}</h1>
-            <div class="page-description">{courseTypeFilter.description}</div>
+            <h1 className="page-title">{courseTypeFilter.name}</h1>
+            <div className="page-description">
+              {courseTypeFilter.description}
+            </div>
           </>
         )}
         {centerFilter && (
           <>
-            <h1 class="page-title">
+            <h1 className="page-title">
               Courses offered by {centerNameFilter} center
             </h1>
           </>
         )}
       </section>
-      <section class="section-course-find">
-        <div class="container">
-          <div class="course-filter-wrap">
+      <section className="section-course-find">
+        <div className="container">
+          <div className="course-filter-wrap">
             <div
               id="courses-filters"
-              class="course-filter-listing search-form col-12 d-flex align-items-center"
+              className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
-              <button class="filter-save-button">Save Changes</button>
+              <button className="filter-save-button">Save Changes</button>
               <Popup
                 tabIndex="1"
                 value={locationFilter}
@@ -1110,13 +1110,15 @@ const Course = () => {
               </Popup>
 
               <div
-                class="courses-filter"
                 data-filter="timezone"
                 className={classNames('courses-filter', {
                   'with-selected': filterStartEndDate,
                 })}
               >
-                <button class="courses-filter__remove" onClick={onDatesChange}>
+                <button
+                  className="courses-filter__remove"
+                  onClick={onDatesChange}
+                >
                   <svg
                     width="20"
                     height="21"
@@ -1157,7 +1159,7 @@ const Course = () => {
                   </svg>
                 </button>
                 <label>Dates</label>
-                <div class="courses-filter__button date-picker">
+                <div className="courses-filter__button date-picker">
                   <DateRangePicker
                     placeholder="Dates"
                     appearance="subtle"
@@ -1244,28 +1246,28 @@ const Course = () => {
                 )}
               </Popup>
             </div>
-            <div class="search_course_form_mobile d-lg-none d-block">
+            <div className="search_course_form_mobile d-lg-none d-block">
               <div>
                 <div>
-                  <div class="filter">
+                  <div className="filter">
                     <div
                       className={classNames('filter--button d-flex', {
                         active: showFilterModal,
                       })}
                       onClick={toggleFilter}
                     >
-                      <span class="icon-aol iconaol-setting"></span>
+                      <span className="icon-aol iconaol-setting"></span>
                       Filter
                       <span id="filter-count">{filterCount}</span>
                     </div>
                   </div>
                 </div>
                 {showFilterModal && (
-                  <div class="filter--box">
-                    <div class="selected-filter-wrap">
+                  <div className="filter--box">
+                    <div className="selected-filter-wrap">
                       {locationFilter && (
                         <div
-                          class="selected-filter-item"
+                          className="selected-filter-item"
                           onClick={onFilterClearEvent('locationFilter')}
                         >
                           {locationFilter.locationName}
@@ -1274,7 +1276,7 @@ const Course = () => {
 
                       {courseModeFilter && COURSE_MODES[courseModeFilter] && (
                         <div
-                          class="selected-filter-item"
+                          className="selected-filter-item"
                           onClick={onFilterClearEvent('courseModeFilter')}
                         >
                           {COURSE_MODES[courseModeFilter].value}
@@ -1283,7 +1285,7 @@ const Course = () => {
 
                       {filterStartEndDateStr && (
                         <div
-                          class="selected-filter-item"
+                          className="selected-filter-item"
                           onClick={onDatesChange}
                         >
                           {filterStartEndDateStr}
@@ -1292,7 +1294,7 @@ const Course = () => {
 
                       {onlyWeekend && (
                         <div
-                          class="selected-filter-item"
+                          className="selected-filter-item"
                           onClick={onFilterClearEvent('onlyWeekend')}
                         >
                           Weekend Courses
@@ -1301,7 +1303,7 @@ const Course = () => {
 
                       {timeZoneFilter && TIME_ZONE[timeZoneFilter] && (
                         <div
-                          class="selected-filter-item"
+                          className="selected-filter-item"
                           onClick={onFilterClearEvent('timeZoneFilter')}
                         >
                           {TIME_ZONE[timeZoneFilter].name}
@@ -1310,7 +1312,7 @@ const Course = () => {
 
                       {instructorFilter && (
                         <div
-                          class="selected-filter-item"
+                          className="selected-filter-item"
                           onClick={onFilterClearEvent('instructorFilter')}
                         >
                           {instructorFilter.label}
@@ -1318,7 +1320,7 @@ const Course = () => {
                       )}
                       {filterCount > 1 && (
                         <div
-                          class="selected-filter-item clear"
+                          className="selected-filter-item clear"
                           onClick={onClearAllFilter}
                         >
                           Clear All
@@ -1384,7 +1386,7 @@ const Course = () => {
                       })}
                     >
                       <button
-                        class="btn_outline_box btn-modal_dropdown full-btn mt-3"
+                        className="btn_outline_box btn-modal_dropdown full-btn mt-3"
                         data-filter="weekend-mobile-courses"
                         data-type="checkbox"
                         onClick={() => {
@@ -1394,7 +1396,7 @@ const Course = () => {
                         Weekend courses
                       </button>
                       <button
-                        class="courses-filter__remove"
+                        className="courses-filter__remove"
                         data-filter="weekend-mobile-courses"
                         data-placeholder="Online"
                         onClick={() => {
@@ -1488,7 +1490,7 @@ const Course = () => {
                       }
                       clearEvent={onDatesChange}
                     >
-                      <div class="datepicker-block">
+                      <div className="datepicker-block">
                         <DateRangePicker
                           placeholder="Dates"
                           showHeader={false}
@@ -1578,18 +1580,18 @@ const Course = () => {
                 )}
                 {showFilterModal && (
                   <button
-                    class="filter-cancel-button"
+                    className="filter-cancel-button"
                     onClick={toggleFilter}
                   ></button>
                 )}
               </div>
             </div>
           </div>
-          <div class="course-listing">
-            <div class="selected-filter-wrap">
+          <div className="course-listing">
+            <div className="selected-filter-wrap">
               {locationFilter && (
                 <div
-                  class="selected-filter-item"
+                  className="selected-filter-item"
                   onClick={onFilterClearEvent('locationFilter')}
                 >
                   {locationFilter.locationName}
@@ -1598,7 +1600,7 @@ const Course = () => {
 
               {courseModeFilter && COURSE_MODES[courseModeFilter] && (
                 <div
-                  class="selected-filter-item"
+                  className="selected-filter-item"
                   onClick={onFilterClearEvent('courseModeFilter')}
                 >
                   {COURSE_MODES[courseModeFilter].value}
@@ -1606,14 +1608,14 @@ const Course = () => {
               )}
 
               {filterStartEndDateStr && (
-                <div class="selected-filter-item" onClick={onDatesChange}>
+                <div className="selected-filter-item" onClick={onDatesChange}>
                   {filterStartEndDateStr}
                 </div>
               )}
 
               {onlyWeekend && (
                 <div
-                  class="selected-filter-item"
+                  className="selected-filter-item"
                   onClick={onFilterClearEvent('onlyWeekend')}
                 >
                   Weekend Courses
@@ -1622,7 +1624,7 @@ const Course = () => {
 
               {timeZoneFilter && TIME_ZONE[timeZoneFilter] && (
                 <div
-                  class="selected-filter-item"
+                  className="selected-filter-item"
                   onClick={onFilterClearEvent('timeZoneFilter')}
                 >
                   {TIME_ZONE[timeZoneFilter].name}
@@ -1631,7 +1633,7 @@ const Course = () => {
 
               {instructorFilter && (
                 <div
-                  class="selected-filter-item"
+                  className="selected-filter-item"
                   onClick={onFilterClearEvent('instructorFilter')}
                 >
                   {instructorFilter.label}
@@ -1639,7 +1641,7 @@ const Course = () => {
               )}
               {filterCount > 1 && (
                 <div
-                  class="selected-filter-item clear"
+                  className="selected-filter-item clear"
                   onClick={onClearAllFilter}
                 >
                   Clear All

@@ -108,7 +108,7 @@ const CheckoutPage = ({ workshop }) => {
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/ticketed-event/thankyou/${workshop.id}?${queryString.stringify(
+      }/us-en/ticketed-event/thankyou/${data.attendeeId}?${queryString.stringify(
         filteredParams,
       )}`;
 
