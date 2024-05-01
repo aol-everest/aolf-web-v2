@@ -220,26 +220,14 @@ const TicketCongratulations = () => {
   const handleSubmitAttendees = async () => {
     setLoading(true);
     let allFieldsValid = true;
-    if (totalNoOfTickets !== Object.keys(ticketData).length) {
-      allFieldsValid = false;
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: "Please input all attendee details. Details can't be empty",
-      });
-      setLoading(false);
-      return;
-    }
-    const attendeeInfo = Object.keys(ticketData).map((attendeeId) => {
-      const item = ticketData[attendeeId];
-      return item;
-    });
-    if (attendeeInfo.length === 0) {
+    if (ticketData.length === 0) {
       allFieldsValid = false;
       setLoading(false);
       return showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: "Please input attendee details. Details can't be empty",
       });
     }
-    attendeeInfo.forEach((item) => {
+    ticketData.forEach((item) => {
       if (!item || !item.firstName || !item.lastName) {
         allFieldsValid = false;
         setLoading(false);
@@ -265,7 +253,7 @@ const TicketCongratulations = () => {
     if (allFieldsValid) {
       const payload = {
         orderId: attendeeId,
-        attendeeInfo: attendeeInfo,
+        attendeeInfo: ticketData,
       };
       try {
         const {
