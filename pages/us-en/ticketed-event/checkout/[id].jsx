@@ -25,7 +25,7 @@ import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
-import { replaceRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
@@ -324,28 +324,35 @@ const TicketCheckoutForm = ({ event }) => {
       }
 
       if (data || paypalObj) {
-        let filteredParams = {
-          ctype: productTypeId,
-          page: 'ty',
-          referral: 'ticketed_event_checkout',
-          ...filterAllowedParams(router.query),
-        };
-        const returnUrl = `${
-          window.location.origin
-        }/us-en/ticketed-event/thankyou/${data.orderId}?${queryString.stringify(
-          filteredParams,
-        )}`;
-        const result = await stripe.confirmPayment({
-          //`Elements` instance that was used to create the Payment Element
-          elements,
-          clientSecret: stripeIntentObj.client_secret,
-          confirmParams: {
-            return_url: returnUrl,
-          },
-        });
-        if (result.error) {
-          // Show error to your customer (for example, payment details incomplete)
-          throw new Error(result.error.message);
+        if (data.totalOrderAmount === 0) {
+          pushRouteWithUTMQuery(
+            router,
+            `/us-en/ticketed-event/thankyou/${data.orderId}`,
+          );
+        } else {
+          let filteredParams = {
+            ctype: productTypeId,
+            page: 'ty',
+            referral: 'ticketed_event_checkout',
+            ...filterAllowedParams(router.query),
+          };
+          const returnUrl = `${
+            window.location.origin
+          }/us-en/ticketed-event/thankyou/${data.orderId}?${queryString.stringify(
+            filteredParams,
+          )}`;
+          const result = await stripe.confirmPayment({
+            //`Elements` instance that was used to create the Payment Element
+            elements,
+            clientSecret: stripeIntentObj.client_secret,
+            confirmParams: {
+              return_url: returnUrl,
+            },
+          });
+          if (result.error) {
+            // Show error to your customer (for example, payment details incomplete)
+            throw new Error(result.error.message);
+          }
         }
       }
       setLoading(false);

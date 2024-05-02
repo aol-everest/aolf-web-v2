@@ -91,6 +91,12 @@ const PAGES = {
       'Each life matters.. Your donation changes lives & communities. Together we can make a difference.',
     url: 'https://event.us.artofliving.org/us-en/donations/',
   },
+  'teacher-training-course': {
+    name: 'Teacher Training Course - Course Dates and Registration',
+    description:
+      'Experience the joy of transforming lives through service, Gain greater self-confidence & connectedness with others and Integrate deep yogic wisdom & practices through teaching.',
+    url: 'https://event.us.artofliving.org/us-en/teacher-training-course/',
+  },
 };
 
 function LandingPage() {
@@ -103,7 +109,7 @@ function LandingPage() {
     .join('&');
   if (PAGES[pid]) {
     let metaData = {
-      title: PAGES[pid].name,
+      defaultTitle: PAGES[pid].name,
     };
     if (PAGES[pid].description) {
       metaData = { ...metaData, description: PAGES[pid].description };
