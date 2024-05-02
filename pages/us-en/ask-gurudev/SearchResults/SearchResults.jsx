@@ -6,7 +6,15 @@ import SearchResultsList from '../SearchResultsList/SearchResultsList';
 export const EmptyResults = () => {
   return (
     <div className="emptyResults">
-      <p>No results found. Try broadening your search.</p>
+      <h5>No results found, please refine your search criteria.</h5>
+    </div>
+  );
+};
+
+export const IncorrectResults = () => {
+  return (
+    <div className="emptyResults">
+      <h5>For relavent results, please refine your search criteria.</h5>
     </div>
   );
 };
@@ -20,6 +28,7 @@ const SearchResults = ({
   setQuery,
   setDebouncedQuery,
   query,
+  incorrectResponse,
 }) => {
   const handlePredefinedElements = useCallback(
     (query) => {
@@ -42,7 +51,7 @@ const SearchResults = ({
       {isLoading && <div className="cover-spin"></div>}
       <section className="search-results-area">
         <div className="container">
-          <h2 className="section-title">{query}</h2>
+          {results && incorrectResponse && !isEmpty && <IncorrectResults />}
           <nav className="category-tabs-wrap">
             <div
               className="nav nav-tabs category-tabs"
@@ -169,6 +178,7 @@ const SearchResults = ({
               </button>
             </div>
           </nav>
+
           {results && isEmpty && debouncedQuery && <EmptyResults />}
           {results && !isEmpty && (
             <div

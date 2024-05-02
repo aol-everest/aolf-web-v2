@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
-import { useEffectOnce, useLocalStorage } from 'react-use';
+import { useEffectOnce } from 'react-use';
 import { useState } from 'react';
 import {
   FaTicket,
@@ -23,6 +23,9 @@ import { AddToCalendarModal } from '@components/addToCalendarModal';
 import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
 import { pushRouteWithUTMQuery } from '@service';
+import { PageLoading } from '@components';
+import ErrorPage from 'next/error';
+import { groupBy } from 'lodash';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -32,18 +35,41 @@ const TicketCongratulations = () => {
   const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const [expanded, setExpanded] = useState(0);
-  const [ticketData, setTicketData] = useState({});
+  const [ticketData, setTicketData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useLocalStorage('ticket-events');
+  const { id: attendeeId } = router.query;
   const {
-    selectedTickets,
-    delfee,
-    orderId,
-    attendeeDetails,
-    workshop: selectedWorkshop,
-    totalPrice,
-  } = value;
-  const firstItemId = selectedTickets[0]?.pricingTierId || '';
+    data: attendeeDetail,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: 'getTicketedEventAttendees',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'getTicketedEventAttendees',
+        param: {
+          orderId: attendeeId,
+        },
+      });
+      return response.data;
+    },
+    enabled: !!attendeeId,
+  });
+
+  useEffect(() => {
+    if (attendeeDetail?.attendees) {
+      setTicketData(
+        attendeeDetail?.attendees.map((attendee, index) => {
+          return {
+            ...attendee,
+            number: index + 1,
+          };
+        }),
+      );
+      setExpanded(attendeeDetail?.attendees[0].attendeeRecordExternalId);
+    }
+  }, [attendeeDetail]);
 
   useEffectOnce(() => {
     page({
@@ -51,45 +77,10 @@ const TicketCongratulations = () => {
       name: 'ticketed_event_thank_you',
       referral: 'ticketed_event_checkout',
     });
-    setValue({
-      ...value,
-      orderId: orderId,
-    });
   });
 
-  useEffectOnce(() => {
-    const newTicketData = { ...ticketData };
-    const ticketId = `${firstItemId}-${1}`;
-    newTicketData[ticketId] = {
-      ...newTicketData[ticketId],
-      firstName: attendeeDetails?.firstName,
-      lastName: attendeeDetails?.lastName,
-      contactPhone: attendeeDetails?.contactPhone,
-      email: attendeeDetails?.email,
-      tierName: selectedTickets[0]?.pricingTierName || '',
-    };
-    setTicketData(newTicketData);
-  });
-
-  const { data: workshop, isLoading } = useQuery({
-    queryKey: 'getTicketedEvent',
-    queryFn: async () => {
-      const response = await api.get({
-        path: 'getTicketedEvent',
-        param: {
-          id: selectedWorkshop?.id,
-        },
-      });
-      return response.data;
-    },
-    enabled: !!selectedWorkshop?.id,
-  });
-
-  useEffect(() => {
-    if (selectedTickets.length > 0) {
-      setExpanded(firstItemId + 1);
-    }
-  }, [selectedTickets]);
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
 
   const duration = 2;
 
@@ -119,43 +110,54 @@ const TicketCongratulations = () => {
     state,
     zip,
     country,
-  } = workshop || {};
+  } = attendeeDetail.ticketedEvent || {};
 
-  if (isLoading) {
-    return <Loader />;
-  }
-  let ticketType = [];
-  let totalNoOfTickets = 0;
+  const ticketByTier = groupBy(ticketData, 'pricingTierName');
+  const ticketType = Object.keys(ticketByTier);
+  const totalNoOfTickets = attendeeDetail.attendees.length;
+  const firstTicketId = attendeeDetail.attendees[0].attendeeRecordExternalId;
 
-  selectedTickets.map((item) => {
-    ticketType.push(item.pricingTierName);
-    totalNoOfTickets = totalNoOfTickets + item.numberOfTickets;
-  });
+  console.log(ticketByTier);
 
-  const handleExpandItem = (parentItem, item) => {
-    setExpanded(parentItem.pricingTierId + item);
+  const handleExpandItem = (ticket) => {
+    setExpanded(ticket.attendeeRecordExternalId);
   };
 
-  const handleInputChange = (childItem, parentItem, fieldName, value) => {
-    const newTicketData = { ...ticketData };
-    const ticketId = `${parentItem.pricingTierId}-${childItem}`;
-    newTicketData[ticketId] = {
-      ...newTicketData[ticketId],
-      [fieldName]: value?.trim(),
-      tierName: parentItem?.pricingTierName,
-    };
+  const handleInputChange = (ticket, fieldName) => (e) => {
+    const value = e.target.value;
+    const newTicketData = ticketData.map((d) => {
+      if (d.attendeeRecordExternalId === ticket.attendeeRecordExternalId) {
+        d[fieldName] = value;
+      }
+      return d;
+    });
     setTicketData(newTicketData);
   };
 
-  const handleCopyData = (childItem, parentItem, value) => {
-    if (value) {
-      const ticketId = `${parentItem.pricingTierId}-${childItem}`;
-      const newTicketData = { ...ticketData };
-      newTicketData[ticketId] = {
-        ...(newTicketData[ticketId] || {}),
-        ...newTicketData[value],
-        tierName: parentItem?.pricingTierName,
-      };
+  const handleCopyData = (ticket) => (e) => {
+    const value = e.target.value;
+    if (value !== null) {
+      console.log(value);
+      const ticketId = ticket.attendeeRecordExternalId;
+      const fromTicket = ticketData.find((d) => {
+        return d.attendeeRecordExternalId === value;
+      });
+      const newTicketData = ticketData.map((d) => {
+        if (d.attendeeRecordExternalId === ticketId) {
+          if (fromTicket) {
+            d.firstName = fromTicket.firstName;
+            d.lastName = fromTicket.lastName;
+            d.contactPhone = fromTicket.contactPhone;
+            d.email = fromTicket.email;
+          } else {
+            d.firstName = '';
+            d.lastName = '';
+            d.contactPhone = '';
+            d.email = '';
+          }
+        }
+        return d;
+      });
       setTicketData(newTicketData);
     }
   };
@@ -212,33 +214,22 @@ const TicketCongratulations = () => {
     if (e) e.preventDefault();
     hideAlert();
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/tickets/${selectedWorkshop?.id}`,
+      pathname: `/us-en/ticketed-event/tickets/${attendeeId}`,
     });
   };
 
   const handleSubmitAttendees = async () => {
     setLoading(true);
     let allFieldsValid = true;
-    if (selectedTickets.length !== Object.keys(ticketData).length) {
-      allFieldsValid = false;
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: "Please input all attendee details. Details can't be empty",
-      });
-      setLoading(false);
-      return;
-    }
-    const attendeeInfo = Object.keys(ticketData).map((attendeId) => {
-      const item = ticketData[attendeId];
-      return item;
-    });
-    if (attendeeInfo.length === 0) {
+    if (ticketData.length === 0) {
       allFieldsValid = false;
       setLoading(false);
       return showAlert(ALERT_TYPES.ERROR_ALERT, {
         children: "Please input attendee details. Details can't be empty",
       });
     }
-    attendeeInfo.forEach((item) => {
+    ticketData.forEach((item) => {
+      console.log(item);
       if (!item || !item.firstName || !item.lastName) {
         allFieldsValid = false;
         setLoading(false);
@@ -253,7 +244,7 @@ const TicketCongratulations = () => {
           children:
             'Please input correct email address. Email address is not valid',
         });
-      } else if (item.contactPhone.length < 11) {
+      } else if (!item.contactPhone || item.contactPhone.length < 11) {
         allFieldsValid = false;
         setLoading(false);
         return showAlert(ALERT_TYPES.ERROR_ALERT, {
@@ -263,8 +254,8 @@ const TicketCongratulations = () => {
     });
     if (allFieldsValid) {
       const payload = {
-        orderId: orderId,
-        attendeeInfo: attendeeInfo,
+        orderId: attendeeId,
+        attendeeInfo: ticketData,
       };
       try {
         const {
@@ -335,12 +326,11 @@ const TicketCongratulations = () => {
                   <li className="order-item">
                     <FaHashtag className="fa fa-hashtag" />{' '}
                     <span>Order Number: </span>
-                    {orderId}
+                    {attendeeId}
                   </li>
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}
-                    <span>Order Total: </span> $
-                    {parseFloat(delfee || totalPrice).toFixed(2)}
+                    <span>Order Total: </span> ${attendeeDetail.totalAmountPaid}
                   </li>
                 </ul>
                 <div className="bottom-info">
@@ -354,33 +344,31 @@ const TicketCongratulations = () => {
                   Information
                 </h2>
                 <div className="attendee-info-wrapper">
-                  {selectedTickets.map((item) => {
-                    const ticketCountArray = Array.from(
-                      { length: item.numberOfTickets },
-                      (_, index) => index + 1,
-                    );
+                  {Object.entries(ticketByTier).map(([key, value]) => {
                     return (
                       <>
                         <div className="subsection-title">
-                          <span className="ticket-type">
-                            {item?.pricingTierName}
-                          </span>
+                          <span className="ticket-type">{key}</span>
                         </div>
                         <div
                           className="accordion ticket-holder-accordion"
                           id="programAccordion"
                         >
-                          {ticketCountArray.map((ticket) => {
+                          {value.map((t) => {
+                            const ticket = ticketData.find(
+                              (ti) =>
+                                ti.attendeeRecordExternalId ===
+                                t.attendeeRecordExternalId,
+                            );
                             const isExpanded =
-                              expanded === item.pricingTierId + ticket;
-                            const ticketId = `${item.pricingTierId}-${ticket}`;
-                            const ticketItemData = ticketData[ticketId];
+                              expanded === ticket.attendeeRecordExternalId;
+                            const ticketId = ticket.attendeeRecordExternalId;
 
                             return (
                               <div
                                 className="accordion-item ticket-holder-accordion__item"
                                 key={ticketId}
-                                onClick={() => handleExpandItem(item, ticket)}
+                                onClick={() => handleExpandItem(ticket)}
                               >
                                 <div
                                   className="accordion-item-header accordion-item__header"
@@ -391,7 +379,7 @@ const TicketCongratulations = () => {
                                   aria-controls="collapse2"
                                 >
                                   <h6 className="accordion-item-header__text">
-                                    Ticket Holder #{ticket}
+                                    Ticket Holder #{ticket.number}
                                   </h6>
                                   <img
                                     src="/img/ic-arrow-down.svg"
@@ -408,45 +396,43 @@ const TicketCongratulations = () => {
                                   data-parent="#programAccordion"
                                 >
                                   <div className="attendee-details-form">
-                                    {Object.keys(ticketData)?.length > 0 &&
-                                      `${firstItemId}-1` !== ticketId && (
+                                    {ticketData.length > 0 &&
+                                      firstTicketId !== ticketId && (
                                         <div className="form-item other">
                                           <label htmlFor="other">
                                             Copy data from
                                           </label>
                                           <select
                                             name="other"
-                                            onChange={(ev) =>
-                                              handleCopyData(
-                                                ticket,
-                                                item,
-                                                ev.target.value,
-                                              )
-                                            }
+                                            onChange={handleCopyData(ticket)}
                                           >
                                             <option value="">
                                               Other Attendee
                                             </option>
-                                            {Object.keys(ticketData)?.map(
-                                              (ticketAttende, attendeIndex) => {
-                                                const attendeItem =
-                                                  ticketAttende.split('-');
-                                                const tierItem =
-                                                  selectedTickets?.find(
-                                                    (item) =>
-                                                      item.pricingTierId ===
-                                                      attendeItem?.[0],
+                                            {ticketData.map(
+                                              (ticketAttendee) => {
+                                                if (
+                                                  ticketAttendee.attendeeRecordExternalId !==
+                                                  ticketId
+                                                ) {
+                                                  return (
+                                                    <option
+                                                      value={
+                                                        ticketAttendee.attendeeRecordExternalId
+                                                      }
+                                                      key={
+                                                        ticketAttendee.attendeeRecordExternalId
+                                                      }
+                                                    >
+                                                      {
+                                                        ticketAttendee?.pricingTierName
+                                                      }{' '}
+                                                      Ticket Holder #
+                                                      {ticketAttendee.number}
+                                                    </option>
                                                   );
-                                                return (
-                                                  <option
-                                                    value={ticketAttende}
-                                                    key={ticketAttende}
-                                                  >
-                                                    {tierItem?.pricingTierName}{' '}
-                                                    Ticket Holder #
-                                                    {attendeItem?.[1]}
-                                                  </option>
-                                                );
+                                                }
+                                                return null;
                                               },
                                             )}
                                           </select>
@@ -458,15 +444,11 @@ const TicketCongratulations = () => {
                                       <input
                                         type="text"
                                         name="firstName"
-                                        value={ticketItemData?.firstName || ''}
-                                        onChange={(e) =>
-                                          handleInputChange(
-                                            ticket,
-                                            item,
-                                            'firstName',
-                                            e.target.value,
-                                          )
-                                        }
+                                        value={ticket?.firstName || ''}
+                                        onChange={handleInputChange(
+                                          ticket,
+                                          'firstName',
+                                        )}
                                       />
                                     </div>
                                     <div className="form-item required">
@@ -476,15 +458,11 @@ const TicketCongratulations = () => {
                                       <input
                                         type="text"
                                         name="lastName"
-                                        value={ticketItemData?.lastName || ''}
-                                        onChange={(e) =>
-                                          handleInputChange(
-                                            ticket,
-                                            item,
-                                            'lastName',
-                                            e.target.value,
-                                          )
-                                        }
+                                        value={ticket?.lastName || ''}
+                                        onChange={handleInputChange(
+                                          ticket,
+                                          'lastName',
+                                        )}
                                       />
                                     </div>
                                     <div className="form-item required">
@@ -494,15 +472,11 @@ const TicketCongratulations = () => {
                                       <input
                                         type="email"
                                         name="email"
-                                        value={ticketItemData?.email || ''}
-                                        onChange={(e) =>
-                                          handleInputChange(
-                                            ticket,
-                                            item,
-                                            'email',
-                                            e.target.value,
-                                          )
-                                        }
+                                        value={ticket?.email || ''}
+                                        onChange={handleInputChange(
+                                          ticket,
+                                          'email',
+                                        )}
                                       />
                                     </div>
                                     <div className="form-item required">
@@ -512,19 +486,13 @@ const TicketCongratulations = () => {
                                       <input
                                         type="tel"
                                         name="contactPhone"
-                                        value={
-                                          ticketItemData?.contactPhone || ''
-                                        }
+                                        value={ticket?.contactPhone || ''}
                                         minLength={11}
                                         maxLength={15}
-                                        onChange={(e) =>
-                                          handleInputChange(
-                                            ticket,
-                                            item,
-                                            'contactPhone',
-                                            e.target.value,
-                                          )
-                                        }
+                                        onChange={handleInputChange(
+                                          ticket,
+                                          'contactPhone',
+                                        )}
                                       />
                                     </div>
                                   </div>

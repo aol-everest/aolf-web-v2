@@ -9,6 +9,7 @@ import { useQueryString } from '@hooks';
 export default function AskGurudev() {
   const [query, setQuery] = useQueryString('query');
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [incorrectResponse, setIncorrectResponse] = useState(false);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function AskGurudev() {
     () => {
       setDebouncedQuery(query);
     },
-    500,
+    2000,
     [query],
   );
 
@@ -37,7 +38,8 @@ export default function AskGurudev() {
         const apiUrl = `https://aolf-ask-gurudev-41c0d69b7bde.herokuapp.com/search?query=${query}`;
         const response = await fetch(apiUrl);
         const result = await response.json();
-        setResults(result);
+        setResults(result.searchResults);
+        setIncorrectResponse(result.showBetterSearchMessage);
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -61,6 +63,21 @@ export default function AskGurudev() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
+
+  useEffect(() => {
+    const handleEnterKey = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission
+        // Perform your search or other action here
+      }
+    };
+
+    document.addEventListener('keydown', handleEnterKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleEnterKey);
+    };
+  }, []);
 
   const isEmpty = results && !results.length;
 
@@ -94,6 +111,7 @@ export default function AskGurudev() {
             isLoading={loading}
             results={results}
             query={query}
+            incorrectResponse={incorrectResponse}
           />
         </div>
       </div>

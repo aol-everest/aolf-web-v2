@@ -65,19 +65,26 @@ export const StyledInputNewCheckout = ({
   return (
     <div className={className}>
       {!isReadOnly && isPhoneNumberMask && (
-        <MaskedInput
-          mask={phoneNumberMask}
-          type="tel"
-          name={formikKey}
-          value={formikProps.values[formikKey]}
-          {...inputProps}
-          className={
-            formikProps.errors[formikKey] && formikProps.touched[formikKey]
-              ? 'text-input error'
-              : 'text-input'
-          }
-          {...rest}
-        />
+        <>
+          <MaskedInput
+            mask={phoneNumberMask}
+            type="tel"
+            name={formikKey}
+            value={formikProps.values[formikKey]}
+            {...inputProps}
+            className={
+              formikProps.errors[formikKey] && formikProps.touched[formikKey]
+                ? 'text-input error'
+                : 'text-input'
+            }
+            {...rest}
+          />
+          {formikProps.errors[formikKey] && (
+            <div className="validation-input">
+              {formikProps.errors[formikKey]}
+            </div>
+          )}
+        </>
       )}
       {!isPhoneNumberMask && (
         <>
@@ -94,15 +101,13 @@ export const StyledInputNewCheckout = ({
             {...inputProps}
             {...rest}
           />
+          {formikProps.errors[formikKey] && (
+            <div className="validation-input">
+              {formikProps.errors[formikKey]}
+            </div>
+          )}
         </>
       )}
-      {tooltip && (
-        <div className={classNames('input-tooltip', { active: showTooltip })}>
-          <div className="tooltip-arrow"></div>
-          {tooltip}
-        </div>
-      )}
-      {tip && <p className="agreement__text !tw-ml-0 tw-w-[249px]">{tip}</p>}
     </div>
   );
 };

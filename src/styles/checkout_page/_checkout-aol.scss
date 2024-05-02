@@ -207,6 +207,9 @@ main.checkout-aol {
         padding: 0;
       }
     }
+    div.error {
+      border-color: red !important;
+    }
     input:not(
         [type='file' i],
         [type='image' i],

@@ -18,6 +18,7 @@ const allOrganizationConfig = [
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
     courseModes: ['ONLINE', 'IN_PERSON', 'DESTINATION_RETREATS'],
+    meetupModes: ['ONLINE', 'IN_PERSON'],
     courseTypes: [
       'SKY_BREATH_MEDITATION',
       'SILENT_RETREAT',
@@ -54,6 +55,7 @@ const allOrganizationConfig = [
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
     courseModes: ['ONLINE', 'IN_PERSON', 'DESTINATION_RETREATS'],
+    meetupModes: ['ONLINE', 'IN_PERSON'],
     courseTypes: [
       'SKY_BREATH_MEDITATION',
       'SILENT_RETREAT',
@@ -86,6 +88,7 @@ const allOrganizationConfig = [
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
     courseModes: ['ONLINE', 'IN_PERSON'],
+    meetupModes: ['ONLINE', 'IN_PERSON'],
     courseTypes: ['SKY_HAPPINESS_RETREAT'],
     otherCourseTypes: [],
   },

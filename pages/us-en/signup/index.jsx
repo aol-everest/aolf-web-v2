@@ -6,65 +6,65 @@ function LoginPage() {
   const router = useRouter();
 
   return (
-    <main class="login-register-page">
-      <section class="section-login-register">
-        <div class="container">
-          <h1 class="page-title">Create an account</h1>
-          <div class="login-options">
-            <button class="google-icon">
+    <main className="login-register-page">
+      <section className="section-login-register">
+        <div className="container">
+          <h1 className="page-title">Create an account</h1>
+          <div className="login-options">
+            <button className="google-icon">
               <img src="/img/google-icon.svg" />
             </button>
-            <button class="facebook-icon">
+            <button className="facebook-icon">
               <img src="/img/facebook-icon.svg" />
             </button>
             <button
-              class="apple-icon"
+              className="apple-icon"
               data-toggle="modal"
               data-target="#login-appleID"
             >
               <img src="/img/apple-icon.svg" />
             </button>
           </div>
-          <div class="or-separator">
+          <div className="or-separator">
             <span>OR</span>
           </div>
-          <div class="form-login-register">
-            <div class="form-item">
+          <div className="form-login-register">
+            <div className="form-item">
               <label for="fname">First name</label>
               <input
                 id="fname"
                 type="text"
-                class="input-field"
+                className="input-field"
                 placeholder="First name"
               />
             </div>
-            <div class="form-item">
+            <div className="form-item">
               <label for="lname">Last name</label>
               <input
                 id="lname"
                 type="text"
-                class="input-field"
+                className="input-field"
                 placeholder="Last name"
               />
             </div>
-            <div class="form-item">
+            <div className="form-item">
               <label for="email">Email address</label>
               <input
                 id="email"
                 type="email"
-                class="input-field"
+                className="input-field"
                 placeholder="Email address"
               />
             </div>
-            <div class="form-item password">
+            <div className="form-item password">
               <label for="pass">Password</label>
               <input
                 id="email"
                 type="password"
-                class="input-field password"
+                className="input-field password"
                 placeholder="Password"
               />
-              <button class="showPassBtn">
+              <button className="showPassBtn">
                 <img
                   src="/img/PasswordEye.svg"
                   width="16"
@@ -73,17 +73,17 @@ function LoginPage() {
                 />
               </button>
             </div>
-            <div class="form-item checkbox">
+            <div className="form-item checkbox">
               <input type="checkbox" id="toc" />
-              <label class="toc" for="toc">
+              <label className="toc" for="toc">
                 By signing up, I agree to <a href="">Terms of Service</a> and{' '}
                 <a href="">Privacy Policy</a>
               </label>
             </div>
-            <div class="form-action">
-              <button class="submit-btn">Sign up</button>
+            <div className="form-action">
+              <button className="submit-btn">Sign up</button>
             </div>
-            <div class="form-other-info">
+            <div className="form-other-info">
               Already have an account? <a href="login.html">Log in</a>
             </div>
           </div>

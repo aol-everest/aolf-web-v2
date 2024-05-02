@@ -13,27 +13,31 @@ import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpress
 import dayjs from 'dayjs';
 import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
-import { ABBRS, COURSE_MODES, COURSE_TYPES } from '@constants';
+import { ABBRS, COURSE_MODES, COURSE_TYPES, ALERT_TYPES } from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import { pushRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { useGlobalAlertContext } from '@contexts';
 import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
-var advancedFormat = require('dayjs/plugin/advancedFormat');
+
+const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = 'both';
 
-const New = () => {
+const Scheduling = () => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
+  const { showAlert } = useGlobalAlertContext();
   const router = useRouter();
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
   const [showLocationModal, setShowLocationModal] = useState(true);
   const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
+  const [attendeeId] = useQueryState('aid');
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
     parseAsJson(),
@@ -97,7 +101,7 @@ const New = () => {
   });
 
   useEffect(() => {
-    if (cityFilter || locationFilter?.locationName) {
+    if (attendeeId || cityFilter || locationFilter?.locationName) {
       setShowLocationModal(false);
     }
   }, [cityFilter]);
@@ -600,6 +604,45 @@ const New = () => {
     }, 100);
   };
 
+  const handleTransferWorkshopRequest = async () => {
+    //token.saveCardForFuture = true;
+    if (loading) {
+      return null;
+    }
+    setLoading(true);
+    try {
+      const {
+        status,
+        data,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: 'transferWorkshopAttendee',
+        body: { attendeeRecordId: attendeeId, productSfId: activeWorkshop?.id },
+      });
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+      setLoading(false);
+      replaceRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/thankyou/${attendeeId}`,
+        query: {
+          ctype: activeWorkshop.productTypeId,
+          page: 'ty',
+          referral: 'course_scheduling_checkout',
+        },
+      });
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      setLoading(false);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+    }
+  };
+
   const isInPersonMode =
     activeWorkshop?.mode === COURSE_MODES.IN_PERSON.value ||
     workshopMaster?.mode === COURSE_MODES.IN_PERSON.value;
@@ -612,15 +655,26 @@ const New = () => {
       {(loading || isLoading) && <div className="cover-spin"></div>}
       <main className="scheduling-page calendar-online">
         <section className="scheduling-top">
-          <div className="container">
-            <h1 className="page-title">{workshopMaster?.title}</h1>
-            <div
-              className="page-description"
-              dangerouslySetInnerHTML={{
-                __html: workshopMaster?.calenderViewDescription,
-              }}
-            ></div>
-          </div>
+          {(!attendeeId || activeWorkshop?.id) && (
+            <div className="container">
+              <h1 className="page-title">{workshopMaster?.title}</h1>
+              <div
+                className="page-description"
+                dangerouslySetInnerHTML={{
+                  __html: workshopMaster?.calenderViewDescription,
+                }}
+              ></div>
+            </div>
+          )}
+          {attendeeId && !activeWorkshop?.id && (
+            <div className="container">
+              <h1 className="page-title">Thank you for your payment</h1>
+              <div className="page-description">
+                <b>Select a date</b> to register for the {workshopMaster?.title}{' '}
+                course.
+              </div>
+            </div>
+          )}
         </section>
         <section className="scheduling-stepper">
           <div className="container">
@@ -733,10 +787,12 @@ const New = () => {
                     </div>
                   </div>
                 </div>
-                <div className="specific-teacher-text">
-                  Are you looking for a course with a specific teacher?{' '}
-                  <a href={`/us-en/courses/${slug}`}>Click here</a>
-                </div>
+                {!activeWorkshop?.id && (
+                  <div className="specific-teacher-text">
+                    Are you looking for a course with a specific teacher?{' '}
+                    <a href={`/us-en/courses/${slug}`}>Click here</a>
+                  </div>
+                )}
                 {!selectedWorkshopId && (
                   <div className="payment-box center-one">
                     <div className="payment-total-box">
@@ -774,30 +830,35 @@ const New = () => {
               </div>
               <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
                 <div className="payment-box">
-                  <div className="payment-total-box">
-                    <label>Total:</label>
-                    <div className="amount">
-                      $
-                      {`${
-                        activeWorkshop.unitPrice
-                          ? activeWorkshop.unitPrice.toFixed(2) ||
-                            '0'.toFixed(2)
-                          : workshopMaster.unitPrice
-                      }`}
-                    </div>
-                  </div>
-                  <div className="payment-details">
-                    <div className="payby">
-                      Pay As Low As{' '}
-                      <img src="/img/logo-affirm.webp" height="22" />
-                    </div>
-                    <div className="price-breakup">
-                      <div className="price-per-month">
-                        ${activeWorkshop?.instalmentAmount}/<span>month</span>
+                  {!attendeeId && (
+                    <>
+                      <div className="payment-total-box">
+                        <label>Total:</label>
+                        <div className="amount">
+                          $
+                          {`${
+                            activeWorkshop.unitPrice
+                              ? activeWorkshop.unitPrice.toFixed(2) ||
+                                '0'.toFixed(2)
+                              : workshopMaster.unitPrice
+                          }`}
+                        </div>
                       </div>
-                      <div className="payment-tenure">for 12 months</div>
-                    </div>
-                  </div>
+                      <div className="payment-details">
+                        <div className="payby">
+                          Pay As Low As{' '}
+                          <img src="/img/logo-affirm.webp" height="22" />
+                        </div>
+                        <div className="price-breakup">
+                          <div className="price-per-month">
+                            ${activeWorkshop?.instalmentAmount}/
+                            <span>month</span>
+                          </div>
+                          <div className="payment-tenure">for 12 months</div>
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   <div className="checkout-details">
                     <div className="section__body">
@@ -1177,12 +1238,22 @@ const New = () => {
                   </div>
                   <div className="payment-agreements"></div>
                   <div className="payment-actions">
-                    {activeWorkshop && activeWorkshop.id && (
+                    {!attendeeId && activeWorkshop && activeWorkshop.id && (
                       <StripeExpressCheckoutElement
                         workshop={activeWorkshop}
                         goToPaymentModal={goToPaymentModal}
                         selectedWorkshopId={selectedWorkshopId}
+                        btnText="Checkout"
                       />
+                    )}
+                    {attendeeId && (
+                      <button
+                        className="submit-btn"
+                        disabled={!selectedWorkshopId}
+                        onClick={handleTransferWorkshopRequest}
+                      >
+                        Continue
+                      </button>
                     )}
 
                     {!activeWorkshop && (
@@ -1287,5 +1358,5 @@ const New = () => {
     </>
   );
 };
-
-export default New;
+Scheduling.hideFooter = true;
+export default Scheduling;

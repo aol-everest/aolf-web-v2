@@ -320,7 +320,6 @@ function PodcastPage() {
     if (player) {
       player.unMute();
       player.playVideo();
-      console.log('player.getPlayerState()', player.getPlayerState());
       if (player.getPlayerState() !== 1) {
         player.mute();
         player.playVideo();
