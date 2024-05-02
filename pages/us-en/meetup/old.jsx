@@ -429,7 +429,7 @@ const Meetup = () => {
 
   const openEnrollPage = (selectedMeetup) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
+    if (authenticated) {
       showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
       if (!user.profile.isMandatoryWorkshopAttended) {

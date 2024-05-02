@@ -934,8 +934,18 @@ const Meetup = () => {
           setLocationFilter(null);
         }
         break;
+      case 'timesOfDayFilter':
+        setTimesOfDayFilter(value);
+        break;
       case 'timeZoneFilter':
-        setTimeZoneFilter(value);
+        if (value) {
+          setTimeZoneFilter(value);
+        } else {
+          setTimeZoneFilter(null);
+          setTimeout(() => {
+            setTimesOfDayFilter(null);
+          }, 0);
+        }
         break;
       case 'instructorFilter':
         if (value) {
@@ -960,8 +970,14 @@ const Meetup = () => {
       case 'locationFilter':
         setLocationFilter(null);
         break;
+      case 'timesOfDayFilter':
+        setTimesOfDayFilter(null);
+        break;
       case 'timeZoneFilter':
         setTimeZoneFilter(null);
+        setTimeout(() => {
+          setTimesOfDayFilter(null);
+        }, 0);
         break;
       case 'instructorFilter':
         setInstructorFilter(null);
@@ -985,6 +1001,9 @@ const Meetup = () => {
           setLocationFilter(null);
         }
         break;
+      case 'timesOfDayFilter':
+        setTimesOfDayFilter(value);
+        break;
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
@@ -993,6 +1012,7 @@ const Meetup = () => {
           setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
+          setSearchKey('');
         }
         break;
     }
