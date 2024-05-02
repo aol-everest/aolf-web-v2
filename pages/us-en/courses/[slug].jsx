@@ -34,6 +34,7 @@ import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import dynamic from 'next/dynamic';
+import { NextSeo } from 'next-seo';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
@@ -1007,6 +1008,10 @@ const Course = () => {
 
   return (
     <main className="all-courses-find">
+      <NextSeo
+        defaultTitle={`${courseTypeFilter.name} - Course Dates and Registration`}
+        description={courseTypeFilter.description}
+      />
       <section className="title-header">
         {!centerFilter && courseTypeFilter && (
           <>
