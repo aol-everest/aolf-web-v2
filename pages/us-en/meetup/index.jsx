@@ -488,13 +488,13 @@ const MeetupTile = ({ data, authenticated }) => {
       memberPrice,
       sfid,
       productTypeId,
-      complianceQuestionnaire,
+      isSubscriptionOfferingUsed,
     } = selectedMeetup;
     const { subscriptions = [] } = user.profile;
     hideAlert();
     hideModal();
 
-    if (complianceQuestionnaire?.length > 0) {
+    if (!isSubscriptionOfferingUsed) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
