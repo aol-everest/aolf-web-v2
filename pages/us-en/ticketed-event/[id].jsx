@@ -376,7 +376,7 @@ function TicketedEvent() {
                           type="submit"
                           disabled={selectedTickets.length === 0}
                         >
-                          Book Another Way
+                          Confirm
                         </button>
                       </div>
                       {isLoading && <Loader />}

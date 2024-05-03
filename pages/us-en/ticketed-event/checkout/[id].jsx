@@ -961,7 +961,7 @@ const TicketCheckoutForm = ({ event }) => {
                                 form="my-form"
                                 onClick={handleFormSubmit}
                               >
-                                Confirm
+                                Confirm and Pay
                               </button>
                             </div>
                           </div>
