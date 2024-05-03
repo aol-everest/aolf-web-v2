@@ -194,10 +194,12 @@ const TicketCheckoutForm = ({ event }) => {
   } = user?.profile || {};
 
   useEffect(() => {
-    validateCoupon();
+    if (couponCode) {
+      validateCoupon();
+    }
   }, [couponCode]);
 
-  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
+  const { totalDiscount = 0 } = discountResponse || {};
 
   const validateCoupon = async () => {
     try {
@@ -959,7 +961,7 @@ const TicketCheckoutForm = ({ event }) => {
                                 form="my-form"
                                 onClick={handleFormSubmit}
                               >
-                                Confirm and Pay
+                                Confirm
                               </button>
                             </div>
                           </div>

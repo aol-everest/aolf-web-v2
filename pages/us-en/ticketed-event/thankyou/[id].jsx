@@ -341,7 +341,8 @@ const TicketCongratulations = () => {
               <form className="attendee-info-form">
                 <h2 className="section-title">
                   <FaUser className="fa fa-user-o" /> Provide Attendee
-                  Information
+                  Information{' '}
+                  {attendeeDetail.totalAmountPaid ? '' : '(Optional)'}
                 </h2>
                 <div className="attendee-info-wrapper">
                   {Object.entries(ticketByTier).map(([key, value]) => {
