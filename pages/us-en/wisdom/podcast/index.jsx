@@ -467,7 +467,7 @@ function PodcastPage() {
             ></VideoItemComp>
           </div>
           <div className="video-listing">
-            {search(restData).map((video) => {
+            {search(restData)?.map((video) => {
               return (
                 <VideoItemComp
                   addPlayerLoadedCount={addPlayerLoadedCount}

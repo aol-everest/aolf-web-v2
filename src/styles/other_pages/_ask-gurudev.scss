@@ -330,6 +330,7 @@
     background: white;
     box-shadow: 4px 2px 20px 0px #9530001c;
     border-radius: 12px;
+    min-height: unset;
     .video-text {
       color: #31364e95;
       font-size: 14px;
@@ -340,10 +341,8 @@
     .video-player-wrap {
       border-radius: 10px;
       overflow: hidden;
-      height: 203px;
       iframe {
         width: 100%;
-        height: 203px;
       }
     }
   }
