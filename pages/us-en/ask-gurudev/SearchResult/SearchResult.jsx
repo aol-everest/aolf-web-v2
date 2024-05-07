@@ -113,9 +113,11 @@ const VideoItemComp = (props) => {
   );
 };
 
-const SearchResult = React.forwardRef(function SearchResult({ result }, ref) {
+const SearchResult = React.forwardRef(function SearchResult(
+  { result, setPlayingId, playingId },
+  ref,
+) {
   const thumbnailUrl = result.metadata.thumbnail;
-  const [playingId, setPlayingId] = useState(null);
 
   const onPlayAction = (id) => {
     setPlayingId(id);
