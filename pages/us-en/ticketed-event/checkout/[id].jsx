@@ -29,6 +29,7 @@ import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
+import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 
 function TicketCheckout() {
   const router = useRouter();
@@ -168,7 +169,15 @@ const TicketCheckoutForm = ({ event }) => {
     pricingTiers,
     title,
     productTypeId,
+    complianceQuestionnaire,
   } = event;
+
+  const questionnaireArray = complianceQuestionnaire
+    ? complianceQuestionnaire.map((current) => ({
+        key: current.questionSfid,
+        value: false,
+      }))
+    : [];
 
   let pricingTiersLocal = pricingTiers.filter((p) => {
     return p.pricingTierId in selectedTickets;
@@ -501,6 +510,7 @@ const TicketCheckoutForm = ({ event }) => {
           couponCode: discountResponse?.couponCode
             ? discountResponse.couponCode
             : '',
+          questionnaire: questionnaireArray,
           contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
@@ -952,6 +962,13 @@ const TicketCheckoutForm = ({ event }) => {
                         </div>
                         <div className="section-box confirm-submit">
                           <div className="section__body">
+                            <ScheduleAgreementForm
+                              formikProps={formikProps}
+                              complianceQuestionnaire={complianceQuestionnaire}
+                              isCorporateEvent={false}
+                              questionnaireArray={questionnaireArray}
+                              screen="DESKTOP"
+                            />
                             <div className="form-item submit-item">
                               <button
                                 className="submit-btn"
