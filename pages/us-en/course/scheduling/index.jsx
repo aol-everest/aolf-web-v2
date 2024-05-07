@@ -396,6 +396,7 @@ const Scheduling = () => {
     if (value) {
       setLocationFilter(value);
     } else {
+      handleModalToggle();
       setLocationFilter(null);
     }
   };
