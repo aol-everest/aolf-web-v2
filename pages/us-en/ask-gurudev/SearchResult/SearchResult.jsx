@@ -30,6 +30,7 @@ const VideoItemComp = (props) => {
       playsinline: 1,
       iv_load_policy: 3,
       listType: 'playlist',
+      start: Math.round(parseFloat(startSec)),
     },
   };
   const onReady = (event) => {
@@ -45,7 +46,7 @@ const VideoItemComp = (props) => {
         if (player.getPlayerState() !== 1) {
           player.mute();
           player.playVideo();
-          player.seekTo(parseFloat(startSec));
+          // player.seekTo(parseFloat(startSec));
         }
       }, 1000);
     }
