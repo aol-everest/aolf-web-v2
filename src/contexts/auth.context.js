@@ -8,6 +8,7 @@ import React, {
   createContext,
 } from 'react';
 import { Hub } from 'aws-amplify/utils';
+import { signOut as amplifySignOut } from 'aws-amplify/auth';
 import { Auth } from '@utils';
 import { signOut } from '@passwordLess/common.js';
 import { parseJwtPayload, setTimeoutWallClock } from '@passwordLess/util.js';
@@ -462,6 +463,7 @@ function _usePasswordless(fetchCurrentUser) {
         currentStatus: signingInStatus,
       });
       signingOut.signedOut.catch(setLastError);
+      amplifySignOut({ global: true });
       return signingOut;
     },
     /** Request a sign-in link ("magic link") to be sent to the user's e-mail address */

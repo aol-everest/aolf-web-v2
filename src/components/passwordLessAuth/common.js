@@ -93,7 +93,7 @@ export const signOut = (props) => {
     } catch (err) {
       if (abort.signal.aborted) return;
       currentStatus && statusCb?.(currentStatus);
-      throw err;
+      // throw err;
     }
   };
   return {
