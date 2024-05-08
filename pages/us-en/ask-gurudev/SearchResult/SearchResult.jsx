@@ -3,7 +3,14 @@ import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
 
 const VideoItemComp = (props) => {
-  const { videoId, thumbnailUrl, videoTitle, playingId, onPlayAction } = props;
+  const {
+    videoId,
+    thumbnailUrl,
+    videoTitle,
+    playingId,
+    onPlayAction,
+    startSec,
+  } = props;
   const [isInitialPlaying, setInitialPlaying] = useState(false);
   const [isReady, setReady] = useState(false);
   const [player, setPlayer] = useState(null);
@@ -38,6 +45,7 @@ const VideoItemComp = (props) => {
         if (player.getPlayerState() !== 1) {
           player.mute();
           player.playVideo();
+          player.seekTo(parseFloat(startSec));
         }
       }, 1000);
     }
@@ -143,6 +151,7 @@ const SearchResult = React.forwardRef(function SearchResult(
               thumbnailUrl={thumbnailUrl}
               onPlayAction={onPlayAction}
               playingId={playingId}
+              startSec={result.metadata?.start}
             ></VideoItemComp>
           </div>
         </section>
