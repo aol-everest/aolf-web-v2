@@ -489,13 +489,13 @@ const MeetupTile = ({ data }) => {
       memberPrice,
       sfid,
       productTypeId,
-      complianceQuestionnaire,
+      isSubscriptionOfferingUsed,
     } = selectedMeetup;
     const { subscriptions = [] } = profile;
     hideAlert();
     hideModal();
 
-    if (complianceQuestionnaire?.length > 0) {
+    if (!isSubscriptionOfferingUsed) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {
@@ -935,8 +935,18 @@ const Meetup = () => {
           setLocationFilter(null);
         }
         break;
+      case 'timesOfDayFilter':
+        setTimesOfDayFilter(value);
+        break;
       case 'timeZoneFilter':
-        setTimeZoneFilter(value);
+        if (value) {
+          setTimeZoneFilter(value);
+        } else {
+          setTimeZoneFilter(null);
+          setTimeout(() => {
+            setTimesOfDayFilter(null);
+          }, 0);
+        }
         break;
       case 'instructorFilter':
         if (value) {
@@ -961,8 +971,14 @@ const Meetup = () => {
       case 'locationFilter':
         setLocationFilter(null);
         break;
+      case 'timesOfDayFilter':
+        setTimesOfDayFilter(null);
+        break;
       case 'timeZoneFilter':
         setTimeZoneFilter(null);
+        setTimeout(() => {
+          setTimesOfDayFilter(null);
+        }, 0);
         break;
       case 'instructorFilter':
         setInstructorFilter(null);
@@ -986,6 +1002,9 @@ const Meetup = () => {
           setLocationFilter(null);
         }
         break;
+      case 'timesOfDayFilter':
+        setTimesOfDayFilter(value);
+        break;
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
@@ -994,6 +1013,7 @@ const Meetup = () => {
           setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
+          setSearchKey('');
         }
         break;
     }
@@ -1323,7 +1343,7 @@ const Meetup = () => {
                 {showFilterModal && (
                   <>
                     <div className="filter--box">
-                      <div className="selected-filter-wrap">
+                      <div className="selected-filter-wrap mb-3">
                         {locationFilter && (
                           <div
                             className="selected-filter-item"
@@ -1387,28 +1407,48 @@ const Meetup = () => {
                           </div>
                         )}
                       </div>
-                      <label className="mt-4">Meetup format</label>
-                      <div
-                        id="switch-mobile-filter"
-                        className="btn_outline_box full-btn mt-3"
+
+                      <MobileFilterModal
+                        label="Meetup Format"
+                        cl
+                        value={
+                          meetupModeFilter
+                            ? COURSE_MODES[meetupModeFilter].name
+                            : 'Select Format'
+                        }
+                        hideClearOption
+                        closeEvent={onFilterChange('meetupModeFilter')}
                       >
-                        <a
-                          className="btn"
-                          href="#"
-                          data-swicth-active={meetupModeFilter === 'ONLINE'}
-                          onClick={toggleActiveFilter('ONLINE')}
-                        >
-                          Online
-                        </a>
-                        <a
-                          className="btn"
-                          href="#"
-                          data-swicth-active={meetupModeFilter === 'IN_PERSON'}
-                          onClick={toggleActiveFilter('IN_PERSON')}
-                        >
-                          In Person
-                        </a>
-                      </div>
+                        <div className="dropdown">
+                          <SmartDropDown
+                            value={meetupModeFilter}
+                            buttonText={
+                              meetupModeFilter
+                                ? COURSE_MODES[meetupModeFilter].name
+                                : 'Select Format'
+                            }
+                            closeEvent={onFilterChange('meetupModeFilter')}
+                          >
+                            {({ closeHandler }) => (
+                              <>
+                                {orgConfig.meetupModes?.map(
+                                  (courseMode, index) => {
+                                    return (
+                                      <li
+                                        key={index}
+                                        className="dropdown-item"
+                                        onClick={closeHandler(courseMode)}
+                                      >
+                                        {COURSE_MODES[courseMode].name}
+                                      </li>
+                                    );
+                                  },
+                                )}
+                              </>
+                            )}
+                          </SmartDropDown>
+                        </div>
+                      </MobileFilterModal>
 
                       <MobileFilterModal
                         label="Location"

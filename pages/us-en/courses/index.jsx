@@ -2,6 +2,7 @@
 import { COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
 import { orgConfig } from '@org';
 import Link from '@components/linkWithUTM';
+import { NextSeo } from 'next-seo';
 
 const CourseTypeTile = ({ courseType }) => {
   const findCourseAction = () => {
@@ -67,6 +68,10 @@ const SectionComponent = ({ section }) => {
 const Home = () => {
   return (
     <main className="all-courses">
+      <NextSeo
+        defaultTitle="Art of Living Courses Overview"
+        description="A brief overview of the Art of Living course offerings including beginners, advanced and training courses"
+      />
       {COURSE_TYPES_MASTER[orgConfig.name] &&
         COURSE_TYPES_MASTER[orgConfig.name].map((section, i) => {
           return (

@@ -1,7 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useLocalStorage } from 'react-use';
 import {
   useAuth,
   useGlobalAlertContext,
@@ -28,10 +27,11 @@ import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
 import { navigateToLogin } from '@utils';
 import { Loader } from '@components';
-import { replaceRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
+import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 
 function TicketCheckout() {
   const router = useRouter();
@@ -171,7 +171,15 @@ const TicketCheckoutForm = ({ event }) => {
     pricingTiers,
     title,
     productTypeId,
+    complianceQuestionnaire,
   } = event;
+
+  const questionnaireArray = complianceQuestionnaire
+    ? complianceQuestionnaire.map((current) => ({
+        key: current.questionSfid,
+        value: false,
+      }))
+    : [];
 
   let pricingTiersLocal = pricingTiers.filter((p) => {
     return p.pricingTierId in selectedTickets;
@@ -197,10 +205,12 @@ const TicketCheckoutForm = ({ event }) => {
   } = profile || {};
 
   useEffect(() => {
-    validateCoupon();
+    if (couponCode) {
+      validateCoupon();
+    }
   }, [couponCode]);
 
-  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
+  const { totalDiscount = 0 } = discountResponse || {};
 
   const validateCoupon = async () => {
     try {
@@ -327,28 +337,35 @@ const TicketCheckoutForm = ({ event }) => {
       }
 
       if (data || paypalObj) {
-        let filteredParams = {
-          ctype: productTypeId,
-          page: 'ty',
-          referral: 'ticketed_event_checkout',
-          ...filterAllowedParams(router.query),
-        };
-        const returnUrl = `${
-          window.location.origin
-        }/us-en/ticketed-event/thankyou/${data.orderId}?${queryString.stringify(
-          filteredParams,
-        )}`;
-        const result = await stripe.confirmPayment({
-          //`Elements` instance that was used to create the Payment Element
-          elements,
-          clientSecret: stripeIntentObj.client_secret,
-          confirmParams: {
-            return_url: returnUrl,
-          },
-        });
-        if (result.error) {
-          // Show error to your customer (for example, payment details incomplete)
-          throw new Error(result.error.message);
+        if (data.totalOrderAmount === 0) {
+          pushRouteWithUTMQuery(
+            router,
+            `/us-en/ticketed-event/thankyou/${data.orderId}`,
+          );
+        } else {
+          let filteredParams = {
+            ctype: productTypeId,
+            page: 'ty',
+            referral: 'ticketed_event_checkout',
+            ...filterAllowedParams(router.query),
+          };
+          const returnUrl = `${
+            window.location.origin
+          }/us-en/ticketed-event/thankyou/${data.orderId}?${queryString.stringify(
+            filteredParams,
+          )}`;
+          const result = await stripe.confirmPayment({
+            //`Elements` instance that was used to create the Payment Element
+            elements,
+            clientSecret: stripeIntentObj.client_secret,
+            confirmParams: {
+              return_url: returnUrl,
+            },
+          });
+          if (result.error) {
+            // Show error to your customer (for example, payment details incomplete)
+            throw new Error(result.error.message);
+          }
         }
       }
       setLoading(false);
@@ -495,6 +512,7 @@ const TicketCheckoutForm = ({ event }) => {
           couponCode: discountResponse?.couponCode
             ? discountResponse.couponCode
             : '',
+          questionnaire: questionnaireArray,
           contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
@@ -946,6 +964,13 @@ const TicketCheckoutForm = ({ event }) => {
                         </div>
                         <div className="section-box confirm-submit">
                           <div className="section__body">
+                            <ScheduleAgreementForm
+                              formikProps={formikProps}
+                              complianceQuestionnaire={complianceQuestionnaire}
+                              isCorporateEvent={false}
+                              questionnaireArray={questionnaireArray}
+                              screen="DESKTOP"
+                            />
                             <div className="form-item submit-item">
                               <button
                                 className="submit-btn"

@@ -102,7 +102,7 @@ const Scheduling = () => {
   });
 
   useEffect(() => {
-    if (attendeeId || cityFilter || locationFilter?.locationName) {
+    if (cityFilter || locationFilter?.locationName) {
       setShowLocationModal(false);
     }
   }, [cityFilter]);
@@ -397,6 +397,7 @@ const Scheduling = () => {
     if (value) {
       setLocationFilter(value);
     } else {
+      handleModalToggle();
       setLocationFilter(null);
     }
   };
