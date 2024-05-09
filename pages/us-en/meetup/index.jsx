@@ -814,7 +814,7 @@ const Meetup = () => {
           if (meetupTypeFilter) {
             param = {
               ...param,
-              filter: meetupTypeFilter.id,
+              filter: meetupTypeFilter,
             };
           }
           if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
