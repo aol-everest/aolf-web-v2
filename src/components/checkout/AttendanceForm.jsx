@@ -77,6 +77,8 @@ export const AttendanceForm = ({ formikProps, corporates }) => {
                   }
                 }}
                 placeholder="Healthcare Organization"
+                isSearchable
+                isClearable
               />
             </FieldWrapper>
           )}
