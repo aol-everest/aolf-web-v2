@@ -830,18 +830,14 @@ export const PaymentFormHB = ({
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),
-          claimingType: Yup.mixed().when('CME', {
-            is: true,
-            then: Yup.string().required('CE Claiming type is required'),
-            otherwise: Yup.mixed().notRequired(),
-          }),
-          certificateOfAttendance: Yup.mixed().when('CME', {
-            is: true,
-            then: Yup.string().required(
-              'I would like to get the following is required',
-            ),
-            otherwise: Yup.mixed().notRequired(),
-          }),
+          claimingType: cmeAddOn
+            ? Yup.string().required('CE Claiming type is required')
+            : Yup.mixed().notRequired(),
+          certificateOfAttendance: cmeAddOn
+            ? Yup.string().required(
+                'I would like to get the following is required',
+              )
+            : Yup.mixed().notRequired(),
           contactClaimingTypeOther: cmeAddOn
             ? Yup.string().when('claimingType', {
                 is: (claimingType) => claimingType === 'Other',
@@ -923,7 +919,6 @@ export const PaymentFormHB = ({
           const isBundlePaypalAvailable = selectedBundle
             ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
             : false;
-
           return (
             <div className="row">
               {loading && <Loader />}
