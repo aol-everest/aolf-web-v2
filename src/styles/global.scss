@@ -102,4 +102,30 @@ main {
   .react-select__input {
     padding: 10px 14px;
   }
+  .react-select {
+    &__menu {
+      margin: 0.125rem auto;
+    }
+
+    &__option {
+      background-color: white;
+
+      &--is-focused {
+        background-color: #fff6ec;
+      }
+
+      &--is-selected {
+        background-color: #ffa180;
+      }
+
+      &--is-active {
+        background-color: #ffa180;
+      }
+
+      &:active {
+        background-color: #ffa180;
+        color: #ffffff;
+      }
+    }
+  }
 }

@@ -4,6 +4,21 @@ import Style from './Dropdown.module.scss';
 import { FieldWrapper } from './FieldWrapper';
 import Select from 'react-select';
 
+const dot = (color = 'transparent') => ({
+  alignItems: 'center',
+  display: 'flex',
+
+  ':before': {
+    backgroundColor: color,
+    borderRadius: 10,
+    content: '" "',
+    display: 'block',
+    marginRight: 8,
+    height: 10,
+    width: 10,
+  },
+});
+
 const SelectField = ({ options, field, form, placeholder }) => (
   <Select
     options={options}
