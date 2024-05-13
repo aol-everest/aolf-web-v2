@@ -109,10 +109,10 @@ const StepInputPassword = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div class="form-login-register">
-        <div class="form-item">
+        {/* <div class="form-item">
           <label for="email">Email address</label>
           <p>{username}</p>
-        </div>
+        </div> */}
         <div class="form-item password">
           <label for="pass">Password</label>
           <input
@@ -146,7 +146,7 @@ const StepInputPassword = ({
         </div>
         <div class="form-action">
           <button class="submit-btn" type="submit">
-            Sign in
+            Log in
           </button>
         </div>
       </div>
@@ -407,14 +407,25 @@ export const SigninForm = ({
                   </>
                 )}
               </div>
-              <div class="form-action">
+              <StepInputPassword
+                username={username}
+                showMessage={showMessage}
+                message={message}
+                onSubmit={signInWithPasswordAction}
+                forgotPassword={forgotPassword}
+                updateStep={updateStep}
+              />
+              {/* <div class="form-action">
                 <button class="submit-btn" onClick={updateStep(2)}>
                   Continue with password
                 </button>
+              </div> */}
+              <div class="or-separator mt-2 pt-1">
+                <span>OR</span>
               </div>
-              <div class="form-action">
-                <button
-                  class="submit-btn"
+              <div class="login-options-1">
+                <div
+                  class="login-option-item"
                   onClick={() => {
                     authenticateWithFido2({
                       username: user.username,
@@ -423,19 +434,99 @@ export const SigninForm = ({
                   }}
                   disabled={busy}
                 >
-                  Sign in with face or touch
-                </button>
-                <button
-                  class="submit-btn"
-                  onClick={() =>
+                  <div class="option-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.5 6.75V4.875C1.5 3.0075 3.0075 1.5 4.875 1.5H6.75"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M11.25 1.5H13.125C14.9925 1.5 16.5 3.0075 16.5 4.875V6.75"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M16.5 12V13.125C16.5 14.9925 14.9925 16.5 13.125 16.5H12"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M6.75 16.5H4.875C3.0075 16.5 1.5 14.9925 1.5 13.125V11.25"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12.75 7.125V10.875C12.75 12.375 12 13.125 10.5 13.125H7.5C6 13.125 5.25 12.375 5.25 10.875V7.125C5.25 5.625 6 4.875 7.5 4.875H10.5C12 4.875 12.75 5.625 12.75 7.125Z"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M14.25 9H3.75"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <span>
+                    Sign in with <strong>face or touch</strong>
+                  </span>
+                </div>
+                <div
+                  class="login-option-item"
+                  nClick={() =>
                     requestSignInLink({
                       username: user.username,
                     })
                   }
                   disabled={busy}
                 >
-                  Sign in with magic link
-                </button>
+                  <div class="option-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M2.4525 9C1.86 8.2875 1.5 7.3725 1.5 6.375C1.5 4.11 3.3525 2.25 5.625 2.25H9.375C11.64 2.25 13.5 4.11 13.5 6.375C13.5 8.64 11.6475 10.5 9.375 10.5H7.5"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M15.5475 9C16.14 9.7125 16.5 10.6275 16.5 11.625C16.5 13.89 14.6475 15.75 12.375 15.75H8.625C6.36 15.75 4.5 13.89 4.5 11.625C4.5 9.36 6.3525 7.5 8.625 7.5H10.5"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <span>
+                    Sign in with <strong>magic link</strong>
+                  </span>
+                </div>
               </div>
               <div class="form-other-info">
                 <a href="#" onClick={signInWithAnotherUserAction}>
