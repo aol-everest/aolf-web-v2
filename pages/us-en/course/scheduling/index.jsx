@@ -164,6 +164,28 @@ const Scheduling = () => {
     }
   }, [router.query]);
 
+  const { data: attendeeRecord } = useQuery({
+    queryKey: 'attendeeRecord',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'getWorkshopByAttendee',
+        param: {
+          aid: attendeeId,
+          skipcheck: '1',
+        },
+      });
+      return response.data;
+    },
+
+    enabled: !!attendeeId,
+  });
+
+  useEffect(() => {
+    if (attendeeRecord) {
+      setMode(attendeeRecord.mode);
+    }
+  }, [attendeeRecord]);
+
   const { data: dateAvailable = [], isLoading } = useQuery({
     queryKey: [
       'workshopMonthCalendar',
@@ -707,22 +729,26 @@ const Scheduling = () => {
             <div className="calendar-area-wrap">
               <div className="first-col">
                 <div className="cal-filters">
-                  <div className="form-item">
-                    <label>Course type</label>
-                    <select
-                      className="input-select"
-                      id="courseType"
-                      name="courseType"
-                      value={mode}
-                      onChange={(ev) => handleSelectMode(ev.target.value)}
-                    >
-                      <option value="both">All courses</option>
-                      <option value={COURSE_MODES.ONLINE.value}>Online</option>
-                      <option value={COURSE_MODES.IN_PERSON.value}>
-                        In-person
-                      </option>
-                    </select>
-                  </div>
+                  {!attendeeId && (
+                    <div className="form-item">
+                      <label>Course type</label>
+                      <select
+                        className="input-select"
+                        id="courseType"
+                        name="courseType"
+                        value={mode}
+                        onChange={(ev) => handleSelectMode(ev.target.value)}
+                      >
+                        <option value="both">All courses</option>
+                        <option value={COURSE_MODES.ONLINE.value}>
+                          Online
+                        </option>
+                        <option value={COURSE_MODES.IN_PERSON.value}>
+                          In-person
+                        </option>
+                      </select>
+                    </div>
+                  )}
                   <div className="form-item">
                     <ScheduleLocationFilterNew
                       handleLocationChange={handleLocationFilterChange}

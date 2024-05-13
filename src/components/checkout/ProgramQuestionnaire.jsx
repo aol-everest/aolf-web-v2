@@ -95,6 +95,8 @@ const questionRender = (formikProps) => (question, index) => {
                   className={classNames({
                     'is-invalid': errors[key] && formikProps.touched[key],
                   })}
+                  isSearchable
+                  isClearable
                 />
               );
             }}

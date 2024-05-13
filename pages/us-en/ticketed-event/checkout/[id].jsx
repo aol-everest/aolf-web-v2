@@ -268,7 +268,15 @@ const TicketCheckoutForm = ({ event }) => {
 
     const { id: productId, isCCNotRequired } = event;
 
-    const { firstName, lastName, email, contactPhone } = values;
+    const { firstName, lastName, email, contactPhone, questionnaire } = values;
+
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? 'Yes' : 'No',
+      }),
+      {},
+    );
 
     const tickets = Object.entries(selectedTickets).map(([key, value]) => {
       return {
@@ -295,6 +303,7 @@ const TicketCheckoutForm = ({ event }) => {
             billingPhone: contactPhone,
           },
           products,
+          complianceQuestionnaire,
           isStripeIntentPayment: true,
           isPaypalPayment: false,
           tickets: tickets,
