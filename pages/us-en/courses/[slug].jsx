@@ -472,6 +472,8 @@ const CourseTile = ({ data, authenticated }) => {
     timings,
     unitPrice,
     listPrice,
+    isEventFull,
+    isPurchased,
   } = data || {};
 
   const enrollAction = () => {
@@ -537,7 +539,12 @@ const CourseTile = ({ data, authenticated }) => {
   };
 
   return (
-    <div className="course-item">
+    <div
+      className={classNames('course-item', {
+        'course-full': isEventFull,
+        registered: isPurchased,
+      })}
+    >
       <div className="course-item-header">
         <div className="course-title-duration">
           <div className="course-title">{mode}</div>

@@ -469,6 +469,8 @@ const MeetupTile = ({ data, authenticated }) => {
     meetupStartDate,
     meetupStartTime,
     meetupDuration,
+    isEventFull,
+    isPurchased,
   } = data || {};
 
   const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, '')} Min`;
@@ -693,7 +695,12 @@ const MeetupTile = ({ data, authenticated }) => {
   };
 
   return (
-    <div className="course-item">
+    <div
+      className={classNames('course-item', {
+        'course-full': isEventFull,
+        registered: isPurchased,
+      })}
+    >
       <div className="course-item-header">
         <div className="course-title-duration">
           <div className="course-title">{meetupTitle}</div>
