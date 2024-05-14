@@ -743,16 +743,11 @@ export const PaymentFormHB = ({
     formikProps.setFieldValue('accommodation', value);
   };
 
-  const toggleCouponCodeFieldAction = (e) => {
-    if (e) e.preventDefault();
-    setShowCouponCodeField((showCouponCodeField) => !showCouponCodeField);
-  };
-
   return (
     <>
       <Formik
         initialValues={{
-          CME: true,
+          CME: cmeAddOn ? true : false,
           firstName: first_name || '',
           lastName: last_name || '',
           email: email || '',
