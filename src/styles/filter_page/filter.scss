@@ -68,6 +68,8 @@
 .upcoming_course_card img {
   width: 100%;
   transition: all 0.3s ease-in-out;
+  height: 100%;
+  object-fit: cover;
 }
 
 .upcoming_course_card:not(.no-hover):hover .course_detail_box {
