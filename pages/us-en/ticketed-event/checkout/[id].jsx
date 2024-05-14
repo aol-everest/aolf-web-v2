@@ -478,6 +478,7 @@ const TicketCheckoutForm = ({ event }) => {
             ? discountResponse.couponCode
             : '',
           questionnaire: questionnaireArray,
+          ppaAgreement: false,
           contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
@@ -502,6 +503,13 @@ const TicketCheckoutForm = ({ event }) => {
             //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
             .min(2, 'Zip is invalid')
             .max(10, 'Zip is invalid'),
+          ppaAgreement: Yup.boolean()
+            .label('Terms')
+            .test(
+              'is-true',
+              'Please check the box in order to continue.',
+              (value) => value === true,
+            ),
         })}
         innerRef={formRef}
         onSubmit={async (values) => {
