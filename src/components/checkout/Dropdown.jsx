@@ -2,6 +2,26 @@ import classNames from 'classnames';
 import { Field } from 'formik';
 import Style from './Dropdown.module.scss';
 import { FieldWrapper } from './FieldWrapper';
+import Select from 'react-select';
+
+const SelectField = ({ options, field, form, placeholder }) => (
+  <Select
+    options={options}
+    name={field.name}
+    value={
+      options ? options.find((option) => option.value === field.value) : ''
+    }
+    onChange={(option) =>
+      form.setFieldValue(field.name, option ? option.value : '')
+    }
+    onBlur={field.onBlur}
+    className="react-select-container-old"
+    classNamePrefix="react-select"
+    placeholder={placeholder}
+    isSearchable
+    isClearable
+  />
+);
 
 export const Dropdown = ({
   label,
@@ -22,7 +42,13 @@ export const Dropdown = ({
       containerClass={containerClass}
       fullWidth={fullWidth}
     >
-      <div
+      <Field
+        name={formikKey}
+        component={SelectField}
+        options={options}
+        placeholder={placeholder}
+      />
+      {/* <div
         className={classNames('select-box', {
           'order__card__payment-select': !innerFullWidth,
         })}
@@ -78,7 +104,7 @@ export const Dropdown = ({
             );
           })}
         </ul>
-      </div>
+      </div> */}
     </FieldWrapper>
   );
 };
