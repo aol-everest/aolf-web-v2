@@ -41,6 +41,7 @@ import 'rsuite/DateRangePicker/styles/index.css';
 import { useQueryString } from '@hooks';
 import { MeetupEnroll } from '@components/meetup/meetupEnroll';
 import { filterAllowedParams } from '@utils/utmParam';
+import queryString from 'query-string';
 
 const AddressSearch = dynamic(() =>
   import('@components').then((mod) => mod.AddressSearch),
@@ -625,7 +626,11 @@ const MeetupTile = ({ data, authenticated }) => {
   const enrollAction = async (e) => {
     if (e) e.preventDefault();
     if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+      showModal(MODAL_TYPES.LOGIN_MODAL, {
+        navigateTo: `/us-en/meetup/checkout/${data.sfid}?page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
+      });
     } else {
       if (!user.profile.isMandatoryWorkshopAttended) {
         const warningPayload = {
