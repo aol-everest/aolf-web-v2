@@ -568,6 +568,7 @@ const TicketCheckoutForm = ({ event }) => {
                             <UserInfoFormNewCheckout
                               formikProps={formikProps}
                               afterDiscountPrice={afterDiscountPrice}
+                              isTicktedEvent={true}
                             />
                           </form>
                         </div>

@@ -10,6 +10,7 @@ export const UserInfoFormNewCheckout = ({
   formikProps,
   isLoggedUser = false,
   afterDiscountPrice,
+  isTicktedEvent = false,
 }) => {
   return (
     <Fragment>
@@ -29,7 +30,17 @@ export const UserInfoFormNewCheckout = ({
           formikKey="lastName"
           label="Last Name"
         ></StyledInputNewCheckout>
-        {afterDiscountPrice > 0 && (
+        {afterDiscountPrice > 0 && isTicktedEvent && (
+          <StyledInputNewCheckout
+            className="form-item required"
+            placeholder="Street Address"
+            formikProps={formikProps}
+            formikKey="contactAddress"
+            label="Street Address"
+          ></StyledInputNewCheckout>
+        )}
+
+        {!isTicktedEvent && (
           <StyledInputNewCheckout
             className="form-item required"
             placeholder="Street Address"
