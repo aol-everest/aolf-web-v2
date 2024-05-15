@@ -250,8 +250,6 @@ function TicketedEvent() {
     );
   };
 
-  console.log('selectedTickets', selectedTickets);
-
   return (
     <Formik
       initialValues={{
