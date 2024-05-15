@@ -381,7 +381,7 @@ export const SigninForm = ({
                 Welcome back{' '}
                 <span className="tw-font-semibold">{user.email}</span>!
               </div>
-              {children}
+              {/* {children} */}
               <div className="passwordless-flex">
                 {signingInStatus === 'SIGNIN_LINK_EXPIRED' && (
                   <div className="passwordless-flex passwordless-flex-align-start">
