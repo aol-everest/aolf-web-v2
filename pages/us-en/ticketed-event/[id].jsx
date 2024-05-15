@@ -250,6 +250,8 @@ function TicketedEvent() {
     );
   };
 
+  console.log('selectedTickets', selectedTickets);
+
   return (
     <Formik
       initialValues={{
@@ -352,7 +354,7 @@ function TicketedEvent() {
                           id="next-step"
                           className="tickets-modal__footer-button"
                           type="submit"
-                          disabled={selectedTickets.length === 0}
+                          disabled={Object.keys(selectedTickets).length === 0}
                         >
                           Confirm
                         </button>
