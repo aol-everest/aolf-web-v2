@@ -197,6 +197,19 @@ export const SigninForm = ({
     signOut();
   };
 
+  const signInWithMagicLink = () => {
+    requestSignInLink({
+      username: user.username,
+    });
+  };
+
+  const signInWithTouch = () => {
+    authenticateWithFido2({
+      username: user.username,
+      credentials: user.credentials,
+    });
+  };
+
   if (signInStatus === 'SIGNED_IN') {
     // reset state fields for entering new username
     if (newUsername) {
@@ -249,7 +262,10 @@ export const SigninForm = ({
         signingInStatus === 'REQUESTING_SIGNIN_LINK' ||
           signingInStatus === 'STARTING_SIGN_IN_WITH_FIDO2',
       );
-    } else if (signingInStatus === 'SIGNIN_LINK_REQUESTED') {
+    } else if (
+      signingInStatus === 'SIGNIN_LINK_REQUESTED' ||
+      signingInStatus === 'FIDO2_SIGNIN_FAILED'
+    ) {
       setLoading(false);
     }
   }
@@ -365,6 +381,7 @@ export const SigninForm = ({
                 Welcome back{' '}
                 <span className="tw-font-semibold">{user.email}</span>!
               </div>
+              {children}
               <div className="passwordless-flex">
                 {signingInStatus === 'SIGNIN_LINK_EXPIRED' && (
                   <div className="passwordless-flex passwordless-flex-align-start">
@@ -426,12 +443,7 @@ export const SigninForm = ({
               <div class="login-options-1">
                 <div
                   class="login-option-item"
-                  onClick={() => {
-                    authenticateWithFido2({
-                      username: user.username,
-                      credentials: user.credentials,
-                    });
-                  }}
+                  onClick={signInWithTouch}
                   disabled={busy}
                 >
                   <div class="option-icon">
@@ -492,11 +504,7 @@ export const SigninForm = ({
                 </div>
                 <div
                   class="login-option-item"
-                  nClick={() =>
-                    requestSignInLink({
-                      username: user.username,
-                    })
-                  }
+                  onClick={signInWithMagicLink}
                   disabled={busy}
                 >
                   <div class="option-icon">
