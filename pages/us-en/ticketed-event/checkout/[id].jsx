@@ -469,6 +469,7 @@ const TicketCheckoutForm = ({ event }) => {
     setShowAttendeeDetails(showAttendee);
     pricingTiersLocal = [...updatedAttendeeData];
   };
+  const afterDiscountPrice = totalPrice - totalDiscount;
 
   return (
     <>
@@ -504,7 +505,13 @@ const TicketCheckoutForm = ({ event }) => {
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
-          contactAddress: Yup.string().required('Address is required'),
+          contactAddress: Yup.string().when([], (obj) => {
+            if (afterDiscountPrice !== 0) {
+              return obj.required('Address is required');
+            } else {
+              return obj;
+            }
+          }),
           contactCity: Yup.string().required('City is required'),
           contactState: Yup.string().required('State is required'),
           contactZip: Yup.string()
@@ -575,10 +582,12 @@ const TicketCheckoutForm = ({ event }) => {
                               <form id="my-form">
                                 <UserInfoFormNewCheckout
                                   formikProps={formikProps}
+                                  afterDiscountPrice={afterDiscountPrice}
                                 />
                               </form>
                             </div>
                           </div>
+
                           <div className="section-box">
                             {totalPrice > 0 && (
                               <>
