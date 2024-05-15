@@ -71,6 +71,8 @@ const TicketCongratulations = () => {
     }
   }, [attendeeDetail]);
 
+  console.log('titttstss', ticketData);
+
   useEffectOnce(() => {
     page({
       category: 'ticketed_event',
@@ -116,8 +118,6 @@ const TicketCongratulations = () => {
   const ticketType = Object.keys(ticketByTier);
   const totalNoOfTickets = attendeeDetail.attendees.length;
   const firstTicketId = attendeeDetail.attendees[0].attendeeRecordExternalId;
-
-  console.log(ticketByTier);
 
   const handleExpandItem = (ticket) => {
     setExpanded(ticket.attendeeRecordExternalId);
