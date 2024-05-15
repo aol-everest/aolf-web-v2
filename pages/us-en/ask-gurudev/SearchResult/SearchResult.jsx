@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
 
-const VideoItemComp = (props) => {
+export const VideoItemComp = (props) => {
   const {
     videoId,
     thumbnailUrl,
     videoTitle,
     playingId,
     onPlayAction,
-    startSec,
+    startSec = 0,
   } = props;
   const [isInitialPlaying, setInitialPlaying] = useState(false);
   const [isReady, setReady] = useState(false);

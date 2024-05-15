@@ -1,14 +1,58 @@
 import classNames from 'classnames';
 import { Field } from 'formik';
+import Select from 'react-select';
 
 const PAYPAL_PAYMENT_MODE = 'PAYPAL_PAYMENT_MODE';
 const STRIPE_PAYMENT_MODE = 'STRIPE_PAYMENT_MODE';
+
+const SelectField = ({ options, field, form, placeholder }) => (
+  <Select
+    options={options}
+    name={field.name}
+    value={
+      options ? options.find((option) => option.value === field.value) : ''
+    }
+    onChange={(option) =>
+      form.setFieldValue(field.name, option ? option.value : '')
+    }
+    onBlur={field.onBlur}
+    className="react-select-container-old"
+    classNamePrefix="react-select"
+    placeholder={placeholder}
+    isSearchable
+    isClearable
+  />
+);
+
 export const PayWith = ({
+  formikKey = 'paymentMode',
   formikProps,
   otherPaymentOptions,
   isBundlePaypalAvailable,
   isBundleSelected,
 }) => {
+  let options = [
+    {
+      label: 'Credit card or debit card',
+      value: STRIPE_PAYMENT_MODE,
+    },
+  ];
+
+  if (
+    (!isBundleSelected &&
+      otherPaymentOptions &&
+      otherPaymentOptions.indexOf('Paypal') > -1 &&
+      formikProps.values.paymentOption !== 'LATER') ||
+    (isBundleSelected && isBundlePaypalAvailable)
+  ) {
+    options = [
+      ...options,
+      {
+        label: 'PayPal',
+        value: PAYPAL_PAYMENT_MODE,
+      },
+    ];
+  }
   return (
     <div
       className={classNames('input-block order__card__payment', {
@@ -19,7 +63,13 @@ export const PayWith = ({
       })}
     >
       <h6 className="order__card__payment-title">Pay with</h6>
-      <div className="select-box order__card__payment-select">
+      <Field
+        name={formikKey}
+        component={SelectField}
+        options={options}
+        placeholder="Select payment method"
+      />
+      {/* <div className="select-box order__card__payment-select">
         <div tabIndex="1" className="select-box__current">
           <span className="select-box__placeholder">Select payment method</span>
           <div className="select-box__value">
@@ -86,7 +136,7 @@ export const PayWith = ({
             </li>
           )}
         </ul>
-      </div>
+      </div> */}
       {formikProps.errors.paymentMode && formikProps.touched.paymentMode && (
         <div className="validation-message validation-mobile-message show">
           {formikProps.errors.paymentMode}

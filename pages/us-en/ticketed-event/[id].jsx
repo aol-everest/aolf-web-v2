@@ -338,28 +338,6 @@ function TicketedEvent() {
                       <div className="tickets-modal__cart-empty">
                         <img src="/img/empty-cart.svg" alt="violet" />
                       </div>
-                      <div className="tickets-modal__promo">
-                        <div className="tickets-modal__promo-wrapper">
-                          <div className="section__body">
-                            <div className="form-item required">
-                              <DiscountInputNew
-                                placeholder="Discount Code"
-                                formikProps={formikProps}
-                                formikKey="couponCode"
-                                product={productId}
-                                applyDiscount={applyDiscount}
-                                addOnProducts={addOnProducts}
-                                containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
-                                selectedTickets={selectedTickets}
-                                productType="ticketed_event"
-                                inputClass="tickets-modal__input"
-                                tagClass="tickets-modal__input ticket-discount"
-                                isTicketDiscount
-                              ></DiscountInputNew>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
 
                       <div className="tickets-modal__cart">
                         {renderSummery()}
@@ -374,7 +352,7 @@ function TicketedEvent() {
                           id="next-step"
                           className="tickets-modal__footer-button"
                           type="submit"
-                          disabled={selectedTickets.length === 0}
+                          disabled={Object.keys(selectedTickets).length === 0}
                         >
                           Confirm
                         </button>

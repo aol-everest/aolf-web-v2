@@ -30,6 +30,7 @@ const SearchResults = ({
   setDebouncedQuery,
   query,
   incorrectResponse,
+  defaultVideos,
 }) => {
   const handlePredefinedElements = useCallback(
     (query) => {
@@ -180,8 +181,10 @@ const SearchResults = ({
             </div>
           </nav>
 
-          {results && isEmpty && debouncedQuery && <EmptyResults />}
-          {results && !isEmpty && (
+          {results && isEmpty && debouncedQuery && !isLoading && (
+            <EmptyResults />
+          )}
+          {results && (
             <div
               className="tab-content categories-tab-content"
               id="nav-tabContent"
@@ -193,7 +196,11 @@ const SearchResults = ({
                 aria-labelledby="nav-home-tab"
               >
                 <div className="ask-gurudev-videos-list">
-                  <SearchResultsList results={results} />
+                  <SearchResultsList
+                    results={results}
+                    defaultVideos={defaultVideos}
+                    debouncedQuery={debouncedQuery}
+                  />
                 </div>
               </div>
             </div>

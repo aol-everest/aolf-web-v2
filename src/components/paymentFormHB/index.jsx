@@ -23,8 +23,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import * as Yup from 'yup';
-
-import { Loader } from '@components';
 import {
   ALERT_TYPES,
   MODAL_TYPES,
@@ -63,10 +61,8 @@ const createOptions = {
 };
 
 export const PaymentFormHB = ({
-  isStripeIntentPayment = false,
   workshop = {},
   profile = {},
-  enrollmentCompletionLink,
   enrollmentCompletionAction = () => {},
   handleCouseSelection = () => {},
   login = () => {},
@@ -90,11 +86,7 @@ export const PaymentFormHB = ({
 
   const router = useRouter();
 
-  const {
-    data: corporates,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: corporates } = useQuery({
     queryKey: 'corporates',
     queryFn: async () => {
       const response = await api.get({
@@ -117,7 +109,7 @@ export const PaymentFormHB = ({
     }
   }, [programQuestionnaireResult]);
 
-  const logout = async (event) => {
+  const logout = async () => {
     await Auth.logout();
     setUser(null);
     pushRouteWithUTMQuery(
@@ -592,7 +584,6 @@ export const PaymentFormHB = ({
   const {
     id: productId,
     premiumRate = {},
-    notes,
     isCorporateEvent,
     otherPaymentOptions,
     groupedAddOnProducts,
@@ -752,16 +743,11 @@ export const PaymentFormHB = ({
     formikProps.setFieldValue('accommodation', value);
   };
 
-  const toggleCouponCodeFieldAction = (e) => {
-    if (e) e.preventDefault();
-    setShowCouponCodeField((showCouponCodeField) => !showCouponCodeField);
-  };
-
   return (
     <>
       <Formik
         initialValues={{
-          CME: true,
+          CME: cmeAddOn ? true : false,
           firstName: first_name || '',
           lastName: last_name || '',
           email: email || '',
@@ -830,14 +816,18 @@ export const PaymentFormHB = ({
           contactDegree: Yup.string().required(
             'Degree/Qualifications is required',
           ),
-          claimingType: cmeAddOn
-            ? Yup.string().required('CE Claiming type is required')
-            : Yup.mixed().notRequired(),
-          certificateOfAttendance: cmeAddOn
-            ? Yup.string().required(
-                'I would like to get the following is required',
-              )
-            : Yup.mixed().notRequired(),
+          claimingType: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required('CE Claiming type is required'),
+            otherwise: Yup.string().notRequired(),
+          }),
+          certificateOfAttendance: Yup.string().when('CME', {
+            is: true,
+            then: Yup.string().required(
+              'I would like to get the following is required',
+            ),
+            otherwise: Yup.string().notRequired(),
+          }),
           contactClaimingTypeOther: cmeAddOn
             ? Yup.string().when('claimingType', {
                 is: (claimingType) => claimingType === 'Other',
@@ -921,7 +911,7 @@ export const PaymentFormHB = ({
             : false;
           return (
             <div className="row">
-              {loading && <Loader />}
+              {loading && <div className="cover-spin"></div>}
               <div className="col-lg-7 col-12">
                 <form className="order__form" onSubmit={handleSubmit}>
                   <div className="details">
