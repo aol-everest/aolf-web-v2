@@ -626,11 +626,7 @@ const MeetupTile = ({ data, authenticated }) => {
   const enrollAction = async (e) => {
     if (e) e.preventDefault();
     if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/meetup/checkout/${data.sfid}?page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-      });
+      showModal(MODAL_TYPES.LOGIN_MODAL);
     } else {
       if (!user.profile.isMandatoryWorkshopAttended) {
         const warningPayload = {
