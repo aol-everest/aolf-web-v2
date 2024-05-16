@@ -42,6 +42,7 @@ import 'rsuite/DateRangePicker/styles/index.css';
 import { useQueryString } from '@hooks';
 import { MeetupEnroll } from '@components/meetup/meetupEnroll';
 import { filterAllowedParams } from '@utils/utmParam';
+import queryString from 'query-string';
 
 const AddressSearch = dynamic(() =>
   import('@components').then((mod) => mod.AddressSearch),
