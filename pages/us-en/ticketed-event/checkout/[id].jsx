@@ -462,6 +462,7 @@ const TicketCheckoutForm = ({ event }) => {
   };
 
   const afterDiscountPrice = totalPrice - totalDiscount;
+  const showStreetAddress = afterDiscountPrice > 0;
 
   return (
     <>
@@ -567,8 +568,7 @@ const TicketCheckoutForm = ({ event }) => {
                           <form id="my-form">
                             <UserInfoFormNewCheckout
                               formikProps={formikProps}
-                              afterDiscountPrice={afterDiscountPrice}
-                              isTicktedEvent={true}
+                              showStreetAddress={showStreetAddress}
                             />
                           </form>
                         </div>
