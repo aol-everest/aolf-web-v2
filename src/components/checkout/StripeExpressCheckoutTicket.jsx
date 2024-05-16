@@ -39,8 +39,8 @@ export const StripeExpressCheckoutTicket = ({ workshop }) => {
 
 const options = {
   buttonType: {
-    applePay: 'buy',
-    googlePay: 'buy',
+    applePay: 'book',
+    googlePay: 'book',
   },
   wallets: {
     applePay: 'always',

@@ -67,6 +67,8 @@ export const AttendanceFormIAHV = ({ formikProps, corporates }) => {
                 }
               }}
               placeholder="University Affiliation"
+              isSearchable
+              isClearable
             />
           </FieldWrapper>
         )}

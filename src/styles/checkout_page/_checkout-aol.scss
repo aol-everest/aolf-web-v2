@@ -214,7 +214,8 @@ main.checkout-aol {
         [type='file' i],
         [type='image' i],
         [type='checkbox' i],
-        [type='radio' i]
+        [type='radio' i],
+        [class='react-select__input' i]
       ) {
       padding: 10px 14px;
       height: 44px;

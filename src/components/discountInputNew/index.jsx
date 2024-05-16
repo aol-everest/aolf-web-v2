@@ -16,6 +16,7 @@ export const DiscountInputNew = ({
   setUser,
   userId = null,
   isBackendRequest = false,
+  ticketsPayload,
   ...rest
 }) => {
   const [showTag, setShowTag] = useState(false);
@@ -72,6 +73,15 @@ export const DiscountInputNew = ({
         },
         userId,
       };
+      if (ticketsPayload) {
+        payLoad = {
+          ...payLoad,
+          shoppingRequest: {
+            ...payLoad.shoppingRequest,
+            tickets: ticketsPayload,
+          },
+        };
+      }
       if (isBackendRequest) {
         const userEmail = formikProps.values['email'];
         payLoad = { ...payLoad, isBackendRequest: true, email: userEmail };

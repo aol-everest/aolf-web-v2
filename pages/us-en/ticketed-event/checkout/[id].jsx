@@ -1,5 +1,5 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   useAuth,
@@ -11,7 +11,6 @@ import { ABBRS, ALERT_TYPES, COURSE_MODES, MODAL_TYPES } from '@constants';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { loadStripe } from '@stripe/stripe-js';
-import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams } from '@utils/utmParam';
 import queryString from 'query-string';
 import {
@@ -20,15 +19,16 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { useQueryState, parseAsBoolean, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsJson } from 'nuqs';
 import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery } from '@service';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
+import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 
 function TicketCheckout() {
   const router = useRouter();
@@ -145,7 +145,6 @@ const TicketCheckoutForm = ({ event }) => {
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
   const [discountResponse, setDiscountResponse] = useState(null);
-  const [couponCode] = useQueryState('coupon');
   const [selectedTickets] = useQueryState(
     'ticket',
     parseAsJson().withDefault({}),
@@ -168,7 +167,15 @@ const TicketCheckoutForm = ({ event }) => {
     pricingTiers,
     title,
     productTypeId,
+    complianceQuestionnaire,
   } = event;
+
+  const questionnaireArray = complianceQuestionnaire
+    ? complianceQuestionnaire.map((current) => ({
+        key: current.questionSfid,
+        value: false,
+      }))
+    : [];
 
   let pricingTiersLocal = pricingTiers.filter((p) => {
     return p.pricingTierId in selectedTickets;
@@ -181,6 +188,12 @@ const TicketCheckoutForm = ({ event }) => {
     accumulator = accumulator + item.price * item?.numberOfTickets;
     return accumulator;
   }, 0);
+  const ticketsPayload = pricingTiersLocal.map((item) => {
+    return {
+      pricingTierId: item.pricingTierId,
+      numberOfTickets: item.numberOfTickets,
+    };
+  });
 
   const {
     first_name,
@@ -193,40 +206,7 @@ const TicketCheckoutForm = ({ event }) => {
     personMailingCity,
   } = user?.profile || {};
 
-  useEffect(() => {
-    validateCoupon();
-  }, [couponCode]);
-
-  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
-
-  const validateCoupon = async () => {
-    try {
-      let payLoad = {
-        shoppingRequest: {
-          products: {
-            productType: 'ticketed_event',
-            productSfId: productId,
-          },
-          couponCode: couponCode,
-        },
-        userId: null,
-      };
-      let results = await api.post({
-        path: 'applyCoupon',
-        body: payLoad,
-      });
-      if (results.status !== 200) {
-        throw new Error(results.error || 'Internal Server error.');
-      }
-      setLoading(false);
-
-      setDiscountResponse(results);
-    } catch (ex) {
-      const data = ex.response?.data;
-      setLoading(false);
-      applyDiscount(null);
-    }
-  };
+  const { totalDiscount = 0 } = discountResponse || {};
 
   const login = () => {
     showModal(MODAL_TYPES.LOGIN_MODAL);
@@ -255,7 +235,15 @@ const TicketCheckoutForm = ({ event }) => {
 
     const { id: productId, isCCNotRequired } = event;
 
-    const { firstName, lastName, email, contactPhone } = values;
+    const { firstName, lastName, email, contactPhone, questionnaire } = values;
+
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? 'Yes' : 'No',
+      }),
+      {},
+    );
 
     const tickets = Object.entries(selectedTickets).map(([key, value]) => {
       return {
@@ -282,6 +270,7 @@ const TicketCheckoutForm = ({ event }) => {
             billingPhone: contactPhone,
           },
           products,
+          complianceQuestionnaire,
           isStripeIntentPayment: true,
           isPaypalPayment: false,
           tickets: tickets,
@@ -434,18 +423,7 @@ const TicketCheckoutForm = ({ event }) => {
     setDiscountResponse(discount);
   };
 
-  const renderSummery = () => {
-    let pricingTiersLocal = pricingTiers.filter((p) => {
-      return p.pricingTierId in selectedTickets;
-    });
-    pricingTiersLocal = pricingTiersLocal.map((p) => {
-      p.numberOfTickets = selectedTickets[p.pricingTierId];
-      return p;
-    });
-    const total = pricingTiersLocal.reduce((accumulator, item) => {
-      accumulator = accumulator + item.price * item?.numberOfTickets;
-      return accumulator;
-    }, 0);
+  const renderSummary = () => {
     return (
       <>
         <div className="tickets-container">
@@ -463,25 +441,28 @@ const TicketCheckoutForm = ({ event }) => {
           })}
           <div className="tickets">
             <div className="label">Subtotal</div>
-            <div className="value">${parseFloat(total).toFixed(2)}</div>
+            <div className="value">${parseFloat(totalPrice).toFixed(2)}</div>
           </div>
         </div>
         {totalDiscount > 0 && (
-          <p className="tickets-modal__cart-discount">
-            Discount(-)
-            <span>${parseFloat(totalDiscount).toFixed(2)}</span>
-          </p>
+          <div className="tickets">
+            <div className="label">Discount(-)</div>
+            <div className="value">${parseFloat(totalDiscount).toFixed(2)}</div>
+          </div>
         )}
 
         <div className="total">
           <div className="label">Total:</div>
           <div className="value">
-            ${(parseFloat(total) - totalDiscount).toFixed(2)}
+            ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
           </div>
         </div>
       </>
     );
   };
+
+  const afterDiscountPrice = totalPrice - totalDiscount;
+  const showStreetAddress = afterDiscountPrice > 0;
 
   return (
     <>
@@ -499,6 +480,8 @@ const TicketCheckoutForm = ({ event }) => {
           couponCode: discountResponse?.couponCode
             ? discountResponse.couponCode
             : '',
+          questionnaire: questionnaireArray,
+          ppaAgreement: false,
           contactPhone: '',
         }}
         validationSchema={Yup.object().shape({
@@ -515,7 +498,13 @@ const TicketCheckoutForm = ({ event }) => {
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
-          contactAddress: Yup.string().required('Address is required'),
+          contactAddress: Yup.string().when([], (obj) => {
+            if (afterDiscountPrice !== 0) {
+              return obj.required('Address is required');
+            } else {
+              return obj;
+            }
+          }),
           contactCity: Yup.string().required('City is required'),
           contactState: Yup.string().required('State is required'),
           contactZip: Yup.string()
@@ -523,6 +512,13 @@ const TicketCheckoutForm = ({ event }) => {
             //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
             .min(2, 'Zip is invalid')
             .max(10, 'Zip is invalid'),
+          ppaAgreement: Yup.boolean()
+            .label('Terms')
+            .test(
+              'is-true',
+              'Please check the box in order to continue.',
+              (value) => value === true,
+            ),
         })}
         innerRef={formRef}
         onSubmit={async (values) => {
@@ -572,6 +568,7 @@ const TicketCheckoutForm = ({ event }) => {
                           <form id="my-form">
                             <UserInfoFormNewCheckout
                               formikProps={formikProps}
+                              showStreetAddress={showStreetAddress}
                             />
                           </form>
                         </div>
@@ -628,13 +625,13 @@ const TicketCheckoutForm = ({ event }) => {
                                     productType="ticketed_event"
                                     inputClass="tickets-modal__input"
                                     tagClass="tickets-modal__input ticket-discount"
-                                    isTicketDiscount
+                                    ticketsPayload={ticketsPayload}
                                   ></DiscountInputNew>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          {renderSummery()}
+                          {renderSummary()}
                         </div>
                         <div className="section-box checkout-details">
                           <h2 className="section__title">Details:</h2>
@@ -950,6 +947,13 @@ const TicketCheckoutForm = ({ event }) => {
                         </div>
                         <div className="section-box confirm-submit">
                           <div className="section__body">
+                            <ScheduleAgreementForm
+                              formikProps={formikProps}
+                              complianceQuestionnaire={complianceQuestionnaire}
+                              isCorporateEvent={false}
+                              questionnaireArray={questionnaireArray}
+                              screen="DESKTOP"
+                            />
                             <div className="form-item submit-item">
                               <button
                                 className="submit-btn"

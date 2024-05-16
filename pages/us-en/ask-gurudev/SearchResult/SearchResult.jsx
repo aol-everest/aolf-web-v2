@@ -1,32 +1,136 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link';
+import YouTube from 'react-youtube';
 
-const SearchResult = React.forwardRef(function SearchResult({ result }, ref) {
-  const time = result.metadata.start.split('.')[0];
-  const youtubeUrl = `https://youtube.com/watch?v=${result.metadata.videoId}&t=${time}`;
-  // const thumbnailUrl = `https://img.youtube.com/vi/${result.metadata.videoId}/maxresdefault.jpg`;
+export const VideoItemComp = (props) => {
+  const {
+    videoId,
+    thumbnailUrl,
+    videoTitle,
+    playingId,
+    onPlayAction,
+    startSec = 0,
+  } = props;
+  const [isInitialPlaying, setInitialPlaying] = useState(false);
+  const [isReady, setReady] = useState(false);
+  const [player, setPlayer] = useState(null);
+  const [playerState, setPlayerState] = useState(null);
+  const opts = {
+    height: '560',
+    width: '315',
+    playerVars: {
+      version: 3,
+      controls: 1,
+      playerapiid: 'ytplayer',
+      color: 'white',
+      enablejsapi: 1,
+      mute: 1,
+      showinfo: 0,
+      rel: 0,
+      playsinline: 1,
+      iv_load_policy: 3,
+      listType: 'playlist',
+      start: Math.round(parseFloat(startSec)),
+    },
+  };
+  const onReady = (event) => {
+    setPlayer(event.target);
+    setReady(true);
+  };
+
+  const playVideo = () => {
+    if (player) {
+      player.unMute();
+      player.playVideo();
+      setTimeout(function () {
+        if (player.getPlayerState() !== 1) {
+          player.mute();
+          player.playVideo();
+          // player.seekTo(parseFloat(startSec));
+        }
+      }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    if (player) {
+      if (playingId === videoId) {
+        playVideo();
+      } else {
+        player.pauseVideo();
+      }
+    }
+  }, [playingId, player]);
+
+  const onPlay = async (e) => {
+    setInitialPlaying(true);
+    if (playingId !== videoId) {
+      onPlayAction(videoId);
+    }
+  };
+
+  const watchAction = () => {
+    if (player) {
+      if (playingId !== videoId) {
+        onPlayAction(videoId);
+      }
+      if (player.getPlayerState() === 2) {
+        playVideo();
+      }
+    }
+  };
+
+  const onStateChange = (event) => {
+    setPlayerState(event.data);
+  };
+
+  const showLoader = () => {
+    return (
+      !isReady ||
+      (playerState &&
+        playerState !== YouTube.PlayerState.PLAYING &&
+        playerState !== YouTube.PlayerState.PAUSED &&
+        playerState !== YouTube.PlayerState.ENDED)
+    );
+  };
+
+  return (
+    <div className="featured-video-item">
+      <div className="video-thumb" onClick={watchAction}>
+        {showLoader() && (
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+        )}
+        <img
+          style={{ display: isInitialPlaying ? 'none' : 'block' }}
+          src={thumbnailUrl}
+          className="thumbnail"
+          alt="YouTube"
+        />
+        <YouTube
+          videoId={videoId}
+          title={videoTitle}
+          loading="loading"
+          opts={opts}
+          onReady={onReady}
+          onPlay={onPlay}
+          onStateChange={onStateChange}
+        />
+      </div>
+    </div>
+  );
+};
+
+const SearchResult = React.forwardRef(function SearchResult(
+  { result, setPlayingId, playingId },
+  ref,
+) {
   const thumbnailUrl = result.metadata.thumbnail;
 
-  // const MAX_WORDS = 30;
-
-  // const truncateToWords = (html, maxWords) => {
-  //   // Create a temporary element to parse the HTML string
-  //   const tempElement = document.createElement('div');
-  //   tempElement.innerHTML = html;
-
-  //   // Get the text content from the HTML
-  //   const textContent = tempElement.textContent || tempElement.innerText || '';
-
-  //   // Split the text content into words
-  //   const words = textContent.trim().split(/\s+/);
-
-  //   // Take the first `maxWords` words and join them back into a string
-  //   const truncatedText = words.slice(0, maxWords).join(' ');
-
-  //   return truncatedText;
-  // };
+  const onPlayAction = (id) => {
+    setPlayingId(id);
+  };
 
   return (
     <motion.div
@@ -36,43 +140,23 @@ const SearchResult = React.forwardRef(function SearchResult({ result }, ref) {
       exit={{ scale: 0, translateY: 50 }}
       ref={ref}
     >
-      <div className="ask-gurudev-video-item">
-        <div className="video-text">
-          {/* <p
-            dangerouslySetInnerHTML={{
-              __html: truncateToWords(result.matchedHtml, MAX_WORDS),
-            }}
-          /> */}
-          <p>{result.metadata.title}</p>
-        </div>
-        <div className="video-player-wrap">
-          <Link
-            href={youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="YouTube"
-            className="frame"
-          >
-            {thumbnailUrl ? (
-              <Image
-                className="thumbnail"
-                src={thumbnailUrl}
-                alt={`YouTube ${result.metadata.title}`}
-                width={378}
-                height={203}
-                unoptimized
-                blurDataURL={result.metadata.preview}
-              />
-            ) : (
-              result.metadata.title
-            )}
-
-            <div className="overlay">
-              <div className="youtubeButton" />
-            </div>
-          </Link>
-        </div>
-      </div>
+      <main className="ask-gurudev-video-item podcasts">
+        <section className="video-text">
+          <div className="video-text">
+            <p>{result.metadata.title}</p>
+          </div>
+          <div className="video-player-wrap">
+            <VideoItemComp
+              videoId={result.metadata.videoId}
+              videoTitle={result.metadata.title}
+              thumbnailUrl={thumbnailUrl}
+              onPlayAction={onPlayAction}
+              playingId={playingId}
+              startSec={result.metadata?.start}
+            ></VideoItemComp>
+          </div>
+        </section>
+      </main>
     </motion.div>
   );
 });

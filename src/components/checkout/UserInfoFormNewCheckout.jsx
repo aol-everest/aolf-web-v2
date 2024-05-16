@@ -9,6 +9,7 @@ import { DropdownNewCheckout } from './DropdownNewCheckout';
 export const UserInfoFormNewCheckout = ({
   formikProps,
   isLoggedUser = false,
+  showStreetAddress = true,
 }) => {
   return (
     <Fragment>
@@ -29,13 +30,15 @@ export const UserInfoFormNewCheckout = ({
           label="Last Name"
         ></StyledInputNewCheckout>
 
-        <StyledInputNewCheckout
-          className="form-item required"
-          placeholder="Street Address"
-          formikProps={formikProps}
-          formikKey="contactAddress"
-          label="Street Address"
-        ></StyledInputNewCheckout>
+        {showStreetAddress && (
+          <StyledInputNewCheckout
+            className="form-item required"
+            placeholder="Street Address"
+            formikProps={formikProps}
+            formikKey="contactAddress"
+            label="Street Address"
+          ></StyledInputNewCheckout>
+        )}
 
         <DropdownNewCheckout
           placeholder="State"

@@ -7,13 +7,12 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
-import { DiscountCodeInput } from '@components/checkout';
 import { pushRouteWithUTMQuery } from '@service';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
 import { DiscountInputNew } from '@components/discountInputNew';
-import { useQueryState, parseAsBoolean, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsJson } from 'nuqs';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 
@@ -110,24 +109,17 @@ function TicketedEvent() {
     addOnProducts,
     eventImageUrl,
     isEventFull,
-    primaryTeacherName,
-    contactName,
-    phone1,
-    phone2,
-    email,
     mode,
     isLocationEmpty,
     locationStreet,
     locationCity,
     locationProvince,
     locationPostalCode,
-    locationCountry,
     streetAddress1,
     streetAddress2,
     city,
     state,
     zip,
-    country,
     maxTicketsWithOneOrder,
   } = event || {};
 
@@ -182,7 +174,7 @@ function TicketedEvent() {
     setDiscountResponse(discount);
   };
 
-  const { totalDiscount = 0, totalOrderAmountNew = 0 } = discountResponse || {};
+  const { totalDiscount = 0 } = discountResponse || {};
 
   const handleTicketCheckout = (values) => {
     const totalTicketsQuantity = Object.entries(selectedTickets).reduce(
@@ -346,28 +338,6 @@ function TicketedEvent() {
                       <div className="tickets-modal__cart-empty">
                         <img src="/img/empty-cart.svg" alt="violet" />
                       </div>
-                      <div className="tickets-modal__promo">
-                        <div className="tickets-modal__promo-wrapper">
-                          <div className="section__body">
-                            <div className="form-item required">
-                              <DiscountInputNew
-                                placeholder="Discount Code"
-                                formikProps={formikProps}
-                                formikKey="couponCode"
-                                product={productId}
-                                applyDiscount={applyDiscount}
-                                addOnProducts={addOnProducts}
-                                containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
-                                selectedTickets={selectedTickets}
-                                productType="ticketed_event"
-                                inputClass="tickets-modal__input"
-                                tagClass="tickets-modal__input ticket-discount"
-                                isTicketDiscount
-                              ></DiscountInputNew>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
 
                       <div className="tickets-modal__cart">
                         {renderSummery()}
@@ -382,7 +352,7 @@ function TicketedEvent() {
                           id="next-step"
                           className="tickets-modal__footer-button"
                           type="submit"
-                          disabled={selectedTickets.length === 0}
+                          disabled={Object.keys(selectedTickets).length === 0}
                         >
                           Confirm
                         </button>

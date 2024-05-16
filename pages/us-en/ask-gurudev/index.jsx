@@ -3,8 +3,12 @@ import React, { useCallback, useState, useEffect } from 'react';
 import SearchOptions from './SearchOptions/SearchOptions';
 import SearchResults from './SearchResults/SearchResults';
 import { useDebounce } from 'react-use';
+import { youtube } from '@service';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useQueryString } from '@hooks';
+
+const PLAYLIST_ID = `${process.env.NEXT_PUBLIC_PODCAST_PLAYLIST_ID}`;
 
 export default function AskGurudev() {
   const [query, setQuery] = useQueryString('query');
@@ -13,6 +17,14 @@ export default function AskGurudev() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: 'yt-playlist',
+    queryFn: async () => {
+      const result = await youtube.getPlaylistDetails(PLAYLIST_ID);
+      return result;
+    },
+  });
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -112,6 +124,7 @@ export default function AskGurudev() {
             results={results}
             query={query}
             incorrectResponse={incorrectResponse}
+            defaultVideos={data?.all || []}
           />
         </div>
       </div>

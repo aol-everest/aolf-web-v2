@@ -27,6 +27,7 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryString } from '@hooks';
 import { useAnalytics } from 'use-analytics';
+import { isMobile } from '@utils/addToCalendar';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -101,6 +102,7 @@ function getLastElement(arr) {
 }
 
 const Thankyou = () => {
+  console.log(isMobile());
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
@@ -530,6 +532,79 @@ const Thankyou = () => {
 
   const autoVoidParam = ammountPaid === 0 ? '&autovoid=1' : '';
 
+  const renderStickyFooter = () => {
+    if (isMobile() && isSKYType) {
+      return null;
+    }
+    return (
+      <div className="course-bottom-card show">
+        <div className="container">
+          <div className="course-bottom-card__container">
+            <div className="course-bottom-card__info-block">
+              <div className="course-bottom-card__img d-none d-lg-block tw-relative tw-h-[60px] tw-max-w-[60px]">
+                {isSilentRetreatType && (
+                  <img
+                    src="/img/course-card-4.png"
+                    alt="course-photo"
+                    layout="fill"
+                  />
+                )}
+                {isSKYType && (
+                  <img
+                    src="/img/course-card-2.png"
+                    alt="course-photo"
+                    layout="fill"
+                  />
+                )}
+                {isSahajSamadhiMeditationType && (
+                  <img
+                    src="/img/course-card-5.png"
+                    alt="course-photo"
+                    layout="fill"
+                  />
+                )}
+                {!isSilentRetreatType &&
+                  !isSKYType &&
+                  !isSahajSamadhiMeditationType && (
+                    <img
+                      src="/img/course-card-1.png"
+                      alt="course-photo"
+                      layout="fill"
+                    />
+                  )}
+              </div>
+              <div className="course-bottom-card__info">
+                {!isGenericWorkshop &&
+                  !isMeditationDeluxe &&
+                  !gatewayToInfinity && (
+                    <p>
+                      {dayjs.utc(eventStartDate).format('MMMM D') +
+                        ' - ' +
+                        dayjs.utc(eventEndDate).format('MMMM D') +
+                        ', ' +
+                        dayjs.utc(eventEndDate).format('YYYY')}
+                    </p>
+                  )}
+                <div>
+                  <h3>{title}</h3>
+                </div>
+              </div>
+            </div>
+            {!isMeditationDeluxe && !gatewayToInfinity && (
+              <button
+                id="register-button-2"
+                className="btn-secondary"
+                onClick={addToCalendarAction}
+              >
+                Add to Calendar
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <main>
@@ -820,71 +895,8 @@ const Thankyou = () => {
           </>
         )}
       </main>
-      <div className="course-bottom-card show">
-        <div className="container">
-          <div className="course-bottom-card__container">
-            <div className="course-bottom-card__info-block">
-              <div className="course-bottom-card__img d-none d-lg-block tw-relative tw-h-[60px] tw-max-w-[60px]">
-                {isSilentRetreatType && (
-                  <img
-                    src="/img/course-card-4.png"
-                    alt="course-photo"
-                    layout="fill"
-                  />
-                )}
-                {isSKYType && (
-                  <img
-                    src="/img/course-card-2.png"
-                    alt="course-photo"
-                    layout="fill"
-                  />
-                )}
-                {isSahajSamadhiMeditationType && (
-                  <img
-                    src="/img/course-card-5.png"
-                    alt="course-photo"
-                    layout="fill"
-                  />
-                )}
-                {!isSilentRetreatType &&
-                  !isSKYType &&
-                  !isSahajSamadhiMeditationType && (
-                    <img
-                      src="/img/course-card-1.png"
-                      alt="course-photo"
-                      layout="fill"
-                    />
-                  )}
-              </div>
-              <div className="course-bottom-card__info">
-                {!isGenericWorkshop &&
-                  !isMeditationDeluxe &&
-                  !gatewayToInfinity && (
-                    <p>
-                      {dayjs.utc(eventStartDate).format('MMMM D') +
-                        ' - ' +
-                        dayjs.utc(eventEndDate).format('MMMM D') +
-                        ', ' +
-                        dayjs.utc(eventEndDate).format('YYYY')}
-                    </p>
-                  )}
-                <div>
-                  <h3>{title}</h3>
-                </div>
-              </div>
-            </div>
-            {!isMeditationDeluxe && !gatewayToInfinity && (
-              <button
-                id="register-button-2"
-                className="btn-secondary"
-                onClick={addToCalendarAction}
-              >
-                Add to Calendar
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* JS-2191: Temporarily Disable Sticky Footer in Part 1 Confirmation page for Mobile only */}
+      {renderStickyFooter()}
     </>
   );
 };
