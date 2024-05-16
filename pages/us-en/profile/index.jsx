@@ -150,7 +150,6 @@ const Profile = ({ tab }) => {
 
   const logoutAction = async () => {
     setLoading(true);
-    await Auth.logout();
     await signOut();
     setLoading(false);
     pushRouteWithUTMQuery(router, '/us-en');

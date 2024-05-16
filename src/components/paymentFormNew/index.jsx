@@ -80,7 +80,7 @@ export const PaymentFormNew = ({
   const { showAlert } = useGlobalAlertContext();
   const stripe = useStripe();
   const elements = useElements();
-  const { setUser } = useAuth();
+  const { setUser, passwordLess } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [discount] = useQueryString('discountCode');
@@ -93,6 +93,7 @@ export const PaymentFormNew = ({
     useState(null);
 
   const router = useRouter();
+  const { signOut } = passwordLess;
 
   useEffect(() => {
     if (programQuestionnaireResult?.length > 0) {
@@ -223,11 +224,10 @@ export const PaymentFormNew = ({
   }
 
   const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
+    await signOut();
     pushRouteWithUTMQuery(
       router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+      `/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 
