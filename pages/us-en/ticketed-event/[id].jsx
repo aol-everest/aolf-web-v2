@@ -18,7 +18,6 @@ import { PageLoading } from '@components';
 dayjs.extend(utc);
 
 const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
-  // console.log('selectedTickets', selectedTickets);
   let count = 0;
   if (item.pricingTierId in selectedTickets) {
     count = selectedTickets[item.pricingTierId];
