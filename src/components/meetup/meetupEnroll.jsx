@@ -169,7 +169,7 @@ export const MeetupEnroll = ({
                       {listPrice === unitPrice && <>${unitPrice}</>}
                     </>
                   </div>
-                  <button className="member-btn" onClick={checkoutMeetup}>
+                  <button className="member-btn" onClick={checkoutMeetup(null)}>
                     {checkoutLoading && (
                       <div className="loaded tw-px-7 tw-py-0">
                         <div className="loader">
