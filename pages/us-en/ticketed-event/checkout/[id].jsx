@@ -470,6 +470,7 @@ const TicketCheckoutForm = ({ event }) => {
     pricingTiersLocal = [...updatedAttendeeData];
   };
   const afterDiscountPrice = totalPrice - totalDiscount;
+  const showStreetAddress = afterDiscountPrice > 0;
 
   return (
     <>
@@ -582,12 +583,11 @@ const TicketCheckoutForm = ({ event }) => {
                               <form id="my-form">
                                 <UserInfoFormNewCheckout
                                   formikProps={formikProps}
-                                  afterDiscountPrice={afterDiscountPrice}
+                                  showStreetAddress={showStreetAddress}
                                 />
                               </form>
                             </div>
                           </div>
-
                           <div className="section-box">
                             {totalPrice > 0 && (
                               <>

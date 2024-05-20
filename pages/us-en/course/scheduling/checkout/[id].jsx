@@ -1,7 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
 import dayjs from 'dayjs';
 import { PageLoading } from '@components';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
-import { useQueryString } from '@hooks';
+import { useQueryState } from 'nuqs';
 import queryString from 'query-string';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
@@ -53,8 +54,8 @@ export const getServerSideProps = async (context) => {
 
 const SchedulingPayment = (props) => {
   const router = useRouter();
-  const [discount] = useQueryString('discountCode');
-  const [courseType] = useQueryString('courseType');
+  const [discount] = useQueryState('discountCode');
+  const [courseType] = useQueryState('courseType');
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const { track, page } = useAnalytics();
@@ -260,6 +261,7 @@ const SchedulingPaymentForm = ({
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
+  const [isDirectCheckoutFlow] = useQueryState('direct');
 
   const { showAlert } = useGlobalAlertContext();
 
@@ -792,6 +794,47 @@ const SchedulingPaymentForm = ({
                   </div>
                   <div className="col-12 col-lg-5">
                     <div className="checkout-sidebar">
+                      {isDirectCheckoutFlow && (
+                        <div className="d-flex flex-row tw-py-[12px] tw-px-[16px] tw-bg-[#EDF5FC] tw-rounded-2xl tw-text-[#3D8BE8] tw-text-[16px] tw-font-medium">
+                          <i className="d-flex tw-pr-[16px] tw-justify-center">
+                            <svg
+                              className="tw-self-center"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M12 21.9998C17.5 21.9998 22 17.4998 22 11.9998C22 6.49976 17.5 1.99976 12 1.99976C6.5 1.99976 2 6.49976 2 11.9998C2 17.4998 6.5 21.9998 12 21.9998Z"
+                                stroke="#3D8BE8"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M12 7.99976V12.9998"
+                                stroke="#3D8BE8"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M11.9946 16.0002H12.0036"
+                                stroke="#3D8BE8"
+                                stroke-width="2.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </i>
+                          <div>
+                            Once you're registered, you'll be able to choose a
+                            course date/time to suit you! Coursed are offered
+                            every weekend and throughout the week.
+                          </div>
+                        </div>
+                      )}
                       <div className="room-board-pricing">
                         <div className="total">
                           <div className="label">Total:</div>
