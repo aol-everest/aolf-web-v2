@@ -1,20 +1,17 @@
-import { Loader } from '@components/loader';
-import { api, emailRegExp, tConvert } from '@utils';
+import { api, tConvert } from '@utils';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import { useEffectOnce } from 'react-use';
-import { useState } from 'react';
 import {
   FaTicket,
   FaAngellist,
   FaHashtag,
   FaMoneyBill,
-  FaUser,
   FaList,
 } from 'react-icons/fa6';
 import { FaInfoCircle } from 'react-icons/fa';
@@ -22,10 +19,8 @@ import { ALERT_TYPES, COURSE_MODES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
 import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
-import { pushRouteWithUTMQuery } from '@service';
 import { PageLoading } from '@components';
 import ErrorPage from 'next/error';
-import { groupBy } from 'lodash';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -34,10 +29,16 @@ const TicketCongratulations = () => {
   const router = useRouter();
   const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const [expanded, setExpanded] = useState(0);
-  const [ticketData, setTicketData] = useState([]);
-  const [loading, setLoading] = useState(false);
   const { id: attendeeId } = router.query;
+
+  useEffectOnce(() => {
+    page({
+      category: 'ticketed_event',
+      name: 'ticketed_event_thank_you',
+      referral: 'ticketed_event_checkout',
+    });
+  });
+
   const {
     data: attendeeDetail,
     isLoading,
@@ -55,30 +56,6 @@ const TicketCongratulations = () => {
       return response.data;
     },
     enabled: !!attendeeId,
-  });
-
-  useEffect(() => {
-    if (attendeeDetail?.attendees) {
-      setTicketData(
-        attendeeDetail?.attendees.map((attendee, index) => {
-          return {
-            ...attendee,
-            number: index + 1,
-          };
-        }),
-      );
-      setExpanded(attendeeDetail?.attendees[0].attendeeRecordExternalId);
-    }
-  }, [attendeeDetail]);
-
-  console.log('titttstss', ticketData);
-
-  useEffectOnce(() => {
-    page({
-      category: 'ticketed_event',
-      name: 'ticketed_event_thank_you',
-      referral: 'ticketed_event_checkout',
-    });
   });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
@@ -114,53 +91,7 @@ const TicketCongratulations = () => {
     country,
   } = attendeeDetail.ticketedEvent || {};
 
-  const ticketByTier = groupBy(ticketData, 'pricingTierName');
-  const ticketType = Object.keys(ticketByTier);
   const totalNoOfTickets = attendeeDetail.attendees.length;
-  const firstTicketId = attendeeDetail.attendees[0].attendeeRecordExternalId;
-
-  const handleExpandItem = (ticket) => {
-    setExpanded(ticket.attendeeRecordExternalId);
-  };
-
-  const handleInputChange = (ticket, fieldName) => (e) => {
-    const value = e.target.value;
-    const newTicketData = ticketData.map((d) => {
-      if (d.attendeeRecordExternalId === ticket.attendeeRecordExternalId) {
-        d[fieldName] = value;
-      }
-      return d;
-    });
-    setTicketData(newTicketData);
-  };
-
-  const handleCopyData = (ticket) => (e) => {
-    const value = e.target.value;
-    if (value !== null) {
-      console.log(value);
-      const ticketId = ticket.attendeeRecordExternalId;
-      const fromTicket = ticketData.find((d) => {
-        return d.attendeeRecordExternalId === value;
-      });
-      const newTicketData = ticketData.map((d) => {
-        if (d.attendeeRecordExternalId === ticketId) {
-          if (fromTicket) {
-            d.firstName = fromTicket.firstName;
-            d.lastName = fromTicket.lastName;
-            d.contactPhone = fromTicket.contactPhone;
-            d.email = fromTicket.email;
-          } else {
-            d.firstName = '';
-            d.lastName = '';
-            d.contactPhone = '';
-            d.email = '';
-          }
-        }
-        return d;
-      });
-      setTicketData(newTicketData);
-    }
-  };
 
   let startDatetime = null;
   if (eventStartDateTimeGMT) {
@@ -210,88 +141,9 @@ const TicketCongratulations = () => {
     });
   };
 
-  const gotToTicketsPage = (e) => {
-    if (e) e.preventDefault();
-    hideAlert();
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/tickets/${attendeeId}`,
-    });
-  };
-
-  const handleSubmitAttendees = async () => {
-    setLoading(true);
-    let allFieldsValid = true;
-    if (ticketData.length === 0) {
-      allFieldsValid = false;
-      setLoading(false);
-      return showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: "Please input attendee details. Details can't be empty",
-      });
-    }
-    ticketData.forEach((item) => {
-      console.log(item);
-      if (!item || !item.firstName || !item.lastName) {
-        allFieldsValid = false;
-        setLoading(false);
-        return showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children:
-            "Please input first and last name details. Details can't be empty",
-        });
-      } else if (!emailRegExp.test(item.email)) {
-        allFieldsValid = false;
-        setLoading(false);
-        return showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children:
-            'Please input correct email address. Email address is not valid',
-        });
-      } else if (!item.contactPhone || item.contactPhone.length < 11) {
-        allFieldsValid = false;
-        setLoading(false);
-        return showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: 'Please input correct phone details with country code.',
-        });
-      }
-    });
-    if (allFieldsValid) {
-      const payload = {
-        orderId: attendeeId,
-        attendeeInfo: ticketData,
-      };
-      try {
-        const {
-          status,
-          error: errorMessage,
-          isError,
-          data,
-        } = await api.post({
-          path: 'updateTicketedEventAttendees',
-          body: payload,
-          isUnauthorized: true,
-        });
-        setLoading(false);
-        if (status === 400 || isError) {
-          throw new Error(errorMessage);
-        }
-        if (data || status === 200) {
-          showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-            title: 'Confirmed',
-            children: 'We have received your attendee details.',
-            closeModalAction: () => {
-              gotToTicketsPage();
-            },
-          });
-        }
-      } catch (ex) {
-        console.error(ex);
-        const data = ex.response?.data;
-        const { message, statusCode } = data || {};
-        setLoading(false);
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: message ? `Error: ${message} (${statusCode})` : ex.message,
-        });
-      }
-    }
-  };
+  const ticketTiers = attendeeDetail.attendees.map(
+    (item) => item?.pricingTierName,
+  );
 
   return (
     <main className="course-filter calendar-online">
@@ -316,7 +168,7 @@ const TicketCongratulations = () => {
                   <li className="order-item">
                     <FaTicket className="fa fa-ticket" />{' '}
                     <span>Ticket Type: </span>
-                    {ticketType?.join(', ')}
+                    {ticketTiers?.join(', ')}
                   </li>
                   <li className="order-item">
                     <FaAngellist className="fa fa-hand-peace-o" />{' '}
@@ -338,183 +190,36 @@ const TicketCongratulations = () => {
                   receive the tickets in your email
                 </div>
               </div>
-              <form className="attendee-info-form">
-                <h2 className="section-title">
-                  <FaUser className="fa fa-user-o" /> Provide Attendee
-                  Information{' '}
-                  {attendeeDetail.totalAmountPaid ? '' : '(Optional)'}
-                </h2>
-                <div className="attendee-info-wrapper">
-                  {Object.entries(ticketByTier).map(([key, value]) => {
-                    return (
-                      <>
-                        <div className="subsection-title">
-                          <span className="ticket-type">{key}</span>
-                        </div>
-                        <div
-                          className="accordion ticket-holder-accordion"
-                          id="programAccordion"
-                        >
-                          {value.map((t) => {
-                            const ticket = ticketData.find(
-                              (ti) =>
-                                ti.attendeeRecordExternalId ===
-                                t.attendeeRecordExternalId,
-                            );
-                            const isExpanded =
-                              expanded === ticket.attendeeRecordExternalId;
-                            const ticketId = ticket.attendeeRecordExternalId;
 
-                            return (
-                              <div
-                                className="accordion-item ticket-holder-accordion__item"
-                                key={ticketId}
-                                onClick={() => handleExpandItem(ticket)}
-                              >
-                                <div
-                                  className="accordion-item-header accordion-item__header"
-                                  id="heading2"
-                                  data-toggle="collapse"
-                                  data-target="#collapse2"
-                                  aria-expanded={isExpanded}
-                                  aria-controls="collapse2"
-                                >
-                                  <h6 className="accordion-item-header__text">
-                                    Ticket Holder #{ticket.number}
-                                  </h6>
-                                  <img
-                                    src="/img/ic-arrow-down.svg"
-                                    alt="Expand"
-                                    className="accordion-item-header__icon"
-                                  />
-                                </div>
-                                <div
-                                  className={`accordion-item-body accordion-item__body collapse ${
-                                    isExpanded && 'show'
-                                  }`}
-                                  id="collapse2"
-                                  aria-labelledby="heading2"
-                                  data-parent="#programAccordion"
-                                >
-                                  <div className="attendee-details-form">
-                                    {ticketData.length > 0 &&
-                                      firstTicketId !== ticketId && (
-                                        <div className="form-item other">
-                                          <label htmlFor="other">
-                                            Copy data from
-                                          </label>
-                                          <select
-                                            name="other"
-                                            onChange={handleCopyData(ticket)}
-                                          >
-                                            <option value="">
-                                              Other Attendee
-                                            </option>
-                                            {ticketData.map(
-                                              (ticketAttendee) => {
-                                                if (
-                                                  ticketAttendee.attendeeRecordExternalId !==
-                                                  ticketId
-                                                ) {
-                                                  return (
-                                                    <option
-                                                      value={
-                                                        ticketAttendee.attendeeRecordExternalId
-                                                      }
-                                                      key={
-                                                        ticketAttendee.attendeeRecordExternalId
-                                                      }
-                                                    >
-                                                      {
-                                                        ticketAttendee?.pricingTierName
-                                                      }{' '}
-                                                      Ticket Holder #
-                                                      {ticketAttendee.number}
-                                                    </option>
-                                                  );
-                                                }
-                                                return null;
-                                              },
-                                            )}
-                                          </select>
-                                        </div>
-                                      )}
-
-                                    <div className="form-item required">
-                                      <label htmlFor="fname">First Name</label>
-                                      <input
-                                        type="text"
-                                        name="firstName"
-                                        value={ticket?.firstName || ''}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'firstName',
-                                        )}
-                                      />
-                                    </div>
-                                    <div className="form-item required">
-                                      <label htmlFor="lname required">
-                                        Last Name
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="lastName"
-                                        value={ticket?.lastName || ''}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'lastName',
-                                        )}
-                                      />
-                                    </div>
-                                    <div className="form-item required">
-                                      <label htmlFor="email">
-                                        Email Address
-                                      </label>
-                                      <input
-                                        type="email"
-                                        name="email"
-                                        value={ticket?.email || ''}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'email',
-                                        )}
-                                      />
-                                    </div>
-                                    <div className="form-item required">
-                                      <label htmlFor="phone">
-                                        Phone Number
-                                      </label>
-                                      <input
-                                        type="tel"
-                                        name="contactPhone"
-                                        value={ticket?.contactPhone || ''}
-                                        minLength={11}
-                                        maxLength={15}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'contactPhone',
-                                        )}
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
+              <h2 className="section-title">
+                <FaList className="fa fa-list-alt" /> Ticket Information
+              </h2>
+              <div className="tickets-accepted">
+                {attendeeDetail.attendees.map((item, index) => {
+                  return (
+                    <div
+                      className="ticket-box"
+                      key={item.attendeeRecordExternalId}
+                    >
+                      <div className="ticket-header">
+                        <div className="ticket-title">
+                          TICKET HOLDER #{index + 1}
                         </div>
-                      </>
-                    );
-                  })}
-                </div>
-                {loading && <Loader />}
-                <button
-                  type="button"
-                  className="btn btn-submit"
-                  onClick={handleSubmitAttendees}
-                >
-                  Submit
-                </button>
-              </form>
+                        <div className="ticket-type">
+                          {item.pricingTierName}
+                        </div>
+                      </div>
+                      <div className="ticket-body">
+                        <div className="ticket-holder-name">{item.name}</div>
+                        <div className="ticket-holder-email">{item.email}</div>
+                        <div className="ticket-holder-mobile">
+                          {item.contactPhone}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             <div className="col-12 col-lg-4 borderLeft">
               <div className="sidebar-banner">

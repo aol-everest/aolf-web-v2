@@ -15,7 +15,6 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
       };
     });
     setExpanded(updatedTickets?.[0].attendeeRecordExternalId);
-    console.log('updatedTickets', updatedTickets);
     setTicketData(updatedTickets);
   }, []);
 
@@ -52,14 +51,10 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
   const handleCopyData = (ticket) => (e) => {
     const value = e.target.value;
     if (value !== null) {
-      console.log('value', value);
       const ticketId = ticket.attendeeRecordExternalId;
-      console.log('ticketId', ticketId);
-      console.log('ticketData', ticketData);
       const fromTicket = ticketData.find((d) => {
         return d.attendeeRecordExternalId == value;
       });
-      console.log('fromTicket', fromTicket);
       const newTicketData = ticketData.map((d) => {
         if (d.attendeeRecordExternalId === ticketId) {
           if (fromTicket) {

@@ -146,6 +146,7 @@ const TicketCheckoutForm = ({ event }) => {
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
   const [showAttendeeDetails, setShowAttendeeDetails] = useState(true);
+  const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
   const [selectedTickets] = useQueryState(
     'ticket',
@@ -196,8 +197,6 @@ const TicketCheckoutForm = ({ event }) => {
       numberOfTickets: item.numberOfTickets,
     };
   });
-
-  console.log('pricingTiersLocal', pricingTiersLocal);
 
   const {
     first_name,
@@ -256,6 +255,16 @@ const TicketCheckoutForm = ({ event }) => {
       };
     });
 
+    const attendeeDetailsPayload = attendeeDetails.map((tier) => {
+      return {
+        firstName: tier.firstName,
+        lastName: tier.lastName,
+        email: tier.email,
+        contactPhone: tier.contactPhone,
+        pricingTierId: tier.pricingTierId,
+      };
+    });
+
     try {
       setLoading(true);
 
@@ -296,6 +305,7 @@ const TicketCheckoutForm = ({ event }) => {
           firstName: firstName,
           email: email,
         },
+        attendeeInfo: attendeeDetailsPayload,
       };
 
       //token.saveCardForFuture = true;
@@ -467,6 +477,7 @@ const TicketCheckoutForm = ({ event }) => {
 
   const handleSubmitAttendees = (showAttendee, updatedAttendeeData) => {
     setShowAttendeeDetails(showAttendee);
+    setAttendeeDetails(updatedAttendeeData);
     pricingTiersLocal = [...updatedAttendeeData];
   };
   const afterDiscountPrice = totalPrice - totalDiscount;
@@ -978,7 +989,7 @@ const TicketCheckoutForm = ({ event }) => {
                                 className="submit-btn"
                                 id="pay-button"
                                 type="button"
-                                disabled={loading}
+                                disabled={loading || showAttendeeDetails}
                                 form="my-form"
                                 onClick={handleFormSubmit}
                               >
