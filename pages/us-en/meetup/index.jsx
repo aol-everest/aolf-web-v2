@@ -485,7 +485,7 @@ const MeetupTile = ({ data, authenticated }) => {
     });
   };
 
-  const checkoutMeetup = (selectedMeetup) => async () => {
+  const checkoutMeetup = (selectedMeetup) => (questionnaire) => async () => {
     const {
       unitPrice,
       memberPrice,
@@ -496,6 +496,16 @@ const MeetupTile = ({ data, authenticated }) => {
     const { subscriptions = [] } = user.profile;
     hideAlert();
     hideModal();
+
+    const complianceQuestionnaire = questionnaire
+      ? questionnaire.reduce(
+          (res, current) => ({
+            ...res,
+            [current.key]: current.value ? 'Yes' : 'No',
+          }),
+          {},
+        )
+      : null;
 
     if (!isSubscriptionOfferingUsed) {
       pushRouteWithUTMQuery(router, {
@@ -560,6 +570,7 @@ const MeetupTile = ({ data, authenticated }) => {
               productSfId: sfid,
               AddOnProductIds: [],
             },
+            complianceQuestionnaire,
             isInstalmentOpted: false,
           },
           utm: filterAllowedParams(router.query),
