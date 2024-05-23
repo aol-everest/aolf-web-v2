@@ -287,6 +287,7 @@ const TicketCheckoutForm = ({ event }) => {
           isStripeIntentPayment: true,
           isPaypalPayment: false,
           tickets: tickets,
+          attendeeInfo: attendeeDetailsPayload,
         },
       };
       if (isPaypal) {
@@ -305,7 +306,6 @@ const TicketCheckoutForm = ({ event }) => {
           firstName: firstName,
           email: email,
         },
-        attendeeInfo: attendeeDetailsPayload,
       };
 
       //token.saveCardForFuture = true;
