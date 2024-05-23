@@ -365,12 +365,6 @@ function PodcastPage() {
     }
   };
 
-  const watchAction = () => {
-    if (playingId !== data.mostPopular.videoDetail.id) {
-      setPlayingId(data.mostPopular.videoDetail.id);
-    }
-  };
-
   const addPlayerLoadedCount = () => {
     setPlayerCount(playerCount + 1);
   };

@@ -432,7 +432,9 @@ export const Header = () => {
   const loginAction = () => {
     setNavExpanded(false);
     showModal(MODAL_TYPES.LOGIN_MODAL, {
-      navigateTo: '/us-en/profile?' + queryString.stringify(router.query),
+      navigateTo: router.pathname
+        ? `${router.pathname}?${queryString.stringify(router.query)}`
+        : '/us-en/profile?' + queryString.stringify(router.query),
     });
   };
 
