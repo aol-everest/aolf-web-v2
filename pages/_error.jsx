@@ -29,7 +29,9 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
   );
 };
 
-MyError.getInitialProps = async ({ res, err, asPath }) => {
+MyError.getInitialProps = async (contextData) => {
+  await Sentry.captureUnderscoreErrorException(contextData);
+  const { res, err, asPath } = contextData;
   const errorInitialProps = await NextErrorComponent.getInitialProps({
     res,
     err,

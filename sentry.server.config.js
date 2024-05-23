@@ -4,21 +4,17 @@
 
 import * as Sentry from '@sentry/nextjs';
 
-const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
+Sentry.init({
+  dsn: 'https://ea0f23a601e34913a8362f424021cd7d@o272363.ingest.us.sentry.io/6260150',
 
-if (process.env.NODE_ENV !== 'development') {
-  Sentry.init({
-    dsn:
-      SENTRY_DSN ||
-      'https://ea0f23a601e34913a8362f424021cd7d@o272363.ingest.sentry.io/6260150',
-    // Adjust this value in production, or use tracesSampler for greater control
-    tracesSampleRate: 1.0,
-    release: 'aolf-web@0.1.0',
-    environment: process.env.SENTRY_ENVIRONMENT,
-    attachStacktrace: true,
-    // ...
-    // Note: if you want to override the automatic release value, do not set a
-    // `release` value here - use the environment variable `SENTRY_RELEASE`, so
-    // that it will also get attached to your source maps
-  });
-}
+  // Adjust this value in production, or use tracesSampler for greater control
+  tracesSampleRate: 1,
+
+  // Setting this option to true will print useful information to the console while you're setting up Sentry.
+  debug: false,
+  environment: process.env.SENTRY_ENVIRONMENT,
+  attachStacktrace: true,
+
+  // Uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: process.env.NODE_ENV === 'development',
+});

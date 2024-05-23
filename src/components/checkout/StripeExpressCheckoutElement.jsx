@@ -302,7 +302,7 @@ const CheckoutPage = ({
                   type="button"
                   className={buttonClass ? buttonClass : 'submit-btn'}
                   disabled={!selectedWorkshopId}
-                  onClick={goToPaymentModal}
+                  onClick={goToPaymentModal(formikProps.values.questionnaire)}
                 >
                   {buttonLoading && (
                     <div className="loaded tw-px-7 tw-py-0">
