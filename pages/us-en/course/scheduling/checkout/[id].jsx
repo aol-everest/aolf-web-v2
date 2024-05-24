@@ -2,7 +2,7 @@
 import dayjs from 'dayjs';
 import { PageLoading } from '@components';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
-import { useQueryState } from 'nuqs';
+import { useQueryState, parseAsInteger } from 'nuqs';
 import queryString from 'query-string';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
@@ -262,6 +262,7 @@ const SchedulingPaymentForm = ({
   const stripe = useStripe();
   const elements = useElements();
   const [isDirectCheckoutFlow] = useQueryState('direct');
+  const [flowVersion] = useQueryState('fver', parseAsInteger);
 
   const { showAlert } = useGlobalAlertContext();
 
@@ -498,7 +499,11 @@ const SchedulingPaymentForm = ({
             data.attendeeId
           }?${queryString.stringify(filteredParams)}`;
           if (isGenericWorkshop) {
-            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
+            if (flowVersion === 2) {
+              returnUrl = `${window.location.origin}/us-en/scheduling/online/course/${data.attendeeId}?${queryString.stringify(filteredParams)}`;
+            } else {
+              returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
+            }
           }
 
           const result = await stripe.confirmPayment({
@@ -514,15 +519,33 @@ const SchedulingPaymentForm = ({
             throw new Error(result.error.message);
           }
         } else {
-          replaceRouteWithUTMQuery(router, {
-            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
-            query: {
-              ctype: productTypeId,
-              page: 'ty',
-              courseType,
-              referral: 'course_scheduling_checkout',
-            },
-          });
+          if (isGenericWorkshop) {
+            if (flowVersion === 2) {
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/scheduling/online/course/${data.attendeeId}`,
+                query: {
+                  aid: data.attendeeId,
+                },
+              });
+            } else {
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/course/scheduling/${data.attendeeId}`,
+                query: {
+                  aid: data.attendeeId,
+                },
+              });
+            }
+          } else {
+            replaceRouteWithUTMQuery(router, {
+              pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+              query: {
+                ctype: productTypeId,
+                page: 'ty',
+                courseType,
+                referral: 'course_scheduling_checkout',
+              },
+            });
+          }
         }
       }
 
