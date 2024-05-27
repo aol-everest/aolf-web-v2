@@ -144,6 +144,7 @@ const TicketCongratulations = () => {
   const ticketTiers = attendeeDetail.attendees.map(
     (item) => item?.pricingTierName,
   );
+  const uniqueTicketTiers = [...new Set(ticketTiers)];
 
   return (
     <main className="course-filter calendar-online">
@@ -168,7 +169,7 @@ const TicketCongratulations = () => {
                   <li className="order-item">
                     <FaTicket className="fa fa-ticket" />{' '}
                     <span>Ticket Type: </span>
-                    {ticketTiers?.join(', ')}
+                    {uniqueTicketTiers?.join(', ')}
                   </li>
                   <li className="order-item">
                     <FaAngellist className="fa fa-hand-peace-o" />{' '}

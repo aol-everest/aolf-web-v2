@@ -7,12 +7,12 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
   const [ticketData, setTicketData] = useState([]);
 
   useEffect(() => {
-    const updatedTickets = tickets.map((item, index) => {
-      return {
+    const updatedTickets = tickets.flatMap((item) => {
+      return Array.from({ length: item.numberOfTickets }, (_, index) => ({
         ...item,
         number: index + 1,
         attendeeRecordExternalId: generateUniqueId(),
-      };
+      }));
     });
     setExpanded(updatedTickets?.[0].attendeeRecordExternalId);
     setTicketData(updatedTickets);
