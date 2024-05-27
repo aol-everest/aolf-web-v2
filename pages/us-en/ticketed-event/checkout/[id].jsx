@@ -30,6 +30,7 @@ import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import AttendeeDetails from './AttendeeDetails';
+import { FaArrowLeft, FaChevronLeft } from 'react-icons/fa6';
 
 function TicketCheckout() {
   const router = useRouter();
@@ -171,6 +172,7 @@ const TicketCheckoutForm = ({ event }) => {
     title,
     productTypeId,
     complianceQuestionnaire,
+    isAllAttedeeInformationRequired,
   } = event;
 
   const questionnaireArray = complianceQuestionnaire
@@ -480,6 +482,10 @@ const TicketCheckoutForm = ({ event }) => {
     setAttendeeDetails(updatedAttendeeData);
     pricingTiersLocal = [...updatedAttendeeData];
   };
+  const handleAttendeeDetails = () => {
+    setShowAttendeeDetails(true);
+  };
+
   const afterDiscountPrice = totalPrice - totalDiscount;
   const showStreetAddress = afterDiscountPrice > 0;
 
@@ -562,10 +568,22 @@ const TicketCheckoutForm = ({ event }) => {
                         <AttendeeDetails
                           tickets={pricingTiersLocal}
                           handleSubmitAttendees={handleSubmitAttendees}
+                          detailsRequired={isAllAttedeeInformationRequired}
                         />
                       ) : (
                         <>
                           <div className="section-box account-details">
+                            <p className="details__content">
+                              <FaChevronLeft className="fa-solid" />
+                              <a
+                                href="#"
+                                className="link"
+                                onClick={handleAttendeeDetails}
+                              >
+                                Go Back
+                              </a>
+                            </p>
+
                             <h2 className="section__title">Account Details</h2>
                             <p className="tickets-modal__billing-login">
                               {isUserLoggedIn && (
