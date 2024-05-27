@@ -219,7 +219,7 @@ const Scheduling = () => {
                       />
                     </button> */}
                     <button class="submit-btn" onClick={continueToCheckout}>
-                      Continue
+                      Checkout
                     </button>
                   </div>
                 </div>
