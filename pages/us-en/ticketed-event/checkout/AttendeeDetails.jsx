@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { FaUser } from 'react-icons/fa6';
+import { ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
 
-export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
+export default function AttendeeDetails({
+  tickets,
+  handleSubmitAttendees,
+  detailsRequired,
+}) {
+  const { showAlert } = useGlobalAlertContext();
   const [expanded, setExpanded] = useState(0);
   const [ticketData, setTicketData] = useState([]);
 
@@ -75,7 +82,43 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
     }
   };
 
-  const isButtonDisabled = ticketData.some((item) => !item.firstName);
+  const handelSubmitData = (showAttendee, attendeeData) => {
+    if (detailsRequired) {
+      const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      };
+
+      const isNonEmptyString = (str) => {
+        return typeof str === 'string' && str.trim().length > 0;
+      };
+
+      const validateTickets = (tickets) => {
+        return tickets.every(
+          (ticket) =>
+            isValidEmail(ticket.email) &&
+            isNonEmptyString(ticket.firstName) &&
+            isNonEmptyString(ticket.lastName) &&
+            isNonEmptyString(ticket.contactPhone),
+        );
+      };
+      const result = validateTickets(tickets);
+      if (result) {
+        handleSubmitAttendees(showAttendee, attendeeData);
+      } else {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: 'Attendee details are not valid. Please verify once.',
+        });
+      }
+    } else {
+      handleSubmitAttendees(showAttendee, attendeeData);
+    }
+  };
+
+  const isButtonDisabled =
+    detailsRequired === false
+      ? false
+      : ticketData.some((item) => !item.firstName);
 
   return (
     <main className="course-filter calendar-online">
@@ -184,7 +227,9 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
                                         </div>
                                       )}
 
-                                    <div className="form-item required">
+                                    <div
+                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
+                                    >
                                       <label htmlFor="fname">First Name</label>
                                       <input
                                         type="text"
@@ -196,7 +241,9 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
                                         )}
                                       />
                                     </div>
-                                    <div className="form-item required">
+                                    <div
+                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
+                                    >
                                       <label htmlFor="lname required">
                                         Last Name
                                       </label>
@@ -210,7 +257,9 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
                                         )}
                                       />
                                     </div>
-                                    <div className="form-item required">
+                                    <div
+                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
+                                    >
                                       <label htmlFor="email">
                                         Email Address
                                       </label>
@@ -224,7 +273,9 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
                                         )}
                                       />
                                     </div>
-                                    <div className="form-item required">
+                                    <div
+                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
+                                    >
                                       <label htmlFor="phone">
                                         Phone Number
                                       </label>
@@ -254,9 +305,9 @@ export default function AttendeeDetails({ tickets, handleSubmitAttendees }) {
                   type="button"
                   className="btn btn-submit"
                   disabled={isButtonDisabled}
-                  onClick={() => handleSubmitAttendees(false, ticketData)}
+                  onClick={() => handelSubmitData(false, ticketData)}
                 >
-                  Submit
+                  Continue
                 </button>
               </form>
             </div>
