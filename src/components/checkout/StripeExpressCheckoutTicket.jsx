@@ -12,12 +12,13 @@ import { ALERT_TYPES } from '@constants';
 import queryString from 'query-string';
 import { removeNull } from '@utils/utmParam';
 import { useRouter } from 'next/router';
+import Style from './StripeExpressCheckoutElement.module.scss';
 
-export const StripeExpressCheckoutTicket = ({ workshop, total }) => {
+export const StripeExpressCheckoutTicket = ({ workshop, total = 1 }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const elementsOptions = {
     mode: 'payment',
-    amount: total * 100,
+    amount: total ? total * 100 : 100,
     currency: 'usd',
     appearance: {
       theme: 'stripe',
@@ -29,7 +30,7 @@ export const StripeExpressCheckoutTicket = ({ workshop, total }) => {
   };
   return (
     <Elements stripe={stripePromise} options={elementsOptions}>
-      <CheckoutPage workshop={workshop} />
+      <CheckoutPage workshop={workshop} total={total} />
     </Elements>
   );
 };
@@ -46,7 +47,7 @@ const options = {
   paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
-const CheckoutPage = ({ workshop }) => {
+const CheckoutPage = ({ workshop, total }) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -144,7 +145,8 @@ const CheckoutPage = ({ workshop }) => {
   };
 
   return (
-    <div>
+    <div className="tw-relative">
+      <div className={!total ? Style.express_checkout_block : ''}></div>
       <ExpressCheckoutElement
         options={options}
         onConfirm={onConfirm}
