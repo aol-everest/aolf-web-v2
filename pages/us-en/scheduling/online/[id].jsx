@@ -106,13 +106,13 @@ const Scheduling = () => {
                 <div class="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Select Course Date & Time</div>
+                <div class="step-text">Complete Your Purchase</div>
               </div>
               <div class="step">
                 <div class="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Complete Your Purchase</div>
+                <div class="step-text">Select Course Date & Time</div>
               </div>
               <div class="step">
                 <div class="step-icon">
