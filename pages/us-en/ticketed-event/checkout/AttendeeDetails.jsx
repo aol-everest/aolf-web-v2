@@ -127,14 +127,12 @@ export default function AttendeeDetails({
           <div className="calendar-benefits-wrapper row">
             <div className="tw-w-full">
               <form className="attendee-info-form">
-                <div>
+                <div className="optional">
                   <h2 className="section-title">
                     <FaUser className="fa fa-user-o" /> Provide Attendee
                     Information
                   </h2>
-                  <span className="optional">
-                    {!detailsRequired && '(Optional)'}
-                  </span>
+                  <span>{`${!detailsRequired ? '(Optional)' : ''}`}</span>
                 </div>
                 <div className="attendee-info-wrapper">
                   {Object.entries(ticketByTier).map(([key, value]) => {
