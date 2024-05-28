@@ -6,21 +6,18 @@ import {
   Elements,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { api, priceCalculation } from '@utils';
+import { api } from '@utils';
 import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import queryString from 'query-string';
 import { removeNull } from '@utils/utmParam';
 import { useRouter } from 'next/router';
 
-export const StripeExpressCheckoutTicket = ({ workshop }) => {
+export const StripeExpressCheckoutTicket = ({ workshop, total }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
-  const { fee } = priceCalculation({
-    workshop,
-  });
   const elementsOptions = {
     mode: 'payment',
-    amount: fee * 100,
+    amount: total * 100,
     currency: 'usd',
     appearance: {
       theme: 'stripe',

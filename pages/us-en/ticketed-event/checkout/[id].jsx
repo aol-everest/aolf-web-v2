@@ -30,7 +30,7 @@ import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import AttendeeDetails from './AttendeeDetails';
-import { FaArrowLeft, FaChevronLeft } from 'react-icons/fa6';
+import { FaChevronLeft } from 'react-icons/fa6';
 
 function TicketCheckout() {
   const router = useRouter();
