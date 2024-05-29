@@ -343,7 +343,10 @@ const WorkshopSelectModal = React.memo(
                   </div>
                 )}
           </div>
-
+          <div className="specific-teacher-text">
+            Are you looking for a course with a specific teacher?{' '}
+            <a href={`/us-en/courses/${slug}`}>Click here</a>
+          </div>
           <div className="slot-action">
             <button
               type="button"
@@ -1075,73 +1078,7 @@ const Scheduling = () => {
                   </a>
                 </div>
               </div>
-              <div class="second-col">
-                <div class="course-highlight-box">
-                  <div class="box-hero-image-wrap">
-                    <img
-                      src="/img/course-highlight-box-hero.png"
-                      alt="course highlight"
-                      width="100%"
-                    />
-                  </div>
-                  <div class="course-highlights-info-box">
-                    <h2>Course Highlights:</h2>
-                    <ul>
-                      <li>
-                        <span class="icon-aol iconaol-users"></span>
-                        <span>
-                          Engage in a <strong>3-day, 2.5-hour</strong> daily
-                          course led by a certified instructor in a small group
-                        </span>
-                      </li>
-                      <li>
-                        <span class="icon-aol iconaol-world-clock"></span>
-                        <span>
-                          Available multiple times daily across PT, ET, CT time
-                          zones
-                        </span>
-                      </li>
-                      <li>
-                        <span class="icon-aol iconaol-yoga"></span>
-                        <span>
-                          Master <strong>Sudarshan Kriya Yoga (SKY)</strong> and
-                          other effective pranayama breathing methods.
-                        </span>
-                      </li>
-                      <li>
-                        <span class="icon-aol iconaol-relieved"></span>
-                        <span>
-                          Receive the "<strong>5 Keys to a Joyful Life</strong>"
-                          toolkit, providing essential strategies for lifelong
-                          happiness and well-being.
-                        </span>
-                      </li>
-                      <li>
-                        <span class="icon-aol iconaol-calendar-2"></span>
-                        <span>
-                          <strong>Flexible</strong> rescheduling options.
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="course-medical-info">
-                  <img
-                    src="/img/mental_health-vector-icon.svg"
-                    width="54"
-                    height="54"
-                    alt="mental health"
-                  />
-                  <span>
-                    Over <strong>40 years</strong> of research and more than{' '}
-                    <strong>100 independent studies</strong> at top institutions
-                    like Harvard and Stanford demonstrate that SKY significantly
-                    improves sleep quality, reduces stress and anxiety, boosts
-                    immunity, and increases focus and energy.
-                  </span>
-                </div>
-              </div>
-              <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
+              <div className={activeWorkshop?.id ? 'first-col' : 'hide-col'}>
                 <div className="payment-box">
                   <div className="payment-total-box">
                     <label>Total:</label>
@@ -1565,6 +1502,72 @@ const Scheduling = () => {
                       </button>
                     )}
                   </div>
+                </div>
+              </div>
+              <div class="second-col">
+                <div class="course-highlight-box">
+                  <div class="box-hero-image-wrap">
+                    <img
+                      src="/img/course-highlight-box-hero.png"
+                      alt="course highlight"
+                      width="100%"
+                    />
+                  </div>
+                  <div class="course-highlights-info-box">
+                    <h2>Course Highlights:</h2>
+                    <ul>
+                      <li>
+                        <span class="icon-aol iconaol-users"></span>
+                        <span>
+                          Engage in a <strong>3-day, 2.5-hour</strong> daily
+                          course led by a certified instructor in a small group
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-world-clock"></span>
+                        <span>
+                          Available multiple times daily across PT, ET, CT time
+                          zones
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-yoga"></span>
+                        <span>
+                          Master <strong>Sudarshan Kriya Yoga (SKY)</strong> and
+                          other effective pranayama breathing methods.
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-relieved"></span>
+                        <span>
+                          Receive the "<strong>5 Keys to a Joyful Life</strong>"
+                          toolkit, providing essential strategies for lifelong
+                          happiness and well-being.
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-calendar-2"></span>
+                        <span>
+                          <strong>Flexible</strong> rescheduling options.
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="course-medical-info">
+                  <img
+                    src="/img/mental_health-vector-icon.svg"
+                    width="54"
+                    height="54"
+                    alt="mental health"
+                  />
+                  <span>
+                    Over <strong>40 years</strong> of research and more than{' '}
+                    <strong>100 independent studies</strong> at top institutions
+                    like Harvard and Stanford demonstrate that SKY significantly
+                    improves sleep quality, reduces stress and anxiety, boosts
+                    immunity, and increases focus and energy.
+                  </span>
                 </div>
               </div>
             </div>
