@@ -19,9 +19,10 @@ export default function AttendeeDetails({
         ...item,
         number: index + 1,
         attendeeRecordExternalId: generateUniqueId(),
+        numberOfTickets: 1,
       }));
     });
-    setExpanded(updatedTickets?.[0].attendeeRecordExternalId);
+    setExpanded(updatedTickets?.[0]?.attendeeRecordExternalId);
     setTicketData(updatedTickets);
   }, []);
 
