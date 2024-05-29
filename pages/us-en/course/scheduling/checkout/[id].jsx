@@ -872,6 +872,42 @@ const SchedulingPaymentForm = ({
                           </div>
                         </div>
                       </div>
+                      {isGenericWorkshop && (
+                        <div className="section-box checkout-details">
+                          <h2 className="section__title">Details:</h2>
+                          <div className="section__body">
+                            <div className="detail-item row">
+                              <div className="label col-5">
+                                <svg
+                                  className="detailsIcon icon-calendar"
+                                  viewBox="0 0 34 32"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="miter"
+                                    strokeLinecap="butt"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M16.223 17.907c2.297 0 4.16-1.863 4.16-4.16s-1.863-4.16-4.16-4.16c-2.298 0-4.16 1.863-4.16 4.16s1.863 4.16 4.16 4.16z"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="miter"
+                                    strokeLinecap="butt"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M5.049 11.32c2.627-11.547 19.733-11.533 22.347 0.013 1.533 6.773-2.68 12.507-6.373 16.053-2.68 2.587-6.92 2.587-9.613 0-3.68-3.547-7.893-9.293-6.36-16.067z"
+                                  ></path>
+                                </svg>{' '}
+                                Location:
+                              </div>
+                              <div className="value col-7">{mode}</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       {!isGenericWorkshop && (
                         <div className="section-box checkout-details">
                           <h2 className="section__title">Details:</h2>
