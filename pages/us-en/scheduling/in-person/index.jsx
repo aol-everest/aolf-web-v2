@@ -957,6 +957,19 @@ const Scheduling = () => {
     }, 100);
   };
 
+  const scrollToCourseHighlight = (e) => {
+    if (e) e.preventDefault();
+    setTimeout(() => {
+      const timeContainer = document.querySelector('.course-highlight-col');
+      if (timeContainer) {
+        timeContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 100);
+  };
+
   const isInPersonMode =
     activeWorkshop?.mode === COURSE_MODES.IN_PERSON.value ||
     workshopMaster?.mode === COURSE_MODES.IN_PERSON.value;
@@ -977,6 +990,15 @@ const Scheduling = () => {
                 __html: workshopMaster?.calenderViewDescription,
               }}
             ></div>
+          </div>
+          <div class="mt-3 text-center d-lg-none d-md-none">
+            <a
+              href="#"
+              class="course-highlight-action"
+              onClick={scrollToCourseHighlight}
+            >
+              Course Highlights {'>>'}
+            </a>
           </div>
         </section>
         <section class="scheduling-stepper">
@@ -1504,7 +1526,7 @@ const Scheduling = () => {
                   </div>
                 </div>
               </div>
-              <div class="second-col">
+              <div class="second-col course-highlight-col">
                 <div class="course-highlight-box">
                   <div class="box-hero-image-wrap">
                     <img
