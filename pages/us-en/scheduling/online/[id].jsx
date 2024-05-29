@@ -83,6 +83,19 @@ const Scheduling = () => {
     });
   };
 
+  const scrollToCourseHighlight = (e) => {
+    if (e) e.preventDefault();
+    setTimeout(() => {
+      const timeContainer = document.querySelector('.course-highlight-col');
+      if (timeContainer) {
+        timeContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 100);
+  };
+
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
@@ -96,6 +109,15 @@ const Scheduling = () => {
               </strong>{' '}
               who have experienced the benefits of this distinctive 3-day course
               (2.5 hours per day)
+            </div>
+            <div class="mt-3 text-center d-lg-none d-md-none">
+              <a
+                href="#"
+                class="course-highlight-action"
+                onClick={scrollToCourseHighlight}
+              >
+                Course Highlights {'>>'}
+              </a>
             </div>
           </div>
         </section>
@@ -234,7 +256,7 @@ const Scheduling = () => {
                   </a>
                 </div>
               </div>
-              <div class="second-col">
+              <div class="second-col course-highlight-col">
                 <div class="course-highlight-box">
                   <div class="box-hero-image-wrap">
                     <img
