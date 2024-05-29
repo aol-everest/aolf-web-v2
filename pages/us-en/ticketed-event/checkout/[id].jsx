@@ -1,5 +1,5 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   useAuth,
@@ -148,6 +148,7 @@ const TicketCheckoutForm = ({ event }) => {
   const [loading, setLoading] = useState(false);
   const [showAttendeeDetails, setShowAttendeeDetails] = useState(true);
   const [attendeeDetails, setAttendeeDetails] = useState([]);
+  const [pricingTiersLocal, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
   const [selectedTickets] = useQueryState(
     'ticket',
@@ -182,13 +183,18 @@ const TicketCheckoutForm = ({ event }) => {
       }))
     : [];
 
-  let pricingTiersLocal = pricingTiers.filter((p) => {
-    return p.pricingTierId in selectedTickets;
-  });
-  pricingTiersLocal = pricingTiersLocal.map((p) => {
-    p.numberOfTickets = selectedTickets[p.pricingTierId];
-    return p;
-  });
+  useEffect(() => {
+    let pricingTiersLocals = [];
+    pricingTiersLocals = pricingTiers.filter((p) => {
+      return p.pricingTierId in selectedTickets;
+    });
+    pricingTiersLocals = pricingTiersLocals.map((p) => {
+      p.numberOfTickets = selectedTickets[p.pricingTierId];
+      return p;
+    });
+    setPricingTierLocal(pricingTiersLocals);
+  }, []);
+
   const totalPrice = pricingTiersLocal.reduce((accumulator, item) => {
     accumulator = accumulator + item.price * item?.numberOfTickets;
     return accumulator;
@@ -480,7 +486,7 @@ const TicketCheckoutForm = ({ event }) => {
   const handleSubmitAttendees = (showAttendee, updatedAttendeeData) => {
     setShowAttendeeDetails(showAttendee);
     setAttendeeDetails(updatedAttendeeData);
-    pricingTiersLocal = [...updatedAttendeeData];
+    setPricingTierLocal([...updatedAttendeeData]);
   };
   const handleAttendeeDetails = () => {
     setShowAttendeeDetails(true);
@@ -564,7 +570,7 @@ const TicketCheckoutForm = ({ event }) => {
                       <div className="section--title">
                         <h1 className="page-title">{title}</h1>
                       </div>
-                      {showAttendeeDetails ? (
+                      {showAttendeeDetails && pricingTiersLocal.length > 0 ? (
                         <AttendeeDetails
                           tickets={pricingTiersLocal}
                           handleSubmitAttendees={handleSubmitAttendees}
