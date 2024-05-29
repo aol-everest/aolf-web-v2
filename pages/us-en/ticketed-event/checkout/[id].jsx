@@ -295,7 +295,9 @@ const TicketCheckoutForm = ({ event }) => {
           isStripeIntentPayment: true,
           isPaypalPayment: false,
           tickets: tickets,
-          attendeeInfo: attendeeDetailsPayload,
+          attendeeInfo: isAllAttedeeInformationRequired
+            ? attendeeDetailsPayload
+            : [],
         },
       };
       if (isPaypal) {
