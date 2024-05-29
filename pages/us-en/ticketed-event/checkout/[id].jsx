@@ -148,7 +148,7 @@ const TicketCheckoutForm = ({ event }) => {
   const [loading, setLoading] = useState(false);
   const [showAttendeeDetails, setShowAttendeeDetails] = useState(true);
   const [attendeeDetails, setAttendeeDetails] = useState([]);
-  const [pricingTiersLocal, setPricingTierLocal] = useState([]);
+  const [pricingTiersLocalState, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
   const [selectedTickets] = useQueryState(
     'ticket',
@@ -183,16 +183,16 @@ const TicketCheckoutForm = ({ event }) => {
       }))
     : [];
 
+  let pricingTiersLocal = pricingTiers.filter((p) => {
+    return p.pricingTierId in selectedTickets;
+  });
+  pricingTiersLocal = pricingTiersLocal.map((p) => {
+    p.numberOfTickets = selectedTickets[p.pricingTierId];
+    return p;
+  });
+
   useEffect(() => {
-    let pricingTiersLocals = [];
-    pricingTiersLocals = pricingTiers.filter((p) => {
-      return p.pricingTierId in selectedTickets;
-    });
-    pricingTiersLocals = pricingTiersLocals.map((p) => {
-      p.numberOfTickets = selectedTickets[p.pricingTierId];
-      return p;
-    });
-    setPricingTierLocal(pricingTiersLocals);
+    setPricingTierLocal(pricingTiersLocal);
   }, []);
 
   const totalPrice = pricingTiersLocal.reduce((accumulator, item) => {
@@ -570,9 +570,10 @@ const TicketCheckoutForm = ({ event }) => {
                       <div className="section--title">
                         <h1 className="page-title">{title}</h1>
                       </div>
-                      {showAttendeeDetails && pricingTiersLocal.length > 0 ? (
+                      {showAttendeeDetails &&
+                      pricingTiersLocalState.length > 0 ? (
                         <AttendeeDetails
-                          tickets={pricingTiersLocal}
+                          tickets={pricingTiersLocalState}
                           handleSubmitAttendees={handleSubmitAttendees}
                           detailsRequired={isAllAttedeeInformationRequired}
                         />
@@ -608,11 +609,6 @@ const TicketCheckoutForm = ({ event }) => {
                                   </a>
                                 </p>
                               )}
-
-                              <span className="tickets-modal__billing-login_required">
-                                <span className="tickets-modal--accent">*</span>{' '}
-                                Required
-                              </span>
                             </p>
                             <div className="section__body">
                               <form id="my-form">

@@ -14,16 +14,21 @@ export default function AttendeeDetails({
   const [ticketData, setTicketData] = useState([]);
 
   useEffect(() => {
-    const updatedTickets = tickets.flatMap((item) => {
-      return Array.from({ length: item.numberOfTickets }, (_, index) => ({
-        ...item,
-        number: index + 1,
-        attendeeRecordExternalId: generateUniqueId(),
-        numberOfTickets: 1,
-      }));
-    });
-    setExpanded(updatedTickets?.[0]?.attendeeRecordExternalId);
-    setTicketData(updatedTickets);
+    if (!tickets?.[0]?.attendeeRecordExternalId) {
+      const updatedTickets = tickets.flatMap((item) => {
+        return Array.from({ length: item.numberOfTickets }, (_, index) => ({
+          ...item,
+          number: index + 1,
+          attendeeRecordExternalId: generateUniqueId(),
+          numberOfTickets: 1,
+        }));
+      });
+      setExpanded(updatedTickets?.[0]?.attendeeRecordExternalId);
+      setTicketData(updatedTickets);
+    } else {
+      setExpanded(tickets?.[0]?.attendeeRecordExternalId);
+      setTicketData(tickets);
+    }
   }, []);
 
   const ticketByTier = groupBy(ticketData, 'pricingTierName');
