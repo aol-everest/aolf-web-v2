@@ -273,12 +273,6 @@ const TicketCheckoutForm = ({ event }) => {
       };
     });
 
-    console.log(
-      'attendeeDetailsPayload',
-      attendeeDetailsPayload,
-      isAllAttedeeInformationRequired,
-    );
-
     try {
       setLoading(true);
 
