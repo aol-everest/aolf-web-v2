@@ -1,26 +1,12 @@
-.scheduling-page {
+.in-person-course-page {
+  @media screen and (max-width: 991px) {
+    margin-top: 0 !important;
+  }
   .flatpickr-input {
     display: none;
   }
-  .other-calendar-info {
-    padding-top: 22px;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 20px;
-    text-align: center;
-    color: #3d8be8;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    @media (width < 768px) {
-      flex-direction: column;
-    }
-  }
   background: #fffaf5;
-  .scheduling-top {
+  .top-section {
     padding-top: 60px;
     padding-bottom: 32px;
     @media screen and (max-width: 991px) {
@@ -45,17 +31,25 @@
     }
   }
   .page-description {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 24px;
     text-align: center;
     color: #6f7283;
+    font-style: italic;
     strong {
       font-weight: 500;
+      font-style: normal;
     }
     @media screen and (max-width: 991px) {
       font-size: 16px;
     }
+  }
+  .course-highlight-action {
+    color: #ff7e00;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 18px;
   }
   .scheduling-stepper {
     padding-bottom: 32px;
@@ -152,7 +146,7 @@
   }
   .calendar-section {
     .container {
-      max-width: 1030px;
+      max-width: 1150px;
     }
     .calendar-area-wrap {
       display: flex;
@@ -168,9 +162,11 @@
         display: none;
       }
       .second-col {
-        width: 420px;
+        width: 540px;
+        order: -1;
         @media screen and (max-width: 991px) {
           width: auto;
+          order: 1;
         }
       }
     }
@@ -299,6 +295,92 @@
       }
     }
   }
+  .course-purchase-section {
+    .container {
+      max-width: 1030px;
+    }
+    .course-purchase-wrap {
+      display: flex;
+      gap: 40px;
+      @media screen and (max-width: 991px) {
+        flex-direction: column;
+        gap: 32px;
+      }
+      .first-col {
+        flex: 1;
+      }
+      .hide-col {
+        display: none;
+      }
+      .second-col {
+        width: 540px;
+        order: -1;
+        @media screen and (max-width: 991px) {
+          width: auto;
+          order: 1;
+        }
+      }
+    }
+  }
+  .course-highlight-box {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    .box-hero-image-wrap {
+      margin-bottom: 24px;
+      img {
+        border-radius: 12px;
+      }
+    }
+    h2 {
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 16px;
+    }
+    .course-highlights-info-box {
+      ul {
+        li {
+          display: flex;
+          gap: 16px;
+          font-size: 16px;
+          line-height: 24px;
+          @media screen and (max-width: 767px) {
+            font-size: 14px;
+          }
+          strong {
+            font-weight: 500;
+          }
+          .icon-aol {
+            font-size: 32px;
+            color: #ff7e00;
+          }
+          & + li {
+            margin-top: 12px;
+          }
+        }
+      }
+    }
+  }
+  .course-medical-info {
+    border: #cbe4f9 1px solid;
+    background: #f6fafe url(/img/lotus-background-vector.svg) no-repeat center
+      17px;
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 40px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    font-size: 16px;
+    line-height: 24px;
+    strong {
+      font-weight: 500;
+    }
+    @media (width < 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
   .form-item {
     .scheduling-address {
       margin: 0;
@@ -396,32 +478,22 @@
     .form-item {
       flex: 1;
     }
-    .smart-input {
-      position: relative;
-      .result-list {
-        position: absolute;
-        width: 100%;
-        top: 100%;
-        border: #f7f7f7 1px solid;
-        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
-      }
-    }
-    select,
-    input.custom-input {
-      background: #ffffff url(/img/chevron-down.svg) no-repeat calc(100% - 14px)
-        center;
-      -webkit-appearance: none;
-    }
   }
-  .specific-teacher-text {
-    padding-top: 24px;
+  .other-calendar-info {
+    padding-top: 22px;
     font-size: 16px;
-    font-weight: 500;
-    line-height: 24px;
+    font-weight: 600;
+    line-height: 20px;
     text-align: center;
-    a {
-      color: #ed7347;
-      font-weight: 600;
+    color: #3d8be8;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    @media (width < 768px) {
+      flex-direction: column;
     }
   }
   .payment-box {
@@ -487,6 +559,14 @@
     .payment-agreements {
       border-top: #e6e8ec 1px solid;
       padding-top: 20px;
+      .form-item {
+        display: flex;
+        gap: 10px;
+      }
+      a {
+        color: #ed994e;
+        text-decoration: none;
+      }
     }
     .payment-actions {
       display: flex;
@@ -546,6 +626,7 @@
       }
     }
   }
+
   .offer-box {
     background: linear-gradient(94.04deg, #ffa180 3.84%, #ed7347 109.6%);
     border-radius: 16px;
@@ -585,7 +666,7 @@
   .testimonials {
     padding-top: 80px;
     .container {
-      max-width: 1030px;
+      max-width: 1150px;
     }
     .top-text {
       color: #ed994e;
@@ -649,7 +730,6 @@
       }
     }
   }
-
   .question-call {
     display: flex;
     align-items: center;
@@ -670,7 +750,6 @@
       }
     }
   }
-
   .time-slot-changer {
     display: flex;
     justify-content: center;
@@ -932,9 +1011,6 @@
       }
     }
     .modal-header {
-      font-size: 28px;
-      font-weight: 500;
-      line-height: 36px;
       .title {
         font-size: 28px;
         font-weight: 500;
@@ -965,7 +1041,7 @@
       }
     }
     .modal-body {
-      padding: 12px 0 0 0;
+      padding: 24px 0 0 0;
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -1101,9 +1177,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        &[disabled] {
-          opacity: 0.3;
-        }
         img {
           height: 14px;
           svg {
@@ -1118,11 +1191,11 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
-      height: 316px;
+      max-height: 50vh;
       overflow: auto;
-      align-items: flex-start;
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
+        max-height: calc(100vh - 250px);
       }
       .slot-item {
         background: #f7f7f7;
@@ -1169,19 +1242,6 @@
     }
   }
 }
-.specific-teacher-text {
-  padding-top: 24px;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  text-align: center;
-  a {
-    color: #ed7347;
-    font-weight: 600;
-    text-decoration: none;
-  }
-}
-
 .event-type-pills {
   display: flex;
   gap: 16px;

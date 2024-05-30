@@ -2,7 +2,7 @@ import { api, tConvert } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -11,7 +11,6 @@ import { pushRouteWithUTMQuery } from '@service';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
-import { DiscountInputNew } from '@components/discountInputNew';
 import { useQueryState, parseAsJson } from 'nuqs';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
@@ -74,7 +73,6 @@ function TicketedEvent() {
     parseAsJson().withDefault({}),
   );
   const { showAlert } = useGlobalAlertContext();
-  const [discountResponse, setDiscountResponse] = useState(null);
   const { id: eventId } = router.query;
   const formRef = useRef();
 
@@ -105,8 +103,6 @@ function TicketedEvent() {
     eventEndDate,
     eventTimeZone,
     pricingTiers,
-    id: productId,
-    addOnProducts,
     eventImageUrl,
     isEventFull,
     mode,
@@ -140,6 +136,31 @@ function TicketedEvent() {
     }
   }, [event]);
 
+  useEffect(() => {
+    if (pricingTiers?.length > 0) {
+      const isPaidPricingTier = pricingTiers.some((item) => item.price > 0);
+      if (!isPaidPricingTier) {
+        const firstPricingTier = pricingTiers[0];
+        const { pricingTierId } = firstPricingTier;
+        const selectedTicketsCopy = {};
+        selectedTicketsCopy[pricingTierId] = 1;
+        setSelectedTickets(selectedTicketsCopy);
+      }
+    }
+  }, [pricingTiers]);
+
+  let pricingTiersLocal = pricingTiers?.filter((p) => {
+    return p.pricingTierId in selectedTickets;
+  });
+  pricingTiersLocal = pricingTiersLocal?.map((p) => {
+    p.numberOfTickets = selectedTickets[p.pricingTierId];
+    return p;
+  });
+  const total = pricingTiersLocal?.reduce((accumulator, item) => {
+    accumulator = accumulator + item.price * item?.numberOfTickets;
+    return accumulator;
+  }, 0);
+
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
@@ -170,13 +191,7 @@ function TicketedEvent() {
     setSelectedTickets(updatedSelectedTickets);
   };
 
-  const applyDiscount = (discount) => {
-    setDiscountResponse(discount);
-  };
-
-  const { totalDiscount = 0 } = discountResponse || {};
-
-  const handleTicketCheckout = (values) => {
+  const handleTicketCheckout = () => {
     const totalTicketsQuantity = Object.entries(selectedTickets).reduce(
       (accumulator, [key, value]) => {
         accumulator = accumulator + value;
@@ -201,18 +216,7 @@ function TicketedEvent() {
     });
   };
 
-  const renderSummery = () => {
-    let pricingTiersLocal = pricingTiers.filter((p) => {
-      return p.pricingTierId in selectedTickets;
-    });
-    pricingTiersLocal = pricingTiersLocal.map((p) => {
-      p.numberOfTickets = selectedTickets[p.pricingTierId];
-      return p;
-    });
-    const total = pricingTiersLocal.reduce((accumulator, item) => {
-      accumulator = accumulator + item.price * item?.numberOfTickets;
-      return accumulator;
-    }, 0);
+  const renderSummary = () => {
     return (
       <>
         <div className="tickets-container">
@@ -233,18 +237,10 @@ function TicketedEvent() {
             <div className="value">${parseFloat(total).toFixed(2)}</div>
           </div>
         </div>
-        {totalDiscount > 0 && (
-          <p className="tickets-modal__cart-discount">
-            Discount(-)
-            <span>${parseFloat(totalDiscount).toFixed(2)}</span>
-          </p>
-        )}
 
         <div className="total">
           <div className="label">Total:</div>
-          <div className="value">
-            ${(parseFloat(total) - totalDiscount).toFixed(2)}
-          </div>
+          <div className="value">${parseFloat(total).toFixed(2)}</div>
         </div>
       </>
     );
@@ -340,12 +336,15 @@ function TicketedEvent() {
                       </div>
 
                       <div className="tickets-modal__cart">
-                        {renderSummery()}
+                        {renderSummary()}
                       </div>
                       <div className="tickets-modal__footer">
-                        {event && (
+                        {event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
-                            <StripeExpressCheckoutTicket workshop={event} />
+                            <StripeExpressCheckoutTicket
+                              workshop={event}
+                              total={total}
+                            />
                           </div>
                         )}
                         <button

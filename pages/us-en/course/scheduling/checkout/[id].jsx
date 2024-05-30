@@ -1,7 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
 import dayjs from 'dayjs';
 import { Loader, PageLoading } from '@components';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
-import { useQueryString } from '@hooks';
+import { useQueryState, parseAsInteger } from 'nuqs';
 import queryString from 'query-string';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
@@ -53,8 +54,8 @@ export const getServerSideProps = async (context) => {
 
 const SchedulingPayment = (props) => {
   const router = useRouter();
-  const [discount] = useQueryString('discountCode');
-  const [courseType] = useQueryString('courseType');
+  const [discount] = useQueryState('discountCode');
+  const [courseType] = useQueryState('courseType');
   const [discountResponse, setDiscountResponse] = useState(null);
   const { id: workshopId } = router.query;
   const { track, page } = useAnalytics();
@@ -260,6 +261,8 @@ const SchedulingPaymentForm = ({
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
+  const [isDirectCheckoutFlow] = useQueryState('direct');
+  const [flowVersion] = useQueryState('fver', parseAsInteger);
 
   const { showAlert } = useGlobalAlertContext();
 
@@ -496,7 +499,11 @@ const SchedulingPaymentForm = ({
             data.attendeeId
           }?${queryString.stringify(filteredParams)}`;
           if (isGenericWorkshop) {
-            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
+            if (flowVersion === 2) {
+              returnUrl = `${window.location.origin}/us-en/scheduling/online/course/${data.attendeeId}?${queryString.stringify(filteredParams)}`;
+            } else {
+              returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
+            }
           }
 
           const result = await stripe.confirmPayment({
@@ -512,15 +519,33 @@ const SchedulingPaymentForm = ({
             throw new Error(result.error.message);
           }
         } else {
-          replaceRouteWithUTMQuery(router, {
-            pathname: `/us-en/course/thankyou/${data.attendeeId}`,
-            query: {
-              ctype: productTypeId,
-              page: 'ty',
-              courseType,
-              referral: 'course_scheduling_checkout',
-            },
-          });
+          if (isGenericWorkshop) {
+            if (flowVersion === 2) {
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/scheduling/online/course/${data.attendeeId}`,
+                query: {
+                  aid: data.attendeeId,
+                },
+              });
+            } else {
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/course/scheduling/${data.attendeeId}`,
+                query: {
+                  aid: data.attendeeId,
+                },
+              });
+            }
+          } else {
+            replaceRouteWithUTMQuery(router, {
+              pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+              query: {
+                ctype: productTypeId,
+                page: 'ty',
+                courseType,
+                referral: 'course_scheduling_checkout',
+              },
+            });
+          }
         }
       }
 
@@ -792,6 +817,47 @@ const SchedulingPaymentForm = ({
                   </div>
                   <div className="col-12 col-lg-5">
                     <div className="checkout-sidebar">
+                      {isDirectCheckoutFlow && (
+                        <div className="d-flex flex-row tw-py-[12px] tw-px-[16px] tw-bg-[#EDF5FC] tw-rounded-2xl tw-text-[#3D8BE8] tw-text-[16px] tw-font-medium">
+                          <i className="d-flex tw-pr-[16px] tw-justify-center">
+                            <svg
+                              className="tw-self-center"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M12 21.9998C17.5 21.9998 22 17.4998 22 11.9998C22 6.49976 17.5 1.99976 12 1.99976C6.5 1.99976 2 6.49976 2 11.9998C2 17.4998 6.5 21.9998 12 21.9998Z"
+                                stroke="#3D8BE8"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M12 7.99976V12.9998"
+                                stroke="#3D8BE8"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M11.9946 16.0002H12.0036"
+                                stroke="#3D8BE8"
+                                stroke-width="2.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </i>
+                          <div>
+                            Once you're registered, you'll be able to choose a
+                            course date/time to suit you! Coursed are offered
+                            every weekend and throughout the week.
+                          </div>
+                        </div>
+                      )}
                       <div className="room-board-pricing">
                         <div className="total">
                           <div className="label">Total:</div>
@@ -806,316 +872,357 @@ const SchedulingPaymentForm = ({
                           </div>
                         </div>
                       </div>
-                      <div className="section-box checkout-details">
-                        <h2 className="section__title">Details:</h2>
-                        <div className="section__body">
-                          <div className="detail-item row">
-                            <div className="label col-5">
-                              <svg
-                                className="detailsIcon icon-calendar"
-                                viewBox="0 0 34 32"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="2.4"
-                                  d="M29.556 16c0 7.36-5.973 13.333-13.333 13.333s-13.333-5.973-13.333-13.333c0-7.36 5.973-13.333 13.333-13.333s13.333 5.973 13.333 13.333z"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="2.4"
-                                  d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
-                                ></path>
-                              </svg>{' '}
-                              Date:
-                            </div>
-                            <div className="value col-7">
-                              {dayjs
-                                .utc(eventStartDate)
-                                .isSame(dayjs.utc(eventEndDate), 'month') &&
-                                `${dayjs
-                                  .utc(eventStartDate)
-                                  .format('MMM DD')}-${dayjs
-                                  .utc(eventEndDate)
-                                  .format('DD, YYYY')}`}
-
-                              {!dayjs
-                                .utc(eventStartDate)
-                                .isSame(dayjs.utc(eventEndDate), 'month') &&
-                                `${dayjs
-                                  .utc(eventStartDate)
-                                  .format('MMM DD')}-${dayjs
-                                  .utc(eventEndDate)
-                                  .format('MMM DD, YYYY')}`}
-                            </div>
-                          </div>
-                          <div className="detail-item row">
-                            <div className="label col-5">
-                              <svg
-                                className="detailsIcon icon-calendar"
-                                viewBox="0 0 34 32"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="10"
-                                  strokeWidth="2.4"
-                                  d="M10.889 2.667v4"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="10"
-                                  strokeWidth="2.4"
-                                  d="M21.555 2.667v4"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="10"
-                                  strokeWidth="2.4"
-                                  d="M4.889 12.12h22.667"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="10"
-                                  strokeWidth="2.4"
-                                  d="M28.222 11.333v11.333c0 4-2 6.667-6.667 6.667h-10.667c-4.667 0-6.667-2.667-6.667-6.667v-11.333c0-4 2-6.667 6.667-6.667h10.667c4.667 0 6.667 2.667 6.667 6.667z"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="3.2"
-                                  d="M21.148 18.267h0.012"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="3.2"
-                                  d="M21.148 22.267h0.012"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="3.2"
-                                  d="M16.216 18.267h0.012"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="3.2"
-                                  d="M16.216 22.267h0.012"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="3.2"
-                                  d="M11.281 18.267h0.012"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="3.2"
-                                  d="M11.281 22.267h0.012"
-                                ></path>
-                              </svg>{' '}
-                              Timing:
-                            </div>
-                            <div className="value col-7">
-                              {timings &&
-                                timings.map((time) => {
-                                  return (
-                                    <div key={time.startDate}>
-                                      {dayjs.utc(time.startDate).format('dd')}:{' '}
-                                      {tConvert(time.startTime)}-
-                                      {tConvert(time.endTime)}{' '}
-                                      {ABBRS[time.timeZone]}
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          </div>
-                          <div className="detail-item row">
-                            <div className="label col-5">
-                              <svg
-                                className="detailsIcon icon-calendar"
-                                viewBox="0 0 34 32"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="2.4"
-                                  d="M16.435 14.493c-0.133-0.013-0.293-0.013-0.44 0-3.173-0.107-5.693-2.707-5.693-5.907 0-3.267 2.64-5.92 5.92-5.92 3.267 0 5.92 2.653 5.92 5.92-0.013 3.2-2.533 5.8-5.707 5.907z"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="round"
-                                  strokeLinecap="round"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="2.4"
-                                  d="M9.768 19.413c-3.227 2.16-3.227 5.68 0 7.827 3.667 2.453 9.68 2.453 13.347 0 3.227-2.16 3.227-5.68 0-7.827-3.653-2.44-9.667-2.44-13.347 0z"
-                                ></path>
-                              </svg>{' '}
-                              Instructor(s):
-                            </div>
-                            <div className="value col-7">
-                              {primaryTeacherName && primaryTeacherName}
-                              <br />
-                              {coTeacher1Name && coTeacher1Name}
-                              <br />
-                              {coTeacher2Name && coTeacher2Name}
-                            </div>
-                          </div>
-                          <div className="detail-item row">
-                            <div className="label col-5">
-                              <svg
-                                className="detailsIcon icon-calendar"
-                                viewBox="0 0 34 32"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="miter"
-                                  strokeLinecap="butt"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="2.4"
-                                  d="M16.223 17.907c2.297 0 4.16-1.863 4.16-4.16s-1.863-4.16-4.16-4.16c-2.298 0-4.16 1.863-4.16 4.16s1.863 4.16 4.16 4.16z"
-                                ></path>
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="miter"
-                                  strokeLinecap="butt"
-                                  strokeMiterlimit="4"
-                                  strokeWidth="2.4"
-                                  d="M5.049 11.32c2.627-11.547 19.733-11.533 22.347 0.013 1.533 6.773-2.68 12.507-6.373 16.053-2.68 2.587-6.92 2.587-9.613 0-3.68-3.547-7.893-9.293-6.36-16.067z"
-                                ></path>
-                              </svg>{' '}
-                              Location:
-                            </div>
-                            <div className="value col-7">
-                              {mode === COURSE_MODES.ONLINE.name
-                                ? mode
-                                : (mode === COURSE_MODES.IN_PERSON.name ||
-                                    mode ===
-                                      COURSE_MODES.DESTINATION_RETREATS
-                                        .name) && (
-                                    <>
-                                      {!workshop.isLocationEmpty && (
-                                        <a
-                                          href={`https://www.google.com/maps/search/?api=1&query=${
-                                            workshop.locationStreet || ''
-                                          }, ${workshop.locationCity} ${
-                                            workshop.locationProvince
-                                          } ${workshop.locationPostalCode} ${
-                                            workshop.locationCountry
-                                          }`}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                        >
-                                          {workshop.locationStreet &&
-                                            workshop.locationStreet}
-                                          {workshop.locationCity || ''}
-                                          {', '}
-                                          {workshop.locationProvince || ''}{' '}
-                                          {workshop.locationPostalCode || ''}
-                                        </a>
-                                      )}
-                                      {workshop.isLocationEmpty && (
-                                        <a
-                                          href={`https://www.google.com/maps/search/?api=1&query=${
-                                            workshop.streetAddress1 || ''
-                                          },${workshop.streetAddress2 || ''} ${
-                                            workshop.city
-                                          } ${workshop.state} ${workshop.zip} ${
-                                            workshop.country
-                                          }`}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                        >
-                                          {workshop.streetAddress1 &&
-                                            workshop.streetAddress1}
-                                          {workshop.streetAddress2 &&
-                                            workshop.streetAddress2}
-                                          {workshop.city || ''}
-                                          {', '}
-                                          {workshop.state || ''}{' '}
-                                          {workshop.zip || ''}
-                                        </a>
-                                      )}
-                                    </>
-                                  )}
-                            </div>
-                          </div>
-                          <div className="detail-item row">
-                            <div className="label col-5">
-                              <svg
-                                className="detailsIcon icon-calendar"
-                                viewBox="0 0 34 32"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="#9598a6"
-                                  strokeLinejoin="miter"
-                                  strokeLinecap="butt"
-                                  strokeMiterlimit="10"
-                                  strokeWidth="2.4"
-                                  d="M29.516 24.44c0 0.48-0.107 0.973-0.333 1.453s-0.52 0.933-0.907 1.36c-0.653 0.72-1.373 1.24-2.187 1.573-0.8 0.333-1.667 0.507-2.6 0.507-1.36 0-2.813-0.32-4.347-0.973s-3.067-1.533-4.587-2.64c-1.533-1.12-2.987-2.36-4.373-3.733-1.373-1.387-2.613-2.84-3.72-4.36-1.093-1.52-1.973-3.040-2.613-4.547-0.64-1.52-0.96-2.973-0.96-4.36 0-0.907 0.16-1.773 0.48-2.573 0.32-0.813 0.827-1.56 1.533-2.227 0.853-0.84 1.787-1.253 2.773-1.253 0.373 0 0.747 0.080 1.080 0.24 0.347 0.16 0.653 0.4 0.893 0.747l3.093 4.36c0.24 0.333 0.413 0.64 0.533 0.933 0.12 0.28 0.187 0.56 0.187 0.813 0 0.32-0.093 0.64-0.28 0.947-0.173 0.307-0.427 0.627-0.747 0.947l-1.013 1.053c-0.147 0.147-0.213 0.32-0.213 0.533 0 0.107 0.013 0.2 0.040 0.307 0.040 0.107 0.080 0.187 0.107 0.267 0.24 0.44 0.653 1.013 1.24 1.707 0.6 0.693 1.24 1.4 1.933 2.107 0.72 0.707 1.413 1.36 2.12 1.96 0.693 0.587 1.267 0.987 1.72 1.227 0.067 0.027 0.147 0.067 0.24 0.107 0.107 0.040 0.213 0.053 0.333 0.053 0.227 0 0.4-0.080 0.547-0.227l1.013-1c0.333-0.333 0.653-0.587 0.96-0.747 0.307-0.187 0.613-0.28 0.947-0.28 0.253 0 0.52 0.053 0.813 0.173s0.6 0.293 0.933 0.52l4.413 3.133c0.347 0.24 0.587 0.52 0.733 0.853 0.133 0.333 0.213 0.667 0.213 1.040z"
-                                ></path>
-                              </svg>{' '}
-                              Contact details:
-                            </div>
-                            <div className="value col-7">
-                              <span>{contactName}</span>
-                              <br />
-                              <a href={`tel:${phone1}`}>{phone1}</a>
-                              <br />
-                              {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}
-                              <a href={`mailto:${contactEmail}`}>
-                                {contactEmail}
-                              </a>
+                      {isGenericWorkshop && (
+                        <div className="section-box checkout-details">
+                          <h2 className="section__title">Details:</h2>
+                          <div className="section__body">
+                            <div className="detail-item row">
+                              <div className="label col-5">
+                                <svg
+                                  className="detailsIcon icon-calendar"
+                                  viewBox="0 0 34 32"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="miter"
+                                    strokeLinecap="butt"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M16.223 17.907c2.297 0 4.16-1.863 4.16-4.16s-1.863-4.16-4.16-4.16c-2.298 0-4.16 1.863-4.16 4.16s1.863 4.16 4.16 4.16z"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="miter"
+                                    strokeLinecap="butt"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M5.049 11.32c2.627-11.547 19.733-11.533 22.347 0.013 1.533 6.773-2.68 12.507-6.373 16.053-2.68 2.587-6.92 2.587-9.613 0-3.68-3.547-7.893-9.293-6.36-16.067z"
+                                  ></path>
+                                </svg>{' '}
+                                Location:
+                              </div>
+                              <div className="value col-7">{mode}</div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      )}
+                      {!isGenericWorkshop && (
+                        <div className="section-box checkout-details">
+                          <h2 className="section__title">Details:</h2>
+                          <div className="section__body">
+                            <div className="detail-item row">
+                              <div className="label col-5">
+                                <svg
+                                  className="detailsIcon icon-calendar"
+                                  viewBox="0 0 34 32"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M29.556 16c0 7.36-5.973 13.333-13.333 13.333s-13.333-5.973-13.333-13.333c0-7.36 5.973-13.333 13.333-13.333s13.333 5.973 13.333 13.333z"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
+                                  ></path>
+                                </svg>{' '}
+                                Date:
+                              </div>
+                              <div className="value col-7">
+                                {dayjs
+                                  .utc(eventStartDate)
+                                  .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                  `${dayjs
+                                    .utc(eventStartDate)
+                                    .format('MMM DD')}-${dayjs
+                                    .utc(eventEndDate)
+                                    .format('DD, YYYY')}`}
+
+                                {!dayjs
+                                  .utc(eventStartDate)
+                                  .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                  `${dayjs
+                                    .utc(eventStartDate)
+                                    .format('MMM DD')}-${dayjs
+                                    .utc(eventEndDate)
+                                    .format('MMM DD, YYYY')}`}
+                              </div>
+                            </div>
+                            <div className="detail-item row">
+                              <div className="label col-5">
+                                <svg
+                                  className="detailsIcon icon-calendar"
+                                  viewBox="0 0 34 32"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="10"
+                                    strokeWidth="2.4"
+                                    d="M10.889 2.667v4"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="10"
+                                    strokeWidth="2.4"
+                                    d="M21.555 2.667v4"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="10"
+                                    strokeWidth="2.4"
+                                    d="M4.889 12.12h22.667"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="10"
+                                    strokeWidth="2.4"
+                                    d="M28.222 11.333v11.333c0 4-2 6.667-6.667 6.667h-10.667c-4.667 0-6.667-2.667-6.667-6.667v-11.333c0-4 2-6.667 6.667-6.667h10.667c4.667 0 6.667 2.667 6.667 6.667z"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="3.2"
+                                    d="M21.148 18.267h0.012"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="3.2"
+                                    d="M21.148 22.267h0.012"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="3.2"
+                                    d="M16.216 18.267h0.012"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="3.2"
+                                    d="M16.216 22.267h0.012"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="3.2"
+                                    d="M11.281 18.267h0.012"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="3.2"
+                                    d="M11.281 22.267h0.012"
+                                  ></path>
+                                </svg>{' '}
+                                Timing:
+                              </div>
+                              <div className="value col-7">
+                                {timings &&
+                                  timings.map((time) => {
+                                    return (
+                                      <div key={time.startDate}>
+                                        {dayjs.utc(time.startDate).format('dd')}
+                                        : {tConvert(time.startTime)}-
+                                        {tConvert(time.endTime)}{' '}
+                                        {ABBRS[time.timeZone]}
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                            </div>
+                            <div className="detail-item row">
+                              <div className="label col-5">
+                                <svg
+                                  className="detailsIcon icon-calendar"
+                                  viewBox="0 0 34 32"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M16.435 14.493c-0.133-0.013-0.293-0.013-0.44 0-3.173-0.107-5.693-2.707-5.693-5.907 0-3.267 2.64-5.92 5.92-5.92 3.267 0 5.92 2.653 5.92 5.92-0.013 3.2-2.533 5.8-5.707 5.907z"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M9.768 19.413c-3.227 2.16-3.227 5.68 0 7.827 3.667 2.453 9.68 2.453 13.347 0 3.227-2.16 3.227-5.68 0-7.827-3.653-2.44-9.667-2.44-13.347 0z"
+                                  ></path>
+                                </svg>{' '}
+                                Instructor(s):
+                              </div>
+                              <div className="value col-7">
+                                {primaryTeacherName && primaryTeacherName}
+                                <br />
+                                {coTeacher1Name && coTeacher1Name}
+                                <br />
+                                {coTeacher2Name && coTeacher2Name}
+                              </div>
+                            </div>
+                            <div className="detail-item row">
+                              <div className="label col-5">
+                                <svg
+                                  className="detailsIcon icon-calendar"
+                                  viewBox="0 0 34 32"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="miter"
+                                    strokeLinecap="butt"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M16.223 17.907c2.297 0 4.16-1.863 4.16-4.16s-1.863-4.16-4.16-4.16c-2.298 0-4.16 1.863-4.16 4.16s1.863 4.16 4.16 4.16z"
+                                  ></path>
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="miter"
+                                    strokeLinecap="butt"
+                                    strokeMiterlimit="4"
+                                    strokeWidth="2.4"
+                                    d="M5.049 11.32c2.627-11.547 19.733-11.533 22.347 0.013 1.533 6.773-2.68 12.507-6.373 16.053-2.68 2.587-6.92 2.587-9.613 0-3.68-3.547-7.893-9.293-6.36-16.067z"
+                                  ></path>
+                                </svg>{' '}
+                                Location:
+                              </div>
+                              <div className="value col-7">
+                                {mode === COURSE_MODES.ONLINE.name
+                                  ? mode
+                                  : (mode === COURSE_MODES.IN_PERSON.name ||
+                                      mode ===
+                                        COURSE_MODES.DESTINATION_RETREATS
+                                          .name) && (
+                                      <>
+                                        {!workshop.isLocationEmpty && (
+                                          <a
+                                            href={`https://www.google.com/maps/search/?api=1&query=${
+                                              workshop.locationStreet || ''
+                                            }, ${workshop.locationCity} ${
+                                              workshop.locationProvince
+                                            } ${workshop.locationPostalCode} ${
+                                              workshop.locationCountry
+                                            }`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                          >
+                                            {workshop.locationStreet &&
+                                              workshop.locationStreet}
+                                            {workshop.locationCity || ''}
+                                            {', '}
+                                            {workshop.locationProvince ||
+                                              ''}{' '}
+                                            {workshop.locationPostalCode || ''}
+                                          </a>
+                                        )}
+                                        {workshop.isLocationEmpty && (
+                                          <a
+                                            href={`https://www.google.com/maps/search/?api=1&query=${
+                                              workshop.streetAddress1 || ''
+                                            },${workshop.streetAddress2 || ''} ${
+                                              workshop.city
+                                            } ${workshop.state} ${workshop.zip} ${
+                                              workshop.country
+                                            }`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                          >
+                                            {workshop.streetAddress1 &&
+                                              workshop.streetAddress1}
+                                            {workshop.streetAddress2 &&
+                                              workshop.streetAddress2}
+                                            {workshop.city || ''}
+                                            {', '}
+                                            {workshop.state || ''}{' '}
+                                            {workshop.zip || ''}
+                                          </a>
+                                        )}
+                                      </>
+                                    )}
+                              </div>
+                            </div>
+                            <div className="detail-item row">
+                              <div className="label col-5">
+                                <svg
+                                  className="detailsIcon icon-calendar"
+                                  viewBox="0 0 34 32"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="#9598a6"
+                                    strokeLinejoin="miter"
+                                    strokeLinecap="butt"
+                                    strokeMiterlimit="10"
+                                    strokeWidth="2.4"
+                                    d="M29.516 24.44c0 0.48-0.107 0.973-0.333 1.453s-0.52 0.933-0.907 1.36c-0.653 0.72-1.373 1.24-2.187 1.573-0.8 0.333-1.667 0.507-2.6 0.507-1.36 0-2.813-0.32-4.347-0.973s-3.067-1.533-4.587-2.64c-1.533-1.12-2.987-2.36-4.373-3.733-1.373-1.387-2.613-2.84-3.72-4.36-1.093-1.52-1.973-3.040-2.613-4.547-0.64-1.52-0.96-2.973-0.96-4.36 0-0.907 0.16-1.773 0.48-2.573 0.32-0.813 0.827-1.56 1.533-2.227 0.853-0.84 1.787-1.253 2.773-1.253 0.373 0 0.747 0.080 1.080 0.24 0.347 0.16 0.653 0.4 0.893 0.747l3.093 4.36c0.24 0.333 0.413 0.64 0.533 0.933 0.12 0.28 0.187 0.56 0.187 0.813 0 0.32-0.093 0.64-0.28 0.947-0.173 0.307-0.427 0.627-0.747 0.947l-1.013 1.053c-0.147 0.147-0.213 0.32-0.213 0.533 0 0.107 0.013 0.2 0.040 0.307 0.040 0.107 0.080 0.187 0.107 0.267 0.24 0.44 0.653 1.013 1.24 1.707 0.6 0.693 1.24 1.4 1.933 2.107 0.72 0.707 1.413 1.36 2.12 1.96 0.693 0.587 1.267 0.987 1.72 1.227 0.067 0.027 0.147 0.067 0.24 0.107 0.107 0.040 0.213 0.053 0.333 0.053 0.227 0 0.4-0.080 0.547-0.227l1.013-1c0.333-0.333 0.653-0.587 0.96-0.747 0.307-0.187 0.613-0.28 0.947-0.28 0.253 0 0.52 0.053 0.813 0.173s0.6 0.293 0.933 0.52l4.413 3.133c0.347 0.24 0.587 0.52 0.733 0.853 0.133 0.333 0.213 0.667 0.213 1.040z"
+                                  ></path>
+                                </svg>{' '}
+                                Contact details:
+                              </div>
+                              <div className="value col-7">
+                                <span>{contactName}</span>
+                                <br />
+                                <a href={`tel:${phone1}`}>{phone1}</a>
+                                <br />
+                                {phone2 && (
+                                  <a href={`tel:${phone2}`}>{phone2}</a>
+                                )}
+                                <a href={`mailto:${contactEmail}`}>
+                                  {contactEmail}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       <div className="section-box confirm-submit">
                         <div className="section__body">
                           <div className="form-item required">
