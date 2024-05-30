@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
 import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
 import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
@@ -7,6 +8,7 @@ import {
   findCourseTypeByKey,
   findSlugByProductTypeId,
   tConvert,
+  formatDateRange,
 } from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
@@ -19,15 +21,347 @@ import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
+import Modal from 'react-bootstrap/Modal';
 import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
-import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
-const COURSE_MODES_BOTH = 'both';
+// eslint-disable-next-line react/display-name
+const WorkshopSelectModal = React.memo(
+  ({
+    setShowWorkshopSelectModal,
+    getWorkshopDetails,
+    setSelectedWorkshopId,
+    setSelectedDates,
+    dateAvailable,
+    selectedDates,
+    showWorkshopSelectModal,
+    workshops,
+    handleWorkshopModalCalendarMonthChange,
+    currentMonthYear,
+    setWorkshops,
+    loading,
+    setActiveWorkshop,
+    handleAutoScrollForMobile,
+    slug,
+  }) => {
+    const { track } = useAnalytics();
+    const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
+    const [backPressed, setBackPressed] = useState(false);
+    const handleWorkshopSelect = async (workshop) => {
+      setLocalSelectedWorkshop(workshop);
+      track('cmodal_course_select');
+    };
+
+    const handleWorkshopSelectForCheckout = async () => {
+      track('cmodal_course_continue');
+      setShowWorkshopSelectModal((prevValue) => !prevValue);
+      const workshopDetail = await getWorkshopDetails(
+        localSelectedWorkshop?.id,
+      );
+      setSelectedWorkshopId(workshopDetail?.id);
+      track('program_date_button', {
+        program_id: localSelectedWorkshop?.id,
+        program_name: workshopDetail?.title,
+        program_date: workshopDetail?.eventStartDate,
+        program_time: workshopDetail?.eventStartTime,
+        category: 'All',
+      });
+      handleAutoScrollForMobile();
+    };
+
+    const handleModalToggle = () => {
+      setSelectedDates([]);
+      setActiveWorkshop({});
+      setSelectedWorkshopId(null);
+      setLocalSelectedWorkshop(null);
+      setShowWorkshopSelectModal(false);
+    };
+
+    const getSelectedAvailabelDate = () => {
+      const index = dateAvailable.findIndex((obj) => {
+        return obj.allDates.every((date) => selectedDates?.includes(date));
+      });
+      return index;
+    };
+
+    const dateIndex = getSelectedAvailabelDate();
+    const currentUserMonth = moment(new Date())?.format('M');
+    const currentSelectedMonth = moment(currentMonthYear, 'YYYY-M')?.format(
+      'M',
+    );
+
+    const handelGoBack = () => {
+      const parsedDate = moment(
+        dateAvailable[dateIndex - 1]?.firstDate,
+        'YYYY-M',
+      )?.format('YYYY-M');
+      if (dateAvailable[dateIndex - 1]?.allDates) {
+        setSelectedDates(dateAvailable[dateIndex - 1]?.allDates);
+      } else {
+        setSelectedDates([]);
+        setLocalSelectedWorkshop(null);
+        setWorkshops([]);
+      }
+      if (parsedDate !== currentMonthYear) {
+        setBackPressed(true);
+        handleWorkshopModalCalendarMonthChange(true);
+      }
+    };
+
+    const handelGoForward = () => {
+      if (dateAvailable[dateIndex + 1]) {
+        const parsedDate = moment(
+          dateAvailable[dateIndex + 1]?.firstDate,
+          'YYYY-M',
+        )?.format('YYYY-M');
+        setSelectedDates(dateAvailable[dateIndex + 1]?.allDates);
+        if (parsedDate !== currentMonthYear) {
+          handleWorkshopModalCalendarMonthChange();
+        }
+      }
+    };
+
+    useEffect(() => {
+      if (dateAvailable.length > 0 && showWorkshopSelectModal && backPressed) {
+        // This logic is when we come back to previous month,
+        //rather than showing the first workshop of the month
+        // we are showing the workshop which is last in the month.
+        let maxDateObject = null;
+        let maxDate = null;
+        const newMonthDate = moment(currentMonthYear, 'YYYY-M').format(
+          'YYYY-MM',
+        );
+        dateAvailable.forEach((item) => {
+          if (item.firstDate.startsWith(newMonthDate)) {
+            const lastDate = item.allDates[item.allDates.length - 1];
+            // Update the maxDateObject if the item's last date is greater than the current maxDate
+            if (!maxDate || lastDate > maxDate) {
+              maxDate = lastDate;
+              maxDateObject = item;
+            }
+          }
+        });
+        setSelectedDates(maxDateObject?.allDates || []);
+        setBackPressed(false);
+      }
+    }, [dateAvailable]);
+
+    return (
+      <Modal
+        show={showWorkshopSelectModal}
+        onHide={handleModalToggle}
+        backdrop="static"
+        className="available-time modal fade bd-example-modal-lg"
+        dialogClassName="modal-dialog modal-dialog-centered modal-lg"
+      >
+        <Modal.Header closeButton>Available Time</Modal.Header>
+        <Modal.Body>
+          <div className="time-slot-changer">
+            <button
+              className="prev-slot"
+              disabled={currentUserMonth === currentSelectedMonth}
+              onClick={handelGoBack}
+            >
+              <img src="/img/chevron-left.svg" />
+            </button>
+            <div className="slot-info">
+              {selectedDates?.length > 0 && formatDateRange(selectedDates)}
+            </div>
+            <button
+              className="next-slot"
+              disabled={!dateAvailable[dateIndex + 1]}
+              onClick={handelGoForward}
+            >
+              <img src="/img/chevron-right.svg" />
+            </button>
+          </div>
+          <div className="slot-listing">
+            {workshops.length > 0
+              ? workshops.map((workshop) => {
+                  return (
+                    <div
+                      className="slot-item"
+                      onClick={() => handleWorkshopSelect(workshop)}
+                      key={workshop?.sfid}
+                    >
+                      <div className="slot-type">
+                        <div className="slot-info">
+                          {workshop?.mode === COURSE_MODES.ONLINE.name ? (
+                            workshop.mode
+                          ) : workshop.isLocationEmpty ? (
+                            <>
+                              {workshop?.city}, {workshop?.state}
+                            </>
+                          ) : (
+                            `${
+                              workshop.locationStreet
+                                ? workshop.locationStreet + ','
+                                : ''
+                            } ${
+                              workshop.locationCity
+                                ? workshop.locationCity + ','
+                                : ''
+                            }
+                              ${
+                                workshop.locationProvince
+                                  ? workshop.locationProvince + ','
+                                  : ''
+                              } ${workshop.locationCountry || ''}`
+                          )}
+                        </div>
+                        <div className="slot-select form-item">
+                          <input
+                            type="radio"
+                            value={localSelectedWorkshop?.id}
+                            defaultChecked={
+                              localSelectedWorkshop?.id === workshop.id
+                            }
+                            checked={localSelectedWorkshop?.id === workshop.id}
+                          />
+                        </div>
+                      </div>
+                      {workshop.timings.map((timing, index) => {
+                        return (
+                          <div className="slot-timing" key={index}>
+                            <div className="slot-date">
+                              <svg
+                                className="detailsIcon icon-calendar"
+                                viewBox="0 0 34 32"
+                              >
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M10.889 2.667v4"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M21.555 2.667v4"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M4.889 12.12h22.667"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="10"
+                                  strokeWidth="2.4"
+                                  d="M28.222 11.333v11.333c0 4-2 6.667-6.667 6.667h-10.667c-4.667 0-6.667-2.667-6.667-6.667v-11.333c0-4 2-6.667 6.667-6.667h10.667c4.667 0 6.667 2.667 6.667 6.667z"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M21.148 18.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M21.148 22.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M16.216 18.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M16.216 22.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M11.281 18.267h0.012"
+                                ></path>
+                                <path
+                                  fill="none"
+                                  stroke="#3d8be8"
+                                  strokeLinejoin="round"
+                                  strokeLinecap="round"
+                                  strokeMiterlimit="4"
+                                  strokeWidth="3.2"
+                                  d="M11.281 22.267h0.012"
+                                ></path>
+                              </svg>
+                              {dayjs.utc(timing.startDate).format('M/DD, ddd')}
+                            </div>
+
+                            <div className="slot-time">
+                              {tConvert(timing.startTime)}-
+                              {tConvert(timing.endTime)}{' '}
+                              {ABBRS[timing.timeZone]}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })
+              : !loading && (
+                  <div className="specific-teacher-text">
+                    No Workshops available
+                  </div>
+                )}
+          </div>
+          <div className="specific-teacher-text">
+            Are you looking for a course with a specific teacher?{' '}
+            <a href={`/us-en/courses/${slug}`}>Click here</a>
+          </div>
+          <div className="slot-action">
+            <button
+              type="button"
+              disabled={!localSelectedWorkshop}
+              className="btn btn-primary find-courses submit-btn"
+              onClick={handleWorkshopSelectForCheckout}
+            >
+              Continue
+            </button>
+          </div>
+        </Modal.Body>
+      </Modal>
+    );
+  },
+);
 
 const Scheduling = () => {
   const fp = useRef(null);
@@ -61,7 +395,7 @@ const Scheduling = () => {
   );
   const [mode, setMode] = useQueryState(
     'mode',
-    parseAsString.withDefault('both'),
+    parseAsString.withDefault('In Person'),
   );
 
   const [teacherFilter] = useQueryState('teacher');
@@ -204,9 +538,7 @@ const Scheduling = () => {
       if (mode !== COURSE_MODES.IN_PERSON.value) {
         param = { ...param, timeZone: timezoneFilter };
       }
-      if (mode && mode !== COURSE_MODES_BOTH) {
-        param = { ...param, mode };
-      }
+      param = { ...param, mode };
       if (milesFilter) {
         param = { ...param, radius: milesFilter };
       }
@@ -351,9 +683,7 @@ const Scheduling = () => {
     if (mode !== COURSE_MODES.IN_PERSON.value) {
       param = { ...param, timeZone: timezoneFilter };
     }
-    if (mode && mode !== COURSE_MODES_BOTH) {
-      param = { ...param, mode };
-    }
+    param = { ...param, mode };
     if (milesFilter) {
       param = { ...param, radius: milesFilter };
     }
@@ -627,43 +957,17 @@ const Scheduling = () => {
     }, 100);
   };
 
-  const handleTransferWorkshopRequest = async () => {
-    //token.saveCardForFuture = true;
-    if (loading) {
-      return null;
-    }
-    setLoading(true);
-    try {
-      const {
-        status,
-        data,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        path: 'transferWorkshopAttendee',
-        body: { attendeeRecordId: attendeeId, productSfId: activeWorkshop?.id },
-      });
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
+  const scrollToCourseHighlight = (e) => {
+    if (e) e.preventDefault();
+    setTimeout(() => {
+      const timeContainer = document.querySelector('.course-highlight-col');
+      if (timeContainer) {
+        timeContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
       }
-      setLoading(false);
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/thankyou/${attendeeId}`,
-        query: {
-          ctype: activeWorkshop.productTypeId,
-          page: 'ty',
-          referral: 'course_scheduling_checkout',
-        },
-      });
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
-    }
+    }, 100);
   };
 
   const isInPersonMode =
@@ -676,49 +980,47 @@ const Scheduling = () => {
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
-      <main className="scheduling-page calendar-online">
-        <section className="scheduling-top">
-          {(!attendeeId || activeWorkshop?.id) && (
-            <div className="container">
-              <h1 className="page-title">{workshopMaster?.title}</h1>
-              <div
-                className="page-description"
-                dangerouslySetInnerHTML={{
-                  __html: workshopMaster?.calenderViewDescription,
-                }}
-              ></div>
-            </div>
-          )}
-          {attendeeId && !activeWorkshop?.id && (
-            <div className="container">
-              <h1 className="page-title">Thank you for your payment</h1>
-              <div className="page-description">
-                <b>Select a date</b> to register for the {workshopMaster?.title}{' '}
-                course.
-              </div>
-            </div>
-          )}
+      <main className="in-person-course-page">
+        <section class="top-section">
+          <div class="container">
+            <h1 class="page-title">{workshopMaster?.title}</h1>
+            <div
+              class="page-description"
+              dangerouslySetInnerHTML={{
+                __html: workshopMaster?.calenderViewDescription,
+              }}
+            ></div>
+          </div>
+          <div class="mt-3 text-center d-lg-none d-md-none">
+            <a
+              href="#"
+              class="course-highlight-action"
+              onClick={scrollToCourseHighlight}
+            >
+              Course Highlights {'>>'}
+            </a>
+          </div>
         </section>
-        <section className="scheduling-stepper">
-          <div className="container">
-            <div className="step-wrapper">
-              <div className="step active">
-                <div className="step-icon">
+        <section class="scheduling-stepper">
+          <div class="container">
+            <div class="step-wrapper">
+              <div class="step active">
+                <div class="step-icon">
                   <span></span>
                 </div>
-                <div className="step-text">Select the date</div>
+                <div class="step-text">Select Course Date & Time</div>
               </div>
               <div className={selectedWorkshopId ? 'step active' : 'step'}>
-                <div className="step-icon">
+                <div class="step-icon">
                   <span></span>
                 </div>
-                <div className="step-text">Select the course time</div>
+                <div class="step-text">Complete Your Purchase</div>
               </div>
-              <div className="step">
-                <div className="step-icon">
+              <div class="step">
+                <div class="step-icon">
                   <span></span>
                 </div>
-                <div className="step-text">Checkout</div>
+                <div class="step-text">Start Your Course</div>
               </div>
             </div>
           </div>
@@ -726,28 +1028,8 @@ const Scheduling = () => {
         <section className="calendar-section">
           <div className="container">
             <div className="calendar-area-wrap">
-              <div className="first-col">
+              <div className={!activeWorkshop?.id ? 'first-col' : 'hide-col'}>
                 <div className="cal-filters">
-                  {!attendeeId && (
-                    <div className="form-item">
-                      <label>Course type</label>
-                      <select
-                        className="input-select"
-                        id="courseType"
-                        name="courseType"
-                        value={mode}
-                        onChange={(ev) => handleSelectMode(ev.target.value)}
-                      >
-                        <option value="both">All courses</option>
-                        <option value={COURSE_MODES.ONLINE.value}>
-                          Online
-                        </option>
-                        <option value={COURSE_MODES.IN_PERSON.value}>
-                          In-person
-                        </option>
-                      </select>
-                    </div>
-                  )}
                   <div className="form-item">
                     <ScheduleLocationFilterNew
                       handleLocationChange={handleLocationFilterChange}
@@ -775,52 +1057,11 @@ const Scheduling = () => {
                       minDate: 'today',
                       enable: enableDates || [],
                     }}
-                    onDayCreate={handelDayCreate}
                     onMonthChange={onMonthChangeAction}
                   />
-                  <div className="event-type-pills">
-                    <div className="online">
-                      <span className="icon-aol iconaol-monitor-mobile"></span>
-                      Online
-                      <span className="icon-aol iconaol-info-circle"></span>
-                      <div className="tooltip">
-                        <h4>
-                          <span className="icon-aol iconaol-monitor-mobile"></span>
-                          Online
-                        </h4>
-                        <p>
-                          Enjoy your experience from the comfort of your own
-                          home (or anywhere quiet you choose). A more flexible
-                          choice for busy folks!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="inPerson">
-                      <span className="icon-aol iconaol-profile-users"></span>
-                      In person
-                      <span className="icon-aol iconaol-info-circle"></span>
-                      <div className="tooltip">
-                        <h4>
-                          <span className="icon-aol iconaol-profile-users"></span>
-                          In person{' '}
-                        </h4>
-                        <p>
-                          Within a relaxing venue, you’ll leave everyday
-                          distractions and stresses behind, enabling an
-                          immersive journey and connection to a like-minded
-                          community in real life.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-                {!activeWorkshop?.id && (
-                  <div className="specific-teacher-text">
-                    Are you looking for a course with a specific teacher?{' '}
-                    <a href={`/us-en/courses/${slug}`}>Click here</a>
-                  </div>
-                )}
-                {!selectedWorkshopId && (
+
+                {/* {!selectedWorkshopId && (
                   <div className="payment-box center-one">
                     <div className="payment-total-box">
                       <label>Total:</label>
@@ -847,45 +1088,44 @@ const Scheduling = () => {
                       </div>
                     </div>
                   </div>
-                )}
-                <div className="question-call">
-                  <a href="tel:(855)2024400" className="call-cta">
+                )} */}
+                <div class="other-calendar-info">
+                  <span class="icon-aol iconaol-clock-bold"></span>Flexible
+                  Rescheduling for All Courses
+                </div>
+                <div class="question-call">
+                  <a href="tel:(855)2024400" class="call-cta">
                     Still have questions?{' '}
                     <strong>Call us at (855) 202-4400</strong>
                   </a>
                 </div>
               </div>
-              <div className={activeWorkshop?.id ? 'second-col' : 'hide-col'}>
+              <div className={activeWorkshop?.id ? 'first-col' : 'hide-col'}>
                 <div className="payment-box">
-                  {!attendeeId && (
-                    <>
-                      <div className="payment-total-box">
-                        <label>Total:</label>
-                        <div className="amount">
-                          $
-                          {`${
-                            activeWorkshop.unitPrice
-                              ? activeWorkshop.unitPrice.toFixed(2) ||
-                                '0'.toFixed(2)
-                              : workshopMaster.unitPrice
-                          }`}
-                        </div>
+                  <div className="payment-total-box">
+                    <label>Total:</label>
+                    <div className="amount">
+                      $
+                      {`${
+                        activeWorkshop.unitPrice
+                          ? activeWorkshop.unitPrice.toFixed(2) ||
+                            '0'.toFixed(2)
+                          : workshopMaster.unitPrice
+                      }`}
+                    </div>
+                  </div>
+                  <div className="payment-details">
+                    <div className="payby">
+                      Pay As Low As{' '}
+                      <img src="/img/logo-affirm.webp" height="22" />
+                    </div>
+                    <div className="price-breakup">
+                      <div className="price-per-month">
+                        ${activeWorkshop?.instalmentAmount}/<span>month</span>
                       </div>
-                      <div className="payment-details">
-                        <div className="payby">
-                          Pay As Low As{' '}
-                          <img src="/img/logo-affirm.webp" height="22" />
-                        </div>
-                        <div className="price-breakup">
-                          <div className="price-per-month">
-                            ${activeWorkshop?.instalmentAmount}/
-                            <span>month</span>
-                          </div>
-                          <div className="payment-tenure">for 12 months</div>
-                        </div>
-                      </div>
-                    </>
-                  )}
+                      <div className="payment-tenure">for 12 months</div>
+                    </div>
+                  </div>
 
                   <div className="checkout-details">
                     <div className="section__body">
@@ -1273,15 +1513,6 @@ const Scheduling = () => {
                         btnText="Checkout"
                       />
                     )}
-                    {attendeeId && (
-                      <button
-                        className="submit-btn"
-                        disabled={!selectedWorkshopId}
-                        onClick={handleTransferWorkshopRequest}
-                      >
-                        Continue
-                      </button>
-                    )}
 
                     {!activeWorkshop && (
                       <button
@@ -1293,6 +1524,72 @@ const Scheduling = () => {
                       </button>
                     )}
                   </div>
+                </div>
+              </div>
+              <div class="second-col course-highlight-col">
+                <div class="course-highlight-box">
+                  <div class="box-hero-image-wrap">
+                    <img
+                      src="/img/course-highlight-box-hero.png"
+                      alt="course highlight"
+                      width="100%"
+                    />
+                  </div>
+                  <div class="course-highlights-info-box">
+                    <h2>Course Highlights:</h2>
+                    <ul>
+                      <li>
+                        <span class="icon-aol iconaol-users"></span>
+                        <span>
+                          Engage in a <strong>3-day, 2.5-hour</strong> daily
+                          course led by a certified instructor in a small group
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-world-clock"></span>
+                        <span>
+                          Available multiple times daily across PT, ET, CT time
+                          zones
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-yoga"></span>
+                        <span>
+                          Master <strong>Sudarshan Kriya Yoga (SKY)</strong> and
+                          other effective pranayama breathing methods.
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-relieved"></span>
+                        <span>
+                          Receive the "<strong>5 Keys to a Joyful Life</strong>"
+                          toolkit, providing essential strategies for lifelong
+                          happiness and well-being.
+                        </span>
+                      </li>
+                      <li>
+                        <span class="icon-aol iconaol-calendar-2"></span>
+                        <span>
+                          <strong>Flexible</strong> rescheduling options.
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="course-medical-info">
+                  <img
+                    src="/img/mental_health-vector-icon.svg"
+                    width="54"
+                    height="54"
+                    alt="mental health"
+                  />
+                  <span>
+                    Over <strong>40 years</strong> of research and more than{' '}
+                    <strong>100 independent studies</strong> at top institutions
+                    like Harvard and Stanford demonstrate that SKY significantly
+                    improves sleep quality, reduces stress and anxiety, boosts
+                    immunity, and increases focus and energy.
+                  </span>
                 </div>
               </div>
             </div>

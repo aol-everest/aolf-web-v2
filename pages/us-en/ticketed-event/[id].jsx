@@ -149,6 +149,18 @@ function TicketedEvent() {
     }
   }, [pricingTiers]);
 
+  let pricingTiersLocal = pricingTiers?.filter((p) => {
+    return p.pricingTierId in selectedTickets;
+  });
+  pricingTiersLocal = pricingTiersLocal?.map((p) => {
+    p.numberOfTickets = selectedTickets[p.pricingTierId];
+    return p;
+  });
+  const total = pricingTiersLocal?.reduce((accumulator, item) => {
+    accumulator = accumulator + item.price * item?.numberOfTickets;
+    return accumulator;
+  }, 0);
+
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
@@ -205,17 +217,6 @@ function TicketedEvent() {
   };
 
   const renderSummary = () => {
-    let pricingTiersLocal = pricingTiers.filter((p) => {
-      return p.pricingTierId in selectedTickets;
-    });
-    pricingTiersLocal = pricingTiersLocal.map((p) => {
-      p.numberOfTickets = selectedTickets[p.pricingTierId];
-      return p;
-    });
-    const total = pricingTiersLocal.reduce((accumulator, item) => {
-      accumulator = accumulator + item.price * item?.numberOfTickets;
-      return accumulator;
-    }, 0);
     return (
       <>
         <div className="tickets-container">
@@ -338,9 +339,12 @@ function TicketedEvent() {
                         {renderSummary()}
                       </div>
                       <div className="tickets-modal__footer">
-                        {event && (
+                        {event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
-                            <StripeExpressCheckoutTicket workshop={event} />
+                            <StripeExpressCheckoutTicket
+                              workshop={event}
+                              total={total}
+                            />
                           </div>
                         )}
                         <button
