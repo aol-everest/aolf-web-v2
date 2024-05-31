@@ -227,7 +227,7 @@ export const PaymentFormNew = ({
     await signOut();
     pushRouteWithUTMQuery(
       router,
-      `/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 
