@@ -246,6 +246,11 @@ function TicketedEvent() {
     );
   };
 
+  const formattedStartDate = dayjs
+    .utc(eventStartDate)
+    .format('ddd, MMM DD, YYYY');
+  const formattedEndDate = dayjs.utc(eventEndDate).format('ddd, MMM DD, YYYY');
+
   return (
     <Formik
       initialValues={{
@@ -268,11 +273,9 @@ function TicketedEvent() {
                     <div className="tickets-modal__section-products">
                       <h2 className="tickets-modal__title">{title}</h2>
                       <p className="tickets-modal__date">
-                        {`${dayjs
-                          .utc(eventStartDate)
-                          .format('ddd, MMM DD, YYYY')}`}{' '}
-                        -{' '}
-                        {`${dayjs.utc(eventEndDate).format('ddd, MMM DD, YYYY')}`}
+                        {eventStartDate === eventEndDate
+                          ? formattedStartDate
+                          : `${formattedStartDate} - ${formattedEndDate}`}
                       </p>
                       <p className="tickets-modal__date">
                         {tConvert(eventStartTime, true)} -{' '}

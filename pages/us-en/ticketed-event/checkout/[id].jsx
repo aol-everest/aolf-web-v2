@@ -146,7 +146,7 @@ const TicketCheckoutForm = ({ event }) => {
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
   const [loading, setLoading] = useState(false);
-  const [showAttendeeDetails, setShowAttendeeDetails] = useState(true);
+  const [showAttendeeDetails, setShowAttendeeDetails] = useState(false);
   const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [pricingTiersLocalState, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
@@ -192,7 +192,10 @@ const TicketCheckoutForm = ({ event }) => {
   });
 
   useEffect(() => {
-    setPricingTierLocal(pricingTiersLocal);
+    if (isAllAttedeeInformationRequired) {
+      setShowAttendeeDetails(true);
+      setPricingTierLocal(pricingTiersLocal);
+    }
   }, []);
 
   const totalPrice = pricingTiersLocal.reduce((accumulator, item) => {
@@ -716,23 +719,15 @@ const TicketCheckoutForm = ({ event }) => {
                                 Date:
                               </div>
                               <div className="value col-7">
-                                {dayjs
-                                  .utc(eventStartDate)
-                                  .isSame(dayjs.utc(eventEndDate), 'month') &&
-                                  `${dayjs
-                                    .utc(eventStartDate)
-                                    .format('MMM DD')}-${dayjs
-                                    .utc(eventEndDate)
-                                    .format('DD, YYYY')}`}
-
-                                {!dayjs
-                                  .utc(eventStartDate)
-                                  .isSame(dayjs.utc(eventEndDate), 'month') &&
-                                  `${dayjs
-                                    .utc(eventStartDate)
-                                    .format('MMM DD')}-${dayjs
-                                    .utc(eventEndDate)
-                                    .format('MMM DD, YYYY')}`}
+                                {eventStartDate === eventEndDate
+                                  ? dayjs
+                                      .utc(eventStartDate)
+                                      .format('MMM DD, YYYY')
+                                  : `${dayjs
+                                      .utc(eventStartDate)
+                                      .format('MMM DD')}-${dayjs
+                                      .utc(eventEndDate)
+                                      .format('DD, YYYY')}`}
                               </div>
                             </div>
                             <div className="detail-item row">
