@@ -582,16 +582,18 @@ const TicketCheckoutForm = ({ event }) => {
                       ) : (
                         <>
                           <div className="section-box account-details">
-                            <p className="details__content">
-                              <FaChevronLeft className="fa-solid" />
-                              <a
-                                href="#"
-                                className="link"
-                                onClick={handleAttendeeDetails}
-                              >
-                                Go Back
-                              </a>
-                            </p>
+                            {isAllAttedeeInformationRequired && (
+                              <p className="details__content">
+                                <FaChevronLeft className="fa-solid" />
+                                <a
+                                  href="#"
+                                  className="link"
+                                  onClick={handleAttendeeDetails}
+                                >
+                                  Go Back
+                                </a>
+                              </p>
+                            )}
 
                             <h2 className="section__title">Account Details</h2>
                             <p className="tickets-modal__billing-login">
