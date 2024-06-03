@@ -249,7 +249,17 @@ const TicketCheckoutForm = ({ event }) => {
 
     const { id: productId, isCCNotRequired } = event;
 
-    const { firstName, lastName, email, contactPhone, questionnaire } = values;
+    const {
+      firstName,
+      lastName,
+      email,
+      contactPhone,
+      questionnaire,
+      contactAddress,
+      contactCity,
+      contactState,
+      contactZip,
+    } = values;
 
     const complianceQuestionnaire = questionnaire.reduce(
       (res, current) => ({
@@ -289,9 +299,17 @@ const TicketCheckoutForm = ({ event }) => {
           couponCode: discountResponse?.couponCode || '',
           contactAddress: {
             contactPhone,
+            contactAddress,
+            contactCity,
+            contactState,
+            contactZip,
           },
           billingAddress: {
             billingPhone: contactPhone,
+            billingAddress: contactAddress,
+            billingCity: contactCity,
+            billingState: contactState,
+            billingZip: contactZip,
           },
           products,
           complianceQuestionnaire,
