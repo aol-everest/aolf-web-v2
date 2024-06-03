@@ -141,11 +141,9 @@ const CheckoutPage = ({
         throw new Error(errorMessage);
       }
 
-      const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
-
       const returnUrl = `${
         window.location.origin
-      }/us-en/course/scheduling/thankyou/${data.attendeeId}?${queryString.stringify(
+      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
         filteredParams,
       )}`;
 
