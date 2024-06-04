@@ -145,6 +145,8 @@ const TicketCongratulations = () => {
     (item) => item?.pricingTierName,
   );
   const uniqueTicketTiers = [...new Set(ticketTiers)];
+  const formattedStartDate = dayjs.utc(eventStartDate).format('ddd');
+  const formattedEndDate = dayjs.utc(eventEndDate).format('ddd');
 
   return (
     <main className="course-filter calendar-online">
@@ -251,9 +253,10 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="event-item">
                     <i className="fa fa-sun-o" aria-hidden="true"></i>{' '}
-                    <span>Day: </span> {dayjs.utc(eventStartDate).format('ddd')}
-                    {eventEndDate &&
-                      ` - ${dayjs.utc(eventEndDate).format('ddd')}`}
+                    <span>Day: </span>{' '}
+                    {eventStartDate === eventEndDate
+                      ? dayjs.utc(eventStartDate).format('dddd')
+                      : `${formattedStartDate} - ${formattedEndDate}`}
                   </li>
                   <li className="event-item">
                     <i className="fa fa-calendar" aria-hidden="true"></i>{' '}

@@ -85,7 +85,7 @@ const CheckoutPage = ({ workshop, total }) => {
       } = await api.post({
         path: 'createIntentForExpressCheckout',
         body: {
-          workshopId: workshop.id,
+          ticketedEventId: workshop.id,
           utmParams: filteredParams,
         },
         isUnauthorized: true,
