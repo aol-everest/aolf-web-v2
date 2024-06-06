@@ -7,13 +7,6 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import { useEffectOnce } from 'react-use';
-import {
-  FaTicket,
-  FaAngellist,
-  FaHashtag,
-  FaMoneyBill,
-  FaList,
-} from 'react-icons/fa6';
 import { FaInfoCircle } from 'react-icons/fa';
 import { ALERT_TYPES, COURSE_MODES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
@@ -29,7 +22,7 @@ const TicketCongratulations = () => {
   const router = useRouter();
   const { track, page } = useAnalytics();
   const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { id: attendeeId } = router.query;
+  const { id: eventId } = router.query;
 
   useEffectOnce(() => {
     page({
@@ -40,22 +33,22 @@ const TicketCongratulations = () => {
   });
 
   const {
-    data: attendeeDetail,
+    data: eventDetails,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: 'getTicketedEventAttendees',
+    queryKey: 'getTicketedEvent',
     queryFn: async () => {
       const response = await api.get({
-        path: 'getTicketedEventAttendees',
+        path: 'getTicketedEvent',
         param: {
-          orderId: attendeeId,
+          id: eventId,
         },
       });
       return response.data;
     },
-    enabled: !!attendeeId,
+    enabled: !!eventId,
   });
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
@@ -90,9 +83,7 @@ const TicketCongratulations = () => {
     zip,
     country,
     timings,
-  } = attendeeDetail.ticketedEvent || {};
-
-  const totalNoOfTickets = attendeeDetail.attendees.length;
+  } = eventDetails || {};
 
   let startDatetime = null;
   if (eventStartDateTimeGMT) {
@@ -142,10 +133,6 @@ const TicketCongratulations = () => {
     });
   };
 
-  const ticketTiers = attendeeDetail.attendees.map(
-    (item) => item?.pricingTierName,
-  );
-  const uniqueTicketTiers = [...new Set(ticketTiers)];
   const formattedStartDate = dayjs.utc(eventStartDate).format('ddd');
   const formattedEndDate = dayjs.utc(eventEndDate).format('ddd');
 
@@ -164,65 +151,11 @@ const TicketCongratulations = () => {
         <div className="container checkout-congratulations">
           <div className="calendar-benefits-wrapper row">
             <div className="col-12 col-lg-8 paddingRight">
-              <h2 className="section-title">
-                <FaList className="fa fa-list-alt" /> Order Details
-              </h2>
               <div className="order-details-wrapper">
-                <ul className="order-items-list">
-                  <li className="order-item">
-                    <FaTicket className="fa fa-ticket" />{' '}
-                    <span>Ticket Type: </span>
-                    {uniqueTicketTiers?.join(', ')}
-                  </li>
-                  <li className="order-item">
-                    <FaAngellist className="fa fa-hand-peace-o" />{' '}
-                    <span>Number of Tickets: </span>
-                    {totalNoOfTickets}
-                  </li>
-                  <li className="order-item">
-                    <FaHashtag className="fa fa-hashtag" />{' '}
-                    <span>Order Number: </span>
-                    {attendeeId}
-                  </li>
-                  <li className="order-item">
-                    <FaMoneyBill className="fa fa-money" />{' '}
-                    <span>Order Total: </span> ${attendeeDetail.totalAmountPaid}
-                  </li>
-                </ul>
                 <div className="bottom-info">
                   <FaInfoCircle className="fa fa-info-circle" /> You should
                   receive the tickets in your email
                 </div>
-              </div>
-
-              <h2 className="section-title">
-                <FaList className="fa fa-list-alt" /> Ticket Information
-              </h2>
-              <div className="tickets-accepted">
-                {attendeeDetail.attendees.map((item, index) => {
-                  return (
-                    <div
-                      className="ticket-box"
-                      key={item.attendeeRecordExternalId}
-                    >
-                      <div className="ticket-header">
-                        <div className="ticket-title">
-                          TICKET HOLDER #{index + 1}
-                        </div>
-                        <div className="ticket-type">
-                          {item.pricingTierName}
-                        </div>
-                      </div>
-                      <div className="ticket-body">
-                        <div className="ticket-holder-name">{item.name}</div>
-                        <div className="ticket-holder-email">{item.email}</div>
-                        <div className="ticket-holder-mobile">
-                          {item.contactPhone}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
               </div>
             </div>
             <div className="col-12 col-lg-4 borderLeft">
