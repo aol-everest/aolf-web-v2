@@ -15,7 +15,7 @@ import {
   FaList,
 } from 'react-icons/fa6';
 import { FaInfoCircle } from 'react-icons/fa';
-import { ALERT_TYPES, COURSE_MODES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
 import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
@@ -89,6 +89,7 @@ const TicketCongratulations = () => {
     state,
     zip,
     country,
+    timings,
   } = attendeeDetail.ticketedEvent || {};
 
   const totalNoOfTickets = attendeeDetail.attendees.length;
@@ -270,8 +271,18 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="event-item">
                     <i className="fa fa-clock" aria-hidden="true"></i>{' '}
-                    <span>Time: </span> {tConvert(eventStartTime, true)} -{' '}
-                    {tConvert(eventEndTime, true)}
+                    <span>Time: </span>
+                    {timings &&
+                      timings.map((time) => {
+                        return (
+                          <div class="info-item" key={time.startDate}>
+                            <span class="p2">
+                              {tConvert(time.startTime)}-
+                              {tConvert(time.endTime)}{' '}
+                            </span>
+                          </div>
+                        );
+                      })}
                   </li>
                 </ul>
                 <div className="contact-info">
