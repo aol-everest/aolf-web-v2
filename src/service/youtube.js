@@ -7,13 +7,13 @@ async function getPlaylistDetails(playlistId) {
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    const videoIds = (data.items || []).map(
-      ({ snippet }) => snippet.resourceId.videoId,
-    );
+    const items = data.items || [];
+
+    const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId);
 
     const videoDetails = await getVideoDetails(videoIds);
 
-    let result = data.items.map((item) => {
+    let result = items.map((item) => {
       const videoDetail = videoDetails.find(
         (v) => v.id === item.snippet.resourceId.videoId,
       );
