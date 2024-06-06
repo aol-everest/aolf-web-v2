@@ -7,7 +7,7 @@ async function getPlaylistDetails(playlistId) {
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    const videoIds = data.items.map(
+    const videoIds = (data.items || []).map(
       ({ snippet }) => snippet.resourceId.videoId,
     );
 
