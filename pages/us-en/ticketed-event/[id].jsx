@@ -117,6 +117,7 @@ function TicketedEvent() {
     state,
     zip,
     maxTicketsWithOneOrder,
+    timings,
   } = event || {};
 
   useEffect(() => {
@@ -246,10 +247,8 @@ function TicketedEvent() {
     );
   };
 
-  const formattedStartDate = dayjs
-    .utc(eventStartDate)
-    .format('ddd, MMM DD, YYYY');
-  const formattedEndDate = dayjs.utc(eventEndDate).format('ddd, MMM DD, YYYY');
+  const formattedStartDate = dayjs.utc(eventStartDate).format('MMM DD, YYYY');
+  const formattedEndDate = dayjs.utc(eventEndDate).format('MMM DD, YYYY');
 
   return (
     <Formik
@@ -272,44 +271,66 @@ function TicketedEvent() {
                   <div className="tickets-modal__left-column">
                     <div className="tickets-modal__section-products">
                       <h2 className="tickets-modal__title">{title}</h2>
-                      <p className="tickets-modal__date">
-                        {eventStartDate === eventEndDate
-                          ? formattedStartDate
-                          : `${formattedStartDate} - ${formattedEndDate}`}
-                      </p>
-                      <p className="tickets-modal__date">
-                        {tConvert(eventStartTime, true)} -{' '}
-                        {tConvert(eventEndTime, true)}{' '}
-                        {' ' + ABBRS[eventTimeZone]}
-                      </p>
-                      <p className="tickets-modal__location">
-                        {mode === COURSE_MODES.ONLINE.name
-                          ? mode
-                          : (mode === COURSE_MODES.IN_PERSON.name ||
-                              mode ===
-                                COURSE_MODES.DESTINATION_RETREATS.name) && (
-                              <>
-                                {!isLocationEmpty && (
-                                  <span>
-                                    {locationStreet && locationStreet}
-                                    {locationCity || ''}
-                                    {', '}
-                                    {locationProvince || ''}{' '}
-                                    {locationPostalCode || ''}
-                                  </span>
+                      <div class="section-wisdom-event-checkout-info">
+                        <div class="info-item">
+                          <span class="icon-aol iconaol-calendar"></span>
+                          <span class="p2">
+                            <strong>Duration:</strong>{' '}
+                            {eventStartDate === eventEndDate
+                              ? formattedStartDate
+                              : `${dayjs.utc(eventStartDate).format('ddd, ')}${formattedStartDate} - ${dayjs.utc(eventEndDate).format('ddd, ')}${formattedEndDate}`}
+                          </span>
+                        </div>
+
+                        {timings &&
+                          timings.map((time, index) => {
+                            return (
+                              <div class="info-item" key={time.startDate}>
+                                <span class="icon-aol iconaol-calendar-2"></span>
+                                <span class="p2">
+                                  <strong>Day {index + 1}:</strong>{' '}
+                                  {dayjs.utc(time.startDate).format('ddd')}:{' '}
+                                  {tConvert(time.startTime)}-
+                                  {tConvert(time.endTime)}{' '}
+                                  {ABBRS[time.timeZone]}
+                                </span>
+                              </div>
+                            );
+                          })}
+
+                        <div class="info-item">
+                          <span class="icon-aol iconaol-location"></span>
+                          <span class="p2">
+                            <strong>Location:</strong>{' '}
+                            {mode === COURSE_MODES.ONLINE.name
+                              ? mode
+                              : (mode === COURSE_MODES.IN_PERSON.name ||
+                                  mode ===
+                                    COURSE_MODES.DESTINATION_RETREATS.name) && (
+                                  <>
+                                    {!isLocationEmpty && (
+                                      <span>
+                                        {locationStreet && locationStreet}
+                                        {locationCity || ''}
+                                        {', '}
+                                        {locationProvince || ''}{' '}
+                                        {locationPostalCode || ''}
+                                      </span>
+                                    )}
+                                    {isLocationEmpty && (
+                                      <span>
+                                        {streetAddress1 && streetAddress1}
+                                        {streetAddress2 && streetAddress2}
+                                        {city || ''}
+                                        {', '}
+                                        {state || ''} {zip || ''}
+                                      </span>
+                                    )}
+                                  </>
                                 )}
-                                {isLocationEmpty && (
-                                  <span>
-                                    {streetAddress1 && streetAddress1}
-                                    {streetAddress2 && streetAddress2}
-                                    {city || ''}
-                                    {', '}
-                                    {state || ''} {zip || ''}
-                                  </span>
-                                )}
-                              </>
-                            )}
-                      </p>
+                          </span>
+                        </div>
+                      </div>
 
                       <div className="tickets-modal__list">
                         {pricingTiers?.map((item, index) => (

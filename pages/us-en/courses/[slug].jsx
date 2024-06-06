@@ -552,15 +552,17 @@ const CourseTile = ({ data, isAuthenticated }) => {
           <div className="course-title">{mode}</div>
           <div className="course-duration">{getCourseDeration()}</div>
         </div>
-        <div className="course-price">
-          {listPrice === unitPrice ? (
-            <span>${unitPrice}</span>
-          ) : (
-            <>
-              <s>${listPrice}</s> <span>${unitPrice}</span>
-            </>
-          )}
-        </div>
+        {!isPurchased && (
+          <div className="course-price">
+            {listPrice === unitPrice ? (
+              <span>${unitPrice}</span>
+            ) : (
+              <>
+                <s>${listPrice}</s> <span>${unitPrice}</span>
+              </>
+            )}
+          </div>
+        )}
       </div>
       {mode !== 'Online' && locationCity && (
         <div className="course-location">

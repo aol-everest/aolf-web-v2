@@ -773,6 +773,7 @@ export const PaymentFormHB = ({
           claimingType: '',
           certificateOfAttendance: '',
           contactClaimingTypeOther: '',
+          cmeAgreeToShareData: true,
         }}
         validationSchema={Yup.object().shape({
           firstName: Yup.string().required('First Name is required'),
@@ -834,6 +835,11 @@ export const PaymentFormHB = ({
                 then: Yup.string().required('Other is required'),
               })
             : Yup.mixed().notRequired(),
+          cmeAgreeToShareData: Yup.bool().when('CME', {
+            is: true,
+            then: Yup.bool().oneOf([true], 'Must be checked'),
+            otherwise: Yup.bool().notRequired(),
+          }),
         })}
         onSubmit={async (values, { setSubmitting, isValid, errors }) => {
           await preEnrollValidation(values);
