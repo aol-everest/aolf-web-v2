@@ -7,13 +7,7 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import { useEffectOnce } from 'react-use';
-import {
-  FaTicket,
-  FaAngellist,
-  FaHashtag,
-  FaMoneyBill,
-  FaList,
-} from 'react-icons/fa6';
+import { FaTicket, FaAngellist, FaMoneyBill, FaList } from 'react-icons/fa6';
 import { FaInfoCircle } from 'react-icons/fa';
 import { ALERT_TYPES, COURSE_MODES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
@@ -178,11 +172,6 @@ const TicketCongratulations = () => {
                     <FaAngellist className="fa fa-hand-peace-o" />{' '}
                     <span>Number of Tickets: </span>
                     {totalNoOfTickets}
-                  </li>
-                  <li className="order-item">
-                    <FaHashtag className="fa fa-hashtag" />{' '}
-                    <span>Order Number: </span>
-                    {attendeeId}
                   </li>
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}

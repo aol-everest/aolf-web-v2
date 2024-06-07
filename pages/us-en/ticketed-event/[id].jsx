@@ -96,12 +96,9 @@ function TicketedEvent() {
   });
 
   const {
-    eventStartTime,
-    eventEndTime,
     title,
     eventStartDate,
     eventEndDate,
-    eventTimeZone,
     pricingTiers,
     eventImageUrl,
     isEventFull,
