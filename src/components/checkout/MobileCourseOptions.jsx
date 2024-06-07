@@ -64,7 +64,7 @@ export const MobileCourseOptions = ({
     return (
       <Fragment>
         <div className="order__card !tw-border-0 !tw-shadow-none !tw-p-2">
-          <div className="d-flex w-50 justify-content-start">
+          <div className="d-flex justify-content-start">
             <FieldWrapper formikKey={'claimingType'} formikProps={formikProps}>
               <InputDropDown
                 placeholder="CE Claiming type"
@@ -179,6 +179,43 @@ export const MobileCourseOptions = ({
                 )}
               </InputDropDown>
             </FieldWrapper>
+          </div>
+          <div>
+            <Field
+              name={'cmeAgreeToShareData'}
+              render={({ field, form }) => {
+                return (
+                  <>
+                    <label
+                      htmlFor="cmeAgreeToShareData"
+                      className="ml-2 tw-my-5 tw-ml-2 tw-text-[14px] tw-text-[#31364e] tw-font-medium"
+                    >
+                      ̦
+                      <input
+                        id="cmeAgreeToShareData"
+                        type="checkbox"
+                        className="mr-2"
+                        checked={field.value}
+                        {...field}
+                      />
+                      I allow Healing Breaths to share my data with the ACCME
+                      for the purposes of reporting credit
+                    </label>
+                    {formikProps.errors.cmeAgreeToShareData &&
+                      formikProps.touched.cmeAgreeToShareData && (
+                        <div className="agreement__important agreement__important_desktop">
+                          <img
+                            className="agreement__important-icon"
+                            src="/img/warning.svg"
+                            alt="warning"
+                          />
+                          {formikProps.errors.cmeAgreeToShareData}
+                        </div>
+                      )}
+                  </>
+                );
+              }}
+            />
           </div>
         </div>
       </Fragment>

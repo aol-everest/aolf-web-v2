@@ -108,7 +108,7 @@ export default function AttendeeDetails({
             isNonEmptyString(ticket.contactPhone),
         );
       };
-      const result = validateTickets(tickets);
+      const result = validateTickets(attendeeData);
       if (result) {
         handleSubmitAttendees(showAttendee, attendeeData);
       } else {

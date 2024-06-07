@@ -227,12 +227,12 @@
       color: #fa4141;
     }
 
-    input:not([type='radio']),
+    input:not([type='radio']):not([type='checkbox']),
     .select-box {
       margin-top: 1.5rem;
     }
 
-    input:not([type='radio']) {
+    input:not([type='radio']):not([type='checkbox']) {
       outline: none;
       border: none;
       width: 250px;
