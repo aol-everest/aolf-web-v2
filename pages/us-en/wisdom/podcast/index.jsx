@@ -399,34 +399,36 @@ function PodcastPage() {
 
   return (
     <main className="podcasts">
-      <section className="top-video">
-        <img
-          style={{ display: isPlaying ? 'none' : 'inline-block' }}
-          src={data.mostPopular.snippet.thumbnails.maxres.url}
-          className="video-thumb-img"
-          width="100%"
-          height="700"
-          alt="YouTube"
-        />
+      {data.mostPopular && (
+        <section className="top-video">
+          <img
+            style={{ display: isPlaying ? 'none' : 'inline-block' }}
+            src={data.mostPopular.snippet.thumbnails.maxres.url}
+            className="video-thumb-img"
+            width="100%"
+            height="700"
+            alt="YouTube"
+          />
 
-        <YouTube
-          videoId={data.mostPopular.videoDetail.id}
-          title={data.mostPopular.snippet.title}
-          loading="loading"
-          opts={opts}
-          onPlay={onPlay}
-          onReady={onReady}
-        />
+          <YouTube
+            videoId={data.mostPopular.videoDetail.id}
+            title={data.mostPopular.snippet.title}
+            loading="loading"
+            opts={opts}
+            onPlay={onPlay}
+            onReady={onReady}
+          />
 
-        <div className="top-video-info">
-          <div className="channel-name">
-            {data.mostPopular.snippet.videoOwnerChannelTitle}
+          <div className="top-video-info">
+            <div className="channel-name">
+              {data.mostPopular.snippet.videoOwnerChannelTitle}
+            </div>
+            <div className="video-title">
+              {toPascalCaseWithSpaces(data.mostPopular.snippet.title)}
+            </div>
           </div>
-          <div className="video-title">
-            {toPascalCaseWithSpaces(data.mostPopular.snippet.title)}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
       <section className="video-playlist">
         <div className="container">
           <div className="podcast-search-wrap">
