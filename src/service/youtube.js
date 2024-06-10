@@ -27,11 +27,11 @@ async function getPlaylistDetails(playlistId) {
     });
 
     const mostPopular = getMostViewedVideo(result);
-    console.log(mostPopular);
-
-    result = result.filter((video) => {
-      return video.videoDetail.id !== mostPopular.videoDetail.id;
-    });
+    if (mostPopular) {
+      result = result.filter((video) => {
+        return video.videoDetail.id !== mostPopular.videoDetail.id;
+      });
+    }
 
     return { mostPopular, all: result };
   } catch (error) {
