@@ -1525,6 +1525,16 @@ const Scheduling = () => {
                     )}
                   </div>
                 </div>
+                <div class="other-calendar-info">
+                  <span class="icon-aol iconaol-clock-bold"></span>Flexible
+                  Rescheduling for All Courses
+                </div>
+                <div class="question-call">
+                  <a href="tel:(855)2024400" class="call-cta">
+                    Still have questions?{' '}
+                    <strong>Call us at (855) 202-4400</strong>
+                  </a>
+                </div>
               </div>
               <div class="second-col course-highlight-col">
                 <div class="course-highlight-box">
