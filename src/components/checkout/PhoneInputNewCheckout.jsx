@@ -14,8 +14,10 @@ export const PhoneInputNewCheckout = ({
   tip,
   placeholder,
   className,
+  showLabel = true,
   ...rest
 }) => {
+  console.log('showLabel', showLabel);
   const onChangeAction = () => {
     if (isReadOnly) {
       return null;
@@ -49,6 +51,7 @@ export const PhoneInputNewCheckout = ({
   return (
     <div className={className}>
       <label htmlFor="phone">{label}</label>
+
       <PhoneInput
         {...rest}
         {...inputProps}
@@ -61,6 +64,8 @@ export const PhoneInputNewCheckout = ({
         containerClass="input-block"
         countryCodeEditable={true}
         international={true}
+        showLabel={showLabel}
+        showSpecialLabel={false}
       />
 
       {formikProps.errors[formikKey] && (

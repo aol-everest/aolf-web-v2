@@ -1,4 +1,9 @@
-import { Dropdown, StyledInput } from '@components/checkout';
+import {
+  Dropdown,
+  PhoneInputNewCheckout,
+  StyledInput,
+  StyledInputNewCheckout,
+} from '@components/checkout';
 import { ChangeEmail } from '@components/profile';
 import {
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
@@ -17,26 +22,7 @@ import { FaRegEdit } from 'react-icons/fa';
 import * as Yup from 'yup';
 import PhoneInput from './../phoneInputCmp';
 import Style from './ChangeProfile.module.scss';
-
-const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
-  const onChangeAction = (value, data, event, formattedValue) => {
-    form.setFieldValue(field.name, formattedValue);
-  };
-  return (
-    <PhoneInput
-      {...field}
-      {...props}
-      placeholder="Phone Number"
-      country="us"
-      inputClass={classNames({
-        validate: form.errors.contactPhone,
-        'w-100': isMobile,
-      })}
-      countryCodeEditable={true}
-      onChange={onChangeAction}
-    />
-  );
-};
+import { DropdownNewCheckout } from '@components/checkout/DropdownNewCheckout';
 
 export const ChangeProfile = ({
   isMobile,
@@ -49,20 +35,6 @@ export const ChangeProfile = ({
   const description = useRef('');
 
   const allowEmailEdit = profile.cognito.UserStatus !== 'EXTERNAL_PROVIDER';
-
-  const editEmailAction = (e) => {
-    if (e) e.preventDefault();
-    showModal(MODAL_TYPES.EMPTY_MODAL, {
-      children: (handleModalToggle) => {
-        return (
-          <ChangeEmail
-            closeDetailAction={handleModalToggle}
-            existingEmail={profile.email}
-          />
-        );
-      },
-    });
-  };
 
   const submitAction = async (values) => {
     const { contactPhone, contactAddress, contactState, contactZip } = values;
@@ -302,6 +274,7 @@ export const ChangeProfile = ({
           contactAddress: personMailingStreet || '',
           contactState: personMailingState || '',
           contactZip: personMailingPostalCode || '',
+          email: email,
         }}
         validationSchema={Yup.object().shape({
           contactPhone: Yup.string()
@@ -333,117 +306,74 @@ export const ChangeProfile = ({
             submitCount,
           } = props;
           return (
-            <form className="profile-update__form" onSubmit={handleSubmit}>
-              {!isMobile && <h6 className="profile-update__title">Profile:</h6>}
-              <div className="profile-update__card order__card">
-                <StyledInput
-                  containerClass={classNames(Style.address, 'tw-mt-0')}
-                  className={classNames(Style.address, 'tw-mt-0 !tw-w-full')}
+            <form className="profile-form-box" onSubmit={handleSubmit}>
+              <div className="profile-form-wrap">
+                <StyledInputNewCheckout
+                  className="form-item col-1-2"
+                  placeholder="First Name"
+                  formikProps={props}
+                  isReadOnly
+                  formikKey="firstName"
+                  label="First Name"
+                ></StyledInputNewCheckout>
+
+                <StyledInputNewCheckout
+                  className="form-item col-1-2"
+                  placeholder="Last Name"
+                  isReadOnly
+                  formikProps={props}
+                  formikKey="lastName"
+                  label="Last Name"
+                ></StyledInputNewCheckout>
+                <StyledInputNewCheckout
+                  className={'form-item col-1-1'}
                   placeholder="Address"
                   formikProps={props}
                   formikKey="contactAddress"
                   fullWidth
-                ></StyledInput>
-                <Dropdown
-                  containerClass={classNames({ 'w-100': isMobile })}
-                  placeholder="State"
+                ></StyledInputNewCheckout>
+                <DropdownNewCheckout
+                  placeholder=""
                   formikProps={props}
                   formikKey="contactState"
                   options={US_STATES}
-                ></Dropdown>
-                <StyledInput
-                  containerClass={classNames({ 'w-100': isMobile })}
-                  className="zip"
+                  containerClass="form-item form-item col-1-2"
+                ></DropdownNewCheckout>
+                <StyledInputNewCheckout
+                  className={'form-item col-1-2'}
                   placeholder="Zip"
                   formikProps={props}
                   formikKey="contactZip"
-                ></StyledInput>
+                ></StyledInputNewCheckout>
 
-                <div
-                  className={classNames('input-block', {
-                    'w-100': isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    readOnly={true}
-                    placeholder="First Name"
-                    className={classNames({
-                      'w-100': isMobile,
-                    })}
-                    value={values.firstName}
-                    name="firstName"
-                  />
-                </div>
+                <StyledInputNewCheckout
+                  type="email"
+                  isReadOnly={!allowEmailEdit}
+                  className="form-item col-1-2"
+                  placeholder="Email"
+                  formikProps={props}
+                  formikKey="email"
+                  onCut={(event) => {
+                    event.preventDefault();
+                  }}
+                  onCopy={(event) => {
+                    event.preventDefault();
+                  }}
+                  onPaste={(event) => {
+                    event.preventDefault();
+                  }}
+                ></StyledInputNewCheckout>
 
-                <div
-                  className={classNames('input-block', {
-                    'w-100': isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    readOnly={true}
-                    className={classNames({
-                      'w-100': isMobile,
-                    })}
-                    placeholder="Last Name"
-                    value={values.lastName}
-                    name="lastName"
-                  />
-                </div>
+                <PhoneInputNewCheckout
+                  className="second form-item col-1-2"
+                  containerClass={`scheduling-modal__content-wrapper-form-list-row`}
+                  formikProps={props}
+                  formikKey="contactPhone"
+                  name="contactPhone"
+                  type="tel"
+                  showLabel={false}
+                ></PhoneInputNewCheckout>
 
-                <div
-                  className={classNames(
-                    'input-block inline-edit-input-container',
-                    {
-                      'w-100': isMobile,
-                    },
-                  )}
-                >
-                  <input
-                    readOnly={true}
-                    value={email}
-                    className={classNames({
-                      'w-100': isMobile,
-                    })}
-                    type="email"
-                    placeholder="Email"
-                  />
-                  {allowEmailEdit && (
-                    <a className="icon" href="#" onClick={editEmailAction}>
-                      <FaRegEdit />
-                    </a>
-                  )}
-                </div>
-                <div
-                  className={classNames('input-block', {
-                    'w-100': isMobile,
-                  })}
-                >
-                  <Field
-                    name="contactPhone"
-                    component={PhoneNumberInputField}
-                    isMobile={isMobile}
-                  />
-                  {/* <MaskedInput
-                    placeholder="Phone Number"
-                    mask={phoneNumberMask}
-                    type="tel"
-                    name="contactPhone"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.contactPhone}
-                    className={classNames({
-                      validate: errors.contactPhone && touched.contactPhone,
-                      "w-100": isMobile,
-                    })}
-                  /> */}
-
-                  {errors.contactPhone && (
-                    <p className="validation-input">{errors.contactPhone}</p>
-                  )}
-                </div>
                 <div className="tw-mt-4 tw-flex tw-flex-1 tw-justify-end">
                   <a
                     href="#"
@@ -454,18 +384,19 @@ export const ChangeProfile = ({
                   </a>
                 </div>
               </div>
-              <div className="tw-mt-6 tw-flex tw-justify-end">
+              <div className="form-actions col-1-1">
                 {showVerifyStudentStatus && (
                   <button
                     type="button"
-                    className="btn-primary ml-auto v2"
+                    className="primary-btn"
                     onClick={handleVerifyStudentEmail}
                   >
                     Verify Student Status
                   </button>
                 )}
-                <button type="submit" className="btn-primary d-block ml-4 v2">
-                  Update Profile
+                <button className="secondary-btn">Discard Changes</button>
+                <button type="submit" className="primary-btn">
+                  Save Changes
                 </button>
               </div>
             </form>
