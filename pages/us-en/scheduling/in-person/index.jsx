@@ -672,7 +672,8 @@ const Scheduling = () => {
   const getWorkshops = async () => {
     setLoading(true);
     let param = {
-      sdate: mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
+      sdate:
+        selectedDates && selectedDates.length > 0 ? selectedDates?.[0] : null,
       timingsRequired: true,
       skipFullCourses: true,
       ctype:
