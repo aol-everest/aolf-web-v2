@@ -176,10 +176,10 @@ export const COURSE_TYPES_MASTER = {
           slug: 'sahaj-samadhi-meditation',
           name: 'Sahaj Samadhi - Signature Meditation Program',
         },
-        ART_OF_LIVING_PREMIUM_PROGRAM: {
-          slug: 'art-of-living-premium-program',
-          name: 'SKY Breath + Sahaj Meditation Combo',
-        },
+        // BE_WELL_SESSIONS: {
+        //   slug: 'be_well',
+        //   name: 'Be Well',
+        // },
       },
     },
     {
@@ -342,6 +342,13 @@ export const COURSE_TYPES = {
       Online: process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_ONLINE_CTYPE,
       'In Person': process.env.NEXT_PUBLIC_SKY_WITH_SAHAJ_IN_PERSON_CTYPE,
     },
+  },
+  BE_WELL_SESSIONS: {
+    slug: 'be_well',
+    name: 'Be Well',
+    value: process.env.NEXT_PUBLIC_BE_WELL_SESSIONS_CTYPE || '',
+    description:
+      'A one-hour series of webinars covering a wide variety of topics in healthcare and self-care. Includes an experience of breathwork and meditation.',
   },
   SKY_HAPPINESS_RETREAT: {
     slug: 'sky-happiness-retreat',
