@@ -713,7 +713,8 @@
     overflow: auto;
     @media screen and (max-width: 767px) {
       grid-template-columns: repeat(1, auto);
-      max-height: calc(100vh - 250px);
+      height: calc(100vh - 250px);
+      align-items: center;
     }
     .slot-item {
       background: #f7f7f7;
@@ -1118,7 +1119,6 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
-      height: 316px;
       overflow: auto;
       align-items: flex-start;
       @media screen and (max-width: 767px) {
@@ -1135,6 +1135,7 @@
         border-bottom: #e9e9e9 1px solid;
         margin-bottom: 10px;
         padding-bottom: 10px;
+        gap: 20px;
       }
       .slot-info {
         font-family: Lora;
