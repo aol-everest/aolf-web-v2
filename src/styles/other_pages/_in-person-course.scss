@@ -1192,7 +1192,19 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       max-height: 50vh;
-      overflow: auto;
+      overflow-y: auto;
+      @media screen and (min-width: 768px) {
+        &::-webkit-scrollbar {
+          -webkit-appearance: none;
+          width: 7px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 5px;
+          background-color: rgba(0, 0, 0, 0.5);
+          -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+      }
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
         height: calc(100vh - 250px);
