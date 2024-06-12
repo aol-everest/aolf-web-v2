@@ -62,7 +62,7 @@ export const NewPasswordForm = ({
               <label for="pass">New password</label>
               <input
                 {...register('password')}
-                type="password"
+                type={type}
                 className={classNames('input-field password', {
                   validate: errors.password,
                 })}
@@ -89,7 +89,7 @@ export const NewPasswordForm = ({
               <label for="pass">Confirm password</label>
               <input
                 {...register('passwordConfirmation')}
-                type="password"
+                type={typeCPassword}
                 className={classNames('input-field password', {
                   validate: errors.passwordConfirmation,
                 })}

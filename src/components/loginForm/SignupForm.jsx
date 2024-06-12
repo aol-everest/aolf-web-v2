@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
+import { useState } from 'react';
 
 const schema = object().shape({
   username: string()
@@ -23,6 +24,7 @@ export const SignupForm = ({
   toSignInMode,
   children,
 }) => {
+  const [type, setType] = useState('password');
   const {
     register,
     control,
@@ -31,6 +33,14 @@ export const SignupForm = ({
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const handleToggle = () => {
+    if (type === 'password') {
+      setType('text');
+    } else {
+      setType('password');
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(signUp)}>
@@ -70,11 +80,11 @@ export const SignupForm = ({
               <label for="pass">Password</label>
               <input
                 {...register('password')}
-                type="password"
+                type={type}
                 class="input-field password"
                 placeholder="Password"
               />
-              <button class="showPassBtn" type="button">
+              <button class="showPassBtn" type="button" onClick={handleToggle}>
                 <img
                   src="/img/PasswordEye.svg"
                   width="16"
