@@ -269,24 +269,16 @@ function TicketedEvent() {
                     <div className="tickets-modal__section-products">
                       <h2 className="tickets-modal__title">{title}</h2>
                       <div class="section-wisdom-event-checkout-info">
-                        <div class="info-item">
-                          <span class="icon-aol iconaol-calendar"></span>
-                          <span class="p2">
-                            <strong>Duration:</strong>{' '}
-                            {eventStartDate === eventEndDate
-                              ? formattedStartDate
-                              : `${dayjs.utc(eventStartDate).format('ddd, ')}${formattedStartDate} - ${dayjs.utc(eventEndDate).format('ddd, ')}${formattedEndDate}`}
-                          </span>
-                        </div>
-
                         {timings &&
-                          timings.map((time, index) => {
+                          timings.map((time) => {
                             return (
                               <div class="info-item" key={time.startDate}>
                                 <span class="icon-aol iconaol-calendar-2"></span>
                                 <span class="p2">
-                                  <strong>Day {index + 1}:</strong>{' '}
-                                  {dayjs.utc(time.startDate).format('ddd')}:{' '}
+                                  {dayjs.utc(time.startDate).format('ddd')},{' '}
+                                  {dayjs
+                                    .utc(time.startDate)
+                                    .format('MMM DD ○ ')}
                                   {tConvert(time.startTime)}-
                                   {tConvert(time.endTime)}{' '}
                                   {ABBRS[time.timeZone]}
