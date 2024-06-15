@@ -175,7 +175,8 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}
-                    <span>Order Total: </span> ${attendeeDetail.totalAmountPaid}
+                    <span>Order Total: </span> $
+                    {(attendeeDetail?.totalAmountPaid || 0).toFixed(2)}
                   </li>
                 </ul>
                 <div className="bottom-info">
