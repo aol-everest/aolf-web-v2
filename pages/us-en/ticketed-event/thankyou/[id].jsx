@@ -175,7 +175,8 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}
-                    <span>Order Total: </span> ${attendeeDetail.totalAmountPaid}
+                    <span>Order Total: </span> $
+                    {(attendeeDetail?.totalAmountPaid || 0).toFixed(2)}
                   </li>
                 </ul>
                 <div className="bottom-info">
@@ -308,11 +309,11 @@ const TicketCongratulations = () => {
                                 <a
                                   href={`https://www.google.com/maps/search/?api=1&query=${
                                     locationStreet || ''
-                                  }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                                  }, ${locationCity}, ${locationProvince} ${locationPostalCode} ${locationCountry}`}
                                   target="_blank"
                                   rel="noreferrer"
                                 >
-                                  {locationStreet && locationStreet}
+                                  {locationStreet && `${locationStreet}, `}
                                   {locationCity || ''}
                                   {', '}
                                   {locationProvince || ''}{' '}

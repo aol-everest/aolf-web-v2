@@ -720,7 +720,7 @@ const SchedulingPaymentForm = ({
                           </div>
                         </>
                       )}
-                      <div className="trust-score">
+                      <div className="trust-score !tw-mt-10">
                         <div className="first-row">
                           Excellent
                           <img
