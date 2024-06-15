@@ -309,11 +309,11 @@ const TicketCongratulations = () => {
                                 <a
                                   href={`https://www.google.com/maps/search/?api=1&query=${
                                     locationStreet || ''
-                                  }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                                  }, ${locationCity}, ${locationProvince} ${locationPostalCode} ${locationCountry}`}
                                   target="_blank"
                                   rel="noreferrer"
                                 >
-                                  {locationStreet && locationStreet}
+                                  {locationStreet && `${locationStreet}, `}
                                   {locationCity || ''}
                                   {', '}
                                   {locationProvince || ''}{' '}
