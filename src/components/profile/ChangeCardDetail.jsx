@@ -23,7 +23,10 @@ const createOptions = {
     },
   },
 };
-export const ChangeCardDetail = ({ updateCompleteAction }) => {
+export const ChangeCardDetail = ({
+  updateCompleteAction,
+  switchCardDetailView,
+}) => {
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -62,20 +65,15 @@ export const ChangeCardDetail = ({ updateCompleteAction }) => {
     <>
       {loading && <div className="cover-spin"></div>}
       <form className="profile-update__form" onSubmit={handleSubmit}>
-        <div className="profile-update__form-header d-flex justify-content-between align-items-center">
-          <h6 className="profile-update__title m-0">Card Details:</h6>
-          <div className="profile-update__images-container">
-            <img src="/img/ic-visa.svg" alt="visa" />
-            <img src="/img/ic-mc.svg" alt="mc" />
-            <img src="/img/ic-ae.svg" alt="ae" />
-          </div>
+        <CardElement options={createOptions} />
+        <div className="form-actions col-1-1">
+          <button class="secondary-btn" onClick={switchCardDetailView}>
+            Discard Changes
+          </button>
+          <button type="submit" className="primary-btn">
+            Save Changes
+          </button>
         </div>
-        <div className="profile-update__card">
-          <CardElement options={createOptions} />
-        </div>
-        <button type="submit" className="btn-primary d-block ml-auto mt-4 v2">
-          Update Card
-        </button>
       </form>
     </>
   );

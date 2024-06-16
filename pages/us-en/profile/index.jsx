@@ -312,8 +312,10 @@ const Profile = ({ tab }) => {
                   </div>
                 </div>
                 <div className="user-name"> {name}</div>
-                <div className="user-type">Journey (premium) member</div>
-                <div className="user-since">since January 21, 2019</div>
+                <ProfileHeader
+                  subscriptions={subscriptions}
+                  userSubscriptions={userSubscriptions}
+                />
                 <div className="user-logout">
                   <a onClick={logoutAction}>
                     <span className="icon-aol iconaol-logout"></span>Log Out
@@ -416,26 +418,28 @@ const Profile = ({ tab }) => {
                         <span className="icon-aol iconaol-payment-card"></span>
                       </div>
                     </div>
-                    <div className="profile-form-wrap">
-                      <div className="form-item card-number">
-                        <label for="cardnum">Card number</label>
-                        <input type="text" id="cardnum" />
-                      </div>
-                      <div className="form-item expiry">
-                        <label for="exp">Expirty</label>
-                        <input type="text" id="exp" />
-                      </div>
-                      <div className="form-item cvv">
-                        <label for="cvv">CVV</label>
-                        <input type="text" id="cvv" />
-                      </div>
-                      <div className="form-actions col-1-1">
-                        <button className="secondary-btn">
-                          Discard Changes
-                        </button>
-                        <button className="primary-btn">Save Changes</button>
-                      </div>
-                    </div>
+                    {!editCardDetail && (
+                      <ViewCardDetail
+                        switchCardDetailView={switchCardDetailView}
+                        profile={user.profile}
+                      ></ViewCardDetail>
+                    )}
+                    {editCardDetail && (
+                      <Elements
+                        stripe={stripePromise}
+                        fonts={[
+                          {
+                            cssSrc:
+                              'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+                          },
+                        ]}
+                      >
+                        <ChangeCardDetail
+                          switchCardDetailView={switchCardDetailView}
+                          updateCompleteAction={updateCompleteAction}
+                        />
+                      </Elements>
+                    )}
                   </div>
                 </div>
                 <div
@@ -444,39 +448,9 @@ const Profile = ({ tab }) => {
                     'tab-content': activeTab !== CHANGE_PASSWORD,
                   })}
                 >
-                  <div className="profile-form-box">
-                    <div className="profile-form-wrap">
-                      <div className="form-item col-1-2 relative">
-                        <label for="password">Current password</label>
-                        <input
-                          type="password"
-                          id="password"
-                          placeholder="Password"
-                        />
-                        <button className="showPass">
-                          <span className="icon-aol iconaol-eye"></span>
-                        </button>
-                      </div>
-                      <div className="form-item col-1-2 relative">
-                        <label for="cpassword">New password</label>
-                        <input
-                          type="password"
-                          id="cpassword"
-                          placeholder="Password"
-                        />
-                        <button className="showPass">
-                          <span className="icon-aol iconaol-eye"></span>
-                        </button>
-                        <div className="input-info">Minimum 6 characters</div>
-                      </div>
-                      <div className="form-actions col-1-1">
-                        <button className="secondary-btn">
-                          Discard Changes
-                        </button>
-                        <button className="primary-btn">Save Changes</button>
-                      </div>
-                    </div>
-                  </div>
+                  <ChangePassword
+                    updateCompleteAction={updateCompleteAction}
+                  ></ChangePassword>
                 </div>
                 <div
                   id="tab4"
@@ -484,6 +458,7 @@ const Profile = ({ tab }) => {
                     'tab-content': activeTab !== PAST_COURSES,
                   })}
                 >
+                  {/* <PastCourses /> */}
                   <div className="profile-form-box">
                     <div className="past-courses-stats">
                       <div className="stats-info">
@@ -1029,179 +1004,10 @@ const Profile = ({ tab }) => {
                       </div>
                       <div className="refer-section-items">
                         <div className="refer-section-col">
-                          <div className="refer-section-card">
-                            <h2 className="title">Redeem Advocate Coupons</h2>
-                            <div className="desc">
-                              Select Rewards Codes to Redeem.
-                            </div>
-                            <div className="redeem-coupons">
-                              <div className="form-item">
-                                <input
-                                  type="radio"
-                                  name="coupon"
-                                  id="coupon1"
-                                  checked
-                                />
-                                <label for="coupon1">
-                                  Art of Living Part 1
-                                </label>
-                              </div>
-                              <div className="form-item">
-                                <input
-                                  type="radio"
-                                  name="coupon"
-                                  id="coupon2"
-                                  checked
-                                />
-                                <label for="coupon2">
-                                  Art of Living Part 2
-                                </label>
-                              </div>
-                              <button className="btn-primary">Redeem</button>
-                            </div>
-                          </div>
-                          <div className="refer-section-card">
-                            <h2 className="title">
-                              Keep track of your shares & rewards
-                            </h2>
-                            <div className="share-rewards">
-                              <div className="share-reward-stats">
-                                <div className="stat-item">
-                                  <div className="value">24</div>
-                                  <label>Shared</label>
-                                </div>
-                                <div className="stat-item">
-                                  <div className="value">$124,50</div>
-                                  <label>Rewards</label>
-                                </div>
-                              </div>
-                              <div className="tracking-bar-wrap">
-                                <div className="tracking-bar-item">
-                                  <label>
-                                    Invited to SKY (2){' '}
-                                    <a>
-                                      <span className="icon-aol iconaol-info-circle-bold"></span>
-                                    </a>
-                                  </label>
-                                  <div className="progress">
-                                    <div
-                                      className="progress-bar"
-                                      role="progressbar"
-                                      aria-valuenow="20"
-                                      aria-valuemin="0"
-                                      aria-valuemax="100"
-                                      style={{ width: '20%' }}
-                                    >
-                                      <span className="sr-only">
-                                        70% Complete
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="tracking-bar-item">
-                                  <label>
-                                    Friends that clicked (0){' '}
-                                    <a>
-                                      <span className="icon-aol iconaol-info-circle-bold"></span>
-                                    </a>
-                                  </label>
-                                  <div className="progress">
-                                    <div
-                                      className="progress-bar"
-                                      role="progressbar"
-                                      aria-valuenow="0"
-                                      aria-valuemin="0"
-                                      aria-valuemax="100"
-                                      style={{ width: '0%' }}
-                                    >
-                                      <span className="sr-only">
-                                        0% Complete
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="tracking-bar-item">
-                                  <label>
-                                    Claimed discount codes (1){' '}
-                                    <a>
-                                      <span className="icon-aol iconaol-info-circle-bold"></span>
-                                    </a>
-                                  </label>
-                                  <div className="progress">
-                                    <div
-                                      className="progress-bar"
-                                      role="progressbar"
-                                      aria-valuenow="10"
-                                      aria-valuemin="0"
-                                      aria-valuemax="100"
-                                      style={{ width: '10%' }}
-                                    >
-                                      <span className="sr-only">
-                                        10% Complete
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="tracking-bar-item">
-                                  <label>
-                                    Approved Refferrals (5){' '}
-                                    <a>
-                                      <span className="icon-aol iconaol-info-circle-bold"></span>
-                                    </a>
-                                  </label>
-                                  <div className="progress">
-                                    <div
-                                      className="progress-bar"
-                                      role="progressbar"
-                                      aria-valuenow="50"
-                                      aria-valuemin="0"
-                                      aria-valuemax="100"
-                                      style={{ width: '50%' }}
-                                    >
-                                      <span className="sr-only">
-                                        50% Complete
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="refer-section-col">
-                          <div className="refer-section-card">
-                            <h2 className="title">Refer a friend</h2>
-                            <div className="refer-friend">
-                              <label>Share via Email</label>
-                              <button
-                                className="btn-primary"
-                                data-toggle="modal"
-                                data-target="#referEmailModal"
-                              >
-                                <span className="icon-aol iconaol-sms"></span>
-                                Share
-                              </button>
-                              <div className="or-separator">
-                                <span>OR</span>
-                              </div>
-                              <label>Here is your personal link:</label>
-                              <input type="text" disabled />
-                              <div className="refer-desc">
-                                You can share it on Twitter, instant messengers.
-                                SMS, or simply tell a friend!
-                              </div>
-                              <button className="btn-secondary">
-                                <span className="icon-aol iconaol-copy"></span>
-                                Copy Link
-                              </button>
-                              <div className="tac">
-                                By accepting this offer you agroe to the Terme
-                                of Service and Privacy Policy.
-                              </div>
-                            </div>
-                          </div>
+                          <CouponStack></CouponStack>
                         </div>
                       </div>
+                      <div id="talkable-offer"></div>
                       <div className="accordion" id="accordionRefer">
                         <div className="refer-accordion-item">
                           <div
@@ -1232,17 +1038,18 @@ const Profile = ({ tab }) => {
                             <div className="reward-accordion-body">
                               <ol>
                                 <li>
-                                  Invite your friends to take the Art of Living
-                                  Part 1 course
+                                  Invite your friends to take the{' '}
+                                  {COURSE_TYPES.SKY_BREATH_MEDITATION.name}{' '}
+                                  course
                                 </li>
                                 <li>
                                   For every friend that completes the course,
-                                  you'll be entered into a Sweepstakes where you
-                                  can win an Art of Living Part 2 Course
-                                  (Silence Program) online or in-person up to a
-                                  value of $700. The winner will be announced at
-                                  the end of every quarter. See T&Cs for
-                                  details.
+                                  you’ll be entered into a Sweepstakes where you
+                                  can win an {COURSE_TYPES.SILENT_RETREAT.name}{' '}
+                                  Course (Silence Program) online or in-person
+                                  up to a value of $700. The winner will be
+                                  announced at the end of every quarter. See
+                                  T&Cs for details.
                                 </li>
                               </ol>
                             </div>
@@ -1276,17 +1083,14 @@ const Profile = ({ tab }) => {
                             <div className="reward-accordion-body">
                               <ol>
                                 <li>
-                                  Invite your friends to take the Art of Living
-                                  Part 1 course
+                                  The winner of the Sweepstakes will receive an
+                                  email with a coupon code for the{' '}
+                                  {COURSE_TYPES.SILENT_RETREAT.name} Course.
                                 </li>
                                 <li>
-                                  For every friend that completes the course,
-                                  you'll be entered into a Sweepstakes where you
-                                  can win an Art of Living Part 2 Course
-                                  (Silence Program) online or in-person up to a
-                                  value of $700. The winner will be announced at
-                                  the end of every quarter. See T&Cs for
-                                  details.
+                                  Enter the coupon code when registering for the
+                                  course and enjoy a few days of deep calm &
+                                  peace.
                                 </li>
                               </ol>
                             </div>

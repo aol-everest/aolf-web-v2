@@ -73,24 +73,22 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
             submitCount,
           } = props;
           return (
-            <form className="profile-update__form" onSubmit={handleSubmit}>
-              {!isMobile && (
-                <h6 className="profile-update__title">Change Password:</h6>
-              )}
-              <div className="profile-update__card">
+            <form className="profile-form-box" onSubmit={handleSubmit}>
+              <div className="profile-form-wrap">
                 {showSuccessMessage && (
                   <div className="success-message-cp">
                     <i className="fas fa-check-circle"></i>
                     {'  '}Your password has been changed successfully
                   </div>
                 )}
-                <div className="input-block w-100">
+                <div className="form-item col-1-2 relative">
+                  <label for="password">Current Password</label>
                   <input
                     type="password"
                     className={classNames('mt-0 w-100', {
                       validate: errors.oldPassword && touched.oldPassword,
                     })}
-                    placeholder="Old Password"
+                    placeholder="Current Password"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.oldPassword}
@@ -101,7 +99,8 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                 {errors.oldPassword && touched.oldPassword && (
                   <p className="validation-input">{errors.oldPassword}</p>
                 )}
-                <div className="input-block w-100">
+                <div className="form-item col-1-2 relative">
+                  <label for="cpassword">New Password</label>
                   <input
                     placeholder="New Password"
                     type="password"
@@ -117,7 +116,8 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                 {errors.password && touched.password && (
                   <p className="validation-input">{errors.password}</p>
                 )}
-                <div className="input-block w-100">
+                <div className="form-item col-1-2 relative">
+                  <label for="cpassword">Confirm New Password</label>
                   <input
                     type="password"
                     className={classNames('w-100', {
@@ -139,13 +139,12 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                       {errors.passwordConfirmation}
                     </p>
                   )}
+                <div className="form-actions col-1-1">
+                  <button type="submit" className="primary-btn">
+                    Change Password
+                  </button>
+                </div>
               </div>
-              <button
-                type="submit"
-                className="btn-primary d-block ml-auto mt-4 v2"
-              >
-                Change Password
-              </button>
             </form>
           );
         }}

@@ -185,19 +185,17 @@ export const ProfileHeader = ({
 
   const subscriptionPanel = (subscription) => {
     return (
-      <div
-        className="profile-header__course"
-        key={subscription.subscriptionMasterSfid}
-      >
-        <strong>{subscription.name} member </strong>
-        <span className="profile-header__course-date">
+      <>
+        <div className="user-type">{subscription.name} member</div>
+        <div className="user-since">
           since{' '}
           {dayjs(subscription.subscriptionStartDate).format('MMMM DD, YYYY')}
-        </span>{' '}
+        </div>
         {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
           subscription.subscriptionMasterSfid && (
           <a
             href="#"
+            style={{ fontSize: 14 }}
             className="link link_dark link-modal"
             onClick={showPurchaseMembershipModalAction(
               subscription.subscriptionMasterSfid,
@@ -207,7 +205,7 @@ export const ProfileHeader = ({
             <strong>See details</strong>
           </a>
         )}
-      </div>
+      </>
     );
   };
 
