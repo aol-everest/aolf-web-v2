@@ -144,9 +144,11 @@ const TicketCongratulations = () => {
   const formattedEndDate = dayjs.utc(eventEndDate).format('ddd');
   let tickets = attendeeDetail.attendees;
   if (!attendeeDetail.ticketedEvent.isAllAttedeeInformationRequired) {
-    tickets = attendeeDetail.attendees.find(
-      (obj) => obj.firstName && obj.lastName && obj.email,
-    );
+    tickets = [
+      attendeeDetail.attendees.find(
+        (obj) => obj.firstName && obj.lastName && obj.email,
+      ),
+    ];
   }
 
   return (
