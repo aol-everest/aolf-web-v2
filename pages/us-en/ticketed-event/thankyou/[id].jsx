@@ -209,7 +209,9 @@ const TicketCongratulations = () => {
                           {tickets.length > 1 ? `#${index + 1}` : ''}
                         </div>
                         <div className="ticket-type">
-                          {item.pricingTierName}
+                          {attendeeDetail.ticketedEvent
+                            .isAllAttedeeInformationRequired &&
+                            item.pricingTierName}
                         </div>
                       </div>
                       <div className="ticket-body">
