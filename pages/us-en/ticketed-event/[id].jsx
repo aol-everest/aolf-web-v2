@@ -353,7 +353,7 @@ function TicketedEvent() {
                         {renderSummary()}
                       </div>
                       <div className="tickets-modal__footer">
-                        {event && total > 0 && (
+                        {false && event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
                             <StripeExpressCheckoutTicket
                               workshop={event}
