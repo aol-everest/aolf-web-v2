@@ -375,7 +375,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, authenticated }) => {
+const CourseTile = ({ data, inIframe }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -401,12 +401,19 @@ const CourseTile = ({ data, authenticated }) => {
   } = data || {};
 
   const enrollAction = () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/${sfid}`,
-      query: {
-        ctype: productTypeId,
-      },
-    });
+    if (inIframe) {
+      window.open(
+        `/us-en/ticketed-event/${sfid}?ctype=${productTypeId}`,
+        '_blank',
+      );
+    } else {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/ticketed-event/${sfid}`,
+        query: {
+          ctype: productTypeId,
+        },
+      });
+    }
   };
 
   const getCourseDeration = () => {
@@ -481,6 +488,17 @@ const CourseTile = ({ data, authenticated }) => {
   );
 };
 
+const isInIframe = () => {
+  if (typeof window !== 'undefined') {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true; // Assume true if access to window.top is denied
+    }
+  }
+  return false;
+};
+
 const TicketedEvent = () => {
   const { track, page } = useAnalytics();
   const { ref, inView } = useInView({
@@ -506,6 +524,11 @@ const TicketedEvent = () => {
   const [centerNameFilter] = useQueryState('center-name');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [inIframe, setInIframe] = useState(false);
+
+  useEffect(() => {
+    setInIframe(isInIframe());
+  }, []);
 
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
@@ -727,6 +750,7 @@ const TicketedEvent = () => {
                   key={course.sfid}
                   data={course}
                   authenticated={authenticated}
+                  inIframe={inIframe}
                 />
               ))}
             </React.Fragment>
@@ -1065,7 +1089,8 @@ const TicketedEvent = () => {
   );
 };
 
-// Course.requiresAuth = true;
+TicketedEvent.noHeader = true;
+TicketedEvent.hideFooter = true;
 // Course.redirectUnauthenticated = "/login";
 
 export default TicketedEvent;
