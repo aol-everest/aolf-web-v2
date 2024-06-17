@@ -269,24 +269,16 @@ function TicketedEvent() {
                     <div className="tickets-modal__section-products">
                       <h2 className="tickets-modal__title">{title}</h2>
                       <div class="section-wisdom-event-checkout-info">
-                        <div class="info-item">
-                          <span class="icon-aol iconaol-calendar"></span>
-                          <span class="p2">
-                            <strong>Duration:</strong>{' '}
-                            {eventStartDate === eventEndDate
-                              ? formattedStartDate
-                              : `${dayjs.utc(eventStartDate).format('ddd, ')}${formattedStartDate} - ${dayjs.utc(eventEndDate).format('ddd, ')}${formattedEndDate}`}
-                          </span>
-                        </div>
-
                         {timings &&
-                          timings.map((time, index) => {
+                          timings.map((time) => {
                             return (
                               <div class="info-item" key={time.startDate}>
                                 <span class="icon-aol iconaol-calendar-2"></span>
                                 <span class="p2">
-                                  <strong>Day {index + 1}:</strong>{' '}
-                                  {dayjs.utc(time.startDate).format('ddd')}:{' '}
+                                  {dayjs.utc(time.startDate).format('ddd')},{' '}
+                                  {dayjs
+                                    .utc(time.startDate)
+                                    .format('MMM DD ○ ')}
                                   {tConvert(time.startTime)}-
                                   {tConvert(time.endTime)}{' '}
                                   {ABBRS[time.timeZone]}
@@ -298,7 +290,6 @@ function TicketedEvent() {
                         <div class="info-item">
                           <span class="icon-aol iconaol-location"></span>
                           <span class="p2">
-                            <strong>Location:</strong>{' '}
                             {mode === COURSE_MODES.ONLINE.name
                               ? mode
                               : (mode === COURSE_MODES.IN_PERSON.name ||
@@ -307,7 +298,8 @@ function TicketedEvent() {
                                   <>
                                     {!isLocationEmpty && (
                                       <span>
-                                        {locationStreet && locationStreet}
+                                        {locationStreet &&
+                                          `${locationStreet}, `}
                                         {locationCity || ''}
                                         {', '}
                                         {locationProvince || ''}{' '}
@@ -316,7 +308,8 @@ function TicketedEvent() {
                                     )}
                                     {isLocationEmpty && (
                                       <span>
-                                        {streetAddress1 && streetAddress1}
+                                        {streetAddress1 &&
+                                          `${streetAddress1}, `}
                                         {streetAddress2 && streetAddress2}
                                         {city || ''}
                                         {', '}
@@ -360,7 +353,7 @@ function TicketedEvent() {
                         {renderSummary()}
                       </div>
                       <div className="tickets-modal__footer">
-                        {event && total > 0 && (
+                        {false && event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
                             <StripeExpressCheckoutTicket
                               workshop={event}
