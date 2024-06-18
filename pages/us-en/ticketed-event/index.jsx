@@ -796,49 +796,6 @@ const TicketedEvent = () => {
               className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
               <button className="filter-save-button">Save Changes</button>
-              <Popup
-                tabIndex="1"
-                value={locationFilter}
-                buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : null
-                }
-                closeEvent={onFilterChange('locationFilter')}
-                label="Location"
-              >
-                {({ closeHandler }) => (
-                  <AddressSearch
-                    closeHandler={closeHandler}
-                    placeholder="Search for Location"
-                  />
-                )}
-              </Popup>
-              <Popup
-                tabIndex="2"
-                value={COURSE_MODES[courseModeFilter] && courseModeFilter}
-                buttonText={
-                  courseModeFilter && COURSE_MODES[courseModeFilter]
-                    ? COURSE_MODES[courseModeFilter].name
-                    : null
-                }
-                closeEvent={onFilterChange('courseModeFilter')}
-                label="Course Format"
-              >
-                {({ closeHandler }) => (
-                  <>
-                    {orgConfig.courseModes.map((courseMode, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className="courses-filter__list-item"
-                          onClick={closeHandler(courseMode)}
-                        >
-                          {COURSE_MODES[courseMode].name}
-                        </li>
-                      );
-                    })}
-                  </>
-                )}
-              </Popup>
 
               <div
                 data-filter="timezone"
@@ -962,59 +919,6 @@ const TicketedEvent = () => {
                         </div>
                       )}
                     </div>
-
-                    <MobileFilterModal
-                      label="Location"
-                      value={
-                        locationFilter ? `${locationFilter.locationName}` : null
-                      }
-                      clearEvent={onFilterClearEvent('locationFilter')}
-                    >
-                      <AddressSearch
-                        closeHandler={onFilterChange('locationFilter')}
-                        placeholder="Search for Location"
-                      />
-                    </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Course format"
-                      value={
-                        courseModeFilter && COURSE_MODES[courseModeFilter]
-                          ? COURSE_MODES[courseModeFilter].name
-                          : null
-                      }
-                      closeEvent={onFilterClearEvent('courseModeFilter')}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={courseModeFilter}
-                          buttonText={
-                            courseModeFilter && COURSE_MODES[courseModeFilter]
-                              ? COURSE_MODES[courseModeFilter].name
-                              : null
-                          }
-                          closeEvent={onFilterChange('courseModeFilter')}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              {orgConfig.courseModes.map(
-                                (courseMode, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      className="dropdown-item"
-                                      onClick={closeHandler(courseMode)}
-                                    >
-                                      {COURSE_MODES[courseMode].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
-                    <label>Weekend courses</label>
 
                     <MobileFilterModal
                       label="Dates"
