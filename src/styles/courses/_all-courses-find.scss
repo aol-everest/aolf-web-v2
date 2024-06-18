@@ -71,12 +71,13 @@ main.all-courses-find {
       gap: 12px;
       max-width: 316px;
       flex: 1;
+      /*
       @media screen and (min-width: 992px) {
         position: sticky;
         top: 10px;
         max-height: calc(100vh - 20px);
         overflow-y: auto;
-      }
+      }*/
       .filter-save-button {
         display: none;
       }
@@ -153,7 +154,7 @@ main.all-courses-find {
         padding: 0;
         .courses-filter {
           .rs-input::placeholder {
-            color: #31364e;
+            color: rgb(203, 213, 225);
           }
           .rs-input:focus {
             outline: none !important;

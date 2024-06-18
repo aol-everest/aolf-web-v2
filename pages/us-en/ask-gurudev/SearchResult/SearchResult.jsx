@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
+import { truncateString } from '@utils';
 
 export const VideoItemComp = (props) => {
   const {
@@ -102,6 +103,14 @@ export const VideoItemComp = (props) => {
             <div className="loader"></div>
           </div>
         )}
+        {playerState !== YouTube.PlayerState.PLAYING &&
+          playerState !== YouTube.PlayerState.PAUSED &&
+          playerState !== YouTube.PlayerState.ENDED && (
+            <div className="loader-container">
+              <div className="youtubeButton" />
+            </div>
+          )}
+
         <img
           style={{ display: isInitialPlaying ? 'none' : 'block' }}
           src={thumbnailUrl}
@@ -127,6 +136,7 @@ const SearchResult = React.forwardRef(function SearchResult(
   ref,
 ) {
   const thumbnailUrl = result.metadata.thumbnail;
+  const updatedTitle = truncateString(result.metadata.title);
 
   const onPlayAction = (id) => {
     setPlayingId(id);
@@ -143,7 +153,7 @@ const SearchResult = React.forwardRef(function SearchResult(
       <main className="ask-gurudev-video-item podcasts">
         <section className="video-text">
           <div className="video-text">
-            <p>{result.metadata.title}</p>
+            <p>{updatedTitle}</p>
           </div>
           <div className="video-player-wrap">
             <VideoItemComp

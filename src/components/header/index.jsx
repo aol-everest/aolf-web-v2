@@ -159,6 +159,14 @@ const AOL_MENU = [
             link: '/us-en/lp/teacher-training-course',
           },
           {
+            name: 'Sri Sri Yoga Teacher Training',
+            link: 'https://artoflivingretreatcenter.org/event/sri-sri-school-of-yoga-ttc',
+          },
+          {
+            name: 'Sri Sri Marma Practitioner',
+            link: '/us-en/marma-training',
+          },
+          {
             name: 'All Courses',
             link: '/us-en/courses',
           },

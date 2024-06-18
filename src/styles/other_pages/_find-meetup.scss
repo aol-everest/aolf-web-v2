@@ -72,12 +72,13 @@ main.find-meetup {
       gap: 12px;
       max-width: 316px;
       flex: 1;
+      /*
       @media screen and (min-width: 992px) {
         position: sticky;
         top: 10px;
         max-height: calc(100vh - 20px);
         overflow-y: auto;
-      }
+      }*/
       .filter-cancel-button,
       .filter-save-button {
         display: none;
@@ -151,6 +152,9 @@ main.find-meetup {
           }
           input::placeholder {
             color: #000; /* Change to your desired placeholder color */
+          }
+          .rs-input::placeholder {
+            color: rgb(203, 213, 225);
           }
           .rs-input {
             color: #31364e;

@@ -10,6 +10,7 @@ import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
+import { useSearchParams } from 'next/navigation';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import {
@@ -316,11 +317,13 @@ const Popup = (props) => {
         )}
         <label>{label}</label>
         <button
-          className="courses-filter__button"
+          className={classNames('courses-filter__button', {
+            '!tw-text-slate-300': !buttonText,
+          })}
           data-filter="event-type"
           onClick={!showList ? handleSelectFilter : handleDropdownClick}
         >
-          {buttonText || label}
+          {buttonText || 'Select...'}
         </button>
         {showList && (
           <div className="courses-filter__wrapper-list">
@@ -375,7 +378,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, authenticated }) => {
+const CourseTile = ({ data, inIframe }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -401,12 +404,19 @@ const CourseTile = ({ data, authenticated }) => {
   } = data || {};
 
   const enrollAction = () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/${sfid}`,
-      query: {
-        ctype: productTypeId,
-      },
-    });
+    if (inIframe) {
+      window.open(
+        `/us-en/ticketed-event/${sfid}?ctype=${productTypeId}`,
+        '_blank',
+      );
+    } else {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/ticketed-event/${sfid}`,
+        query: {
+          ctype: productTypeId,
+        },
+      });
+    }
   };
 
   const getCourseDeration = () => {
@@ -481,8 +491,20 @@ const CourseTile = ({ data, authenticated }) => {
   );
 };
 
+const isInIframe = () => {
+  if (typeof window !== 'undefined') {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true; // Assume true if access to window.top is denied
+    }
+  }
+  return false;
+};
+
 const TicketedEvent = () => {
   const { track, page } = useAnalytics();
+  const searchParams = useSearchParams();
   const { ref, inView } = useInView({
     /* Optional options */
     threshold: 0.1,
@@ -502,10 +524,15 @@ const TicketedEvent = () => {
     parseAsStartEndDate,
   );
 
-  const [centerFilter] = useQueryState('center');
-  const [centerNameFilter] = useQueryState('center-name');
+  const centerFilter = searchParams.get('center');
+  const centerNameFilter = searchParams.get('center-name');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [inIframe, setInIframe] = useState(false);
+
+  useEffect(() => {
+    setInIframe(isInIframe());
+  }, []);
 
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
@@ -727,6 +754,7 @@ const TicketedEvent = () => {
                   key={course.sfid}
                   data={course}
                   authenticated={authenticated}
+                  inIframe={inIframe}
                 />
               ))}
             </React.Fragment>
@@ -864,7 +892,7 @@ const TicketedEvent = () => {
                 <label>Dates</label>
                 <div className="courses-filter__button date-picker">
                   <DateRangePicker
-                    placeholder="Dates"
+                    placeholder="Select..."
                     appearance="subtle"
                     showHeader={false}
                     onChange={onDatesChange}
@@ -1065,7 +1093,8 @@ const TicketedEvent = () => {
   );
 };
 
-// Course.requiresAuth = true;
+TicketedEvent.noHeader = true;
+TicketedEvent.hideFooter = true;
 // Course.redirectUnauthenticated = "/login";
 
 export default TicketedEvent;
