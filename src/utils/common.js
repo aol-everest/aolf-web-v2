@@ -303,3 +303,13 @@ export const findSlugByProductTypeId = (productTypeId) => {
   }
   return 'art-of-living-part-1';
 };
+
+export const truncateString = (str) => {
+  const words = str.split(' ');
+
+  if (words.length > 16) {
+    return words.slice(0, 16).join(' ') + '...';
+  }
+
+  return str;
+};
