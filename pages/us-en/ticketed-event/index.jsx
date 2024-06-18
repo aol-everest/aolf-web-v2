@@ -10,6 +10,7 @@ import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
+import { useSearchParams } from 'next/navigation';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import {
@@ -501,6 +502,7 @@ const isInIframe = () => {
 
 const TicketedEvent = () => {
   const { track, page } = useAnalytics();
+  const searchParams = useSearchParams();
   const { ref, inView } = useInView({
     /* Optional options */
     threshold: 0.1,
@@ -520,8 +522,8 @@ const TicketedEvent = () => {
     parseAsStartEndDate,
   );
 
-  const [centerFilter] = useQueryState('center');
-  const [centerNameFilter] = useQueryState('center-name');
+  const centerFilter = searchParams.get('center');
+  const centerNameFilter = searchParams.get('center-name');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [inIframe, setInIframe] = useState(false);
