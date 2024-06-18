@@ -290,7 +290,6 @@ function TicketedEvent() {
                         <div class="info-item">
                           <span class="icon-aol iconaol-location"></span>
                           <span class="p2">
-                            <strong>Location:</strong>{' '}
                             {mode === COURSE_MODES.ONLINE.name
                               ? mode
                               : (mode === COURSE_MODES.IN_PERSON.name ||
@@ -299,7 +298,8 @@ function TicketedEvent() {
                                   <>
                                     {!isLocationEmpty && (
                                       <span>
-                                        {locationStreet && locationStreet}
+                                        {locationStreet &&
+                                          `${locationStreet}, `}
                                         {locationCity || ''}
                                         {', '}
                                         {locationProvince || ''}{' '}
@@ -308,7 +308,8 @@ function TicketedEvent() {
                                     )}
                                     {isLocationEmpty && (
                                       <span>
-                                        {streetAddress1 && streetAddress1}
+                                        {streetAddress1 &&
+                                          `${streetAddress1}, `}
                                         {streetAddress2 && streetAddress2}
                                         {city || ''}
                                         {', '}
@@ -352,7 +353,7 @@ function TicketedEvent() {
                         {renderSummary()}
                       </div>
                       <div className="tickets-modal__footer">
-                        {event && total > 0 && (
+                        {false && event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
                             <StripeExpressCheckoutTicket
                               workshop={event}

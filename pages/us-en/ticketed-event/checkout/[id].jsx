@@ -536,7 +536,7 @@ const TicketCheckoutForm = ({ event }) => {
             : '',
           questionnaire: questionnaireArray,
           ppaAgreement: false,
-          contactPhone: '',
+          contactPhone: personMobilePhone,
         }}
         validationSchema={Yup.object().shape({
           firstName: Yup.string()
