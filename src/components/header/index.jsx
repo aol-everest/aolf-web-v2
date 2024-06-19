@@ -164,7 +164,7 @@ const AOL_MENU = [
           },
           {
             name: 'Sri Sri Marma Practitioner',
-            link: '/us-en/marma-training',
+            link: 'https://event.us.artofliving.org/us-en/marma-training',
           },
           {
             name: 'All Courses',
