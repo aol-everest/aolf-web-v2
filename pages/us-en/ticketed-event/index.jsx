@@ -463,7 +463,7 @@ const CourseTile = ({ data, inIframe }) => {
         </div>
         {!isPurchased && (
           <div className="course-price">
-            <span>${unitPrice}</span>
+            <span>${unitPrice === 0 || unitPrice === 1 ? '0' : unitPrice}</span>
           </div>
         )}
       </div>
