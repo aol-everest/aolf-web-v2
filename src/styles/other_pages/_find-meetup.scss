@@ -153,6 +153,9 @@ main.find-meetup {
           input::placeholder {
             color: #000; /* Change to your desired placeholder color */
           }
+          .rs-input::placeholder {
+            color: rgb(203, 213, 225);
+          }
           .rs-input {
             color: #31364e;
             border-width: 0px;
