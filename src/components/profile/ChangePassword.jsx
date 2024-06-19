@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
 
-export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
+export const ChangePassword = ({ updateCompleteAction }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);

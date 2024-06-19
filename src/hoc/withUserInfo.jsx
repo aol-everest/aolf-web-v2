@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import { Loader } from '@components/loader';
 
 const ProfileHeader = dynamic(() =>
   import('@components/profile').then((mod) => mod.ProfileHeader),
@@ -21,18 +22,18 @@ const MESSAGE_DELETE_PERSONAL_INFORMATION_ERROR = `We're sorry, but an error occ
                 at (855) 202-4400 to resolve the issue and delete your information.`;
 const MESSAGE_ALREADY_CASE_REGISTERED_ERROR = `We have already received your request to delete PII/CC. The support team is working on it and will get in touch with you shortly`;
 
-const UPCOMING_EVENTS = '/us-en/profile/UpcomingCourses';
-const PAST_COURSES = '/us-en/profile/PastCourses';
-const UPDATE_PROFILE = '/us-en/profile/UpdateProfile';
-const REFER_A_FRIEND = '/us-en/profile/ReferAFriend';
-const CARD_DETAILS = '/us-en/profile/CardDetails';
-const CHANGE_PASSWORD = '/us-en/profile/ChangePassword';
-const PREFERENCES = '/us-en/profile/Preferences';
+const UPCOMING_EVENTS = '/us-en/profile/upcoming-courses';
+const PAST_COURSES = '/us-en/profile/past-courses';
+const UPDATE_PROFILE = '/us-en/profile/update-profile';
+const REFER_A_FRIEND = '/us-en/profile/refer-a-friend';
+const CARD_DETAILS = '/us-en/profile/card-details';
+const CHANGE_PASSWORD = '/us-en/profile/change-password';
+const PREFERENCES = '/us-en/profile/preferences';
 
-const userInfo = (WrappedComponent) => {
+const withUserInfo = (WrappedComponent) => {
   return function UserInfo(props) {
     const [request, setRequest] = useQueryState('request');
-    const { user, setUser } = useAuth();
+    const { user, setUser, authenticated } = useAuth();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
@@ -171,8 +172,13 @@ const userInfo = (WrappedComponent) => {
       // router.push({
       //   pathname: screen,
       // });
-      window.history.pushState(null, '', screen);
+      router.push(screen);
+      // window.history.pushState(null, '', screen);
     };
+
+    if (!authenticated) {
+      return null;
+    }
 
     return (
       <>
@@ -304,4 +310,4 @@ const userInfo = (WrappedComponent) => {
   };
 };
 
-export default userInfo;
+export default withUserInfo;

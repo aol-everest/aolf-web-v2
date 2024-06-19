@@ -2,13 +2,13 @@ import { useAuth, useGlobalAlertContext } from '@contexts';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { ALERT_TYPES } from '@constants';
-import userInfo from './UserInfo';
+import withUserInfo from '../../../src/hoc/withUserInfo';
 
 const ChangeProfile = dynamic(() =>
   import('@components/profile').then((mod) => mod.ChangeProfile),
 );
 
-const UpdateProfile = ({ setLoading, loading }) => {
+const UpdateProfile = ({ setLoading }) => {
   const { showAlert } = useGlobalAlertContext();
   const { user, reloadProfile, authenticated } = useAuth();
 
@@ -27,9 +27,6 @@ const UpdateProfile = ({ setLoading, loading }) => {
       setLoading(false);
     }
   };
-  if (!authenticated) {
-    return null;
-  }
 
   return (
     <div>
@@ -41,4 +38,4 @@ const UpdateProfile = ({ setLoading, loading }) => {
   );
 };
 
-export default userInfo(UpdateProfile);
+export default withUserInfo(UpdateProfile);

@@ -1,0 +1,59 @@
+/* eslint-disable react/no-unescaped-entities */
+import { useAuth } from '@contexts';
+import React from 'react';
+import dynamic from 'next/dynamic';
+import withUserInfo from '../../../src/hoc/withUserInfo';
+import Link from '@components/linkWithUTM';
+
+const EventList = dynamic(() =>
+  import('@components/profile').then((mod) => mod.EventList),
+);
+
+const UpcomingCourses = () => {
+  const { user } = useAuth();
+
+  const { upcomingWorkshop = [], upcomingMeetup = [] } = user?.profile || {};
+  const upcomingEvents = [...upcomingWorkshop, ...upcomingMeetup];
+
+  return (
+    <div>
+      <div className="profile-form-box">
+        {upcomingEvents.length === 0 && (
+          <div className="no-events">
+            <div className="no-events-icon">
+              <span className="icon-aol iconaol-calendar"></span>
+            </div>
+            <div className="no-events-text">
+              You don't have any events scheduled right now.
+            </div>
+            <div className="find-event-text">
+              Find an upcoming{' '}
+              <Link href="/us-en" prefetch={false} legacyBehavior>
+                <a href="#" className="link link_orange">
+                  course
+                </a>
+              </Link>{' '}
+              or{' '}
+              <Link href="/us-en/meetup" prefetch={false} legacyBehavior>
+                <a href="#" className="link link_orange">
+                  meetup
+                </a>
+              </Link>{' '}
+              to join.
+            </div>
+          </div>
+        )}
+        <div className="preffered-upcoming-events">
+          <h2 className="title">
+            Here are the upcoming courses in your preferred center
+          </h2>
+          <div className="course-listing">
+            <EventList workshops={upcomingEvents}></EventList>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default withUserInfo(UpcomingCourses);
