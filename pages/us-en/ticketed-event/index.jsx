@@ -421,6 +421,14 @@ const CourseTile = ({ data, inIframe }) => {
   };
 
   const getCourseDeration = () => {
+    if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'day')) {
+      return (
+        <>
+          {`${dayjs.utc(eventStartDate).format('MMMM DD, YYYY')}`}
+          {' ' + ABBRS[eventTimeZone]}
+        </>
+      );
+    }
     if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'month')) {
       return (
         <>
@@ -460,13 +468,17 @@ const CourseTile = ({ data, inIframe }) => {
         )}
       </div>
       <div className="course-location">
-        {concatenateStrings([
-          locationStreet,
-          locationCity,
-          locationProvince,
-          locationPostalCode,
-        ])}
+        {mode !== 'Online' &&
+          locationCity &&
+          concatenateStrings([
+            locationStreet,
+            locationCity,
+            locationProvince,
+            locationPostalCode,
+          ])}
+        {mode === 'Online' && 'Online'}
       </div>
+
       {/* <div className="course-instructors">
         {concatenateStrings([primaryTeacherName, coTeacher1Name])}
       </div> */}
@@ -475,8 +487,10 @@ const CourseTile = ({ data, inIframe }) => {
           timings.map((time, i) => {
             return (
               <div className="course-timing" key={i}>
-                <span>{dayjs.utc(time.startDate).format('M/D dddd')}</span>
-                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                <span className="tw-pr-2">
+                  {dayjs.utc(time.startDate).format('ddd, MMM DD')}{' '}
+                </span>
+                {`${tConvert(time.startTime)}-${tConvert(time.endTime)} ${
                   ABBRS[time.timeZone]
                 }`}
               </div>
@@ -783,9 +797,7 @@ const TicketedEvent = () => {
       <section className="title-header">
         {centerFilter && (
           <>
-            <h1 className="page-title">
-              Events offered by {centerNameFilter} center
-            </h1>
+            <h1 className="page-title">Events offered by Art of Living SFBA</h1>
           </>
         )}
       </section>
