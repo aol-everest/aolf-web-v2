@@ -13,7 +13,6 @@ import {
 import { useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { api, phoneRegExp } from '@utils';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { Field, Formik } from 'formik';
 import { useRouter } from 'next/router';
