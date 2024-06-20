@@ -1,8 +1,11 @@
-import { ALERT_TYPES } from '@constants';
+import { ALERT_TYPES, MESSAGE_EMAIL_VERIFICATION_SUCCESS } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useAnalytics } from 'use-analytics';
+import { FaCheckCircle } from 'react-icons/fa';
+import classNames from 'classnames';
+import { api } from '@utils';
 import {
   ChangePasswordForm,
   NewPasswordForm,
@@ -21,6 +24,7 @@ import {
   updatePassword,
   confirmSignIn,
 } from 'aws-amplify/auth';
+import { Hub } from 'aws-amplify/utils';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
 
@@ -31,6 +35,12 @@ const SIGN_UP_MODE = 's-up';
 const RESET_PASSWORD_REQUEST = 'spr';
 const NEW_PASSWORD_REQUEST = 'npr';
 const CHANGE_PASSWORD_REQUEST = 'cpr';
+
+const encodeFormData = (data) => {
+  return Object.keys(data)
+    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
+};
 
 const VerificationCodeMessage = () => (
   <div class="confirmation-message-info">
@@ -89,6 +99,8 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [mode, setMode] = useQueryState(
     'mode',
     parseAsString.withDefault(SIGN_IN_MODE),
@@ -143,10 +155,31 @@ function LoginPage() {
           // Collect the confirmation code from the user and pass to confirmResetPassword.
           break;
         case 'DONE':
-          if (navigateTo) {
-            router.push(navigateTo);
+          if (isStudent) {
+            await api.post({
+              path: 'verify-email',
+              body: {
+                email: username,
+              },
+            });
+            setShowSuccessMessage(true);
+            setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
+            setTimeout(() => {
+              setLoading(false);
+              setShowSuccessMessage(false);
+              setSuccessMessage(null);
+              if (navigateTo) {
+                router.push(navigateTo);
+              } else {
+                router.push('/us-en');
+              }
+            }, 3000);
           } else {
-            router.push('/us-en');
+            if (navigateTo) {
+              router.push(navigateTo);
+            } else {
+              router.push('/us-en');
+            }
           }
           break;
       }
@@ -294,7 +327,7 @@ function LoginPage() {
     setShowMessage(false);
     await signInWithRedirect({
       provider: 'Google',
-      customState: navigateTo,
+      customState: navigateTo || router.asPath,
     });
   };
 
@@ -407,6 +440,18 @@ function LoginPage() {
 
   return (
     <main class="login-register-page">
+      <div
+        className={classNames('success-message-container', {
+          'd-none': !showSuccessMessage,
+        })}
+      >
+        <div className="success-message">
+          <div className="icon-container">
+            <FaCheckCircle />
+          </div>
+          {successMessage}
+        </div>
+      </div>
       {renderForm()}
 
       <Fido2Toast />

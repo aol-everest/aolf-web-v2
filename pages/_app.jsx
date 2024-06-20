@@ -24,6 +24,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
 import { Amplify } from 'aws-amplify';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
+import { Hub } from 'aws-amplify/utils';
+import { useRouter } from 'next/router';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -82,6 +84,7 @@ Amplify.configure({
 });
 
 function App({ Component, pageProps }) {
+  const router = useRouter();
   const [user, setUser] = useState({ isAuthenticated: false });
   const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
@@ -97,6 +100,23 @@ function App({ Component, pageProps }) {
       },
     },
   });
+
+  useEffect(() => {
+    console.log('Hub.listen===>');
+    const unsubscribe = Hub.listen('auth', ({ payload }) => {
+      console.log(payload.event);
+      console.log('payload.event===>');
+      switch (payload.event) {
+        case 'customOAuthState':
+          if (payload.data && payload.data !== '') {
+            router.push(payload.data);
+          }
+          break;
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     fetchProfile();
