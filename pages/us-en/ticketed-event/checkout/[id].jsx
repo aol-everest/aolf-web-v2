@@ -538,7 +538,7 @@ const TicketCheckoutForm = ({ event }) => {
             : '',
           questionnaire: questionnaireArray,
           ppaAgreement: false,
-          contactPhone: '',
+          contactPhone: personMobilePhone,
         }}
         validationSchema={Yup.object().shape({
           firstName: Yup.string()
@@ -939,7 +939,7 @@ const TicketCheckoutForm = ({ event }) => {
                                           <a
                                             href={`https://www.google.com/maps/search/?api=1&query=${
                                               event.locationStreet || ''
-                                            }, ${event.locationCity} ${
+                                            }, ${event.locationCity}, ${
                                               event.locationProvince
                                             } ${event.locationPostalCode} ${
                                               event.locationCountry
@@ -948,7 +948,7 @@ const TicketCheckoutForm = ({ event }) => {
                                             rel="noreferrer"
                                           >
                                             {event.locationStreet &&
-                                              event.locationStreet}
+                                              `${event.locationStreet}, `}
                                             {event.locationCity || ''}
                                             {', '}
                                             {event.locationProvince || ''}{' '}

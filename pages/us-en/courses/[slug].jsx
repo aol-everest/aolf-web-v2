@@ -393,11 +393,13 @@ const Popup = (props) => {
         )}
         <label>{label}</label>
         <button
-          className="courses-filter__button"
+          className={classNames('courses-filter__button', {
+            '!tw-text-slate-300': !buttonText,
+          })}
           data-filter="event-type"
           onClick={!showList ? handleSelectFilter : handleDropdownClick}
         >
-          {buttonText || label}
+          {buttonText || 'Select...'}
         </button>
         {showList && (
           <div className="courses-filter__wrapper-list">
@@ -1175,7 +1177,7 @@ const Course = () => {
                 <label>Dates</label>
                 <div className="courses-filter__button date-picker">
                   <DateRangePicker
-                    placeholder="Dates"
+                    placeholder="Select..."
                     appearance="subtle"
                     showHeader={false}
                     onChange={onDatesChange}

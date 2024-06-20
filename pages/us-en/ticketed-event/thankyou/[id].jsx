@@ -142,6 +142,14 @@ const TicketCongratulations = () => {
   const uniqueTicketTiers = [...new Set(ticketTiers)];
   const formattedStartDate = dayjs.utc(eventStartDate).format('ddd');
   const formattedEndDate = dayjs.utc(eventEndDate).format('ddd');
+  let tickets = attendeeDetail.attendees;
+  if (!attendeeDetail.ticketedEvent.isAllAttedeeInformationRequired) {
+    tickets = [
+      attendeeDetail.attendees.find(
+        (obj) => obj.firstName && obj.lastName && obj.email,
+      ),
+    ];
+  }
 
   return (
     <main className="course-filter calendar-online">
@@ -175,7 +183,8 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="order-item">
                     <FaMoneyBill className="fa fa-money" />{' '}
-                    <span>Order Total: </span> ${attendeeDetail.totalAmountPaid}
+                    <span>Order Total: </span> $
+                    {(attendeeDetail?.totalAmountPaid || 0).toFixed(2)}
                   </li>
                 </ul>
                 <div className="bottom-info">
@@ -188,7 +197,7 @@ const TicketCongratulations = () => {
                 <FaList className="fa fa-list-alt" /> Ticket Information
               </h2>
               <div className="tickets-accepted">
-                {attendeeDetail.attendees.map((item, index) => {
+                {tickets.map((item, index) => {
                   return (
                     <div
                       className="ticket-box"
@@ -196,10 +205,13 @@ const TicketCongratulations = () => {
                     >
                       <div className="ticket-header">
                         <div className="ticket-title">
-                          TICKET HOLDER #{index + 1}
+                          TICKET HOLDER{' '}
+                          {tickets.length > 1 ? `#${index + 1}` : ''}
                         </div>
                         <div className="ticket-type">
-                          {item.pricingTierName}
+                          {attendeeDetail.ticketedEvent
+                            .isAllAttedeeInformationRequired &&
+                            item.pricingTierName}
                         </div>
                       </div>
                       <div className="ticket-body">
@@ -308,11 +320,11 @@ const TicketCongratulations = () => {
                                 <a
                                   href={`https://www.google.com/maps/search/?api=1&query=${
                                     locationStreet || ''
-                                  }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                                  }, ${locationCity}, ${locationProvince} ${locationPostalCode} ${locationCountry}`}
                                   target="_blank"
                                   rel="noreferrer"
                                 >
-                                  {locationStreet && locationStreet}
+                                  {locationStreet && `${locationStreet}, `}
                                   {locationCity || ''}
                                   {', '}
                                   {locationProvince || ''}{' '}

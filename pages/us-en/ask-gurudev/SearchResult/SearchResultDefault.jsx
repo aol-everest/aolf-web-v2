@@ -1,12 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { VideoItemComp } from './SearchResult';
+import { truncateString } from '@utils';
 
 const SearchResultDefault = React.forwardRef(function SearchResult(
   { result, setPlayingId, playingId },
   ref,
 ) {
   const thumbnailUrl = result?.snippet.thumbnails.standard.url;
+  const updatedTitle = truncateString(result.snippet.description);
 
   const onPlayAction = (id) => {
     setPlayingId(id);
@@ -23,7 +25,7 @@ const SearchResultDefault = React.forwardRef(function SearchResult(
       <main className="ask-gurudev-video-item podcasts">
         <section className="video-text">
           <div className="video-text">
-            <p>{result.snippet.title}</p>
+            <p>{updatedTitle}</p>
           </div>
           <div className="video-player-wrap">
             <VideoItemComp

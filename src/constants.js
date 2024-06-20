@@ -157,6 +157,14 @@ export const COURSE_TYPES_MASTER = {
           description:
             'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
         },
+        SRI_SRI_YOGA_TEACHER_TRAINING: {
+          slug: 'sri-sri-yoga-teacher-training',
+          name: 'Sri Sri Yoga Teacher Training',
+          isExternal: true,
+          link: 'https://artoflivingretreatcenter.org/event/sri-sri-school-of-yoga-ttc',
+          description:
+            'Dive into authentic yoga with inspiring trainers in a serene mountain setting. Rooted in science, experience, and a lineage of yoga masters, SSYTT enab...',
+        },
         MARMA_TRAINING: {
           slug: 'sri-sri-marma-practitioner',
           name: 'Sri Sri Marma Practitioner',
