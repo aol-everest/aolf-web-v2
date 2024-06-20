@@ -1,5 +1,4 @@
-import { useAuth } from '@contexts';
-import { Auth } from '@utils';
+import { updatePassword } from 'aws-amplify/auth';
 import classNames from 'classnames';
 import { Formik } from 'formik';
 import { useState } from 'react';
@@ -7,7 +6,6 @@ import * as Yup from 'yup';
 import { Loader } from '@components';
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
-  const { profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -15,8 +13,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
     const { password: newPassword, oldPassword } = values;
     setLoading(true);
     try {
-      await Auth.changePassword({
-        email: profile.email,
+      await updatePassword({
         oldPassword,
         newPassword,
       });
