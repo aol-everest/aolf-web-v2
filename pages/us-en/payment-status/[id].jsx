@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 
 const checkPaymentStatus = async (id) => {
   const response = await api.get({
-    path: 'workshopDetail',
+    path: 'getOrderAndAttendeeDetails',
     param: {
-      id,
+      orderId: id,
     },
   });
   if (!response.ok) {
@@ -57,17 +57,13 @@ const PaymentStatus = () => {
   const { id } = router.query;
   const next = searchParams.get('search');
 
-  const [status, setStatus] = useState(null);
-  const [error, setError] = useState(null);
-
   useEffect(() => {
     const fetchStatus = async () => {
       try {
         const result = await retryPaymentStatusCheck(id);
-        setStatus(result);
-        router.replace(next);
+        router.replace(`${next}/${result.id}`);
       } catch (error) {
-        setError(error.message);
+        console.log(error.message);
       }
     };
 
