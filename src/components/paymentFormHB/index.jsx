@@ -62,7 +62,6 @@ const createOptions = {
 
 export const PaymentFormHB = ({
   workshop = {},
-  profile = {},
   enrollmentCompletionAction = () => {},
   handleCouseSelection = () => {},
   login = () => {},
@@ -71,7 +70,8 @@ export const PaymentFormHB = ({
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
-  const { setUser } = useAuth();
+  const { profile, passwordLess } = useAuth();
+  const { signOut } = passwordLess;
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
@@ -110,11 +110,9 @@ export const PaymentFormHB = ({
   }, [programQuestionnaireResult]);
 
   const logout = async () => {
-    await Auth.logout();
-    setUser(null);
-    pushRouteWithUTMQuery(
-      router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+    await signOut();
+    router.push(
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 

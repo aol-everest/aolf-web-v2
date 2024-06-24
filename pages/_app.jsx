@@ -51,7 +51,6 @@ Passwordless.configure({
   },
   debug: console.debug,
 });
-
 Amplify.configure({
   Auth: {
     Cognito: {
@@ -75,7 +74,7 @@ Amplify.configure({
             'aws.cognito.signin.user.admin',
           ],
           redirectSignIn: [process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN],
-          redirectSignOut: [process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNOUT],
+          redirectSignOut: 'about:blank',
           responseType: 'code',
         },
       },

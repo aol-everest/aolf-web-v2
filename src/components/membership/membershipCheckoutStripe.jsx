@@ -73,7 +73,6 @@ export const MembershipCheckoutStripe = ({
   subsciption,
   activeSubscription,
   couponCode,
-  profile,
   completeCheckoutCallback,
   isAuthenticated,
   closeRetreatPrerequisiteWarning,
@@ -85,7 +84,8 @@ export const MembershipCheckoutStripe = ({
   const { showAlert } = useGlobalAlertContext();
   const elements = useElements();
   const stripe = useStripe();
-  const { setUser } = useAuth();
+  const { profile, passwordLess } = useAuth();
+  const { signOut } = passwordLess;
 
   const {
     first_name,
@@ -263,11 +263,9 @@ export const MembershipCheckoutStripe = ({
   };
 
   const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
-    pushRouteWithUTMQuery(
-      router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+    await signOut();
+    router.push(
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 

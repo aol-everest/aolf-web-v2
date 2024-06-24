@@ -140,7 +140,8 @@ function TicketCheckout() {
 
 const TicketCheckoutForm = ({ event }) => {
   const router = useRouter();
-  const { profile, isAuthenticated: isUserLoggedIn, setUser } = useAuth();
+  const { profile, passwordLess, isAuthenticated: isUserLoggedIn } = useAuth();
+  const { signOut } = passwordLess;
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const formRef = useRef();
@@ -436,12 +437,10 @@ const TicketCheckoutForm = ({ event }) => {
   };
 
   const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
-    // pushRouteWithUTMQuery(
-    //   router,
-    //   `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
-    // );
+    await signOut();
+    router.push(
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+    );
   };
 
   const paymentElementOptions = {

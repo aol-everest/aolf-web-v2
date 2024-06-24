@@ -92,12 +92,9 @@ const Checkout = () => {
 
   useEffect(() => {
     if (workshop && !isAuthenticated && !workshop.isGuestCheckoutEnabled) {
-      pushRouteWithUTMQuery(router, {
-        pathname: '/login',
-        query: {
-          next: router.asPath,
-        },
-      });
+      router.push(
+        `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+      );
     }
     setTimeout(() => {
       setLoading(false);
