@@ -134,8 +134,10 @@ const CheckoutPage = ({
         path: 'createIntentForExpressCheckout',
         body: {
           shoppingRequest: {
-            productSfId: workshop.id,
-            productType: 'workshop',
+            products: {
+              productSfId: workshop.id,
+              productType: 'workshop',
+            },
             utmParams: filteredParams,
           },
         },
