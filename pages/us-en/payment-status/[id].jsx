@@ -10,11 +10,10 @@ const checkPaymentStatus = async (id) => {
       orderId: id,
     },
   });
-  if (!response.ok) {
+  if (response.status !== 200) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-  const data = await response.json();
-  return data;
+  return response;
 };
 
 const retryPaymentStatusCheck = async (
@@ -27,9 +26,9 @@ const retryPaymentStatusCheck = async (
 
   while (attempts < maxRetries) {
     try {
-      const { status } = await checkPaymentStatus(id);
-      if (status === 'success') {
-        return status; // If payment is successful, return the status
+      const response = await checkPaymentStatus(id);
+      if (response.status === 200) {
+        return response.data; // If payment is successful, return the status
       }
       attempts++;
       console.log(`Attempt ${attempts}: Payment status is ${status}`);
@@ -55,16 +54,16 @@ const PaymentStatus = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { id } = router.query;
-  const next = searchParams.get('search');
+  const next = searchParams.get('next');
 
   useEffect(() => {
     if (id) {
       const fetchStatus = async () => {
         try {
-          const { data } = await retryPaymentStatusCheck(id);
-          router.replace(`${next}/${data.attendeeExternalId}`);
+          const data = await retryPaymentStatusCheck(id);
+          router.push(`${next}/${data.attendeeExternalId}`);
         } catch (error) {
-          console.log(error.message);
+          console.error(error.message);
         }
       };
 
