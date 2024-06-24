@@ -61,7 +61,7 @@ const PaymentStatus = () => {
       const fetchStatus = async () => {
         try {
           const data = await retryPaymentStatusCheck(id);
-          router.push(`${next}/${data.attendeeExternalId}`);
+          router.replace(`${next}/${data.attendeeExternalId}`);
         } catch (error) {
           console.error(error.message);
         }
