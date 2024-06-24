@@ -58,16 +58,18 @@ const PaymentStatus = () => {
   const next = searchParams.get('search');
 
   useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const result = await retryPaymentStatusCheck(id);
-        router.replace(`${next}/${result.id}`);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+    if (id) {
+      const fetchStatus = async () => {
+        try {
+          const result = await retryPaymentStatusCheck(id);
+          router.replace(`${next}/${result.id}`);
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
 
-    fetchStatus();
+      fetchStatus();
+    }
   }, [id]);
 
   return (
