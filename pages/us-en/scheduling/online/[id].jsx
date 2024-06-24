@@ -287,6 +287,7 @@ const Scheduling = () => {
                       goToPaymentModal={goToPaymentModal}
                       selectedWorkshopId={workshopId}
                       btnText="Checkout"
+                      nextPageUrl="/us-en/scheduling/online/course"
                     />
                     {/* <button class="submit-btn" onClick={continueToCheckout}>
                       Checkout

@@ -31,6 +31,7 @@ export const StripeExpressCheckoutElement = ({
   loading = false,
   buttonClass,
   showHealthLink = false,
+  nextPageUrl,
   parentStyle,
 }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
@@ -60,6 +61,7 @@ export const StripeExpressCheckoutElement = ({
         loading={loading}
         showHealthLink={showHealthLink}
         parentStyle={parentStyle}
+        nextPageUrl={nextPageUrl}
       />
     </Elements>
   );
@@ -86,6 +88,7 @@ const CheckoutPage = ({
   buttonClass,
   showHealthLink,
   parentStyle,
+  nextPageUrl = 'us-en/course/thankyou',
 }) => {
   const { track, page } = useAnalytics();
   const stripe = useStripe();
@@ -94,6 +97,10 @@ const CheckoutPage = ({
   const [loading, setLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const { showAlert } = useGlobalAlertContext();
+
+  const getThankYouPageUrl = () => {
+    return encodeURIComponent(nextPageUrl);
+  };
 
   const onConfirm = async (event) => {
     if (loading) {
@@ -120,16 +127,20 @@ const CheckoutPage = ({
       const {
         stripeIntentObj,
         status,
-        data,
+        orderId,
         error: errorMessage,
         isError,
       } = await api.post({
         path: 'createIntentForExpressCheckout',
         body: {
-          workshopId: workshop.id,
-          utmParams: filteredParams,
+          shoppingRequest: {
+            products: {
+              productSfId: workshop.id,
+              productType: 'workshop',
+            },
+            utmParams: filteredParams,
+          },
         },
-        isUnauthorized: true,
       });
 
       filteredParams = {
@@ -143,7 +154,7 @@ const CheckoutPage = ({
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/course/scheduling/thankyou/${workshop.id}?${queryString.stringify(
+      }/us-en/payment-status/${orderId}?next=${getThankYouPageUrl()}&${queryString.stringify(
         filteredParams,
       )}`;
 
