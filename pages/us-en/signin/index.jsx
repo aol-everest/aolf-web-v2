@@ -42,6 +42,30 @@ const encodeFormData = (data) => {
     .join('&');
 };
 
+const StudentVerificationCodeMessage = () => (
+  <div class="confirmation-message-info">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40px"
+      height="40px"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <path
+        d="M8.5 12.5L10.5 14.5L15.5 9.5"
+        stroke="#ff865b"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <br />
+    <br />A verification link has been emailed to you. Please use the link to
+    verify your student email.
+  </div>
+);
+
 const VerificationCodeMessage = () => (
   <div class="confirmation-message-info">
     <svg
@@ -99,8 +123,6 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [mode, setMode] = useQueryState(
     'mode',
     parseAsString.withDefault(SIGN_IN_MODE),
@@ -162,12 +184,11 @@ function LoginPage() {
                 email: username,
               },
             });
-            setShowSuccessMessage(true);
-            setSuccessMessage(MESSAGE_EMAIL_VERIFICATION_SUCCESS);
+            setLoading(false);
+            showAlert(ALERT_TYPES.NEW_ALERT, {
+              children: <StudentVerificationCodeMessage />,
+            });
             setTimeout(() => {
-              setLoading(false);
-              setShowSuccessMessage(false);
-              setSuccessMessage(null);
               if (navigateTo) {
                 router.push(navigateTo);
               } else {
@@ -239,9 +260,13 @@ function LoginPage() {
           `Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`,
         );
 
-        showAlert(ALERT_TYPES.NEW_ALERT, {
-          children: <VerificationCodeMessage />,
-        });
+        showAlert(
+          ALERT_TYPES.NEW_ALERT,
+          {
+            children: <VerificationCodeMessage />,
+          },
+          2000,
+        );
         // Collect the confirmation code from the user and pass to confirmResetPassword.
         break;
       case 'DONE':
@@ -265,9 +290,13 @@ function LoginPage() {
         newPassword: password,
       });
       setMode(SIGN_IN_MODE);
-      showAlert(ALERT_TYPES.NEW_ALERT, {
-        children: <PasswordChangeSuccessMessage />,
-      });
+      showAlert(
+        ALERT_TYPES.NEW_ALERT,
+        {
+          children: <PasswordChangeSuccessMessage />,
+        },
+        2000,
+      );
     } catch (ex) {
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {
@@ -440,18 +469,6 @@ function LoginPage() {
 
   return (
     <main class="login-register-page">
-      <div
-        className={classNames('success-message-container', {
-          'd-none': !showSuccessMessage,
-        })}
-      >
-        <div className="success-message">
-          <div className="icon-container">
-            <FaCheckCircle />
-          </div>
-          {successMessage}
-        </div>
-      </div>
       {renderForm()}
 
       <Fido2Toast />

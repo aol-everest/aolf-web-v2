@@ -1,6 +1,6 @@
 import { ALERT_TYPES } from '@constants';
 import { GlobalAlertContext } from '@contexts';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CustomAlert } from './CustomAlert';
 import { ErrorAlert } from './ErrorAlert';
 import { SuccessAlert } from './SuccessAlert';
@@ -19,12 +19,17 @@ export const GlobalAlert = ({ children }) => {
   const [store, setStore] = useState();
   const { alertType, alertProps } = store || {};
 
-  const showAlert = (alertType, alertProps) => {
+  const showAlert = (alertType, alertProps, autoHideMS) => {
     setStore({
       ...store,
       alertType,
       alertProps,
     });
+    if (autoHideMS) {
+      setTimeout(() => {
+        hideAlert();
+      }, autoHideMS);
+    }
   };
 
   const hideAlert = () => {
