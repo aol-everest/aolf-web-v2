@@ -307,8 +307,8 @@ export const findSlugByProductTypeId = (productTypeId) => {
 export const truncateString = (str) => {
   const words = str.split(' ');
 
-  if (words.length > 16) {
-    return words.slice(0, 16).join(' ') + '...';
+  if (words.length > 20) {
+    return words.slice(0, 20).join(' ') + '...';
   }
 
   return str;
