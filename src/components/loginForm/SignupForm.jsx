@@ -94,7 +94,6 @@ export const SignupForm = ({
               </button>
             </div>
             <div class="form-item checkbox">
-              <input type="checkbox" id="toc" />
               <label class="toc" for="toc">
                 By signing up, I agree to{' '}
                 <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
