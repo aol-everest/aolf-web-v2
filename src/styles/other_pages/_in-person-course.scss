@@ -870,6 +870,17 @@
 }
 .modal {
   padding-left: 15px;
+  .scheduling-address {
+    margin: 0;
+    width: 100% !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    a.react-tag-remove {
+      font-size: 20px;
+      text-decoration: none;
+    }
+  }
   &.location-search {
     .modal-dialog {
       max-width: 524px;

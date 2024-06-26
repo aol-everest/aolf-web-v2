@@ -20,6 +20,7 @@ import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
@@ -28,6 +29,14 @@ import LocationSearchModal from '@components/scheduleLocationFilter/LocationSear
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
+
+function tryJsonParse(jsonString) {
+  try {
+    return JSON.parse(jsonString);
+  } catch (e) {
+    return null;
+  }
+}
 
 // eslint-disable-next-line react/display-name
 const WorkshopSelectModal = React.memo(
@@ -368,6 +377,7 @@ const Scheduling = () => {
   const { track, page } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
   const [showLocationModal, setShowLocationModal] = useState(true);
   const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
@@ -376,6 +386,7 @@ const Scheduling = () => {
     'location',
     parseAsJson(),
   );
+  const location = searchParams.get('location');
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
@@ -438,7 +449,7 @@ const Scheduling = () => {
     if (cityFilter || locationFilter?.locationName) {
       setShowLocationModal(false);
     }
-  }, [cityFilter]);
+  }, [cityFilter, locationFilter]);
 
   useEffect(() => {
     if (selectedDates?.length) {
