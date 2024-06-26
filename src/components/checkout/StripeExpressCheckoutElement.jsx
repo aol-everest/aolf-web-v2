@@ -88,7 +88,7 @@ const CheckoutPage = ({
   buttonClass,
   showHealthLink,
   parentStyle,
-  nextPageUrl = 'us-en/course/thankyou',
+  nextPageUrl = '/us-en/course/thankyou',
 }) => {
   const { track, page } = useAnalytics();
   const stripe = useStripe();
