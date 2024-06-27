@@ -185,16 +185,20 @@ function LoginPage() {
               },
             });
             setLoading(false);
-            showAlert(ALERT_TYPES.NEW_ALERT, {
-              children: <StudentVerificationCodeMessage />,
-            });
+            showAlert(
+              ALERT_TYPES.NEW_ALERT,
+              {
+                children: <StudentVerificationCodeMessage />,
+              },
+              2000,
+            );
             setTimeout(() => {
               if (navigateTo) {
                 router.push(navigateTo);
               } else {
                 router.push('/us-en');
               }
-            }, 3000);
+            }, 1000);
           } else {
             if (navigateTo) {
               router.push(navigateTo);
