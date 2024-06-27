@@ -477,6 +477,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
     listPrice,
     isEventFull,
     isPurchased,
+    category,
   } = data || {};
 
   const enrollAction = () => {
@@ -551,7 +552,16 @@ const CourseTile = ({ data, isAuthenticated }) => {
     >
       <div className="course-item-header">
         <div className="course-title-duration">
-          <div className="course-title">{mode}</div>
+          <div className="course-title">
+            {mode}
+            {category && (
+              <div
+                class={`course-type ${mode === COURSE_MODES.IN_PERSON.value ? 'intensive' : 'days'}`}
+              >
+                {category}
+              </div>
+            )}
+          </div>
           <div className="course-duration">{getCourseDeration()}</div>
         </div>
         {!isPurchased && (
