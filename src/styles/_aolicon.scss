@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'iconaol';
-  src: url('/fonts/iconaol/iconaol.eot?qmw49i');
+  src: url('/fonts/iconaol/iconaol.eot?jt9vx2');
   src:
-    url('/fonts/iconaol/iconaol.eot?qmw49i#iefix') format('embedded-opentype'),
-    url('/fonts/iconaol/iconaol.ttf?qmw49i') format('truetype'),
-    url('/fonts/iconaol/iconaol.woff?qmw49i') format('woff'),
-    url('/fonts/iconaol/iconaol.svg?qmw49i#iconaol') format('svg');
+    url('/fonts/iconaol/iconaol.eot?jt9vx2#iefix') format('embedded-opentype'),
+    url('/fonts/iconaol/iconaol.ttf?jt9vx2') format('truetype'),
+    url('/fonts/iconaol/iconaol.woff?jt9vx2') format('woff'),
+    url('/fonts/iconaol/iconaol.svg?jt9vx2#iconaol') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -26,6 +26,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.iconaol-lock:before {
+  content: '\e932';
+}
+.iconaol-sms-bold:before {
+  content: '\e926';
+}
+.iconaol-arrow-long-right:before {
+  content: '\e933';
+}
+.iconaol-arrow-long-left:before {
+  content: '\e934';
+}
 .iconaol-users:before {
   content: '\e919';
 }
@@ -47,11 +59,44 @@
 .iconaol-hindu-temple:before {
   content: '\e916';
 }
+.iconaol-chat-flower:before {
+  content: '\e930';
+}
+.iconaol-key:before {
+  content: '\e931';
+}
 .iconaol-clock-bold:before {
   content: '\e925';
 }
 .iconaol-payment-card:before {
   content: '\e914';
+}
+.iconaol-brain:before {
+  content: '\e928';
+}
+.iconaol-charity:before {
+  content: '\e929';
+}
+.iconaol-focus:before {
+  content: '\e92a';
+}
+.iconaol-sleep:before {
+  content: '\e92b';
+}
+.iconaol-lighting:before {
+  content: '\e92c';
+}
+.iconaol-mindfulness:before {
+  content: '\e92d';
+}
+.iconaol-reduce-stress:before {
+  content: '\e92e';
+}
+.iconaol-emotion:before {
+  content: '\e92f';
+}
+.iconaol-location-bold:before {
+  content: '\e927';
 }
 .iconaol-copy:before {
   content: '\e91c';
