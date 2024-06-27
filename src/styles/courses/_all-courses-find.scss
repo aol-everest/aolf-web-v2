@@ -586,6 +586,30 @@ main.all-courses-find {
         font-weight: 500;
         line-height: 28px;
         margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        .course-type {
+          background: linear-gradient(
+            102.78deg,
+            #3d8be8 -37.89%,
+            #89beec 100.28%
+          );
+          border-radius: 8px;
+          padding: 4px 10px;
+          margin-left: 12px;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 17.92px;
+          color: white;
+          &.days {
+            background: linear-gradient(
+              94.04deg,
+              #ffa180 3.84%,
+              #ed7347 109.6%
+            );
+          }
+        }
       }
       .course-duration {
         background: #edf5fc;
