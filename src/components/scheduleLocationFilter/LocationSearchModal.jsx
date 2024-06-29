@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
 import { useAnalytics } from 'use-analytics';
@@ -13,6 +13,9 @@ const LocationSearchModal = React.memo(
   }) => {
     const { track } = useAnalytics();
     const [selectedLocation, setSelectedLocation] = useState(locationFilter);
+    useEffect(() => {
+      setSelectedLocation(locationFilter);
+    }, [locationFilter]);
     const findCourses = () => {
       handleLocationFilterChange(selectedLocation);
       track('cmodal_zip_first_continue');
@@ -38,7 +41,7 @@ const LocationSearchModal = React.memo(
           <div className="form-item">
             <ScheduleLocationFilterNew
               handleLocationChange={handleLocationChange}
-              value={locationFilter}
+              value={selectedLocation}
               listClassName="result-list"
             />
           </div>
