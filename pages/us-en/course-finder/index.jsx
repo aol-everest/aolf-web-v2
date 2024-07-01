@@ -12,6 +12,7 @@ import useQuestionnaireSelection from 'src/hooks/useQuestionnaireSelection';
 import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import { PhoneInputNewCheckout } from '@components/checkout';
+import { Loader } from '@components';
 
 const humanizeNumber = (num) => {
   var ones = [
@@ -349,7 +350,7 @@ const CourseFinder = () => {
 
   return (
     <>
-      {(isLoading || loading) && <div className="cover-spin"></div>}
+      {(isLoading || loading) && <Loader />}
 
       <main className="course-finder-questionnaire-question checkout-aol">
         <section className="questionnaire-question">

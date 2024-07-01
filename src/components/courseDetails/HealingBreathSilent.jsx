@@ -17,6 +17,7 @@ import { FaArrowRightLong } from 'react-icons/fa6';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Link from 'next/link';
+import { navigateToLogin } from '@utils';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -46,13 +47,13 @@ const swiperOption = {
 export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
   const { sfid, title, productTypeId, isGuestCheckoutEnabled } = data || {};
   const router = useRouter();
-  const { authenticated = false } = useAuth();
+  const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
 
   const handleRegister = (e) => {
     e.preventDefault();
 
-    if (authenticated || isGuestCheckoutEnabled) {
+    if (isAuthenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
@@ -61,12 +62,12 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: 'SIGNUP_MODE',
-      });
+      );
     }
   };
   return (

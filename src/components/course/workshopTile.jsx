@@ -7,10 +7,11 @@ import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
+import { navigateToLogin } from '@utils';
 
 dayjs.extend(utc);
 
-export const WorkshopTile = ({ data, authenticated }) => {
+export const WorkshopTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -41,7 +42,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
       course_id: data?.sfid,
       course_price: data?.unitPrice,
     });
-    if (isGuestCheckoutEnabled || authenticated) {
+    if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
@@ -50,11 +51,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-      });
+      );
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
@@ -97,7 +99,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
           ctype: productTypeId,
         },
       });
-    } else if (authenticated) {
+    } else if (isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
@@ -106,11 +108,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-      });
+      );
     }
   };
 

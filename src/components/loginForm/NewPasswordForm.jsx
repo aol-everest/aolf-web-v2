@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { object, ref, string } from 'yup';
+import { useState, useEffect } from 'react';
 
 const schema = object().shape({
   password: string()
@@ -18,6 +19,7 @@ export const NewPasswordForm = ({
   completeNewPassword,
   showMessage,
   message,
+  toSignInMode,
 }) => {
   const {
     register,
@@ -28,43 +30,109 @@ export const NewPasswordForm = ({
     resolver: yupResolver(schema),
   });
 
+  const [type, setType] = useState('password');
+  const [typeCPassword, setTypeCPassword] = useState('password');
+
+  const handleToggle = () => {
+    if (type === 'password') {
+      setType('text');
+    } else {
+      setType('password');
+    }
+  };
+  const handleToggleCPassword = () => {
+    if (typeCPassword === 'password') {
+      setTypeCPassword('text');
+    } else {
+      setTypeCPassword('password');
+    }
+  };
+
   return (
-    <form className="active show" onSubmit={handleSubmit(completeNewPassword)}>
-      <p className="info">
-        You have to change your password. Please enter your new password below.
-      </p>
-      <input
-        {...register('password')}
-        type="password"
-        placeholder="Password"
-        className={classNames({ validate: errors.password })}
-        autoComplete="new-password"
-        aria-invalid="false"
-        aria-haspopup="false"
-        spellCheck="false"
-      />
-      {errors.password && (
-        <p className="validation-input">{errors.password.message}</p>
-      )}
-      <input
-        {...register('passwordConfirmation')}
-        type="password"
-        placeholder="Confirm Password"
-        className={classNames({ validate: errors.password })}
-        autoComplete="new-password"
-        aria-invalid="false"
-        aria-haspopup="false"
-        spellCheck="false"
-      />
-      {errors.passwordConfirmation && (
-        <p className="validation-input">
-          {errors.passwordConfirmation.message}
-        </p>
-      )}
-      {showMessage && <p className="validation-input">{message}</p>}
-      <button type="submit" className="mt-4 modal-window__btn btn-primary">
-        Change Password
-      </button>
+    <form onSubmit={handleSubmit(completeNewPassword)}>
+      <section class="section-login-register">
+        <div class="container">
+          <h1 class="page-title">Reset password</h1>
+          <div class="page-description">
+            You have to change your password. Please enter your new password
+            below.
+          </div>
+          <div class="form-login-register">
+            <div class="form-item password">
+              <label for="pass">New password</label>
+              <input
+                {...register('password')}
+                type={type}
+                className={classNames('input-field password', {
+                  validate: errors.password,
+                })}
+                placeholder="New password"
+                autocomplete="off"
+                autocapitalize="off"
+                autocorrect="off"
+                pattern=".{6,}"
+              />
+
+              <button class="showPassBtn" type="button" onClick={handleToggle}>
+                <img
+                  src="/img/PasswordEye.svg"
+                  width="16"
+                  height="16"
+                  alt="Show Password"
+                />
+              </button>
+              {errors.password && (
+                <div class="validation-input">{errors.password.message}</div>
+              )}
+            </div>
+            <div class="form-item password">
+              <label for="pass">Confirm password</label>
+              <input
+                {...register('passwordConfirmation')}
+                type={typeCPassword}
+                className={classNames('input-field password', {
+                  validate: errors.passwordConfirmation,
+                })}
+                placeholder="Confirm password"
+                autocomplete="off"
+                autocapitalize="off"
+                autocorrect="off"
+                pattern=".{6,}"
+              />
+
+              <button
+                class="showPassBtn"
+                type="button"
+                onClick={handleToggleCPassword}
+              >
+                <img
+                  src="/img/PasswordEye.svg"
+                  width="16"
+                  height="16"
+                  alt="Show Password"
+                />
+              </button>
+              {errors.passwordConfirmation && (
+                <div class="validation-input">
+                  {errors.passwordConfirmation.message}
+                </div>
+              )}
+            </div>
+
+            {showMessage && <div class="common-error-message">{message}</div>}
+            <div class="form-action">
+              <button class="submit-btn" type="submit">
+                Change password
+              </button>
+            </div>
+            <div class="form-other-info">
+              <a href="#" onClick={toSignInMode}>
+                Back to login
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
       <DevTool control={control} />
     </form>
   );

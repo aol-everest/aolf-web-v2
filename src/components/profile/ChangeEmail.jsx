@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaCheckCircle } from 'react-icons/fa';
 import { object, string } from 'yup';
+import { Loader } from '@components';
 
 const ChangeEmailStep = ({
   onSubmit,
@@ -86,7 +87,7 @@ const ChangeEmailStep = ({
 };
 
 export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const [submittedEmail, setSubmittedEmail] = useState(null);
   const [message, setMessage] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
@@ -95,7 +96,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
   async function onChangeEmailSubmitted({ username }) {
     setLoading(true);
     try {
-      if (user.profile.email === username) {
+      if (profile.email === username) {
         throw new Error(`${username} is already your email address`);
       }
 
@@ -178,7 +179,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
           <div className="close-line"></div>
           <div className="close-line"></div>
         </div>
-        {loading && <div className="cover-spin"></div>}
+        {loading && <Loader />}
         <ChangeEmailStep
           onSubmit={onChangeEmailSubmitted}
           existingEmail={existingEmail}

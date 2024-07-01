@@ -17,6 +17,7 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@components": ["src/components"],
+      "@passwordLess/*": ["src/components/passwordLessAuth/*"],
       "@styles/*": ["src/styles/*"],
       "@styles": ["src/styles"],
       "@public/*": ["public/*"],

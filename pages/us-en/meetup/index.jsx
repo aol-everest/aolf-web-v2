@@ -12,6 +12,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
+import { navigateToLogin } from '@utils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import {
   ABBRS,
@@ -453,9 +454,9 @@ const ItemLoaderTile = () => {
   );
 };
 
-const MeetupTile = ({ data, authenticated }) => {
+const MeetupTile = ({ data }) => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const {
@@ -495,7 +496,7 @@ const MeetupTile = ({ data, authenticated }) => {
       productTypeId,
       isSubscriptionOfferingUsed,
     } = selectedMeetup;
-    const { subscriptions = [] } = user.profile;
+    const { subscriptions = [] } = profile;
     hideAlert();
     hideModal();
 
@@ -549,7 +550,7 @@ const MeetupTile = ({ data, authenticated }) => {
           personMailingStreet,
           personMailingState,
           personMailingPostalCode,
-        } = user.profile || {};
+        } = profile || {};
 
         let payLoad = {
           shoppingRequest: {
@@ -578,7 +579,7 @@ const MeetupTile = ({ data, authenticated }) => {
           utm: filterAllowedParams(router.query),
         };
 
-        if (!authenticated) {
+        if (!isAuthenticated) {
           payLoad = {
             ...payLoad,
             user: {
@@ -638,10 +639,10 @@ const MeetupTile = ({ data, authenticated }) => {
 
   const enrollAction = async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
-      if (!user.profile.isMandatoryWorkshopAttended) {
+      if (!profile.isMandatoryWorkshopAttended) {
         const warningPayload = {
           message: (
             <>
@@ -760,7 +761,7 @@ const Meetup = () => {
     threshold: 0.1,
   });
   const seed = useUIDSeed();
-  const { authenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const router = useRouter();
   const [meetupTypeFilter, setMeetupTypeFilter] = useQueryState('meetupType');
   const [timesOfDayFilter, setTimesOfDayFilter] = useQueryString('timesOfDay');
@@ -1107,11 +1108,7 @@ const Meetup = () => {
           data.pages.map((page) => (
             <React.Fragment key={seed(page)}>
               {page.data?.map((meetup) => (
-                <MeetupTile
-                  key={meetup.sfid}
-                  data={meetup}
-                  authenticated={authenticated}
-                />
+                <MeetupTile key={meetup.sfid} data={meetup} />
               ))}
             </React.Fragment>
           ))}

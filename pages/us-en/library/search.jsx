@@ -23,6 +23,7 @@ import React, { useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useUIDSeed } from 'react-uid';
+import { navigateToLogin } from '@utils';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -104,7 +105,7 @@ const LibrarySearch = () => {
   const [folderName] = useQueryString('folderName');
   const [duration, setDuration] = useQueryString('duration');
   const [instructor, setInstructor] = useQueryString('instructor');
-  const { user, authenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const router = useRouter();
 
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -159,8 +160,8 @@ const LibrarySearch = () => {
 
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
       await markFavoriteEvent({ meditate, refetch: refetchFavouriteContents });
     }
@@ -174,8 +175,8 @@ const LibrarySearch = () => {
 
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
       await meditatePlayEvent({
         meditate,
@@ -541,7 +542,7 @@ const LibrarySearch = () => {
                     <MeditationTile
                       key={meditation.sfid}
                       data={meditation}
-                      authenticated={authenticated}
+                      isAuthenticated={isAuthenticated}
                       additionalclassName="meditate-find"
                       markFavorite={markFavorite(meditation)}
                       meditateClickHandle={meditateClickHandle(meditation)}

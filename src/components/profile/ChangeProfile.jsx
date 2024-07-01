@@ -17,6 +17,7 @@ import { FaRegEdit } from 'react-icons/fa';
 import * as Yup from 'yup';
 import PhoneInput from './../phoneInputCmp';
 import Style from './ChangeProfile.module.scss';
+import { Loader } from '@components';
 
 const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
   const onChangeAction = (value, data, event, formattedValue) => {
@@ -292,7 +293,7 @@ export const ChangeProfile = ({
 
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         enableReinitialize
         initialValues={{

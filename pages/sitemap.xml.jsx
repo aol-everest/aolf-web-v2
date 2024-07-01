@@ -89,7 +89,7 @@ export const getServerSideProps = ({ res }) => {
         <priority>1.0</priority>
         </url>
         <url>
-        <loc>http://localhost:3000/login</loc>
+        <loc>http://localhost:3000/us-en/signin</loc>
         <lastmod>2021-12-28T15:21:56.940Z</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -114,12 +114,6 @@ export const getServerSideProps = ({ res }) => {
         </url>
         <url>
         <loc>http://localhost:3000/policy/privacy</loc>
-        <lastmod>2021-12-28T15:21:56.940Z</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-        </url>
-        <url>
-        <loc>http://localhost:3000/token</loc>
         <lastmod>2021-12-28T15:21:56.940Z</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>

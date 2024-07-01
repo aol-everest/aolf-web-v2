@@ -32,7 +32,7 @@ export const getServerSideProps = async (context) => {
 };
 
 const Checkout = (props) => {
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const router = useRouter();
   const { id: workshopId } = router.query;
   const {
@@ -96,7 +96,7 @@ const Checkout = (props) => {
             >
               <MeetupPaymentForm
                 meetup={meetup}
-                profile={user.profile}
+                profile={profile}
                 enrollmentCompletionAction={enrollmentCompletionAction}
                 isReferBySameSite={isReferBySameSite}
               />

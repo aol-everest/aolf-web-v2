@@ -14,6 +14,7 @@ import {
   SigninForm,
   SignupForm,
 } from './../loginForm';
+import { Loader } from '@components';
 
 const LOGIN_MODE = 'LOGIN_MODE';
 const SIGNUP_MODE = 'SIGNUP_MODE';
@@ -324,7 +325,7 @@ export const LoginModal = () => {
   return (
     <div className="modal-window auth show active">
       <div className="modal-window__card show">
-        {loading && <div className="cover-spin"></div>}
+        {loading && <Loader />}
         <div
           className={classNames('success-message-container', {
             'd-none': !showSuccessMessage,

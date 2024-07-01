@@ -9,10 +9,11 @@ import { Element } from 'react-scroll';
 import { CourseBottomCard } from './CourseBottomCard';
 import { RegisterPanel } from './RegisterPanel';
 import queryString from 'query-string';
+import { navigateToLogin } from '@utils';
 
 export const SanyamCourse = ({ data, mode: courseViewMode }) => {
   const { showModal } = useGlobalModalContext();
-  const { authenticated = false } = useAuth();
+  const { isAuthenticated = false } = useAuth();
   const router = useRouter();
 
   const { title, isGuestCheckoutEnabled, mode, productTypeId, sfid } =
@@ -30,7 +31,7 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated || isGuestCheckoutEnabled) {
+    if (isAuthenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
@@ -39,12 +40,12 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: 'SIGNUP_MODE',
-      });
+      );
     }
   };
 

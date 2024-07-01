@@ -1,5 +1,6 @@
 import { GlobalLoadingContext } from '@contexts';
 import { useState } from 'react';
+import { Loader } from '@components';
 
 export const GlobalLoading = ({ children }) => {
   const [store, setStore] = useState();
@@ -27,7 +28,7 @@ export const GlobalLoading = ({ children }) => {
     }
     return (
       <div className="tw-fixed tw-top-0 tw-z-[99999] tw-h-full tw-w-full">
-        <div className="cover-spin"></div>
+        <Loader />
       </div>
     );
   };

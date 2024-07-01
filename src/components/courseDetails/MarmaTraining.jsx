@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { PriceCard } from './PriceCard';
 import queryString from 'query-string';
+import { navigateToLogin } from '@utils';
 
 export const MarmaTraining = ({ data, mode: courseViewMode }) => {
   const {
@@ -18,13 +19,13 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
     businessRules = [],
   } = data || {};
   const router = useRouter();
-  const { authenticated = false } = useAuth();
+  const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
 
   const handleRegister = (e) => {
     e.preventDefault();
     if (sfid) {
-      if (authenticated || isGuestCheckoutEnabled) {
+      if (isAuthenticated || isGuestCheckoutEnabled) {
         pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/checkout/${sfid}`,
           query: {
@@ -33,12 +34,12 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
           },
         });
       } else {
-        showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+        navigateToLogin(
+          router,
+          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
             router.query,
           )}`,
-          defaultView: 'SIGNUP_MODE',
-        });
+        );
       }
     } else {
       pushRouteWithUTMQuery(router, {

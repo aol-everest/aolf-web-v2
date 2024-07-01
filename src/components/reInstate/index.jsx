@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { UpdateCC } from './UpdateCC';
+import { Loader } from '@components';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -35,7 +36,7 @@ export const ReInstateModal = ({ subscription }) => {
   };
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <div>
         {!isSuccess && (
           <>

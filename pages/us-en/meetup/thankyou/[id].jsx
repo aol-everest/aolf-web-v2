@@ -60,7 +60,7 @@ dayjs.extend(localizedFormat);
 } */
 
 const Thankyou = () => {
-  const { authenticated, reloadProfile } = useAuth();
+  const { isAuthenticated, reloadProfile } = useAuth();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const router = useRouter();
   const { track } = useAnalytics();
@@ -86,7 +86,7 @@ const Thankyou = () => {
   });
 
   useEffect(() => {
-    if (!authenticated || !result) return;
+    if (!isAuthenticated || !result) return;
     track('transactionComplete', {
       viewType: 'workshop',
       amount: unitPrice,
@@ -121,7 +121,7 @@ const Thankyou = () => {
       },
     });
     reloadProfile();
-  }, [authenticated, result]);
+  }, [isAuthenticated, result]);
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <PageLoading />;

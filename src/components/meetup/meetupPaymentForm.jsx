@@ -60,11 +60,11 @@ const createOptions = {
 
 export const MeetupPaymentForm = ({
   meetup = {},
-  profile = {},
   enrollmentCompletionAction = () => {},
   isReferBySameSite,
 }) => {
-  const { setUser } = useAuth();
+  const { profile, passwordLess } = useAuth();
+  const { signOut } = passwordLess;
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
@@ -81,11 +81,9 @@ export const MeetupPaymentForm = ({
   };
 
   const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
-    pushRouteWithUTMQuery(
-      router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+    await signOut();
+    router.push(
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 
