@@ -195,7 +195,6 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
                         <input
                           type="radio"
                           name="coupon"
-                          id="coupon1"
                           checked={courseType === item.value}
                         />
                         <label for="coupon1">{item.label}</label>

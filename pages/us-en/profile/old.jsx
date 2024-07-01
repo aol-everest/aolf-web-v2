@@ -102,7 +102,7 @@ const ProfileOld = ({ tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const { user, setUser, reloadProfile, authenticated } = useAuth();
+  const { user, setUser, reloadProfile, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useQueryString('tab', {
     defaultValue: tab || UPCOMING_EVENTS,
   });
@@ -198,7 +198,7 @@ const ProfileOld = ({ tab }) => {
       setEditCardDetail(false);
     }
   };
-  if (!authenticated) {
+  if (!isAuthenticated) {
     return null;
   }
 
