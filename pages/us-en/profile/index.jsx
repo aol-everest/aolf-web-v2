@@ -148,7 +148,8 @@ const Profile = ({ tab }) => {
     setEditCardDetail((editCardDetail) => !editCardDetail);
   };
 
-  const logoutAction = async () => {
+  const logoutAction = async (e) => {
+    if (e) e.preventDefault();
     setLoading(true);
     await signOut();
     setLoading(false);

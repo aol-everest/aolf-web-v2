@@ -200,6 +200,7 @@ function LoginPage() {
               }
             }, 1000);
           } else {
+            console.log(navigateTo);
             if (navigateTo) {
               router.push(navigateTo);
             } else {
