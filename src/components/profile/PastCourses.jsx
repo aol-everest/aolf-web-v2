@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 export const PastCourses = ({ pastCourses = {} }) => {
-  const { totalCourseCount, totalHours, totalPlaces, pastWorkshops } =
-    pastCourses;
+  const {
+    totalCourseCount,
+    totalHours,
+    totalPlaces,
+    pastWorkshops = [],
+  } = pastCourses;
   const [currentActiveCourse, setCurrentActiveCourse] = useState(0);
 
   return (
