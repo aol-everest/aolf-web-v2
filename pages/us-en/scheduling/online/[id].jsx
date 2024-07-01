@@ -96,6 +96,56 @@ const Scheduling = () => {
     }, 100);
   };
 
+  const goToPaymentModal = () => () => {
+    track(
+      'add_to_cart',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: workshop?.unitPrice,
+          course_format: workshop?.productTypeId,
+          course_name: workshop?.title,
+          items: [
+            {
+              item_id: workshop?.id,
+              item_name: workshop?.title,
+              affiliation: 'NA',
+              coupon: '',
+              discount: 0.0,
+              index: 0,
+              item_brand: workshop?.businessOrg,
+              item_category: workshop?.title,
+              item_category2: workshop?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: workshop?.productTypeId,
+              item_list_name: workshop?.title,
+              item_variant: workshop?.workshopTotalHours,
+              location_id: workshop?.locationCity,
+              price: workshop?.unitPrice,
+              quantity: 1,
+            },
+          ],
+        },
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
+        },
+      },
+    );
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling/checkout/${workshop.id}`,
+      query: {
+        ctype: workshop?.productTypeId,
+        fver: 2,
+        mode,
+      },
+    });
+  };
+
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
@@ -232,17 +282,16 @@ const Scheduling = () => {
                     </div>
                   </div> */}
                   <div class="payment-actions">
-                    {/* <button class="submit-btn gpay">
-                      Buy with{' '}
-                      <img
-                        src="/img/Gpay-Payment-icon.webp"
-                        alt="gpay"
-                        height="24"
-                      />
-                    </button> */}
-                    <button class="submit-btn" onClick={continueToCheckout}>
+                    <StripeExpressCheckoutElement
+                      workshop={workshop}
+                      goToPaymentModal={goToPaymentModal}
+                      selectedWorkshopId={workshopId}
+                      btnText="Checkout"
+                      nextPageUrl="/us-en/scheduling/online/course"
+                    />
+                    {/* <button class="submit-btn" onClick={continueToCheckout}>
                       Checkout
-                    </button>
+                    </button> */}
                   </div>
                 </div>
                 <div class="other-calendar-info">

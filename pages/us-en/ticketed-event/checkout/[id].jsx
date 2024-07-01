@@ -24,7 +24,9 @@ import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
-import { pushRouteWithUTMQuery } from '@service';
+import { navigateToLogin } from '@utils';
+import { Loader } from '@components';
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
@@ -138,7 +140,8 @@ function TicketCheckout() {
 
 const TicketCheckoutForm = ({ event }) => {
   const router = useRouter();
-  const { user, authenticated: isUserLoggedIn, setUser } = useAuth();
+  const { profile, passwordLess, isAuthenticated: isUserLoggedIn } = useAuth();
+  const { signOut } = passwordLess;
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const formRef = useRef();
@@ -218,12 +221,12 @@ const TicketCheckoutForm = ({ event }) => {
     personMobilePhone,
     personMailingStreet,
     personMailingCity,
-  } = user?.profile || {};
+  } = profile || {};
 
   const { totalDiscount = 0 } = discountResponse || {};
 
   const login = () => {
-    showModal(MODAL_TYPES.LOGIN_MODAL);
+    navigateToLogin(router);
   };
 
   const completeEnrollmentAction = async (
@@ -433,13 +436,12 @@ const TicketCheckoutForm = ({ event }) => {
     }
   };
 
-  const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
-    // pushRouteWithUTMQuery(
-    //   router,
-    //   `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
-    // );
+  const logout = async (e) => {
+    if (e) e.preventDefault();
+    await signOut();
+    router.push(
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+    );
   };
 
   const paymentElementOptions = {
@@ -521,7 +523,7 @@ const TicketCheckoutForm = ({ event }) => {
   return (
     <>
       <NextSeo title={'Ticketed Checkout'} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: first_name || '',

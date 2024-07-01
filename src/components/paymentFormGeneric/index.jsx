@@ -77,7 +77,6 @@ const createOptions = {
 export const PaymentFormGeneric = ({
   isStripeIntentPayment = false,
   workshop = {},
-  profile = {},
   enrollmentCompletionLink,
   enrollmentCompletionAction = () => {},
   handleCouseSelection = () => {},
@@ -87,7 +86,8 @@ export const PaymentFormGeneric = ({
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
-  const { setUser } = useAuth();
+  const { profile, passwordLess } = useAuth();
+  const { signOut } = passwordLess;
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
@@ -125,12 +125,11 @@ export const PaymentFormGeneric = ({
     }
   }, [programQuestionnaireResult]);
 
-  const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
-    pushRouteWithUTMQuery(
-      router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+  const logout = async (e) => {
+    if (e) e.preventDefault();
+    await signOut();
+    router.push(
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 

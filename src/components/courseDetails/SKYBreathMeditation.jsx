@@ -19,6 +19,7 @@ import queryString from 'query-string';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import { FaArrowRightLong } from 'react-icons/fa6';
+import { navigateToLogin } from '@utils';
 
 const settings = {
   slidesToShow: 3,
@@ -56,13 +57,13 @@ const settings = {
 export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
   const router = useRouter();
-  const { authenticated = false } = useAuth();
+  const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
 
   const handleRegister = (e) => {
     e.preventDefault();
     if (sfid) {
-      if (authenticated || isGuestCheckoutEnabled) {
+      if (isAuthenticated || isGuestCheckoutEnabled) {
         pushRouteWithUTMQuery(router, {
           pathname: `/us-en/course/checkout/${sfid}`,
           query: {
@@ -71,12 +72,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
           },
         });
       } else {
-        showModal(MODAL_TYPES.LOGIN_MODAL, {
-          navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+        navigateToLogin(
+          router,
+          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
             router.query,
           )}`,
-          defaultView: 'SIGNUP_MODE',
-        });
+        );
       }
     } else {
       pushRouteWithUTMQuery(router, {

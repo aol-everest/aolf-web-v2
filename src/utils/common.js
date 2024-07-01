@@ -304,11 +304,32 @@ export const findSlugByProductTypeId = (productTypeId) => {
   return 'art-of-living-part-1';
 };
 
+export function getFullPathWithQueryParams(router) {
+  // Get pathname
+  const { pathname } = router;
+
+  // Get query parameters
+  const { query } = router;
+
+  // Combine pathname and query parameters
+  const fullPath = `${pathname}${Object.keys(query).length > 0 ? '?' + new URLSearchParams(query).toString() : ''}`;
+
+  return fullPath;
+}
+
+export function navigateToLogin(router, next) {
+  router.push({
+    pathname: '/us-en/signin',
+    query: {
+      next: next || getFullPathWithQueryParams(router),
+    },
+  });
+}
 export const truncateString = (str) => {
   const words = str.split(' ');
 
-  if (words.length > 16) {
-    return words.slice(0, 16).join(' ') + '...';
+  if (words.length > 21) {
+    return words.slice(0, 21).join(' ') + '...';
   }
 
   return str;

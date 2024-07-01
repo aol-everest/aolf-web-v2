@@ -2,6 +2,7 @@ import { useAuth } from '@contexts';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { api } from '@utils';
 import { useState } from 'react';
+import { Loader, PageLoading } from '@components';
 
 const createOptions = {
   style: {
@@ -30,7 +31,7 @@ export const ChangeCardDetail = ({
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  const { user } = useAuth();
+  const { profile } = useAuth();
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
@@ -38,7 +39,7 @@ export const ChangeCardDetail = ({
     try {
       const cardElement = elements.getElement(CardElement);
       let createTokenRespone = await stripe.createToken(cardElement, {
-        name: user?.profile.name,
+        name: profile.name,
       });
       let { error, token } = createTokenRespone;
       if (error) {
@@ -63,7 +64,7 @@ export const ChangeCardDetail = ({
   };
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <form className="profile-update__form" onSubmit={handleSubmit}>
         <CardElement options={createOptions} />
         <div className="form-actions col-1-1">

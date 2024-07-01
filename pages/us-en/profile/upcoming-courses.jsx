@@ -2,18 +2,32 @@
 import { useAuth } from '@contexts';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import withUserInfo from '../../../src/hoc/withUserInfo';
+import { api } from '@utils';
+import { withAuth, withUserInfo } from '@hoc';
 import Link from '@components/linkWithUTM';
+import { useQuery } from '@tanstack/react-query';
 
 const EventList = dynamic(() =>
   import('@components/profile').then((mod) => mod.EventList),
 );
 
 const UpcomingCourses = () => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
 
-  const { upcomingWorkshop = [], upcomingMeetup = [] } = user?.profile || {};
-  const upcomingEvents = [...upcomingWorkshop, ...upcomingMeetup];
+  const {
+    data: upcomingEvents = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: 'getUserUpcomingCourses',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'getUserUpcomingCourses',
+      });
+      return response.data?.upcomingCourses;
+    },
+  });
 
   return (
     <div>
@@ -56,4 +70,4 @@ const UpcomingCourses = () => {
   );
 };
 
-export default withUserInfo(UpcomingCourses);
+export default withAuth(withUserInfo(UpcomingCourses));

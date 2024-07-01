@@ -40,7 +40,9 @@ import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import { useRef } from 'react';
 import { PayWithNewCheckout } from '@components/checkout/PayWithNewCheckout';
 import CostDetailsCardNewCheckout from '@components/checkout/CostDetailsCardNewCheckout';
-var advancedFormat = require('dayjs/plugin/advancedFormat');
+import { Loader } from '@components';
+
+const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
 const createOptions = {
@@ -78,7 +80,7 @@ export const PaymentFormNew = ({
   const { showAlert } = useGlobalAlertContext();
   const stripe = useStripe();
   const elements = useElements();
-  const { setUser } = useAuth();
+  const { setUser, passwordLess } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [discount] = useQueryString('discountCode');
@@ -91,6 +93,7 @@ export const PaymentFormNew = ({
     useState(null);
 
   const router = useRouter();
+  const { signOut } = passwordLess;
 
   useEffect(() => {
     if (programQuestionnaireResult?.length > 0) {
@@ -220,12 +223,12 @@ export const PaymentFormNew = ({
     }
   }
 
-  const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
+  const logout = async (e) => {
+    if (e) e.preventDefault();
+    await signOut();
     pushRouteWithUTMQuery(
       router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 
@@ -1041,7 +1044,7 @@ export const PaymentFormNew = ({
 
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: first_name || '',

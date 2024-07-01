@@ -26,7 +26,7 @@ dayjs.extend(utc);
 
 export const EventList = ({ isMobile, workshops }) => {
   const router = useRouter();
-  const { user, authenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { track } = useAnalytics();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
@@ -116,7 +116,7 @@ export const EventList = ({ isMobile, workshops }) => {
             course_id: sfid,
             course_price: unitPrice,
           });
-          if (isGuestCheckoutEnabled || authenticated) {
+          if (isGuestCheckoutEnabled || isAuthenticated) {
             pushRouteWithUTMQuery(router, {
               pathname: `/us-en/course/checkout/${sfid}`,
               query: {
@@ -238,7 +238,7 @@ export const EventList = ({ isMobile, workshops }) => {
                   utm: filterAllowedParams(router.query),
                 };
 
-                if (!authenticated) {
+                if (!isAuthenticated) {
                   payLoad = {
                     ...payLoad,
                     user: {
@@ -296,7 +296,7 @@ export const EventList = ({ isMobile, workshops }) => {
 
         const meetupEnrollAction = async (e) => {
           if (e) e.preventDefault();
-          if (!authenticated) {
+          if (!isAuthenticated) {
             showModal(MODAL_TYPES.LOGIN_MODAL);
           } else {
             if (!user.profile.isMandatoryWorkshopAttended) {

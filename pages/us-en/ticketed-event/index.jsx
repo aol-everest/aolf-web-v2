@@ -390,6 +390,7 @@ const CourseTile = ({ data, inIframe }) => {
     eventEndDate,
     eventTimeZone,
     sfid,
+    title,
     locationPostalCode,
     locationCity,
     locationProvince,
@@ -420,6 +421,14 @@ const CourseTile = ({ data, inIframe }) => {
   };
 
   const getCourseDeration = () => {
+    if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'day')) {
+      return (
+        <>
+          {`${dayjs.utc(eventStartDate).format('MMMM DD, YYYY')}`}
+          {' ' + ABBRS[eventTimeZone]}
+        </>
+      );
+    }
     if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'month')) {
       return (
         <>
@@ -449,23 +458,27 @@ const CourseTile = ({ data, inIframe }) => {
     >
       <div className="course-item-header">
         <div className="course-title-duration">
-          <div className="course-title">{mode}</div>
+          <div className="course-title">{title}</div>
           <div className="course-duration">{getCourseDeration()}</div>
         </div>
         {!isPurchased && (
           <div className="course-price">
-            <span>${unitPrice}</span>
+            <span>${unitPrice === 0 || unitPrice === 1 ? '0' : unitPrice}</span>
           </div>
         )}
       </div>
       <div className="course-location">
-        {concatenateStrings([
-          locationStreet,
-          locationCity,
-          locationProvince,
-          locationPostalCode,
-        ])}
+        {mode !== 'Online' &&
+          locationCity &&
+          concatenateStrings([
+            locationStreet,
+            locationCity,
+            locationProvince,
+            locationPostalCode,
+          ])}
+        {mode === 'Online' && 'Online'}
       </div>
+
       {/* <div className="course-instructors">
         {concatenateStrings([primaryTeacherName, coTeacher1Name])}
       </div> */}
@@ -474,8 +487,10 @@ const CourseTile = ({ data, inIframe }) => {
           timings.map((time, i) => {
             return (
               <div className="course-timing" key={i}>
-                <span>{dayjs.utc(time.startDate).format('M/D dddd')}</span>
-                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                <span className="tw-pr-2">
+                  {dayjs.utc(time.startDate).format('ddd, MMM DD')}{' '}
+                </span>
+                {`${tConvert(time.startTime)}-${tConvert(time.endTime)} ${
                   ABBRS[time.timeZone]
                 }`}
               </div>
@@ -782,274 +797,12 @@ const TicketedEvent = () => {
       <section className="title-header">
         {centerFilter && (
           <>
-            <h1 className="page-title">
-              Events offered by {centerNameFilter} center
-            </h1>
+            <h1 className="page-title">Events offered by Art of Living SFBA</h1>
           </>
         )}
       </section>
       <section className="section-course-find">
         <div className="container">
-          <div className="course-filter-wrap">
-            <div
-              id="courses-filters"
-              className="course-filter-listing search-form col-12 d-flex align-items-center"
-            >
-              <button className="filter-save-button">Save Changes</button>
-              <Popup
-                tabIndex="1"
-                value={locationFilter}
-                buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : null
-                }
-                closeEvent={onFilterChange('locationFilter')}
-                label="Location"
-              >
-                {({ closeHandler }) => (
-                  <AddressSearch
-                    closeHandler={closeHandler}
-                    placeholder="Search for Location"
-                  />
-                )}
-              </Popup>
-              <Popup
-                tabIndex="2"
-                value={COURSE_MODES[courseModeFilter] && courseModeFilter}
-                buttonText={
-                  courseModeFilter && COURSE_MODES[courseModeFilter]
-                    ? COURSE_MODES[courseModeFilter].name
-                    : null
-                }
-                closeEvent={onFilterChange('courseModeFilter')}
-                label="Course Format"
-              >
-                {({ closeHandler }) => (
-                  <>
-                    {orgConfig.courseModes.map((courseMode, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className="courses-filter__list-item"
-                          onClick={closeHandler(courseMode)}
-                        >
-                          {COURSE_MODES[courseMode].name}
-                        </li>
-                      );
-                    })}
-                  </>
-                )}
-              </Popup>
-
-              <div
-                data-filter="timezone"
-                className={classNames('courses-filter', {
-                  'with-selected': filterStartEndDate,
-                })}
-              >
-                <button
-                  className="courses-filter__remove"
-                  onClick={onDatesChange}
-                >
-                  <svg
-                    width="20"
-                    height="21"
-                    viewBox="0 0 20 21"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.5"
-                      y="1"
-                      width="19"
-                      height="19"
-                      rx="9.5"
-                      fill="#ABB1BA"
-                    />
-                    <rect
-                      x="0.5"
-                      y="1"
-                      width="19"
-                      height="19"
-                      rx="9.5"
-                      stroke="white"
-                    />
-                    <path
-                      d="M13.5 7L6.5 14"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M13.5 14L6.5 7"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </button>
-                <label>Dates</label>
-                <div className="courses-filter__button date-picker">
-                  <DateRangePicker
-                    placeholder="Select..."
-                    appearance="subtle"
-                    showHeader={false}
-                    onChange={onDatesChange}
-                    value={filterStartEndDate}
-                    shouldDisableDate={combine(
-                      allowedMaxDays(14),
-                      beforeToday(),
-                    )}
-                    ranges={[]}
-                    editable={false}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="search_course_form_mobile d-lg-none d-block">
-              <div>
-                <div>
-                  <div className="filter">
-                    <div
-                      className={classNames('filter--button d-flex', {
-                        active: showFilterModal,
-                      })}
-                      onClick={toggleFilter}
-                    >
-                      <span className="icon-aol iconaol-setting"></span>
-                      Filter
-                      <span id="filter-count">{filterCount}</span>
-                    </div>
-                  </div>
-                </div>
-                {showFilterModal && (
-                  <div className="filter--box">
-                    <div className="selected-filter-wrap">
-                      {locationFilter && (
-                        <div
-                          className="selected-filter-item"
-                          onClick={onFilterClearEvent('locationFilter')}
-                        >
-                          {locationFilter.locationName}
-                        </div>
-                      )}
-
-                      {courseModeFilter && COURSE_MODES[courseModeFilter] && (
-                        <div
-                          className="selected-filter-item"
-                          onClick={onFilterClearEvent('courseModeFilter')}
-                        >
-                          {COURSE_MODES[courseModeFilter].value}
-                        </div>
-                      )}
-
-                      {filterStartEndDateStr && (
-                        <div
-                          className="selected-filter-item"
-                          onClick={onDatesChange}
-                        >
-                          {filterStartEndDateStr}
-                        </div>
-                      )}
-
-                      {filterCount > 1 && (
-                        <div
-                          className="selected-filter-item clear"
-                          onClick={onClearAllFilter}
-                        >
-                          Clear All
-                        </div>
-                      )}
-                    </div>
-
-                    <MobileFilterModal
-                      label="Location"
-                      value={
-                        locationFilter ? `${locationFilter.locationName}` : null
-                      }
-                      clearEvent={onFilterClearEvent('locationFilter')}
-                    >
-                      <AddressSearch
-                        closeHandler={onFilterChange('locationFilter')}
-                        placeholder="Search for Location"
-                      />
-                    </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Course format"
-                      value={
-                        courseModeFilter && COURSE_MODES[courseModeFilter]
-                          ? COURSE_MODES[courseModeFilter].name
-                          : null
-                      }
-                      closeEvent={onFilterClearEvent('courseModeFilter')}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={courseModeFilter}
-                          buttonText={
-                            courseModeFilter && COURSE_MODES[courseModeFilter]
-                              ? COURSE_MODES[courseModeFilter].name
-                              : null
-                          }
-                          closeEvent={onFilterChange('courseModeFilter')}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              {orgConfig.courseModes.map(
-                                (courseMode, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      className="dropdown-item"
-                                      onClick={closeHandler(courseMode)}
-                                    >
-                                      {COURSE_MODES[courseMode].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
-                    <label>Weekend courses</label>
-
-                    <MobileFilterModal
-                      label="Dates"
-                      value={
-                        filterStartEndDateStr ? filterStartEndDateStr : null
-                      }
-                      clearEvent={onDatesChange}
-                    >
-                      <div className="datepicker-block">
-                        <DateRangePicker
-                          placeholder="Dates"
-                          showHeader={false}
-                          onChange={onDatesChange}
-                          showOneCalendar
-                          ranges={[]}
-                          editable={false}
-                          shouldDisableDate={combine(
-                            allowedMaxDays(14),
-                            beforeToday(),
-                          )}
-                          value={filterStartEndDate}
-                        />
-                      </div>
-                    </MobileFilterModal>
-                  </div>
-                )}
-                {showFilterModal && (
-                  <button
-                    className="filter-cancel-button"
-                    onClick={toggleFilter}
-                  ></button>
-                )}
-              </div>
-            </div>
-          </div>
           <div className="course-listing">
             <div className="selected-filter-wrap">
               {locationFilter && (

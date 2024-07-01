@@ -23,4 +23,9 @@ export {
   useGlobalVideoPlayerContext,
 } from './GlobalVideoPlayerContext';
 
-export { AuthProvider, useAuth } from './auth.context';
+export {
+  AuthProvider,
+  useAuth,
+  useLocalUserCache,
+  useAwaitableState,
+} from './auth.context';

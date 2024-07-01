@@ -1,10 +1,7 @@
 import {
-  Dropdown,
   PhoneInputNewCheckout,
-  StyledInput,
   StyledInputNewCheckout,
 } from '@components/checkout';
-import { ChangeEmail } from '@components/profile';
 import {
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
@@ -14,26 +11,20 @@ import { useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { api, phoneRegExp } from '@utils';
 import dayjs from 'dayjs';
-import { Field, Formik } from 'formik';
+import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { FaRegEdit } from 'react-icons/fa';
 import * as Yup from 'yup';
-import PhoneInput from './../phoneInputCmp';
-import Style from './ChangeProfile.module.scss';
 import { DropdownNewCheckout } from '@components/checkout/DropdownNewCheckout';
+import { Loader } from '@components';
 
-export const ChangeProfile = ({
-  isMobile,
-  profile = {},
-  updateCompleteAction,
-}) => {
+export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
   const router = useRouter();
   const description = useRef('');
 
-  const allowEmailEdit = profile.cognito.UserStatus !== 'EXTERNAL_PROVIDER';
+  const allowEmailEdit = profile?.cognito?.UserStatus !== 'EXTERNAL_PROVIDER';
 
   const submitAction = async (values) => {
     const { contactPhone, contactAddress, contactState, contactZip } = values;
@@ -263,7 +254,7 @@ export const ChangeProfile = ({
 
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         enableReinitialize
         initialValues={{

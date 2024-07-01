@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import withUserInfo from '../../../src/hoc/withUserInfo';
+import { withAuth, withUserInfo } from '@hoc';
 import classNames from 'classnames';
 import { COURSE_TYPES } from '@constants';
 
@@ -133,4 +133,4 @@ const ReferAFriend = () => {
   );
 };
 
-export default withUserInfo(ReferAFriend);
+export default withAuth(withUserInfo(ReferAFriend));

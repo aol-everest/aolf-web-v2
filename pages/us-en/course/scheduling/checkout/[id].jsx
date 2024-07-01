@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import dayjs from 'dayjs';
-import { PageLoading } from '@components';
+import { Loader, PageLoading } from '@components';
 import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { useQueryState, parseAsInteger } from 'nuqs';
 import queryString from 'query-string';
@@ -256,7 +256,7 @@ const SchedulingPaymentForm = ({
   courseType,
   isReferBySameSite,
 }) => {
-  const { user = {} } = useAuth();
+  const { profile = {} } = useAuth();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
@@ -294,7 +294,7 @@ const SchedulingPaymentForm = ({
     personMobilePhone,
     personMailingStreet,
     personMailingCity,
-  } = user?.profile || {};
+  } = profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -625,7 +625,7 @@ const SchedulingPaymentForm = ({
   return (
     <>
       <NextSeo title={title + ' Course Checkout'} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: '',

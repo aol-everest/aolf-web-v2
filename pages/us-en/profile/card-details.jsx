@@ -1,7 +1,7 @@
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import withUserInfo from '../../../src/hoc/withUserInfo';
+import { withAuth, withUserInfo } from '@hoc';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { ALERT_TYPES } from '@constants';
@@ -15,7 +15,7 @@ const ViewCardDetail = dynamic(() =>
 
 const CardDetails = ({ setLoading }) => {
   const { showAlert } = useGlobalAlertContext();
-  const { user, reloadProfile, authenticated } = useAuth();
+  const { reloadProfile, profile } = useAuth();
   const [editCardDetail, setEditCardDetail] = useState(false);
 
   const stripePromise = loadStripe(
@@ -51,7 +51,7 @@ const CardDetails = ({ setLoading }) => {
         {!editCardDetail && (
           <ViewCardDetail
             switchCardDetailView={switchCardDetailView}
-            profile={user.profile}
+            profile={profile}
           ></ViewCardDetail>
         )}
         {editCardDetail && (
@@ -75,4 +75,4 @@ const CardDetails = ({ setLoading }) => {
   );
 };
 
-export default withUserInfo(CardDetails);
+export default withAuth(withUserInfo(CardDetails));

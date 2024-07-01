@@ -2,6 +2,7 @@
 
 import React, { useCallback } from 'react';
 import SearchResultsList from '../SearchResultsList/SearchResultsList';
+import { Loader, PageLoading } from '@components';
 
 export const EmptyResults = () => {
   return (
@@ -49,7 +50,7 @@ const SearchResults = ({
 
   return (
     <>
-      {isLoading && <div className="cover-spin"></div>}
+      {isLoading && <Loader />}
       <section className="search-results-area">
         <div className="container">
           {results && incorrectResponse && !isEmpty && <IncorrectResults />}

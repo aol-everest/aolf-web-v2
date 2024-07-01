@@ -1,6 +1,6 @@
 import React from 'react';
 // import dynamic from 'next/dynamic';
-import withUserInfo from '../../../src/hoc/withUserInfo';
+import { withAuth, withUserInfo } from '@hoc';
 
 // const PastCoursesComp = dynamic(() =>
 //   import('@components/profile').then((mod) => mod.PastCourses),
@@ -100,4 +100,4 @@ const Preferences = () => {
   );
 };
 
-export default withUserInfo(Preferences);
+export default withAuth(withUserInfo(Preferences));

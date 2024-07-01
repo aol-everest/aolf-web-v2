@@ -35,6 +35,7 @@ import {
   TimeDivider,
   VolumeMenuButton,
 } from 'video-react';
+import { navigateToLogin } from '@utils';
 import Styles from './Learn.module.scss';
 
 /* export const getServerSideProps = async (context) => {
@@ -73,7 +74,7 @@ import Styles from './Learn.module.scss';
 }; */
 
 export default function Learn() {
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const router = useRouter();
   const playerEl = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -137,8 +138,8 @@ export default function Learn() {
 
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
       await markFavoriteEvent({ meditate, refetch: null });
     }

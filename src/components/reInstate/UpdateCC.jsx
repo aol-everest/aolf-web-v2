@@ -3,6 +3,7 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { api } from '@utils';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { Loader } from '@components';
 
 const createOptions = {
   style: {
@@ -29,7 +30,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
   const [amount, setAmount] = useState(0);
   const stripe = useStripe();
   const elements = useElements();
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -66,7 +67,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
     try {
       const cardElement = elements.getElement(CardElement);
       let createTokenRespone = await stripe.createToken(cardElement, {
-        name: user?.profile.name,
+        name: profile.name,
       });
       let { error, token } = createTokenRespone;
       if (error) {
@@ -111,7 +112,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
   };
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <form name="profile-edit" onSubmit={handleSubmit}>
         <span>Current Balance due - {amount}</span>
         <div className="input_card">

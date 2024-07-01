@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useAnalytics } from 'use-analytics';
 import * as Yup from 'yup';
+import { Loader } from '@components';
 
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -51,7 +52,7 @@ function WorldCultureFestival() {
   const router = useRouter();
   const { track } = useAnalytics();
   const [loading, setLoading] = useState(false);
-  const { authenticated, user } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const { showAlert } = useGlobalAlertContext();
   const [activeStep] = useQueryString('s', {
     defaultValue: 0,
@@ -67,17 +68,17 @@ function WorldCultureFestival() {
   });
 
   let formInitialValue = { ...INITIAL_VALUES, ticketCount, sessionsAttending };
-  if (authenticated) {
+  if (isAuthenticated) {
     formInitialValue = {
       ...formInitialValue,
-      country: user.profile.personMailingCountry
-        ? user.profile.personMailingCountry.toUpperCase()
+      country: profile.personMailingCountry
+        ? profile.personMailingCountry.toUpperCase()
         : 'US',
-      phoneCountry: user.profile.personMailingCountry
-        ? user.profile.personMailingCountry.toUpperCase()
+      phoneCountry: profile.personMailingCountry
+        ? profile.personMailingCountry.toUpperCase()
         : 'US',
-      state: user.profile.personMailingState,
-      phoneNumber: user.profile.personMobilePhone,
+      state: profile.personMailingState,
+      phoneNumber: profile.personMobilePhone,
     };
   }
   if (
@@ -169,7 +170,7 @@ function WorldCultureFestival() {
         <title>World Culture Festival</title>
       </Head>
       <div id="wcfSelect" className="wcf-select__dropdown"></div>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <FormikWizard
         initialValues={formInitialValue}
         onSubmit={handleSubmit}

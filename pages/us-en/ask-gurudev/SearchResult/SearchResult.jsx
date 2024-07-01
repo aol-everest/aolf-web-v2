@@ -136,7 +136,7 @@ const SearchResult = React.forwardRef(function SearchResult(
   ref,
 ) {
   const thumbnailUrl = result.metadata.thumbnail;
-  const updatedTitle = truncateString(result.metadata.title);
+  const updatedTitle = truncateString(result.metadata.text);
 
   const onPlayAction = (id) => {
     setPlayingId(id);

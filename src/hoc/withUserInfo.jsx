@@ -30,10 +30,10 @@ const CARD_DETAILS = '/us-en/profile/card-details';
 const CHANGE_PASSWORD = '/us-en/profile/change-password';
 const PREFERENCES = '/us-en/profile/preferences';
 
-const withUserInfo = (WrappedComponent) => {
+export const withUserInfo = (WrappedComponent) => {
   return function UserInfo(props) {
     const [request, setRequest] = useQueryState('request');
-    const { user, setUser, authenticated } = useAuth();
+    const { user, setUser, isAuthenticated, profile } = useAuth();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
@@ -45,7 +45,8 @@ const withUserInfo = (WrappedComponent) => {
       name,
       userProfilePic: profilePic,
       subscriptions = [],
-    } = user?.profile || {};
+    } = profile || {};
+
     const userSubscriptions = subscriptions.reduce(
       (accumulator, currentValue) => {
         return {
@@ -176,7 +177,7 @@ const withUserInfo = (WrappedComponent) => {
       // window.history.pushState(null, '', screen);
     };
 
-    if (!authenticated) {
+    if (!isAuthenticated) {
       return null;
     }
 
@@ -273,16 +274,7 @@ const withUserInfo = (WrappedComponent) => {
                           Upcoming Courses
                         </a>
                       </li>
-                      <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(PREFERENCES),
-                          })}
-                          onClick={() => switchTab(PREFERENCES)}
-                        >
-                          Preferences
-                        </a>
-                      </li>
+
                       <li>
                         <a
                           className={classNames('profile-tab', {
@@ -309,5 +301,3 @@ const withUserInfo = (WrappedComponent) => {
     );
   };
 };
-
-export default withUserInfo;

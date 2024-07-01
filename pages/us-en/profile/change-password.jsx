@@ -2,7 +2,7 @@ import { useAuth, useGlobalAlertContext } from '@contexts';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { ALERT_TYPES } from '@constants';
-import withUserInfo from '../../../src/hoc/withUserInfo';
+import { withAuth, withUserInfo } from '@hoc';
 
 const ChangePassword = dynamic(() =>
   import('@components/profile').then((mod) => mod.ChangePassword),
@@ -33,4 +33,4 @@ const UpdatePassword = ({ setLoading }) => {
   );
 };
 
-export default withUserInfo(UpdatePassword);
+export default withAuth(withUserInfo(UpdatePassword));
