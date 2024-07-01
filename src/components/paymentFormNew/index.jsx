@@ -223,7 +223,8 @@ export const PaymentFormNew = ({
     }
   }
 
-  const logout = async (event) => {
+  const logout = async (e) => {
+    if (e) e.preventDefault();
     await signOut();
     pushRouteWithUTMQuery(
       router,
