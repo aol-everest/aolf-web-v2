@@ -1,6 +1,6 @@
 import { ALERT_TYPES, MESSAGE_EMAIL_VERIFICATION_SUCCESS } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useAnalytics } from 'use-analytics';
 import { FaCheckCircle } from 'react-icons/fa';
@@ -170,7 +170,6 @@ function LoginPage() {
     try {
       await signOut({ global: true });
       const { isSignedIn, nextStep } = await signIn({ username, password });
-      console.log(isSignedIn, nextStep);
       switch (nextStep.signInStep) {
         case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
           setMode(NEW_PASSWORD_REQUEST);
@@ -193,6 +192,7 @@ function LoginPage() {
               2000,
             );
             setTimeout(() => {
+              router.refresh();
               if (navigateTo) {
                 router.push(navigateTo);
               } else {
@@ -200,6 +200,7 @@ function LoginPage() {
               }
             }, 1000);
           } else {
+            router.refresh();
             console.log(navigateTo);
             if (navigateTo) {
               router.push(navigateTo);
