@@ -1,12 +1,11 @@
-import { useAuth } from '@contexts';
-import { Auth } from '@utils';
+import { updatePassword } from 'aws-amplify/auth';
 import classNames from 'classnames';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
+import { Loader } from '@components';
 
 export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
-  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -14,8 +13,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
     const { password: newPassword, oldPassword } = values;
     setLoading(true);
     try {
-      await Auth.changePassword({
-        email: user.profile.email,
+      await updatePassword({
         oldPassword,
         newPassword,
       });
@@ -34,7 +32,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
   };
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         enableReinitialize
         initialValues={{

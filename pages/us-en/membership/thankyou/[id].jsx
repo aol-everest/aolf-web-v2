@@ -73,7 +73,7 @@ dayjs.extend(utc);
 }; */
 
 const MembershipThankyou = () => {
-  const { reloadProfile, authenticated } = useAuth();
+  const { reloadProfile, isAuthenticated } = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const {
@@ -95,9 +95,9 @@ const MembershipThankyou = () => {
     enabled: router.isReady,
   });
   useEffect(() => {
-    if (!authenticated || !order) return;
+    if (!isAuthenticated || !order) return;
     reloadProfile();
-  }, [authenticated, order]);
+  }, [isAuthenticated, order]);
 
   const [courseId] = useQueryString('cid');
   const [meetupId] = useQueryString('mid');

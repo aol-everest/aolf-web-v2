@@ -1,6 +1,7 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
+import { useContext } from 'react';
 import { MODAL_TYPES, COURSE_TYPES, WORKSHOP_MODE } from '@constants';
 import classNames from 'classnames';
 import { useAuth, useGlobalModalContext } from '@contexts';
@@ -13,13 +14,13 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { PriceCard } from './PriceCard';
 import { Pagination, A11y } from 'swiper';
 import { Accordion, Card, AccordionContext } from 'react-bootstrap';
+import { navigateToLogin } from '@utils';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import { useContext } from 'react';
 
 export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
-  const { authenticated = false } = useAuth();
+  const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
 
@@ -48,7 +49,7 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated || isGuestCheckoutEnabled) {
+    if (isAuthenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
@@ -57,12 +58,12 @@ export const SKYSilentRetreat = ({ data, mode: courseViewMode }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: 'SIGNUP_MODE',
-      });
+      );
     }
   };
 

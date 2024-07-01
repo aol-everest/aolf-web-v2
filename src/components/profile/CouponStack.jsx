@@ -99,7 +99,7 @@ const CouponMergeResultCmp = ({
   reedemableAmount,
   workshopType,
 }) => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
 
   const handleCopyCoupon = () => {
     navigator.clipboard.writeText(newCouponCode);
@@ -116,7 +116,7 @@ const CouponMergeResultCmp = ({
             created for{' '}
             {COURSE_TYPES_COUPON.find((c) => c.value === workshopType).label}. A
             confirmation email with your rewards code has been sent to
-            <span className="d-block">{user.profile.email}.</span>
+            <span className="d-block">{profile.email}.</span>
           </p>
         </div>
 

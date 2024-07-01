@@ -19,7 +19,7 @@ const timeConvert = (data) => {
 
 export const DesignOne = ({
   data,
-  authenticated,
+  isAuthenticated,
   swiperOption,
   pickCategoryImage,
   backgroundIterator,
@@ -611,7 +611,7 @@ export const DesignOne = ({
             </section>
           );
         })}
-      {authenticated && (
+      {isAuthenticated && (
         <>
           {favouriteContentOnly && favouriteContentOnly.length > 0 && (
             <section className="browse-category most-popular">

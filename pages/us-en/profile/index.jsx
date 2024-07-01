@@ -102,7 +102,9 @@ const Profile = ({ tab }) => {
   const { showAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
-  const { user, setUser, reloadProfile, authenticated } = useAuth();
+  const { profile, setUser, reloadProfile, isAuthenticated, passwordLess } =
+    useAuth();
+  const { signOut } = passwordLess;
   const [activeTab, setActiveTab] = useQueryString('tab', {
     defaultValue: tab || UPCOMING_EVENTS,
   });
@@ -123,7 +125,7 @@ const Profile = ({ tab }) => {
     upcomingWorkshop = [],
     upcomingMeetup = [],
     subscriptions = [],
-  } = user?.profile || {};
+  } = profile || {};
   const upcomingEvents = [...upcomingWorkshop, ...upcomingMeetup];
   const userSubscriptions = subscriptions.reduce(
     (accumulator, currentValue) => {
@@ -148,9 +150,8 @@ const Profile = ({ tab }) => {
 
   const logoutAction = async () => {
     setLoading(true);
-    await Auth.logout();
+    await signOut();
     setLoading(false);
-    setUser(null);
     pushRouteWithUTMQuery(router, '/us-en');
   };
 
@@ -198,7 +199,7 @@ const Profile = ({ tab }) => {
       setEditCardDetail(false);
     }
   };
-  if (!authenticated) {
+  if (!isAuthenticated) {
     return null;
   }
 
@@ -472,7 +473,7 @@ const Profile = ({ tab }) => {
               >
                 <ChangeProfile
                   updateCompleteAction={updateCompleteAction}
-                  profile={user.profile}
+                  profile={profile}
                 ></ChangeProfile>
               </div>
               <div
@@ -528,7 +529,7 @@ const Profile = ({ tab }) => {
                 {!editCardDetail && (
                   <ViewCardDetail
                     switchCardDetailView={switchCardDetailView}
-                    profile={user.profile}
+                    profile={profile}
                   ></ViewCardDetail>
                 )}
                 {editCardDetail && (
@@ -662,7 +663,7 @@ const Profile = ({ tab }) => {
                     <ChangeProfile
                       isMobile
                       updateCompleteAction={updateCompleteAction}
-                      profile={user.profile}
+                      profile={profile}
                     ></ChangeProfile>
                   </div>
                 </div>
@@ -716,7 +717,7 @@ const Profile = ({ tab }) => {
                       <ViewCardDetail
                         isMobile
                         switchCardDetailView={switchCardDetailView}
-                        profile={user.profile}
+                        profile={profile}
                       ></ViewCardDetail>
                     )}
                     {editCardDetail && (

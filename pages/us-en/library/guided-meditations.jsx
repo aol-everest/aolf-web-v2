@@ -22,6 +22,7 @@ import {
 import ErrorPage from 'next/error';
 import { A11y, Navigation, Scrollbar } from 'swiper';
 import { NextSeo } from 'next-seo';
+import { navigateToLogin } from '@utils';
 
 import 'swiper/css';
 import 'swiper/css/a11y';
@@ -43,7 +44,7 @@ const CATEGORY_IMAGES = [
 ];
 
 export default function GuidedMeditations() {
-  const { authenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const folderId = CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID;
   // const { id: folderId } = router.query;
@@ -92,7 +93,7 @@ export default function GuidedMeditations() {
         return response.data;
       },
 
-      enabled: authenticated,
+      enabled: isAuthenticated,
     });
 
   const { data: meditationCategory = [], isSuccess } = useQuery({
@@ -171,8 +172,8 @@ export default function GuidedMeditations() {
 
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
       await markFavoriteEvent({
         meditate,
@@ -189,8 +190,8 @@ export default function GuidedMeditations() {
 
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else if (meditate.accessible && meditate.type === 'Course') {
       pushRouteWithUTMQuery(router, `/us-en/learn/${meditate.sfid}`);
     } else {
@@ -280,7 +281,7 @@ export default function GuidedMeditations() {
   };
 
   const params = {
-    authenticated,
+    isAuthenticated,
     swiperOption,
     pickCategoryImage,
     backgroundIterator,

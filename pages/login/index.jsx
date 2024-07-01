@@ -4,6 +4,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { PageLoading } from '@components';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { navigateToLogin } from '@utils';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -34,27 +35,20 @@ function Login() {
   const router = useRouter();
   // const [loading, setLoading] = useState(true);
   const { showModal } = useGlobalModalContext();
-  const { authenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { mode = 'LOGIN_MODE' } = router.query;
     const navigateTo = router.query.next || '/';
-    if (authenticated) {
+    if (isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: navigateTo,
       });
     } else {
       // setLoading(false);
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo,
-        closeModalAction: () => {
-          pushRouteWithUTMQuery(router, '/us-en/course');
-        },
-        defaultView: mode,
-      });
+      navigateToLogin(router);
     }
-  }, [router.isReady]);
+  }, [router.isReady, isAuthenticated]);
 
   /* async function signIn({ username, password }) {
     try {

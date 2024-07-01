@@ -9,7 +9,7 @@ const timeConvert = (data) => {
 
 export const MeditationTile = ({
   data,
-  authenticated,
+  isAuthenticated,
   markFavorite,
   meditateClickHandle,
   additionalClass,
