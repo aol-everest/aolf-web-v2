@@ -26,7 +26,7 @@ dayjs.extend(utc);
 
 export const EventList = ({ isPreferredCenter, workshops }) => {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, profile } = useAuth();
   const { track } = useAnalytics();
   const { showModal, hideModal } = useGlobalModalContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
@@ -300,7 +300,7 @@ export const EventList = ({ isPreferredCenter, workshops }) => {
           if (!isAuthenticated) {
             showModal(MODAL_TYPES.LOGIN_MODAL);
           } else {
-            if (!user.profile.isMandatoryWorkshopAttended) {
+            if (!profile.isMandatoryWorkshopAttended) {
               const warningPayload = {
                 message: (
                   <>
@@ -427,21 +427,20 @@ export const EventList = ({ isPreferredCenter, workshops }) => {
             <div className="course-instructors">
               {concatenateStrings([primaryTeacherName, coTeacher1Name])}
             </div>
-            {isWorkshop && (
+            {isWorkshop && timings?.length > 0 && (
               <div className="course-timings">
-                {timings?.length > 0 &&
-                  timings.map((time, i) => {
-                    return (
-                      <div className="course-timing" key={i}>
-                        <span>
-                          {dayjs.utc(time.startDate).format('M/D dddd')}
-                        </span>
-                        {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
-                          ABBRS[time.timeZone]
-                        }`}
-                      </div>
-                    );
-                  })}
+                {timings.map((time, i) => {
+                  return (
+                    <div className="course-timing" key={i}>
+                      <span>
+                        {dayjs.utc(time.startDate).format('M/D dddd')}
+                      </span>
+                      {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                        ABBRS[time.timeZone]
+                      }`}
+                    </div>
+                  );
+                })}
               </div>
             )}
 

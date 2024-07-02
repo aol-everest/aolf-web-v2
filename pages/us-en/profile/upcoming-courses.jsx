@@ -12,10 +12,8 @@ const EventList = dynamic(() =>
 );
 
 const UpcomingCourses = () => {
-  const { profile } = useAuth();
-
   const {
-    data: upcomingEvents = [],
+    data = [],
     isLoading,
     isError,
     error,
@@ -25,9 +23,13 @@ const UpcomingCourses = () => {
       const response = await api.get({
         path: 'getUserUpcomingCourses',
       });
-      return response.data?.upcomingCourses;
+      return response.data;
     },
   });
+
+  console.log('data', data);
+
+  const upcomingEvents = [...(data?.workshops || []), ...(data?.meetups || [])];
 
   return (
     <div>
