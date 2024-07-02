@@ -24,7 +24,7 @@ import { filterAllowedParams } from '@utils/utmParam';
 
 dayjs.extend(utc);
 
-export const EventList = ({ isMobile, workshops }) => {
+export const EventList = ({ isPreferredCenter, workshops }) => {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const { track } = useAnalytics();
@@ -60,6 +60,7 @@ export const EventList = ({ isMobile, workshops }) => {
           coTeacher1Name,
           timings,
           isGuestCheckoutEnabled = false,
+          actualAmountPaid,
         } = workshop || {};
 
         const isWorkshop = eventType === 'Workshop';
@@ -373,7 +374,7 @@ export const EventList = ({ isMobile, workshops }) => {
                   </div>
                 )}
               </div>
-              {isWorkshop && (
+              {isWorkshop && isPreferredCenter && (
                 <div className="course-price">
                   {listPrice === unitPrice ? (
                     <span>${unitPrice}</span>
@@ -382,6 +383,11 @@ export const EventList = ({ isMobile, workshops }) => {
                       <s>${listPrice}</s> <span>${unitPrice}</span>
                     </>
                   )}
+                </div>
+              )}
+              {!isPreferredCenter && (
+                <div className="course-price">
+                  <span>${actualAmountPaid}</span>
                 </div>
               )}
             </div>
@@ -448,17 +454,21 @@ export const EventList = ({ isMobile, workshops }) => {
                   >
                     Details
                   </button>
-                  <button
-                    className="btn-primary"
-                    onClick={workshopEnrollAction}
-                  >
-                    Register
-                  </button>
+                  {isPreferredCenter && (
+                    <button
+                      className="btn-primary"
+                      onClick={workshopEnrollAction}
+                    >
+                      Register
+                    </button>
+                  )}
                 </>
               ) : (
-                <button className="btn-primary" onClick={meetupEnrollAction}>
-                  Enroll
-                </button>
+                isPreferredCenter && (
+                  <button className="btn-primary" onClick={meetupEnrollAction}>
+                    Enroll
+                  </button>
+                )
               )}
             </div>
           </div>

@@ -317,13 +317,14 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                 ></StyledInputNewCheckout>
                 <StyledInputNewCheckout
                   className={'form-item col-1-1'}
-                  placeholder="Address"
+                  placeholder="Street address"
                   formikProps={props}
                   formikKey="contactAddress"
                   fullWidth
+                  label="Street address"
                 ></StyledInputNewCheckout>
                 <DropdownNewCheckout
-                  placeholder=""
+                  placeholder="City"
                   formikProps={props}
                   formikKey="contactState"
                   options={US_STATES}
@@ -334,13 +335,14 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   placeholder="Zip"
                   formikProps={props}
                   formikKey="contactZip"
+                  label="Zip"
                 ></StyledInputNewCheckout>
 
                 <StyledInputNewCheckout
                   type="email"
                   isReadOnly={!allowEmailEdit}
                   className="form-item col-1-2"
-                  placeholder="Email"
+                  placeholder="Email address"
                   formikProps={props}
                   formikKey="email"
                   onCut={(event) => {
@@ -352,6 +354,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   onPaste={(event) => {
                     event.preventDefault();
                   }}
+                  label="Email address"
                 ></StyledInputNewCheckout>
 
                 <PhoneInputNewCheckout
@@ -361,7 +364,8 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   formikKey="contactPhone"
                   name="contactPhone"
                   type="tel"
-                  showLabel={false}
+                  placeholder="Mobile number"
+                  label="Mobile number"
                 ></PhoneInputNewCheckout>
 
                 <div className="tw-mt-4 tw-flex tw-flex-1 tw-justify-end">

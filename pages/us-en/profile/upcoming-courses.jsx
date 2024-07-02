@@ -42,7 +42,7 @@ const UpcomingCourses = () => {
             </div>
             <div className="find-event-text">
               Find an upcoming{' '}
-              <Link href="/us-en" prefetch={false} legacyBehavior>
+              <Link href="/us-en/courses" prefetch={false} legacyBehavior>
                 <a href="#" className="link link_orange">
                   course
                 </a>
@@ -58,12 +58,19 @@ const UpcomingCourses = () => {
           </div>
         )}
         <div className="preffered-upcoming-events">
-          <h2 className="title">
-            Here are the upcoming courses in your preferred center
-          </h2>
           <div className="course-listing">
             <EventList workshops={upcomingEvents}></EventList>
           </div>
+          {/* <h2 className="title" /> */}
+          {/* <h2 className="title">
+            Here are the upcoming courses in your preferred center
+          </h2>
+          <div className="course-listing">
+            <EventList
+              workshops={upcomingEvents}
+              isPreferredCenter={true}
+            ></EventList>
+          </div> */}
         </div>
       </div>
     </div>

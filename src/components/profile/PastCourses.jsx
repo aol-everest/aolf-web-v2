@@ -2,6 +2,9 @@
 import { api } from '@utils';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 export const PastCourses = ({ pastCourses = {} }) => {
   const {
@@ -42,7 +45,7 @@ export const PastCourses = ({ pastCourses = {} }) => {
                       type="button"
                       aria-expanded={currentActiveCourse === index}
                       aria-controls="collapseOne"
-                      onClick={setCurrentActiveCourse(index)}
+                      onClick={() => setCurrentActiveCourse(index)}
                     >
                       {workshop.title}
                       <span className="icon-aol iconaol-arrow-down"></span>
@@ -58,15 +61,17 @@ export const PastCourses = ({ pastCourses = {} }) => {
                     <div className="course-history-info">
                       <div className="ch-info-pill">
                         <span className="icon-aol iconaol-profile"></span>{' '}
-                        Theresa Webb
+                        {workshop.primaryTeacherName}
                       </div>
                       <div className="ch-info-pill">
                         <span className="icon-aol iconaol-sms"></span>{' '}
-                        felicia.reid@example.com
+                        {workshop.primaryTeacherEmail}
                       </div>
                       <div className="ch-info-pill">
                         <span className="icon-aol iconaol-calendar"></span>{' '}
-                        04.10.2023 - 07.10.2023
+                        {`${dayjs.utc(workshop.eventStartDate).format('DD.MM.YYYY')} - ${dayjs
+                          .utc(workshop.eventEndDate)
+                          .format('DD.MM.YYYY')}`}
                       </div>
                     </div>
                   </div>

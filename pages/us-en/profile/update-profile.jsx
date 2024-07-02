@@ -12,8 +12,6 @@ const UpdateProfile = ({ setLoading }) => {
   const { showAlert } = useGlobalAlertContext();
   const { reloadProfile, profile } = useAuth();
 
-  console.log('calledd');
-
   const updateCompleteAction = async ({
     message,
     isError = false,

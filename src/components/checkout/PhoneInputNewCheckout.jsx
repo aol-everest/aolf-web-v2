@@ -12,7 +12,7 @@ export const PhoneInputNewCheckout = ({
   textToUpperCase = false,
   tooltip,
   tip,
-  placeholder,
+  placeholder = 'Phone No',
   className,
   showLabel = true,
   ...rest
@@ -55,7 +55,7 @@ export const PhoneInputNewCheckout = ({
       <PhoneInput
         {...rest}
         {...inputProps}
-        placeholder="Phone No"
+        placeholder={placeholder}
         defaultCountry="us"
         smartCaret={true}
         country="us"

@@ -1,6 +1,6 @@
 import { useAuth } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
-import { Auth } from '@utils';
+// import { Auth } from '@utils';
 import dynamic from 'next/dynamic';
 import { NextSeo } from 'next-seo';
 import { useQueryState } from 'nuqs';
@@ -28,16 +28,16 @@ const UPDATE_PROFILE = '/us-en/profile/update-profile';
 const REFER_A_FRIEND = '/us-en/profile/refer-a-friend';
 const CARD_DETAILS = '/us-en/profile/card-details';
 const CHANGE_PASSWORD = '/us-en/profile/change-password';
-const PREFERENCES = '/us-en/profile/preferences';
+// const PREFERENCES = '/us-en/profile/preferences';
 
 export const withUserInfo = (WrappedComponent) => {
   return function UserInfo(props) {
     const [request, setRequest] = useQueryState('request');
-    const { user, setUser, isAuthenticated, profile } = useAuth();
+    const { passwordLess, isAuthenticated, profile } = useAuth();
+    const { signOut } = passwordLess;
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
-    console.log('pathname', pathname);
 
     const {
       first_name,
@@ -68,11 +68,11 @@ export const withUserInfo = (WrappedComponent) => {
       });
     };
 
-    const logoutAction = async () => {
+    const logoutAction = async (e) => {
+      if (e) e.preventDefault();
       setLoading(true);
-      await Auth.logout();
+      await signOut();
       setLoading(false);
-      setUser(null);
       pushRouteWithUTMQuery(router, '/us-en');
     };
 

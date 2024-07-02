@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
@@ -252,18 +253,18 @@ const subscriptionBuyBtnPanel = (
         'Take your journey deeper with two options for additional content and support';
     }
     if (message) {
-      result = <div className="profile-header__course">{message}</div>;
+      result = <div className="new-journey-header">{message}</div>;
     }
   }
 
   return (
     <>
       {result}
-      <div className="btn-wrapper">
+      <div className="new-journey-btn-wrapper">
         {!userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value] && (
           <button
             data-href-modal="digital-member-join"
-            className="btn-secondary link-modal"
+            className="btn-secondary link-modal tw-mb-4"
             onClick={showPurchaseMembershipModalAction(
               MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
             )}
