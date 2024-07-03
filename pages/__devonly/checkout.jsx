@@ -237,6 +237,7 @@ function CheckoutForm({ formSchema }) {
     let { shoppingRequest } = payload;
 
     if (
+      typeof shoppingRequest.complianceQuestionnaire === 'string' &&
       shoppingRequest.complianceQuestionnaire.trim() !== '' &&
       tryJsonParse(shoppingRequest.complianceQuestionnaire)
     ) {
@@ -251,6 +252,7 @@ function CheckoutForm({ formSchema }) {
     let { products } = shoppingRequest;
 
     if (
+      typeof products.AddOnProductIds === 'string' &&
       products.AddOnProductIds.trim() !== '' &&
       tryJsonParse(products.AddOnProductIds)
     ) {
@@ -325,7 +327,7 @@ function CheckoutForm({ formSchema }) {
               onClick={() => setRSelected(1)}
               active={rSelected === 1}
             >
-              JSON
+              TextArea
             </Button>
             <Button
               outline
@@ -335,12 +337,47 @@ function CheckoutForm({ formSchema }) {
             >
               HTML
             </Button>
+            <Button
+              outline
+              variant="primary"
+              onClick={() => setRSelected(3)}
+              active={rSelected === 3}
+            >
+              JSON
+            </Button>
           </ButtonGroup>
 
-          <div className={classNames({ 'tw-hidden': rSelected === 1 })}>
+          <div
+            className={classNames('tw-hidden', {
+              '!tw-block': rSelected === 1,
+            })}
+          >
+            <textarea
+              value={JSON.stringify(values, null, 4)}
+              onChange={(e) => {
+                try {
+                  const parsedValues = JSON.parse(e.target.value);
+                  setValues(parsedValues);
+                } catch (error) {
+                  console.error('Invalid JSON format:', error.message);
+                }
+              }}
+              rows={10}
+              className="form-control"
+            />
+          </div>
+          <div
+            className={classNames('tw-hidden', {
+              '!tw-block': rSelected === 2,
+            })}
+          >
             {generateFields(properties)}
           </div>
-          <div className={classNames({ 'tw-hidden': rSelected === 2 })}>
+          <div
+            className={classNames('tw-hidden', {
+              '!tw-block': rSelected === 3,
+            })}
+          >
             <ReactJson
               src={values}
               onEdit={(edit) => {
