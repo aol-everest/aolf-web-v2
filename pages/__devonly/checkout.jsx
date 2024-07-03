@@ -3,6 +3,7 @@
 import { loadStripe } from '@stripe/stripe-js';
 import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { api } from '@utils';
 import * as Yup from 'yup';
 import {
   Elements,
@@ -23,38 +24,99 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
 
-const generateFields = (schema) => {
-  return Object.keys(schema.properties).map((key) => {
-    const field = schema.properties[key];
-    let fieldComponent;
+const generateFields = (properties, path = '') => {
+  return Object.keys(properties).map((key) => {
+    const field = properties[key];
+    const fieldPath = path ? `${path}.${key}` : key;
+    let fieldComponent = null;
 
+    if (field.type === 'object' && field.properties) {
+      return (
+        <div key={fieldPath}>
+          <h5>{field.title || key}</h5>
+          {generateFields(field.properties, fieldPath)}
+        </div>
+      );
+    }
     switch (field.type) {
       case 'string':
+        if (field.format === 'json') {
+          fieldComponent = (
+            <div className="mb-3" key={fieldPath}>
+              <label htmlFor={fieldPath} className="form-label">
+                {field.title || key}
+              </label>
+              <Field
+                as="textarea"
+                id={fieldPath}
+                name={fieldPath}
+                className="form-control"
+                rows={4}
+              />
+              <ErrorMessage
+                name={fieldPath}
+                component="div"
+                className="text-danger"
+              />
+            </div>
+          );
+        } else {
+          fieldComponent = (
+            <div className="mb-3" key={fieldPath}>
+              <label htmlFor={fieldPath} className="form-label">
+                {field.title || key}
+              </label>
+              <Field
+                id={fieldPath}
+                name={fieldPath}
+                type="text"
+                className="form-control"
+              />
+              <ErrorMessage
+                name={fieldPath}
+                component="div"
+                className="text-danger"
+              />
+            </div>
+          );
+        }
+        break;
+      case 'integer':
         fieldComponent = (
-          <div className="form-group" key={key}>
-            <label htmlFor={key}>{field.title || key}</label>
+          <div className="mb-3" key={fieldPath}>
+            <label htmlFor={fieldPath} className="form-label">
+              {field.title || key}
+            </label>
             <Field
-              name={key}
-              type={field.format === 'password' ? 'password' : 'text'}
+              id={fieldPath}
+              name={fieldPath}
+              type="number"
               className="form-control"
             />
             <ErrorMessage
-              name={key}
+              name={fieldPath}
               component="div"
-              className="invalid-feedback d-inline-block"
+              className="text-danger"
             />
           </div>
         );
         break;
-      case 'integer':
+      case 'boolean':
         fieldComponent = (
-          <div className="form-group" key={key}>
-            <label htmlFor={key}>{field.title || key}</label>
-            <Field name={key} type="number" className="form-control" />
+          <div className="form-check mb-3" key={fieldPath}>
+            <Field
+              id={fieldPath}
+              name={fieldPath}
+              type="checkbox"
+              className="form-check-input"
+            />
+            <label htmlFor={fieldPath} className="form-check-label">
+              {field.title || key}
+            </label>
             <ErrorMessage
-              name={key}
+              name={fieldPath}
               component="div"
-              className="invalid-feedback"
+              className="text-danger"
             />
           </div>
         );
@@ -68,33 +130,41 @@ const generateFields = (schema) => {
   });
 };
 
-const generateValidationSchema = (schema) => {
+const generateValidationSchema = (properties, requiredFields = []) => {
   const validationSchema = {};
 
-  Object.keys(schema.properties).forEach((key) => {
-    const field = schema.properties[key];
+  Object.keys(properties).forEach((key) => {
+    const field = properties[key];
+    const isRequired = requiredFields.includes(key);
     let validator;
 
-    switch (field.type) {
-      case 'string':
-        validator = Yup.string();
-        if (field.minLength) validator = validator.min(field.minLength);
-        if (field.maxLength) validator = validator.max(field.maxLength);
-        if (field.pattern)
-          validator = validator.matches(new RegExp(field.pattern));
-        break;
-      case 'integer':
-        validator = Yup.number().integer();
-        if (field.minimum) validator = validator.min(field.minimum);
-        if (field.maximum) validator = validator.max(field.maximum);
-        break;
-      // Add more cases for other types if needed
-      default:
-        validator = Yup.mixed();
-    }
-
-    if (schema.required && schema.required.includes(key)) {
-      validator = validator.required(`(${key}) is required`);
+    if (field.type === 'object' && field.properties) {
+      validator = generateValidationSchema(
+        field.properties,
+        field.required || [],
+      );
+    } else {
+      switch (field.type) {
+        case 'string':
+          validator = Yup.string();
+          if (field.minLength) validator = validator.min(field.minLength);
+          if (field.maxLength) validator = validator.max(field.maxLength);
+          if (field.pattern)
+            validator = validator.matches(new RegExp(field.pattern));
+          if (isRequired)
+            validator = validator.required(`(${key}) is required`);
+          break;
+        case 'integer':
+          validator = Yup.number().integer();
+          if (field.minimum) validator = validator.min(field.minimum);
+          if (field.maximum) validator = validator.max(field.maximum);
+          if (isRequired)
+            validator = validator.required(`(${key}) is required`);
+          break;
+        // Add more cases for other types if needed
+        default:
+          validator = Yup.mixed();
+      }
     }
 
     validationSchema[key] = validator;
@@ -103,7 +173,31 @@ const generateValidationSchema = (schema) => {
   return Yup.object().shape(validationSchema);
 };
 
+const generateInitialValues = (properties) => {
+  const initialValues = {};
+
+  Object.keys(properties).forEach((key) => {
+    const field = properties[key];
+    if (field.properties) {
+      initialValues[key] = generateInitialValues(field.properties);
+    } else {
+      initialValues[key] = field.default || '';
+    }
+  });
+
+  return initialValues;
+};
+
+function tryJsonParse(jsonString) {
+  try {
+    return JSON.parse(jsonString);
+  } catch (e) {
+    return null;
+  }
+}
+
 function CheckoutForm({ formSchema }) {
+  const { properties, required = [] } = formSchema;
   const [rSelected, setRSelected] = useState(1);
   const stripe = useStripe();
   const elements = useElements();
@@ -111,7 +205,7 @@ function CheckoutForm({ formSchema }) {
   const paymentElementOptions = {
     layout: {
       type: 'accordion',
-      defaultCollapsed: true,
+      defaultCollapsed: false,
       radios: true,
       spacedAccordionItems: false,
     },
@@ -124,34 +218,94 @@ function CheckoutForm({ formSchema }) {
     },
   };
 
-  const initialValues = Object.keys(formSchema.properties).reduce(
-    (acc, key) => {
-      acc[key] = formSchema.properties[key].default || '';
-      return acc;
-    },
-    {},
-  );
+  const initialValues = generateInitialValues(properties);
 
-  const validationSchema = generateValidationSchema(formSchema);
+  const validationSchema = generateValidationSchema(properties, required);
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    console.log('Form data:', values);
-
     if (!stripe || !elements) {
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
+    // Trigger form validation and wallet collection
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      throw submitError;
+    }
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
+    let payload = { ...values };
+    let { shoppingRequest } = payload;
+
+    if (
+      shoppingRequest.complianceQuestionnaire.trim() !== '' &&
+      tryJsonParse(shoppingRequest.complianceQuestionnaire)
+    ) {
+      shoppingRequest = {
+        ...shoppingRequest,
+        complianceQuestionnaire: tryJsonParse(
+          shoppingRequest.complianceQuestionnaire,
+        ),
+      };
+    }
+
+    let { products } = shoppingRequest;
+
+    if (
+      products.AddOnProductIds.trim() !== '' &&
+      tryJsonParse(products.AddOnProductIds)
+    ) {
+      products = {
+        ...products,
+        AddOnProductIds: tryJsonParse(products.AddOnProductIds),
+      };
+    }
+    shoppingRequest = {
+      ...shoppingRequest,
+      products,
+      billingAddress: {
+        billingPhone: shoppingRequest.contactAddress?.contactPhone,
+        billingAddress: shoppingRequest.contactAddress?.contactAddress,
+        billingCity: shoppingRequest.contactAddress?.contactCity,
+        billingState: shoppingRequest.contactAddress?.contactState,
+        billingZip: shoppingRequest.contactAddress?.contactZip,
+      },
+    };
+
+    payload = {
+      ...payload,
+      shoppingRequest,
+    };
+
+    const {
+      stripeIntentObj,
+      status,
+      data,
+      error: errorMessage,
+      isError,
+    } = await api.post({
+      path: 'createAndPayOrder',
+      body: values,
     });
 
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(paymentMethod);
+    if (status === 400 || isError) {
+      throw new Error(errorMessage);
+    }
+
+    if (data && data.totalOrderAmount > 0) {
+      const returnUrl = '#';
+      const result = await stripe.confirmPayment({
+        //`Elements` instance that was used to create the Payment Element
+        elements,
+        clientSecret: stripeIntentObj.client_secret,
+        confirmParams: {
+          return_url: returnUrl,
+        },
+      });
+
+      if (result.error) {
+        // Show error to your customer (for example, payment details incomplete)
+        throw new Error(result.error.message);
+      }
     }
     setSubmitting(false);
   };
@@ -164,7 +318,7 @@ function CheckoutForm({ formSchema }) {
     >
       {({ errors, touched, isSubmitting, values, setValues }) => (
         <Form>
-          <ButtonGroup aria-label="Basic example">
+          <ButtonGroup>
             <Button
               outline
               variant="primary"
@@ -184,7 +338,7 @@ function CheckoutForm({ formSchema }) {
           </ButtonGroup>
 
           <div className={classNames({ 'tw-hidden': rSelected === 1 })}>
-            {generateFields(formSchema)}
+            {generateFields(properties)}
           </div>
           <div className={classNames({ 'tw-hidden': rSelected === 2 })}>
             <ReactJson
@@ -297,55 +451,109 @@ const JsonInputForm = ({ formSchema, updateSchema }) => {
 
 const StripeComponent = () => {
   const schema = {
-    required: ['email', 'lastName'],
+    title: 'JSON Schema Form',
+    type: 'object',
     properties: {
-      firstName: {
-        type: 'string',
-        title: 'First Name',
-        default: 'John',
-        minLength: 3,
+      user: {
+        type: 'object',
+        properties: {
+          firstName: {
+            type: 'string',
+            title: 'First Name',
+            default: 'John',
+            minLength: 3,
+          },
+          lastName: {
+            type: 'string',
+            title: 'Last Name',
+            default: 'Doe',
+            minLength: 3,
+          },
+          email: {
+            type: 'string',
+            title: 'Email',
+            default: '',
+            minLength: 3,
+          },
+        },
       },
-      lastName: {
-        type: 'string',
-        title: 'Last Name',
-        default: 'Doe',
-        minLength: 3,
-      },
-      email: {
-        type: 'string',
-        title: 'Email',
-        default: '',
-        minLength: 3,
-      },
-      contactPhone: {
-        type: 'string',
-        title: 'Phone',
-        default: '',
-      },
-      contactAddress: {
-        type: 'string',
-        title: 'Contact Address',
-        default: '',
-      },
-      contactCity: {
-        type: 'string',
-        title: 'Contact Address',
-        default: '',
-      },
-      contactState: {
-        type: 'string',
-        title: 'Contact State',
-        default: '',
-      },
-      contactZip: {
-        type: 'string',
-        title: 'Contact Zip',
-        default: '',
-      },
-      couponCode: {
-        type: 'string',
-        title: 'Coupon Code',
-        default: '',
+      shoppingRequest: {
+        type: 'object',
+        properties: {
+          couponCode: {
+            type: 'string',
+            title: 'Coupon Code',
+            default: '',
+          },
+          isInstalmentOpted: {
+            type: 'boolean',
+            title: 'isInstalmentOpted',
+            default: false,
+          },
+          isStripeIntentPayment: {
+            type: 'boolean',
+            title: 'IsStripeIntentPayment',
+            default: true,
+          },
+          complianceQuestionnaire: {
+            type: 'string',
+            title: 'complianceQuestionnaire',
+            format: 'json',
+            default: '{}',
+          },
+
+          contactAddress: {
+            type: 'object',
+            properties: {
+              contactPhone: {
+                type: 'string',
+                title: 'Phone',
+                default: '',
+              },
+              contactAddress: {
+                type: 'string',
+                title: 'Contact Address',
+                default: '',
+              },
+              contactCity: {
+                type: 'string',
+                title: 'Contact City',
+                default: '',
+              },
+              contactState: {
+                type: 'string',
+                title: 'Contact State',
+                default: '',
+              },
+              contactZip: {
+                type: 'string',
+                title: 'Contact Zip',
+                default: '',
+              },
+            },
+          },
+          products: {
+            type: 'object',
+            properties: {
+              productType: {
+                type: 'string',
+                title: 'Product Type',
+                default: 'workshop',
+              },
+              productSfId: {
+                type: 'string',
+                title: 'Product SFID',
+                default: '',
+              },
+              AddOnProductIds: {
+                type: 'string',
+                title: 'AddOn Product Ids',
+                format: 'json',
+                default: '[]',
+              },
+            },
+          },
+        },
       },
     },
   };
