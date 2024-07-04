@@ -31,5 +31,7 @@ function DevOnly() {
     </div>
   );
 }
+DevOnly.noHeader = true;
+DevOnly.hideFooter = true;
 
 export default withAuth(DevOnly);
