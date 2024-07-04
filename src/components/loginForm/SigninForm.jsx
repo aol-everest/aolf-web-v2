@@ -625,7 +625,13 @@ export const SigninForm = ({
         </a>
       </div>
       {lastError && (
-        <div className="common-error-message">{lastError.message}</div>
+        <div className="common-error-message">
+          {lastError.message.startsWith(
+            'The operation either timed out or was not allowed',
+          )
+            ? ''
+            : lastError.message}
+        </div>
       )}
     </Container>
   );
