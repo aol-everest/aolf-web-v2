@@ -167,6 +167,7 @@ export const SigninForm = ({
   backToFlowAction,
   children,
 }) => {
+  const authObj = useAuth();
   const {
     requestSignInLink,
     lastError,
@@ -179,7 +180,8 @@ export const SigninForm = ({
     signOut,
     toggleShowAuthenticatorManager,
     showAuthenticatorManager,
-  } = useAuth().passwordLess;
+  } = authObj.passwordLess;
+  console.log(authObj);
   const [step, setStep] = useState(0);
   const [newUsername, setNewUsername] = useState(username);
   const [showSignInOptionsForUser, setShowSignInOptionsForUser] =
@@ -294,15 +296,13 @@ export const SigninForm = ({
     );
   }
 
-  if (signInStatus === 'SIGNED_IN' && tokens) {
+  if (authObj.isAuthenticated) {
     //if (children) return <>{children}</>;
     return (
       <Container>
         <div class="page-description">
           You&apos;re currently signed-in as:{' '}
-          <span className="tw-font-semibold">
-            {tokensParsed?.idToken.email}
-          </span>
+          <span className="tw-font-semibold">{authObj?.profile.email}</span>
         </div>
         <div class="form-action">
           <button class="submit-btn" onClick={backToFlowAction}>
