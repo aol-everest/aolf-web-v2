@@ -185,10 +185,10 @@ export const COURSE_TYPES_MASTER = {
           slug: 'sahaj-samadhi-meditation',
           name: 'Sahaj Samadhi - Signature Meditation Program',
         },
-        // BE_WELL_SESSIONS: {
-        //   slug: 'be_well',
-        //   name: 'Be Well',
-        // },
+        BE_WELL_SESSIONS: {
+          slug: 'be_well',
+          name: 'Be Well',
+        },
       },
     },
     {
