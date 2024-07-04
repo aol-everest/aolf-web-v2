@@ -369,8 +369,6 @@ export const SigninForm = ({
     setStep(0);
   };
 
-  console.log(user);
-
   const renderStep = () => {
     if (step === 0) {
       return (

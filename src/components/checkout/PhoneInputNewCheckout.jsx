@@ -1,5 +1,4 @@
 import PhoneInput from '@components/phoneInputCmp';
-import classNames from 'classnames';
 
 export const PhoneInputNewCheckout = ({
   children,
@@ -17,7 +16,6 @@ export const PhoneInputNewCheckout = ({
   showLabel = true,
   ...rest
 }) => {
-  console.log('showLabel', showLabel);
   const onChangeAction = () => {
     if (isReadOnly) {
       return null;

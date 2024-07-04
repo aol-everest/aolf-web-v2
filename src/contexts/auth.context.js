@@ -55,7 +55,6 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
 
     // Subscribe to Hub events for authentication
     const hubListenerCancelToken = Hub.listen('auth', async ({ payload }) => {
-      console.log('hubListener', payload);
       setError(null);
       switch (payload.event) {
         case 'signedIn':
@@ -590,8 +589,6 @@ function _useLocalUserCache() {
       username: idToken['cognito:username'],
       email: idToken.email,
     };
-    console.log(idToken);
-    console.log(user);
     if (lastSignedInUsers) {
       const found = lastSignedInUsers.find(
         (lastUser) =>

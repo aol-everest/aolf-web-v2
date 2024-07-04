@@ -45,7 +45,7 @@ export const ViewCardDetail = ({
 
       <div className="form-actions col-1-1">
         <button className="primary-btn" onClick={switchCardDetailView}>
-          Update Card
+          Change Card
         </button>
       </div>
     </form>

@@ -1,13 +1,9 @@
-import { ALERT_TYPES, MESSAGE_EMAIL_VERIFICATION_SUCCESS } from '@constants';
+import { ALERT_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { useAnalytics } from 'use-analytics';
-import { FaCheckCircle } from 'react-icons/fa';
-import classNames from 'classnames';
+import { useState } from 'react';
 import { api } from '@utils';
 import {
-  ChangePasswordForm,
   NewPasswordForm,
   ResetPasswordForm,
   SigninForm,
@@ -21,10 +17,8 @@ import {
   signInWithRedirect,
   resetPassword,
   confirmResetPassword,
-  updatePassword,
   confirmSignIn,
 } from 'aws-amplify/auth';
-import { Hub } from 'aws-amplify/utils';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
 
@@ -34,13 +28,6 @@ const SIGN_IN_MODE = 's-in';
 const SIGN_UP_MODE = 's-up';
 const RESET_PASSWORD_REQUEST = 'spr';
 const NEW_PASSWORD_REQUEST = 'npr';
-const CHANGE_PASSWORD_REQUEST = 'cpr';
-
-const encodeFormData = (data) => {
-  return Object.keys(data)
-    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-    .join('&');
-};
 
 const StudentVerificationCodeMessage = () => (
   <div class="confirmation-message-info">
@@ -169,7 +156,7 @@ function LoginPage() {
     setShowMessage(false);
     try {
       await signOut({ global: true });
-      const { isSignedIn, nextStep } = await signIn({ username, password });
+      const { nextStep } = await signIn({ username, password });
       switch (nextStep.signInStep) {
         case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
           setMode(NEW_PASSWORD_REQUEST);
@@ -325,7 +312,6 @@ function LoginPage() {
       const { isSignedIn, nextStep } = await confirmSignIn({
         challengeResponse: password,
       });
-      console.log(isSignedIn, nextStep);
       if (isSignedIn && nextStep.signInStep === 'DONE') {
         if (navigateTo) {
           router.push(navigateTo);
@@ -372,7 +358,7 @@ function LoginPage() {
     const isStudentFlowEnabled =
       process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === 'true';
     try {
-      const { isSignUpComplete, userId, nextStep } = await signUp({
+      await signUp({
         username,
         password,
         options: {
@@ -385,7 +371,6 @@ function LoginPage() {
           autoSignIn: true, // or SignInOptions e.g { authFlowType: "USER_SRP_AUTH" }
         },
       });
-      console.log(isSignUpComplete, userId, nextStep);
       // await Auth.signup({ email: username, password, firstName, lastName });
       const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
       await signInAction({ username, password, isStudent });

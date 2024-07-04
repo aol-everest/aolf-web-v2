@@ -10,18 +10,12 @@ const PastCoursesComp = dynamic(() =>
 );
 
 const PastCourses = () => {
-  const {
-    data: pastCourses = {},
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data: pastCourses = {} } = useQuery({
     queryKey: 'getUserPastCourses',
     queryFn: async () => {
       const response = await api.get({
         path: 'getUserPastCourses',
       });
-      console.log('response.data', response);
       return response;
     },
   });

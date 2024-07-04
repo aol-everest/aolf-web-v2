@@ -27,6 +27,7 @@
     width: 100%;
     text-align: center;
     justify-content: center;
+    border-radius: 100px;
   }
   .user-info-box {
     background: white;
@@ -96,7 +97,6 @@
   }
   .profile-info-box {
     flex: 1;
-    overflow: auto;
     .tab-content {
       display: none;
     }
@@ -266,6 +266,15 @@
           line-height: 34px;
         }
       }
+    }
+  }
+  .state-dropdown {
+    display: flex;
+    flex-direction: column;
+    label {
+      font-size: 14px;
+      color: #9598a6;
+      margin-bottom: 6px;
     }
   }
   .form-item {

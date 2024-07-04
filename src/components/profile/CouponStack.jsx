@@ -1,5 +1,4 @@
 import { Loader } from '@components';
-import { Dropdown } from '@components/checkout/Dropdown';
 import { ALERT_TYPES, COURSE_TYPES } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { api } from '@utils';

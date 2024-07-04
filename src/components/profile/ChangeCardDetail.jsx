@@ -2,7 +2,7 @@ import { useAuth } from '@contexts';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { api } from '@utils';
 import { useState } from 'react';
-import { Loader, PageLoading } from '@components';
+import { Loader } from '@components';
 
 const createOptions = {
   style: {

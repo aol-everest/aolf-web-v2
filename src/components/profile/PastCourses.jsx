@@ -1,7 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { api } from '@utils';
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);

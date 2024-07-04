@@ -297,7 +297,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
           } = props;
           return (
             <form className="profile-form-box" onSubmit={handleSubmit}>
-              <div className="profile-form-wrap">
+              <div className="profile-form-wrap form-inputs">
                 <StyledInputNewCheckout
                   className="form-item col-1-2"
                   placeholder="First Name"
@@ -324,11 +324,11 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   label="Street address"
                 ></StyledInputNewCheckout>
                 <DropdownNewCheckout
-                  placeholder="City"
+                  placeholder="State"
                   formikProps={props}
                   formikKey="contactState"
                   options={US_STATES}
-                  containerClass="form-item form-item col-1-2"
+                  containerClass="state-dropdown col-1-2"
                 ></DropdownNewCheckout>
                 <StyledInputNewCheckout
                   className={'form-item col-1-2'}

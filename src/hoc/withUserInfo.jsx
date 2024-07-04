@@ -1,6 +1,5 @@
-import { useAuth } from '@contexts';
+import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
-// import { Auth } from '@utils';
 import dynamic from 'next/dynamic';
 import { NextSeo } from 'next-seo';
 import { useQueryState } from 'nuqs';
@@ -10,9 +9,14 @@ import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { Loader } from '@components/loader';
+import { MODAL_TYPES } from '@constants';
 
 const ProfileHeader = dynamic(() =>
   import('@components/profile').then((mod) => mod.ProfileHeader),
+);
+
+const ProfilePicCrop = dynamic(() =>
+  import('@components/profile').then((mod) => mod.ProfilePicCrop),
 );
 
 const MESSAGE_CANCEL_MEMBERSHIP_ERROR = `We're sorry, but an error occurred. Please contact the help desk
@@ -33,6 +37,7 @@ const CHANGE_PASSWORD = '/us-en/profile/change-password';
 export const withUserInfo = (WrappedComponent) => {
   return function UserInfo(props) {
     const [request, setRequest] = useQueryState('request');
+    const { showModal } = useGlobalModalContext();
     const { passwordLess, isAuthenticated, profile } = useAuth();
     const { signOut } = passwordLess;
     const router = useRouter();
@@ -75,6 +80,36 @@ export const withUserInfo = (WrappedComponent) => {
       setLoading(false);
       pushRouteWithUTMQuery(router, '/us-en');
     };
+
+    const handleOnSelectFile = (e) => {
+      if (e.target.files.length) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => {
+          showModal(MODAL_TYPES.EMPTY_MODAL, {
+            title: 'Enrollment Completed Successfully.',
+            children: (handleModalToggle) => (
+              <ProfilePicCrop
+                src={reader.result}
+                closeDetailAction={handleModalToggle}
+              />
+            ),
+          });
+        });
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    };
+
+    const switchTab = (screen) => {
+      // router.push({
+      //   pathname: screen,
+      // });
+      router.push(screen);
+      // window.history.pushState(null, '', screen);
+    };
+
+    if (!isAuthenticated) {
+      return null;
+    }
 
     // Define the alerts based on the request status
     const renderAlert = () => {
@@ -169,18 +204,6 @@ export const withUserInfo = (WrappedComponent) => {
       }
     };
 
-    const switchTab = (screen) => {
-      // router.push({
-      //   pathname: screen,
-      // });
-      router.push(screen);
-      // window.history.pushState(null, '', screen);
-    };
-
-    if (!isAuthenticated) {
-      return null;
-    }
-
     return (
       <>
         {loading && <Loader />}
@@ -194,11 +217,20 @@ export const withUserInfo = (WrappedComponent) => {
             <div className="container">
               <div className="user-info-grid">
                 <div className="user-info-box">
+                  <input
+                    type="file"
+                    id="upload-button"
+                    accept="image/*"
+                    className="tw-hidden"
+                    onChange={handleOnSelectFile}
+                  />
                   <div className="profile-picture">
                     <span>{initials}</span>
                     {profilePic && (
                       <img
                         src={profilePic}
+                        width={120}
+                        height={120}
                         className="rounded-circle profile-pic"
                         onError={(i) => (i.target.style.display = 'none')}
                       />
