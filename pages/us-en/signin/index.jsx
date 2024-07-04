@@ -90,6 +90,30 @@ const VerificationCodeMessage = () => (
   </div>
 );
 
+const TemporaryPasswordMessage = () => (
+  <div class="confirmation-message-info">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40px"
+      height="40px"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <path
+        d="M8.5 12.5L10.5 14.5L15.5 9.5"
+        stroke="#ff865b"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <br />
+    <br />A new temporary password has been emailed to you. Please use the
+    temporary password and reset your password.
+  </div>
+);
+
 const PasswordChangeSuccessMessage = () => (
   <div class="confirmation-message-info">
     <svg
@@ -133,9 +157,6 @@ function LoginPage() {
   const switchView = (view) => (e) => {
     if (e) e.preventDefault();
     setMode(view);
-    if (view === RESET_PASSWORD_REQUEST) {
-      resetPasswordAction();
-    }
   };
 
   const getActualMessage = (message) => {
@@ -234,10 +255,38 @@ function LoginPage() {
     }
     setLoading(false);
   };
+  const handleTemporaryPassword = async (username) => {
+    let isTemporaryPasswordSucceeded = false;
 
-  const resetPasswordAction = async () => {
-    setLoading(true);
-    setShowMessage(false);
+    try {
+      const {
+        data,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: 'resend-temporary-password',
+        body: { email: username },
+      });
+
+      isTemporaryPasswordSucceeded = true;
+      if (data?.User?.UserStatus === 'FORCE_CHANGE_PASSWORD') {
+        showAlert(
+          ALERT_TYPES.NEW_ALERT,
+          {
+            children: <TemporaryPasswordMessage />,
+          },
+          2000,
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      isTemporaryPasswordSucceeded = false;
+    }
+
+    return isTemporaryPasswordSucceeded;
+  };
+
+  const handleResetPassword = async (username) => {
     try {
       const output = await resetPassword({ username });
       handleResetPasswordNextSteps(output);
@@ -252,6 +301,17 @@ function LoginPage() {
       const { message, statusCode } = data || {};
       setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
       setShowMessage(true);
+    }
+  };
+
+  const resetPasswordAction = async () => {
+    setLoading(true);
+    setShowMessage(false);
+    const isTemporaryPasswordSucceeded =
+      await handleTemporaryPassword(username);
+
+    if (isTemporaryPasswordSucceeded === false) {
+      await handleResetPassword(username);
     }
     setLoading(false);
   };
@@ -273,6 +333,7 @@ function LoginPage() {
           },
           2000,
         );
+        setMode(RESET_PASSWORD_REQUEST);
         // Collect the confirmation code from the user and pass to confirmResetPassword.
         break;
       case 'DONE':
@@ -457,7 +518,7 @@ function LoginPage() {
         return (
           <SigninForm
             signIn={signInAction}
-            forgotPassword={switchView(RESET_PASSWORD_REQUEST)}
+            forgotPassword={resetPasswordAction}
             toSignUpMode={switchView(SIGN_UP_MODE)}
             showMessage={showMessage}
             message={getActualMessage(message)}
