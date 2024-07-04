@@ -1,23 +1,18 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useAuth } from '@contexts';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { api } from '@utils';
 import { withAuth, withUserInfo } from '@hoc';
 import Link from '@components/linkWithUTM';
 import { useQuery } from '@tanstack/react-query';
+import { Loader } from '@components/loader';
 
 const EventList = dynamic(() =>
   import('@components/profile').then((mod) => mod.EventList),
 );
 
 const UpcomingCourses = () => {
-  const {
-    data = [],
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data = [], isLoading } = useQuery({
     queryKey: 'getUserUpcomingCourses',
     queryFn: async () => {
       const response = await api.get({
@@ -27,12 +22,11 @@ const UpcomingCourses = () => {
     },
   });
 
-  console.log('data', data);
-
   const upcomingEvents = [...(data?.workshops || []), ...(data?.meetups || [])];
 
   return (
     <div>
+      {isLoading && <Loader />}
       <div className="profile-form-box">
         {upcomingEvents.length === 0 && (
           <div className="no-events">

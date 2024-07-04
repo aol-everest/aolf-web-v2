@@ -19,7 +19,6 @@ export function configure(config) {
 }
 
 export function configureFromAmplify(amplifyConfig) {
-  console.log(amplifyConfig);
   const { region, userPoolId, userPoolWebClientId } = isAmplifyConfig(
     amplifyConfig,
   )
