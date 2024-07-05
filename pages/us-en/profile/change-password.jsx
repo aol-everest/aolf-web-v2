@@ -21,6 +21,9 @@ const UpdatePassword = ({ setLoading }) => {
       setLoading(true);
       await reloadProfile();
       setLoading(false);
+      showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+        children: 'Your password has been changed successfully',
+      });
     }
   };
 

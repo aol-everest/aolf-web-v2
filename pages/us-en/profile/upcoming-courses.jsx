@@ -33,9 +33,11 @@ const UpcomingCourses = () => {
             <div className="no-events-icon">
               <span className="icon-aol iconaol-calendar"></span>
             </div>
-            <div className="no-events-text">
-              You don't have any events scheduled right now.
-            </div>
+            {!isLoading && (
+              <div className="no-events-text">
+                You don't have any events scheduled right now.
+              </div>
+            )}
             <div className="find-event-text">
               Find an upcoming{' '}
               <Link href="/us-en/courses" prefetch={false} legacyBehavior>

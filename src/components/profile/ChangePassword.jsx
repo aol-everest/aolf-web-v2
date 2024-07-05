@@ -17,8 +17,9 @@ export const ChangePassword = ({ updateCompleteAction }) => {
         oldPassword,
         newPassword,
       });
-      updateCompleteAction({});
-      setShowSuccessMessage(true);
+      updateCompleteAction({
+        isError: false,
+      });
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;
@@ -53,7 +54,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
         })}
         onSubmit={async (values, { resetForm, setStatus }) => {
           await submitAction(values);
-          //resetForm({});
+          resetForm({});
           //setStatus({ success: true });
         }}
       >
@@ -72,13 +73,13 @@ export const ChangePassword = ({ updateCompleteAction }) => {
           } = props;
           return (
             <form className="profile-form-box" onSubmit={handleSubmit}>
+              {showSuccessMessage && (
+                <div className="success-message-cp">
+                  <i className="fas fa-check-circle"></i>
+                  {'  '}Your password has been changed successfully
+                </div>
+              )}
               <div className="profile-form-wrap">
-                {showSuccessMessage && (
-                  <div className="success-message-cp">
-                    <i className="fas fa-check-circle"></i>
-                    {'  '}Your password has been changed successfully
-                  </div>
-                )}
                 <div className="form-item col-1-2 relative">
                   <label for="password">Current Password</label>
                   <input

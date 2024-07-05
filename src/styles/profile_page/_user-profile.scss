@@ -338,6 +338,11 @@
   .state-dropdown {
     display: flex;
     flex-direction: column;
+    .react-select__single-value {
+      color: black;
+      font-size: 16px;
+      font-weight: 400;
+    }
     label {
       font-size: 14px;
       color: #9598a6;
