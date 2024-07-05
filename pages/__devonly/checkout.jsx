@@ -444,7 +444,6 @@ const JsonInputForm = ({ formSchema, updateSchema }) => {
   });
 
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log(JSON.parse(values.jsonData));
     setSubmitting(false);
     updateSchema(JSON.parse(values.jsonData));
   };

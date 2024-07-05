@@ -7,7 +7,6 @@ export const withAuth = (Component = null, options = {}) => {
   const AuthenticatedRoute = (props) => {
     const router = useRouter();
     const { isAuthenticated, profile } = useAuth();
-    console.log(useAuth());
     if (isAuthenticated) {
       if (options.role) {
         if (options.role.includes(profile.userType)) {

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import { Loader } from '@components';
 
-export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
+export const ChangePassword = ({ updateCompleteAction }) => {
   const [loading, setLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -17,8 +17,9 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
         oldPassword,
         newPassword,
       });
-      updateCompleteAction({});
-      setShowSuccessMessage(true);
+      updateCompleteAction({
+        isError: false,
+      });
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;
@@ -53,7 +54,7 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
         })}
         onSubmit={async (values, { resetForm, setStatus }) => {
           await submitAction(values);
-          //resetForm({});
+          resetForm({});
           //setStatus({ success: true });
         }}
       >
@@ -71,24 +72,22 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
             submitCount,
           } = props;
           return (
-            <form className="profile-update__form" onSubmit={handleSubmit}>
-              {!isMobile && (
-                <h6 className="profile-update__title">Change Password:</h6>
+            <form className="profile-form-box" onSubmit={handleSubmit}>
+              {showSuccessMessage && (
+                <div className="success-message-cp">
+                  <i className="fas fa-check-circle"></i>
+                  {'  '}Your password has been changed successfully
+                </div>
               )}
-              <div className="profile-update__card">
-                {showSuccessMessage && (
-                  <div className="success-message-cp">
-                    <i className="fas fa-check-circle"></i>
-                    {'  '}Your password has been changed successfully
-                  </div>
-                )}
-                <div className="input-block w-100">
+              <div className="profile-form-wrap">
+                <div className="form-item col-1-2 relative">
+                  <label for="password">Current Password</label>
                   <input
                     type="password"
                     className={classNames('mt-0 w-100', {
                       validate: errors.oldPassword && touched.oldPassword,
                     })}
-                    placeholder="Old Password"
+                    placeholder="Current Password"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.oldPassword}
@@ -99,7 +98,8 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                 {errors.oldPassword && touched.oldPassword && (
                   <p className="validation-input">{errors.oldPassword}</p>
                 )}
-                <div className="input-block w-100">
+                <div className="form-item col-1-2 relative">
+                  <label for="cpassword">New Password</label>
                   <input
                     placeholder="New Password"
                     type="password"
@@ -115,7 +115,8 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                 {errors.password && touched.password && (
                   <p className="validation-input">{errors.password}</p>
                 )}
-                <div className="input-block w-100">
+                <div className="form-item col-1-2 relative">
+                  <label for="cpassword">Confirm New Password</label>
                   <input
                     type="password"
                     className={classNames('w-100', {
@@ -137,13 +138,12 @@ export const ChangePassword = ({ isMobile, updateCompleteAction }) => {
                       {errors.passwordConfirmation}
                     </p>
                   )}
+                <div className="form-actions col-1-1">
+                  <button type="submit" className="primary-btn">
+                    Change Password
+                  </button>
+                </div>
               </div>
-              <button
-                type="submit"
-                className="btn-primary d-block ml-auto mt-4 v2"
-              >
-                Change Password
-              </button>
             </form>
           );
         }}

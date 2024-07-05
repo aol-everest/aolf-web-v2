@@ -101,10 +101,7 @@ function App({ Component, pageProps }) {
   });
 
   useEffect(() => {
-    console.log('Hub.listen===>');
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
-      console.log(payload.event);
-      console.log('payload.event===>');
       switch (payload.event) {
         case 'customOAuthState':
           if (payload.data && payload.data !== '') {
