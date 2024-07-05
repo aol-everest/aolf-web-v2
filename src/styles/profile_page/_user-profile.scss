@@ -15,6 +15,9 @@
     display: flex;
     gap: 20px;
     align-items: flex-start;
+    @media screen and (max-width: 991px) {
+      flex-direction: column;
+    }
   }
   .new-journey-header {
     margin-top: 18px;
@@ -39,8 +42,19 @@
     align-items: center;
     padding: 32px 32px 24px 32px;
     flex-shrink: 0;
-    @media screen and (max-width: 991px) {
-      display: none;
+    @media screen and (min-width: 560px) and (max-width: 991px) {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 20px;
+      grid-template-areas:
+        'profilePicture username'
+        'profilePicture userType'
+        'profilePicture userSince'
+        'profilePicture userLogout';
+    }
+    @media screen and (max-width: 559px) {
+      width: 100%;
     }
     .profile-picture {
       width: 120px;
@@ -55,6 +69,42 @@
       justify-content: center;
       border-radius: 100%;
       margin-bottom: 24px;
+      position: relative;
+      grid-area: profilePicture;
+      @media screen and (max-width: 991px) {
+        margin-bottom: 0;
+      }
+      .profile-pic {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .camera-icon {
+        top: 0;
+        left: 0;
+        display: none;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        border-radius: 100%;
+        input[type='file'] {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: 1;
+          -webkit-appearance: none;
+          opacity: 0;
+        }
+      }
+      &:hover .camera-icon {
+        display: flex;
+      }
     }
     .user-name {
       font-family: Lora;
@@ -63,6 +113,10 @@
       line-height: 36.4px;
       text-align: center;
       margin-bottom: 12px;
+      grid-area: username;
+      @media screen and (max-width: 991px) {
+        text-align: left;
+      }
     }
     .user-type,
     .user-since {
@@ -71,9 +125,11 @@
       font-size: 14px;
       font-weight: 600;
       line-height: 21px;
+      grid-area: userType;
     }
     .user-since {
       font-weight: 400;
+      grid-area: userSince;
     }
     .user-logout {
       margin-top: 24px;
@@ -84,6 +140,11 @@
       font-weight: 500;
       line-height: 24px;
       padding-top: 24px;
+      grid-area: userLogout;
+      @media screen and (max-width: 991px) {
+        padding-top: 10px;
+        margin-top: 10px;
+      }
       a {
         text-decoration: none;
         display: inline-flex;
@@ -97,6 +158,12 @@
   }
   .profile-info-box {
     flex: 1;
+    @media screen and (min-width: 992px) {
+      max-width: calc(100vw - 385px);
+    }
+    @media screen and (max-width: 991px) {
+      max-width: 100%;
+    }
     .tab-content {
       display: none;
     }

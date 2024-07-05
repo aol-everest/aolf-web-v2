@@ -217,15 +217,8 @@ export const withUserInfo = (WrappedComponent) => {
             <div className="container">
               <div className="user-info-grid">
                 <div className="user-info-box">
-                  <input
-                    type="file"
-                    id="upload-button"
-                    accept="image/*"
-                    className="tw-hidden"
-                    onChange={handleOnSelectFile}
-                  />
                   <div className="profile-picture">
-                    <span>{initials}</span>
+                    {initials}
                     {profilePic && (
                       <img
                         src={profilePic}
@@ -237,6 +230,12 @@ export const withUserInfo = (WrappedComponent) => {
                     )}
 
                     <div className="camera-icon">
+                      <input
+                        type="file"
+                        id="upload-button"
+                        accept="image/*"
+                        onChange={handleOnSelectFile}
+                      />
                       <i className="fa">
                         <FaCamera />
                       </i>
