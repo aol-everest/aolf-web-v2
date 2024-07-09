@@ -1,190 +1,84 @@
-import { api } from '@utils';
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { COURSE_TYPES } from '@constants';
+/* eslint-disable react/no-unescaped-entities */
+import { useState } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
-export const PastCourses = ({ isMobile }) => {
-  const [pastWorkshops, setPastWorkshops] = useState([]);
-  const [workshopOrderAsc, setWorkshopOrderAsc] = useState(true);
-
-  const { data = [] } = useQuery({
-    queryKey: 'userPastCourses',
-    queryFn: async () => {
-      const response = await api.get({
-        path: 'getUserPastCourses',
-      });
-      const updatedResponse = response.pastWorkshops.sort((a, b) => {
-        return (
-          new Date(a.eventStartDateTimeGMT) - new Date(b.eventStartDateTimeGMT)
-        );
-      });
-      return updatedResponse;
-    },
-  });
-
-  useEffect(() => {
-    if (data.length > 0) {
-      setPastWorkshops(data);
-    }
-  }, [data]);
-
-  const handleOrderChange = () => {
-    setWorkshopOrderAsc(!workshopOrderAsc);
-    const pastWorkshopsReversed = pastWorkshops.reverse();
-    setPastWorkshops(pastWorkshopsReversed);
-  };
-
-  const workshopCounts = {
-    sky: 0,
-    silent: 0,
-    sahaj: 0,
-  };
-
-  pastWorkshops.forEach((item) => {
-    if (Object.prototype.hasOwnProperty.call(workshopCounts, item.courseType)) {
-      workshopCounts[item.courseType] += 1;
-    }
-  });
-
-  if (!isMobile) {
-    return (
-      <div
-        className="tab-pane past-courses fade active show"
-        id="profile-past-courses"
-        role="tabpanel"
-        aria-labelledby="profile-past-courses-tab"
-      >
-        <div className="past-courses__cards">
-          <div className="past-courses__cards__item">
-            <h4 className="past-courses__cards__item-title mr-2">
-              {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-            </h4>
-            <div className="past-courses__cards__item-counter">
-              <span>{workshopCounts.sky}</span> times
-            </div>
-          </div>
-          <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
-          <div className="past-courses__cards__item">
-            <h4 className="past-courses__cards__item-title mr-2">
-              {COURSE_TYPES.SILENT_RETREAT.name}
-            </h4>
-            <div className="past-courses__cards__item-counter">
-              <span>{workshopCounts.silent}</span> times
-            </div>
-          </div>
-          <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
-          <div className="past-courses__cards__item">
-            <h4 className="past-courses__cards__item-title mr-2">
-              {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-            </h4>
-            <div className="past-courses__cards__item-counter">
-              <span>{workshopCounts.sahaj}</span> time
-            </div>
-          </div>
-        </div>
-        <div className="past-courses__table table-responsive-lg">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Course</th>
-                <th>Teacher</th>
-                <th>Teacher Email</th>
-                <th>
-                  <button
-                    type="button"
-                    className="table__sort-button tw-flex"
-                    data-order={workshopOrderAsc ? 'asc' : 'desc'}
-                    onClick={handleOrderChange}
-                  >
-                    <span className="table__sort-button__text">Start Date</span>
-                    <span className="tw-pt-1">
-                      <svg
-                        width="10"
-                        height="10"
-                        viewBox="0 0 10 10"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="table__sort-button__icon"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M9 3.44444C9 3.56481 8.95052 3.66898 8.85156 3.75694L5.35156 6.86806C5.2526 6.95602 5.13542 7 5 7C4.86458 7 4.7474 6.95602 4.64844 6.86806L1.14844 3.75694C1.04948 3.66898 1 3.56481 1 3.44444C1 3.32407 1.04948 3.21991 1.14844 3.13194C1.2474 3.04398 1.36458 3 1.5 3H8.5C8.63542 3 8.7526 3.04398 8.85156 3.13194C8.95052 3.21991 9 3.32407 9 3.44444Z"
-                          fill="#C4C5CC"
-                        ></path>
-                      </svg>
-                    </span>
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {pastWorkshops.map((workshop, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{workshop.title}</td>
-                  <td>{workshop.primaryTeacherName}</td>
-                  <td>{workshop.primaryTeacherEmail}</td>
-                  <td className="text-right">{workshop.eventStartDate}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
+export const PastCourses = ({ pastCourses = {} }) => {
+  const {
+    totalCourseCount,
+    totalHours,
+    totalPlaces,
+    pastWorkshops = [],
+  } = pastCourses;
+  const [currentActiveCourse, setCurrentActiveCourse] = useState(0);
 
   return (
-    <>
-      <div className="past-courses__cards">
-        <div className="past-courses__cards__item">
-          <h4 className="past-courses__cards__item-title">
-            {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-          </h4>
-          <div className="past-courses__cards__item-counter">
-            <span>{workshopCounts.sky}</span> times
-          </div>
+    <div className="profile-form-box">
+      <div className="past-courses-stats">
+        <div className="stats-info">
+          <div className="number">{totalCourseCount}</div>
+          <div className="text">courses you've taken</div>
         </div>
-        <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
-        <div className="past-courses__cards__item">
-          <h4 className="past-courses__cards__item-title">
-            {COURSE_TYPES.SILENT_RETREAT.name}
-          </h4>
-          <div className="past-courses__cards__item-counter">
-            <span>{workshopCounts.silent}</span> times
-          </div>
+        <div className="stats-info">
+          <div className="number">{totalHours}</div>
+          <div className="text">hours you spent in meditation</div>
         </div>
-        <img src="/img/Arrow.svg" className="past-courses__cards__arrow" />
-        <div className="past-courses__cards__item">
-          <h4 className="past-courses__cards__item-title">
-            {COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.name}
-          </h4>
-          <div className="past-courses__cards__item-counter">
-            <span>{workshopCounts.sahaj}</span> time
-          </div>
+        <div className="stats-info">
+          <div className="number">{totalPlaces}</div>
+          <div className="text">places you've meditated in</div>
         </div>
       </div>
-      <div className="past-courses__data">
-        <div className="past-courses__data__items">
-          {pastWorkshops.map((workshop, index) => (
-            <div className="past-course" key={index}>
-              <div className="past-course__meta">
-                <span>#{index + 1}</span>
-                <span>{workshop.eventStartDate}</span>
+      <div className="courses-history">
+        <h2 className="title">History of courses</h2>
+        <div className="accordion" id="accordionExample">
+          {pastWorkshops.map((workshop, index) => {
+            return (
+              <div className="history-accordion-item" key={workshop.id}>
+                <div className="history-accordion-header">
+                  <h2 className="mb-0">
+                    <span className="icon-aol iconaol-Tick"></span>
+                    <button
+                      className={`btn btn-link btn-block text-left ${currentActiveCourse !== index ? 'collapsed' : ''}`}
+                      type="button"
+                      aria-expanded={currentActiveCourse === index}
+                      aria-controls="collapseOne"
+                      onClick={() => setCurrentActiveCourse(index)}
+                    >
+                      {workshop.title}
+                      <span className="icon-aol iconaol-arrow-down"></span>
+                    </button>
+                  </h2>
+                </div>
+
+                <div
+                  className={`collapse ${currentActiveCourse === index ? 'show' : ''}`}
+                  data-parent="#accordionExample"
+                >
+                  <div className="history-accordion-body">
+                    <div className="course-history-info">
+                      <div className="ch-info-pill">
+                        <span className="icon-aol iconaol-profile"></span>{' '}
+                        {workshop.primaryTeacherName}
+                      </div>
+                      <div className="ch-info-pill">
+                        <span className="icon-aol iconaol-sms"></span>{' '}
+                        {workshop.primaryTeacherEmail}
+                      </div>
+                      <div className="ch-info-pill">
+                        <span className="icon-aol iconaol-calendar"></span>{' '}
+                        {`${dayjs.utc(workshop.eventStartDate).format('DD.MM.YYYY')} - ${dayjs
+                          .utc(workshop.eventEndDate)
+                          .format('DD.MM.YYYY')}`}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="past-course__course">{workshop.title}</p>
-              <p className="past-course__teacher">
-                {workshop.primaryTeacherName}
-              </p>
-              <p className="past-course__email">
-                {workshop.primaryTeacherEmail}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-    </>
+    </div>
   );
 };
