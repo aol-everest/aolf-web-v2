@@ -108,21 +108,21 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
   ) => {
     if (requestCreated) {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 3,
         },
       });
     } else if (caseAlreadyRegistered || ccInfoAlreadyDeleted) {
       router.push({
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 5,
         },
       });
     } else {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 4,
         },
@@ -270,31 +270,21 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
-          contactAddress: Yup.string().required('Address is required'),
+          contactAddress: Yup.string().trim().required('Address is required'),
           contactState: Yup.string().required('State is required'),
           contactZip: Yup.string()
             .required('Zip is required!')
             .matches(/^[0-9]+$/, { message: 'Zip is invalid' })
             .min(2, 'Zip is invalid')
             .max(10, 'Zip is invalid'),
+          email: Yup.string().required('Email is required').email(),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           await submitAction(values);
         }}
       >
         {(props) => {
-          const {
-            values,
-            touched,
-            errors,
-            dirty,
-            isSubmitting,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            handleReset,
-            submitCount,
-          } = props;
+          const { dirty, handleSubmit, isValid } = props;
           return (
             <form className="profile-form-box" onSubmit={handleSubmit}>
               <div className="profile-form-wrap form-inputs">
@@ -389,7 +379,11 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   </button>
                 )}
                 <button className="secondary-btn">Discard Changes</button>
-                <button type="submit" className="primary-btn">
+                <button
+                  type="submit"
+                  className="primary-btn"
+                  disabled={!(isValid && dirty)}
+                >
                   Save Changes
                 </button>
               </div>
