@@ -84,7 +84,7 @@ Amplify.configure({
 
 function App({ Component, pageProps }) {
   const router = useRouter();
-  const [user, setUser] = useState({ isAuthenticated: false });
+  const [user, setUser] = useState({ isAuthenticated: false, profile: {} });
   const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
   // const [pendingSurveyInvite, setPendingSurveyInvite] = useState(null);
