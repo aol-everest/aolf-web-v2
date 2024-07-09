@@ -1,4 +1,3 @@
-/* eslint-disable no-inline-styles/no-inline-styles */
 import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
@@ -186,17 +185,19 @@ export const ProfileHeader = ({
 
   const subscriptionPanel = (subscription) => {
     return (
-      <>
-        <div className="user-type">{subscription.name} member</div>
-        <div className="user-since">
+      <div
+        className="profile-header__course"
+        key={subscription.subscriptionMasterSfid}
+      >
+        <strong>{subscription.name} member </strong>
+        <span className="profile-header__course-date">
           since{' '}
           {dayjs(subscription.subscriptionStartDate).format('MMMM DD, YYYY')}
-        </div>
+        </span>{' '}
         {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
           subscription.subscriptionMasterSfid && (
           <a
             href="#"
-            style={{ fontSize: 14 }}
             className="link link_dark link-modal"
             onClick={showPurchaseMembershipModalAction(
               subscription.subscriptionMasterSfid,
@@ -206,7 +207,7 @@ export const ProfileHeader = ({
             <strong>See details</strong>
           </a>
         )}
-      </>
+      </div>
     );
   };
 
@@ -253,18 +254,18 @@ const subscriptionBuyBtnPanel = (
         'Take your journey deeper with two options for additional content and support';
     }
     if (message) {
-      result = <div className="new-journey-header">{message}</div>;
+      result = <div className="profile-header__course">{message}</div>;
     }
   }
 
   return (
     <>
       {result}
-      <div className="new-journey-btn-wrapper">
+      <div className="btn-wrapper">
         {!userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value] && (
           <button
             data-href-modal="digital-member-join"
-            className="btn-secondary link-modal tw-mb-4"
+            className="btn-secondary link-modal"
             onClick={showPurchaseMembershipModalAction(
               MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
             )}

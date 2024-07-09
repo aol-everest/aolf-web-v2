@@ -128,7 +128,7 @@ const MembershipCancellation = () => {
   const backToProfileAction = (e) => {
     if (e) e.preventDefault();
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/profile/update-profile`,
+      pathname: `/us-en/profile`,
     });
   };
 
@@ -157,7 +157,7 @@ const MembershipCancellation = () => {
         throw new Error(errorMessage);
       }
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile/update-profile`,
+        pathname: `/us-en/profile`,
         query: {
           request: 2,
         },
@@ -166,7 +166,7 @@ const MembershipCancellation = () => {
       console.log(error);
 
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile/update-profile`,
+        pathname: `/us-en/profile`,
         query: {
           request: 1,
         },
