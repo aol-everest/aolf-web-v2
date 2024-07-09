@@ -101,6 +101,7 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
     <AuthContext.Provider
       value={{
         passwordLess: _usePasswordless(fetchCurrentUser),
+        fetchCurrentUser,
         ...currentUser,
         error,
       }}

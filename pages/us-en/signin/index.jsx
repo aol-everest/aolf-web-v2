@@ -19,6 +19,7 @@ import {
   confirmResetPassword,
   confirmSignIn,
 } from 'aws-amplify/auth';
+import { useAuth } from '@contexts';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
 
@@ -128,6 +129,7 @@ const PasswordChangeSuccessMessage = () => (
 
 function LoginPage() {
   const router = useRouter();
+  const { fetchCurrentUser } = useAuth();
   // const { identify } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
 
@@ -184,6 +186,7 @@ function LoginPage() {
           // Collect the confirmation code from the user and pass to confirmResetPassword.
           break;
         case 'DONE':
+          await fetchCurrentUser();
           if (isStudent) {
             await api.post({
               path: 'verify-email',
@@ -209,12 +212,12 @@ function LoginPage() {
             }, 1000);
           } else {
             // router.refresh();
-            // console.log(navigateTo);
-            // if (navigateTo) {
-            //   router.push(navigateTo);
-            // } else {
-            //   router.push('/us-en');
-            // }
+            console.log(navigateTo);
+            if (navigateTo) {
+              router.push(navigateTo);
+            } else {
+              router.push('/us-en');
+            }
           }
           break;
       }
