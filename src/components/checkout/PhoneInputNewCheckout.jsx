@@ -1,5 +1,4 @@
 import PhoneInput from '@components/phoneInputCmp';
-import classNames from 'classnames';
 
 export const PhoneInputNewCheckout = ({
   children,
@@ -12,8 +11,9 @@ export const PhoneInputNewCheckout = ({
   textToUpperCase = false,
   tooltip,
   tip,
-  placeholder,
+  placeholder = 'Phone No',
   className,
+  showLabel = true,
   ...rest
 }) => {
   const onChangeAction = () => {
@@ -49,10 +49,11 @@ export const PhoneInputNewCheckout = ({
   return (
     <div className={className}>
       <label htmlFor="phone">{label}</label>
+
       <PhoneInput
         {...rest}
         {...inputProps}
-        placeholder="Phone No"
+        placeholder={placeholder}
         defaultCountry="us"
         smartCaret={true}
         country="us"
@@ -61,6 +62,8 @@ export const PhoneInputNewCheckout = ({
         containerClass="input-block"
         countryCodeEditable={true}
         international={true}
+        showLabel={showLabel}
+        showSpecialLabel={false}
       />
 
       {formikProps.errors[formikKey] && (

@@ -102,7 +102,6 @@ function getLastElement(arr) {
 }
 
 const Thankyou = () => {
-  console.log(isMobile());
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();

@@ -37,8 +37,6 @@ export const PostCostDetailsCard = ({
     groupedAddOnProducts,
   } = workshop || {};
 
-  console.log(formikProps.errors);
-
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
 
   const isSilentRetreatType =

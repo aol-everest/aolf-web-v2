@@ -1,12 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
-import { DevTool } from '@hookform/devtools';
 import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 import { useState } from 'react';
 import { useAuth, useLocalUserCache } from '@contexts';
-import { configure } from '@components/passwordLessAuth/config';
 import { Passwordless as NewPasswordlessComponent } from '@components/passwordLessAuth/NewComp';
 
 const passwordSchema = object().shape({
@@ -33,9 +31,7 @@ const Container = (props) => {
 const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
   const {
     register,
-    control,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(userNameSchema),
@@ -83,16 +79,13 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
 };
 
 const StepInputPassword = ({
-  username,
   showMessage,
   message,
   onSubmit,
   forgotPassword,
-  updateStep,
 }) => {
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -167,6 +160,7 @@ export const SigninForm = ({
   backToFlowAction,
   children,
 }) => {
+  const authObj = useAuth();
   const {
     requestSignInLink,
     lastError,
@@ -174,18 +168,14 @@ export const SigninForm = ({
     busy,
     signInStatus,
     signingInStatus,
-    tokens,
-    tokensParsed,
     signOut,
     toggleShowAuthenticatorManager,
-    showAuthenticatorManager,
-  } = useAuth().passwordLess;
+  } = authObj.passwordLess;
   const [step, setStep] = useState(0);
   const [newUsername, setNewUsername] = useState(username);
   const [showSignInOptionsForUser, setShowSignInOptionsForUser] =
     useState('LAST_USER');
   const { lastSignedInUsers } = useLocalUserCache();
-  const showFido2AuthOption = !!configure().fido2;
 
   const toggleShowAuthenticatorManagerAction = (e) => {
     if (e) e.preventDefault();
@@ -294,15 +284,13 @@ export const SigninForm = ({
     );
   }
 
-  if (signInStatus === 'SIGNED_IN' && tokens) {
+  if (authObj.isAuthenticated) {
     //if (children) return <>{children}</>;
     return (
       <Container>
         <div class="page-description">
           You&apos;re currently signed-in as:{' '}
-          <span className="tw-font-semibold">
-            {tokensParsed?.idToken.email}
-          </span>
+          <span className="tw-font-semibold">{authObj?.profile.email}</span>
         </div>
         <div class="form-action">
           <button class="submit-btn" onClick={backToFlowAction}>
@@ -368,8 +356,6 @@ export const SigninForm = ({
     setShowSignInOptionsForUser('NEW_USER_ENTRY');
     setStep(0);
   };
-
-  console.log(user);
 
   const renderStep = () => {
     if (step === 0) {
@@ -625,7 +611,13 @@ export const SigninForm = ({
         </a>
       </div>
       {lastError && (
-        <div className="common-error-message">{lastError.message}</div>
+        <div className="common-error-message">
+          {lastError.message.startsWith(
+            'The operation either timed out or was not allowed',
+          )
+            ? ''
+            : lastError.message}
+        </div>
       )}
     </Container>
   );

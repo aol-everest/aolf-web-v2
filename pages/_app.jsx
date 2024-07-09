@@ -84,7 +84,7 @@ Amplify.configure({
 
 function App({ Component, pageProps }) {
   const router = useRouter();
-  const [user, setUser] = useState({ isAuthenticated: false });
+  const [user, setUser] = useState({ isAuthenticated: false, profile: {} });
   const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
   // const [pendingSurveyInvite, setPendingSurveyInvite] = useState(null);
@@ -101,10 +101,7 @@ function App({ Component, pageProps }) {
   });
 
   useEffect(() => {
-    console.log('Hub.listen===>');
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
-      console.log(payload.event);
-      console.log('payload.event===>');
       switch (payload.event) {
         case 'customOAuthState':
           if (payload.data && payload.data !== '') {
