@@ -15,7 +15,7 @@ const ViewCardDetail = dynamic(() =>
 
 const CardDetails = ({ setLoading }) => {
   const { showAlert } = useGlobalAlertContext();
-  const { reloadProfile, profile } = useAuth();
+  const { profile, fetchCurrentUser } = useAuth();
   const [editCardDetail, setEditCardDetail] = useState(false);
 
   const stripePromise = loadStripe(
@@ -29,7 +29,7 @@ const CardDetails = ({ setLoading }) => {
       });
     } else {
       setLoading(true);
-      await reloadProfile();
+      await fetchCurrentUser();
       setLoading(false);
       setEditCardDetail(false);
     }
@@ -38,6 +38,8 @@ const CardDetails = ({ setLoading }) => {
   const switchCardDetailView = () => {
     setEditCardDetail((editCardDetail) => !editCardDetail);
   };
+
+  console.log('profile', profile);
 
   return (
     <div>
