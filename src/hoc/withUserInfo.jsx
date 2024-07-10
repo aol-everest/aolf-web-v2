@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { NextSeo } from 'next-seo';
 import { useQueryState } from 'nuqs';
 import { FaCamera } from 'react-icons/fa';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
@@ -43,6 +43,40 @@ export const withUserInfo = (WrappedComponent) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
+    const elementRef = useRef(null);
+    const [activeTab, setActiveTab] = useState(() => {
+      // Initialize active tab based on current route
+      if (pathname.includes(UPDATE_PROFILE)) return 'profile';
+      if (pathname.includes(CARD_DETAILS)) return 'payment';
+      if (pathname.includes(CHANGE_PASSWORD)) return 'changePassword';
+      if (pathname.includes(PAST_COURSES)) return 'pastCourses';
+      if (pathname.includes(UPCOMING_EVENTS)) return 'upcomingCourses';
+      if (pathname.includes(REFER_A_FRIEND)) return 'referFriend';
+      return null;
+    });
+
+    const tabRefs = {
+      profile: useRef(null),
+      payment: useRef(null),
+      changePassword: useRef(null),
+      pastCourses: useRef(null),
+      upcomingCourses: useRef(null),
+      referFriend: useRef(null),
+    };
+
+    const scrollOffset = 75; // Adjust this value as needed
+
+    useEffect(() => {
+      if (elementRef.current) {
+        const elementPosition = elementRef.current.getBoundingClientRect().top;
+        const offsetPosition = elementPosition - scrollOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }
+    }, [router.pathname]);
 
     const {
       first_name,
@@ -100,11 +134,8 @@ export const withUserInfo = (WrappedComponent) => {
     };
 
     const switchTab = (screen) => {
-      // router.push({
-      //   pathname: screen,
-      // });
+      setActiveTab(screen);
       router.push(screen);
-      // window.history.pushState(null, '', screen);
     };
 
     if (!isAuthenticated) {
@@ -261,6 +292,7 @@ export const withUserInfo = (WrappedComponent) => {
                             active: pathname.includes(UPDATE_PROFILE),
                           })}
                           onClick={() => switchTab(UPDATE_PROFILE)}
+                          ref={tabRefs.profile}
                         >
                           Profile
                         </a>
@@ -271,6 +303,7 @@ export const withUserInfo = (WrappedComponent) => {
                             active: pathname.includes(CARD_DETAILS),
                           })}
                           onClick={() => switchTab(CARD_DETAILS)}
+                          ref={tabRefs.payment}
                         >
                           Payment
                         </a>
@@ -281,6 +314,7 @@ export const withUserInfo = (WrappedComponent) => {
                             active: pathname.includes(CHANGE_PASSWORD),
                           })}
                           onClick={() => switchTab(CHANGE_PASSWORD)}
+                          ref={tabRefs.changePassword}
                         >
                           Change Password
                         </a>
@@ -291,6 +325,7 @@ export const withUserInfo = (WrappedComponent) => {
                             active: pathname.includes(PAST_COURSES),
                           })}
                           onClick={() => switchTab(PAST_COURSES)}
+                          ref={tabRefs.pastCourses}
                         >
                           Past Courses
                         </a>
@@ -301,6 +336,7 @@ export const withUserInfo = (WrappedComponent) => {
                             active: pathname.includes(UPCOMING_EVENTS),
                           })}
                           onClick={() => switchTab(UPCOMING_EVENTS)}
+                          ref={tabRefs.upcomingCourses}
                         >
                           Upcoming Courses
                         </a>
@@ -312,17 +348,20 @@ export const withUserInfo = (WrappedComponent) => {
                             active: pathname.includes(REFER_A_FRIEND),
                           })}
                           onClick={() => switchTab(REFER_A_FRIEND)}
+                          ref={tabRefs.referFriend}
                         >
                           Refer a Friend
                         </a>
                       </li>
                     </ul>
                   </div>
-                  <WrappedComponent
-                    setLoading={setLoading}
-                    loading={loading}
-                    {...props}
-                  />
+                  <div ref={elementRef}>
+                    <WrappedComponent
+                      setLoading={setLoading}
+                      loading={loading}
+                      {...props}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
