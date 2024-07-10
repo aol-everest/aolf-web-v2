@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 const checkPaymentStatus = async (id) => {
   const response = await api.get({
-    path: 'getOrderAndAttendeeDetails',
+    path: 'getOrderAndAttendeeDetailsPOC',
     param: {
       orderId: id,
     },
@@ -86,7 +86,7 @@ const PaymentStatus = () => {
               Please wait a few minutes. We appreciate your patience during this
               time!
             </p>
-            {errorMessage && <p>errorMessage</p>}
+            {errorMessage && <p>{errorMessage}</p>}
             <p>{JSON.stringify(result, null, 2)}</p>
           </div>
         </div>
