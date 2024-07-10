@@ -39,8 +39,6 @@ const CardDetails = ({ setLoading }) => {
     setEditCardDetail((editCardDetail) => !editCardDetail);
   };
 
-  console.log('profile', profile);
-
   return (
     <div>
       <div className="profile-form-box">

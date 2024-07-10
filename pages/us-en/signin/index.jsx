@@ -214,8 +214,6 @@ function LoginPage() {
               }
             }, 1000);
           } else {
-            // router.refresh();
-            console.log(navigateTo);
             if (navigateTo) {
               router.push(navigateTo);
             } else {

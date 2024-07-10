@@ -437,7 +437,6 @@ const Scheduling = () => {
     if (response?.data && selectedDates?.length > 0) {
       // const selectedSfids = getGroupedUniqueEventIds(response);
       const finalWorkshops = response?.data;
-      console.log(response?.data);
 
       setTimeout(() => {
         const timeContainer = document.querySelector(
