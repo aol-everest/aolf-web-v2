@@ -78,10 +78,12 @@ export const withUserInfo = (WrappedComponent) => {
         const elementPosition = elementRef.current.getBoundingClientRect().top;
         const offsetPosition = elementPosition - scrollOffset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth',
-        });
+        setTimeout(() => {
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
+        }, 200);
       }
     }, [router.pathname]);
 
