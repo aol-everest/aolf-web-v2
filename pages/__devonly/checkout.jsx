@@ -291,6 +291,7 @@ function CheckoutForm({ formSchema }) {
     const {
       stripeIntentObj,
       status,
+      orderId,
       data,
       error: errorMessage,
       isError,
@@ -304,7 +305,7 @@ function CheckoutForm({ formSchema }) {
     }
 
     if (data && data.totalOrderAmount > 0) {
-      const returnUrl = '#';
+      const returnUrl = `${window.location.origin}/__devonly/check-payment/${orderId}`;
       const result = await stripe.confirmPayment({
         //`Elements` instance that was used to create the Payment Element
         elements,
