@@ -1,7 +1,7 @@
 'use client';
 
 import { loadStripe } from '@stripe/stripe-js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { api } from '@utils';
 import * as Yup from 'yup';
@@ -13,7 +13,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import dynamic from 'next/dynamic';
-import { Button, ButtonGroup } from 'reactstrap';
+import { Button, ButtonGroup, Alert } from 'reactstrap';
 import classNames from 'classnames';
 
 const ReactJson = dynamic(() => import('@microlink/react-json-view'), {
@@ -198,7 +198,9 @@ function tryJsonParse(jsonString) {
 
 function CheckoutForm({ formSchema }) {
   const { properties, required = [] } = formSchema;
-  const [rSelected, setRSelected] = useState(1);
+  const [jsonText, setJsonText] = useState('');
+  const [apiName, setApiName] = useState('createIntentForExpressCheckoutPOC');
+  const [errorMessage, setErrorMessage] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -221,6 +223,14 @@ function CheckoutForm({ formSchema }) {
   const initialValues = generateInitialValues(properties);
 
   const validationSchema = generateValidationSchema(properties, required);
+
+  useEffect(() => {
+    try {
+      setJsonText(JSON.stringify(initialValues, null, 4));
+    } catch (error) {
+      console.error('Invalid JSON format:', error.message);
+    }
+  }, []);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     if (!stripe || !elements) {
@@ -285,7 +295,7 @@ function CheckoutForm({ formSchema }) {
       error: errorMessage,
       isError,
     } = await api.post({
-      path: 'createAndPayOrder',
+      path: apiName,
       body: values,
     });
 
@@ -311,6 +321,27 @@ function CheckoutForm({ formSchema }) {
     }
     setSubmitting(false);
   };
+
+  const updateValues = (setValues) => (e) => {
+    if (e) e.preventDefault();
+    try {
+      setErrorMessage(null);
+      const parsedValues = JSON.parse(jsonText);
+      setValues(parsedValues);
+    } catch (error) {
+      console.error('Invalid JSON format:', error.message);
+      setErrorMessage('Invalid JSON format:', error.message);
+    }
+  };
+
+  const handleChange = (event) => {
+    setJsonText(event.target.value);
+  };
+
+  const handleChangeApiName = (event) => {
+    setApiName(event.target.value);
+  };
+
   return (
     <Formik
       initialValues={initialValues}
@@ -320,84 +351,32 @@ function CheckoutForm({ formSchema }) {
     >
       {({ errors, touched, isSubmitting, values, setValues }) => (
         <Form>
-          <ButtonGroup>
-            <Button
-              outline
-              variant="primary"
-              onClick={() => setRSelected(1)}
-              active={rSelected === 1}
-            >
-              TextArea
-            </Button>
-            <Button
-              outline
-              variant="primary"
-              onClick={() => setRSelected(2)}
-              active={rSelected === 2}
-            >
-              HTML
-            </Button>
-            <Button
-              outline
-              variant="primary"
-              onClick={() => setRSelected(3)}
-              active={rSelected === 3}
-            >
-              JSON
-            </Button>
-          </ButtonGroup>
-
-          <div
-            className={classNames('tw-hidden', {
-              '!tw-block': rSelected === 1,
-            })}
-          >
+          <div class="form-group">
+            <label for="exampleInputEmail1">Api Name</label>
+            <input
+              type="text"
+              value={apiName}
+              onChange={handleChangeApiName}
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Payload</label>
             <textarea
-              value={JSON.stringify(values, null, 4)}
-              onChange={(e) => {
-                try {
-                  const parsedValues = JSON.parse(e.target.value);
-                  setValues(parsedValues);
-                } catch (error) {
-                  console.error('Invalid JSON format:', error.message);
-                }
-              }}
-              rows={10}
+              value={jsonText}
+              onChange={handleChange}
+              rows={20}
               className="form-control"
             />
+            {errorMessage && <Alert color="danger">{errorMessage}</Alert>}
           </div>
-          <div
-            className={classNames('tw-hidden', {
-              '!tw-block': rSelected === 2,
-            })}
-          >
-            {generateFields(properties)}
+
+          <div className="tw-my-5">
+            <a href="#" onClick={updateValues(setValues)}>
+              Update Payload
+            </a>
           </div>
-          <div
-            className={classNames('tw-hidden', {
-              '!tw-block': rSelected === 3,
-            })}
-          >
-            <ReactJson
-              src={values}
-              onEdit={(edit) => {
-                const updatedValues = {
-                  ...values,
-                  [edit.name]: edit.updated_src[edit.name],
-                };
-                setValues(updatedValues);
-              }}
-              onAdd={(add) => {
-                const updatedValues = { ...values, [add.name]: add.new_value };
-                setValues(updatedValues);
-              }}
-              onDelete={(del) => {
-                const updatedValues = { ...values };
-                delete updatedValues[del.name];
-                setValues(updatedValues);
-              }}
-            />
-          </div>
+
           <PaymentElement options={paymentElementOptions} />
 
           <button
@@ -407,83 +386,12 @@ function CheckoutForm({ formSchema }) {
           >
             Submit
           </button>
-          <div className="tw-pt-6">
-            {Object.keys(errors).length > 0 && (
-              <div className="alert alert-danger">
-                <h4 className="alert-heading">Form Errors</h4>
-                <ul className="mb-0">
-                  {Object.keys(errors).map(
-                    (key) => touched[key] && <li key={key}>{errors[key]}</li>,
-                  )}
-                </ul>
-              </div>
-            )}
-          </div>
+          <div className="tw-pt-6">{JSON.stringify(errors, null, 2)}</div>
         </Form>
       )}
     </Formik>
   );
 }
-
-const JsonInputForm = ({ formSchema, updateSchema }) => {
-  const initialValues = {
-    jsonData: JSON.stringify(formSchema, null, 4),
-  };
-
-  const validationSchema = Yup.object({
-    jsonData: Yup.string()
-      .required('JSON data is required')
-      .test('is-json', 'Invalid JSON', (value) => {
-        try {
-          JSON.parse(value);
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }),
-  });
-
-  const handleSubmit = (values, { setSubmitting }) => {
-    setSubmitting(false);
-    updateSchema(JSON.parse(values.jsonData));
-  };
-
-  return (
-    <div className="container mt-5">
-      <h2>Form customize</h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ errors, touched, isSubmitting }) => (
-          <Form>
-            <div className="form-group">
-              <label htmlFor="jsonData">JSON Schema</label>
-              <Field
-                as="textarea"
-                name="jsonData"
-                id="jsonData"
-                className={`form-control ${errors.jsonData && touched.jsonData ? 'is-invalid' : ''}`}
-                rows="10"
-              />
-              {errors.jsonData && touched.jsonData ? (
-                <div className="invalid-feedback">{errors.jsonData}</div>
-              ) : null}
-            </div>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              Submit
-            </button>
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
 
 const StripeComponent = () => {
   const schema = {
@@ -530,12 +438,6 @@ const StripeComponent = () => {
             type: 'boolean',
             title: 'IsStripeIntentPayment',
             default: true,
-          },
-          complianceQuestionnaire: {
-            type: 'string',
-            title: 'complianceQuestionnaire',
-            format: 'json',
-            default: '{}',
           },
 
           contactAddress: {
@@ -593,10 +495,7 @@ const StripeComponent = () => {
       },
     },
   };
-  const [formSchema, setFormSchema] = useState(schema);
-  const updateSchema = (_schema) => {
-    setFormSchema(_schema);
-  };
+
   const elementsOptions = {
     mode: 'payment',
     amount: 1099,
@@ -648,11 +547,8 @@ const StripeComponent = () => {
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          <JsonInputForm formSchema={formSchema} updateSchema={updateSchema} />
-        </div>
-        <div class="col-sm">
           <Elements stripe={stripePromise} options={elementsOptions}>
-            <CheckoutForm formSchema={formSchema} />
+            <CheckoutForm formSchema={schema} />
           </Elements>
         </div>
       </div>
