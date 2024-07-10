@@ -357,6 +357,31 @@
       color: #9598a6;
       margin-bottom: 6px;
     }
+    .input-msg {
+      font-size: 12px;
+      padding-top: 4px;
+    }
+    .eye-button {
+      position: absolute;
+      top: 32px;
+      right: 16px;
+      display: block;
+      background-color: $wcf-light;
+      padding: 4px;
+      width: 32px;
+      height: 32px;
+      text-align: center;
+      border: none;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
     select {
       padding: 10px 14px;
       height: 44px;
