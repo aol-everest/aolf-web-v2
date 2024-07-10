@@ -88,7 +88,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
           return (
             <form className="profile-form-box" onSubmit={handleSubmit}>
               <div className="profile-form-wrap">
-                <div className="form-item col-1-2 relative">
+                <div className="form-item col-1-1 relative">
                   <label for="password">Current Password</label>
                   <input
                     type={
@@ -117,7 +117,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                   )}
                 </div>
 
-                <div className="form-item col-1-2 relative">
+                <div className="form-item col-1-1 relative">
                   <label for="cpassword">New Password</label>
                   <input
                     placeholder="New Password"

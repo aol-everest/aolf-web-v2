@@ -66,8 +66,15 @@ export const withUserInfo = (WrappedComponent) => {
 
     const scrollOffset = 75; // Adjust this value as needed
 
+    const isMobileOrTablet = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+        userAgent,
+      );
+    };
+
     useEffect(() => {
-      if (elementRef.current) {
+      if (elementRef.current && isMobileOrTablet()) {
         const elementPosition = elementRef.current.getBoundingClientRect().top;
         const offsetPosition = elementPosition - scrollOffset;
 
