@@ -293,7 +293,9 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
           </div>
           <div class="centers-listing">
             {(isLoading || loading) && renderLoader()}
-            {allCenters &&
+            {!isLoading &&
+              !loading &&
+              allCenters &&
               allCenters.map((center) => {
                 const isSelected =
                   (selectedCenter || []).indexOf(center.sfid) >= 0;
