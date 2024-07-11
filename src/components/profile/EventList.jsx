@@ -362,7 +362,7 @@ export const EventList = ({ isPreferredCenter, workshops }) => {
             <div className="course-item-header">
               <div className="course-title-duration">
                 <div className="course-title">
-                  <span className="icon-aol iconaol-hindu-temple"></span>
+                  {/* <span className="icon-aol iconaol-hindu-temple"></span> */}
                   {isWorkshop ? mode : meetupTitle}
                 </div>
                 {isWorkshop ? (
