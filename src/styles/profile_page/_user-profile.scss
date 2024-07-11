@@ -1469,6 +1469,8 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 15px;
         margin-top: 18px;
+        height: calc(100vh - 400px);
+        overflow: auto;
         @media screen and (max-width: 767px) {
           grid-template-columns: repeat(1, minmax(0, 1fr));
         }
