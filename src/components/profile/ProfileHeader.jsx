@@ -187,7 +187,7 @@ export const ProfileHeader = ({
   const subscriptionPanel = (subscription) => {
     return (
       <>
-        <div className="user-type">{subscription.name} member</div>
+        <div className="user-type tw-pt-2">{subscription.name} member</div>
         <div className="user-since">
           since{' '}
           {dayjs(subscription.subscriptionStartDate).format('MMMM DD, YYYY')}

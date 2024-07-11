@@ -232,8 +232,6 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
   const {
     first_name,
     last_name,
-    personMailingCity,
-    personMailingCountry,
     personMailingPostalCode,
     personMailingState,
     personMobilePhone,
@@ -255,20 +253,22 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
         dayjs(new Date()).diff(dayjs(studentVerificationDate), 'y', true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
+  const initalValue = {
+    firstName: first_name || '',
+    lastName: last_name || '',
+    contactPhone: personMobilePhone || '',
+    contactAddress: personMailingStreet || '',
+    contactState: personMailingState || '',
+    contactZip: personMailingPostalCode || '',
+    email: email,
+  };
+
   return (
     <>
       {loading && <Loader />}
       <Formik
         enableReinitialize
-        initialValues={{
-          firstName: first_name || '',
-          lastName: last_name || '',
-          contactPhone: personMobilePhone || '',
-          contactAddress: personMailingStreet || '',
-          contactState: personMailingState || '',
-          contactZip: personMailingPostalCode || '',
-          email: email,
-        }}
+        initialValues={initalValue}
         validationSchema={Yup.object().shape({
           contactPhone: Yup.string()
             .required('Phone number required')
@@ -287,7 +287,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
         }}
       >
         {(props) => {
-          const { dirty, handleSubmit, isValid } = props;
+          const { dirty, handleSubmit, isValid, setValues } = props;
           return (
             <form className="profile-form-box" onSubmit={handleSubmit}>
               <div className="profile-form-wrap form-inputs">
@@ -381,7 +381,12 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                     Verify Student Status
                   </button>
                 )}
-                <button className="secondary-btn">Discard Changes</button>
+                <button
+                  className="secondary-btn"
+                  onClick={() => setValues(initalValue)}
+                >
+                  Discard Changes
+                </button>
                 <button
                   type="submit"
                   className="primary-btn"
