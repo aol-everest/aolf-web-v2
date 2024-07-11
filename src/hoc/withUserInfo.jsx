@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { Loader } from '@components/loader';
 import { MODAL_TYPES } from '@constants';
+import Link from '@components/linkWithUTM';
 
 const ProfileHeader = dynamic(() =>
   import('@components/profile').then((mod) => mod.ProfileHeader),
@@ -32,7 +33,7 @@ const UPDATE_PROFILE = '/us-en/profile/update-profile';
 const REFER_A_FRIEND = '/us-en/profile/refer-a-friend';
 const CARD_DETAILS = '/us-en/profile/card-details';
 const CHANGE_PASSWORD = '/us-en/profile/change-password';
-// const PREFERENCES = '/us-en/profile/preferences';
+const PREFERENCES = '/us-en/profile/preferences';
 
 export const withUserInfo = (WrappedComponent) => {
   return function UserInfo(props) {
@@ -44,25 +45,6 @@ export const withUserInfo = (WrappedComponent) => {
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
     const elementRef = useRef(null);
-    const [activeTab, setActiveTab] = useState(() => {
-      // Initialize active tab based on current route
-      if (pathname.includes(UPDATE_PROFILE)) return 'profile';
-      if (pathname.includes(CARD_DETAILS)) return 'payment';
-      if (pathname.includes(CHANGE_PASSWORD)) return 'changePassword';
-      if (pathname.includes(PAST_COURSES)) return 'pastCourses';
-      if (pathname.includes(UPCOMING_EVENTS)) return 'upcomingCourses';
-      if (pathname.includes(REFER_A_FRIEND)) return 'referFriend';
-      return null;
-    });
-
-    const tabRefs = {
-      profile: useRef(null),
-      payment: useRef(null),
-      changePassword: useRef(null),
-      pastCourses: useRef(null),
-      upcomingCourses: useRef(null),
-      referFriend: useRef(null),
-    };
 
     const scrollOffset = 75; // Adjust this value as needed
 
@@ -140,11 +122,6 @@ export const withUserInfo = (WrappedComponent) => {
         });
         reader.readAsDataURL(e.target.files[0]);
       }
-    };
-
-    const switchTab = (screen) => {
-      setActiveTab(screen);
-      router.push(screen);
     };
 
     if (!isAuthenticated) {
@@ -296,71 +273,83 @@ export const withUserInfo = (WrappedComponent) => {
                   <div className="profile-tabs">
                     <ul className="tab-links">
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(UPDATE_PROFILE),
-                          })}
-                          onClick={() => switchTab(UPDATE_PROFILE)}
-                          ref={tabRefs.profile}
-                        >
-                          Profile
-                        </a>
+                        <Link href={UPDATE_PROFILE} legacyBehavior>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === UPDATE_PROFILE,
+                            })}
+                            href="#"
+                          >
+                            Profile
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(CARD_DETAILS),
-                          })}
-                          onClick={() => switchTab(CARD_DETAILS)}
-                          ref={tabRefs.payment}
-                        >
-                          Payment
-                        </a>
+                        <Link href={CARD_DETAILS} legacyBehavior>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === CARD_DETAILS,
+                            })}
+                          >
+                            Payment
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(CHANGE_PASSWORD),
-                          })}
-                          onClick={() => switchTab(CHANGE_PASSWORD)}
-                          ref={tabRefs.changePassword}
-                        >
-                          Change Password
-                        </a>
+                        <Link href={CHANGE_PASSWORD} legacyBehavior>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === CHANGE_PASSWORD,
+                            })}
+                          >
+                            Change Password
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(PAST_COURSES),
-                          })}
-                          onClick={() => switchTab(PAST_COURSES)}
-                          ref={tabRefs.pastCourses}
-                        >
-                          Past Courses
-                        </a>
+                        <Link href={PAST_COURSES} legacyBehavior>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === PAST_COURSES,
+                            })}
+                          >
+                            Past Courses
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(UPCOMING_EVENTS),
-                          })}
-                          onClick={() => switchTab(UPCOMING_EVENTS)}
-                          ref={tabRefs.upcomingCourses}
-                        >
-                          Upcoming Courses
-                        </a>
+                        <Link href={UPCOMING_EVENTS} legacyBehavior>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === UPCOMING_EVENTS,
+                            })}
+                          >
+                            Upcoming Courses
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href={PREFERENCES} legacyBehavior>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === PREFERENCES,
+                            })}
+                          >
+                            Preferences
+                          </a>
+                        </Link>
                       </li>
 
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(REFER_A_FRIEND),
-                          })}
-                          onClick={() => switchTab(REFER_A_FRIEND)}
-                          ref={tabRefs.referFriend}
-                        >
-                          Refer a Friend
-                        </a>
+                        <Link href={REFER_A_FRIEND} legacyBehavior>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === REFER_A_FRIEND,
+                            })}
+                          >
+                            Refer a Friend
+                          </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>

@@ -84,13 +84,12 @@ export const SignupForm = ({
                 class="input-field password"
                 placeholder="Password"
               />
-              <button class="showPassBtn" type="button" onClick={handleToggle}>
-                <img
-                  src="/img/PasswordEye.svg"
-                  width="16"
-                  height="16"
-                  alt="Show Password"
-                />
+              <button
+                class={classNames('showPassBtn', type)}
+                type="button"
+                onClick={handleToggle}
+              >
+                <span class="icon-aol"></span>
               </button>
             </div>
             <div class="form-item checkbox">

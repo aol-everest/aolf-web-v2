@@ -73,13 +73,12 @@ export const NewPasswordForm = ({
                 pattern=".{6,}"
               />
 
-              <button class="showPassBtn" type="button" onClick={handleToggle}>
-                <img
-                  src="/img/PasswordEye.svg"
-                  width="16"
-                  height="16"
-                  alt="Show Password"
-                />
+              <button
+                class={classNames('showPassBtn', type)}
+                type="button"
+                onClick={handleToggle}
+              >
+                <span class="icon-aol"></span>
               </button>
               {errors.password && (
                 <div class="validation-input">{errors.password.message}</div>
@@ -99,19 +98,14 @@ export const NewPasswordForm = ({
                 autocorrect="off"
                 pattern=".{6,}"
               />
-
               <button
-                class="showPassBtn"
+                class={classNames('showPassBtn', typeCPassword)}
                 type="button"
                 onClick={handleToggleCPassword}
               >
-                <img
-                  src="/img/PasswordEye.svg"
-                  width="16"
-                  height="16"
-                  alt="Show Password"
-                />
+                <span class="icon-aol"></span>
               </button>
+
               {errors.passwordConfirmation && (
                 <div class="validation-input">
                   {errors.passwordConfirmation.message}
