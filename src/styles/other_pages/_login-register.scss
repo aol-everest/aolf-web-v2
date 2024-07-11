@@ -211,10 +211,24 @@
         &:focus {
           outline: none;
         }
+        .icon-aol:before {
+          color: #98a2b3;
+          font-size: 16px;
+        }
       }
       input {
         &.validate {
           border-color: #dc3545;
+        }
+      }
+      .showPassBtn.password {
+        .icon-aol:before {
+          content: '\e918';
+        }
+      }
+      .showPassBtn.text {
+        .icon-aol:before {
+          content: '\e939';
         }
       }
     }

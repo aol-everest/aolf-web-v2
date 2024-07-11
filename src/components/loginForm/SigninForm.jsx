@@ -119,13 +119,12 @@ const StepInputPassword = ({
             autocorrect="off"
             {...register('password')}
           />
-          <button class="showPassBtn" type="button" onClick={handleToggle}>
-            <img
-              src="/img/PasswordEye.svg"
-              width="16"
-              height="16"
-              alt="Show Password"
-            />
+          <button
+            class={classNames('showPassBtn', type)}
+            type="button"
+            onClick={handleToggle}
+          >
+            <span class="icon-aol"></span>
           </button>
           {errors.password && (
             <div class="validation-input">{errors.password.message}</div>
