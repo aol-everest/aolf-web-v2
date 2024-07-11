@@ -11,7 +11,15 @@ export const PastCourses = ({ pastCourses = {} }) => {
     totalPlaces,
     pastWorkshops = [],
   } = pastCourses;
-  const [currentActiveCourse, setCurrentActiveCourse] = useState(0);
+  const [currentActiveCourse, setCurrentActiveCourse] = useState(null);
+
+  const handleOpenAccordion = (index) => {
+    if (currentActiveCourse === index) {
+      setCurrentActiveCourse(null);
+    } else {
+      setCurrentActiveCourse(index);
+    }
+  };
 
   return (
     <div className="profile-form-box">
@@ -43,7 +51,7 @@ export const PastCourses = ({ pastCourses = {} }) => {
                       type="button"
                       aria-expanded={currentActiveCourse === index}
                       aria-controls="collapseOne"
-                      onClick={() => setCurrentActiveCourse(index)}
+                      onClick={() => handleOpenAccordion(index)}
                     >
                       {workshop.title}
                       <span className="icon-aol iconaol-arrow-down"></span>
