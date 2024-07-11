@@ -342,29 +342,33 @@ const Preferences = () => {
   });
 
   const addCenterAction = async (centerIds) => {
-    setLoading(true);
-    const { error: errorMessage, isError } = await api.post({
-      path: 'preferredLocation',
-      body: {
-        locationId: centerIds[0],
-        operation: 'add',
-      },
-    });
-    await refetch();
-    setLoading(false);
+    if (centerIds && centerIds.length > 0) {
+      setLoading(true);
+      const { error: errorMessage, isError } = await api.post({
+        path: 'preferredLocation',
+        body: {
+          locationIds: centerIds,
+          operation: 'add',
+        },
+      });
+      await refetch();
+      setLoading(false);
+    }
   };
 
   const removeCenterAction = (centerId) => async (e) => {
-    setLoading(true);
-    const { error: errorMessage, isError } = await api.post({
-      path: 'preferredLocation',
-      body: {
-        locationId: centerId,
-        operation: 'delete',
-      },
-    });
-    await refetch();
-    setLoading(false);
+    if (centerId) {
+      setLoading(true);
+      const { error: errorMessage, isError } = await api.post({
+        path: 'preferredLocation',
+        body: {
+          locationIds: [centerId],
+          operation: 'delete',
+        },
+      });
+      await refetch();
+      setLoading(false);
+    }
   };
 
   const showAddCenterModel = () => {
