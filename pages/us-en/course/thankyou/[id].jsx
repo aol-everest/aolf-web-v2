@@ -14,7 +14,13 @@ import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
 import { pushRouteWithUTMQuery } from '@service';
-import { Talkable, api, calculateBusinessDays, tConvert } from '@utils';
+import {
+  Talkable,
+  api,
+  calculateBusinessDays,
+  isMobile,
+  tConvert,
+} from '@utils';
 import { hasCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -27,7 +33,6 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryString } from '@hooks';
 import { useAnalytics } from 'use-analytics';
-import { isMobile } from '@utils/addToCalendar';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
