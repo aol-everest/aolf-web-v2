@@ -188,7 +188,7 @@ export const COURSE_TYPES_MASTER = {
         },
         BE_WELL_SESSIONS: {
           slug: 'be_well',
-          name: 'Be Well',
+          name: 'Be Well Sessions',
         },
       },
     },
