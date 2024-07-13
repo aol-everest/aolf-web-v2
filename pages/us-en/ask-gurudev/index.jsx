@@ -1,30 +1,44 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useCallback, useState, useEffect } from 'react';
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import SearchOptions from './SearchOptions/SearchOptions';
-import SearchResults from './SearchResults/SearchResults';
+import CategoryTabs from './CategoryTabs';
 import { useDebounce } from 'react-use';
-import { youtube } from '@service';
-import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useQueryString } from '@hooks';
-
-const PLAYLIST_ID = `${process.env.NEXT_PUBLIC_PODCAST_PLAYLIST_ID}`;
+import { Footer } from './Footer';
+import SearchResultsList from './SearchResultsList/SearchResultsList';
+import { Loader } from '@components/loader';
+import { ALERT_TYPES } from '@constants';
+import { useGlobalAlertContext } from '@contexts';
 
 export default function AskGurudev() {
+  const { showAlert } = useGlobalAlertContext();
   const [query, setQuery] = useQueryString('query');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  const [incorrectResponse, setIncorrectResponse] = useState(false);
-  const [results, setResults] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('Anger');
+  const [selectedPageIndex, setSelectedPageIndex] = useState(0);
+  const [searchResult, setSearchResult] = useState({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const elementRef = useRef(null);
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: 'yt-playlist',
-    queryFn: async () => {
-      const result = await youtube.getPlaylistDetails(PLAYLIST_ID);
-      return result;
-    },
-  });
+  const selectedQueryResponse = useMemo(() => {
+    return searchResult?.matches?.[selectedPageIndex];
+  }, [searchResult, selectedPageIndex]);
+
+  // const { data, isLoading, isError, error } = useQuery({
+  //   queryKey: 'yt-playlist',
+  //   queryFn: async () => {
+  //     const result = await youtube.getPlaylistDetails(PLAYLIST_ID);
+  //     return result;
+  //   },
+  // });
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -39,7 +53,7 @@ export default function AskGurudev() {
     () => {
       setDebouncedQuery(query);
     },
-    2000,
+    1000,
     [query],
   );
 
@@ -47,11 +61,11 @@ export default function AskGurudev() {
     const getApiData = async (query) => {
       setLoading(true);
       try {
-        const apiUrl = `https://aolf-ask-gurudev-41c0d69b7bde.herokuapp.com/search?query=${query}`;
+        const apiUrl = `https://askgurudev.me/search/?question=${query}`;
         const response = await fetch(apiUrl);
         const result = await response.json();
-        setResults(result.searchResults);
-        setIncorrectResponse(result.showBetterSearchMessage);
+        setSearchResult(result);
+        setSelectedPageIndex(0);
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -77,13 +91,21 @@ export default function AskGurudev() {
   }, [router.query]);
 
   useEffect(() => {
+    if (elementRef.current) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  }, [selectedQueryResponse]);
+
+  useEffect(() => {
     const handleEnterKey = (event) => {
       if (event.key === 'Enter') {
         event.preventDefault(); // Prevent form submission
         // Perform your search or other action here
       }
     };
-
     document.addEventListener('keydown', handleEnterKey);
 
     return () => {
@@ -91,16 +113,73 @@ export default function AskGurudev() {
     };
   }, []);
 
-  const isEmpty = results && !results.length;
+  const handleVoteSelect = async (isUpvoteSelected) => {
+    const rating = isUpvoteSelected ? 1 : -1;
+    try {
+      const apiUrl = `https://askgurudev.me/feedback/?hash=${searchResult.hash}&rating=${rating}&sample=${selectedPageIndex}`;
+      const response = await fetch(apiUrl);
+      const result = await response.json();
+      showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+        children: 'Your feedback submitted successfully',
+      });
+    } catch (error) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: 'we had a trouble submitting feeback, please try again later',
+      });
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isEmpty = searchResult?.matches && !searchResult?.matches.length;
+  const currentMeta = selectedQueryResponse?.meta;
+
+  const EmptyResults = () => {
+    return (
+      <div className="emptyResults">
+        <h5>
+          Sorry, there is a limited set of topics we can help with and we may
+          not be able to answer this question. Try something else?
+        </h5>
+      </div>
+    );
+  };
+
+  const CustomMessage = () => {
+    const message = getErrorMessagesForMeta();
+    return (
+      <div className="emptyResults">
+        <p dangerouslySetInnerHTML={{ __html: message }} />
+      </div>
+    );
+  };
+
+  const getErrorMessagesForMeta = () => {
+    switch (currentMeta) {
+      case 'error':
+        return "Hi friend :) Thanks for trying the beta version of AskGurudev, but something unexpected happened. Please try again later and see Gurudev's <a href='https://www.instagram.com/gurudev'>instagram</a> for wisdom!";
+      case 'llm out of scope':
+      case 'filtered honeypot':
+      case 'above threshold':
+      case 'filtered stop word':
+        return 'Sorry, there is a limited set of topics we can help with and we may not be able to answer this question. Try something else?';
+      case 'suicide':
+        return "Hi there, Below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message 408-759-1301.";
+      default:
+        return '';
+    }
+  };
 
   return (
     <main className="ask-gurudev-page">
       <section className="ask-gurudev-top">
         <div className="container">
           <h1 className="page-title">Ask Gurudev</h1>
-          <div className="page-description">
-            Ask any question and instantly receive Gurudev's wisdom and insight!
-          </div>
+          <CategoryTabs
+            setSelectedCategory={setSelectedCategory}
+            selectedCategory={selectedCategory}
+          />
         </div>
       </section>
       <SearchOptions
@@ -109,25 +188,31 @@ export default function AskGurudev() {
         setDebouncedQuery={setDebouncedQuery}
         query={query}
         isLoading={loading}
-        setResults={setResults}
+        setSearchResult={setSearchResult}
+        selectedCategory={selectedCategory}
       />
 
-      <div className="homePage">
-        <div className="body">
-          <SearchResults
-            setQuery={setQuery}
-            setDebouncedQuery={setDebouncedQuery}
-            isEmpty={isEmpty}
-            debouncedQuery={debouncedQuery}
-            error={false}
-            isLoading={loading}
-            results={results}
-            query={query}
-            incorrectResponse={incorrectResponse}
-            defaultVideos={data?.all || []}
-          />
+      <section className="search-results-area" ref={elementRef}>
+        <div className="container">
+          <div className="tab-content categories-tab-content" id="nav-anger">
+            {isEmpty && debouncedQuery && !loading && <EmptyResults />}
+            {<CustomMessage />}
+            {loading && <Loader />}
+            <SearchResultsList
+              result={selectedQueryResponse || {}}
+              debouncedQuery={debouncedQuery}
+            />
+          </div>
+          {selectedQueryResponse && (
+            <Footer
+              results={searchResult?.matches}
+              handleVoteSelect={handleVoteSelect}
+              setSelectedPageIndex={setSelectedPageIndex}
+              selectedPageIndex={selectedPageIndex}
+            />
+          )}
         </div>
-      </div>
+      </section>
     </main>
   );
 }

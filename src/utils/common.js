@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { COURSE_TYPES } from '@constants';
 import dayjs from 'dayjs';
 
@@ -333,4 +334,188 @@ export const truncateString = (str) => {
   }
 
   return str;
+};
+
+export const extractVideoId = (url) => {
+  const regex =
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
+
+/**
+ * Tests provided UserAgent against Known Mobile User Agents
+ * @returns {bool} isMobileDevice
+ */
+export const isMobile = () =>
+  new RegExp('Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile').test(
+    window.navigator.userAgent || window.navigator.vendor || window.opera,
+  );
+
+export const askGurudevQuestions = () => {
+  return [
+    {
+      name: 'Anger',
+      questions: [
+        'How to overcome frustration?',
+        'How to handle anger?',
+        'What can you do when anger rises in you?',
+        'Why should you make your anger expensive?',
+        'What are practical tips to control anger?',
+      ],
+    },
+    {
+      name: 'Anxiety',
+      questions: [
+        'How to get over anxiety?',
+        'Does meditation help reduce anxiety?',
+        'How do you navigate turbulent times in life?',
+        'What are practical tips to manage stress and anxiety?',
+        'How to clear your mind of negative thoughts?',
+      ],
+    },
+    {
+      name: 'Death',
+      questions: [
+        'What happens at the time of death?',
+        'What is reincarnation?',
+        'How to overcome the fear of death?',
+        'What happens after death?',
+        'How to cope with the fear of losing the people you love?',
+      ],
+    },
+    {
+      name: 'Desire',
+      questions: [
+        "What's the secret to manifesting desires?",
+        'How to manage your desires?',
+        'What happens when you take your mind away from the little desires and thoughts that disturb you?',
+        'Should you have desires?',
+        "Why 90% of our desires don't get fulfilled?",
+      ],
+    },
+    {
+      name: 'Devotion',
+      questions: [
+        'What is the power of prayer?',
+        'What is Guru Purnima?',
+        'What is the Guru principle?',
+        'What is the significance of chanting mantras?',
+        'What is seva?',
+        'How should you pray to God?',
+        'How to balance material and spiritual ambitions?',
+      ],
+    },
+    {
+      name: 'Divine',
+      questions: [
+        'What is Guru Tattva?',
+        'What is a Guru?',
+        'Why do you need a Guru in your life?',
+        'Where is the divine?',
+        'What is divine love?',
+        'What makes a great teacher?',
+      ],
+    },
+    {
+      name: 'Emotions',
+      questions: [
+        'How to handle negative emotions?',
+        'How to not let things bother you?',
+        'How to keep an open mind?',
+        'How to be free from the storm of emotions?',
+        'How to get rid of unwanted thoughts?',
+      ],
+    },
+    {
+      name: 'Failure',
+      questions: [
+        'How do you overcome the fear of failure?',
+        'How to succeed after many failures?',
+        'How can you become professionally successful?',
+        'Why is it important to embrace failure?',
+        'How to deal with setbacks in life?',
+      ],
+    },
+    {
+      name: 'Life',
+      questions: [
+        'What is the purpose of life?',
+        'How to lead a fulfilling life?',
+        'How to find inner peace?',
+        'What is the key to happiness?',
+        'How to live a balanced life?',
+      ],
+    },
+    {
+      name: 'Love',
+      questions: [
+        'What is love?',
+        'Why do we run away from love?',
+        'How to increase self-love?',
+        'Why do we fall in love?',
+        'Why do people make mistakes if they are full of love?',
+        'Why does love cease to exist after marriage?',
+        'What happens when you find it difficult to attain what you are attracted to?',
+        'What is the difference between love and lust?',
+      ],
+    },
+    {
+      name: 'Meditation',
+      questions: [
+        'What is meditation?',
+        'What is enlightenment?',
+        'How can you meditate?',
+        'What are the benefits of yoga?',
+        'How to quiet the mind during meditation?',
+      ],
+    },
+    {
+      name: 'Mind',
+      questions: [
+        'How to overcome guilt?',
+        'What are the natural tendencies of the mind?',
+        'What is monkey mind?',
+        'How to live in the present moment?',
+        'How to have dispassion in life?',
+        'How to balance the mind?',
+        'What are the modes of the mind?',
+        'How to calm the mind and feel happy from within?',
+        'How to overcome suffering?',
+        'What is bondage?',
+      ],
+    },
+    {
+      name: 'Relationships',
+      questions: [
+        'How do you find your life partner?',
+        'How to overcome the fear of commitment?',
+        'How to build a healthy relationship?',
+        'What are the golden rules for a successful marriage?',
+        'How to be detached from relationships?',
+        'How to know if this is the right relationship or person for me?',
+        'How to mend a broken heart?',
+      ],
+    },
+    {
+      name: 'Self',
+      questions: [
+        'What is our true nature?',
+        'How to accept people and situations as they are?',
+        'How to increase self-confidence?',
+        'How does the ego work?',
+        'How to get rid of the ego?',
+      ],
+    },
+    {
+      name: 'Surrender',
+      questions: [
+        'How can you drop the past and move forward?',
+        'How can you get rid of attachments?',
+        'What is the art of letting go?',
+        'What does it mean to become hollow and empty?',
+        'How to surrender your desires to the divine?',
+      ],
+    },
+  ];
 };

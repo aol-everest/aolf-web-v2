@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
-import { truncateString } from '@utils';
+import { extractVideoId } from '@utils';
 
 export const VideoItemComp = (props) => {
-  const {
-    videoId,
-    thumbnailUrl,
-    videoTitle,
-    playingId,
-    onPlayAction,
-    startSec = 0,
-  } = props;
-  const [isInitialPlaying, setInitialPlaying] = useState(false);
-  const [isReady, setReady] = useState(false);
+  const { video, playingId, onPlayAction } = props;
+  // const [isInitialPlaying, setInitialPlaying] = useState(false);
+  // const [isReady, setReady] = useState(false);
   const [player, setPlayer] = useState(null);
-  const [playerState, setPlayerState] = useState(null);
+  // const [playerState, setPlayerState] = useState(null);
   const opts = {
-    height: '560',
-    width: '315',
+    height: '100%',
+    width: '100%',
     playerVars: {
       version: 3,
       controls: 1,
@@ -31,12 +24,14 @@ export const VideoItemComp = (props) => {
       playsinline: 1,
       iv_load_policy: 3,
       listType: 'playlist',
-      start: Math.round(parseFloat(startSec)),
+      start: 0,
     },
   };
+
+  const videoId = extractVideoId(video);
   const onReady = (event) => {
     setPlayer(event.target);
-    setReady(true);
+    // setReady(true);
   };
 
   const playVideo = () => {
@@ -53,18 +48,18 @@ export const VideoItemComp = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (player) {
-      if (playingId === videoId) {
-        playVideo();
-      } else {
-        player.pauseVideo();
-      }
-    }
-  }, [playingId, player]);
+  // useEffect(() => {
+  //   if (player) {
+  //     if (playingId === videoId) {
+  //       playVideo();
+  //     } else {
+  //       player.pauseVideo();
+  //     }
+  //   }
+  // }, [playingId, player]);
 
   const onPlay = async (e) => {
-    setInitialPlaying(true);
+    // setInitialPlaying(true);
     if (playingId !== videoId) {
       onPlayAction(videoId);
     }
@@ -81,52 +76,16 @@ export const VideoItemComp = (props) => {
     }
   };
 
-  const onStateChange = (event) => {
-    setPlayerState(event.data);
-  };
-
-  const showLoader = () => {
-    return (
-      !isReady ||
-      (playerState &&
-        playerState !== YouTube.PlayerState.PLAYING &&
-        playerState !== YouTube.PlayerState.PAUSED &&
-        playerState !== YouTube.PlayerState.ENDED)
-    );
-  };
-
   return (
-    <div className="featured-video-item">
-      <div className="video-thumb" onClick={watchAction}>
-        {showLoader() && (
-          <div className="loader-container">
-            <div className="loader"></div>
-          </div>
-        )}
-        {playerState !== YouTube.PlayerState.PLAYING &&
-          playerState !== YouTube.PlayerState.PAUSED &&
-          playerState !== YouTube.PlayerState.ENDED && (
-            <div className="loader-container">
-              <div className="youtubeButton" />
-            </div>
-          )}
-
-        <img
-          style={{ display: isInitialPlaying ? 'none' : 'block' }}
-          src={thumbnailUrl}
-          className="thumbnail"
-          alt="YouTube"
-        />
-        <YouTube
-          videoId={videoId}
-          title={videoTitle}
-          loading="loading"
-          opts={opts}
-          onReady={onReady}
-          onPlay={onPlay}
-          onStateChange={onStateChange}
-        />
-      </div>
+    <div onClick={watchAction}>
+      <YouTube
+        videoId={videoId}
+        loading="loading"
+        opts={opts}
+        onReady={onReady}
+        onPlay={onPlay}
+        className="youtube-iframe"
+      />
     </div>
   );
 };
@@ -135,38 +94,66 @@ const SearchResult = React.forwardRef(function SearchResult(
   { result, setPlayingId, playingId },
   ref,
 ) {
-  const thumbnailUrl = result.metadata.thumbnail;
-  const updatedTitle = truncateString(result.metadata.text);
-
+  const [showToast, setShowToast] = useState(false);
   const onPlayAction = (id) => {
     setPlayingId(id);
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(result.content)
+      .then(() => {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000); // Reset the copied state after 2 seconds
+      })
+      .catch((err) => {
+        console.error('Failed to copy text: ', err);
+      });
+  };
+
+  const getFormattedText = () => {
+    return result?.content?.replace(/\n/g, '<br />');
+  };
+
   return (
     <motion.div
-      className={['searchResult']}
+      // className={['searchResult']}
       initial={{ scale: 0, translateY: -50 }}
       animate={{ scale: 1, translateY: 0 }}
       exit={{ scale: 0, translateY: 50 }}
       ref={ref}
     >
-      <main className="ask-gurudev-video-item podcasts">
-        <section className="video-text">
-          <div className="video-text">
-            <p>{updatedTitle}</p>
-          </div>
-          <div className="video-player-wrap">
+      {result?.category?.startsWith('video') ? (
+        <div
+          className="tab-pane"
+          id="nav-anxiety"
+          role="tabpanel"
+          aria-labelledby="nav-anxiety-tab"
+        >
+          <div className="tab-content-video">
             <VideoItemComp
-              videoId={result.metadata.videoId}
-              videoTitle={result.metadata.title}
-              thumbnailUrl={thumbnailUrl}
+              video={result.source}
               onPlayAction={onPlayAction}
               playingId={playingId}
-              startSec={result.metadata?.start}
+              className="youtube-iframe"
             ></VideoItemComp>
           </div>
-        </section>
-      </main>
+        </div>
+      ) : (
+        result.content && (
+          <div className="tab-pane active" id="nav-anger" role="tabpanel">
+            <div className="tab-content-text">
+              <p dangerouslySetInnerHTML={{ __html: getFormattedText() }} />
+            </div>
+            <div className="tab-content-action">
+              <button className="tc-action-btn" onClick={copyToClipboard}>
+                <span className="icon-aol iconaol-copy"></span>
+              </button>
+            </div>
+          </div>
+        )
+      )}
+      {showToast && <div className="toast">Text copied!</div>}
     </motion.div>
   );
 });
