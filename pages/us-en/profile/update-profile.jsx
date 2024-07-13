@@ -3,7 +3,6 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { ALERT_TYPES } from '@constants';
 import { withAuth, withUserInfo } from '@hoc';
-import { useRouter } from 'next/router';
 
 const ChangeProfile = dynamic(() =>
   import('@components/profile').then((mod) => mod.ChangeProfile),
@@ -11,7 +10,6 @@ const ChangeProfile = dynamic(() =>
 
 const UpdateProfile = ({ setLoading }) => {
   const { showAlert } = useGlobalAlertContext();
-  const router = useRouter();
   const { fetchCurrentUser, profile } = useAuth();
 
   const updateCompleteAction = async ({
