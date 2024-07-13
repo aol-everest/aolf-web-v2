@@ -25,6 +25,9 @@ const UpdateProfile = ({ setLoading }) => {
       setLoading(true);
       await fetchCurrentUser();
       setLoading(false);
+      showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+        children: 'Your profile has been updated successfully',
+      });
     }
   };
 

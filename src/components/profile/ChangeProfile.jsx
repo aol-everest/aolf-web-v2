@@ -27,7 +27,13 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
   const allowEmailEdit = profile?.cognito?.UserStatus !== 'EXTERNAL_PROVIDER';
 
   const submitAction = async (values) => {
-    const { contactPhone, contactAddress, contactState, contactZip } = values;
+    const {
+      contactPhone,
+      contactAddress,
+      contactState,
+      contactZip,
+      contactCity,
+    } = values;
     setLoading(true);
     try {
       const { status, error: errorMessage } = await api.post({
@@ -37,6 +43,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
           contactAddress,
           contactState,
           contactZip,
+          contactCity,
         },
       });
 
@@ -236,6 +243,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
     personMailingState,
     personMobilePhone,
     personMailingStreet,
+    personMailingCity,
     email,
     isStudentVerified,
     studentVerificationDate,
@@ -259,6 +267,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
     contactPhone: personMobilePhone || '',
     contactAddress: personMailingStreet || '',
     contactState: personMailingState || '',
+    contactCity: personMailingCity || '',
     contactZip: personMailingPostalCode || '',
     email: email,
   };
@@ -275,6 +284,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
             .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().trim().required('Address is required'),
           contactState: Yup.string().required('State is required'),
+          contactCity: Yup.string().required('City is required'),
           contactZip: Yup.string()
             .required('Zip is required!')
             .matches(/^[0-9]+$/, { message: 'Zip is invalid' })
@@ -282,8 +292,9 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
             .max(10, 'Zip is invalid'),
           email: Yup.string().required('Email is required').email(),
         })}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setValues }) => {
           await submitAction(values);
+          setValues(initalValue);
         }}
       >
         {(props) => {
@@ -309,12 +320,20 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   label="Last Name"
                 ></StyledInputNewCheckout>
                 <StyledInputNewCheckout
-                  className={'form-item col-1-1'}
+                  className={'form-item col-1-2'}
                   placeholder="Street address"
                   formikProps={props}
                   formikKey="contactAddress"
                   fullWidth
                   label="Street address"
+                ></StyledInputNewCheckout>
+                <StyledInputNewCheckout
+                  className={'form-item col-1-2'}
+                  placeholder="City"
+                  formikProps={props}
+                  formikKey="contactCity"
+                  fullWidth
+                  label="City"
                 ></StyledInputNewCheckout>
                 <DropdownNewCheckout
                   placeholder="State"
