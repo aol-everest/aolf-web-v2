@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Footer = ({
+const Footer = ({
   results,
   handleVoteSelect,
   setSelectedPageIndex,
@@ -78,3 +78,5 @@ export const Footer = ({
     </div>
   );
 };
+
+export default Footer;

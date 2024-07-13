@@ -11,7 +11,7 @@ import CategoryTabs from './CategoryTabs';
 import { useDebounce } from 'react-use';
 import { useRouter } from 'next/router';
 import { useQueryString } from '@hooks';
-import { Footer } from './Footer';
+import Footer from './Footer';
 import SearchResultsList from './SearchResultsList/SearchResultsList';
 import { Loader } from '@components/loader';
 import { ALERT_TYPES } from '@constants';
