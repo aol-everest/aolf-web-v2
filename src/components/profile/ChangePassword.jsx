@@ -64,7 +64,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
             .min(8, 'Must Contain 8 Characters')
             .notOneOf(
               [Yup.ref('oldPassword')],
-              'New password cannot be the same as the old password',
+              'New password cannot be the same as the existing password',
             ),
           passwordConfirmation: Yup.string()
             .required('Password is required')

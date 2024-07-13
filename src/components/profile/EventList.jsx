@@ -392,38 +392,37 @@ export const EventList = ({ isPreferredCenter, workshops }) => {
               )}
             </div>
 
-            <div className="course-location">
-              {isWorkshop ? (
-                <>
-                  {mode !== 'Online' && locationCity && (
-                    <div className="course-location">
-                      {concatenateStrings([
-                        locationStreet,
-                        locationCity,
-                        locationProvince,
-                        locationPostalCode,
-                      ])}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  {isOnlineMeetup ? (
-                    'Live Streaming from' + ' ' + centerName
-                  ) : (
-                    <>
-                      {locationCity
-                        ? concatenateStrings([
-                            locationCity,
-                            locationProvince,
-                            locationPostalCode,
-                          ])
-                        : centerName}
-                    </>
-                  )}
-                </>
-              )}
-            </div>
+            {isWorkshop ? (
+              <>
+                {mode !== 'Online' && locationCity && (
+                  <div className="course-location">
+                    {concatenateStrings([
+                      locationStreet,
+                      locationCity,
+                      locationProvince,
+                      locationPostalCode,
+                    ])}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="course-location">
+                {isOnlineMeetup ? (
+                  'Live Streaming from' + ' ' + centerName
+                ) : (
+                  <>
+                    {locationCity
+                      ? concatenateStrings([
+                          locationCity,
+                          locationProvince,
+                          locationPostalCode,
+                        ])
+                      : centerName}
+                  </>
+                )}
+              </div>
+            )}
+
             <div className="course-instructors">
               {concatenateStrings([primaryTeacherName, coTeacher1Name])}
             </div>
