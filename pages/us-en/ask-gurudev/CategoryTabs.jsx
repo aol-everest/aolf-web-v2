@@ -32,7 +32,7 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
   };
 
   return (
-    <nav class="category-tabs-wrap swiper tabSwiper">
+    <nav className="category-tabs-wrap swiper tabSwiper">
       <Swiper
         ref={swiperRef}
         modules={[Navigation, Scrollbar, A11y, Pagination]}

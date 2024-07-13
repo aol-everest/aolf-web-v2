@@ -11,8 +11,6 @@ export const Footer = ({
     (_, index) => index,
   );
 
-  console.log('selectedPageIndex', selectedPageIndex);
-
   return (
     <div className="answer-bottom-area">
       <div className="vote-up-down">

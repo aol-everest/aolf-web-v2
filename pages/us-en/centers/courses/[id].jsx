@@ -1005,11 +1005,11 @@ const Course = ({ centerDetail }) => {
   };
 
   return (
-    <div id="tab1" class="tab-content">
+    <div id="tab1" className="tab-content">
       <NextSeo
         defaultTitle={`${centerDetail.centerName} - Course Dates and Registration`}
       />
-      <div class="course-tab-content-wrap">
+      <div className="course-tab-content-wrap">
         <div className="course-filter-wrap">
           <div
             id="courses-filters"

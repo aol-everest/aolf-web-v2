@@ -194,7 +194,7 @@ export default function AskGurudev() {
 
       <section className="search-results-area" ref={elementRef}>
         <div className="container">
-          <div class="tab-content categories-tab-content" id="nav-anger">
+          <div className="tab-content categories-tab-content" id="nav-anger">
             {isEmpty && debouncedQuery && !loading && <EmptyResults />}
             {<CustomMessage />}
             {loading && <Loader />}

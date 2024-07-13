@@ -94,8 +94,25 @@ const SearchResult = React.forwardRef(function SearchResult(
   { result, setPlayingId, playingId },
   ref,
 ) {
+  const [showToast, setShowToast] = useState(false);
   const onPlayAction = (id) => {
     setPlayingId(id);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(result.content)
+      .then(() => {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000); // Reset the copied state after 2 seconds
+      })
+      .catch((err) => {
+        console.error('Failed to copy text: ', err);
+      });
+  };
+
+  const getFormattedText = () => {
+    return result?.content?.replace(/\n/g, '<br />');
   };
 
   return (
@@ -108,12 +125,12 @@ const SearchResult = React.forwardRef(function SearchResult(
     >
       {result?.category?.startsWith('video') ? (
         <div
-          class="tab-pane"
+          className="tab-pane"
           id="nav-anxiety"
           role="tabpanel"
           aria-labelledby="nav-anxiety-tab"
         >
-          <div class="tab-content-video">
+          <div className="tab-content-video">
             <VideoItemComp
               video={result.source}
               onPlayAction={onPlayAction}
@@ -124,18 +141,19 @@ const SearchResult = React.forwardRef(function SearchResult(
         </div>
       ) : (
         result.content && (
-          <div class="tab-pane active" id="nav-anger" role="tabpanel">
-            <div class="tab-content-text">
-              <p>{result.content}</p>
+          <div className="tab-pane active" id="nav-anger" role="tabpanel">
+            <div className="tab-content-text">
+              <p dangerouslySetInnerHTML={{ __html: getFormattedText() }} />
             </div>
-            <div class="tab-content-action">
-              <button class="tc-action-btn">
-                <span class="icon-aol iconaol-copy"></span>
+            <div className="tab-content-action">
+              <button className="tc-action-btn" onClick={copyToClipboard}>
+                <span className="icon-aol iconaol-copy"></span>
               </button>
             </div>
           </div>
         )
       )}
+      {showToast && <div className="toast">Text copied!</div>}
     </motion.div>
   );
 });
