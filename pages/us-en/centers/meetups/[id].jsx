@@ -38,7 +38,7 @@ import dynamic from 'next/dynamic';
 import { navigateToLogin } from '@utils';
 import { NextSeo } from 'next-seo';
 import { SmartInput, SmartDropDown, Popup } from '@components';
-import { MobileFilterModal } from '@components/filterComps/MobileFilterModal';
+import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
 import { filterAllowedParams } from '@utils/utmParam';
 import { MeetupEnroll } from '@components/meetup/meetupEnroll';
 

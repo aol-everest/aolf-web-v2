@@ -36,7 +36,7 @@ import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import dynamic from 'next/dynamic';
 import { SmartInput, SmartDropDown, Popup } from '@components';
-import { MobileFilterModal } from '@components/filterComps/MobileFilterModal';
+import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
