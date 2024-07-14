@@ -17,14 +17,13 @@ import { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { DropdownNewCheckout } from '@components/checkout/DropdownNewCheckout';
 import { Loader } from '@components';
+import { ChangeEmail } from '@components/profile';
 
 export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
   const router = useRouter();
   const description = useRef('');
-
-  const allowEmailEdit = profile?.cognito?.UserStatus !== 'EXTERNAL_PROVIDER';
 
   const submitAction = async (values) => {
     const {
@@ -236,6 +235,22 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
     });
   };
 
+  const allowEmailEdit = profile.cognito.UserStatus !== 'EXTERNAL_PROVIDER';
+
+  const editEmailAction = (e) => {
+    if (e) e.preventDefault();
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      children: (handleModalToggle) => {
+        return (
+          <ChangeEmail
+            closeDetailAction={handleModalToggle}
+            existingEmail={profile.email}
+          />
+        );
+      },
+    });
+  };
+
   const {
     first_name,
     last_name,
@@ -366,6 +381,10 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   onPaste={(event) => {
                     event.preventDefault();
                   }}
+                  onChange={(event) => {
+                    event.preventDefault();
+                  }}
+                  onClick={allowEmailEdit ? editEmailAction : null}
                   label="Email address"
                 ></StyledInputNewCheckout>
 
@@ -401,6 +420,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   </button>
                 )}
                 <button
+                  type="button"
                   className="secondary-btn"
                   onClick={() => setValues(initalValue)}
                 >
