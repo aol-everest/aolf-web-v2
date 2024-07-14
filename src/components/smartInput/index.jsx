@@ -4,7 +4,7 @@ import { useState } from 'react';
 export const SmartInput = ({
   dataList,
   containerClass = 'smart-input',
-  inputclassName = '',
+  inputClassName = '',
   placeholder = 'Search',
   closeHandler,
   onSearchKeyChange,
@@ -37,7 +37,7 @@ export const SmartInput = ({
       <input
         placeholder={placeholder}
         type="text"
-        className={classNames('custom-input', inputclassName)}
+        className={classNames('custom-input', inputClassName)}
         value={searchKey}
         onChange={handleChange}
       />
