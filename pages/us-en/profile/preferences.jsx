@@ -198,6 +198,10 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
     );
   };
 
+  const allCentersFiltered = (allCenters || []).filter((center) => {
+    return !oldPreference.some((pc) => pc.locationId === center.sfid);
+  });
+
   return (
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
@@ -295,8 +299,8 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
             {(isLoading || loading) && renderLoader()}
             {!isLoading &&
               !loading &&
-              allCenters &&
-              allCenters.map((center) => {
+              allCentersFiltered &&
+              allCentersFiltered.map((center) => {
                 const isSelected =
                   (selectedCenter || []).indexOf(center.sfid) >= 0;
                 return (
