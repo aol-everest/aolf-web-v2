@@ -299,7 +299,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
             .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().trim().required('Address is required'),
           contactState: Yup.string().required('State is required'),
-          contactCity: Yup.string().required('City is required'),
+          contactCity: Yup.string().trim().required('City is required'),
           contactZip: Yup.string()
             .required('Zip is required!')
             .matches(/^[0-9]+$/, { message: 'Zip is invalid' })
