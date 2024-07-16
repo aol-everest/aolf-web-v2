@@ -57,6 +57,12 @@ const SearchOptions = ({
     return shuffledQuestions?.slice(0, 3);
   }, [shuffledQuestions]);
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      onChangeQuery(localQuery); // Trigger search action on Enter key press
+    }
+  };
+
   return (
     <form onSubmit={onSubmit}>
       <section className="ask-gurudev-main-search">
@@ -85,9 +91,10 @@ const SearchOptions = ({
                 disabled={isLoading}
                 value={localQuery}
                 onChange={onSearchChangeQuery}
-                autoComplete={false}
+                autoComplete="off"
                 ref={queryInputRef}
                 className={`${localQuery ? 'input has-value' : ''}`}
+                onKeyDown={handleKeyPress} // Call handleKeyPress on key down
               />
               <button
                 className="search-button"
