@@ -344,6 +344,7 @@ const Course = ({ centerDetail }) => {
           courseModeFilter,
           onlyWeekend,
           cityFilter,
+          centerDetail: centerDetail.sfid,
         },
       ],
       queryFn: async ({ pageParam = 1 }) => {

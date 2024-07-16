@@ -57,12 +57,14 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
   return response;
 };
 
-const fillDefaultTimeZone = () => {
-  const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
-  if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
-    return userTimeZoneAbbreviation.toUpperCase();
-  }
-  return null;
+const queryCenter = async ({ queryKey: [_, term] }) => {
+  const response = await api.get({
+    path: 'getAllCenters',
+    param: {
+      query: term,
+    },
+  });
+  return response;
 };
 
 const parseAsStartEndDate = createParser({
@@ -227,7 +229,6 @@ const EventTile = ({ data, isAuthenticated }) => {
           ])}
         </div>
       )}
-      <div class="course-date">Mon, May 13, 2024 - Mon, May 13, 2024</div>
       <div class="course-date">{getCourseDeration()}</div>
       {timings?.length > 0 &&
         timings.map((time, i) => {
@@ -266,16 +267,14 @@ const Event = ({ centerDetail }) => {
 
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [ctypeFilter] = useQueryState('ctype');
-  const [locationFilter, setLocationFilter] = useQueryState(
-    'location',
-    parseAsJson(),
-  );
+
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
     parseAsStartEndDate,
   );
 
   const [searchKey, setSearchKey] = useState('');
+  const [centerSearchKey, setCenterSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
@@ -284,10 +283,10 @@ const Event = ({ centerDetail }) => {
         queryKey: [
           'ticketedEvents',
           {
-            locationFilter,
             ctypeFilter,
             filterStartEndDate,
             courseModeFilter,
+            centerDetail: centerDetail.sfid,
           },
         ],
         queryFn: async ({ pageParam = 1 }) => {
@@ -316,14 +315,6 @@ const Event = ({ centerDetail }) => {
               ...param,
               sdate: startDate,
               edate: endDate,
-            };
-          }
-          if (locationFilter) {
-            const { lat, lng } = locationFilter;
-            param = {
-              ...param,
-              lat,
-              lng,
             };
           }
 
@@ -362,6 +353,15 @@ const Event = ({ centerDetail }) => {
     staleTime: 10 * 1000,
   });
 
+  let centerResult = useQuery({
+    queryKey: ['centers', centerSearchKey],
+    queryFn: queryCenter,
+    // only fetch search terms longer than 2 characters
+    enabled: centerSearchKey.length > 0,
+    // refresh cache after 10 seconds (watch the network tab!)
+    staleTime: 10 * 1000,
+  });
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -381,8 +381,14 @@ const Event = ({ centerDetail }) => {
 
   const onClearAllFilter = () => {
     setCourseModeFilter(null);
-    setLocationFilter(null);
     setFilterStartEndDate(null);
+  };
+
+  const centerChangeHandler = (center) => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/events/${center.value}`,
+      query: { u: 'true' },
+    });
   };
 
   const onFilterChange = (field) => async (value) => {
@@ -392,13 +398,6 @@ const Event = ({ centerDetail }) => {
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
-        break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
         break;
     }
   };
@@ -412,9 +411,6 @@ const Event = ({ centerDetail }) => {
       case 'courseModeFilter':
         setCourseModeFilter(null);
         break;
-      case 'locationFilter':
-        setLocationFilter(null);
-        break;
     }
   };
 
@@ -426,13 +422,6 @@ const Event = ({ centerDetail }) => {
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
-        break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
         break;
     }
   };
@@ -451,9 +440,7 @@ const Event = ({ centerDetail }) => {
   };
 
   let filterCount = 0;
-  if (locationFilter) {
-    filterCount++;
-  }
+
   if (courseModeFilter) {
     filterCount++;
   }
@@ -466,6 +453,12 @@ const Event = ({ centerDetail }) => {
     label: name,
   }));
   instructorList = (instructorList || []).slice(0, 5);
+
+  let centerList = centerResult?.data?.data?.map(({ sfid, centerName }) => ({
+    value: sfid,
+    label: centerName,
+  }));
+  centerList = (centerList || []).slice(0, 5);
 
   const filterStartEndDateStr =
     filterStartEndDate &&
@@ -530,18 +523,19 @@ const Event = ({ centerDetail }) => {
             <button className="filter-save-button">Save Changes</button>
             <Popup
               tabIndex="1"
-              value={locationFilter}
-              buttonText={
-                locationFilter ? `${locationFilter.locationName}` : null
-              }
-              closeEvent={onFilterChange('locationFilter')}
-              label="Location"
+              value={centerDetail ? centerDetail.centerName : null}
+              buttonText={centerDetail ? centerDetail.centerName : null}
+              closeEvent={centerChangeHandler}
+              label="Center"
+              hideClearOption
             >
               {({ closeHandler }) => (
-                <AddressSearch
+                <SmartInput
+                  onSearchKeyChange={(value) => setCenterSearchKey(value)}
+                  dataList={centerList}
                   closeHandler={closeHandler}
-                  placeholder="Search for Location"
-                />
+                  value={centerSearchKey}
+                ></SmartInput>
               )}
             </Popup>
             <Popup
@@ -553,7 +547,7 @@ const Event = ({ centerDetail }) => {
                   : null
               }
               closeEvent={onFilterChange('courseModeFilter')}
-              label="Course Format"
+              label="Event Format"
             >
               {({ closeHandler }) => (
                 <>
@@ -655,15 +649,6 @@ const Event = ({ centerDetail }) => {
               {showFilterModal && (
                 <div className="filter--box">
                   <div className="selected-filter-wrap">
-                    {locationFilter && (
-                      <div
-                        className="selected-filter-item"
-                        onClick={onFilterClearEvent('locationFilter')}
-                      >
-                        {locationFilter.locationName}
-                      </div>
-                    )}
-
                     {courseModeFilter && COURSE_MODES[courseModeFilter] && (
                       <div
                         className="selected-filter-item"
@@ -692,18 +677,6 @@ const Event = ({ centerDetail }) => {
                     )}
                   </div>
 
-                  <MobileFilterModal
-                    label="Location"
-                    value={
-                      locationFilter ? `${locationFilter.locationName}` : null
-                    }
-                    clearEvent={onFilterClearEvent('locationFilter')}
-                  >
-                    <AddressSearch
-                      closeHandler={onFilterChange('locationFilter')}
-                      placeholder="Search for Location"
-                    />
-                  </MobileFilterModal>
                   <MobileFilterModal
                     label="Course format"
                     value={
@@ -777,15 +750,6 @@ const Event = ({ centerDetail }) => {
         </div>
         <div className="course-listing">
           <div className="selected-filter-wrap">
-            {locationFilter && (
-              <div
-                className="selected-filter-item"
-                onClick={onFilterClearEvent('locationFilter')}
-              >
-                {locationFilter.locationName}
-              </div>
-            )}
-
             {courseModeFilter && COURSE_MODES[courseModeFilter] && (
               <div
                 className="selected-filter-item"
