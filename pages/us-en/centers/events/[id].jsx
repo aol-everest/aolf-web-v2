@@ -184,6 +184,19 @@ const EventTile = ({ data, isAuthenticated }) => {
     });
   };
 
+  const getCourseDeration = () => {
+    if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'day')) {
+      return <>{`${dayjs.utc(eventStartDate).format('ddd, MMM DD, YYYY')}`}</>;
+    }
+    return (
+      <>
+        {`${dayjs.utc(eventStartDate).format('ddd, MMM DD, YYYY')} - ${dayjs
+          .utc(eventEndDate)
+          .format('ddd, MMM DD, YYYY')}`}
+      </>
+    );
+  };
+
   return (
     <div
       className={classNames('course-item', {
@@ -215,12 +228,24 @@ const EventTile = ({ data, isAuthenticated }) => {
         </div>
       )}
       <div class="course-date">Mon, May 13, 2024 - Mon, May 13, 2024</div>
+      <div class="course-date">{getCourseDeration()}</div>
+      {timings?.length > 0 &&
+        timings.map((time, i) => {
+          return (
+            <div className="course-time" key={i}>
+              <span>{dayjs.utc(time.startDate).format('M/D dddd')}</span>
+              {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                ABBRS[time.timeZone]
+              }`}
+            </div>
+          );
+        })}
 
-      <div class="event-categories">
+      {/* <div class="event-categories">
         <div class="cat-item">Silver</div>
         <div class="cat-item">General</div>
         <div class="cat-item">General</div>
-      </div>
+      </div> */}
       <div class="course-actions">
         <button class="btn-secondary">Details</button>
         <button class="btn-primary">Register</button>
@@ -412,21 +437,6 @@ const Event = ({ centerDetail }) => {
     }
   };
 
-  const changeCourseType = (courseType) => {
-    const { slug, ...rest } = router.query;
-    router.push(
-      {
-        ...router,
-        query: {
-          slug: courseType.slug,
-          ...rest,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
-
   const onDatesChange = async (date) => {
     if (Array.isArray(date)) {
       setFilterStartEndDate(date);
@@ -511,7 +521,7 @@ const Event = ({ centerDetail }) => {
       <NextSeo
         defaultTitle={`${centerDetail.centerName} - Course Dates and Registration`}
       />
-      <div className="course-tab-content-wrap">
+      <div className="course-tab-content-wrap events">
         <div className="course-filter-wrap">
           <div
             id="courses-filters"

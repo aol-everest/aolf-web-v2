@@ -61,6 +61,16 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
   return response;
 };
 
+const queryCenter = async ({ queryKey: [_, term] }) => {
+  const response = await api.get({
+    path: 'getAllCenters',
+    param: {
+      query: term,
+    },
+  });
+  return response;
+};
+
 const fillDefaultTimeZone = () => {
   const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
@@ -450,6 +460,7 @@ const Meetup = ({ centerDetail }) => {
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
   const [searchKey, setSearchKey] = useState('');
+  const [centerSearchKey, setCenterSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const { data: allMeetupMaster = [] } = useQuery({
@@ -573,6 +584,15 @@ const Meetup = ({ centerDetail }) => {
     staleTime: 10 * 1000,
   });
 
+  let centerResult = useQuery({
+    queryKey: ['centers', centerSearchKey],
+    queryFn: queryCenter,
+    // only fetch search terms longer than 2 characters
+    enabled: centerSearchKey.length > 0,
+    // refresh cache after 10 seconds (watch the network tab!)
+    staleTime: 10 * 1000,
+  });
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -600,6 +620,13 @@ const Meetup = ({ centerDetail }) => {
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setMeetupTypeFilter(null);
+  };
+
+  const centerChangeHandler = (center) => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/courses/${center.value}`,
+      query: { u: 'true' },
+    });
   };
 
   const onFilterChange = (field) => async (value) => {
@@ -701,21 +728,6 @@ const Meetup = ({ centerDetail }) => {
     }
   };
 
-  const changeCourseType = (courseType) => {
-    const { slug, ...rest } = router.query;
-    router.push(
-      {
-        ...router,
-        query: {
-          slug: courseType.slug,
-          ...rest,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
-
   const onDatesChange = async (date) => {
     if (Array.isArray(date)) {
       setFilterStartEndDate(date);
@@ -754,6 +766,13 @@ const Meetup = ({ centerDetail }) => {
     label: name,
   }));
   instructorList = (instructorList || []).slice(0, 5);
+  console.log(centerResult);
+
+  let centerList = centerResult?.data?.data?.map(({ sfid, centerName }) => ({
+    value: sfid,
+    label: centerName,
+  }));
+  centerList = (centerList || []).slice(0, 5);
 
   const filterStartEndDateStr =
     filterStartEndDate &&
@@ -813,6 +832,23 @@ const Meetup = ({ centerDetail }) => {
           >
             <button className="filter-save-button">Save Changes</button>
             <Popup
+              tabIndex="1"
+              value={centerDetail ? centerDetail.centerName : null}
+              buttonText={centerDetail ? centerDetail.centerName : null}
+              closeEvent={centerChangeHandler}
+              label="Center"
+              hideClearOption
+            >
+              {({ closeHandler }) => (
+                <SmartInput
+                  onSearchKeyChange={(value) => setCenterSearchKey(value)}
+                  dataList={centerList}
+                  closeHandler={closeHandler}
+                  value={centerSearchKey}
+                ></SmartInput>
+              )}
+            </Popup>
+            <Popup
               tabIndex="2"
               value={COURSE_MODES[meetupModeFilter] && meetupModeFilter}
               buttonText={
@@ -837,23 +873,6 @@ const Meetup = ({ centerDetail }) => {
                     );
                   })}
                 </>
-              )}
-            </Popup>
-            <Popup
-              tabIndex="1"
-              value={locationFilter}
-              buttonText={
-                locationFilter ? `${locationFilter.locationName}` : null
-              }
-              closeEvent={onFilterChange('locationFilter')}
-              label="Location"
-              parentClassName="location"
-            >
-              {({ closeHandler }) => (
-                <AddressSearch
-                  closeHandler={closeHandler}
-                  placeholder="Search for Location"
-                />
               )}
             </Popup>
             <Popup

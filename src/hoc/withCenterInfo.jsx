@@ -30,6 +30,7 @@ export const withCenterInfo = (WrappedComponent) => {
   return function CenterInfo(props) {
     const router = useRouter();
     const { id } = router.query;
+    console.log(id);
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
     const COURSES_PAGE = `/us-en/centers/courses/${id}`;
@@ -42,7 +43,7 @@ export const withCenterInfo = (WrappedComponent) => {
       isError,
       error,
     } = useQuery({
-      queryKey: 'centerDetail',
+      queryKey: ['centerDetail', id],
       queryFn: async () => {
         const response = await getCenterDetailsApi(id);
         return response.data;
