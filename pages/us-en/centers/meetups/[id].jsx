@@ -789,7 +789,7 @@ const Meetup = ({ centerDetail }) => {
   return (
     <div id="tab1" className="tab-content">
       <NextSeo
-        defaultTitle={`${centerDetail.centerName} - Course Dates and Registration`}
+        defaultTitle={`${centerDetail.centerName} - Meetup Dates and Registration`}
       />
       <div className="course-tab-content-wrap meetup">
         <div className="course-filter-wrap">

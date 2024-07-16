@@ -512,7 +512,7 @@ const Event = ({ centerDetail }) => {
   return (
     <div id="tab1" className="tab-content">
       <NextSeo
-        defaultTitle={`${centerDetail.centerName} - Course Dates and Registration`}
+        defaultTitle={`${centerDetail.centerName} - Event Dates and Registration`}
       />
       <div className="course-tab-content-wrap events">
         <div className="course-filter-wrap">
