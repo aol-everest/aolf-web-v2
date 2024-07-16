@@ -1,6 +1,12 @@
 'use client';
 import { askGurudevQuestions } from '@utils';
-import React, { useCallback, useRef, useEffect, useMemo } from 'react';
+import React, {
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 const SearchOptions = ({
   query,
@@ -13,6 +19,7 @@ const SearchOptions = ({
 }) => {
   const queryInputRef = useRef(null);
   const questions = askGurudevQuestions();
+  const [localQuery, setLocalQuery] = useState(query);
 
   useEffect(() => {
     if (queryInputRef.current) {
@@ -31,12 +38,24 @@ const SearchOptions = ({
       setDebouncedQuery('');
       queryInputRef.current.value = '';
     }
-    onChangeQuery(event);
+    setLocalQuery(event.target.value);
   }, []);
+
+  const shuffleArray = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
 
   const selectedCategoryQuestions = useMemo(() => {
     return questions.find((item) => item.name === selectedCategory);
   }, [selectedCategory, questions]);
+
+  const shuffledQuestions = useMemo(() => {
+    return shuffleArray([...(selectedCategoryQuestions?.questions || [])]);
+  }, [selectedCategory]);
+
+  const randomQuestions = useMemo(() => {
+    return shuffledQuestions?.slice(0, 3);
+  }, [shuffledQuestions]);
 
   return (
     <form onSubmit={onSubmit}>
@@ -44,7 +63,7 @@ const SearchOptions = ({
         <div className="container">
           <div className="main-search-area">
             <div className="search-tags">
-              {selectedCategoryQuestions?.questions?.map((question, index) => {
+              {randomQuestions?.map((question, index) => {
                 return (
                   <div
                     key={index}
@@ -64,11 +83,18 @@ const SearchOptions = ({
                 name="query"
                 id="query"
                 disabled={isLoading}
-                value={query}
+                value={localQuery}
                 onChange={onSearchChangeQuery}
                 autoComplete={false}
                 ref={queryInputRef}
-                className={`${query ? 'input has-value' : ''}`}
+                className={`${localQuery ? 'input has-value' : ''}`}
+              />
+              <button
+                className="search-button"
+                onClick={localQuery ? () => onChangeQuery(localQuery) : null}
+                style={{
+                  backgroundImage: `url(/img/map-search-input-icon-2.svg)`,
+                }}
               />
             </div>
           </div>

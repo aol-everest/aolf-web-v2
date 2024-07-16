@@ -81,6 +81,9 @@
       font-size: 16px;
     }
   }
+  .disclaimer {
+    margin-bottom: 24px;
+  }
   .ask-gurudev-main-search {
     .main-search-area {
       display: flex;
@@ -90,6 +93,9 @@
     .search-input-box {
       display: flex;
       justify-content: center;
+      position: relative;
+
+      width: 100%;
       input {
         border: #f2cbab 1px solid;
         box-shadow: 0px 3px 23px 0px #95300014;
@@ -100,8 +106,6 @@
         font-weight: 500;
         padding: 0 68px 0 32px;
         max-width: 744px;
-        background: #fff url(/img/map-search-input-icon-2.svg) no-repeat
-          calc(100% - 32px) center;
         @media screen and (max-width: 991px) {
           background-position: calc(100% - 20px) center;
           background-size: 20px;
@@ -109,6 +113,28 @@
           font-size: 16px;
           font-weight: 400;
         }
+      }
+    }
+    .search-button {
+      position: absolute;
+      right: 17%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: none;
+      cursor: pointer;
+      height: 24px;
+      width: 64px;
+      background-size: contain;
+      background: transparent url(/img/map-search-input-icon-2.svg) no-repeat
+        center;
+    }
+
+    @media screen and (max-width: 991px) {
+      .search-button {
+        right: 20px;
+        height: 44px;
+        width: 44px;
       }
     }
     .search-tags {

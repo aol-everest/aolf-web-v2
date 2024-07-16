@@ -8,19 +8,17 @@ import React, {
 } from 'react';
 import SearchOptions from './SearchOptions/SearchOptions';
 import CategoryTabs from './CategoryTabs';
-import { useDebounce } from 'react-use';
+import { useDebounce, useEffectOnce } from 'react-use';
 import { useRouter } from 'next/router';
 import { useQueryString } from '@hooks';
 import Footer from './Footer';
 import SearchResultsList from './SearchResultsList/SearchResultsList';
 import { Loader } from '@components/loader';
-import { ALERT_TYPES } from '@constants';
-import { useGlobalAlertContext } from '@contexts';
 
 export default function AskGurudev() {
-  const { showAlert } = useGlobalAlertContext();
   const [query, setQuery] = useQueryString('query');
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [feedbackText, setFeedbackText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Anger');
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
   const [searchResult, setSearchResult] = useState({});
@@ -58,6 +56,26 @@ export default function AskGurudev() {
   );
 
   useEffect(() => {
+    const getInitialData = async () => {
+      setLoading(true);
+      try {
+        const apiUrl = `https://askgurudev.me/search/?question=`;
+        const response = await fetch(apiUrl);
+        const result = await response.json();
+        setSearchResult(result);
+        setSelectedPageIndex(0);
+      } catch (error) {
+        console.log('error', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (query === '') {
+      getInitialData();
+    }
+  }, [debouncedQuery, query]);
+
+  useEffect(() => {
     const getApiData = async (query) => {
       setLoading(true);
       try {
@@ -78,8 +96,8 @@ export default function AskGurudev() {
     }
   }, [debouncedQuery]);
 
-  const onChangeQuery = useCallback((event) => {
-    setQuery(event.target.value);
+  const onChangeQuery = useCallback((value) => {
+    setQuery(value);
   }, []);
 
   useEffect(() => {
@@ -117,15 +135,18 @@ export default function AskGurudev() {
     const rating = isUpvoteSelected ? 1 : -1;
     try {
       const apiUrl = `https://askgurudev.me/feedback/?hash=${searchResult.hash}&rating=${rating}&sample=${selectedPageIndex}`;
-      const response = await fetch(apiUrl);
-      const result = await response.json();
-      showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-        children: 'Your feedback submitted successfully',
-      });
+      await fetch(apiUrl);
+      setFeedbackText('Your feedback submitted successfully');
+      setTimeout(() => {
+        setFeedbackText('');
+      }, 2000);
     } catch (error) {
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: 'we had a trouble submitting feeback, please try again later',
-      });
+      setFeedbackText(
+        'we had a trouble submitting feeback, please try again later',
+      );
+      setTimeout(() => {
+        setFeedbackText('');
+      }, 2000);
       console.log('error', error);
     } finally {
       setLoading(false);
@@ -133,7 +154,7 @@ export default function AskGurudev() {
   };
 
   const isEmpty = searchResult?.matches && !searchResult?.matches.length;
-  const currentMeta = selectedQueryResponse?.meta;
+  const currentMeta = searchResult?.meta;
 
   const EmptyResults = () => {
     return (
@@ -167,13 +188,14 @@ export default function AskGurudev() {
       case 'suicide':
         return "Hi there, Below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message 408-759-1301.";
       default:
-        return '';
+        return "We've noticed people ask very personal questions, and while AskGurudev isn't intended to provide prescriptive advice, we want to ensure clarity that the answers provided are not meant to be taken as such. Often times, until the app improves, we also may match wisdom related but not direct answer, so it can help set expectations too. People may think the sheet they received is G’s answer because we call it AskGurudev and devotees may assume its his answer to them.<br/> Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!";
     }
   };
 
   return (
     <main className="ask-gurudev-page">
       <section className="ask-gurudev-top">
+        {feedbackText && <div className="toast">{feedbackText}</div>}
         <div className="container">
           <h1 className="page-title">Ask Gurudev</h1>
           <CategoryTabs
@@ -196,7 +218,8 @@ export default function AskGurudev() {
         <div className="container">
           <div className="tab-content categories-tab-content" id="nav-anger">
             {isEmpty && debouncedQuery && !loading && <EmptyResults />}
-            {<CustomMessage />}
+            <div className="disclaimer"> {<CustomMessage />}</div>
+
             {loading && <Loader />}
             <SearchResultsList
               result={selectedQueryResponse || {}}

@@ -343,6 +343,17 @@ export const extractVideoId = (url) => {
   return match ? match[1] : null;
 };
 
+export const extractFacebookVideoId = (url) => {
+  const urlObj = new URL(url);
+  return urlObj.searchParams.get('v');
+};
+
+export const extractInstagramVideoId = (url) => {
+  const regex = /\/p\/([a-zA-Z0-9_-]+)\//;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
+
 /**
  * Tests provided UserAgent against Known Mobile User Agents
  * @returns {bool} isMobileDevice
@@ -375,6 +386,18 @@ export const askGurudevQuestions = () => {
       ],
     },
     {
+      name: 'Career',
+      questions: [
+        'What are the different types of wealth?',
+        'What determines how much wealth one accumulates in life?',
+        'What percentage of success is luck?',
+        'What is the shortcut to success?',
+        'How to choose the best career path?',
+        'How to balance spiritual and career growth?',
+        'How to deal with losing a job?',
+      ],
+    },
+    {
       name: 'Death',
       questions: [
         'What happens at the time of death?',
@@ -391,7 +414,7 @@ export const askGurudevQuestions = () => {
         'How to manage your desires?',
         'What happens when you take your mind away from the little desires and thoughts that disturb you?',
         'Should you have desires?',
-        "Why 90% of our desires don't get fulfilled?",
+        'How to deal with unfulfilled desires?',
       ],
     },
     {
@@ -400,10 +423,9 @@ export const askGurudevQuestions = () => {
         'What is the power of prayer?',
         'What is Guru Purnima?',
         'What is the Guru principle?',
-        'What is the significance of chanting mantras?',
-        'What is seva?',
+        'What is the value of chanting mantras?',
         'How should you pray to God?',
-        'How to balance material and spiritual ambitions?',
+        'How do we balance our material and spiritual lives? ',
       ],
     },
     {
@@ -414,7 +436,6 @@ export const askGurudevQuestions = () => {
         'Why do you need a Guru in your life?',
         'Where is the divine?',
         'What is divine love?',
-        'What makes a great teacher?',
       ],
     },
     {
@@ -438,13 +459,81 @@ export const askGurudevQuestions = () => {
       ],
     },
     {
+      name: 'Faith',
+      questions: [
+        'Why is faith important?',
+        'What is faith?',
+        'Who should you have faith in?',
+        'How to eliminate doubt?',
+        'How to keep faith during difficult times in life?',
+      ],
+    },
+    {
+      name: 'Fear',
+      questions: [
+        'How to overcome fear of the future?',
+        'How to overcome the fear of getting hurt?',
+        'What is the purpose of fear?',
+        "What's the secret to understanding fears?",
+        'What is the cause of fear?',
+        'Why do 85% of fears never come true?',
+      ],
+    },
+    {
+      name: 'Gratitude',
+      questions: [
+        'How can you get more grace in life?',
+        'How do you become more grateful?',
+        'What is grace?',
+        'How to stop complaining?',
+      ],
+    },
+    {
+      name: 'Happiness',
+      questions: [
+        'How to always be happy?',
+        'What is the formula for happiness?',
+        'How to live in the present moment?',
+        'How to find unshakeable peace and happiness?',
+        'How to be happy through difficult times?',
+        'How to develop a habit of being happy?',
+        'How to achieve inner peace?',
+        'What are some practical tips to living a happy life?',
+        'How can you make the people around you happy?',
+      ],
+    },
+    {
+      name: 'Health',
+      questions: [
+        'What are signs of good health?',
+        'What are some tips for healthier living?',
+        'How can you stay healthy?',
+        'How to prevent disease?',
+        'What is the ancient secret for good health?',
+      ],
+    },
+    {
+      name: 'Karma',
+      questions: [
+        'How to get rid of negative karma?',
+        'What to do when someone blames you?',
+        'What are the different types of karma?',
+        'What is karma?',
+        'Does everything happen as a result of karma?',
+        'What is enlightenment?',
+        'How can you become enlightened?',
+      ],
+    },
+    {
       name: 'Life',
       questions: [
         'What is the purpose of life?',
-        'How to lead a fulfilling life?',
-        'How to find inner peace?',
-        'What is the key to happiness?',
-        'How to live a balanced life?',
+        'What is the meaning of life?',
+        'What is the monkey mind?',
+        'Is it possible to choose what you become in your next life?',
+        'How to live in the present moment?',
+        'How to give 100% to everything in life',
+        'How to attain liberation',
       ],
     },
     {
@@ -465,7 +554,6 @@ export const askGurudevQuestions = () => {
       questions: [
         'What is meditation?',
         'What is enlightenment?',
-        'How can you meditate?',
         'What are the benefits of yoga?',
         'How to quiet the mind during meditation?',
       ],
@@ -479,16 +567,13 @@ export const askGurudevQuestions = () => {
         'How to live in the present moment?',
         'How to have dispassion in life?',
         'How to balance the mind?',
-        'What are the modes of the mind?',
         'How to calm the mind and feel happy from within?',
-        'How to overcome suffering?',
         'What is bondage?',
       ],
     },
     {
       name: 'Relationships',
       questions: [
-        'How do you find your life partner?',
         'How to overcome the fear of commitment?',
         'How to build a healthy relationship?',
         'What are the golden rules for a successful marriage?',
@@ -498,13 +583,29 @@ export const askGurudevQuestions = () => {
       ],
     },
     {
+      name: 'Seva',
+      questions: [
+        'What is the Art of Living Teacher Training program?',
+        'What is seva?',
+        'How can a yoga teacher inspire people?',
+      ],
+    },
+    {
       name: 'Self',
       questions: [
-        'What is our true nature?',
         'How to accept people and situations as they are?',
         'How to increase self-confidence?',
         'How does the ego work?',
         'How to get rid of the ego?',
+      ],
+    },
+    {
+      name: 'SKY',
+      questions: [
+        'What is Sudarshan Kriya?',
+        'What is the power of learning Sudarshan Kriya?',
+        'How can practicing Sudarshan Kriya benefit mental health?',
+        'What is the difference between Sudarshan Kriya and other Kriya Yoga?',
       ],
     },
     {

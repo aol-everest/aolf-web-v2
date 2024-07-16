@@ -66,13 +66,14 @@ const Footer = ({
       </div>
       <div className="answer-pagination">
         <ul>
-          {paginationArray.map((value) => (
-            <li key={value} onClick={() => setSelectedPageIndex(value)}>
-              <a className={value === selectedPageIndex ? 'active' : ''}>
-                {value + 1}
-              </a>
-            </li>
-          ))}
+          {paginationArray?.length > 1 &&
+            paginationArray.map((value) => (
+              <li key={value} onClick={() => setSelectedPageIndex(value)}>
+                <a className={value === selectedPageIndex ? 'active' : ''}>
+                  {value + 1}
+                </a>
+              </li>
+            ))}
         </ul>
       </div>
     </div>

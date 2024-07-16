@@ -37,7 +37,6 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
         ref={swiperRef}
         modules={[Navigation, Scrollbar, A11y, Pagination]}
         className="category-tabs swiper-wrapper"
-        spaceBetween={10}
         slidesPerView={'auto'}
         loop={false}
         pagination={{ clickable: true }}
@@ -45,7 +44,8 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
           prevEl: '.slide-button-prev',
           nextEl: '.slide-button-next',
         }}
-        slidesOffsetAfter={isMobile() ? 30 : 0}
+        slidesOffsetAfter={30}
+        slidesOffsetBefore={30}
         onInit={(swiper) => {
           swiper.params.navigation.prevEl = '.slide-button-prev';
           swiper.params.navigation.nextEl = '.slide-button-next';
@@ -93,19 +93,6 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
             id="nav-desire-tab"
             data-toggle="tab"
             role="tab"
-          >
-            <span className="icon-aol iconaol-expectations"></span>Desire
-          </a>
-        </SwiperSlide>
-
-        <SwiperSlide>
-          <a
-            onClick={() => handlePredefinedElements('Desire')}
-            className={`nav-link ${isSelectedItem('Desire') ? 'active' : ''}`}
-            id="nav-desire-tab"
-            data-toggle="tab"
-            role="tab"
-            aria-selected="true"
           >
             <span className="icon-aol iconaol-expectations"></span>Desire
           </a>

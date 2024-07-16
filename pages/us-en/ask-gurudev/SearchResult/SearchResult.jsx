@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
-import { extractVideoId } from '@utils';
+import {
+  extractFacebookVideoId,
+  extractInstagramVideoId,
+  extractVideoId,
+} from '@utils';
+import FacebookVideo from '@components/facebookVideo';
+import InstagramVideo from '@components/instagramVideo';
 
 export const VideoItemComp = (props) => {
   const { video, playingId, onPlayAction } = props;
@@ -28,7 +34,14 @@ export const VideoItemComp = (props) => {
     },
   };
 
-  const videoId = extractVideoId(video);
+  const facebookView = video.includes('www.facebook.com');
+  const instagramView = video.includes('www.instagram.com');
+
+  const videoId = facebookView
+    ? extractFacebookVideoId(video)
+    : instagramView
+      ? extractInstagramVideoId(video)
+      : extractVideoId(video);
   const onReady = (event) => {
     setPlayer(event.target);
     // setReady(true);
@@ -75,6 +88,14 @@ export const VideoItemComp = (props) => {
       }
     }
   };
+
+  if (facebookView) {
+    return <FacebookVideo videoId={videoId} />;
+  }
+
+  if (instagramView) {
+    return <InstagramVideo videoId={videoId} />;
+  }
 
   return (
     <div onClick={watchAction}>
