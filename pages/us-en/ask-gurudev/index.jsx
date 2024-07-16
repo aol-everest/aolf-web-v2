@@ -74,7 +74,7 @@ export default function AskGurudev() {
     if (!query || query === '') {
       getInitialData();
     }
-  }, [debouncedQuery, query]);
+  }, [query]);
 
   useEffect(() => {
     const getApiData = async (query) => {
