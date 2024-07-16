@@ -363,6 +363,13 @@ export const isMobile = () =>
     window.navigator.userAgent || window.navigator.vendor || window.opera,
   );
 
+export const isMobileOrTablet = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+  return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+    userAgent,
+  );
+};
+
 export const askGurudevQuestions = () => {
   return [
     {

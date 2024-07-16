@@ -39,13 +39,14 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
         className="category-tabs swiper-wrapper"
         slidesPerView={'auto'}
         loop={false}
+        spaceBetween={isMobile() ? 15 : 0}
         pagination={{ clickable: true }}
         navigation={{
           prevEl: '.slide-button-prev',
           nextEl: '.slide-button-next',
         }}
         slidesOffsetAfter={30}
-        slidesOffsetBefore={30}
+        slidesOffsetBefore={isMobile() ? 10 : 20}
         onInit={(swiper) => {
           swiper.params.navigation.prevEl = '.slide-button-prev';
           swiper.params.navigation.nextEl = '.slide-button-next';

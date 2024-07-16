@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { Loader } from '@components/loader';
 import { MODAL_TYPES } from '@constants';
 import Link from '@components/linkWithUTM';
+import { isMobileOrTablet } from '@utils';
 
 const ProfileHeader = dynamic(() =>
   import('@components/profile').then((mod) => mod.ProfileHeader),
@@ -47,13 +48,6 @@ export const withUserInfo = (WrappedComponent) => {
     const elementRef = useRef(null);
 
     const scrollOffset = 75; // Adjust this value as needed
-
-    const isMobileOrTablet = () => {
-      const userAgent = navigator.userAgent.toLowerCase();
-      return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
-        userAgent,
-      );
-    };
 
     useEffect(() => {
       if (elementRef.current && isMobileOrTablet()) {
