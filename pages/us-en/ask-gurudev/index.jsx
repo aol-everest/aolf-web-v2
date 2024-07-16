@@ -71,7 +71,7 @@ export default function AskGurudev() {
         setLoading(false);
       }
     };
-    if (query === '') {
+    if (!query || query === '') {
       getInitialData();
     }
   }, [debouncedQuery, query]);
