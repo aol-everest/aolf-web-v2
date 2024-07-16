@@ -195,7 +195,7 @@ export default function AskGurudev() {
       case 'suicide':
         return "Hi there, Below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message 408-759-1301.";
       default: {
-        return `We've noticed people ask very personal questions, and while AskGurudev isn't intended to provide prescriptive advice, we want to ensure clarity that the answers provided are not meant to be taken as such. Often times, until the app improves, we also may match wisdom related but not direct answer, so it can help set expectations too. People may think the sheet they received is G’s answer because we call it AskGurudev and devotees may assume its his answer to them.${query ? "<br/>Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!" : ''}`;
+        return `${query ? "<br/>Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!" : ''}`;
       }
     }
   };
