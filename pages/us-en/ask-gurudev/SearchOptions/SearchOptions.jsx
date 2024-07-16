@@ -35,11 +35,17 @@ const SearchOptions = ({
     if (!event.target.value) {
       setSearchResult({});
       setQuery('');
+      setLocalQuery('');
       setDebouncedQuery('');
       queryInputRef.current.value = '';
     }
     setLocalQuery(event.target.value);
   }, []);
+
+  const onRecomendedQuestionsSelect = (question) => {
+    setLocalQuery(question);
+    setQuery(question);
+  };
 
   const shuffleArray = (array) => {
     return array.sort(() => Math.random() - 0.5);
@@ -74,7 +80,7 @@ const SearchOptions = ({
                   <div
                     key={index}
                     className="search-tag"
-                    onClick={() => setQuery(question)}
+                    onClick={() => onRecomendedQuestionsSelect(question)}
                   >
                     {question}
                   </div>
