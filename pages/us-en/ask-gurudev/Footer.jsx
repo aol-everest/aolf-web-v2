@@ -5,18 +5,24 @@ const Footer = ({
   handleVoteSelect,
   setSelectedPageIndex,
   selectedPageIndex,
+  selectedVotes,
 }) => {
   const paginationArray = Array.from(
     { length: results?.length },
     (_, index) => index,
   );
 
+  const isFeedbackSelected = selectedVotes[selectedPageIndex];
+
   return (
     <div className="answer-bottom-area">
       <div className="vote-up-down">
         <label>Did this answer your question?</label>
         <div className="vote-actions">
-          <button className="vote-btn" onClick={() => handleVoteSelect(true)}>
+          <button
+            className={`vote-btn ${isFeedbackSelected === 1 ? 'active' : ''}`}
+            onClick={() => handleVoteSelect(true)}
+          >
             <svg
               width="20"
               height="20"
@@ -39,7 +45,10 @@ const Footer = ({
               />
             </svg>
           </button>
-          <button className="vote-btn" onClick={() => handleVoteSelect(false)}>
+          <button
+            className={`vote-btn ${isFeedbackSelected === -1 ? 'active' : ''}`}
+            onClick={() => handleVoteSelect(false)}
+          >
             <svg
               width="20"
               height="20"

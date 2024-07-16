@@ -22,6 +22,7 @@ export default function AskGurudev() {
   const [selectedCategory, setSelectedCategory] = useState('Anger');
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
   const [searchResult, setSearchResult] = useState({});
+  const [selectedVotes, setSelectedVotes] = useState({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const elementRef = useRef(null);
@@ -84,6 +85,7 @@ export default function AskGurudev() {
         const result = await response.json();
         setSearchResult(result);
         setSelectedPageIndex(0);
+        setSelectedVotes({});
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -133,6 +135,11 @@ export default function AskGurudev() {
 
   const handleVoteSelect = async (isUpvoteSelected) => {
     const rating = isUpvoteSelected ? 1 : -1;
+    const selectedVotesData = {
+      ...selectedVotes,
+      [selectedPageIndex]: rating,
+    };
+    setSelectedVotes(selectedVotesData);
     try {
       const apiUrl = `https://askgurudev.me/feedback/?hash=${searchResult.hash}&rating=${rating}&sample=${selectedPageIndex}`;
       await fetch(apiUrl);
@@ -233,6 +240,7 @@ export default function AskGurudev() {
               handleVoteSelect={handleVoteSelect}
               setSelectedPageIndex={setSelectedPageIndex}
               selectedPageIndex={selectedPageIndex}
+              selectedVotes={selectedVotes}
             />
           )}
         </div>
