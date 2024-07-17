@@ -857,7 +857,7 @@ const Meetup = () => {
                 buttonText={
                   meetupTypeFilter && meetupMasters[meetupTypeFilter]
                     ? meetupMasters[meetupTypeFilter].name
-                    : 'Meetup Type'
+                    : null
                 }
                 label="Meetup Type"
                 closeEvent={onFilterChange('meetupTypeFilter')}
@@ -1099,10 +1099,9 @@ const Meetup = () => {
                         value={
                           meetupModeFilter
                             ? COURSE_MODES[meetupModeFilter].name
-                            : 'Select Format'
+                            : null
                         }
-                        hideClearOption
-                        closeEvent={onFilterChange('meetupModeFilter')}
+                        clearEvent={onFilterChange('meetupModeFilter')}
                       >
                         <div className="dropdown">
                           <SmartDropDown
@@ -1155,10 +1154,9 @@ const Meetup = () => {
                         value={
                           meetupTypeFilter && meetupMasters[meetupTypeFilter]
                             ? meetupMasters[meetupTypeFilter].name
-                            : 'Select Meetup'
+                            : null
                         }
-                        hideClearOption
-                        closeEvent={onFilterChange('meetupTypeFilter')}
+                        clearEvent={onFilterChange('meetupTypeFilter')}
                       >
                         <div className="dropdown">
                           <SmartDropDown
