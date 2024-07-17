@@ -158,8 +158,61 @@ main.page--find-a-course {
         position: sticky;
         top: 10px;
       }
+      .search_course_form_mobile {
+        @media screen and (max-width: 720px) {
+          margin-bottom: 0;
+          .courses-filter {
+            button.btn_outline_box {
+              color: #000000;
+            }
+          }
+        }
+      }
       .filter-save-button {
         display: none;
+      }
+      .courses-filter__wrapper-list {
+        border: #e9e9e9 1px solid;
+        border-radius: 20px !important;
+        box-shadow:
+          0px 8px 8px -4px rgba(16, 24, 40, 0.031372549),
+          0px 20px 24px -4px rgba(16, 24, 40, 0.0784313725) !important;
+        width: 100%;
+        padding: 8px;
+        top: 100% !important;
+        .courses-filter__list.active {
+          width: 100%;
+          .courses-filter__list-item {
+            text-align: left;
+            &:hover {
+              background: #ed994e70;
+            }
+          }
+        }
+        .smart-input {
+          width: 100%;
+          input.custom-input {
+            width: 100% !important;
+            margin: 0;
+          }
+          .smart-input--list {
+            box-shadow: none;
+            border: none;
+            margin: 5px 0 0 0 !important;
+            padding: 0;
+            width: 100%;
+            &:empty {
+              display: none;
+            }
+            .smart-input--list-item {
+              padding: 12px 20px;
+              font-size: 14px;
+              &:hover {
+                background: #ed994e70;
+              }
+            }
+          }
+        }
       }
       .search_course_form_mobile {
         @media screen and (max-width: 720px) {
@@ -176,11 +229,48 @@ main.page--find-a-course {
         flex-direction: column;
         align-items: flex-start !important;
         padding: 0;
+
         .courses-filter {
           flex-direction: column;
           display: flex;
           flex: 1;
           width: 100%;
+          .rs-input::placeholder {
+            color: rgb(203, 213, 225);
+          }
+          .rs-input:focus {
+            outline: none !important;
+            outline-width: 0 !important;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: none !important;
+          }
+          .rs-input {
+            color: #31364e;
+            border-width: 0px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            box-shadow: none;
+            height: 100%;
+          }
+          .rs-picker-error > .rs-input-group {
+            border-color: transparent;
+          }
+          .rs-picker-daterange.rs-picker-subtle .rs-input-group {
+            border-color: transparent;
+            background-color: transparent;
+            outline: none;
+          }
+          .rs-input-group-addon {
+            display: none;
+          }
+          .rs-picker-error > .rs-input-group {
+            border-width: 0px;
+          }
+          .courses-filter__button.date-picker {
+            padding: 0px;
+          }
           label {
             margin-bottom: 6px;
           }

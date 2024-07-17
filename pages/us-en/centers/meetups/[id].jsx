@@ -61,6 +61,16 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
   return response;
 };
 
+const queryCenter = async ({ queryKey: [_, term] }) => {
+  const response = await api.get({
+    path: 'getAllCenters',
+    param: {
+      query: term,
+    },
+  });
+  return response;
+};
+
 const fillDefaultTimeZone = () => {
   const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
@@ -433,10 +443,6 @@ const Meetup = ({ centerDetail }) => {
   const [timesOfDayFilter, setTimesOfDayFilter] = useQueryState('timesOfDay');
   const [meetupModeFilter, setMeetupModeFilter] = useQueryState('mode');
   const [privateEvent] = useQueryState('private-event', parseAsBoolean);
-  const [locationFilter, setLocationFilter] = useQueryState(
-    'location',
-    parseAsJson(),
-  );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
     parseAsStartEndDate,
@@ -450,6 +456,7 @@ const Meetup = ({ centerDetail }) => {
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
   const [searchKey, setSearchKey] = useState('');
+  const [centerSearchKey, setCenterSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const { data: allMeetupMaster = [] } = useQuery({
@@ -480,7 +487,7 @@ const Meetup = ({ centerDetail }) => {
             meetupModeFilter,
             cityFilter,
             centerFilter,
-            locationFilter,
+            centerDetail: centerDetail.sfid,
           },
         ],
         queryFn: async ({ pageParam = 1 }) => {
@@ -520,14 +527,6 @@ const Meetup = ({ centerDetail }) => {
               ...param,
               sdate: startDate,
               edate: endDate,
-            };
-          }
-          if (locationFilter) {
-            const { lat, lng } = locationFilter;
-            param = {
-              ...param,
-              lat,
-              lng,
             };
           }
           if (privateEvent) {
@@ -573,6 +572,15 @@ const Meetup = ({ centerDetail }) => {
     staleTime: 10 * 1000,
   });
 
+  let centerResult = useQuery({
+    queryKey: ['centers', centerSearchKey],
+    queryFn: queryCenter,
+    // only fetch search terms longer than 2 characters
+    enabled: centerSearchKey.length > 0,
+    // refresh cache after 10 seconds (watch the network tab!)
+    staleTime: 10 * 1000,
+  });
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -595,11 +603,17 @@ const Meetup = ({ centerDetail }) => {
 
   const onClearAllFilter = () => {
     setMeetupModeFilter(null);
-    setLocationFilter(null);
     setTimeZoneFilter(null);
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setMeetupTypeFilter(null);
+  };
+
+  const centerChangeHandler = (center) => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/meetups/${center.value}`,
+      query: { u: 'true' },
+    });
   };
 
   const onFilterChange = (field) => async (value) => {
@@ -609,13 +623,6 @@ const Meetup = ({ centerDetail }) => {
         break;
       case 'meetupModeFilter':
         setMeetupModeFilter(value);
-        break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
         break;
       case 'timesOfDayFilter':
         setTimesOfDayFilter(value);
@@ -650,9 +657,6 @@ const Meetup = ({ centerDetail }) => {
       case 'meetupModeFilter':
         setMeetupModeFilter(null);
         break;
-      case 'locationFilter':
-        setLocationFilter(null);
-        break;
       case 'timesOfDayFilter':
         setTimesOfDayFilter(null);
         break;
@@ -677,13 +681,6 @@ const Meetup = ({ centerDetail }) => {
       case 'meetupModeFilter':
         setMeetupModeFilter(value);
         break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
-        break;
       case 'timesOfDayFilter':
         setTimesOfDayFilter(value);
         break;
@@ -701,21 +698,6 @@ const Meetup = ({ centerDetail }) => {
     }
   };
 
-  const changeCourseType = (courseType) => {
-    const { slug, ...rest } = router.query;
-    router.push(
-      {
-        ...router,
-        query: {
-          slug: courseType.slug,
-          ...rest,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
-
   const onDatesChange = async (date) => {
     if (Array.isArray(date)) {
       setFilterStartEndDate(date);
@@ -730,9 +712,7 @@ const Meetup = ({ centerDetail }) => {
   };
 
   let filterCount = 0;
-  if (locationFilter) {
-    filterCount++;
-  }
+
   if (meetupModeFilter) {
     filterCount++;
   }
@@ -754,6 +734,12 @@ const Meetup = ({ centerDetail }) => {
     label: name,
   }));
   instructorList = (instructorList || []).slice(0, 5);
+
+  let centerList = centerResult?.data?.data?.map(({ sfid, centerName }) => ({
+    value: sfid,
+    label: centerName,
+  }));
+  centerList = (centerList || []).slice(0, 5);
 
   const filterStartEndDateStr =
     filterStartEndDate &&
@@ -803,7 +789,7 @@ const Meetup = ({ centerDetail }) => {
   return (
     <div id="tab1" className="tab-content">
       <NextSeo
-        defaultTitle={`${centerDetail.centerName} - Course Dates and Registration`}
+        defaultTitle={`${centerDetail.centerName} - Meetup Dates and Registration`}
       />
       <div className="course-tab-content-wrap meetup">
         <div className="course-filter-wrap">
@@ -812,6 +798,23 @@ const Meetup = ({ centerDetail }) => {
             className="course-filter-listing search-form col-12 d-flex align-items-center"
           >
             <button className="filter-save-button">Save Changes</button>
+            <Popup
+              tabIndex="1"
+              value={centerDetail ? centerDetail.centerName : null}
+              buttonText={centerDetail ? centerDetail.centerName : null}
+              closeEvent={centerChangeHandler}
+              label="Center"
+              hideClearOption
+            >
+              {({ closeHandler }) => (
+                <SmartInput
+                  onSearchKeyChange={(value) => setCenterSearchKey(value)}
+                  dataList={centerList}
+                  closeHandler={closeHandler}
+                  value={centerSearchKey}
+                ></SmartInput>
+              )}
+            </Popup>
             <Popup
               tabIndex="2"
               value={COURSE_MODES[meetupModeFilter] && meetupModeFilter}
@@ -837,23 +840,6 @@ const Meetup = ({ centerDetail }) => {
                     );
                   })}
                 </>
-              )}
-            </Popup>
-            <Popup
-              tabIndex="1"
-              value={locationFilter}
-              buttonText={
-                locationFilter ? `${locationFilter.locationName}` : null
-              }
-              closeEvent={onFilterChange('locationFilter')}
-              label="Location"
-              parentClassName="location"
-            >
-              {({ closeHandler }) => (
-                <AddressSearch
-                  closeHandler={closeHandler}
-                  placeholder="Search for Location"
-                />
               )}
             </Popup>
             <Popup
@@ -1031,15 +1017,6 @@ const Meetup = ({ centerDetail }) => {
               {showFilterModal && (
                 <div className="filter--box">
                   <div className="selected-filter-wrap">
-                    {locationFilter && (
-                      <div
-                        className="selected-filter-item"
-                        onClick={onFilterClearEvent('locationFilter')}
-                      >
-                        {locationFilter.locationName}
-                      </div>
-                    )}
-
                     {meetupTypeFilter && meetupMasters[meetupTypeFilter] && (
                       <div
                         className="selected-filter-item"
@@ -1132,19 +1109,6 @@ const Meetup = ({ centerDetail }) => {
                         )}
                       </SmartDropDown>
                     </div>
-                  </MobileFilterModal>
-
-                  <MobileFilterModal
-                    label="Location"
-                    value={
-                      locationFilter ? `${locationFilter.locationName}` : null
-                    }
-                    clearEvent={onFilterClearEvent('locationFilter')}
-                  >
-                    <AddressSearch
-                      closeHandler={onFilterChange('locationFilter')}
-                      placeholder="Search for Location"
-                    />
                   </MobileFilterModal>
 
                   <MobileFilterModal
@@ -1347,15 +1311,6 @@ const Meetup = ({ centerDetail }) => {
         </div>
         <div className="course-listing">
           <div className="selected-filter-wrap">
-            {locationFilter && (
-              <div
-                className="selected-filter-item"
-                onClick={onFilterClearEvent('locationFilter')}
-              >
-                {locationFilter.locationName}
-              </div>
-            )}
-
             {meetupTypeFilter && meetupMasters[meetupTypeFilter] && (
               <div
                 className="selected-filter-item"

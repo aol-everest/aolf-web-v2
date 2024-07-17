@@ -17,10 +17,10 @@ export const ProfileHeader = ({
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { data: subsciptionCategories = [] } = useQuery({
-    queryKey: 'subsciption',
+    queryKey: ['subscription'],
     queryFn: async () => {
       const response = await api.get({
-        path: 'subsciption',
+        path: 'subscription',
       });
       return response.data;
     },

@@ -57,6 +57,16 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
   return response;
 };
 
+const queryCenter = async ({ queryKey: [_, term] }) => {
+  const response = await api.get({
+    path: 'getAllCenters',
+    param: {
+      query: term,
+    },
+  });
+  return response;
+};
+
 const fillDefaultTimeZone = () => {
   const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
@@ -87,6 +97,21 @@ const parseAsStartEndDate = createParser({
     return null;
   },
 });
+
+const parseCourseType = (courseTypesOptions) => {
+  return createParser({
+    parse(queryValue) {
+      if (queryValue && courseTypesOptions[queryValue]) {
+        return courseTypesOptions[queryValue];
+      } else {
+        return null;
+      }
+    },
+    serialize(value) {
+      return value;
+    },
+  });
+};
 
 const { allowedMaxDays, beforeToday, combine } = DateRangePicker;
 
@@ -288,10 +313,6 @@ const Course = ({ centerDetail }) => {
     'onlyWeekend',
     parseAsBoolean.withDefault(false),
   );
-  const [locationFilter, setLocationFilter] = useQueryState(
-    'location',
-    parseAsJson(),
-  );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
     parseAsStartEndDate,
@@ -303,7 +324,11 @@ const Course = ({ centerDetail }) => {
   );
 
   const [cityFilter] = useQueryState('city');
-  const [courseTypeFilter] = useQueryState('course-type');
+  const [courseTypeFilter, setCourseTypeFilter] = useQueryState(
+    'course-type',
+    parseCourseType(COURSE_TYPES_OPTIONS),
+  );
+  const [centerSearchKey, setCenterSearchKey] = useState('');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -312,7 +337,6 @@ const Course = ({ centerDetail }) => {
       queryKey: [
         'workshops',
         {
-          locationFilter,
           courseTypeFilter,
           filterStartEndDate,
           timeZoneFilter,
@@ -320,6 +344,7 @@ const Course = ({ centerDetail }) => {
           courseModeFilter,
           onlyWeekend,
           cityFilter,
+          centerDetail: centerDetail.sfid,
         },
       ],
       queryFn: async ({ pageParam = 1 }) => {
@@ -359,14 +384,6 @@ const Course = ({ centerDetail }) => {
             ...param,
             sdate: startDate,
             edate: endDate,
-          };
-        }
-        if (locationFilter) {
-          const { lat, lng } = locationFilter;
-          param = {
-            ...param,
-            lat,
-            lng,
           };
         }
 
@@ -412,6 +429,15 @@ const Course = ({ centerDetail }) => {
     staleTime: 10 * 1000,
   });
 
+  let centerResult = useQuery({
+    queryKey: ['centers', centerSearchKey],
+    queryFn: queryCenter,
+    // only fetch search terms longer than 2 characters
+    enabled: centerSearchKey.length > 0,
+    // refresh cache after 10 seconds (watch the network tab!)
+    staleTime: 10 * 1000,
+  });
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -435,29 +461,29 @@ const Course = ({ centerDetail }) => {
   const onClearAllFilter = () => {
     setCourseModeFilter(null);
     setOnlyWeekend(null);
-    setLocationFilter(null);
     setTimeZoneFilter(null);
     setInstructorFilter(null);
     setFilterStartEndDate(null);
+    setCourseTypeFilter(null);
+  };
+
+  const centerChangeHandler = (center) => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/courses/${center.value}`,
+      query: { u: 'true' },
+    });
   };
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'courseTypeFilter':
-        //setCourseTypeFilter(value);
+        setCourseTypeFilter(value?.slug);
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(value);
-        break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
         break;
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
@@ -476,16 +502,13 @@ const Course = ({ centerDetail }) => {
     if (e) e.preventDefault();
     switch (field) {
       case 'courseTypeFilter':
-        // setCourseTypeFilter(null);
+        setCourseTypeFilter(null);
         break;
       case 'courseModeFilter':
         setCourseModeFilter(null);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(null);
-        break;
-      case 'locationFilter':
-        setLocationFilter(null);
         break;
       case 'timeZoneFilter':
         setTimeZoneFilter(null);
@@ -500,20 +523,13 @@ const Course = ({ centerDetail }) => {
     if (e) e.preventDefault();
     switch (field) {
       case 'courseTypeFilter':
-        // setCourseTypeFilter(value);
+        setCourseTypeFilter(value.slug);
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(value);
-        break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
         break;
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
@@ -526,21 +542,6 @@ const Course = ({ centerDetail }) => {
         }
         break;
     }
-  };
-
-  const changeCourseType = (courseType) => {
-    const { slug, ...rest } = router.query;
-    router.push(
-      {
-        ...router,
-        query: {
-          slug: courseType.slug,
-          ...rest,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
   };
 
   const onDatesChange = async (date) => {
@@ -557,9 +558,7 @@ const Course = ({ centerDetail }) => {
   };
 
   let filterCount = 0;
-  if (locationFilter) {
-    filterCount++;
-  }
+
   if (courseModeFilter) {
     filterCount++;
   }
@@ -575,12 +574,21 @@ const Course = ({ centerDetail }) => {
   if (instructorFilter) {
     filterCount++;
   }
+  if (courseTypeFilter) {
+    filterCount++;
+  }
 
   let instructorList = instructorResult?.data?.map(({ id, name }) => ({
     value: id,
     label: name,
   }));
   instructorList = (instructorList || []).slice(0, 5);
+
+  let centerList = centerResult?.data?.data?.map(({ sfid, centerName }) => ({
+    value: sfid,
+    label: centerName,
+  }));
+  centerList = (centerList || []).slice(0, 5);
 
   const filterStartEndDateStr =
     filterStartEndDate &&
@@ -645,18 +653,19 @@ const Course = ({ centerDetail }) => {
             <button className="filter-save-button">Save Changes</button>
             <Popup
               tabIndex="1"
-              value={locationFilter}
-              buttonText={
-                locationFilter ? `${locationFilter.locationName}` : null
-              }
-              closeEvent={onFilterChange('locationFilter')}
-              label="Location"
+              value={centerDetail ? centerDetail.centerName : null}
+              buttonText={centerDetail ? centerDetail.centerName : null}
+              closeEvent={centerChangeHandler}
+              label="Center"
+              hideClearOption
             >
               {({ closeHandler }) => (
-                <AddressSearch
+                <SmartInput
+                  onSearchKeyChange={(value) => setCenterSearchKey(value)}
+                  dataList={centerList}
                   closeHandler={closeHandler}
-                  placeholder="Search for Location"
-                />
+                  value={centerSearchKey}
+                ></SmartInput>
               )}
             </Popup>
             <Popup
@@ -696,8 +705,7 @@ const Course = ({ centerDetail }) => {
                   : null
               }
               label="Course Type"
-              hideClearOption
-              closeEvent={changeCourseType}
+              closeEvent={onFilterChange('courseTypeFilter')}
             >
               {({ closeHandler }) => (
                 <>
@@ -872,12 +880,12 @@ const Course = ({ centerDetail }) => {
               {showFilterModal && (
                 <div className="filter--box">
                   <div className="selected-filter-wrap">
-                    {locationFilter && (
+                    {courseTypeFilter && (
                       <div
                         className="selected-filter-item"
-                        onClick={onFilterClearEvent('locationFilter')}
+                        onClick={onFilterClearEvent('courseTypeFilter')}
                       >
-                        {locationFilter.locationName}
+                        {courseTypeFilter.name}
                       </div>
                     )}
 
@@ -935,18 +943,6 @@ const Course = ({ centerDetail }) => {
                     )}
                   </div>
 
-                  <MobileFilterModal
-                    label="Location"
-                    value={
-                      locationFilter ? `${locationFilter.locationName}` : null
-                    }
-                    clearEvent={onFilterClearEvent('locationFilter')}
-                  >
-                    <AddressSearch
-                      closeHandler={onFilterChange('locationFilter')}
-                      placeholder="Search for Location"
-                    />
-                  </MobileFilterModal>
                   <MobileFilterModal
                     label="Course format"
                     value={
@@ -1056,7 +1052,7 @@ const Course = ({ centerDetail }) => {
                         : null
                     }
                     hideClearOption
-                    closeEvent={changeCourseType}
+                    closeEvent={onFilterClearEvent('courseTypeFilter')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
@@ -1066,7 +1062,7 @@ const Course = ({ centerDetail }) => {
                             ? courseTypeFilter.name
                             : null
                         }
-                        closeEvent={changeCourseType}
+                        closeEvent={onFilterClearEvent('courseTypeFilter')}
                       >
                         {({ closeHandler }) => (
                           <>
@@ -1192,15 +1188,14 @@ const Course = ({ centerDetail }) => {
         </div>
         <div className="course-listing">
           <div className="selected-filter-wrap">
-            {locationFilter && (
+            {courseTypeFilter && (
               <div
                 className="selected-filter-item"
-                onClick={onFilterClearEvent('locationFilter')}
+                onClick={onFilterClearEvent('courseTypeFilter')}
               >
-                {locationFilter.locationName}
+                {courseTypeFilter.name}
               </div>
             )}
-
             {courseModeFilter && COURSE_MODES[courseModeFilter] && (
               <div
                 className="selected-filter-item"
