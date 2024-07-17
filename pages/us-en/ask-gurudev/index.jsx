@@ -173,7 +173,7 @@ export default function AskGurudev() {
       <section className="ask-gurudev-top">
         {feedbackText && <div className="toast">{feedbackText}</div>}
         <div className="container">
-          <h1 className="page-title">Ask Gurudev</h1>
+          <h1 className="page-title beta">Ask Gurudev</h1>
           <CategoryTabs
             setSelectedCategory={setSelectedCategory}
             selectedCategory={selectedCategory}
