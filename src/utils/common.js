@@ -386,7 +386,6 @@ export const askGurudevQuestions = () => {
       name: 'Anxiety',
       questions: [
         'How to get over anxiety?',
-        'Does meditation help reduce anxiety?',
         'How do you navigate turbulent times in life?',
         'What are practical tips to manage stress and anxiety?',
         'How to clear your mind of negative thoughts?',
@@ -432,7 +431,7 @@ export const askGurudevQuestions = () => {
         'What is the Guru principle?',
         'What is the value of chanting mantras?',
         'How should you pray to God?',
-        'How do we balance our material and spiritual lives? ',
+        'How do we balance our material and spiritual lives?',
       ],
     },
     {
@@ -534,13 +533,13 @@ export const askGurudevQuestions = () => {
     {
       name: 'Life',
       questions: [
-        'What is the purpose of life?',
+        'What is the purpose of my life?',
         'What is the meaning of life?',
         'What is the monkey mind?',
         'Is it possible to choose what you become in your next life?',
         'How to live in the present moment?',
-        'How to give 100% to everything in life',
-        'How to attain liberation',
+        'How to give 100% to everything in life?',
+        'How to attain liberation?',
       ],
     },
     {
@@ -585,25 +584,8 @@ export const askGurudevQuestions = () => {
         'How to build a healthy relationship?',
         'What are the golden rules for a successful marriage?',
         'How to be detached from relationships?',
-        'How to know if this is the right relationship or person for me?',
+        'How to know if this is the right relationship or person for me? ',
         'How to mend a broken heart?',
-      ],
-    },
-    {
-      name: 'Seva',
-      questions: [
-        'What is the Art of Living Teacher Training program?',
-        'What is seva?',
-        'How can a yoga teacher inspire people?',
-      ],
-    },
-    {
-      name: 'Self',
-      questions: [
-        'How to accept people and situations as they are?',
-        'How to increase self-confidence?',
-        'How does the ego work?',
-        'How to get rid of the ego?',
       ],
     },
     {
@@ -612,7 +594,23 @@ export const askGurudevQuestions = () => {
         'What is Sudarshan Kriya?',
         'What is the power of learning Sudarshan Kriya?',
         'How can practicing Sudarshan Kriya benefit mental health?',
-        'What is the difference between Sudarshan Kriya and other Kriya Yoga?',
+      ],
+    },
+    {
+      name: 'Self',
+      questions: [
+        'How to accept people and situations as they are?',
+        'How to increase self-condifence?',
+        'How does the ego work?',
+        'How to get rid of the ego?',
+      ],
+    },
+    {
+      name: 'Service',
+      questions: [
+        'What is the Art of Living Teacher Training program?',
+        'What is seva?',
+        'How can a yoga teacher inspire people?',
       ],
     },
     {

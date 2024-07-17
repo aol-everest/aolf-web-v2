@@ -1,29 +1,17 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import { useEffect } from 'react';
+import { InstagramEmbed } from 'react-social-media-embed';
 
-const InstagramVideo = ({ videoId }) => {
+const InstagramVideo = ({ video }) => {
   useEffect(() => {
-    if (window.instgrm) {
+    if (window.instgrm && window.instgrm.Embeds) {
       window.instgrm.Embeds.process();
     }
   }, []);
-
   return (
-    <blockquote
-      className="instagram-media"
-      data-instgrm-permalink={`https://www.instagram.com/p/${videoId}/`}
-      data-instgrm-version="12"
-    >
-      <div>
-        <a
-          href={`https://www.instagram.com/p/${videoId}/`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Watch on Instagram
-        </a>
-      </div>
-    </blockquote>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <InstagramEmbed url={video} width="100%" captioned igVersion={12} />
+    </div>
   );
 };
-
 export default InstagramVideo;

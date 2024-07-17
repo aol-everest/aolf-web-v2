@@ -8,23 +8,22 @@ import React, {
 } from 'react';
 import SearchOptions from './SearchOptions/SearchOptions';
 import CategoryTabs from './CategoryTabs';
-import { useDebounce, useEffectOnce } from 'react-use';
-import { useRouter } from 'next/router';
 import { useQueryString } from '@hooks';
 import Footer from './Footer';
 import SearchResultsList from './SearchResultsList/SearchResultsList';
 import { Loader } from '@components/loader';
 
 export default function AskGurudev() {
-  const [query, setQuery] = useQueryString('query');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [query, setQuery] = useQueryString('query', {
+    defaultValue: 'What is the purpose of my life',
+  });
   const [feedbackText, setFeedbackText] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Anger');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
   const [searchResult, setSearchResult] = useState({});
   const [selectedVotes, setSelectedVotes] = useState({});
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [initialPageLoad, setInitialPageLoad] = useState(true);
   const elementRef = useRef(null);
 
   const selectedQueryResponse = useMemo(() => {
@@ -44,40 +43,12 @@ export default function AskGurudev() {
     const query = url.searchParams.get('query');
     if (query) {
       setQuery(query);
-      setDebouncedQuery(query);
     }
   }, []);
 
-  useDebounce(
-    () => {
-      setDebouncedQuery(query);
-    },
-    1000,
-    [query],
-  );
-
-  useEffect(() => {
-    const getInitialData = async () => {
-      setLoading(true);
-      try {
-        const apiUrl = `https://askgurudev.me/search/?question=`;
-        const response = await fetch(apiUrl);
-        const result = await response.json();
-        setSearchResult(result);
-        setSelectedPageIndex(0);
-      } catch (error) {
-        console.log('error', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (!query || query === '') {
-      getInitialData();
-    }
-  }, [query]);
-
   useEffect(() => {
     const getApiData = async (query) => {
+      setSearchResult({});
       setLoading(true);
       try {
         const apiUrl = `https://askgurudev.me/search/?question=${query}`;
@@ -86,6 +57,7 @@ export default function AskGurudev() {
         setSearchResult(result);
         setSelectedPageIndex(0);
         setSelectedVotes({});
+        setInitialPageLoad(false);
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -93,22 +65,14 @@ export default function AskGurudev() {
       }
     };
 
-    if (debouncedQuery) {
-      getApiData(debouncedQuery);
+    if (query) {
+      getApiData(query);
     }
-  }, [debouncedQuery]);
+  }, [query]);
 
   const onChangeQuery = useCallback((value) => {
     setQuery(value);
   }, []);
-
-  useEffect(() => {
-    if (!router.query.query && debouncedQuery) {
-      setQuery('');
-      setDebouncedQuery('');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query]);
 
   useEffect(() => {
     if (elementRef.current) {
@@ -165,11 +129,13 @@ export default function AskGurudev() {
 
   const EmptyResults = () => {
     return (
-      <div className="emptyResults">
-        <h5>
-          Sorry, there is a limited set of topics we can help with and we may
-          not be able to answer this question. Try something else?
-        </h5>
+      <div className="disclaimer">
+        <div className="emptyResults">
+          <p>
+            Sorry, there is a limited set of topics we can help with and we may
+            not be able to answer this question. Try something else?
+          </p>
+        </div>
       </div>
     );
   };
@@ -190,10 +156,12 @@ export default function AskGurudev() {
       case 'llm out of scope':
       case 'filtered honeypot':
       case 'above threshold':
+      case 'above first threshold':
       case 'filtered stop word':
+      case 'random':
         return 'Sorry, there is a limited set of topics we can help with and we may not be able to answer this question. Try something else?';
       case 'suicide':
-        return "Hi there, Below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message 408-759-1301.";
+        return "Hi there, Below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message <a href='tel:(855) 202-4400'>408-759-1301</a>";
       default: {
         return `${query ? "<br/>Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!" : ''}`;
       }
@@ -215,23 +183,31 @@ export default function AskGurudev() {
       <SearchOptions
         onChangeQuery={onChangeQuery}
         setQuery={setQuery}
-        setDebouncedQuery={setDebouncedQuery}
         query={query}
         isLoading={loading}
         setSearchResult={setSearchResult}
         selectedCategory={selectedCategory}
+        setLoading={setLoading}
       />
 
       <section className="search-results-area" ref={elementRef}>
         <div className="container">
           <div className="tab-content categories-tab-content" id="nav-anger">
-            <div className="disclaimer">{<CustomMessage />}</div>
+            {isEmpty && query && !loading ? (
+              <EmptyResults />
+            ) : !initialPageLoad ? (
+              <div className="disclaimer">{<CustomMessage />}</div>
+            ) : (
+              <div className="disclaimer">
+                Hi there :) Ask a question and we’ll match it to wisdom from
+                Gurudev Sri Sri Ravi Shankar. If we don't find your question in
+                our collection, we'll share with you something related! To get
+                started, here is wisdom from one of Gurudev’s talks.
+              </div>
+            )}
 
             {loading && <Loader />}
-            <SearchResultsList
-              result={selectedQueryResponse || {}}
-              debouncedQuery={debouncedQuery}
-            />
+            <SearchResultsList result={selectedQueryResponse || {}} />
           </div>
           {selectedQueryResponse && (
             <Footer

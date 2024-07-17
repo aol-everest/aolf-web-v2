@@ -90,11 +90,11 @@ export const VideoItemComp = (props) => {
   };
 
   if (facebookView) {
-    return <FacebookVideo videoId={videoId} />;
+    return <FacebookVideo video={video} />;
   }
 
   if (instagramView) {
-    return <InstagramVideo videoId={videoId} />;
+    return <InstagramVideo video={video} />;
   }
 
   return (

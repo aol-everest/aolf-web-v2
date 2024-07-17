@@ -77,6 +77,17 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
         </SwiperSlide>
         <SwiperSlide>
           <a
+            onClick={() => handlePredefinedElements('Career')}
+            className={`nav-link ${isSelectedItem('Career') ? 'active' : ''}`}
+            id="nav-career-tab"
+            data-toggle="tab"
+            role="tab"
+          >
+            <span className="icon-aol iconaol-relationship-2"></span>Career
+          </a>
+        </SwiperSlide>
+        <SwiperSlide>
+          <a
             onClick={() => handlePredefinedElements('Death')}
             className={`nav-link ${isSelectedItem('Death') ? 'active' : ''}`}
             id="nav-death-tab"
@@ -205,6 +216,19 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
 
         <SwiperSlide>
           <a
+            onClick={() => handlePredefinedElements('Health')}
+            className={`nav-link ${isSelectedItem('Health') ? 'active' : ''}`}
+            id="nav-health-tab"
+            data-toggle="tab"
+            role="tab"
+            aria-selected="false"
+          >
+            <span className="icon-aol iconaol-smiley"></span>Health
+          </a>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <a
             onClick={() => handlePredefinedElements('Karma')}
             className={`nav-link ${isSelectedItem('Karma') ? 'active' : ''}`}
             id="nav-karma-tab"
@@ -284,6 +308,19 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
 
         <SwiperSlide>
           <a
+            onClick={() => handlePredefinedElements('SKY')}
+            className={`nav-link ${isSelectedItem('SKY') ? 'active' : ''}`}
+            id="nav-sky-tab"
+            data-toggle="tab"
+            role="tab"
+            aria-selected="false"
+          >
+            <span className="icon-aol iconaol-meditation"></span>SKY
+          </a>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <a
             onClick={() => handlePredefinedElements('Self')}
             className={`nav-link ${isSelectedItem('Self') ? 'active' : ''}`}
             id="nav-finance-tab"
@@ -292,6 +329,19 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
             aria-selected="false"
           >
             <span className="icon-aol iconaol-user-2"></span>Self
+          </a>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <a
+            onClick={() => handlePredefinedElements('Service')}
+            className={`nav-link ${isSelectedItem('Service') ? 'active' : ''}`}
+            id="nav-service-tab"
+            data-toggle="tab"
+            role="tab"
+            aria-selected="false"
+          >
+            <span className="icon-aol iconaol-heart"></span>Service
           </a>
         </SwiperSlide>
 

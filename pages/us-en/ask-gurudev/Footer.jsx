@@ -17,7 +17,7 @@ const Footer = ({
   return (
     <div className="answer-bottom-area">
       <div className="vote-up-down">
-        <label>Did this answer your question?</label>
+        <label>Did we find the right bit of wisdom for you?</label>
         <div className="vote-actions">
           <button
             className={`vote-btn ${isFeedbackSelected === 1 ? 'active' : ''}`}

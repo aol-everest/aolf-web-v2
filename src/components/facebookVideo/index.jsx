@@ -1,21 +1,33 @@
-import { useEffect } from 'react';
+import { Loader } from '@components/loader';
+import { useEffect, useState } from 'react';
 
-const FacebookVideo = ({ videoId }) => {
+const FacebookVideo = ({ video }) => {
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    if (window.FB) {
-      window.FB.XFBML.parse();
-    }
+    const handleFBEvent = () => {
+      if (window.FB) {
+        window.FB.Event.subscribe('xfbml.render', () => {
+          setIsLoading(false); // Set loading state to false when video is rendered
+        });
+        window.FB.XFBML.parse(); // Parse the XFBML markup
+      }
+    };
+    handleFBEvent();
   }, []);
 
   return (
-    <div
-      className="fb-video"
-      data-href={`https://www.facebook.com/watch/?v=${videoId}`}
-      data-width="auto"
-      data-show-text="false"
-      data-allowfullscreen="true"
-      data-controls="true" // Enable video controls
-    ></div>
+    <div>
+      {isLoading && <Loader />}
+      <div
+        className="fb-video"
+        data-href={video}
+        data-width="auto"
+        data-show-text="false"
+        data-allowfullscreen="true"
+        data-controls="true" // Enable video controls
+        style={{ display: isLoading ? 'none' : 'block' }}
+      ></div>
+    </div>
   );
 };
 

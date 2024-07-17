@@ -101,10 +101,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <script
             async
             defer
-            crossorigin="anonymous"
+            crossOrigin="anonymous"
             src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"
           ></script>
-          <script async defer src="https://www.instagram.com/embed.js"></script>
+          <script async src="https://www.instagram.com/embed.js"></script>
         </Head>
         <body>
           <Main />

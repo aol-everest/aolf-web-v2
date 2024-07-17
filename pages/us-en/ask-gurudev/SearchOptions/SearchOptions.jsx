@@ -12,10 +12,9 @@ const SearchOptions = ({
   query,
   onChangeQuery,
   setQuery,
-  setDebouncedQuery,
   isLoading,
-  setSearchResult,
   selectedCategory,
+  setLoading,
 }) => {
   const queryInputRef = useRef(null);
   const questions = askGurudevQuestions();
@@ -33,10 +32,8 @@ const SearchOptions = ({
 
   const onSearchChangeQuery = useCallback((event) => {
     if (!event.target.value) {
-      setSearchResult({});
       setQuery('');
       setLocalQuery('');
-      setDebouncedQuery('');
       queryInputRef.current.value = '';
     }
     setLocalQuery(event.target.value);
@@ -44,6 +41,7 @@ const SearchOptions = ({
 
   const onRecomendedQuestionsSelect = (question) => {
     setLocalQuery(question);
+    setLoading(true);
     setQuery(question);
   };
 
@@ -65,6 +63,7 @@ const SearchOptions = ({
 
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
+      setLoading(true);
       onChangeQuery(localQuery); // Trigger search action on Enter key press
     }
   };

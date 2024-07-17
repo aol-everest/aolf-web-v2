@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import SearchResult from '../SearchResult/SearchResult';
 
-const SearchResultsList = ({ result, debouncedQuery }) => {
+const SearchResultsList = ({ result }) => {
   const [playingId, setPlayingId] = useState(null);
   return (
     <AnimatePresence mode="popLayout" initial={false}>
