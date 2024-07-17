@@ -10,7 +10,18 @@ const InstagramVideo = ({ video }) => {
   }, []);
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <InstagramEmbed url={video} width="100%" captioned igVersion={12} />
+      <InstagramEmbed
+        url={video}
+        width="100%"
+        captioned
+        igVersion={12}
+        placeholderSpinnerDisabled
+        placeholderProps={{
+          url: video,
+          linkText: 'Please click to View on Instagram',
+          spinnerDisabled: true,
+        }}
+      />
     </div>
   );
 };
