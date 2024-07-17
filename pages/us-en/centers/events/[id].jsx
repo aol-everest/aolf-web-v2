@@ -153,37 +153,19 @@ const EventTile = ({ data, isAuthenticated }) => {
     });
     if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
+        pathname: `/us-en/ticketed-event/${sfid}`,
         query: {
           ctype: productTypeId,
-          page: 'c-o',
         },
       });
     } else {
       navigateToLogin(
         router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
+        `/us-en/ticketed-event/${sfid}?${queryString.stringify(router.query)}`,
       );
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
-  };
-
-  const detailAction = () => {
-    track('allcourses_details_click', {
-      course_format: data?.productTypeId,
-      course_name: data?.title,
-      course_id: data?.sfid,
-      course_price: data?.unitPrice,
-    });
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/${sfid}`,
-      query: {
-        ctype: productTypeId,
-      },
-    });
   };
 
   const getCourseDeration = () => {
@@ -248,8 +230,9 @@ const EventTile = ({ data, isAuthenticated }) => {
         <div class="cat-item">General</div>
       </div> */}
       <div class="course-actions">
-        <button class="btn-secondary">Details</button>
-        <button class="btn-primary">Register</button>
+        <button className="btn-primary" onClick={enrollAction}>
+          Enroll
+        </button>
       </div>
     </div>
   );
@@ -272,6 +255,11 @@ const Event = ({ centerDetail }) => {
     'startEndDate',
     parseAsStartEndDate,
   );
+  const [onlyWeekend, setOnlyWeekend] = useQueryState(
+    'onlyWeekend',
+    parseAsBoolean.withDefault(false),
+  );
+  const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
 
   const [searchKey, setSearchKey] = useState('');
   const [centerSearchKey, setCenterSearchKey] = useState('');
@@ -287,6 +275,8 @@ const Event = ({ centerDetail }) => {
             filterStartEndDate,
             courseModeFilter,
             centerDetail: centerDetail.sfid,
+            onlyWeekend,
+            timeZoneFilter,
           },
         ],
         queryFn: async ({ pageParam = 1 }) => {
@@ -306,6 +296,20 @@ const Event = ({ centerDetail }) => {
             param = {
               ...param,
               ctype: ctypeFilter.value,
+            };
+          }
+
+          if (onlyWeekend) {
+            param = {
+              ...param,
+              onlyWeekend: onlyWeekend,
+            };
+          }
+
+          if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
+            param = {
+              ...param,
+              timeZone: TIME_ZONE[timeZoneFilter].value,
             };
           }
 
@@ -382,6 +386,8 @@ const Event = ({ centerDetail }) => {
   const onClearAllFilter = () => {
     setCourseModeFilter(null);
     setFilterStartEndDate(null);
+    setOnlyWeekend(null);
+    setTimeZoneFilter(null);
   };
 
   const centerChangeHandler = (center) => {
@@ -399,6 +405,12 @@ const Event = ({ centerDetail }) => {
       case 'courseModeFilter':
         setCourseModeFilter(value);
         break;
+      case 'onlyWeekend':
+        setOnlyWeekend(value);
+        break;
+      case 'timeZoneFilter':
+        setTimeZoneFilter(value);
+        break;
     }
   };
 
@@ -411,6 +423,12 @@ const Event = ({ centerDetail }) => {
       case 'courseModeFilter':
         setCourseModeFilter(null);
         break;
+      case 'onlyWeekend':
+        setOnlyWeekend(null);
+        break;
+      case 'timeZoneFilter':
+        setTimeZoneFilter(null);
+        break;
     }
   };
 
@@ -422,6 +440,12 @@ const Event = ({ centerDetail }) => {
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
+        break;
+      case 'onlyWeekend':
+        setOnlyWeekend(null);
+        break;
+      case 'timeZoneFilter':
+        setTimeZoneFilter(null);
         break;
     }
   };
@@ -551,7 +575,7 @@ const Event = ({ centerDetail }) => {
             >
               {({ closeHandler }) => (
                 <>
-                  {orgConfig.courseModes.map((courseMode, index) => {
+                  {orgConfig.eventModes.map((courseMode, index) => {
                     return (
                       <li
                         key={index}
@@ -629,6 +653,61 @@ const Event = ({ centerDetail }) => {
                 />
               </div>
             </div>
+            <Popup
+              tabIndex="2"
+              value={onlyWeekend}
+              closeEvent={onFilterChange('onlyWeekend')}
+              showList={false}
+              label="Weekend courses"
+              buttonText={onlyWeekend ? 'Weekend courses' : null}
+            ></Popup>
+
+            <Popup
+              tabIndex="4"
+              value={TIME_ZONE[timeZoneFilter] ? timeZoneFilter : null}
+              buttonText={
+                timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                  ? TIME_ZONE[timeZoneFilter].name
+                  : null
+              }
+              closeEvent={onFilterChange('timeZoneFilter')}
+              label="Time Zone"
+            >
+              {({ closeHandler }) => (
+                <>
+                  <li
+                    className="courses-filter__list-item"
+                    onClick={closeHandler(TIME_ZONE.EST.value)}
+                  >
+                    {TIME_ZONE.EST.name}
+                  </li>
+                  <li
+                    className="courses-filter__list-item"
+                    onClick={closeHandler(TIME_ZONE.CST.value)}
+                  >
+                    {TIME_ZONE.CST.name}
+                  </li>
+                  <li
+                    className="courses-filter__list-item"
+                    onClick={closeHandler(TIME_ZONE.MST.value)}
+                  >
+                    {TIME_ZONE.MST.name}
+                  </li>
+                  <li
+                    className="courses-filter__list-item"
+                    onClick={closeHandler(TIME_ZONE.PST.value)}
+                  >
+                    {TIME_ZONE.PST.name}
+                  </li>
+                  <li
+                    className="courses-filter__list-item"
+                    onClick={closeHandler(TIME_ZONE.HST.value)}
+                  >
+                    {TIME_ZONE.HST.name}
+                  </li>
+                </>
+              )}
+            </Popup>
           </div>
           <div className="search_course_form_mobile d-lg-none d-block">
             <div>
