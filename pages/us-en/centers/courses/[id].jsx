@@ -474,6 +474,13 @@ const Course = ({ centerDetail }) => {
     });
   };
 
+  const centerChangeHandlerWrapper = (center) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/courses/${center.value}`,
+      query: { u: 'true' },
+    });
+  };
+
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'courseTypeFilter':
@@ -944,13 +951,28 @@ const Course = ({ centerDetail }) => {
                   </div>
 
                   <MobileFilterModal
+                    label="Center"
+                    hideClearOption
+                    value={centerDetail ? centerDetail.centerName : null}
+                  >
+                    <SmartInput
+                      containerClassName="smart-input-mobile"
+                      placeholder="Search Center"
+                      value={centerSearchKey}
+                      onSearchKeyChange={(value) => setCenterSearchKey(value)}
+                      dataList={centerList}
+                      closeHandler={centerChangeHandlerWrapper}
+                    ></SmartInput>
+                  </MobileFilterModal>
+
+                  <MobileFilterModal
                     label="Course format"
                     value={
                       courseModeFilter && COURSE_MODES[courseModeFilter]
                         ? COURSE_MODES[courseModeFilter].name
                         : null
                     }
-                    closeEvent={onFilterClearEvent('courseModeFilter')}
+                    clearEvent={onFilterClearEvent('courseModeFilter')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
@@ -980,6 +1002,67 @@ const Course = ({ centerDetail }) => {
                       </SmartDropDown>
                     </div>
                   </MobileFilterModal>
+
+                  <MobileFilterModal
+                    label="Course Type"
+                    value={
+                      courseTypeFilter && courseTypeFilter.name
+                        ? courseTypeFilter.name
+                        : null
+                    }
+                    clearEvent={onFilterClearEvent('courseTypeFilter')}
+                  >
+                    <div className="dropdown">
+                      <SmartDropDown
+                        value={courseTypeFilter}
+                        buttonText={
+                          courseTypeFilter && courseTypeFilter.name
+                            ? courseTypeFilter.name
+                            : null
+                        }
+                        closeEvent={onFilterChange('courseTypeFilter')}
+                      >
+                        {({ closeHandler }) => (
+                          <>
+                            {Object.values(COURSE_TYPES_OPTIONS).map(
+                              (courseType, index) => {
+                                return (
+                                  <li
+                                    className="dropdown-item"
+                                    key={index}
+                                    onClick={closeHandler(courseType)}
+                                  >
+                                    {courseType.name}
+                                  </li>
+                                );
+                              },
+                            )}
+                          </>
+                        )}
+                      </SmartDropDown>
+                    </div>
+                  </MobileFilterModal>
+                  <MobileFilterModal
+                    label="Dates"
+                    value={filterStartEndDateStr ? filterStartEndDateStr : null}
+                    clearEvent={onDatesChange}
+                  >
+                    <div className="datepicker-block">
+                      <DateRangePicker
+                        placeholder="Dates"
+                        showHeader={false}
+                        onChange={onDatesChange}
+                        showOneCalendar
+                        ranges={[]}
+                        editable={false}
+                        shouldDisableDate={combine(
+                          allowedMaxDays(14),
+                          beforeToday(),
+                        )}
+                        value={filterStartEndDate}
+                      />
+                    </div>
+                  </MobileFilterModal>
                   <label>Weekend courses</label>
                   <div
                     className={classNames('courses-filter', {
@@ -987,14 +1070,19 @@ const Course = ({ centerDetail }) => {
                     })}
                   >
                     <button
-                      className="btn_outline_box btn-modal_dropdown full-btn mt-3"
+                      className={classNames(
+                        'btn_outline_box btn-modal_dropdown full-btn mt-3',
+                        {
+                          '!tw-text-slate-300': !onlyWeekend,
+                        },
+                      )}
                       data-filter="weekend-mobile-courses"
                       data-type="checkbox"
                       onClick={() => {
                         setOnlyWeekend(!onlyWeekend ? true : null);
                       }}
                     >
-                      Weekend courses
+                      {onlyWeekend ? 'Weekend courses' : 'Select...'}
                     </button>
                     <button
                       className="courses-filter__remove"
@@ -1044,67 +1132,6 @@ const Course = ({ centerDetail }) => {
                       </svg>
                     </button>
                   </div>
-                  <MobileFilterModal
-                    label="Course Type"
-                    value={
-                      courseTypeFilter && courseTypeFilter.name
-                        ? courseTypeFilter.name
-                        : null
-                    }
-                    hideClearOption
-                    closeEvent={onFilterClearEvent('courseTypeFilter')}
-                  >
-                    <div className="dropdown">
-                      <SmartDropDown
-                        value={courseTypeFilter}
-                        buttonText={
-                          courseTypeFilter && courseTypeFilter.name
-                            ? courseTypeFilter.name
-                            : null
-                        }
-                        closeEvent={onFilterClearEvent('courseTypeFilter')}
-                      >
-                        {({ closeHandler }) => (
-                          <>
-                            {Object.values(COURSE_TYPES_OPTIONS).map(
-                              (courseType, index) => {
-                                return (
-                                  <li
-                                    className="dropdown-item"
-                                    key={index}
-                                    onClick={closeHandler(courseType)}
-                                  >
-                                    {courseType.name}
-                                  </li>
-                                );
-                              },
-                            )}
-                          </>
-                        )}
-                      </SmartDropDown>
-                    </div>
-                  </MobileFilterModal>
-                  <MobileFilterModal
-                    label="Dates"
-                    value={filterStartEndDateStr ? filterStartEndDateStr : null}
-                    clearEvent={onDatesChange}
-                  >
-                    <div className="datepicker-block">
-                      <DateRangePicker
-                        placeholder="Dates"
-                        showHeader={false}
-                        onChange={onDatesChange}
-                        showOneCalendar
-                        ranges={[]}
-                        editable={false}
-                        shouldDisableDate={combine(
-                          allowedMaxDays(14),
-                          beforeToday(),
-                        )}
-                        value={filterStartEndDate}
-                      />
-                    </div>
-                  </MobileFilterModal>
                   <MobileFilterModal
                     label="Time Zone"
                     value={

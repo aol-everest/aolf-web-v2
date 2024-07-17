@@ -616,6 +616,13 @@ const Meetup = ({ centerDetail }) => {
     });
   };
 
+  const centerChangeHandlerWrapper = (center) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/courses/${center.value}`,
+      query: { u: 'true' },
+    });
+  };
+
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'meetupTypeFilter':
@@ -848,7 +855,7 @@ const Meetup = ({ centerDetail }) => {
               buttonText={
                 meetupTypeFilter && meetupMasters[meetupTypeFilter]
                   ? meetupMasters[meetupTypeFilter].name
-                  : 'Meetup Type'
+                  : null
               }
               label="Meetup Type"
               closeEvent={onFilterChange('meetupTypeFilter')}
@@ -1072,15 +1079,30 @@ const Meetup = ({ centerDetail }) => {
                   </div>
 
                   <MobileFilterModal
+                    label="Center"
+                    hideClearOption
+                    value={centerDetail ? centerDetail.centerName : null}
+                  >
+                    <SmartInput
+                      containerClassName="smart-input-mobile"
+                      placeholder="Search Center"
+                      value={centerSearchKey}
+                      onSearchKeyChange={(value) => setCenterSearchKey(value)}
+                      dataList={centerList}
+                      closeHandler={centerChangeHandlerWrapper}
+                    ></SmartInput>
+                  </MobileFilterModal>
+
+                  <MobileFilterModal
                     label="Meetup Format"
                     cl
                     value={
                       meetupModeFilter
                         ? COURSE_MODES[meetupModeFilter].name
-                        : 'Select Format'
+                        : null
                     }
                     hideClearOption
-                    closeEvent={onFilterChange('meetupModeFilter')}
+                    clearEvent={onFilterChange('meetupModeFilter')}
                   >
                     <div className="dropdown">
                       <SmartDropDown
@@ -1116,10 +1138,9 @@ const Meetup = ({ centerDetail }) => {
                     value={
                       meetupTypeFilter && meetupMasters[meetupTypeFilter]
                         ? meetupMasters[meetupTypeFilter].name
-                        : 'Select Meetup'
+                        : null
                     }
-                    hideClearOption
-                    closeEvent={onFilterChange('meetupTypeFilter')}
+                    clearEvent={onFilterChange('meetupTypeFilter')}
                   >
                     <div className="dropdown">
                       <SmartDropDown

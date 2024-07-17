@@ -30,8 +30,13 @@ export const MobileFilterModal = (props) => {
         className="btn_outline_box btn-modal_dropdown full-btn mt-3"
         onClick={showModal}
       >
-        <a className="btn" href="#">
-          {value || label}
+        <a
+          className={classNames('btn', {
+            '!tw-text-slate-300': !value,
+          })}
+          href="#"
+        >
+          {value || 'Select...'}
         </a>
       </div>
       <div
