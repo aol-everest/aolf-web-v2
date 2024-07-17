@@ -18,7 +18,7 @@ const InstagramVideo = ({ video }) => {
         placeholderSpinnerDisabled
         placeholderProps={{
           url: video,
-          linkText: 'Please click to View on Instagram',
+          linkText: 'Please click to view on Instagram',
           spinnerDisabled: true,
         }}
       />
