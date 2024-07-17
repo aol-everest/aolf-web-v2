@@ -63,7 +63,9 @@ const SearchOptions = ({
 
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
-      setLoading(true);
+      if (localQuery !== query) {
+        setLoading(true);
+      }
       onChangeQuery(localQuery); // Trigger search action on Enter key press
     }
   };
