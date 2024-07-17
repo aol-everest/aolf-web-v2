@@ -9,7 +9,7 @@ export const ViewCardDetail = ({
   return (
     <form className="profile-form-wrap">
       <div className="form-item card-number">
-        <label for="cardnum">Card number</label>
+        <label for="cardnum">Card Number</label>
         <input
           className="mt-0 w-100"
           type="text"

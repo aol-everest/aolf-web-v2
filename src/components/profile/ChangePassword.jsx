@@ -45,6 +45,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
     }
     setLoading(false);
   };
+
   return (
     <>
       {loading && <Loader />}
@@ -85,17 +86,25 @@ export const ChangePassword = ({ updateCompleteAction }) => {
             handleBlur,
             handleSubmit,
           } = props;
+
+          const oldPasswordType = passwordSelected.includes('oldPassword')
+            ? 'text'
+            : 'password';
+          const passwordType = passwordSelected.includes('password')
+            ? 'text'
+            : 'password';
+          const passwordConfirmType = passwordSelected.includes(
+            'passwordConfirmation',
+          )
+            ? 'text'
+            : 'password';
           return (
             <form className="profile-form-box" onSubmit={handleSubmit}>
               <div className="profile-form-wrap">
                 <div className="form-item col-1-1 relative">
                   <label for="password">Current Password</label>
                   <input
-                    type={
-                      passwordSelected.includes('oldPassword')
-                        ? 'text'
-                        : 'password'
-                    }
+                    type={oldPasswordType}
                     className={classNames('mt-0 w-100', {
                       validate: errors.oldPassword && touched.oldPassword,
                     })}
@@ -106,12 +115,13 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                     name="oldPassword"
                   />
                   <button
+                    class={classNames('showPassBtn', oldPasswordType)}
                     type="button"
-                    className="eye-button"
                     onClick={() => togglePassword('oldPassword')}
                   >
-                    <img src="/img/Eye.png" />
+                    <span class="icon-aol"></span>
                   </button>
+
                   {errors.oldPassword && touched.oldPassword && (
                     <p className="validation-input">{errors.oldPassword}</p>
                   )}
@@ -121,11 +131,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                   <label for="cpassword">New Password</label>
                   <input
                     placeholder="New Password"
-                    type={
-                      passwordSelected.includes('password')
-                        ? 'text'
-                        : 'password'
-                    }
+                    type={passwordType}
                     className={classNames('w-100', {
                       validate: errors.password && touched.password,
                     })}
@@ -135,11 +141,11 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                     name="password"
                   />
                   <button
+                    class={classNames('showPassBtn', passwordType)}
                     type="button"
-                    className="eye-button"
                     onClick={() => togglePassword('password')}
                   >
-                    <img src="/img/Eye.png" />
+                    <span class="icon-aol"></span>
                   </button>
                   <label className="input-msg">Minimum 8 characters</label>
                   {errors.password && touched.password && (
@@ -150,11 +156,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                 <div className="form-item col-1-2 relative">
                   <label for="cpassword">Confirm New Password</label>
                   <input
-                    type={
-                      passwordSelected.includes('passwordConfirmation')
-                        ? 'text'
-                        : 'password'
-                    }
+                    type={passwordConfirmType}
                     className={classNames('w-100', {
                       validate:
                         errors.passwordConfirmation &&
@@ -167,12 +169,13 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                     name="passwordConfirmation"
                   />
                   <button
+                    class={classNames('showPassBtn', passwordConfirmType)}
                     type="button"
-                    className="eye-button"
                     onClick={() => togglePassword('passwordConfirmation')}
                   >
-                    <img src="/img/Eye.png" />
+                    <span class="icon-aol"></span>
                   </button>
+
                   {errors.passwordConfirmation &&
                     touched.passwordConfirmation && (
                       <p className="validation-input">

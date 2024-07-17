@@ -367,8 +367,8 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
 
                 <StyledInputNewCheckout
                   type="email"
-                  isReadOnly={!allowEmailEdit}
-                  className="form-item col-1-2"
+                  isReadOnly={true}
+                  className="form-item col-1-2 email-container"
                   placeholder="Email address"
                   formikProps={props}
                   formikKey="email"
@@ -384,8 +384,9 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
                   onChange={(event) => {
                     event.preventDefault();
                   }}
-                  onClick={allowEmailEdit ? editEmailAction : null}
                   label="Email address"
+                  allowEmailEdit={allowEmailEdit}
+                  editEmailAction={editEmailAction}
                 ></StyledInputNewCheckout>
 
                 <PhoneInputNewCheckout
