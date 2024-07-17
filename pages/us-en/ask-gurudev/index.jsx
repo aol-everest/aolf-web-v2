@@ -152,7 +152,7 @@ export default function AskGurudev() {
   const getErrorMessagesForMeta = () => {
     switch (currentMeta) {
       case 'error':
-        return "Hi friend :) Thanks for trying the beta version of AskGurudev, but something unexpected happened. Please try again later and see Gurudev's <a href='https://www.instagram.com/gurudev'>instagram</a> for wisdom!";
+        return "Hi friend 😊 Thanks for trying the beta version of AskGurudev, but something unexpected happened. Please try again later and see Gurudev's <a href='https://www.instagram.com/gurudev'>instagram</a> for wisdom!";
       case 'llm out of scope':
       case 'filtered honeypot':
       case 'above threshold':
@@ -163,7 +163,7 @@ export default function AskGurudev() {
       case 'suicide':
         return "Hi there, Below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message <a href='tel:(855) 202-4400'>408-759-1301</a>";
       default: {
-        return `${query ? "<br/>Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!" : ''}`;
+        return `${query ? "Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!" : ''}`;
       }
     }
   };
@@ -199,7 +199,7 @@ export default function AskGurudev() {
               <div className="disclaimer">{<CustomMessage />}</div>
             ) : (
               <div className="disclaimer">
-                Hi there :) Ask a question and we’ll match it to wisdom from
+                Hi there 😊 Ask a question and we’ll match it to wisdom from
                 Gurudev Sri Sri Ravi Shankar. If we don't find your question in
                 our collection, we'll share with you something related! To get
                 started, here is wisdom from one of Gurudev’s talks.
