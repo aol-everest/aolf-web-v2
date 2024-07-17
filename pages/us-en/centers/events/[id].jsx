@@ -397,6 +397,13 @@ const Event = ({ centerDetail }) => {
     });
   };
 
+  const centerChangeHandlerWrapper = (center) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/courses/${center.value}`,
+      query: { u: 'true' },
+    });
+  };
+
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'courseTypeFilter':
@@ -469,6 +476,12 @@ const Event = ({ centerDetail }) => {
     filterCount++;
   }
   if (filterStartEndDate) {
+    filterCount++;
+  }
+  if (onlyWeekend) {
+    filterCount++;
+  }
+  if (timeZoneFilter) {
     filterCount++;
   }
 
@@ -746,6 +759,24 @@ const Event = ({ centerDetail }) => {
                       </div>
                     )}
 
+                    {onlyWeekend && (
+                      <div
+                        className="selected-filter-item"
+                        onClick={onFilterClearEvent('onlyWeekend')}
+                      >
+                        Weekend Courses
+                      </div>
+                    )}
+
+                    {timeZoneFilter && TIME_ZONE[timeZoneFilter] && (
+                      <div
+                        className="selected-filter-item"
+                        onClick={onFilterClearEvent('timeZoneFilter')}
+                      >
+                        {TIME_ZONE[timeZoneFilter].name}
+                      </div>
+                    )}
+
                     {filterCount > 1 && (
                       <div
                         className="selected-filter-item clear"
@@ -755,9 +786,23 @@ const Event = ({ centerDetail }) => {
                       </div>
                     )}
                   </div>
+                  <MobileFilterModal
+                    label="Center"
+                    hideClearOption
+                    value={centerDetail ? centerDetail.centerName : null}
+                  >
+                    <SmartInput
+                      containerClassName="smart-input-mobile"
+                      placeholder="Search Center"
+                      value={centerSearchKey}
+                      onSearchKeyChange={(value) => setCenterSearchKey(value)}
+                      dataList={centerList}
+                      closeHandler={centerChangeHandlerWrapper}
+                    ></SmartInput>
+                  </MobileFilterModal>
 
                   <MobileFilterModal
-                    label="Course format"
+                    label="Event format"
                     value={
                       courseModeFilter && COURSE_MODES[courseModeFilter]
                         ? COURSE_MODES[courseModeFilter].name
@@ -777,7 +822,7 @@ const Event = ({ centerDetail }) => {
                       >
                         {({ closeHandler }) => (
                           <>
-                            {orgConfig.courseModes.map((courseMode, index) => {
+                            {orgConfig.eventModes.map((courseMode, index) => {
                               return (
                                 <li
                                   key={index}
@@ -793,7 +838,6 @@ const Event = ({ centerDetail }) => {
                       </SmartDropDown>
                     </div>
                   </MobileFilterModal>
-                  <label>Weekend courses</label>
 
                   <MobileFilterModal
                     label="Dates"
@@ -814,6 +858,131 @@ const Event = ({ centerDetail }) => {
                         )}
                         value={filterStartEndDate}
                       />
+                    </div>
+                  </MobileFilterModal>
+                  <label>Weekend courses</label>
+                  <div
+                    className={classNames('courses-filter', {
+                      'with-selected': onlyWeekend,
+                    })}
+                  >
+                    <button
+                      className={classNames(
+                        'btn_outline_box btn-modal_dropdown full-btn mt-3',
+                        {
+                          '!tw-text-slate-300': !onlyWeekend,
+                        },
+                      )}
+                      data-filter="weekend-mobile-courses"
+                      data-type="checkbox"
+                      onClick={() => {
+                        setOnlyWeekend(!onlyWeekend ? true : null);
+                      }}
+                    >
+                      {onlyWeekend ? 'Weekend courses' : 'Select...'}
+                    </button>
+                    <button
+                      className="courses-filter__remove"
+                      data-filter="weekend-mobile-courses"
+                      data-placeholder="Online"
+                      onClick={() => {
+                        setOnlyWeekend(null);
+                      }}
+                    >
+                      <svg
+                        width="20"
+                        height="21"
+                        viewBox="0 0 20 21"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          x="0.5"
+                          y="1"
+                          width="19"
+                          height="19"
+                          rx="9.5"
+                          fill="#ABB1BA"
+                        />
+                        <rect
+                          x="0.5"
+                          y="1"
+                          width="19"
+                          height="19"
+                          rx="9.5"
+                          stroke="white"
+                        />
+                        <path
+                          d="M13.5 7L6.5 14"
+                          stroke="white"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M13.5 14L6.5 7"
+                          stroke="white"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <MobileFilterModal
+                    label="Time Zone"
+                    value={
+                      timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                        ? TIME_ZONE[timeZoneFilter].name
+                        : null
+                    }
+                    clearEvent={onFilterClearEvent('timeZoneFilter')}
+                  >
+                    <div className="dropdown">
+                      <SmartDropDown
+                        value={timeZoneFilter}
+                        buttonText={
+                          timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                            ? TIME_ZONE[timeZoneFilter].name
+                            : 'Select Timezone'
+                        }
+                        closeEvent={onFilterChange('timeZoneFilter')}
+                      >
+                        {({ closeHandler }) => (
+                          <>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.EST.value)}
+                            >
+                              {TIME_ZONE.EST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.CST.value)}
+                            >
+                              {TIME_ZONE.CST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.MST.value)}
+                            >
+                              {TIME_ZONE.MST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.PST.value)}
+                            >
+                              {TIME_ZONE.PST.name}
+                            </li>
+                            <li
+                              className="dropdown-item"
+                              onClick={closeHandler(TIME_ZONE.HST.value)}
+                            >
+                              {TIME_ZONE.HST.name}
+                            </li>
+                          </>
+                        )}
+                      </SmartDropDown>
                     </div>
                   </MobileFilterModal>
                 </div>
@@ -841,6 +1010,24 @@ const Event = ({ centerDetail }) => {
             {filterStartEndDateStr && (
               <div className="selected-filter-item" onClick={onDatesChange}>
                 {filterStartEndDateStr}
+              </div>
+            )}
+
+            {onlyWeekend && (
+              <div
+                className="selected-filter-item"
+                onClick={onFilterClearEvent('onlyWeekend')}
+              >
+                Weekend Courses
+              </div>
+            )}
+
+            {timeZoneFilter && TIME_ZONE[timeZoneFilter] && (
+              <div
+                className="selected-filter-item"
+                onClick={onFilterClearEvent('timeZoneFilter')}
+              >
+                {TIME_ZONE[timeZoneFilter].name}
               </div>
             )}
 
