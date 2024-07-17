@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 import { Loader } from '@components/loader';
 import { MODAL_TYPES } from '@constants';
 import Link from '@components/linkWithUTM';
-import { isMobileOrTablet } from '@utils';
 
 const ProfileHeader = dynamic(() =>
   import('@components/profile').then((mod) => mod.ProfileHeader),
@@ -46,22 +45,6 @@ export const withUserInfo = (WrappedComponent) => {
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
     const elementRef = useRef(null);
-
-    const scrollOffset = 75; // Adjust this value as needed
-
-    useEffect(() => {
-      if (elementRef.current && isMobileOrTablet()) {
-        const elementPosition = elementRef.current.getBoundingClientRect().top;
-        const offsetPosition = elementPosition - scrollOffset;
-
-        setTimeout(() => {
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth',
-          });
-        }, 200);
-      }
-    }, [router.pathname]);
 
     const {
       first_name,
@@ -267,7 +250,11 @@ export const withUserInfo = (WrappedComponent) => {
                   <div className="profile-tabs">
                     <ul className="tab-links">
                       <li>
-                        <Link href={UPDATE_PROFILE} legacyBehavior>
+                        <Link
+                          href={`${UPDATE_PROFILE}`}
+                          scroll={false}
+                          legacyBehavior
+                        >
                           <a
                             className={classNames('profile-tab', {
                               active: pathname === UPDATE_PROFILE,
@@ -279,7 +266,11 @@ export const withUserInfo = (WrappedComponent) => {
                         </Link>
                       </li>
                       <li>
-                        <Link href={CARD_DETAILS} legacyBehavior>
+                        <Link
+                          href={`${CARD_DETAILS}`}
+                          legacyBehavior
+                          scroll={false}
+                        >
                           <a
                             className={classNames('profile-tab', {
                               active: pathname === CARD_DETAILS,
@@ -290,7 +281,11 @@ export const withUserInfo = (WrappedComponent) => {
                         </Link>
                       </li>
                       <li>
-                        <Link href={CHANGE_PASSWORD} legacyBehavior>
+                        <Link
+                          href={`${CHANGE_PASSWORD}`}
+                          legacyBehavior
+                          scroll={false}
+                        >
                           <a
                             className={classNames('profile-tab', {
                               active: pathname === CHANGE_PASSWORD,
@@ -301,7 +296,7 @@ export const withUserInfo = (WrappedComponent) => {
                         </Link>
                       </li>
                       <li>
-                        <Link href={PAST_COURSES} legacyBehavior>
+                        <Link href={PAST_COURSES} legacyBehavior scroll={false}>
                           <a
                             className={classNames('profile-tab', {
                               active: pathname === PAST_COURSES,
@@ -312,7 +307,11 @@ export const withUserInfo = (WrappedComponent) => {
                         </Link>
                       </li>
                       <li>
-                        <Link href={UPCOMING_EVENTS} legacyBehavior>
+                        <Link
+                          href={UPCOMING_EVENTS}
+                          legacyBehavior
+                          scroll={false}
+                        >
                           <a
                             className={classNames('profile-tab', {
                               active: pathname === UPCOMING_EVENTS,
@@ -323,7 +322,7 @@ export const withUserInfo = (WrappedComponent) => {
                         </Link>
                       </li>
                       <li>
-                        <Link href={PREFERENCES} legacyBehavior>
+                        <Link href={PREFERENCES} legacyBehavior scroll={false}>
                           <a
                             className={classNames('profile-tab', {
                               active: pathname === PREFERENCES,
@@ -335,7 +334,11 @@ export const withUserInfo = (WrappedComponent) => {
                       </li>
 
                       <li>
-                        <Link href={REFER_A_FRIEND} legacyBehavior>
+                        <Link
+                          href={REFER_A_FRIEND}
+                          legacyBehavior
+                          scroll={false}
+                        >
                           <a
                             className={classNames('profile-tab', {
                               active: pathname === REFER_A_FRIEND,
