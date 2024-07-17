@@ -206,7 +206,6 @@ function LoginPage() {
               2000,
             );
             setTimeout(() => {
-              router.refresh();
               if (navigateTo) {
                 router.push(navigateTo);
               } else {
