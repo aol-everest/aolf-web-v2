@@ -101,6 +101,9 @@ const SearchOptions = ({
                 className={`${localQuery ? 'input has-value' : ''}`}
                 onKeyDown={handleKeyPress} // Call handleKeyPress on key down
               />
+              <button class="clear-button" onClick={() => setLocalQuery('')}>
+                <img src="/img/ic-close.svg" alt="close" />
+              </button>
               <button
                 className="search-button"
                 onClick={localQuery ? () => onChangeQuery(localQuery) : null}

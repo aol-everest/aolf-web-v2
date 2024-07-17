@@ -113,8 +113,9 @@
       display: flex;
       justify-content: center;
       position: relative;
-
+      margin: 0 auto;
       width: 100%;
+      max-width: 744px;
       input {
         border: #f2cbab 1px solid;
         box-shadow: 0px 3px 23px 0px #95300014;
@@ -123,20 +124,53 @@
         width: 100%;
         font-size: 18px;
         font-weight: 500;
-        padding: 0 68px 0 32px;
+        padding: 0 95px 0 32px;
         max-width: 744px;
         @media screen and (max-width: 991px) {
           background-position: calc(100% - 20px) center;
           background-size: 20px;
-          padding: 0 44px 0 20px;
+          padding: 0 75px 0 20px;
           font-size: 16px;
           font-weight: 400;
+        }
+        &.has-value + .clear-button {
+          visibility: visible;
+        }
+      }
+      input[type='search']::-webkit-search-decoration,
+      input[type='search']::-webkit-search-cancel-button,
+      input[type='search']::-webkit-search-results-button,
+      input[type='search']::-webkit-search-results-decoration {
+        display: none;
+      }
+      .clear-button {
+        position: absolute;
+        right: 65px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        visibility: hidden;
+        cursor: pointer;
+        height: 24px;
+        width: 24px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @media screen and (max-width: 991px) {
+          height: 20px;
+          width: 20px;
+          right: 50px;
+        }
+        img {
+          width: 100%;
         }
       }
     }
     .search-button {
       position: absolute;
-      right: 17%;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
       border: none;
@@ -151,7 +185,7 @@
 
     @media screen and (max-width: 991px) {
       .search-button {
-        right: 20px;
+        right: 10px;
         height: 44px;
         width: 44px;
       }
@@ -260,6 +294,7 @@
           align-items: center;
           justify-content: center;
           color: #6f7283;
+          text-decoration: none;
           &.active {
             border-color: #e9e9e9;
             box-shadow: 0px 1px 2px 0px #1018280d;
