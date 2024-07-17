@@ -57,7 +57,6 @@ export default function AskGurudev() {
         setSearchResult(result);
         setSelectedPageIndex(0);
         setSelectedVotes({});
-        setInitialPageLoad(false);
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -71,6 +70,7 @@ export default function AskGurudev() {
   }, [query]);
 
   const onChangeQuery = useCallback((value) => {
+    setInitialPageLoad(false);
     setQuery(value);
   }, []);
 
