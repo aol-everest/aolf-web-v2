@@ -622,13 +622,14 @@ main.page--find-a-course {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
+        gap: 8px;
       }
       .course-title {
         font-family: Lora;
         font-size: 24px;
         font-weight: 500;
         line-height: 28px;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
         flex: 100%;
       }
       .course-type {
@@ -654,7 +655,6 @@ main.page--find-a-course {
         font-weight: 600;
         line-height: 18px;
         text-transform: uppercase;
-        margin-left: 8px;
       }
       .course-price {
         background: linear-gradient(94.04deg, #ffa180 3.84%, #ed7347 109.6%);
@@ -665,6 +665,7 @@ main.page--find-a-course {
         font-size: 24px;
         font-weight: 600;
         line-height: 28px;
+        flex-shrink: 0;
       }
       .course-instructors,
       .course-location,
@@ -863,6 +864,10 @@ main.page--find-a-course {
             .course-actions {
               display: none;
             }
+          }
+          .course-actions {
+            display: none;
+            visibility: hidden;
           }
         }
         &.registered {
