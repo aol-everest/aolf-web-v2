@@ -544,7 +544,7 @@ const Meetup = ({ centerDetail }) => {
           if (centerDetail) {
             param = {
               ...param,
-              center: centerDetail.sfid,
+              centerId: centerDetail.sfid,
             };
           }
 
