@@ -338,7 +338,7 @@ export const truncateString = (str) => {
 
 export const extractVideoId = (url) => {
   const regex =
-    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
   const match = url.match(regex);
   return match ? match[1] : null;
 };
@@ -570,11 +570,14 @@ export const askGurudevQuestions = () => {
         'How to overcome guilt?',
         'What are the natural tendencies of the mind?',
         'What is monkey mind?',
-        'How to live in the present moment?',
         'How to have dispassion in life?',
         'How to balance the mind?',
         'How to calm the mind and feel happy from within?',
         'What is bondage?',
+        'How does the ego work?',
+        'How to get rid of the ego?',
+        'How to accept people and situations as they are?',
+        'How to live in the present moment?',
       ],
     },
     {
@@ -593,16 +596,15 @@ export const askGurudevQuestions = () => {
       questions: [
         'What is Sudarshan Kriya?',
         'What is the power of learning Sudarshan Kriya?',
-        'How can practicing Sudarshan Kriya benefit mental health?',
+        'How can Sudarshan Kriya benefit my mental and physical health?',
       ],
     },
     {
       name: 'Self',
       questions: [
-        'How to accept people and situations as they are?',
-        'How to increase self-condifence?',
-        'How does the ego work?',
-        'How to get rid of the ego?',
+        'How to increase self-confidence?',
+        'Who am I?',
+        'What is the Self?',
       ],
     },
     {
