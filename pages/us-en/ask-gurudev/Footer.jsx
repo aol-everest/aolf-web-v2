@@ -73,6 +73,9 @@ const Footer = ({
           </button>
         </div>
       </div>
+      <div class="view-other-answers">
+        <span>More wisdom</span>
+      </div>
       <div className="answer-pagination">
         <ul>
           {paginationArray?.length > 1 &&

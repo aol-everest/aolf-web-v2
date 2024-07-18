@@ -235,7 +235,7 @@
         align-items: center;
         @media screen and (max-width: 991px) {
           height: 48px;
-          order: 1;
+          order: 3;
         }
         label {
           font-size: 16px;
@@ -282,12 +282,15 @@
           margin: auto;
           order: 1;
         }
-        a {
+        span {
           color: #3d8be8;
           text-decoration: none;
         }
       }
       .answer-pagination {
+        @media screen and (max-width: 991px) {
+          order: 2;
+        }
         ul {
           display: flex;
         }
