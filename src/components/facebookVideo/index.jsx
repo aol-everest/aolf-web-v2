@@ -16,14 +16,15 @@ const FacebookVideo = ({ video }) => {
   }, []);
 
   return (
-    <div>
+    <div className="video-wrapper">
       {isLoading && <Loader />}
       <div
         className="fb-video"
         data-href={video}
-        data-width="auto"
         data-show-text="false"
-        data-allowfullscreen="true"
+        data-allowfullscreen="false"
+        data-width="auto"
+        data-height="auto"
         data-controls="true" // Enable video controls
         style={{ display: isLoading ? 'none' : 'block' }}
       ></div>

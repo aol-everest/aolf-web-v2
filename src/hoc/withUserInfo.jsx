@@ -198,6 +198,8 @@ export const withUserInfo = (WrappedComponent) => {
       }
     };
 
+    console.log('subscriptions', subscriptions);
+
     return (
       <>
         {loading && <Loader />}

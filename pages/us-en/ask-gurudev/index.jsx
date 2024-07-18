@@ -15,7 +15,7 @@ import { Loader } from '@components/loader';
 
 export default function AskGurudev() {
   const [query, setQuery] = useQueryString('query', {
-    defaultValue: 'What is the purpose of my life',
+    defaultValue: 'What is the purpose of my life?',
   });
   const [feedbackText, setFeedbackText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -48,6 +48,13 @@ export default function AskGurudev() {
 
   useEffect(() => {
     const getApiData = async (query) => {
+      if (
+        query &&
+        query !== 'What is the purpose of my life?' &&
+        initialPageLoad
+      ) {
+        setInitialPageLoad(false);
+      }
       setSearchResult({});
       setLoading(true);
       try {
@@ -63,10 +70,7 @@ export default function AskGurudev() {
         setLoading(false);
       }
     };
-
-    if (query) {
-      getApiData(query);
-    }
+    getApiData(query);
   }, [query]);
 
   const onChangeQuery = useCallback((value) => {
@@ -161,7 +165,7 @@ export default function AskGurudev() {
       case 'random':
         return 'Sorry, there is a limited set of topics we can help with and we may not be able to answer this question. Try something else?';
       case 'suicide':
-        return "Hi there, Below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message <a href='tel:(855) 202-4400'>(855) 202-4400</a>";
+        return "Hi there, below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call or message <a href='tel:(855) 202-4400'>(855) 202-4400</a>";
       default: {
         return `${query ? "Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!" : ''}`;
       }
@@ -201,15 +205,17 @@ export default function AskGurudev() {
               <div className="disclaimer">
                 Hi there 😊 Ask a question and we’ll match it to wisdom from
                 Gurudev Sri Sri Ravi Shankar. If we don't find your question in
-                our collection, we'll share with you something related! To get
-                started, here is wisdom from one of Gurudev’s talks.
+                our collection, we'll try to match it to something related! What
+                are you wondering about?
               </div>
             )}
 
             {loading && <Loader />}
-            <SearchResultsList result={selectedQueryResponse || {}} />
+            {!initialPageLoad && (
+              <SearchResultsList result={selectedQueryResponse || {}} />
+            )}
           </div>
-          {selectedQueryResponse && (
+          {selectedQueryResponse && !initialPageLoad && (
             <Footer
               results={searchResult?.matches}
               handleVoteSelect={handleVoteSelect}

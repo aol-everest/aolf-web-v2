@@ -31,8 +31,8 @@ const SearchOptions = ({
   }, []);
 
   const onSearchChangeQuery = useCallback((event) => {
+    console.log('event.target.value', event.target.value);
     if (!event.target.value) {
-      setQuery('');
       setLocalQuery('');
       queryInputRef.current.value = '';
     }
@@ -108,7 +108,7 @@ const SearchOptions = ({
               </button>
               <button
                 className="search-button"
-                onClick={localQuery ? () => onChangeQuery(localQuery) : null}
+                onClick={() => onChangeQuery(localQuery)}
               >
                 <img src="/img/map-search-input-icon-2.svg" alt="close" />
               </button>

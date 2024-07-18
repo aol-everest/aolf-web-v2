@@ -26,6 +26,8 @@ export const ProfileHeader = ({
     },
   });
 
+  console.log('subsciptionCategories', subsciptionCategories);
+
   const cancelMembershipAction = (modalSubscriptionId) => (e) => {
     if (e) e.preventDefault();
     hideModal();
@@ -54,6 +56,8 @@ export const ProfileHeader = ({
         },
         {},
       );
+      console.log('allSubscriptions', allSubscriptions);
+      console.log('subscriptionId', subscriptionId);
       if (allSubscriptions[subscriptionId]) {
         const modalSubscription = allSubscriptions[subscriptionId];
         const modalBody = (

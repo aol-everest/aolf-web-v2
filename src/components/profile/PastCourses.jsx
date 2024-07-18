@@ -41,6 +41,7 @@ export const PastCourses = ({ pastCourses = {} }) => {
         <h2 className="title">History of courses</h2>
         <div className="accordion" id="accordionExample">
           {pastWorkshops.map((workshop, index) => {
+            console.log('workshop.eventStartDate', workshop.eventStartDate);
             return (
               <div className="history-accordion-item" key={workshop.id}>
                 <div className="history-accordion-header">
@@ -75,7 +76,7 @@ export const PastCourses = ({ pastCourses = {} }) => {
                       </div>
                       <div className="ch-info-pill">
                         <span className="icon-aol iconaol-calendar"></span>{' '}
-                        {`${dayjs.utc(workshop.eventStartDate).format('DD.MM.YYYY')} - ${dayjs
+                        {`${dayjs.utc(new Date(workshop.eventStartDate)).format('DD.MM.YYYY')} - ${dayjs
                           .utc(workshop.eventEndDate)
                           .format('DD.MM.YYYY')}`}
                       </div>
