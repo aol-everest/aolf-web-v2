@@ -210,6 +210,7 @@
         @media screen and (max-width: 991px) {
           padding: 8px;
           font-size: 12px;
+          text-align: center;
         }
       }
     }
@@ -540,5 +541,21 @@
         }
       }
     }
+  }
+  .instagram-video-container {
+    width: 100%;
+    max-width: 100%;
+    height: 495px; /* Fixed height */
+    overflow: hidden;
+    position: relative;
+  }
+
+  .instagram-video-container > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensure content fits without cropping */
   }
 }

@@ -13,6 +13,7 @@ const InstagramVideo = ({ video }) => {
       <InstagramEmbed
         url={video}
         width="100%"
+        height="auto"
         captioned
         igVersion={12}
         placeholderSpinnerDisabled
