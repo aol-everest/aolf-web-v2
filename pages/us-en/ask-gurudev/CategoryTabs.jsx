@@ -12,7 +12,11 @@ const CategoryTabs = ({ setSelectedCategory, selectedCategory }) => {
   const swiperRef = useRef(null);
 
   const handlePredefinedElements = (item) => {
-    setSelectedCategory(item);
+    if (item === selectedCategory) {
+      setSelectedCategory('');
+    } else {
+      setSelectedCategory(item);
+    }
   };
 
   const isSelectedItem = (element) => {

@@ -20,7 +20,7 @@ export const ProfileHeader = ({
     queryKey: ['subscription'],
     queryFn: async () => {
       const response = await api.get({
-        path: 'subscription',
+        path: 'subsciption',
       });
       return response.data;
     },

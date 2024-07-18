@@ -203,6 +203,7 @@
         @media screen and (max-width: 991px) {
           padding: 8px;
           font-size: 12px;
+          text-align: center;
         }
       }
     }
@@ -267,6 +268,23 @@
               }
             }
           }
+        }
+      }
+      .view-other-answers {
+        margin-right: 32px;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+        color: #3d8be8;
+        margin-left: auto;
+        border-bottom: 1.5px solid #3d8be8;
+        @media screen and (max-width: 991px) {
+          margin: auto;
+          order: 1;
+        }
+        a {
+          color: #3d8be8;
+          text-decoration: none;
         }
       }
       .answer-pagination {
@@ -534,5 +552,21 @@
         }
       }
     }
+  }
+  .instagram-video-container {
+    width: 100%;
+    max-width: 100%;
+    height: 495px; /* Fixed height */
+    overflow: hidden;
+    position: relative;
+  }
+
+  .instagram-video-container > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensure content fits without cropping */
   }
 }

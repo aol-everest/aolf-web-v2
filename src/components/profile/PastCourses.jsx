@@ -76,8 +76,8 @@ export const PastCourses = ({ pastCourses = {} }) => {
                       </div>
                       <div className="ch-info-pill">
                         <span className="icon-aol iconaol-calendar"></span>{' '}
-                        {`${dayjs.utc(new Date(workshop.eventStartDate)).format('DD.MM.YYYY')} - ${dayjs
-                          .utc(workshop.eventEndDate)
+                        {`${dayjs.utc(workshop.eventStartDateTimeGMT).format('DD.MM.YYYY')} - ${dayjs
+                          .utc(workshop.eventEndDateTimeGMT)
                           .format('DD.MM.YYYY')}`}
                       </div>
                     </div>
