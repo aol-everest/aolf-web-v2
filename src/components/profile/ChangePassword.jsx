@@ -113,6 +113,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                     onBlur={handleBlur}
                     value={values.oldPassword}
                     name="oldPassword"
+                    autocapitalize="off"
                   />
                   <button
                     class={classNames('showPassBtn', oldPasswordType)}
@@ -131,6 +132,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                   <label for="cpassword">New Password</label>
                   <input
                     placeholder="New Password"
+                    autocapitalize="off"
                     type={passwordType}
                     className={classNames('w-100', {
                       validate: errors.password && touched.password,
@@ -163,6 +165,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                         touched.passwordConfirmation,
                     })}
                     placeholder="Confirm New Password"
+                    autocapitalize="off"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.passwordConfirmation}
