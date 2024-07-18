@@ -110,7 +110,7 @@ const SearchOptions = ({
                 className="search-button"
                 onClick={() => onChangeQuery(localQuery)}
               >
-                <img src="/img/map-search-input-icon-2.svg" alt="close" />
+                <img src="/img/search-input-search-icon.svg" alt="close" />
               </button>
             </div>
           </div>
