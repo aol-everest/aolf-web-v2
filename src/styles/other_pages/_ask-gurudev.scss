@@ -242,6 +242,7 @@
         align-items: center;
         @media screen and (max-width: 991px) {
           height: 48px;
+          order: 1;
         }
         label {
           font-size: 16px;
@@ -274,6 +275,23 @@
               }
             }
           }
+        }
+      }
+      .view-other-answers {
+        margin-right: 32px;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+        color: #3d8be8;
+        margin-left: auto;
+        border-bottom: 1.5px solid #3d8be8;
+        @media screen and (max-width: 991px) {
+          margin: auto;
+          order: 1;
+        }
+        a {
+          color: #3d8be8;
+          text-decoration: none;
         }
       }
       .answer-pagination {
