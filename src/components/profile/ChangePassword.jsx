@@ -120,7 +120,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                     type="button"
                     onClick={() => togglePassword('oldPassword')}
                   >
-                    <span class="icon-aol"></span>
+                    <span className="icon-aol"></span>
                   </button>
 
                   {errors.oldPassword && touched.oldPassword && (
@@ -147,7 +147,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                     type="button"
                     onClick={() => togglePassword('password')}
                   >
-                    <span class="icon-aol"></span>
+                    <span className="icon-aol"></span>
                   </button>
                   <label className="input-msg">Minimum 8 characters</label>
                   {errors.password && touched.password && (
@@ -176,7 +176,7 @@ export const ChangePassword = ({ updateCompleteAction }) => {
                     type="button"
                     onClick={() => togglePassword('passwordConfirmation')}
                   >
-                    <span class="icon-aol"></span>
+                    <span className="icon-aol"></span>
                   </button>
 
                   {errors.passwordConfirmation &&

@@ -19,9 +19,9 @@ const userNameSchema = object().shape({
 
 const Container = (props) => {
   return (
-    <section class="section-login-register">
-      <div class="container">
-        <h1 class="page-title">Log in to your account</h1>
+    <section className="section-login-register">
+      <div className="container">
+        <h1 className="page-title">Log in to your account</h1>
         {props.children}
       </div>
     </section>
@@ -41,13 +41,13 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
   });
   return (
     <>
-      <div class="page-description">
+      <div className="page-description">
         Welcome back! Please enter your details.
       </div>
       {children}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div class="form-login-register">
-          <div class="form-item">
+        <div className="form-login-register">
+          <div className="form-item">
             <label for="email">Email address</label>
             <input
               id="email"
@@ -59,13 +59,13 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
               {...register('username')}
             />
             {errors.username && (
-              <div class="validation-input">{errors.username.message}</div>
+              <div className="validation-input">{errors.username.message}</div>
             )}
           </div>
-          {showMessage && <div class="common-error-message">{message}</div>}
-          <div class="form-action">
+          {showMessage && <div className="common-error-message">{message}</div>}
+          <div className="form-action">
             <button
-              class="submit-btn"
+              className="submit-btn"
               type="submit"
               disabled={errors.username?.message}
             >
@@ -101,12 +101,12 @@ const StepInputPassword = ({
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div class="form-login-register">
-        {/* <div class="form-item">
+      <div className="form-login-register">
+        {/* <div className="form-item">
           <label for="email">Email address</label>
           <p>{username}</p>
         </div> */}
-        <div class="form-item password">
+        <div className="form-item password">
           <label for="pass">Password</label>
           <input
             type={type}
@@ -124,20 +124,20 @@ const StepInputPassword = ({
             type="button"
             onClick={handleToggle}
           >
-            <span class="icon-aol"></span>
+            <span className="icon-aol"></span>
           </button>
           {errors.password && (
-            <div class="validation-input">{errors.password.message}</div>
+            <div className="validation-input">{errors.password.message}</div>
           )}
         </div>
-        {showMessage && <div class="common-error-message">{message}</div>}
-        <div class="form-item">
-          <a href="#" class="forgot-pass" onClick={forgotPassword}>
+        {showMessage && <div className="common-error-message">{message}</div>}
+        <div className="form-item">
+          <a href="#" className="forgot-pass" onClick={forgotPassword}>
             Forgot password
           </a>
         </div>
-        <div class="form-action">
-          <button class="submit-btn" type="submit">
+        <div className="form-action">
+          <button className="submit-btn" type="submit">
             Log in
           </button>
         </div>
@@ -287,21 +287,21 @@ export const SigninForm = ({
     //if (children) return <>{children}</>;
     return (
       <Container>
-        <div class="page-description">
+        <div className="page-description">
           You&apos;re currently signed-in as:{' '}
           <span className="tw-font-semibold">{authObj?.profile.email}</span>
         </div>
-        <div class="form-action">
-          <button class="submit-btn" onClick={backToFlowAction}>
+        <div className="form-action">
+          <button className="submit-btn" onClick={backToFlowAction}>
             Back to flow
           </button>
         </div>
-        <div class="form-other-info">
+        <div className="form-other-info">
           <a href="#" onClick={toggleShowAuthenticatorManagerAction}>
             Manage authenticators
           </a>
         </div>
-        <div class="form-other-info">
+        <div className="form-other-info">
           <a href="#" onClick={signOutAction}>
             Sign out
           </a>
@@ -362,7 +362,7 @@ export const SigninForm = ({
         <>
           {signInStatus === 'NOT_SIGNED_IN' && user && (
             <>
-              <div class="page-description">
+              <div className="page-description">
                 Welcome back{' '}
                 <span className="tw-font-semibold">{user.email}</span>!
               </div>
@@ -417,21 +417,21 @@ export const SigninForm = ({
                 forgotPassword={forgotPassword}
                 updateStep={updateStep}
               />
-              {/* <div class="form-action">
-                <button class="submit-btn" onClick={updateStep(2)}>
+              {/* <div className="form-action">
+                <button className="submit-btn" onClick={updateStep(2)}>
                   Continue with password
                 </button>
               </div> */}
-              <div class="or-separator mt-2 pt-1">
+              <div className="or-separator mt-2 pt-1">
                 <span>OR</span>
               </div>
-              <div class="login-options-1">
+              <div className="login-options-1">
                 <div
-                  class="login-option-item"
+                  className="login-option-item"
                   onClick={signInWithTouch}
                   disabled={busy}
                 >
-                  <div class="option-icon">
+                  <div className="option-icon">
                     <svg
                       width="18"
                       height="18"
@@ -442,44 +442,44 @@ export const SigninForm = ({
                       <path
                         d="M1.5 6.75V4.875C1.5 3.0075 3.0075 1.5 4.875 1.5H6.75"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M11.25 1.5H13.125C14.9925 1.5 16.5 3.0075 16.5 4.875V6.75"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M16.5 12V13.125C16.5 14.9925 14.9925 16.5 13.125 16.5H12"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M6.75 16.5H4.875C3.0075 16.5 1.5 14.9925 1.5 13.125V11.25"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M12.75 7.125V10.875C12.75 12.375 12 13.125 10.5 13.125H7.5C6 13.125 5.25 12.375 5.25 10.875V7.125C5.25 5.625 6 4.875 7.5 4.875H10.5C12 4.875 12.75 5.625 12.75 7.125Z"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M14.25 9H3.75"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </div>
@@ -488,11 +488,11 @@ export const SigninForm = ({
                   </span>
                 </div>
                 <div
-                  class="login-option-item"
+                  className="login-option-item"
                   onClick={signInWithMagicLink}
                   disabled={busy}
                 >
-                  <div class="option-icon">
+                  <div className="option-icon">
                     <svg
                       width="18"
                       height="18"
@@ -503,16 +503,16 @@ export const SigninForm = ({
                       <path
                         d="M2.4525 9C1.86 8.2875 1.5 7.3725 1.5 6.375C1.5 4.11 3.3525 2.25 5.625 2.25H9.375C11.64 2.25 13.5 4.11 13.5 6.375C13.5 8.64 11.6475 10.5 9.375 10.5H7.5"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M15.5475 9C16.14 9.7125 16.5 10.6275 16.5 11.625C16.5 13.89 14.6475 15.75 12.375 15.75H8.625C6.36 15.75 4.5 13.89 4.5 11.625C4.5 9.36 6.3525 7.5 8.625 7.5H10.5"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </div>
@@ -521,7 +521,7 @@ export const SigninForm = ({
                   </span>
                 </div>
               </div>
-              <div class="form-other-info">
+              <div className="form-other-info">
                 <a href="#" onClick={signInWithAnotherUserAction}>
                   Sign-in as another user
                 </a>
@@ -538,9 +538,9 @@ export const SigninForm = ({
               >
                 {children}
               </StepInputUserName>
-              {/* <div class="form-action">
+              {/* <div className="form-action">
                 <button
-                  class="submit-btn"
+                  className="submit-btn"
                   onClick={() => authenticateWithFido2()}
                   disabled={busy}
                 >
@@ -555,13 +555,15 @@ export const SigninForm = ({
     if (step === 1) {
       return (
         <>
-          <div class="page-description">
+          <div className="page-description">
             Welcome back <span className="tw-font-semibold">{username}</span>!
           </div>
-          <div class="form-login-register">
-            {showMessage && <div class="common-error-message">{message}</div>}
-            <div class="form-action">
-              <button class="submit-btn" onClick={updateStep(2)}>
+          <div className="form-login-register">
+            {showMessage && (
+              <div className="common-error-message">{message}</div>
+            )}
+            <div className="form-action">
+              <button className="submit-btn" onClick={updateStep(2)}>
                 Continue with password
               </button>
             </div>
@@ -569,7 +571,7 @@ export const SigninForm = ({
               username={username}
             ></NewPasswordlessComponent>
 
-            <div class="form-other-info">
+            <div className="form-other-info">
               <a href="#" onClick={signInWithAnotherUserAction}>
                 Sign-in as another user
               </a>
@@ -589,7 +591,7 @@ export const SigninForm = ({
             forgotPassword={forgotPassword}
             updateStep={updateStep}
           />
-          <div class="form-other-info">
+          <div className="form-other-info">
             <a href="#" onClick={signInWithAnotherUserAction}>
               Sign-in as another user
             </a>
@@ -603,7 +605,7 @@ export const SigninForm = ({
     <Container>
       {renderStep(children)}
 
-      <div class="form-other-info">
+      <div className="form-other-info">
         Don't have an account?{' '}
         <a href="#" onClick={toSignUpMode}>
           Sign up

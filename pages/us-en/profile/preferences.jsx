@@ -55,27 +55,27 @@ const AddCenterItem = ({ center, isSelected, selectCenterAction }) => {
   const phoneNumber = joinPhoneNumbers(center.phone1, center.phone2);
   return (
     <div class={classNames('center-item', { selected: isSelected })}>
-      <div class="item-top-row">
+      <div className="item-top-row">
         {center.isNationalCenter && (
-          <span class="icon-aol iconaol-hindu-temple"></span>
+          <span className="icon-aol iconaol-hindu-temple"></span>
         )}
 
-        <div class="city">{center.centerName}</div>
+        <div className="city">{center.centerName}</div>
       </div>
       {phoneNumber && (
-        <div class="center-other-info">
-          <span class="icon-aol iconaol-call-calling"></span>
+        <div className="center-other-info">
+          <span className="icon-aol iconaol-call-calling"></span>
           {phoneNumber}
         </div>
       )}
       {center.email && (
-        <div class="center-other-info">
-          <span class="icon-aol iconaol-sms"></span>
+        <div className="center-other-info">
+          <span className="icon-aol iconaol-sms"></span>
           {center.email}
         </div>
       )}
-      <div class="center-select-actions">
-        <button class="center-select" onClick={selectCenterAction}>
+      <div className="center-select-actions">
+        <button className="center-select" onClick={selectCenterAction}>
           Select
         </button>
       </div>
@@ -173,7 +173,7 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
     return (
       <>
         {Array.from({ length: 9 }, (_, index) => (
-          <div class="center-item" key={index}>
+          <div className="center-item" key={index}>
             <ContentLoader
               backgroundColor="#f3f3f3"
               foregroundColor="#c2c2c2"
@@ -203,13 +203,16 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
   });
 
   return (
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="title">Add New Center</h2>
+    <div
+      className="modal-dialog modal-dialog-centered modal-lg"
+      role="document"
+    >
+      <div className="modal-content">
+        <div className="modal-header">
+          <h2 className="title">Add New Center</h2>
           <button
             type="button"
-            class="close"
+            className="close"
             data-dismiss="modal"
             aria-label="Close"
             onClick={hideModal}
@@ -217,13 +220,13 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <div class="desc">
+        <div className="modal-body">
+          <div className="desc">
             You can add{' '}
             <strong>{allowedSelectionLimit - selectedCenter.length}</strong>{' '}
             more
           </div>
-          <div class="input-search-wrap">
+          <div className="input-search-wrap">
             <PlacesAutocomplete
               value={location.address}
               onChange={handleChange}
@@ -262,7 +265,7 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
                   )}
 
                   {!!suggestions.length && (
-                    <div class="tw-z-10">
+                    <div className="tw-z-10">
                       {suggestions.map((suggestion) => {
                         const className = suggestion.active
                           ? 'suggestion-item--active smart-input--list-item'
@@ -295,7 +298,7 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
               )}
             </PlacesAutocomplete>
           </div>
-          <div class="centers-listing">
+          <div className="centers-listing">
             {(isLoading || loading) && renderLoader()}
             {!isLoading &&
               !loading &&
@@ -313,11 +316,11 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
                 );
               })}
           </div>
-          <div class="modal-actions">
+          <div className="modal-actions">
             <button
               type="button"
               data-dismiss="modal"
-              class="btn btn-primary submit-btn"
+              className="btn btn-primary submit-btn"
               onClick={addNewCenters}
             >
               Add New Center

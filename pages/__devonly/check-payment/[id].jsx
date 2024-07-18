@@ -76,12 +76,12 @@ const PaymentStatus = () => {
   }, [id]);
 
   return (
-    <main class="login-register-page">
-      <section class="section-login-register">
-        <div class="loading-overlay no-bg">
-          <div class="overlay-loader"></div>
-          <div class="loading-text">
-            <p class="tw-font-bold tw-py-5">Processing payment...</p>
+    <main className="login-register-page">
+      <section className="section-login-register">
+        <div className="loading-overlay no-bg">
+          <div className="overlay-loader"></div>
+          <div className="loading-text">
+            <p className="tw-font-bold tw-py-5">Processing payment...</p>
             <p>
               Please wait a few minutes. We appreciate your patience during this
               time!

@@ -68,7 +68,7 @@ export const ChangeCardDetail = ({
       <form className="profile-update__form" onSubmit={handleSubmit}>
         <CardElement options={createOptions} />
         <div className="form-actions col-1-1">
-          <button class="secondary-btn" onClick={switchCardDetailView}>
+          <button className="secondary-btn" onClick={switchCardDetailView}>
             Discard Changes
           </button>
           <button type="submit" className="primary-btn">

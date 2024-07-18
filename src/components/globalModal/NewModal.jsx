@@ -23,7 +23,7 @@ export const NewModal = () => {
       <div className="add-new-modal modal fade bd-example-modal-lg show">
         {children}
       </div>
-      <div class="modal-backdrop fade show"></div>
+      <div className="modal-backdrop fade show"></div>
     </>
   );
 };

@@ -50,15 +50,15 @@ export const NewPasswordForm = ({
 
   return (
     <form onSubmit={handleSubmit(completeNewPassword)}>
-      <section class="section-login-register">
-        <div class="container">
-          <h1 class="page-title">Reset password</h1>
-          <div class="page-description">
+      <section className="section-login-register">
+        <div className="container">
+          <h1 className="page-title">Reset password</h1>
+          <div className="page-description">
             You have to change your password. Please enter your new password
             below.
           </div>
-          <div class="form-login-register">
-            <div class="form-item password">
+          <div className="form-login-register">
+            <div className="form-item password">
               <label for="pass">New password</label>
               <input
                 {...register('password')}
@@ -78,13 +78,15 @@ export const NewPasswordForm = ({
                 type="button"
                 onClick={handleToggle}
               >
-                <span class="icon-aol"></span>
+                <span className="icon-aol"></span>
               </button>
               {errors.password && (
-                <div class="validation-input">{errors.password.message}</div>
+                <div className="validation-input">
+                  {errors.password.message}
+                </div>
               )}
             </div>
-            <div class="form-item password">
+            <div className="form-item password">
               <label for="pass">Confirm password</label>
               <input
                 {...register('passwordConfirmation')}
@@ -103,23 +105,25 @@ export const NewPasswordForm = ({
                 type="button"
                 onClick={handleToggleCPassword}
               >
-                <span class="icon-aol"></span>
+                <span className="icon-aol"></span>
               </button>
 
               {errors.passwordConfirmation && (
-                <div class="validation-input">
+                <div className="validation-input">
                   {errors.passwordConfirmation.message}
                 </div>
               )}
             </div>
 
-            {showMessage && <div class="common-error-message">{message}</div>}
-            <div class="form-action">
-              <button class="submit-btn" type="submit">
+            {showMessage && (
+              <div className="common-error-message">{message}</div>
+            )}
+            <div className="form-action">
+              <button className="submit-btn" type="submit">
                 Change password
               </button>
             </div>
-            <div class="form-other-info">
+            <div className="form-other-info">
               <a href="#" onClick={toSignInMode}>
                 Back to login
               </a>

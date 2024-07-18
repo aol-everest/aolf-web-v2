@@ -766,8 +766,8 @@ const Scheduling = () => {
                     onMonthChange={onMonthChangeAction}
                   />
                 </div>
-                <div class="other-calendar-info">
-                  <span class="icon-aol iconaol-clock-bold"></span>Flexible
+                <div className="other-calendar-info">
+                  <span className="icon-aol iconaol-clock-bold"></span>Flexible
                   Rescheduling for All Courses
                 </div>
                 <div className="question-call">

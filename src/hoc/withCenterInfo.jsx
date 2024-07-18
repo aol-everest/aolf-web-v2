@@ -64,12 +64,12 @@ export const withCenterInfo = (WrappedComponent) => {
         {loading && <Loader />}
         <main className="page--find-a-course">
           <section className="title-header">
-            <h1 class="page-title">
+            <h1 className="page-title">
               Welcome to the {centerDetail.centerName} Center
             </h1>
-            <div class="event-title-info">
-              <div class="address">
-                <span class="icon-aol iconaol-location-bold"></span>
+            <div className="event-title-info">
+              <div className="address">
+                <span className="icon-aol iconaol-location-bold"></span>
                 <span>Address:</span>{' '}
                 <strong>
                   {createCompleteAddress({
@@ -81,24 +81,24 @@ export const withCenterInfo = (WrappedComponent) => {
                   })}
                 </strong>
               </div>
-              <div class="email">
-                <span class="icon-aol iconaol-sms-bold"></span>
+              <div className="email">
+                <span className="icon-aol iconaol-sms-bold"></span>
                 <span>Email:</span>{' '}
                 <a href={`mailto:${centerDetail.email}`}>
                   <strong>{centerDetail.email}</strong>
                 </a>
               </div>
-              <div class="phone">
-                <span class="icon-aol iconaol-call-bold"></span>
+              <div className="phone">
+                <span className="icon-aol iconaol-call-bold"></span>
                 <span>Phone:</span> <strong>{phoneNumber}</strong>
               </div>
             </div>
           </section>
           <section className="section-course-find">
             <div className="container">
-              <div class="courses-area">
-                <div class="courses-tabs">
-                  <ul class="tab-links">
+              <div className="courses-area">
+                <div className="courses-tabs">
+                  <ul className="tab-links">
                     <li>
                       <Link href={COURSES_PAGE} legacyBehavior>
                         <a

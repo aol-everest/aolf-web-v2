@@ -352,16 +352,16 @@ function CheckoutForm({ formSchema }) {
     >
       {({ errors, touched, isSubmitting, values, setValues }) => (
         <Form>
-          <div class="form-group">
+          <div className="form-group">
             <label for="exampleInputEmail1">Api Name</label>
             <input
               type="text"
               value={apiName}
               onChange={handleChangeApiName}
-              class="form-control"
+              className="form-control"
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <label for="exampleInputEmail1">Payload</label>
             <textarea
               value={jsonText}
@@ -545,9 +545,9 @@ const StripeComponent = () => {
     },
   };
   return (
-    <div class="container">
-      <div class="row">
-        <div class="col-sm">
+    <div className="container">
+      <div className="row">
+        <div className="col-sm">
           <Elements stripe={stripePromise} options={elementsOptions}>
             <CheckoutForm formSchema={schema} />
           </Elements>

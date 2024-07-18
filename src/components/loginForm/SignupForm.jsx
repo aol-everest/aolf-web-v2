@@ -44,44 +44,44 @@ export const SignupForm = ({
 
   return (
     <form onSubmit={handleSubmit(signUp)}>
-      <section class="section-login-register">
-        <div class="container">
-          <h1 class="page-title">Create an account</h1>
+      <section className="section-login-register">
+        <div className="container">
+          <h1 className="page-title">Create an account</h1>
           {children}
-          <div class="form-login-register">
-            <div class="form-item">
+          <div className="form-login-register">
+            <div className="form-item">
               <label for="fname">First name</label>
               <input
                 {...register('firstName')}
                 type="text"
-                class="input-field"
+                className="input-field"
                 placeholder="First name"
               />
             </div>
-            <div class="form-item">
+            <div className="form-item">
               <label for="lname">Last name</label>
               <input
                 {...register('lastName')}
                 type="text"
-                class="input-field"
+                className="input-field"
                 placeholder="Last name"
               />
             </div>
-            <div class="form-item">
+            <div className="form-item">
               <label for="email">Email address</label>
               <input
                 {...register('username')}
                 type="email"
-                class="input-field"
+                className="input-field"
                 placeholder="Email address"
               />
             </div>
-            <div class="form-item password">
+            <div className="form-item password">
               <label for="pass">Password</label>
               <input
                 {...register('password')}
                 type={type}
-                class="input-field password"
+                className="input-field password"
                 placeholder="Password"
               />
               <button
@@ -89,11 +89,11 @@ export const SignupForm = ({
                 type="button"
                 onClick={handleToggle}
               >
-                <span class="icon-aol"></span>
+                <span className="icon-aol"></span>
               </button>
             </div>
-            <div class="form-item checkbox">
-              <label class="toc" for="toc">
+            <div className="form-item checkbox">
+              <label className="toc" for="toc">
                 By signing up, I agree to{' '}
                 <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
                   <a target="_blank">Terms of Service</a>
@@ -108,13 +108,15 @@ export const SignupForm = ({
                 </a>
               </label>
             </div>
-            {showMessage && <div class="common-error-message">{message}</div>}
-            <div class="form-action">
-              <button class="submit-btn" type="submit">
+            {showMessage && (
+              <div className="common-error-message">{message}</div>
+            )}
+            <div className="form-action">
+              <button className="submit-btn" type="submit">
                 Sign up
               </button>
             </div>
-            <div class="form-other-info">
+            <div className="form-other-info">
               Already have an account?{' '}
               <a href="#" onClick={toSignInMode}>
                 Log in

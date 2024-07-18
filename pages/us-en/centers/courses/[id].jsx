@@ -216,9 +216,9 @@ const CourseTile = ({ data, isAuthenticated }) => {
         registered: isPurchased,
       })}
     >
-      <div class="course-item-header">
-        <div class="course-title-duration">
-          <div class="course-title">{title}</div>
+      <div className="course-item-header">
+        <div className="course-title-duration">
+          <div className="course-title">{title}</div>
           <div
             class={classNames('course-type in-person', {
               'in-person': mode === COURSE_MODES.IN_PERSON.value,
@@ -266,7 +266,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
             );
           })}
       </div>
-      <div class="course-actions">
+      <div className="course-actions">
         <button className="btn-secondary" onClick={detailAction}>
           Details
         </button>
@@ -769,16 +769,16 @@ const Course = ({ centerDetail }) => {
                   <path
                     d="M13.5 7L6.5 14"
                     stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M13.5 14L6.5 7"
                     stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </button>
@@ -1118,16 +1118,16 @@ const Course = ({ centerDetail }) => {
                         <path
                           d="M13.5 7L6.5 14"
                           stroke="white"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                         <path
                           d="M13.5 14L6.5 7"
                           stroke="white"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                     </button>

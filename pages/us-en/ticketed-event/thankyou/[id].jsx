@@ -276,8 +276,8 @@ const TicketCongratulations = () => {
                     {timings &&
                       timings.map((time) => {
                         return (
-                          <div class="info-item" key={time.startDate}>
-                            <span class="p2">
+                          <div className="info-item" key={time.startDate}>
+                            <span className="p2">
                               {tConvert(time.startTime)}-
                               {tConvert(time.endTime)}{' '}
                             </span>
