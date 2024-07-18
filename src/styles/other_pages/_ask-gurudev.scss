@@ -124,13 +124,13 @@
         width: 100%;
         font-size: 18px;
         font-weight: 500;
-        padding: 0 95px 0 32px;
+        padding: 0 55px 0 65px;
         max-width: 744px;
         text-align: center;
         @media screen and (max-width: 991px) {
           background-position: calc(100% - 20px) center;
           background-size: 20px;
-          padding: 0 75px 0 20px;
+          padding: 0 50px 0 55px;
           font-size: 16px;
           font-weight: 400;
         }
@@ -146,7 +146,7 @@
       }
       .clear-button {
         position: absolute;
-        right: 65px;
+        right: 20px;
         top: 50%;
         transform: translateY(-50%);
         background: transparent;
@@ -162,7 +162,7 @@
         @media screen and (max-width: 991px) {
           height: 20px;
           width: 20px;
-          right: 50px;
+          right: 20px;
         }
         img {
           width: 100%;
@@ -171,24 +171,17 @@
     }
     .search-button {
       position: absolute;
-      right: 10px;
+      left: 10px;
       top: 48%;
       transform: translateY(-50%);
       border: none;
       background: none;
       cursor: pointer;
-      height: 24px;
-      width: 64px;
+      height: 32px;
+      width: 44px;
       background-size: contain;
     }
 
-    @media screen and (max-width: 991px) {
-      .search-button {
-        right: 10px;
-        height: 44px;
-        width: 44px;
-      }
-    }
     .search-tags {
       display: flex;
       gap: 12px;
@@ -241,6 +234,7 @@
         align-items: center;
         @media screen and (max-width: 991px) {
           height: 48px;
+          order: 1;
         }
         label {
           font-size: 16px;
