@@ -15,7 +15,7 @@ const ViewCardDetail = dynamic(() =>
 
 const CardDetails = ({ setLoading }) => {
   const { showAlert } = useGlobalAlertContext();
-  const { reloadProfile, profile } = useAuth();
+  const { profile, fetchCurrentUser } = useAuth();
   const [editCardDetail, setEditCardDetail] = useState(false);
 
   const stripePromise = loadStripe(
@@ -29,7 +29,7 @@ const CardDetails = ({ setLoading }) => {
       });
     } else {
       setLoading(true);
-      await reloadProfile();
+      await fetchCurrentUser();
       setLoading(false);
       setEditCardDetail(false);
     }
@@ -43,7 +43,7 @@ const CardDetails = ({ setLoading }) => {
     <div>
       <div className="profile-form-box">
         <div className="form-title-wrap">
-          <div className="form-title-text">Credit or debit card</div>
+          <div className="form-title-text">Credit or Debit Card</div>
           <div className="form-title-icon">
             <span className="icon-aol iconaol-payment-card"></span>
           </div>

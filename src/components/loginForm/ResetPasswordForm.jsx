@@ -100,15 +100,15 @@ export const ResetPasswordForm = ({
 
   return (
     <form onSubmit={handleSubmit(resetPassword)}>
-      <section class="section-login-register">
-        <div class="container">
-          <h1 class="page-title">Reset password</h1>
-          <div class="page-description">
+      <section className="section-login-register">
+        <div className="container">
+          <h1 className="page-title">Reset password</h1>
+          <div className="page-description">
             We have sent a password reset code by email ({username}). Enter it
             below to reset your password.
           </div>
-          <div class="form-login-register">
-            <div class="form-item">
+          <div className="form-login-register">
+            <div className="form-item">
               <label for="code">Code</label>
               <input
                 {...register('code')}
@@ -119,10 +119,10 @@ export const ResetPasswordForm = ({
                 placeholder="Code"
               />
               {errors.code && (
-                <div class="validation-input">{errors.code.message}</div>
+                <div className="validation-input">{errors.code.message}</div>
               )}
             </div>
-            <div class="form-item password">
+            <div className="form-item password">
               <label for="pass">New password</label>
               <input
                 {...register('password')}
@@ -137,19 +137,20 @@ export const ResetPasswordForm = ({
                 pattern=".{6,}"
               />
 
-              <button class="showPassBtn" type="button" onClick={handleToggle}>
-                <img
-                  src="/img/PasswordEye.svg"
-                  width="16"
-                  height="16"
-                  alt="Show Password"
-                />
+              <button
+                class={classNames('showPassBtn', type)}
+                type="button"
+                onClick={handleToggle}
+              >
+                <span className="icon-aol"></span>
               </button>
               {errors.password && (
-                <div class="validation-input">{errors.password.message}</div>
+                <div className="validation-input">
+                  {errors.password.message}
+                </div>
               )}
             </div>
-            <div class="form-item password">
+            <div className="form-item password">
               <label for="pass">Confirm password</label>
               <input
                 {...register('passwordConfirmation')}
@@ -165,24 +166,19 @@ export const ResetPasswordForm = ({
               />
 
               <button
-                class="showPassBtn"
+                class={classNames('showPassBtn', typeCPassword)}
                 type="button"
                 onClick={handleToggleCPassword}
               >
-                <img
-                  src="/img/PasswordEye.svg"
-                  width="16"
-                  height="16"
-                  alt="Show Password"
-                />
+                <span className="icon-aol"></span>
               </button>
               {errors.passwordConfirmation && (
-                <div class="validation-input">
+                <div className="validation-input">
                   {errors.passwordConfirmation.message}
                 </div>
               )}
             </div>
-            <div class="form-item">
+            <div className="form-item">
               {seconds > 0 || minutes > 0 ? (
                 <a
                   href="#"
@@ -192,7 +188,7 @@ export const ResetPasswordForm = ({
                   onClick={resendOTP}
                 >
                   Resend code in{' '}
-                  <span class="tw-font-bold tw-text-slate-400">
+                  <span className="tw-font-bold tw-text-slate-400">
                     {minutes < 10 ? `0${minutes}` : minutes}:
                     {seconds < 10 ? `0${seconds}` : seconds}
                   </span>{' '}
@@ -204,11 +200,13 @@ export const ResetPasswordForm = ({
                 </a>
               )}
             </div>
-            {showMessage && <div class="common-error-message">{message}</div>}
-            <div class="form-action">
-              <button class="submit-btn">Change password</button>
+            {showMessage && (
+              <div className="common-error-message">{message}</div>
+            )}
+            <div className="form-action">
+              <button className="submit-btn">Change password</button>
             </div>
-            <div class="form-other-info">
+            <div className="form-other-info">
               <a href="#" onClick={toSignInMode}>
                 Back to login
               </a>

@@ -4,12 +4,13 @@ import dynamic from 'next/dynamic';
 import { NextSeo } from 'next-seo';
 import { useQueryState } from 'nuqs';
 import { FaCamera } from 'react-icons/fa';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { Loader } from '@components/loader';
 import { MODAL_TYPES } from '@constants';
+import Link from '@components/linkWithUTM';
 
 const ProfileHeader = dynamic(() =>
   import('@components/profile').then((mod) => mod.ProfileHeader),
@@ -32,7 +33,7 @@ const UPDATE_PROFILE = '/us-en/profile/update-profile';
 const REFER_A_FRIEND = '/us-en/profile/refer-a-friend';
 const CARD_DETAILS = '/us-en/profile/card-details';
 const CHANGE_PASSWORD = '/us-en/profile/change-password';
-// const PREFERENCES = '/us-en/profile/preferences';
+const PREFERENCES = '/us-en/profile/preferences';
 
 export const withUserInfo = (WrappedComponent) => {
   return function UserInfo(props) {
@@ -43,6 +44,7 @@ export const withUserInfo = (WrappedComponent) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
+    const elementRef = useRef(null);
 
     const {
       first_name,
@@ -97,14 +99,6 @@ export const withUserInfo = (WrappedComponent) => {
         });
         reader.readAsDataURL(e.target.files[0]);
       }
-    };
-
-    const switchTab = (screen) => {
-      // router.push({
-      //   pathname: screen,
-      // });
-      router.push(screen);
-      // window.history.pushState(null, '', screen);
     };
 
     if (!isAuthenticated) {
@@ -204,6 +198,8 @@ export const withUserInfo = (WrappedComponent) => {
       }
     };
 
+    console.log('subscriptions', subscriptions);
+
     return (
       <>
         {loading && <Loader />}
@@ -256,73 +252,113 @@ export const withUserInfo = (WrappedComponent) => {
                   <div className="profile-tabs">
                     <ul className="tab-links">
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(UPDATE_PROFILE),
-                          })}
-                          onClick={() => switchTab(UPDATE_PROFILE)}
+                        <Link
+                          href={`${UPDATE_PROFILE}`}
+                          scroll={false}
+                          legacyBehavior
                         >
-                          Profile
-                        </a>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === UPDATE_PROFILE,
+                            })}
+                            href="#"
+                          >
+                            Profile
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(CARD_DETAILS),
-                          })}
-                          onClick={() => switchTab(CARD_DETAILS)}
+                        <Link
+                          href={`${CARD_DETAILS}`}
+                          legacyBehavior
+                          scroll={false}
                         >
-                          Payment
-                        </a>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === CARD_DETAILS,
+                            })}
+                          >
+                            Payment
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(CHANGE_PASSWORD),
-                          })}
-                          onClick={() => switchTab(CHANGE_PASSWORD)}
+                        <Link
+                          href={`${CHANGE_PASSWORD}`}
+                          legacyBehavior
+                          scroll={false}
                         >
-                          Change Password
-                        </a>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === CHANGE_PASSWORD,
+                            })}
+                          >
+                            Change Password
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(PAST_COURSES),
-                          })}
-                          onClick={() => switchTab(PAST_COURSES)}
-                        >
-                          Past Courses
-                        </a>
+                        <Link href={PAST_COURSES} legacyBehavior scroll={false}>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === PAST_COURSES,
+                            })}
+                          >
+                            Past Courses
+                          </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(UPCOMING_EVENTS),
-                          })}
-                          onClick={() => switchTab(UPCOMING_EVENTS)}
+                        <Link
+                          href={UPCOMING_EVENTS}
+                          legacyBehavior
+                          scroll={false}
                         >
-                          Upcoming Courses
-                        </a>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === UPCOMING_EVENTS,
+                            })}
+                          >
+                            Upcoming Courses
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href={PREFERENCES} legacyBehavior scroll={false}>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === PREFERENCES,
+                            })}
+                          >
+                            Preferences
+                          </a>
+                        </Link>
                       </li>
 
                       <li>
-                        <a
-                          className={classNames('profile-tab', {
-                            active: pathname.includes(REFER_A_FRIEND),
-                          })}
-                          onClick={() => switchTab(REFER_A_FRIEND)}
+                        <Link
+                          href={REFER_A_FRIEND}
+                          legacyBehavior
+                          scroll={false}
                         >
-                          Refer a Friend
-                        </a>
+                          <a
+                            className={classNames('profile-tab', {
+                              active: pathname === REFER_A_FRIEND,
+                            })}
+                          >
+                            Refer a Friend
+                          </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
-                  <WrappedComponent
-                    setLoading={setLoading}
-                    loading={loading}
-                    {...props}
-                  />
+                  <div ref={elementRef}>
+                    <WrappedComponent
+                      setLoading={setLoading}
+                      loading={loading}
+                      {...props}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

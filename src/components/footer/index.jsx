@@ -276,7 +276,7 @@ export function Footer() {
         <nav className="footer-navbar">
           <ul className="footer-navbar--list privacy_menu order-1 order-md-2 mb-2 mb-md-0">
             <li className="footer-navbar--item copyright">
-              © 2023 Art of Living
+              © 2024 Art of Living
             </li>
             <div className="privacy-links">
               <li className="footer-navbar--item">

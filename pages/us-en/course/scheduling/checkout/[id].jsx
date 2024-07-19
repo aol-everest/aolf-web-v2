@@ -831,23 +831,23 @@ const SchedulingPaymentForm = ({
                               <path
                                 d="M12 21.9998C17.5 21.9998 22 17.4998 22 11.9998C22 6.49976 17.5 1.99976 12 1.99976C6.5 1.99976 2 6.49976 2 11.9998C2 17.4998 6.5 21.9998 12 21.9998Z"
                                 stroke="#3D8BE8"
-                                stroke-width="1.8"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M12 7.99976V12.9998"
                                 stroke="#3D8BE8"
-                                stroke-width="1.8"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M11.9946 16.0002H12.0036"
                                 stroke="#3D8BE8"
-                                stroke-width="2.4"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="2.4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
                           </i>

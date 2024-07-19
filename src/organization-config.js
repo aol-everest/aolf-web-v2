@@ -19,6 +19,7 @@ const allOrganizationConfig = [
     },
     courseModes: ['ONLINE', 'IN_PERSON', 'DESTINATION_RETREATS'],
     meetupModes: ['ONLINE', 'IN_PERSON'],
+    eventModes: ['ONLINE', 'IN_PERSON'],
     courseTypes: [
       'SKY_BREATH_MEDITATION',
       'SILENT_RETREAT',
@@ -56,6 +57,7 @@ const allOrganizationConfig = [
     },
     courseModes: ['ONLINE', 'IN_PERSON', 'DESTINATION_RETREATS'],
     meetupModes: ['ONLINE', 'IN_PERSON'],
+    eventModes: ['ONLINE', 'IN_PERSON'],
     courseTypes: [
       'SKY_BREATH_MEDITATION',
       'SILENT_RETREAT',
@@ -89,6 +91,7 @@ const allOrganizationConfig = [
     },
     courseModes: ['ONLINE', 'IN_PERSON'],
     meetupModes: ['ONLINE', 'IN_PERSON'],
+    eventModes: ['ONLINE', 'IN_PERSON'],
     courseTypes: ['SKY_HAPPINESS_RETREAT'],
     otherCourseTypes: [],
   },

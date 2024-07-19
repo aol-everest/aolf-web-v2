@@ -69,6 +69,7 @@ export const MODAL_TYPES = {
   LOGIN_MODAL: 'LOGIN_MODAL',
   CUSTOM_MODAL: 'CUSTOM_MODAL',
   EMPTY_MODAL: 'EMPTY_MODAL',
+  NEW_MODAL: 'NEW_MODAL',
 };
 
 export const ALERT_TYPES = {
@@ -187,7 +188,7 @@ export const COURSE_TYPES_MASTER = {
         },
         BE_WELL_SESSIONS: {
           slug: 'be_well',
-          name: 'Be Well',
+          name: 'Be Well Sessions',
         },
       },
     },

@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
@@ -16,7 +17,7 @@ export const ProfileHeader = ({
   const router = useRouter();
   const { showModal, hideModal } = useGlobalModalContext();
   const { data: subsciptionCategories = [] } = useQuery({
-    queryKey: 'subsciption',
+    queryKey: ['subscription'],
     queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
@@ -24,6 +25,8 @@ export const ProfileHeader = ({
       return response.data;
     },
   });
+
+  console.log('subsciptionCategories', subsciptionCategories);
 
   const cancelMembershipAction = (modalSubscriptionId) => (e) => {
     if (e) e.preventDefault();
@@ -53,6 +56,8 @@ export const ProfileHeader = ({
         },
         {},
       );
+      console.log('allSubscriptions', allSubscriptions);
+      console.log('subscriptionId', subscriptionId);
       if (allSubscriptions[subscriptionId]) {
         const modalSubscription = allSubscriptions[subscriptionId];
         const modalBody = (
@@ -185,19 +190,17 @@ export const ProfileHeader = ({
 
   const subscriptionPanel = (subscription) => {
     return (
-      <div
-        className="profile-header__course"
-        key={subscription.subscriptionMasterSfid}
-      >
-        <strong>{subscription.name} member </strong>
-        <span className="profile-header__course-date">
+      <>
+        <div className="user-type tw-pt-2">{subscription.name} member</div>
+        <div className="user-since">
           since{' '}
           {dayjs(subscription.subscriptionStartDate).format('MMMM DD, YYYY')}
-        </span>{' '}
+        </div>
         {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
           subscription.subscriptionMasterSfid && (
           <a
             href="#"
+            style={{ fontSize: 14 }}
             className="link link_dark link-modal"
             onClick={showPurchaseMembershipModalAction(
               subscription.subscriptionMasterSfid,
@@ -207,7 +210,7 @@ export const ProfileHeader = ({
             <strong>See details</strong>
           </a>
         )}
-      </div>
+      </>
     );
   };
 
@@ -254,18 +257,18 @@ const subscriptionBuyBtnPanel = (
         'Take your journey deeper with two options for additional content and support';
     }
     if (message) {
-      result = <div className="profile-header__course">{message}</div>;
+      result = <div className="new-journey-header">{message}</div>;
     }
   }
 
   return (
     <>
       {result}
-      <div className="btn-wrapper">
+      <div className="new-journey-btn-wrapper">
         {!userSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value] && (
           <button
             data-href-modal="digital-member-join"
-            className="btn-secondary link-modal"
+            className="btn-secondary link-modal tw-mb-4"
             onClick={showPurchaseMembershipModalAction(
               MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
             )}

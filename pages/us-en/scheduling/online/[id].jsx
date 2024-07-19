@@ -149,21 +149,21 @@ const Scheduling = () => {
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
-      <main class="in-person-course-page">
-        <section class="top-section">
-          <div class="container">
-            <h1 class="page-title">{title}</h1>
-            <div class="page-description">
+      <main className="in-person-course-page">
+        <section className="top-section">
+          <div className="container">
+            <h1 className="page-title">{title}</h1>
+            <div className="page-description">
               <strong>
                 Join the 45 million individuals across 180 countries
               </strong>{' '}
               who have experienced the benefits of this distinctive 3-day course
               (2.5 hours per day)
             </div>
-            <div class="mt-3 text-center d-lg-none d-md-none">
+            <div className="mt-3 text-center d-lg-none d-md-none">
               <a
                 href="#"
-                class="course-highlight-action"
+                className="course-highlight-action"
                 onClick={scrollToCourseHighlight}
               >
                 Course Highlights {'>>'}
@@ -171,38 +171,38 @@ const Scheduling = () => {
             </div>
           </div>
         </section>
-        <section class="scheduling-stepper">
-          <div class="container">
-            <div class="step-wrapper">
-              <div class="step active">
-                <div class="step-icon">
+        <section className="scheduling-stepper">
+          <div className="container">
+            <div className="step-wrapper">
+              <div className="step active">
+                <div className="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Complete Your Purchase</div>
+                <div className="step-text">Complete Your Purchase</div>
               </div>
-              <div class="step">
-                <div class="step-icon">
+              <div className="step">
+                <div className="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Select Course Date & Time</div>
+                <div className="step-text">Select Course Date & Time</div>
               </div>
-              <div class="step">
-                <div class="step-icon">
+              <div className="step">
+                <div className="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Start Your Course</div>
+                <div className="step-text">Start Your Course</div>
               </div>
             </div>
           </div>
         </section>
-        <section class="course-purchase-section">
-          <div class="container">
-            <div class="course-purchase-wrap">
-              <div class="first-col">
-                <div class="payment-box">
-                  <div class="payment-total-box">
+        <section className="course-purchase-section">
+          <div className="container">
+            <div className="course-purchase-wrap">
+              <div className="first-col">
+                <div className="payment-box">
+                  <div className="payment-total-box">
                     <label>Total:</label>
-                    <div class="amount">
+                    <div className="amount">
                       $
                       {`${
                         workshop.unitPrice
@@ -211,20 +211,20 @@ const Scheduling = () => {
                       }`}
                     </div>
                   </div>
-                  <div class="payment-details">
-                    <div class="payby">
+                  <div className="payment-details">
+                    <div className="payby">
                       Pay As Low As{' '}
                       <img src="/img/logo-affirm.webp" height="22" />
                     </div>
-                    <div class="price-breakup">
-                      <div class="price-per-month">
+                    <div className="price-breakup">
+                      <div className="price-per-month">
                         ${workshop?.instalmentAmount}/<span>month</span>
                       </div>
-                      <div class="payment-tenure">for 12 months</div>
+                      <div className="payment-tenure">for 12 months</div>
                     </div>
                   </div>
-                  <div class="checkout-details">
-                    <div class="section__body">
+                  <div className="checkout-details">
+                    <div className="section__body">
                       <div className="detail-item row">
                         <div className="label col-5">
                           <svg
@@ -256,10 +256,10 @@ const Scheduling = () => {
                       </div>
                     </div>
                   </div>
-                  {/* <div class="payment-agreements">
-                    <div class="form-item">
+                  {/* <div className="payment-agreements">
+                    <div className="form-item">
                       <input type="checkbox" id="agreement1" />
-                      <label class="events-news" for="agreement1">
+                      <label className="events-news" for="agreement1">
                         I agree to the{' '}
                         <a href="#">
                           Participant agreement including privacy and
@@ -267,9 +267,9 @@ const Scheduling = () => {
                         </a>
                       </label>
                     </div>
-                    <div class="form-item">
+                    <div className="form-item">
                       <input type="checkbox" id="agreement2" />
-                      <label class="events-news" for="agreement2">
+                      <label className="events-news" for="agreement2">
                         I represent that I am in good physical and mental
                         condition, and fit to participate in this course. I
                         particularly acknowledge that, if I am diagnosed with
@@ -281,7 +281,7 @@ const Scheduling = () => {
                       </label>
                     </div>
                   </div> */}
-                  <div class="payment-actions">
+                  <div className="payment-actions">
                     <StripeExpressCheckoutElement
                       workshop={workshop}
                       goToPaymentModal={goToPaymentModal}
@@ -289,57 +289,57 @@ const Scheduling = () => {
                       btnText="Checkout"
                       nextPageUrl="/us-en/scheduling/online/course"
                     />
-                    {/* <button class="submit-btn" onClick={continueToCheckout}>
+                    {/* <button className="submit-btn" onClick={continueToCheckout}>
                       Checkout
                     </button> */}
                   </div>
                 </div>
-                <div class="other-calendar-info">
-                  <span class="icon-aol iconaol-clock-bold"></span>Flexible
+                <div className="other-calendar-info">
+                  <span className="icon-aol iconaol-clock-bold"></span>Flexible
                   Rescheduling for All Courses
                 </div>
-                <div class="question-call">
-                  <a href="tel:(855)2024400" class="call-cta">
+                <div className="question-call">
+                  <a href="tel:(855)2024400" className="call-cta">
                     Still have questions?{' '}
                     <strong>Call us at (855) 202-4400</strong>
                   </a>
                 </div>
               </div>
-              <div class="second-col course-highlight-col">
-                <div class="course-highlight-box">
-                  <div class="box-hero-image-wrap">
+              <div className="second-col course-highlight-col">
+                <div className="course-highlight-box">
+                  <div className="box-hero-image-wrap">
                     <img
                       src="/img/course-highlight-box-hero.png"
                       alt="course highlight"
                       width="100%"
                     />
                   </div>
-                  <div class="course-highlights-info-box">
+                  <div className="course-highlights-info-box">
                     <h2>Course Highlights:</h2>
                     <ul>
                       <li>
-                        <span class="icon-aol iconaol-users"></span>
+                        <span className="icon-aol iconaol-users"></span>
                         <span>
                           Engage in a <strong>3-day, 2.5-hour</strong> daily
                           course led by a certified instructor in a small group
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-world-clock"></span>
+                        <span className="icon-aol iconaol-world-clock"></span>
                         <span>
                           Available multiple times daily across PT, ET, CT time
                           zones
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-yoga"></span>
+                        <span className="icon-aol iconaol-yoga"></span>
                         <span>
                           Master <strong>Sudarshan Kriya Yoga (SKY)</strong> and
                           other effective pranayama breathing methods.
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-relieved"></span>
+                        <span className="icon-aol iconaol-relieved"></span>
                         <span>
                           Receive the "<strong>5 Keys to a Joyful Life</strong>"
                           toolkit, providing essential strategies for lifelong
@@ -347,7 +347,7 @@ const Scheduling = () => {
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-calendar-2"></span>
+                        <span className="icon-aol iconaol-calendar-2"></span>
                         <span>
                           <strong>Flexible</strong> rescheduling options.
                         </span>
@@ -355,7 +355,7 @@ const Scheduling = () => {
                     </ul>
                   </div>
                 </div>
-                <div class="course-medical-info">
+                <div className="course-medical-info">
                   <img
                     src="/img/mental_health-vector-icon.svg"
                     width="54"
@@ -374,13 +374,13 @@ const Scheduling = () => {
             </div>
           </div>
         </section>
-        <section class="testimonials">
-          <div class="container">
-            <div class="top-text">TESTIMONIALS</div>
-            <h2 class="section-title">What people are sharing</h2>
-            <div class="testimonials-listing">
-              <div class="testimonial-item">
-                <div class="author-picutre">
+        <section className="testimonials">
+          <div className="container">
+            <div className="top-text">TESTIMONIALS</div>
+            <h2 className="section-title">What people are sharing</h2>
+            <div className="testimonials-listing">
+              <div className="testimonial-item">
+                <div className="author-picutre">
                   <img
                     src="/img/testimony-adinah.webp"
                     alt="Adinah"
@@ -388,14 +388,14 @@ const Scheduling = () => {
                     width="70"
                   />
                 </div>
-                <div class="testimony-text">
+                <div className="testimony-text">
                   “Wow. It made a significant impression on me, was very very
                   enjoyable, at times profound, and I plan to keep practicing.”
                 </div>
-                <div class="author-name">Adinah</div>
+                <div className="author-name">Adinah</div>
               </div>
-              <div class="testimonial-item">
-                <div class="author-picutre">
+              <div className="testimonial-item">
+                <div className="author-picutre">
                   <img
                     src="/img/testimony-joanna.webp"
                     alt="Joanna"
@@ -403,15 +403,15 @@ const Scheduling = () => {
                     width="70"
                   />
                 </div>
-                <div class="testimony-text">
+                <div className="testimony-text">
                   “It was awesome! I regained my mental health. And I also feel
                   so much lighter and happier. I got out of my funk that was
                   getting me unmotivated.”
                 </div>
-                <div class="author-name">Joanna</div>
+                <div className="author-name">Joanna</div>
               </div>
-              <div class="testimonial-item">
-                <div class="author-picutre">
+              <div className="testimonial-item">
+                <div className="author-picutre">
                   <img
                     src="/img/testimony-vijitha.webp"
                     alt="Vijitha"
@@ -419,12 +419,12 @@ const Scheduling = () => {
                     width="70"
                   />
                 </div>
-                <div class="testimony-text">
+                <div className="testimony-text">
                   “It was liberating. Any time my mind is wiggling between the
                   past and the future, I notice it and have found a hack to
                   bring myself back to the present.”
                 </div>
-                <div class="author-name">Vijitha</div>
+                <div className="author-name">Vijitha</div>
               </div>
             </div>
           </div>

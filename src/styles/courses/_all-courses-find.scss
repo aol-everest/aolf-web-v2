@@ -793,6 +793,10 @@ main.all-courses-find {
               display: none;
             }
           }
+          .course-actions {
+            display: none;
+            visibility: hidden;
+          }
         }
         &.registered {
           &::after {

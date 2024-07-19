@@ -1,15 +1,24 @@
 'use client';
-import React, { useCallback, useRef, useEffect } from 'react';
+import { askGurudevQuestions } from '@utils';
+import React, {
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 const SearchOptions = ({
   query,
   onChangeQuery,
   setQuery,
-  setDebouncedQuery,
   isLoading,
-  setResults,
+  selectedCategory,
+  setLoading,
 }) => {
   const queryInputRef = useRef(null);
+  const questions = askGurudevQuestions();
+  const [localQuery, setLocalQuery] = useState(query);
 
   useEffect(() => {
     if (queryInputRef.current) {
@@ -21,11 +30,44 @@ const SearchOptions = ({
     event.preventDefault();
   }, []);
 
-  const clearInput = () => {
-    setResults([]);
-    setQuery('');
-    setDebouncedQuery('');
-    queryInputRef.current.value = '';
+  const onSearchChangeQuery = useCallback((event) => {
+    console.log('event.target.value', event.target.value);
+    if (!event.target.value) {
+      setLocalQuery('');
+      queryInputRef.current.value = '';
+    }
+    setLocalQuery(event.target.value);
+  }, []);
+
+  const onRecomendedQuestionsSelect = (question) => {
+    setLocalQuery(question);
+    setLoading(true);
+    setQuery(question);
+  };
+
+  const shuffleArray = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
+
+  const selectedCategoryQuestions = useMemo(() => {
+    return questions.find((item) => item.name === selectedCategory);
+  }, [selectedCategory, questions]);
+
+  const shuffledQuestions = useMemo(() => {
+    return shuffleArray([...(selectedCategoryQuestions?.questions || [])]);
+  }, [selectedCategory]);
+
+  const randomQuestions = useMemo(() => {
+    return shuffledQuestions?.slice(0, 3);
+  }, [shuffledQuestions]);
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      if (localQuery !== query) {
+        setLoading(true);
+      }
+      onChangeQuery(localQuery); // Trigger search action on Enter key press
+    }
   };
 
   return (
@@ -33,43 +75,46 @@ const SearchOptions = ({
       <section className="ask-gurudev-main-search">
         <div className="container">
           <div className="main-search-area">
+            <div className="search-tags">
+              {randomQuestions?.map((question, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="search-tag"
+                    onClick={() => onRecomendedQuestionsSelect(question)}
+                  >
+                    {question}
+                  </div>
+                );
+              })}
+            </div>
+
             <div className="search-input-box">
               <input
                 type="search"
-                placeholder="Ask a question..."
+                placeholder="Search by question or topic"
                 name="query"
                 id="query"
                 disabled={isLoading}
-                value={query}
-                onChange={onChangeQuery}
+                value={localQuery}
+                onChange={onSearchChangeQuery}
+                autoComplete="off"
                 ref={queryInputRef}
-                className={`${query ? 'input has-value' : ''}`}
+                className={`${localQuery ? 'input has-value' : ''}`}
+                onKeyDown={handleKeyPress} // Call handleKeyPress on key down
               />
-              <button className="clear-button" onClick={clearInput}>
+              <button
+                className="clear-button"
+                onClick={() => setLocalQuery('')}
+              >
                 <img src="/img/ic-close.svg" alt="close" />
               </button>
-            </div>
-            <div className="search-tags">
-              <div
-                className="search-tag"
-                onClick={() => setQuery('How to always be happy in life?')}
+              <button
+                className="search-button"
+                onClick={() => onChangeQuery(localQuery)}
               >
-                How to always be happy in life?
-              </div>
-              <div
-                className="search-tag"
-                onClick={() =>
-                  setQuery('Why am I born? What is the purpose of my life?')
-                }
-              >
-                Why am I born? What is the purpose of my life?
-              </div>
-              <div
-                className="search-tag"
-                onClick={() => setQuery('How can I get enlightened?')}
-              >
-                How can I get enlightened?
-              </div>
+                <img src="/img/search-input-search-icon.svg" alt="close" />
+              </button>
             </div>
           </div>
         </div>

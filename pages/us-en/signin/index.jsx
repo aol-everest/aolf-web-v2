@@ -31,7 +31,7 @@ const RESET_PASSWORD_REQUEST = 'spr';
 const NEW_PASSWORD_REQUEST = 'npr';
 
 const StudentVerificationCodeMessage = () => (
-  <div class="confirmation-message-info">
+  <div className="confirmation-message-info">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="40px"
@@ -39,13 +39,13 @@ const StudentVerificationCodeMessage = () => (
       viewBox="0 0 24 24"
       fill="none"
     >
-      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
       <path
         d="M8.5 12.5L10.5 14.5L15.5 9.5"
         stroke="#ff865b"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
     <br />
@@ -55,7 +55,7 @@ const StudentVerificationCodeMessage = () => (
 );
 
 const VerificationCodeMessage = () => (
-  <div class="confirmation-message-info">
+  <div className="confirmation-message-info">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="40px"
@@ -63,13 +63,13 @@ const VerificationCodeMessage = () => (
       viewBox="0 0 24 24"
       fill="none"
     >
-      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
       <path
         d="M8.5 12.5L10.5 14.5L15.5 9.5"
         stroke="#ff865b"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
     <br />
@@ -79,7 +79,7 @@ const VerificationCodeMessage = () => (
 );
 
 const TemporaryPasswordMessage = () => (
-  <div class="confirmation-message-info">
+  <div className="confirmation-message-info">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="40px"
@@ -87,13 +87,13 @@ const TemporaryPasswordMessage = () => (
       viewBox="0 0 24 24"
       fill="none"
     >
-      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
       <path
         d="M8.5 12.5L10.5 14.5L15.5 9.5"
         stroke="#ff865b"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
     <br />
@@ -103,7 +103,7 @@ const TemporaryPasswordMessage = () => (
 );
 
 const PasswordChangeSuccessMessage = () => (
-  <div class="confirmation-message-info">
+  <div className="confirmation-message-info">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="40px"
@@ -111,13 +111,13 @@ const PasswordChangeSuccessMessage = () => (
       viewBox="0 0 24 24"
       fill="none"
     >
-      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
       <path
         d="M8.5 12.5L10.5 14.5L15.5 9.5"
         stroke="#ff865b"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
     <br />
@@ -206,7 +206,6 @@ function LoginPage() {
               2000,
             );
             setTimeout(() => {
-              router.refresh();
               if (navigateTo) {
                 router.push(navigateTo);
               } else {
@@ -214,8 +213,6 @@ function LoginPage() {
               }
             }, 1000);
           } else {
-            // router.refresh();
-            console.log(navigateTo);
             if (navigateTo) {
               router.push(navigateTo);
             } else {
@@ -458,14 +455,14 @@ function LoginPage() {
 
   const socialLoginRender = () => {
     return (
-      <div class="login-options">
-        <button class="google-icon" onClick={googleLogin}>
+      <div className="login-options">
+        <button className="google-icon" onClick={googleLogin}>
           <img src="/img/google-icon.svg" />
         </button>
-        <button class="facebook-icon" onClick={fbLogin}>
+        <button className="facebook-icon" onClick={fbLogin}>
           <img src="/img/facebook-icon.svg" />
         </button>
-        {/* <button class="apple-icon">
+        {/* <button className="apple-icon">
           <img src="/img/apple-icon.svg" />
         </button> */}
       </div>
@@ -526,14 +523,14 @@ function LoginPage() {
   };
 
   return (
-    <main class="login-register-page">
+    <main className="login-register-page">
       {renderForm()}
 
       <Fido2Toast />
       {loading && (
-        <div class="loading-overlay">
-          <div class="overlay-loader"></div>
-          <div class="loading-text">Please wait...</div>
+        <div className="loading-overlay">
+          <div className="overlay-loader"></div>
+          <div className="loading-text">Please wait...</div>
         </div>
       )}
     </main>

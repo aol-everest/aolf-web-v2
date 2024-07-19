@@ -4,6 +4,36 @@
     margin-top: 0 !important;
     padding-top: 0px;
   }
+  .showPassBtn {
+    border: none;
+    background: none;
+    position: absolute;
+    top: 34px;
+    right: 0;
+    padding: 5px 14px;
+    &:focus {
+      outline: none;
+    }
+    .icon-aol:before {
+      color: #98a2b3;
+      font-size: 24px;
+    }
+  }
+  input {
+    &.validate {
+      border-color: #dc3545;
+    }
+  }
+  .showPassBtn.password {
+    .icon-aol:before {
+      content: '\e918';
+    }
+  }
+  .showPassBtn.text {
+    .icon-aol:before {
+      content: '\e939';
+    }
+  }
   .container {
     max-width: 1348px;
     padding-top: 50px;
@@ -21,6 +51,11 @@
   }
   .new-journey-header {
     margin-top: 18px;
+    text-align: center;
+    font-weight: 400;
+    color: #6f7283;
+    font-family: Work Sans;
+    font-size: 14px;
   }
   .new-journey-btn-wrapper {
     justify-content: center;
@@ -150,6 +185,7 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
+        color: #3d8be8;
         .icon-aol {
           font-size: 20px;
         }
@@ -349,13 +385,50 @@
       margin-bottom: 6px;
     }
   }
+
+  .edit-icon {
+    background-color: hsla(0, 0%, 100%, 0.522);
+    color: #3d8be8;
+    position: absolute;
+    right: 15px;
+    top: 35px;
+    text-align: left;
+  }
   .form-item {
     display: flex;
     flex-direction: column;
+    position: relative;
     label {
       font-size: 14px;
       color: #9598a6;
       margin-bottom: 6px;
+    }
+    .input-msg {
+      font-size: 12px;
+      padding-top: 4px;
+      line-height: 18px;
+      font-weight: 400;
+    }
+    .eye-button {
+      position: absolute;
+      top: 32px;
+      right: 16px;
+      display: block;
+      background-color: $wcf-light;
+      padding: 4px;
+      width: 32px;
+      height: 32px;
+      text-align: center;
+      border: none;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      &:focus {
+        outline: none;
+      }
     }
     select {
       padding: 10px 14px;
@@ -1442,6 +1515,8 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 15px;
         margin-top: 18px;
+        height: calc(100vh - 400px);
+        overflow: auto;
         @media screen and (max-width: 767px) {
           grid-template-columns: repeat(1, minmax(0, 1fr));
         }

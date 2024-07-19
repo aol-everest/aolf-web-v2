@@ -10,7 +10,7 @@ const ChangeProfile = dynamic(() =>
 
 const UpdateProfile = ({ setLoading }) => {
   const { showAlert } = useGlobalAlertContext();
-  const { reloadProfile, profile } = useAuth();
+  const { fetchCurrentUser, profile } = useAuth();
 
   const updateCompleteAction = async ({
     message,
@@ -23,8 +23,11 @@ const UpdateProfile = ({ setLoading }) => {
       });
     } else {
       setLoading(true);
-      await reloadProfile();
+      await fetchCurrentUser();
       setLoading(false);
+      showAlert(ALERT_TYPES.SUCCESS_ALERT, {
+        children: 'Your profile has been updated successfully',
+      });
     }
   };
 

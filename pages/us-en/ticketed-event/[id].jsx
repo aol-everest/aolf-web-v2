@@ -268,13 +268,13 @@ function TicketedEvent() {
                   <div className="tickets-modal__left-column">
                     <div className="tickets-modal__section-products">
                       <h2 className="tickets-modal__title">{title}</h2>
-                      <div class="section-wisdom-event-checkout-info">
+                      <div className="section-wisdom-event-checkout-info">
                         {timings &&
                           timings.map((time) => {
                             return (
-                              <div class="info-item" key={time.startDate}>
-                                <span class="icon-aol iconaol-calendar-2"></span>
-                                <span class="p2">
+                              <div className="info-item" key={time.startDate}>
+                                <span className="icon-aol iconaol-calendar-2"></span>
+                                <span className="p2">
                                   {dayjs.utc(time.startDate).format('ddd')},{' '}
                                   {dayjs
                                     .utc(time.startDate)
@@ -287,9 +287,9 @@ function TicketedEvent() {
                             );
                           })}
 
-                        <div class="info-item">
-                          <span class="icon-aol iconaol-location"></span>
-                          <span class="p2">
+                        <div className="info-item">
+                          <span className="icon-aol iconaol-location"></span>
+                          <span className="p2">
                             {mode === COURSE_MODES.ONLINE.name
                               ? mode
                               : (mode === COURSE_MODES.IN_PERSON.name ||
