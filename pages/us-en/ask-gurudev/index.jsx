@@ -203,10 +203,9 @@ export default function AskGurudev() {
               <div className="disclaimer">{<CustomMessage />}</div>
             ) : (
               <div className="disclaimer">
-                Hi there 😊 Ask a question and we’ll match it to wisdom from
-                Gurudev Sri Sri Ravi Shankar. If we don't find your question in
-                our collection, we'll try to match it to something related! What
-                are you wondering about?
+                Hi there 😊 Type a question, press enter, and we’ll match it to
+                wisdom from Gurudev Sri Sri Ravi Shankar. What are you wondering
+                about?
               </div>
             )}
 
