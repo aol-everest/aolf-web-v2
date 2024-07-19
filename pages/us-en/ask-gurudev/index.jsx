@@ -212,16 +212,19 @@ export default function AskGurudev() {
 
             {loading && <Loader />}
             {!initialPageLoad && (
-              <SearchResultsList result={selectedQueryResponse || {}} />
+              <SearchResultsList
+                result={selectedQueryResponse || {}}
+                handleVoteSelect={handleVoteSelect}
+                selectedVotes={selectedVotes}
+                selectedPageIndex={selectedPageIndex}
+              />
             )}
           </div>
           {selectedQueryResponse && !initialPageLoad && (
             <Footer
               results={searchResult?.matches}
-              handleVoteSelect={handleVoteSelect}
               setSelectedPageIndex={setSelectedPageIndex}
               selectedPageIndex={selectedPageIndex}
-              selectedVotes={selectedVotes}
             />
           )}
         </div>

@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import SearchResult from '../SearchResult/SearchResult';
 
-const SearchResultsList = ({ result }) => {
+const SearchResultsList = ({
+  result,
+  selectedVotes,
+  handleVoteSelect,
+  selectedPageIndex,
+}) => {
   const [playingId, setPlayingId] = useState(null);
   return (
     <AnimatePresence mode="popLayout" initial={false}>
@@ -10,6 +15,9 @@ const SearchResultsList = ({ result }) => {
         result={result}
         setPlayingId={setPlayingId}
         playingId={playingId}
+        handleVoteSelect={handleVoteSelect}
+        selectedVotes={selectedVotes}
+        selectedPageIndex={selectedPageIndex}
       />
     </AnimatePresence>
   );
