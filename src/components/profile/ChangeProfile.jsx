@@ -89,7 +89,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
       children: (handleModalToggle) => (
         <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
           <div className=" modal-dialog modal-dialog-centered active">
-            <div className="modal-content">
+            <div className="modal-content tw-justify-center">
               <h2 className="modal-content-title !tw-text-2xl">
                 {MESSAGE_EMAIL_VERIFICATION_SUCCESS}
               </h2>
@@ -235,7 +235,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
     });
   };
 
-  const allowEmailEdit = profile.cognito.UserStatus !== 'EXTERNAL_PROVIDER';
+  const allowEmailEdit = profile?.cognito?.UserStatus !== 'EXTERNAL_PROVIDER';
 
   const editEmailAction = (e) => {
     if (e) e.preventDefault();

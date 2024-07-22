@@ -36,7 +36,6 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const navigateTo = `/us-en/world-culture-festival?s=1&t=${
     props.values.ticketCount
   }&sa=${JSON.stringify(props.values.sessionsAttending)}`;
-  // console.log(navigateTo);
   const { isAuthenticated, profile, setUser } = useAuth();
   const [authMode, setAuthMode] = useState(SIGNUP_MODE);
   const [loading, setLoading] = useState(false);

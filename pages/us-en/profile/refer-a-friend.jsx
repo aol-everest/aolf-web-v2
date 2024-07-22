@@ -50,7 +50,11 @@ const ReferAFriend = () => {
                     data-target="#referCollapseOne"
                     aria-expanded={selectedReward === 'earnReward'}
                     aria-controls="referCollapseOne"
-                    onClick={() => setSelectedReward('earnReward')}
+                    onClick={() =>
+                      selectedReward === 'earnReward'
+                        ? setSelectedReward('')
+                        : setSelectedReward('earnReward')
+                    }
                   >
                     How To Earn Rewards
                     <span className="icon-aol iconaol-arrow-down"></span>
@@ -88,7 +92,11 @@ const ReferAFriend = () => {
               <div className="refer-accordion-header" id="referHeadingTwo">
                 <h2 className="mb-0">
                   <button
-                    onClick={() => setSelectedReward('claimReward')}
+                    onClick={() =>
+                      selectedReward === 'claimReward'
+                        ? setSelectedReward('')
+                        : setSelectedReward('claimReward')
+                    }
                     className={classNames('btn btn-link btn-block text-left', {
                       collapsed: selectedReward !== 'claimReward',
                     })}
