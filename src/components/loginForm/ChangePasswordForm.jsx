@@ -6,6 +6,7 @@ import { number, object, ref, string } from 'yup';
 
 const schema = object().shape({
   password: string()
+    .trim()
     .required('Password is required')
     .min(8, 'Must Contain 8 Characters'),
   passwordConfirmation: string().oneOf(
