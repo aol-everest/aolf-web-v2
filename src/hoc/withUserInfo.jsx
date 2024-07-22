@@ -275,7 +275,7 @@ export const withUserInfo = (WrappedComponent) => {
                     <ul className="tab-links">
                       {tabs.map((tab, index) => (
                         <li key={tab.href}>
-                          <Link href={tab.href} legacyBehavior scroll={true}>
+                          <Link href={tab.href} legacyBehavior scroll={false}>
                             <a
                               ref={(el) => (tabRefs.current[index] = el)}
                               className={classNames('profile-tab', {
