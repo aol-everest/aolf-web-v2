@@ -199,7 +199,7 @@ const WorkshopSelectModal = React.memo(
                     >
                       <div className="slot-type">
                         <div className="slot-info">
-                          {workshop?.mode === COURSE_MODES.ONLINE.name ? (
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>
@@ -745,7 +745,7 @@ const Scheduling = () => {
       track('click_calendar', {
         screen_name: 'course_search_scheduling',
         course_type:
-          courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
+          courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
         location_type: mode,
         num_results: response?.data.length,
       });
@@ -1446,7 +1446,7 @@ const Scheduling = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name
+                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.value
                             ? activeWorkshop?.mode
                             : activeWorkshop && (
                                 <>

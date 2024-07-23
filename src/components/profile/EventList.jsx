@@ -6,6 +6,7 @@ import {
   MEMBERSHIP_TYPES,
   MODAL_TYPES,
   WORKSHOP_MODE,
+  COURSE_MODES_MAP,
 } from '@constants';
 import {
   useAuth,
@@ -369,7 +370,9 @@ export const EventList = ({ isPreferredCenter, workshops }) => {
                   <div className="course-duration">{getCourseDuration()}</div>
                 ) : (
                   <div className="course-mode-duration">
-                    <div className="course-duration">{mode} </div>{' '}
+                    <div className="course-duration">
+                      {COURSE_MODES_MAP[mode]}{' '}
+                    </div>{' '}
                     <div className="course-duration">{getMeetupDuration()}</div>
                   </div>
                 )}

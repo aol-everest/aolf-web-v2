@@ -104,7 +104,7 @@ export const CourseDetailsCard = ({
 
   const isSearchDatesDisabled = !filterStartDate;
 
-  const inPersonCourse = mode === COURSE_MODES.IN_PERSON.name;
+  const inPersonCourse = mode === COURSE_MODES.IN_PERSON.value;
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -157,7 +157,7 @@ export const CourseDetailsCard = ({
           <p className="course-details__table-text">
             LOCATION
             <span>
-              {mode === COURSE_MODES.ONLINE.name ? (
+              {mode === COURSE_MODES.ONLINE.value ? (
                 mode
               ) : (
                 <a

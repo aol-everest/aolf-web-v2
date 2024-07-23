@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import { COURSE_TYPES, MODAL_TYPES, WORKSHOP_MODE } from '@constants';
+import {
+  COURSE_TYPES,
+  MODAL_TYPES,
+  WORKSHOP_MODE,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
@@ -76,7 +81,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
           <div className="banner">
             <div className="container">
               <div className="left-section">
-                <p>{mode}</p>
+                <p>{COURSE_MODES_MAP[mode]}</p>
                 <div className="banner-title">{title}</div>
                 <div className="banner-features">
                   <ul>

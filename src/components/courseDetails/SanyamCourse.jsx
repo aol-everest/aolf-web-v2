@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import { MODAL_TYPES } from '@constants';
+import { MODAL_TYPES, COURSE_MODES_MAP } from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
@@ -64,7 +64,9 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
             <div className="row tw-pt-[50px]">
               <div className="col-lg-7">
                 <div className="about-course__main">
-                  <p className="about-program__main-type">{mode}</p>
+                  <p className="about-program__main-type">
+                    {COURSE_MODES_MAP[mode]}
+                  </p>
                   <h1 className="about-course__main-name about-course__main-name--font-size">
                     {title}
                   </h1>
