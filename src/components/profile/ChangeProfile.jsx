@@ -199,7 +199,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
     description.current = '';
     showModal(MODAL_TYPES.CUSTOM_MODAL, {
       title: 'Delete PII or Remove CC information',
-      className: 'course-join-card',
+      className: 'course-join-card tw-mt-8 sm:tw-mt-0',
       children: (
         <>
           <div className="course-details-card__list">
@@ -217,7 +217,7 @@ export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
         return (
           <div className="course-details-card__footer">
             <button
-              className="btn-secondary link-modal tw-mr-4 !tw-px-7"
+              className="btn-secondary link-modal tw-mb-4 sm:tw-mb-0 sm:tw-mr-4 !tw-px-7"
               onClick={handleDeletePersonalInformation}
             >
               Delete Personal info
