@@ -19,6 +19,7 @@ import {
   TIME_ZONE,
   MODAL_TYPES,
   COURSE_TYPES_MASTER,
+  COURSE_MODES_MAP,
 } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
@@ -214,7 +215,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
       <div className="course-item-header">
         <div className="course-title-duration">
           <div className="course-title">
-            {mode}
+            {COURSE_MODES_MAP[mode]}
             {category && (
               <div
                 class={`course-type ${mode === COURSE_MODES.IN_PERSON.value ? 'intensive' : 'days'}`}

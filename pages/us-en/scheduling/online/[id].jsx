@@ -14,7 +14,13 @@ import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpress
 import dayjs from 'dayjs';
 import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
-import { ABBRS, COURSE_MODES, COURSE_TYPES, ALERT_TYPES } from '@constants';
+import {
+  ABBRS,
+  COURSE_MODES,
+  COURSE_TYPES,
+  ALERT_TYPES,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
@@ -252,7 +258,9 @@ const Scheduling = () => {
                           </svg>{' '}
                           Location:
                         </div>
-                        <div className="value col-7">{mode}</div>
+                        <div className="value col-7">
+                          {COURSE_MODES_MAP[mode]}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import { ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
+import {
+  ALERT_TYPES,
+  COURSE_MODES,
+  COURSE_TYPES,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { priceCalculation } from '@utils';
 import { Element, Link } from 'react-scroll';
@@ -45,7 +50,7 @@ export const SKYHappinessRetreat = ({ data, mode: courseViewMode }) => {
       <main>
         <section className="top-column">
           <div className="container">
-            <p className="type-course">{mode}</p>
+            <p className="type-course">{COURSE_MODES_MAP[mode]}</p>
             <h1 className="course-name">{title}</h1>
             <ul className="course-details-list">
               <li>Relieve stress, anxiety, and tension</li>

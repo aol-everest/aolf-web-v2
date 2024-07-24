@@ -1711,12 +1711,12 @@ export const PaymentFormNew = ({
                                 Location:
                               </div>
                               <div className="value col-7">
-                                {mode === COURSE_MODES.ONLINE.name
+                                {mode === COURSE_MODES.ONLINE.value
                                   ? mode
-                                  : (mode === COURSE_MODES.IN_PERSON.name ||
+                                  : (mode === COURSE_MODES.IN_PERSON.value ||
                                       mode ===
                                         COURSE_MODES.DESTINATION_RETREATS
-                                          .name) && (
+                                          .value) && (
                                       <>
                                         {!workshop.isLocationEmpty && (
                                           <a

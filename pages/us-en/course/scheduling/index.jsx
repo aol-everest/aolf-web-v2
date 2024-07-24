@@ -798,12 +798,12 @@ const Scheduling = () => {
                     </div>
                     <div className="inPerson">
                       <span className="icon-aol iconaol-profile-users"></span>
-                      In person
+                      In-Person
                       <span className="icon-aol iconaol-info-circle"></span>
                       <div className="tooltip">
                         <h4>
                           <span className="icon-aol iconaol-profile-users"></span>
-                          In person{' '}
+                          In-Person{' '}
                         </h4>
                         <p>
                           Within a relaxing venue, you’ll leave everyday
@@ -1195,7 +1195,7 @@ const Scheduling = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name
+                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.value
                             ? activeWorkshop?.mode
                             : activeWorkshop && (
                                 <>

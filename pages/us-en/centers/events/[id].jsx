@@ -20,6 +20,7 @@ import {
   TIME_ZONE,
   MODAL_TYPES,
   COURSE_TYPES_MASTER,
+  COURSE_MODES_MAP,
 } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
@@ -197,7 +198,7 @@ const EventTile = ({ data, isAuthenticated }) => {
               online: mode === COURSE_MODES.ONLINE.value,
             })}
           >
-            {mode}
+            {COURSE_MODES_MAP[mode]}
           </div>
         </div>
       </div>

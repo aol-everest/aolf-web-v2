@@ -22,6 +22,7 @@ import {
   ALERT_TYPES,
   MEMBERSHIP_TYPES,
   COURSE_TYPES,
+  COURSE_MODES_MAP,
 } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
@@ -384,7 +385,7 @@ const MeetupTile = ({ data }) => {
         <div className="course-title-duration">
           <div className="course-title">{meetupTitle}</div>
           <div className={`course-type ${mode === 'Online' ? 'online' : ''}`}>
-            {mode}
+            {COURSE_MODES_MAP[mode]}
           </div>
           <div className="course-duration">{getCourseDuration()}</div>
         </div>

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import dayjs from 'dayjs';
 import { Loader, PageLoading } from '@components';
-import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_MODES_MAP } from '@constants';
 import { useQueryState, parseAsInteger } from 'nuqs';
 import queryString from 'query-string';
 import { useAuth, useGlobalAlertContext } from '@contexts';
@@ -903,7 +903,9 @@ const SchedulingPaymentForm = ({
                                 </svg>{' '}
                                 Location:
                               </div>
-                              <div className="value col-7">{mode}</div>
+                              <div className="value col-7">
+                                {COURSE_MODES_MAP[mode]}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1135,12 +1137,12 @@ const SchedulingPaymentForm = ({
                                 Location:
                               </div>
                               <div className="value col-7">
-                                {mode === COURSE_MODES.ONLINE.name
+                                {mode === COURSE_MODES.ONLINE.value
                                   ? mode
-                                  : (mode === COURSE_MODES.IN_PERSON.name ||
+                                  : (mode === COURSE_MODES.IN_PERSON.value ||
                                       mode ===
                                         COURSE_MODES.DESTINATION_RETREATS
-                                          .name) && (
+                                          .value) && (
                                       <>
                                         {!workshop.isLocationEmpty && (
                                           <a
