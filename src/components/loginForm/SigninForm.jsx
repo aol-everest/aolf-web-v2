@@ -8,7 +8,13 @@ import { useAuth, useLocalUserCache } from '@contexts';
 import { Passwordless as NewPasswordlessComponent } from '@components/passwordLessAuth/NewComp';
 
 const passwordSchema = object().shape({
-  password: string().trim().required('Password is required'),
+  password: string()
+    .test(
+      'no-spaces',
+      'Password cannot contain spaces',
+      (value) => !/\s/.test(value),
+    )
+    .required('Password is required'),
 });
 
 const userNameSchema = object().shape({

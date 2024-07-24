@@ -10,6 +10,11 @@ const schema = object().shape({
     .email('This type of email does not exist. Please enter a valid one.')
     .required('Email is required'),
   password: string()
+    .test(
+      'no-spaces',
+      'Password cannot contain spaces',
+      (value) => !/\s/.test(value),
+    )
     .required('Password is required')
     .min(8, 'Must Contain 8 Characters'),
   firstName: string().required('First Name is required'),

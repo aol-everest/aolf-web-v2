@@ -5,12 +5,18 @@ import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 import { useState } from 'react';
+import { StyledInput } from '@components/checkout';
 
 const schema = object().shape({
   username: string()
     .email('This type of email does not exist. Please enter a valid one.')
     .required('Email is required'),
   password: string()
+    .test(
+      'no-spaces',
+      'Password cannot contain spaces',
+      (value) => !/\s/.test(value),
+    )
     .required('Password is required')
     .min(8, 'Must Contain 8 Characters'),
   firstName: string().required('First Name is required'),
@@ -57,6 +63,11 @@ export const SignupForm = ({
                 className="input-field"
                 placeholder="First name"
               />
+              {errors.firstName && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.firstName.message}
+                </div>
+              )}
             </div>
             <div className="form-item">
               <label for="lname">Last name</label>
@@ -66,7 +77,13 @@ export const SignupForm = ({
                 className="input-field"
                 placeholder="Last name"
               />
+              {errors.lastName && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.lastName.message}
+                </div>
+              )}
             </div>
+
             <div className="form-item">
               <label for="email">Email address</label>
               <input
@@ -75,6 +92,12 @@ export const SignupForm = ({
                 className="input-field"
                 placeholder="Email address"
               />
+
+              {errors.username && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.username.message}
+                </div>
+              )}
             </div>
             <div className="form-item password">
               <label for="pass">Password</label>
@@ -91,6 +114,11 @@ export const SignupForm = ({
               >
                 <span className="icon-aol"></span>
               </button>
+              {errors.password && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.password.message}
+                </div>
+              )}
             </div>
             <div className="form-item checkbox">
               <label className="toc" for="toc">
