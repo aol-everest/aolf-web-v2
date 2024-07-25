@@ -20,6 +20,7 @@ export const GlobalAlert = ({ children }) => {
   const { alertType, alertProps } = store || {};
 
   const showAlert = (alertType, alertProps, autoHideMS) => {
+    document.body.classList.add('overflow-hidden');
     setStore({
       ...store,
       alertType,
@@ -33,6 +34,7 @@ export const GlobalAlert = ({ children }) => {
   };
 
   const hideAlert = () => {
+    document.body.classList.remove('overflow-hidden');
     setStore({
       ...store,
       alertType: null,
