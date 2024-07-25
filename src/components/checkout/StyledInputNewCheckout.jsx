@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { FaRegEdit } from 'react-icons/fa';
 import MaskedInput from 'react-text-mask';
 
 const phoneNumberMask = [
@@ -30,6 +30,8 @@ export const StyledInputNewCheckout = ({
   tip,
   fullWidth,
   className,
+  allowEmailEdit,
+  editEmailAction,
   ...rest
 }) => {
   const onChangeAction = () => {
@@ -101,6 +103,11 @@ export const StyledInputNewCheckout = ({
             {...inputProps}
             {...rest}
           />
+          {allowEmailEdit && (
+            <a className="edit-icon" href="#" onClick={editEmailAction}>
+              <FaRegEdit />
+            </a>
+          )}
           {formikProps.errors[formikKey] && (
             <div className="validation-input">
               {formikProps.errors[formikKey]}

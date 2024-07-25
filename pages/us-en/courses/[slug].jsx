@@ -19,6 +19,7 @@ import {
   TIME_ZONE,
   MODAL_TYPES,
   COURSE_TYPES_MASTER,
+  COURSE_MODES_MAP,
 } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
@@ -29,12 +30,14 @@ import { pushRouteWithUTMQuery } from '@service';
 import queryString from 'query-string';
 import { useInView } from 'react-intersection-observer';
 import { PageLoading } from '@components';
-import { usePopper } from 'react-popper';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import dynamic from 'next/dynamic';
+import { navigateToLogin } from '@utils';
 import { NextSeo } from 'next-seo';
+import { SmartInput, SmartDropDown, Popup } from '@components';
+import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
@@ -88,346 +91,6 @@ const parseAsStartEndDate = createParser({
 
 const { allowedMaxDays, beforeToday, combine } = DateRangePicker;
 
-const SmartInput = ({
-  dataList,
-  containerClass = 'smart-input',
-  inputClassName = '',
-  placeholder = 'Search',
-  closeHandler,
-  onSearchKeyChange,
-  value,
-}) => {
-  const [isHidden, setIsHidden] = useState(true);
-  const [searchKey, setSearchKey] = useState(value);
-
-  const handleChange = (event) => {
-    if (onSearchKeyChange) {
-      onSearchKeyChange(event.target.value);
-    }
-    if (event.target.value) {
-      setIsHidden(false);
-    }
-    setSearchKey(event.target.value);
-  };
-
-  const closeHandlerInner = (data) => (event) => {
-    if (closeHandler) {
-      setSearchKey(data.label);
-      //onSearchKeyChange("");
-      closeHandler(data)();
-    }
-    setIsHidden(true);
-  };
-
-  return (
-    <div className={classNames(containerClass, { active: !isHidden })}>
-      <input
-        placeholder={placeholder}
-        type="text"
-        className={classNames('custom-input', inputClassName)}
-        value={searchKey}
-        onChange={handleChange}
-      />
-      <div className="smart-input--list">
-        {dataList &&
-          dataList.map((data) => {
-            return (
-              <p
-                key={data.value}
-                className="smart-input--list-item"
-                onClick={closeHandlerInner(data)}
-              >
-                {data.label}
-              </p>
-            );
-          })}
-      </div>
-    </div>
-  );
-};
-
-const SmartDropDown = (props) => {
-  const { buttonText, children, value } = props;
-  const [visible, setVisibility] = useState(false);
-
-  function handleDropdownClick(event) {
-    setVisibility(!visible);
-  }
-
-  function closeHandler(value) {
-    return function () {
-      if (props.closeEvent) {
-        props.closeEvent(value);
-      }
-      setVisibility(false);
-    };
-  }
-  return (
-    <div className="dropdown">
-      <button
-        className="custom-dropdown"
-        type="button"
-        id="dropdownCourseButton"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-        onClick={handleDropdownClick}
-      >
-        {buttonText}
-      </button>
-      <ul className={classNames('dropdown-menu', { show: visible })}>
-        {visible &&
-          children({
-            props,
-            closeHandler,
-          })}
-      </ul>
-    </div>
-  );
-};
-
-const MobileFilterModal = (props) => {
-  const [isHidden, setIsHidden] = useState(true);
-
-  const showModal = () => {
-    setIsHidden(false);
-    document.body.classList.add('overflow-hidden');
-  };
-
-  const hideModal = () => {
-    setIsHidden(true);
-    document.body.classList.remove('overflow-hidden');
-  };
-
-  const clearAction = () => {
-    if (props.clearEvent) {
-      props.clearEvent();
-    }
-    setIsHidden(true);
-    document.body.classList.remove('overflow-hidden');
-  };
-
-  const { label, value, children, hideClearOption = false } = props;
-  return (
-    <>
-      <label>{label}</label>
-      <div
-        className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-        onClick={showModal}
-      >
-        <a className="btn" href="#">
-          {value || label}
-        </a>
-      </div>
-      <div
-        className={classNames('mobile-modal', {
-          active: !isHidden,
-        })}
-      >
-        <div className="mobile-modal--header">
-          <div
-            id="course-close_mobile"
-            className="mobile-modal--close"
-            onClick={hideModal}
-          >
-            <img src="/img/ic-close.svg" alt="close" />
-          </div>
-          <h2 className="mobile-modal--title">{label}</h2>
-          {children}
-        </div>
-        <div className="mobile-modal--body">
-          <div className="row m-0 align-items-center justify-content-between">
-            {!hideClearOption && (
-              <div className="clear" onClick={clearAction}>
-                Clear
-              </div>
-            )}
-            <div
-              className="filter-save-button btn_box_primary select-btn"
-              onClick={hideModal}
-            >
-              Select
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const Popup = (props) => {
-  const {
-    buttonText,
-    tabindex,
-    children,
-    value,
-    containerClassName = '',
-    showId,
-    parentClassName = '',
-    showList = true,
-    label,
-    hideClearOption = false,
-  } = props;
-
-  const [visible, setVisibility] = useState(false);
-  const referenceRef = useRef(null);
-  const popperRef = useRef(null);
-  const arrowRef = useRef(null);
-
-  const { styles, attributes } = usePopper(
-    referenceRef.current,
-    popperRef.current,
-    {
-      placement: 'bottom',
-      modifiers: [
-        {
-          name: 'arrow',
-          enabled: true,
-          options: {
-            element: arrowRef.current,
-          },
-        },
-        {
-          name: 'offset',
-          enabled: true,
-          options: {
-            offset: [0, 10],
-          },
-        },
-      ],
-    },
-  );
-  useEffect(() => {
-    // listen for clicks and close dropdown on body
-    document.addEventListener('mousedown', handleDocumentClick);
-    return () => {
-      document.removeEventListener('mousedown', handleDocumentClick);
-    };
-  }, []);
-
-  function handleDropdownClick() {
-    setVisibility(!visible);
-  }
-
-  function handleSelectFilter() {
-    props.closeEvent(!value ? true : null);
-  }
-
-  function handleDocumentClick(event) {
-    if (
-      referenceRef.current.contains(event.target) ||
-      popperRef?.current?.contains(event.target)
-    ) {
-      return;
-    }
-    setVisibility(false);
-  }
-
-  function closeHandler(value) {
-    return function () {
-      if (props.closeEvent) {
-        props.closeEvent(value);
-      }
-      setVisibility(false);
-    };
-  }
-
-  return (
-    <>
-      <div
-        data-filter="event-type"
-        ref={referenceRef}
-        tabIndex={tabindex}
-        className={classNames('courses-filter', parentClassName, {
-          active: visible,
-          'with-selected': value,
-        })}
-      >
-        {value && !hideClearOption && (
-          <button
-            className="courses-filter__remove"
-            data-filter="event-type"
-            data-placeholder="Online"
-            onClick={closeHandler(null)}
-          >
-            <svg
-              width="20"
-              height="21"
-              viewBox="0 0 20 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="0.5"
-                y="1"
-                width="19"
-                height="19"
-                rx="9.5"
-                fill="#ABB1BA"
-              />
-              <rect
-                x="0.5"
-                y="1"
-                width="19"
-                height="19"
-                rx="9.5"
-                stroke="white"
-              />
-              <path
-                d="M13.5 7L6.5 14"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M13.5 14L6.5 7"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        )}
-        <label>{label}</label>
-        <button
-          className={classNames('courses-filter__button', {
-            '!tw-text-slate-300': !buttonText,
-          })}
-          data-filter="event-type"
-          onClick={!showList ? handleSelectFilter : handleDropdownClick}
-        >
-          {buttonText || 'Select...'}
-        </button>
-        {showList && (
-          <div className="courses-filter__wrapper-list">
-            <ul
-              id={showId ? 'time-tooltip' : ''}
-              className={classNames(
-                'courses-filter__list',
-                containerClassName,
-                {
-                  active: visible,
-                },
-              )}
-              data-filter="event-type"
-              ref={popperRef}
-              {...attributes.popper}
-            >
-              {visible &&
-                children({
-                  props,
-                  closeHandler,
-                })}
-            </ul>
-          </div>
-        )}
-      </div>
-    </>
-  );
-};
-
 const ItemLoaderTile = () => {
   return (
     <div className="course-item">
@@ -453,7 +116,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, authenticated }) => {
+const CourseTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -476,6 +139,7 @@ const CourseTile = ({ data, authenticated }) => {
     listPrice,
     isEventFull,
     isPurchased,
+    category,
   } = data || {};
 
   const enrollAction = () => {
@@ -485,7 +149,7 @@ const CourseTile = ({ data, authenticated }) => {
       course_id: data?.sfid,
       course_price: data?.unitPrice,
     });
-    if (isGuestCheckoutEnabled || authenticated) {
+    if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
@@ -494,11 +158,12 @@ const CourseTile = ({ data, authenticated }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-      });
+      );
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
@@ -549,7 +214,16 @@ const CourseTile = ({ data, authenticated }) => {
     >
       <div className="course-item-header">
         <div className="course-title-duration">
-          <div className="course-title">{mode}</div>
+          <div className="course-title">
+            {COURSE_MODES_MAP[mode]}
+            {category && (
+              <div
+                class={`course-type ${mode === COURSE_MODES.IN_PERSON.value ? 'intensive' : 'days'}`}
+              >
+                {category}
+              </div>
+            )}
+          </div>
           <div className="course-duration">{getCourseDeration()}</div>
         </div>
         {!isPurchased && (
@@ -629,7 +303,7 @@ const Course = () => {
     threshold: 0.1,
   });
   const seed = useUIDSeed();
-  const { authenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { slug } = router.query;
 
@@ -995,7 +669,7 @@ const Course = () => {
                 <CourseTile
                   key={course.sfid}
                   data={course}
-                  authenticated={authenticated}
+                  isAuthenticated={isAuthenticated}
                 />
               ))}
             </React.Fragment>
@@ -1159,16 +833,16 @@ const Course = () => {
                     <path
                       d="M13.5 7L6.5 14"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M13.5 14L6.5 7"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 </button>
@@ -1195,6 +869,7 @@ const Course = () => {
                 closeEvent={onFilterChange('onlyWeekend')}
                 showList={false}
                 label="Weekend courses"
+                buttonText={onlyWeekend ? 'Weekend courses' : null}
               ></Popup>
 
               <Popup
@@ -1393,70 +1068,7 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-                    <label>Weekend courses</label>
-                    <div
-                      className={classNames('courses-filter', {
-                        'with-selected': onlyWeekend,
-                      })}
-                    >
-                      <button
-                        className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-                        data-filter="weekend-mobile-courses"
-                        data-type="checkbox"
-                        onClick={() => {
-                          setOnlyWeekend(!onlyWeekend ? true : null);
-                        }}
-                      >
-                        Weekend courses
-                      </button>
-                      <button
-                        className="courses-filter__remove"
-                        data-filter="weekend-mobile-courses"
-                        data-placeholder="Online"
-                        onClick={() => {
-                          setOnlyWeekend(null);
-                        }}
-                      >
-                        <svg
-                          width="20"
-                          height="21"
-                          viewBox="0 0 20 21"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="1"
-                            width="19"
-                            height="19"
-                            rx="9.5"
-                            fill="#ABB1BA"
-                          />
-                          <rect
-                            x="0.5"
-                            y="1"
-                            width="19"
-                            height="19"
-                            rx="9.5"
-                            stroke="white"
-                          />
-                          <path
-                            d="M13.5 7L6.5 14"
-                            stroke="white"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M13.5 14L6.5 7"
-                            stroke="white"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+
                     <MobileFilterModal
                       label="Course Type"
                       value={
@@ -1520,6 +1132,75 @@ const Course = () => {
                         />
                       </div>
                     </MobileFilterModal>
+                    <label>Weekend courses</label>
+                    <div
+                      className={classNames('courses-filter', {
+                        'with-selected': onlyWeekend,
+                      })}
+                    >
+                      <button
+                        className={classNames(
+                          'btn_outline_box btn-modal_dropdown full-btn mt-3',
+                          {
+                            '!tw-text-slate-300': !onlyWeekend,
+                          },
+                        )}
+                        data-filter="weekend-mobile-courses"
+                        data-type="checkbox"
+                        onClick={() => {
+                          setOnlyWeekend(!onlyWeekend ? true : null);
+                        }}
+                      >
+                        Weekend courses
+                      </button>
+                      <button
+                        className="courses-filter__remove"
+                        data-filter="weekend-mobile-courses"
+                        data-placeholder="Online"
+                        onClick={() => {
+                          setOnlyWeekend(null);
+                        }}
+                      >
+                        <svg
+                          width="20"
+                          height="21"
+                          viewBox="0 0 20 21"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="0.5"
+                            y="1"
+                            width="19"
+                            height="19"
+                            rx="9.5"
+                            fill="#ABB1BA"
+                          />
+                          <rect
+                            x="0.5"
+                            y="1"
+                            width="19"
+                            height="19"
+                            rx="9.5"
+                            stroke="white"
+                          />
+                          <path
+                            d="M13.5 7L6.5 14"
+                            stroke="white"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M13.5 14L6.5 7"
+                            stroke="white"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                     <MobileFilterModal
                       label="Time Zone"
                       value={

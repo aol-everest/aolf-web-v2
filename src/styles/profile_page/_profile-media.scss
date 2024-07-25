@@ -3,6 +3,7 @@
     &__alert {
       span {
         font-size: 12px;
+        white-space: normal;
 
         img {
           margin-right: 10px;
@@ -53,7 +54,6 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow-y: auto;
-    top: unset;
     height: 0;
 
     .close-modal {

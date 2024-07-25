@@ -1,5 +1,4 @@
 import { Loader } from '@components';
-import { Dropdown } from '@components/checkout/Dropdown';
 import { ALERT_TYPES, COURSE_TYPES } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { api } from '@utils';
@@ -99,7 +98,7 @@ const CouponMergeResultCmp = ({
   reedemableAmount,
   workshopType,
 }) => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
 
   const handleCopyCoupon = () => {
     navigator.clipboard.writeText(newCouponCode);
@@ -116,7 +115,7 @@ const CouponMergeResultCmp = ({
             created for{' '}
             {COURSE_TYPES_COUPON.find((c) => c.value === workshopType).label}. A
             confirmation email with your rewards code has been sent to
-            <span className="d-block">{user.profile.email}.</span>
+            <span className="d-block">{profile.email}.</span>
           </p>
         </div>
 
@@ -156,7 +155,7 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
       }}
     >
       {(formikProps) => {
-        const { values, resetForm } = formikProps;
+        const { values, resetForm, setFieldValue } = formikProps;
         const handleCouponSelection = (e, field, form, couponCode) => {
           if (e.target.checked) {
             form.setFieldValue('couponCodes', [...field.value, couponCode]);
@@ -181,76 +180,74 @@ const CouponValidateCmp = ({ couponCodes, mergeAction }) => {
         return (
           <form onSubmit={formikProps.handleSubmit}>
             <div className="profile-update__form">
-              <h6 className="profile-update__title">Redeem Advocate Coupons</h6>
+              <div className="refer-section-card">
+                <h2 className="title">Redeem Advocate Coupons</h2>
+                <div className="desc">Select Rewards Codes to Redeem.</div>
+                <div className="redeem-coupons">
+                  {COURSE_TYPES_COUPON.map((item) => {
+                    return (
+                      <div
+                        className="form-item"
+                        onClick={() => setFieldValue('courseType', item.value)}
+                        key={item.value}
+                      >
+                        <input
+                          type="radio"
+                          name="coupon"
+                          checked={courseType === item.value}
+                        />
+                        <label for="coupon1">{item.label}</label>
+                      </div>
+                    );
+                  })}
 
-              <form action="#" className="advocate-reward mt-4 mb-4">
-                <div className="text-center">
-                  <h4 className=" advocate-reward__title mb-4">
-                    Select Rewards Codes to Redeem:
-                  </h4>
-
-                  <Field name="couponCodes">
-                    {({ field, form }) => (
-                      <ul className="advocate-reward__list">
-                        {couponCodes.map((couponCode, key) => {
-                          return (
-                            <li key={key}>
-                              <label className=" d-flex align-items-center">
-                                <input
-                                  type="checkbox"
-                                  defaultChecked
-                                  className="advocate-reward__checkbox mr-2"
-                                  onClick={(e) =>
-                                    handleCouponSelection(
-                                      e,
-                                      field,
-                                      form,
-                                      couponCode,
-                                    )
-                                  }
-                                />
-
-                                <p className="advocate-reward__label">
-                                  {couponCode.text}
-                                </p>
-                              </label>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </Field>
-                </div>
-
-                <div className="volonteer-content__item_multiselect_body item-volonteer advocate-reward__select mt-4 mb-4">
-                  <Dropdown
-                    placeholder="Choose Course Type"
-                    formikProps={formikProps}
-                    formikKey="courseType"
-                    options={COURSE_TYPES_COUPON}
-                    containerClass="tw-w-full"
-                    innerFullWidth={true}
-                  ></Dropdown>
-                </div>
-
-                <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center">
-                  <p className="d-none d-sm-block advocate-reward__total">
-                    {isSubmit && `Rewards Selected Total: [$${totalReward}]`}
-                  </p>
                   <button
-                    className={classNames(
-                      'advocate-reward__button align-self-end',
-                      {
-                        'advocate-reward__button--disabled': !isSubmit,
-                      },
-                    )}
+                    className="btn-primary"
                     disabled={!isSubmit}
                     onClick={handleSubmit}
                   >
                     Redeem
                   </button>
                 </div>
-              </form>
+              </div>
+
+              <Field name="couponCodes">
+                {({ field, form }) => (
+                  <ul className="advocate-reward__list">
+                    {couponCodes.map((couponCode, key) => {
+                      return (
+                        <li key={key}>
+                          <label className=" d-flex align-items-center">
+                            <input
+                              type="checkbox"
+                              defaultChecked
+                              className="advocate-reward__checkbox mr-2"
+                              onClick={(e) =>
+                                handleCouponSelection(
+                                  e,
+                                  field,
+                                  form,
+                                  couponCode,
+                                )
+                              }
+                            />
+
+                            <p className="advocate-reward__label">
+                              {couponCode.text}
+                            </p>
+                          </label>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </Field>
+
+              <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+                <p className="d-none d-sm-block advocate-reward__total">
+                  {isSubmit && `Rewards Selected Total: [$${totalReward}]`}
+                </p>
+              </div>
             </div>
           </form>
         );

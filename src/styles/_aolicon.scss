@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'iconaol';
-  src: url('/fonts/iconaol/iconaol.eot?jt9vx2');
+  src: url('/fonts/iconaol/iconaol.eot?qk97jy');
   src:
-    url('/fonts/iconaol/iconaol.eot?jt9vx2#iefix') format('embedded-opentype'),
-    url('/fonts/iconaol/iconaol.ttf?jt9vx2') format('truetype'),
-    url('/fonts/iconaol/iconaol.woff?jt9vx2') format('woff'),
-    url('/fonts/iconaol/iconaol.svg?jt9vx2#iconaol') format('svg');
+    url('/fonts/iconaol/iconaol.eot?qk97jy#iefix') format('embedded-opentype'),
+    url('/fonts/iconaol/iconaol.ttf?qk97jy') format('truetype'),
+    url('/fonts/iconaol/iconaol.woff?qk97jy') format('woff'),
+    url('/fonts/iconaol/iconaol.svg?qk97jy#iconaol') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -26,11 +26,59 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.iconaol-play:before {
+  content: '\e935';
+}
 .iconaol-lock:before {
   content: '\e932';
 }
 .iconaol-sms-bold:before {
   content: '\e926';
+}
+.iconaol-human-brain:before {
+  content: '\e948';
+}
+.iconaol-angry:before {
+  content: '\e93a';
+}
+.iconaol-broken-heart:before {
+  content: '\e93b';
+}
+.iconaol-emotions:before {
+  content: '\e93c';
+}
+.iconaol-expectations:before {
+  content: '\e93d';
+}
+.iconaol-family:before {
+  content: '\e93e';
+}
+.iconaol-fear:before {
+  content: '\e93f';
+}
+.iconaol-heart:before {
+  content: '\e940';
+}
+.iconaol-karma:before {
+  content: '\e941';
+}
+.iconaol-love:before {
+  content: '\e942';
+}
+.iconaol-peace:before {
+  content: '\e943';
+}
+.iconaol-pray:before {
+  content: '\e944';
+}
+.iconaol-relationship-2:before {
+  content: '\e945';
+}
+.iconaol-smiley:before {
+  content: '\e946';
+}
+.iconaol-user-2:before {
+  content: '\e947';
 }
 .iconaol-arrow-long-right:before {
   content: '\e933';
@@ -56,8 +104,17 @@
 .iconaol-Tick:before {
   content: '\e917';
 }
+.iconaol-video:before {
+  content: '\e936';
+}
 .iconaol-hindu-temple:before {
   content: '\e916';
+}
+.iconaol-dislike:before {
+  content: '\e949';
+}
+.iconaol-like:before {
+  content: '\e94a';
 }
 .iconaol-chat-flower:before {
   content: '\e930';
@@ -70,6 +127,15 @@
 }
 .iconaol-payment-card:before {
   content: '\e914';
+}
+.iconaol-eye-slash:before {
+  content: '\e939';
+}
+.iconaol-arrow-left:before {
+  content: '\e937';
+}
+.iconaol-arrow-right:before {
+  content: '\e938';
 }
 .iconaol-brain:before {
   content: '\e928';

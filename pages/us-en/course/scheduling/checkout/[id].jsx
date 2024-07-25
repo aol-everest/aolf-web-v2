@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import dayjs from 'dayjs';
-import { PageLoading } from '@components';
-import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
+import { Loader, PageLoading } from '@components';
+import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_MODES_MAP } from '@constants';
 import { useQueryState, parseAsInteger } from 'nuqs';
 import queryString from 'query-string';
 import { useAuth, useGlobalAlertContext } from '@contexts';
@@ -256,7 +256,7 @@ const SchedulingPaymentForm = ({
   courseType,
   isReferBySameSite,
 }) => {
-  const { user = {} } = useAuth();
+  const { profile = {} } = useAuth();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
@@ -294,7 +294,7 @@ const SchedulingPaymentForm = ({
     personMobilePhone,
     personMailingStreet,
     personMailingCity,
-  } = user?.profile || {};
+  } = profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -625,7 +625,7 @@ const SchedulingPaymentForm = ({
   return (
     <>
       <NextSeo title={title + ' Course Checkout'} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: '',
@@ -831,23 +831,23 @@ const SchedulingPaymentForm = ({
                               <path
                                 d="M12 21.9998C17.5 21.9998 22 17.4998 22 11.9998C22 6.49976 17.5 1.99976 12 1.99976C6.5 1.99976 2 6.49976 2 11.9998C2 17.4998 6.5 21.9998 12 21.9998Z"
                                 stroke="#3D8BE8"
-                                stroke-width="1.8"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M12 7.99976V12.9998"
                                 stroke="#3D8BE8"
-                                stroke-width="1.8"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M11.9946 16.0002H12.0036"
                                 stroke="#3D8BE8"
-                                stroke-width="2.4"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="2.4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
                           </i>
@@ -903,7 +903,9 @@ const SchedulingPaymentForm = ({
                                 </svg>{' '}
                                 Location:
                               </div>
-                              <div className="value col-7">{mode}</div>
+                              <div className="value col-7">
+                                {COURSE_MODES_MAP[mode]}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1135,12 +1137,12 @@ const SchedulingPaymentForm = ({
                                 Location:
                               </div>
                               <div className="value col-7">
-                                {mode === COURSE_MODES.ONLINE.name
+                                {mode === COURSE_MODES.ONLINE.value
                                   ? mode
-                                  : (mode === COURSE_MODES.IN_PERSON.name ||
+                                  : (mode === COURSE_MODES.IN_PERSON.value ||
                                       mode ===
                                         COURSE_MODES.DESTINATION_RETREATS
-                                          .name) && (
+                                          .value) && (
                                       <>
                                         {!workshop.isLocationEmpty && (
                                           <a

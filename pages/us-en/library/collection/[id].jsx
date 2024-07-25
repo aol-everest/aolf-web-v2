@@ -20,6 +20,7 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
+import { navigateToLogin } from '@utils';
 
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
@@ -132,7 +133,7 @@ function Tile({
 
 function Collection() {
   const router = useRouter();
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const [folderName] = useQueryString('folderName');
   const { id: folderId } = router.query;
   const {
@@ -190,8 +191,8 @@ function Collection() {
 
   const markFavorite = (meditate) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
       await markFavoriteEvent({ meditate, refetch: refetchFavouriteContents });
     }
@@ -205,8 +206,8 @@ function Collection() {
 
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
-    if (!authenticated) {
-      showModal(MODAL_TYPES.LOGIN_MODAL);
+    if (!isAuthenticated) {
+      navigateToLogin(router);
     } else {
       await meditatePlayEvent({
         meditate,
@@ -259,7 +260,7 @@ function Collection() {
                 <Tile
                   key={content.sfid}
                   data={content}
-                  authenticated={authenticated}
+                  isAuthenticated={isAuthenticated}
                   additionalclassName="meditate-collection"
                   markFavorite={markFavorite(content)}
                   meditateClickHandle={meditateClickHandle(content)}

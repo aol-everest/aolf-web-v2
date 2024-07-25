@@ -31,7 +31,11 @@ export const PhoneNumberInputField = ({
         defaultCountry="us"
         smartCaret={true}
         country="us"
-        inputClass={form.errors[field.name] ? 'text-input error' : 'text-input'}
+        inputClass={
+          form.errors[field.name]
+            ? 'text-input error extra-padding'
+            : 'text-input extra-padding'
+        }
         containerClass="input-block"
         countryCodeEditable={true}
         international={true}

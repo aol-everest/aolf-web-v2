@@ -14,6 +14,7 @@ import {
   SigninForm,
   SignupForm,
 } from './../loginForm';
+import { Loader } from '@components';
 
 const LOGIN_MODE = 'LOGIN_MODE';
 const SIGNUP_MODE = 'SIGNUP_MODE';
@@ -77,6 +78,9 @@ export const LoginModal = () => {
   };
 
   const validateStudentEmail = (email) => {
+    if (!email) {
+      return false;
+    }
     const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
     const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
     return isStudentEmail;
@@ -324,7 +328,7 @@ export const LoginModal = () => {
   return (
     <div className="modal-window auth show active">
       <div className="modal-window__card show">
-        {loading && <div className="cover-spin"></div>}
+        {loading && <Loader />}
         <div
           className={classNames('success-message-container', {
             'd-none': !showSuccessMessage,

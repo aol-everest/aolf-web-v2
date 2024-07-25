@@ -1,4 +1,10 @@
-import { ABBRS, COURSE_MODES, COURSE_TYPES, MODAL_TYPES } from '@constants';
+import {
+  ABBRS,
+  COURSE_MODES,
+  COURSE_TYPES,
+  MODAL_TYPES,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { tConvert } from '@utils';
@@ -7,10 +13,11 @@ import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
+import { navigateToLogin } from '@utils';
 
 dayjs.extend(utc);
 
-export const WorkshopTile = ({ data, authenticated }) => {
+export const WorkshopTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -41,7 +48,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
       course_id: data?.sfid,
       course_price: data?.unitPrice,
     });
-    if (isGuestCheckoutEnabled || authenticated) {
+    if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
@@ -50,11 +57,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-      });
+      );
     }
 
     // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
@@ -97,7 +105,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
           ctype: productTypeId,
         },
       });
-    } else if (authenticated) {
+    } else if (isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${workshopId}`,
         query: {
@@ -106,11 +114,12 @@ export const WorkshopTile = ({ data, authenticated }) => {
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${workshopId}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-      });
+      );
     }
   };
 
@@ -161,7 +170,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
         />
       )}
       <h3 className="course-card__title">
-        {mode === COURSE_MODES.IN_PERSON.name ? (
+        {mode === COURSE_MODES.IN_PERSON.value ? (
           <span className="course-card__type">
             {locationCity ? (
               <span>
@@ -175,7 +184,7 @@ export const WorkshopTile = ({ data, authenticated }) => {
             )}
           </span>
         ) : (
-          <span className="course-card__type">{mode}</span>
+          <span className="course-card__type">{COURSE_MODES_MAP[mode]}</span>
         )}
 
         <span

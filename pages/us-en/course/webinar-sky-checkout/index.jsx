@@ -1,4 +1,4 @@
-import { PageLoading } from '@components';
+import { Loader, PageLoading } from '@components';
 import { PaymentFormWebinar } from '@components/PaymentFormWebinar';
 import {
   ALERT_TYPES,
@@ -40,6 +40,9 @@ const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
 };
 
 const validateStudentEmail = (email) => {
+  if (!email) {
+    return false;
+  }
   const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
   const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
   return isStudentEmail;
@@ -47,7 +50,7 @@ const validateStudentEmail = (email) => {
 
 const WebinarSkyCheckout = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
 
   const {
     data: workshops,
@@ -87,7 +90,7 @@ const WebinarSkyCheckout = () => {
   }, [workshops]);
 
   useEffect(() => {
-    if (!user && !workshop.id) return;
+    if (!profile && !workshop.id) return;
     const {
       title,
       name,
@@ -122,7 +125,7 @@ const WebinarSkyCheckout = () => {
       amount: unitPrice,
       requestType: 'Detail',
       hitType: 'paymentpage',
-      user: user.profile.id,
+      user: profile.id,
       ecommerce: {
         checkout: {
           actionField: {
@@ -132,10 +135,10 @@ const WebinarSkyCheckout = () => {
         },
       },
     });
-  }, [user, workshop]);
+  }, [profile, workshop]);
 
   useEffect(() => {
-    if (!user && !workshop.id) return;
+    if (!profile && !workshop.id) return;
     const { businessRules = [], isPreRequisiteCompleted } = workshop;
 
     const firstPreRequisiteFailedReason = businessRules.find(
@@ -230,7 +233,7 @@ const WebinarSkyCheckout = () => {
         selectedWorkshopId={selectedWorkshopId}
         handleWorkshopSelectionChange={handleWorkshopSelectionChange}
         workshops={workshops}
-        profile={user.profile}
+        profile={profile}
         enrollmentCompletionAction={enrollmentCompletionAction}
       />
     );
@@ -241,7 +244,7 @@ const WebinarSkyCheckout = () => {
     isStudentVerified,
     studentVerificationDate,
     studentVerificationExpiryDate,
-  } = user.profile;
+  } = profile;
 
   const handleVerifyStudentEmail = async () => {
     setLoading(true);
@@ -283,6 +286,7 @@ const WebinarSkyCheckout = () => {
   };
 
   const showVerifyStudentStatus =
+    isAuthenticated &&
     validateStudentEmail(email) &&
     workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||
@@ -293,7 +297,7 @@ const WebinarSkyCheckout = () => {
   return (
     <>
       <NextSeo title={workshop.title} />
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <main>
         {showTopMessage && (
           <aside className="tw-relative tw-whitespace-normal tw-text-center">

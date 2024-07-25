@@ -1,4 +1,9 @@
-import { ABBRS, COURSE_MODES, COURSE_TYPES } from '@constants';
+import {
+  ABBRS,
+  COURSE_MODES,
+  COURSE_TYPES,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { tConvert } from '@utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -138,8 +143,8 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
             </li>
           </ul>
 
-          {(mode === COURSE_MODES.IN_PERSON.name ||
-            mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
+          {(mode === COURSE_MODES.IN_PERSON.value ||
+            mode === COURSE_MODES.DESTINATION_RETREATS.value) && (
             <>
               {!workshop.isLocationEmpty && (
                 <ul className="info__list mt-3">
@@ -200,14 +205,14 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
             </>
           )}
 
-          {mode === COURSE_MODES.ONLINE.name && (
+          {mode === COURSE_MODES.ONLINE.value && (
             <>
               {!workshop.isLocationEmpty && (
                 <ul className="info__list mt-3">
                   <h2 className="info__title">Location:</h2>
 
                   <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                    {mode}
+                    {COURSE_MODES_MAP[mode]}
                   </li>
                 </ul>
               )}

@@ -64,7 +64,7 @@ import Style from './MembershipCancellation.module.scss';
 
 const MembershipCancellation = () => {
   const router = useRouter();
-  const { user, authenticated } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const { id: subscriptionId } = router.query;
   const {
     data: cancelSubscription = {},
@@ -91,7 +91,7 @@ const MembershipCancellation = () => {
   const { data, isError } = cancelSubscription;
   const { totalAmountWillBeDeducted } = data || [];
 
-  const { subscriptions = [] } = user.profile || {};
+  const { subscriptions = [] } = profile || {};
 
   const userSubscriptions = subscriptions.find((subscription) => {
     return subscription.sfid === subscriptionId;
@@ -128,7 +128,7 @@ const MembershipCancellation = () => {
   const backToProfileAction = (e) => {
     if (e) e.preventDefault();
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/profile`,
+      pathname: `/us-en/profile/update-profile`,
     });
   };
 
@@ -157,7 +157,7 @@ const MembershipCancellation = () => {
         throw new Error(errorMessage);
       }
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 2,
         },
@@ -166,7 +166,7 @@ const MembershipCancellation = () => {
       console.log(error);
 
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 1,
         },

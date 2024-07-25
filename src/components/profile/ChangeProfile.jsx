@@ -1,5 +1,7 @@
-import { Dropdown, StyledInput } from '@components/checkout';
-import { ChangeEmail } from '@components/profile';
+import {
+  PhoneInputNewCheckout,
+  StyledInputNewCheckout,
+} from '@components/checkout';
 import {
   MESSAGE_EMAIL_VERIFICATION_SUCCESS,
   MODAL_TYPES,
@@ -8,64 +10,29 @@ import {
 import { useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { api, phoneRegExp } from '@utils';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { Field, Formik } from 'formik';
+import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { FaRegEdit } from 'react-icons/fa';
 import * as Yup from 'yup';
-import PhoneInput from './../phoneInputCmp';
-import Style from './ChangeProfile.module.scss';
+import { DropdownNewCheckout } from '@components/checkout/DropdownNewCheckout';
+import { Loader } from '@components';
+import { ChangeEmail } from '@components/profile';
 
-const PhoneNumberInputField = ({ isMobile, field, form, ...props }) => {
-  const onChangeAction = (value, data, event, formattedValue) => {
-    form.setFieldValue(field.name, formattedValue);
-  };
-  return (
-    <PhoneInput
-      {...field}
-      {...props}
-      placeholder="Phone Number"
-      country="us"
-      inputClass={classNames({
-        validate: form.errors.contactPhone,
-        'w-100': isMobile,
-      })}
-      countryCodeEditable={true}
-      onChange={onChangeAction}
-    />
-  );
-};
-
-export const ChangeProfile = ({
-  isMobile,
-  profile = {},
-  updateCompleteAction,
-}) => {
+export const ChangeProfile = ({ profile = {}, updateCompleteAction }) => {
   const [loading, setLoading] = useState(false);
   const { showModal, hideModal } = useGlobalModalContext();
   const router = useRouter();
   const description = useRef('');
 
-  const allowEmailEdit = profile.cognito.UserStatus !== 'EXTERNAL_PROVIDER';
-
-  const editEmailAction = (e) => {
-    if (e) e.preventDefault();
-    showModal(MODAL_TYPES.EMPTY_MODAL, {
-      children: (handleModalToggle) => {
-        return (
-          <ChangeEmail
-            closeDetailAction={handleModalToggle}
-            existingEmail={profile.email}
-          />
-        );
-      },
-    });
-  };
-
   const submitAction = async (values) => {
-    const { contactPhone, contactAddress, contactState, contactZip } = values;
+    const {
+      contactPhone,
+      contactAddress,
+      contactState,
+      contactZip,
+      contactCity,
+    } = values;
     setLoading(true);
     try {
       const { status, error: errorMessage } = await api.post({
@@ -75,6 +42,7 @@ export const ChangeProfile = ({
           contactAddress,
           contactState,
           contactZip,
+          contactCity,
         },
       });
 
@@ -95,6 +63,9 @@ export const ChangeProfile = ({
   };
 
   const validateStudentEmail = (email) => {
+    if (!email) {
+      return false;
+    }
     const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
     const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
     return isStudentEmail;
@@ -118,7 +89,7 @@ export const ChangeProfile = ({
       children: (handleModalToggle) => (
         <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
           <div className=" modal-dialog modal-dialog-centered active">
-            <div className="modal-content">
+            <div className="modal-content tw-justify-center">
               <h2 className="modal-content-title !tw-text-2xl">
                 {MESSAGE_EMAIL_VERIFICATION_SUCCESS}
               </h2>
@@ -146,21 +117,21 @@ export const ChangeProfile = ({
   ) => {
     if (requestCreated) {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 3,
         },
       });
     } else if (caseAlreadyRegistered || ccInfoAlreadyDeleted) {
       router.push({
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 5,
         },
       });
     } else {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/profile`,
+        pathname: `/us-en/profile/update-profile`,
         query: {
           request: 4,
         },
@@ -228,7 +199,7 @@ export const ChangeProfile = ({
     description.current = '';
     showModal(MODAL_TYPES.CUSTOM_MODAL, {
       title: 'Delete PII or Remove CC information',
-      className: 'course-join-card',
+      className: 'course-join-card tw-mt-8 sm:tw-mt-0',
       children: (
         <>
           <div className="course-details-card__list">
@@ -246,7 +217,7 @@ export const ChangeProfile = ({
         return (
           <div className="course-details-card__footer">
             <button
-              className="btn-secondary link-modal tw-mr-4 !tw-px-7"
+              className="btn-secondary link-modal tw-mb-4 sm:tw-mb-0 sm:tw-mr-4 !tw-px-7"
               onClick={handleDeletePersonalInformation}
             >
               Delete Personal info
@@ -264,15 +235,30 @@ export const ChangeProfile = ({
     });
   };
 
+  const allowEmailEdit = profile?.cognito?.UserStatus !== 'EXTERNAL_PROVIDER';
+
+  const editEmailAction = (e) => {
+    if (e) e.preventDefault();
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      children: (handleModalToggle) => {
+        return (
+          <ChangeEmail
+            closeDetailAction={handleModalToggle}
+            existingEmail={profile.email}
+          />
+        );
+      },
+    });
+  };
+
   const {
     first_name,
     last_name,
-    personMailingCity,
-    personMailingCountry,
     personMailingPostalCode,
     personMailingState,
     personMobilePhone,
     personMailingStreet,
+    personMailingCity,
     email,
     isStudentVerified,
     studentVerificationDate,
@@ -290,160 +276,130 @@ export const ChangeProfile = ({
         dayjs(new Date()).diff(dayjs(studentVerificationDate), 'y', true) > 1 &&
         dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
+  const initalValue = {
+    firstName: first_name || '',
+    lastName: last_name || '',
+    contactPhone: personMobilePhone || '',
+    contactAddress: personMailingStreet || '',
+    contactState: personMailingState || '',
+    contactCity: personMailingCity || '',
+    contactZip: personMailingPostalCode || '',
+    email: email,
+  };
+
   return (
     <>
-      {loading && <div className="cover-spin"></div>}
+      {loading && <Loader />}
       <Formik
         enableReinitialize
-        initialValues={{
-          firstName: first_name || '',
-          lastName: last_name || '',
-          contactPhone: personMobilePhone || '',
-          contactAddress: personMailingStreet || '',
-          contactState: personMailingState || '',
-          contactZip: personMailingPostalCode || '',
-        }}
+        initialValues={initalValue}
         validationSchema={Yup.object().shape({
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
-          contactAddress: Yup.string().required('Address is required'),
+          contactAddress: Yup.string().trim().required('Address is required'),
           contactState: Yup.string().required('State is required'),
+          contactCity: Yup.string().trim().required('City is required'),
           contactZip: Yup.string()
             .required('Zip is required!')
             .matches(/^[0-9]+$/, { message: 'Zip is invalid' })
             .min(2, 'Zip is invalid')
             .max(10, 'Zip is invalid'),
+          email: Yup.string().required('Email is required').email(),
         })}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setValues }) => {
           await submitAction(values);
+          setValues(initalValue);
         }}
       >
         {(props) => {
-          const {
-            values,
-            touched,
-            errors,
-            dirty,
-            isSubmitting,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            handleReset,
-            submitCount,
-          } = props;
+          const { dirty, handleSubmit, isValid, setValues } = props;
           return (
-            <form className="profile-update__form" onSubmit={handleSubmit}>
-              {!isMobile && <h6 className="profile-update__title">Profile:</h6>}
-              <div className="profile-update__card order__card">
-                <StyledInput
-                  containerClass={classNames(Style.address, 'tw-mt-0')}
-                  className={classNames(Style.address, 'tw-mt-0 !tw-w-full')}
-                  placeholder="Address"
+            <form className="profile-form-box" onSubmit={handleSubmit}>
+              <div className="profile-form-wrap form-inputs">
+                <StyledInputNewCheckout
+                  className="form-item col-1-2"
+                  placeholder="First Name"
+                  formikProps={props}
+                  isReadOnly
+                  formikKey="firstName"
+                  label="First Name"
+                ></StyledInputNewCheckout>
+
+                <StyledInputNewCheckout
+                  className="form-item col-1-2"
+                  placeholder="Last Name"
+                  isReadOnly
+                  formikProps={props}
+                  formikKey="lastName"
+                  label="Last Name"
+                ></StyledInputNewCheckout>
+                <StyledInputNewCheckout
+                  className={'form-item col-1-2'}
+                  placeholder="Street address"
                   formikProps={props}
                   formikKey="contactAddress"
                   fullWidth
-                ></StyledInput>
-                <Dropdown
-                  containerClass={classNames({ 'w-100': isMobile })}
+                  label="Street address"
+                ></StyledInputNewCheckout>
+                <StyledInputNewCheckout
+                  className={'form-item col-1-2'}
+                  placeholder="City"
+                  formikProps={props}
+                  formikKey="contactCity"
+                  fullWidth
+                  label="City"
+                ></StyledInputNewCheckout>
+                <DropdownNewCheckout
                   placeholder="State"
                   formikProps={props}
                   formikKey="contactState"
                   options={US_STATES}
-                ></Dropdown>
-                <StyledInput
-                  containerClass={classNames({ 'w-100': isMobile })}
-                  className="zip"
+                  containerClass="state-dropdown col-1-2"
+                ></DropdownNewCheckout>
+                <StyledInputNewCheckout
+                  className={'form-item col-1-2'}
                   placeholder="Zip"
                   formikProps={props}
                   formikKey="contactZip"
-                ></StyledInput>
+                  label="Zip"
+                ></StyledInputNewCheckout>
 
-                <div
-                  className={classNames('input-block', {
-                    'w-100': isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    readOnly={true}
-                    placeholder="First Name"
-                    className={classNames({
-                      'w-100': isMobile,
-                    })}
-                    value={values.firstName}
-                    name="firstName"
-                  />
-                </div>
+                <StyledInputNewCheckout
+                  type="email"
+                  isReadOnly={true}
+                  className="form-item col-1-2 email-container"
+                  placeholder="Email address"
+                  formikProps={props}
+                  formikKey="email"
+                  onCut={(event) => {
+                    event.preventDefault();
+                  }}
+                  onCopy={(event) => {
+                    event.preventDefault();
+                  }}
+                  onPaste={(event) => {
+                    event.preventDefault();
+                  }}
+                  onChange={(event) => {
+                    event.preventDefault();
+                  }}
+                  label="Email address"
+                  allowEmailEdit={allowEmailEdit}
+                  editEmailAction={editEmailAction}
+                ></StyledInputNewCheckout>
 
-                <div
-                  className={classNames('input-block', {
-                    'w-100': isMobile,
-                  })}
-                >
-                  <input
-                    type="text"
-                    readOnly={true}
-                    className={classNames({
-                      'w-100': isMobile,
-                    })}
-                    placeholder="Last Name"
-                    value={values.lastName}
-                    name="lastName"
-                  />
-                </div>
+                <PhoneInputNewCheckout
+                  className="second form-item col-1-2"
+                  containerClass={`scheduling-modal__content-wrapper-form-list-row`}
+                  formikProps={props}
+                  formikKey="contactPhone"
+                  name="contactPhone"
+                  type="tel"
+                  placeholder="Mobile number"
+                  label="Mobile number"
+                ></PhoneInputNewCheckout>
 
-                <div
-                  className={classNames(
-                    'input-block inline-edit-input-container',
-                    {
-                      'w-100': isMobile,
-                    },
-                  )}
-                >
-                  <input
-                    readOnly={true}
-                    value={email}
-                    className={classNames({
-                      'w-100': isMobile,
-                    })}
-                    type="email"
-                    placeholder="Email"
-                  />
-                  {allowEmailEdit && (
-                    <a className="icon" href="#" onClick={editEmailAction}>
-                      <FaRegEdit />
-                    </a>
-                  )}
-                </div>
-                <div
-                  className={classNames('input-block', {
-                    'w-100': isMobile,
-                  })}
-                >
-                  <Field
-                    name="contactPhone"
-                    component={PhoneNumberInputField}
-                    isMobile={isMobile}
-                  />
-                  {/* <MaskedInput
-                    placeholder="Phone Number"
-                    mask={phoneNumberMask}
-                    type="tel"
-                    name="contactPhone"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.contactPhone}
-                    className={classNames({
-                      validate: errors.contactPhone && touched.contactPhone,
-                      "w-100": isMobile,
-                    })}
-                  /> */}
-
-                  {errors.contactPhone && (
-                    <p className="validation-input">{errors.contactPhone}</p>
-                  )}
-                </div>
                 <div className="tw-mt-4 tw-flex tw-flex-1 tw-justify-end">
                   <a
                     href="#"
@@ -454,18 +410,29 @@ export const ChangeProfile = ({
                   </a>
                 </div>
               </div>
-              <div className="tw-mt-6 tw-flex tw-justify-end">
+              <div className="form-actions col-1-1">
                 {showVerifyStudentStatus && (
                   <button
                     type="button"
-                    className="btn-primary ml-auto v2"
+                    className="primary-btn"
                     onClick={handleVerifyStudentEmail}
                   >
                     Verify Student Status
                   </button>
                 )}
-                <button type="submit" className="btn-primary d-block ml-4 v2">
-                  Update Profile
+                <button
+                  type="button"
+                  className="secondary-btn"
+                  onClick={() => setValues(initalValue)}
+                >
+                  Discard Changes
+                </button>
+                <button
+                  type="submit"
+                  className="primary-btn"
+                  disabled={!(isValid && dirty)}
+                >
+                  Save Changes
                 </button>
               </div>
             </form>

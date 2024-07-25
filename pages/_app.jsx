@@ -22,6 +22,10 @@ import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
+import { Amplify } from 'aws-amplify';
+import { Passwordless } from '@components/passwordLessAuth/passwordless';
+import { Hub } from 'aws-amplify/utils';
+import { useRouter } from 'next/router';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -35,15 +39,52 @@ import '@styles/old-design/style.scss';
 
 import SEO from '../next-seo.config';
 
-const ClevertapAnalytics = dynamic(
-  () => import('@components/clevertapAnalytics'),
-  {
-    ssr: false,
+Passwordless.configure({
+  clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+  userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
+  cognitoIdpEndpoint: process.env.NEXT_PUBLIC_COGNITO_REGION,
+  fido2: {
+    baseUrl: process.env.NEXT_PUBLIC_PASSWORD_LESS_API_BASE_URL,
+    authenticatorSelection: {
+      userVerification: 'required',
+    },
   },
-);
+  debug: console.debug,
+});
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      region: process.env.NEXT_PUBLIC_COGNITO_REGION,
+      //  Amazon Cognito User Pool ID
+      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
+      // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
+      userPoolClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+      // OPTIONAL - This is used when autoSignIn is enabled for Auth.signUp
+      // 'code' is used for Auth.confirmSignUp, 'link' is used for email link verification
+      signUpVerificationMethod: 'code', // 'code' | 'link'
+      loginWith: {
+        // OPTIONAL - Hosted UI configuration
+        oauth: {
+          domain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
+          scopes: [
+            'phone',
+            'email',
+            'profile',
+            'openid',
+            'aws.cognito.signin.user.admin',
+          ],
+          redirectSignIn: [process.env.NEXT_PUBLIC_COGNITO_REDIRECT_SIGNIN],
+          redirectSignOut: 'about:blank',
+          responseType: 'code',
+        },
+      },
+    },
+  },
+});
 
 function App({ Component, pageProps }) {
-  const [user, setUser] = useState(null);
+  const router = useRouter();
+  const [user, setUser] = useState({ isAuthenticated: false, profile: {} });
   const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
   // const [pendingSurveyInvite, setPendingSurveyInvite] = useState(null);
@@ -60,12 +101,26 @@ function App({ Component, pageProps }) {
   });
 
   useEffect(() => {
+    const unsubscribe = Hub.listen('auth', ({ payload }) => {
+      switch (payload.event) {
+        case 'customOAuthState':
+          if (payload.data && payload.data !== '') {
+            router.push(payload.data);
+          }
+          break;
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
     fetchProfile();
   }, []);
 
   const fetchProfile = async () => {
     try {
-      const userInfo = await Auth.reFetchProfile();
+      const userInfo = await Auth.fetchUserProfile();
       setUser(userInfo);
 
       const pendingAgreementRes = await api.get({
@@ -148,12 +203,7 @@ function App({ Component, pageProps }) {
   return (
     <AnalyticsProvider instance={analytics}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider
-          userInfo={user}
-          setUserInfo={setUser}
-          reloadProfile={fetchProfile}
-          authenticated={!!user}
-        >
+        <AuthProvider userInfo={user} enableLocalUserCache={true}>
           <Compose
             components={[
               GlobalModal,
@@ -183,7 +233,7 @@ function App({ Component, pageProps }) {
               {isCCUpdateRequired && <CardUpdateRequired />}
               {isPendingAgreement && <PendingAgreement />}
               <Component {...pageProps} />
-              <ClevertapAnalytics></ClevertapAnalytics>
+              {/* <ClevertapAnalytics></ClevertapAnalytics> */}
               <ReactQueryDevtools initialIsOpen={false} />
             </Layout>
           </Compose>

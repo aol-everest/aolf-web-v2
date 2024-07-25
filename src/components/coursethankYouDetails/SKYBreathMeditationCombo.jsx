@@ -184,8 +184,8 @@ export const SKYBreathMeditationCombo = ({
               </div>
             )}
 
-            {(mode === COURSE_MODES.IN_PERSON.name ||
-              mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
+            {(mode === COURSE_MODES.IN_PERSON.value ||
+              mode === COURSE_MODES.DESTINATION_RETREATS.value) && (
               <>
                 {!workshop.isLocationEmpty && (
                   <ul className="program-details__list-schedule tw-mt-2">

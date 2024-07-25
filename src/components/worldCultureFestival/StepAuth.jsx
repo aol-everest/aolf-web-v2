@@ -36,8 +36,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
   const navigateTo = `/us-en/world-culture-festival?s=1&t=${
     props.values.ticketCount
   }&sa=${JSON.stringify(props.values.sessionsAttending)}`;
-  // console.log(navigateTo);
-  const { authenticated, user, setUser } = useAuth();
+  const { isAuthenticated, profile, setUser } = useAuth();
   const [authMode, setAuthMode] = useState(SIGNUP_MODE);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -374,7 +373,7 @@ export function StepAuth({ errors, handleNext, ...props }) {
     setLoading(false);
   };
 
-  if (!authenticated) {
+  if (!isAuthenticated) {
     return (
       <section className="world-culture-festival">
         <div className="world-culture-festival__background world-culture-festival__background_people-3">
@@ -514,7 +513,6 @@ export function StepAuth({ errors, handleNext, ...props }) {
       </section>
     );
   }
-  const { profile } = user;
   return (
     <section className="world-culture-festival">
       <div className="world-culture-festival__background world-culture-festival__background_people-3">

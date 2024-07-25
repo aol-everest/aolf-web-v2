@@ -73,9 +73,8 @@ export const MembershipCheckoutStripe = ({
   subsciption,
   activeSubscription,
   couponCode,
-  profile,
   completeCheckoutCallback,
-  authenticated,
+  isAuthenticated,
   closeRetreatPrerequisiteWarning,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -85,7 +84,8 @@ export const MembershipCheckoutStripe = ({
   const { showAlert } = useGlobalAlertContext();
   const elements = useElements();
   const stripe = useStripe();
-  const { setUser } = useAuth();
+  const { profile, passwordLess } = useAuth();
+  const { signOut } = passwordLess;
 
   const {
     first_name,
@@ -221,7 +221,7 @@ export const MembershipCheckoutStripe = ({
         utm: filterAllowedParams(router.query),
       };
 
-      if (!authenticated) {
+      if (!isAuthenticated) {
         payLoad = {
           ...payLoad,
           user: {
@@ -262,12 +262,11 @@ export const MembershipCheckoutStripe = ({
     setDiscount(discount);
   };
 
-  const logout = async (event) => {
-    await Auth.logout();
-    setUser(null);
-    pushRouteWithUTMQuery(
-      router,
-      `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+  const logout = async (e) => {
+    if (e) e.preventDefault();
+    await signOut();
+    router.push(
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
     );
   };
 

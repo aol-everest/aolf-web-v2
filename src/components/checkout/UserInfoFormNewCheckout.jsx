@@ -89,9 +89,9 @@ export const UserInfoFormNewCheckout = ({
           formikProps={formikProps}
           formikKey="contactPhone"
           name="contactPhone"
-          label="Mobile Number"
           placeholder="Mobile Number"
           type="tel"
+          label=""
         ></PhoneInputNewCheckout>
       </div>
     </Fragment>

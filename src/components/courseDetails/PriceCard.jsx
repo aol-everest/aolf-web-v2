@@ -8,19 +8,16 @@ import {
 } from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
-import { LinkedCalendar } from '@components/dateRangePicker';
 import { priceCalculation, tConvert } from '@utils';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
-import { Popup } from '@components';
+import { navigateToLogin } from '@utils';
 import {
   FaArrowRightLong,
   FaUser,
   FaPhone,
-  FaSearchengin,
   FaRegClock,
   FaRegIdCard,
   FaCommentDots,
@@ -63,7 +60,7 @@ export const PriceCard = ({
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
-  const { authenticated = false } = useAuth();
+  const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
   const { fee, delfee } = priceCalculation({ workshop });
@@ -139,7 +136,7 @@ export const PriceCard = ({
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (authenticated || isGuestCheckoutEnabled) {
+    if (isAuthenticated || isGuestCheckoutEnabled) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
@@ -148,12 +145,12 @@ export const PriceCard = ({
         },
       });
     } else {
-      showModal(MODAL_TYPES.LOGIN_MODAL, {
-        navigateTo: `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
-        defaultView: 'SIGNUP_MODE',
-      });
+      );
     }
   };
 
@@ -217,7 +214,7 @@ export const PriceCard = ({
             <span className="title">Location</span>
             <br />
             <span className="content">
-              {mode === COURSE_MODES.ONLINE.name ? (
+              {mode === COURSE_MODES.ONLINE.value ? (
                 mode
               ) : (
                 <a

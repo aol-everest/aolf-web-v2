@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { COURSE_TYPES } from '@constants';
 import dayjs from 'dayjs';
 
@@ -304,6 +305,27 @@ export const findSlugByProductTypeId = (productTypeId) => {
   return 'art-of-living-part-1';
 };
 
+export function getFullPathWithQueryParams(router) {
+  // Get pathname
+  const { pathname } = router;
+
+  // Get query parameters
+  const { query } = router;
+
+  // Combine pathname and query parameters
+  const fullPath = `${pathname}${Object.keys(query).length > 0 ? '?' + new URLSearchParams(query).toString() : ''}`;
+
+  return fullPath;
+}
+
+export function navigateToLogin(router, next) {
+  router.push({
+    pathname: '/us-en/signin',
+    query: {
+      next: next || getFullPathWithQueryParams(router),
+    },
+  });
+}
 export const truncateString = (str) => {
   const words = str.split(' ');
 
@@ -312,4 +334,296 @@ export const truncateString = (str) => {
   }
 
   return str;
+};
+
+export const extractVideoId = (url) => {
+  const regex =
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
+
+export const extractFacebookVideoId = (url) => {
+  const urlObj = new URL(url);
+  return urlObj.searchParams.get('v');
+};
+
+export const extractInstagramVideoId = (url) => {
+  const regex = /\/p\/([a-zA-Z0-9_-]+)\//;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
+
+/**
+ * Tests provided UserAgent against Known Mobile User Agents
+ * @returns {bool} isMobileDevice
+ */
+export const isMobile = () =>
+  new RegExp('Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile').test(
+    window.navigator.userAgent || window.navigator.vendor || window.opera,
+  );
+
+export const isMobileOrTablet = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+  return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+    userAgent,
+  );
+};
+
+export const askGurudevQuestions = () => {
+  return [
+    {
+      name: 'Anger',
+      questions: [
+        'How to overcome frustration?',
+        'How to handle anger?',
+        'What can you do when anger rises in you?',
+        'Why should you make your anger expensive?',
+        'What are practical tips to control anger?',
+      ],
+    },
+    {
+      name: 'Anxiety',
+      questions: [
+        'How to get over anxiety?',
+        'How do you navigate turbulent times in life?',
+        'What are practical tips to manage stress and anxiety?',
+        'How to clear your mind of negative thoughts?',
+      ],
+    },
+    {
+      name: 'Career',
+      questions: [
+        'What are the different types of wealth?',
+        'What determines how much wealth one accumulates in life?',
+        'What percentage of success is luck?',
+        'What is the shortcut to success?',
+        'How to choose the best career path?',
+        'How to balance spiritual and career growth?',
+        'How to deal with losing a job?',
+      ],
+    },
+    {
+      name: 'Death',
+      questions: [
+        'What happens at the time of death?',
+        'What is reincarnation?',
+        'How to overcome the fear of death?',
+        'What happens after death?',
+        'How to cope with the fear of losing the people you love?',
+      ],
+    },
+    {
+      name: 'Desire',
+      questions: [
+        "What's the secret to manifesting desires?",
+        'How to manage your desires?',
+        'What happens when you take your mind away from the little desires and thoughts that disturb you?',
+        'Should you have desires?',
+        'How to deal with unfulfilled desires?',
+      ],
+    },
+    {
+      name: 'Devotion',
+      questions: [
+        'What is the power of prayer?',
+        'What is Guru Purnima?',
+        'What is the Guru principle?',
+        'What is the value of chanting mantras?',
+        'How should you pray to God?',
+        'How do we balance our material and spiritual lives?',
+      ],
+    },
+    {
+      name: 'Divine',
+      questions: [
+        'What is Guru Tattva?',
+        'What is a Guru?',
+        'Why do you need a Guru in your life?',
+        'Where is the divine?',
+        'What is divine love?',
+      ],
+    },
+    {
+      name: 'Emotions',
+      questions: [
+        'How to handle negative emotions?',
+        'How to not let things bother you?',
+        'How to keep an open mind?',
+        'How to be free from the storm of emotions?',
+        'How to get rid of unwanted thoughts?',
+      ],
+    },
+    {
+      name: 'Failure',
+      questions: [
+        'How do you overcome the fear of failure?',
+        'How to succeed after many failures?',
+        'How can you become professionally successful?',
+        'Why is it important to embrace failure?',
+        'How to deal with setbacks in life?',
+      ],
+    },
+    {
+      name: 'Faith',
+      questions: [
+        'Why is faith important?',
+        'What is faith?',
+        'Who should you have faith in?',
+        'How to eliminate doubt?',
+        'How to keep faith during difficult times in life?',
+      ],
+    },
+    {
+      name: 'Fear',
+      questions: [
+        'How to overcome fear of the future?',
+        'How to overcome the fear of getting hurt?',
+        'What is the purpose of fear?',
+        "What's the secret to understanding fears?",
+        'What is the cause of fear?',
+        'Why do 85% of fears never come true?',
+      ],
+    },
+    {
+      name: 'Gratitude',
+      questions: [
+        'How can you get more grace in life?',
+        'How do you become more grateful?',
+        'What is grace?',
+        'How to stop complaining?',
+      ],
+    },
+    {
+      name: 'Happiness',
+      questions: [
+        'How to always be happy?',
+        'What is the formula for happiness?',
+        'How to live in the present moment?',
+        'How to find unshakeable peace and happiness?',
+        'How to be happy through difficult times?',
+        'How to develop a habit of being happy?',
+        'How to achieve inner peace?',
+        'What are some practical tips to living a happy life?',
+        'How can you make the people around you happy?',
+      ],
+    },
+    {
+      name: 'Health',
+      questions: [
+        'What are signs of good health?',
+        'What are some tips for healthier living?',
+        'How can you stay healthy?',
+        'How to prevent disease?',
+        'What is the ancient secret for good health?',
+      ],
+    },
+    {
+      name: 'Karma',
+      questions: [
+        'How to get rid of negative karma?',
+        'What to do when someone blames you?',
+        'What are the different types of karma?',
+        'What is karma?',
+        'Does everything happen as a result of karma?',
+        'What is enlightenment?',
+        'How can you become enlightened?',
+      ],
+    },
+    {
+      name: 'Life',
+      questions: [
+        'What is the purpose of my life?',
+        'What is the meaning of life?',
+        'What is the monkey mind?',
+        'Is it possible to choose what you become in your next life?',
+        'How to live in the present moment?',
+        'How to give 100% to everything in life?',
+        'How to attain liberation?',
+      ],
+    },
+    {
+      name: 'Love',
+      questions: [
+        'What is love?',
+        'Why do we run away from love?',
+        'How to increase self-love?',
+        'Why do we fall in love?',
+        'Why do people make mistakes if they are full of love?',
+        'Why does love cease to exist after marriage?',
+        'What happens when you find it difficult to attain what you are attracted to?',
+        'What is the difference between love and lust?',
+      ],
+    },
+    {
+      name: 'Meditation',
+      questions: [
+        'What is meditation?',
+        'What is enlightenment?',
+        'What are the benefits of yoga?',
+        'How to quiet the mind during meditation?',
+      ],
+    },
+    {
+      name: 'Mind',
+      questions: [
+        'How to overcome guilt?',
+        'What are the natural tendencies of the mind?',
+        'What is monkey mind?',
+        'How to have dispassion in life?',
+        'How to balance the mind?',
+        'How to calm the mind and feel happy from within?',
+        'What is bondage?',
+        'How does the ego work?',
+        'How to get rid of the ego?',
+        'How to accept people and situations as they are?',
+        'How to live in the present moment?',
+      ],
+    },
+    {
+      name: 'Relationships',
+      questions: [
+        'How to overcome the fear of commitment?',
+        'How to build a healthy relationship?',
+        'What are the golden rules for a successful marriage?',
+        'How to be detached from relationships?',
+        'How to know if this is the right relationship or person for me? ',
+        'How to mend a broken heart?',
+      ],
+    },
+    {
+      name: 'SKY',
+      questions: [
+        'What is Sudarshan Kriya?',
+        'What is the power of learning Sudarshan Kriya?',
+        'How can Sudarshan Kriya benefit my mental and physical health?',
+      ],
+    },
+    {
+      name: 'Self',
+      questions: [
+        'How to increase self-confidence?',
+        'Who am I?',
+        'What is the Self?',
+      ],
+    },
+    {
+      name: 'Service',
+      questions: [
+        'What is the Art of Living Teacher Training program?',
+        'What is seva?',
+        'How can a yoga teacher inspire people?',
+      ],
+    },
+    {
+      name: 'Surrender',
+      questions: [
+        'How can you drop the past and move forward?',
+        'How can you get rid of attachments?',
+        'What is the art of letting go?',
+        'What does it mean to become hollow and empty?',
+        'How to surrender your desires to the divine?',
+      ],
+    },
+  ];
 };

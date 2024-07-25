@@ -34,16 +34,20 @@
     }
   }
 }
+.login-register-page,
 .auth,
 .world-culture-festival__container {
   .success-message-container {
     position: absolute;
+    margin: 0 auto;
+    text-align: center;
+    max-width: 500px;
     width: 100%;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.8);
     z-index: 9999;
     border-radius: 8px;
     .success-message {
