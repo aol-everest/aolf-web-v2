@@ -22,7 +22,6 @@ import {
 import { useAuth } from '@contexts';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
-
 import 'amazon-cognito-passwordless-auth/passwordless.css';
 
 const SIGN_IN_MODE = 's-in';

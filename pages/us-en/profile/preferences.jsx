@@ -62,6 +62,16 @@ const AddCenterItem = ({ center, isSelected, selectCenterAction }) => {
 
         <div className="city">{center.centerName}</div>
       </div>
+      <div className="center-other-info">
+        <span className="icon-aol iconaol-location"></span>
+        {createCompleteAddress({
+          streetAddress1: center.streetAddress1,
+          streetAddress2: center.streetAddress2,
+          city: center.city,
+          zipCode: center.postalOrZipCode,
+          state: center.stateProvince,
+        })}
+      </div>
       {phoneNumber && (
         <div className="center-other-info">
           <span className="icon-aol iconaol-call-calling"></span>
