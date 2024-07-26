@@ -9732,10 +9732,10 @@ react-sub-unsub@^2.2.1:
   resolved "https://registry.yarnpkg.com/react-sub-unsub/-/react-sub-unsub-2.2.7.tgz#d755ea40ab61ff64bc8c73a9013efa910472629d"
   integrity sha512-b2o0mIW8G4Yb3aaKxFB9iiCCHxCDGmogy+493oQpEJHjBy/hl6uf+6RhAinqKWRwi1fvO6mGIMVGsf2XYLL38g==
 
-react-tag-input@^6.9.0:
-  version "6.10.2"
-  resolved "https://registry.yarnpkg.com/react-tag-input/-/react-tag-input-6.10.2.tgz#d95b7de7c449c7df9c20361ab6b556183546a946"
-  integrity sha512-ucxcNrTq1rTLH9j49qxOBCcALg6Q5H3MUzxDGSbj0xvwliu9FH7TSohG7mduLoUyW3nvhtzne55V62GgAs0fPA==
+react-tag-input@^6.10.3:
+  version "6.10.3"
+  resolved "https://registry.yarnpkg.com/react-tag-input/-/react-tag-input-6.10.3.tgz#2b0378c32d34cd889eb0f3d8bc38fc0595b910f4"
+  integrity sha512-IVneBnT0/7N8FktHsFUA2UVDvcwLSJoWDTdEm/Ei/r5O6iBABaVw1RMh6SlG+P7oummvzSY6EBjGCXr/Ntq8rQ==
   dependencies:
     "@types/lodash-es" "^4.17.12"
     classnames "~2.3.1"
