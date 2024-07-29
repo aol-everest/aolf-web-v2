@@ -627,3 +627,26 @@ export const askGurudevQuestions = () => {
     },
   ];
 };
+
+export const breakAfterTwoWordsArray = (str) => {
+  const words = str?.split(' ');
+  const result = [];
+
+  words?.reduce((acc, word, index) => {
+    if (index === 0) {
+      if (word.length > 9) {
+        result.push(word);
+      } else {
+        result.push(word + (words.length > 1 ? ' ' + words[1] : ''));
+      }
+    } else if (index % 2 !== 0 || index === 1) {
+      // Skip every second word to avoid duplication
+    } else {
+      result.push(
+        word + (index + 1 < words.length ? ' ' + words[index + 1] : ''),
+      );
+    }
+  }, '');
+
+  return result;
+};

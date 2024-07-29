@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React from 'react';
+import React, { useRef } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
@@ -8,12 +8,23 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useState } from 'react';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import {
+  api,
+  breakAfterTwoWords,
+  breakAfterTwoWordsArray,
+  isSSR,
+} from '@utils';
+import { useQueryString } from '@hooks';
+import AudioPlayerSmall from '@components/audioPlayer/audioPlayerSmall';
+import { PageLoading } from '@components/pageLoading';
+import { CONTENT_FOLDER_IDS } from '@constants';
 
 const swiperOption = {
-  modules: [Pagination, A11y],
+  modules: [Navigation, Scrollbar, A11y, Pagination],
   slidesPerView: 1,
   spaceBetween: 10,
-  pagination: { clickable: true },
+  pagination: { clickable: true, el: false },
   breakpoints: {
     640: {
       slidesPerView: 1,
@@ -30,23 +41,145 @@ const swiperOption = {
   },
 };
 
+const rootFolderID = CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID;
+
 const GuidedMeditation = () => {
   const [accordionIndex, setAccordionIndex] = useState(0);
+  const [topic, setTopic] = useQueryString('topic');
+  const swiperRef = useRef(null);
+
+  const { data: rootFolder = {} } = useQuery({
+    queryKey: ['library'],
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'library',
+        param: {
+          folderId: rootFolderID,
+        },
+      });
+      const [rootFolder] = response.data.folder;
+      if (!rootFolder) {
+        throw new Error('No library found. Invalid Folder Id.');
+      }
+      return rootFolder;
+    },
+  });
+
+  const { data: meditationCategory = [] } = useQuery({
+    queryKey: 'meditationCategory',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'meditationCategory',
+      });
+      return response.data;
+    },
+  });
+
+  const { data: randomMeditate = {}, isLoading } = useQuery({
+    queryKey: 'randomMeditation',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'randomMeditation',
+      });
+      const results = await api.get({
+        path: 'meditationDetail',
+        param: { id: response?.data?.sfid },
+      });
+      return { ...response.data, ...results?.data };
+    },
+  });
+
+  const {
+    status,
+    isSuccess,
+    data,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: [
+      'meditations',
+      {
+        topic,
+      },
+    ],
+    queryFn: async ({ pageParam = 1 }) => {
+      let param = {
+        page: pageParam,
+        size: 12,
+        deviceType: 'Web',
+        folderName: 'Meditations',
+      };
+
+      if (topic) {
+        param = {
+          ...param,
+          category: topic,
+        };
+      }
+
+      const res = await api.get({
+        path: 'library/search',
+        param,
+      });
+      return res;
+    },
+    getNextPageParam: (page) => {
+      return page.currectPage === page.lastPage
+        ? undefined
+        : page.currectPage + 1;
+    },
+  });
+
+  const onFilterChange = (value) => {
+    setTopic(value);
+  };
+
+  const handlePrev = () => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slidePrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideNext();
+    }
+  };
+
+  const lines = breakAfterTwoWordsArray(randomMeditate.title);
+  const contentFolders = rootFolder?.folder;
+
+  let listingFolders = contentFolders?.filter(
+    (folder) => folder.isListingFolder,
+  );
+
+  const popularFolder = listingFolders?.find(
+    (folder) =>
+      folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
+  );
+
+  console.log('popularFolder', popularFolder);
+
   return (
     <main class="guided-meditation">
+      {isLoading && <PageLoading />}
       <section class="banner-section">
         <div class="container">
           <div class="banner-title">
-            Your Guide
-            <br />
-            to Meditation
+            {lines.map((line, index) => (
+              <>
+                {line}
+                {index < lines.length - 1 && <br />}
+              </>
+            ))}
           </div>
-          <div class="banner-desc">
-            Meditation is the delicate art of doing nothing and letting go of
-            all effort to reconnect with the serenity that is your very nature,
-            to feel revived, refreshed, and restored again.
+          <div class="banner-desc">{randomMeditate.description}</div>
+          <div class="banner-audio">
+            <AudioPlayerSmall audioSrc={randomMeditate.track?.url} />
           </div>
-          <div class="banner-audio"></div>
         </div>
       </section>
       <section class="benefits-meditation">
@@ -182,63 +315,49 @@ const GuidedMeditation = () => {
           <h2 class="section-title">Meditation is for everyone</h2>
           <div class="section-desc">Guided meditations for any mood.</div>
           <div class="categories-pills">
-            <a href="#" class="cat-pill active">
-              Calm
-            </a>
-            <a href="#" class="cat-pill">
-              Gratitude
-            </a>
-            <a href="#" class="cat-pill">
-              Love
-            </a>
-            <a href="#" class="cat-pill">
-              Peace
-            </a>
-            <a href="#" class="cat-pill">
-              Uncertainty
-            </a>
-            <a href="#" class="cat-pill">
-              Stress
-            </a>
-            <a href="#" class="cat-pill">
-              Anxiety
-            </a>
-            <a href="#" class="cat-pill">
-              Focus
-            </a>
-            <a href="#" class="cat-pill">
-              Energy
-            </a>
-            <a href="#" class="cat-pill">
-              Beginners
-            </a>
-            <a href="#" class="cat-pill">
-              Relationships
-            </a>
-            <a href="#" class="cat-pill">
-              Anger
-            </a>
-            <a href="#" class="cat-pill">
-              Contentment
-            </a>
-            <a href="#" class="cat-pill">
-              Self - Esteem
-            </a>
+            {meditationCategory &&
+              meditationCategory.map((category) => (
+                <a
+                  class={`cat-pill ${topic === category ? 'active' : ''}`}
+                  key={category}
+                  onClick={() => onFilterChange(category)}
+                >
+                  {category}
+                </a>
+              ))}
           </div>
           <div class="top-picks-container">
             <div class="top-picks-content top-picks-slider swiper">
               <div class="top-picks-header">
                 <div class="top-picks-title">Top picks</div>
                 <div class="top-picks-actions">
-                  <div class="slide-button-prev">
-                    <span class="icon-aol iconaol-arrow-long-left"></span>
+                  <div
+                    className="slide-button-prev slide-button"
+                    onClick={handlePrev}
+                  >
+                    <span className="icon-aol iconaol-arrow-long-left"></span>
                   </div>
-                  <div class="slide-button-next">
-                    <span class="icon-aol iconaol-arrow-long-right"></span>
+                  <div
+                    className="slide-button-next slide-button"
+                    onClick={handleNext}
+                  >
+                    <span className="icon-aol iconaol-arrow-long-right"></span>
                   </div>
                 </div>
               </div>
-              <Swiper {...swiperOption} className="reviews-slider">
+              <Swiper
+                {...swiperOption}
+                className="reviews-slider"
+                navigation={{
+                  prevEl: '.slide-button-prev',
+                  nextEl: '.slide-button-next',
+                }}
+                onInit={(swiper) => {
+                  swiper.params.navigation.prevEl = '.slide-button-prev';
+                  swiper.params.navigation.nextEl = '.slide-button-next';
+                  swiper.navigation.update();
+                }}
+              >
                 <SwiperSlide>
                   <div class="swiper-slide">
                     <div class="top-pick-preview-area">
@@ -563,7 +682,10 @@ const GuidedMeditation = () => {
         <div class="container">
           <h2 class="section-title">Frequently Asked Questions</h2>
           <div id="accordion" class="accordion">
-            <div class="card" onClick={() => setAccordionIndex(0)}>
+            <div
+              class="card"
+              onClick={() => setAccordionIndex(accordionIndex === 0 ? null : 0)}
+            >
               <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
                   <button
@@ -593,7 +715,10 @@ const GuidedMeditation = () => {
                 </div>
               </div>
             </div>
-            <div class="card" onClick={() => setAccordionIndex(1)}>
+            <div
+              class="card"
+              onClick={() => setAccordionIndex(accordionIndex === 1 ? null : 1)}
+            >
               <div class="card-header" id="headingThree">
                 <h5 class="mb-0">
                   <button
@@ -622,7 +747,10 @@ const GuidedMeditation = () => {
                 </div>
               </div>
             </div>
-            <div class="card" onClick={() => setAccordionIndex(2)}>
+            <div
+              class="card"
+              onClick={() => setAccordionIndex(accordionIndex === 2 ? null : 2)}
+            >
               <div class="card-header" id="headingFour">
                 <h5 class="mb-0">
                   <button
@@ -651,7 +779,10 @@ const GuidedMeditation = () => {
                 </div>
               </div>
             </div>
-            <div class="card" onClick={() => setAccordionIndex(3)}>
+            <div
+              class="card"
+              onClick={() => setAccordionIndex(accordionIndex === 3 ? null : 3)}
+            >
               <div class="card-header" id="headingFive">
                 <h5 class="mb-0">
                   <button
@@ -680,7 +811,10 @@ const GuidedMeditation = () => {
                 </div>
               </div>
             </div>
-            <div class="card" onClick={() => setAccordionIndex(4)}>
+            <div
+              class="card"
+              onClick={() => setAccordionIndex(accordionIndex === 4 ? null : 4)}
+            >
               <div class="card-header" id="headingSix">
                 <h5 class="mb-0">
                   <button
