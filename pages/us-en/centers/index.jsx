@@ -82,12 +82,7 @@ const CenterListItem = ({ center, search }) => {
   const router = useRouter();
   const goFindCourse = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/courses/art-of-living-part-1`,
-      query: {
-        center: center.sfid,
-        'center-name': center.centerName,
-        timeZone: 'NAN',
-      },
+      pathname: `/us-en/centers/courses/${center.sfid}`,
     });
   };
   const phoneNumber = joinPhoneNumbers(center.phone1, center.phone2);

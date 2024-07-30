@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useState } from 'react';
 export const SmartDropDown = (props) => {
-  const { buttonText, children, value, containerClass = '' } = props;
+  const { buttonText, children, value } = props;
   const [visible, setVisibility] = useState(false);
 
   function handleDropdownClick(event) {

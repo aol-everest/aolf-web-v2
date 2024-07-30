@@ -45,6 +45,9 @@ const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
 };
 
 const validateStudentEmail = (email) => {
+  if (!email) {
+    return false;
+  }
   const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
   const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
   return isStudentEmail;
@@ -408,7 +411,7 @@ const Checkout = () => {
   };
 
   const showVerifyStudentStatus =
-    profile &&
+    isAuthenticated &&
     validateStudentEmail(email) &&
     workshop.isStudentFeeAllowed &&
     (!isStudentVerified ||

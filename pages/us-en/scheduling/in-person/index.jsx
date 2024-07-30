@@ -199,7 +199,7 @@ const WorkshopSelectModal = React.memo(
                     >
                       <div className="slot-type">
                         <div className="slot-info">
-                          {workshop?.mode === COURSE_MODES.ONLINE.name ? (
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>
@@ -745,7 +745,7 @@ const Scheduling = () => {
       track('click_calendar', {
         screen_name: 'course_search_scheduling',
         course_type:
-          courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
+          courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
         location_type: mode,
         num_results: response?.data.length,
       });
@@ -993,46 +993,46 @@ const Scheduling = () => {
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
       <main className="in-person-course-page">
-        <section class="top-section">
-          <div class="container">
-            <h1 class="page-title">{workshopMaster?.title}</h1>
+        <section className="top-section">
+          <div className="container">
+            <h1 className="page-title">{workshopMaster?.title}</h1>
             <div
-              class="page-description"
+              className="page-description"
               dangerouslySetInnerHTML={{
                 __html: workshopMaster?.calenderViewDescription,
               }}
             ></div>
           </div>
-          <div class="mt-3 text-center d-lg-none d-md-none">
+          <div className="mt-3 text-center d-lg-none d-md-none">
             <a
               href="#"
-              class="course-highlight-action"
+              className="course-highlight-action"
               onClick={scrollToCourseHighlight}
             >
               Course Highlights {'>>'}
             </a>
           </div>
         </section>
-        <section class="scheduling-stepper">
-          <div class="container">
-            <div class="step-wrapper">
-              <div class="step active">
-                <div class="step-icon">
+        <section className="scheduling-stepper">
+          <div className="container">
+            <div className="step-wrapper">
+              <div className="step active">
+                <div className="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Select Course Date & Time</div>
+                <div className="step-text">Select Course Date & Time</div>
               </div>
               <div className={selectedWorkshopId ? 'step active' : 'step'}>
-                <div class="step-icon">
+                <div className="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Complete Your Purchase</div>
+                <div className="step-text">Complete Your Purchase</div>
               </div>
-              <div class="step">
-                <div class="step-icon">
+              <div className="step">
+                <div className="step-icon">
                   <span></span>
                 </div>
-                <div class="step-text">Start Your Course</div>
+                <div className="step-text">Start Your Course</div>
               </div>
             </div>
           </div>
@@ -1101,12 +1101,12 @@ const Scheduling = () => {
                     </div>
                   </div>
                 )} */}
-                <div class="other-calendar-info">
-                  <span class="icon-aol iconaol-clock-bold"></span>Flexible
+                <div className="other-calendar-info">
+                  <span className="icon-aol iconaol-clock-bold"></span>Flexible
                   Rescheduling for All Courses
                 </div>
-                <div class="question-call">
-                  <a href="tel:(855)2024400" class="call-cta">
+                <div className="question-call">
+                  <a href="tel:(855)2024400" className="call-cta">
                     Still have questions?{' '}
                     <strong>Call us at (855) 202-4400</strong>
                   </a>
@@ -1446,7 +1446,7 @@ const Scheduling = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name
+                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.value
                             ? activeWorkshop?.mode
                             : activeWorkshop && (
                                 <>
@@ -1537,52 +1537,52 @@ const Scheduling = () => {
                     )}
                   </div>
                 </div>
-                <div class="other-calendar-info">
-                  <span class="icon-aol iconaol-clock-bold"></span>Flexible
+                <div className="other-calendar-info">
+                  <span className="icon-aol iconaol-clock-bold"></span>Flexible
                   Rescheduling for All Courses
                 </div>
-                <div class="question-call">
-                  <a href="tel:(855)2024400" class="call-cta">
+                <div className="question-call">
+                  <a href="tel:(855)2024400" className="call-cta">
                     Still have questions?{' '}
                     <strong>Call us at (855) 202-4400</strong>
                   </a>
                 </div>
               </div>
-              <div class="second-col course-highlight-col">
-                <div class="course-highlight-box">
-                  <div class="box-hero-image-wrap">
+              <div className="second-col course-highlight-col">
+                <div className="course-highlight-box">
+                  <div className="box-hero-image-wrap">
                     <img
                       src="/img/course-highlight-box-hero.png"
                       alt="course highlight"
                       width="100%"
                     />
                   </div>
-                  <div class="course-highlights-info-box">
+                  <div className="course-highlights-info-box">
                     <h2>Course Highlights:</h2>
                     <ul>
                       <li>
-                        <span class="icon-aol iconaol-users"></span>
+                        <span className="icon-aol iconaol-users"></span>
                         <span>
                           Engage in a <strong>3-day, 2.5-hour</strong> daily
                           course led by a certified instructor in a small group
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-world-clock"></span>
+                        <span className="icon-aol iconaol-world-clock"></span>
                         <span>
                           Available multiple times daily across PT, ET, CT time
                           zones
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-yoga"></span>
+                        <span className="icon-aol iconaol-yoga"></span>
                         <span>
                           Master <strong>Sudarshan Kriya Yoga (SKY)</strong> and
                           other effective pranayama breathing methods.
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-relieved"></span>
+                        <span className="icon-aol iconaol-relieved"></span>
                         <span>
                           Receive the "<strong>5 Keys to a Joyful Life</strong>"
                           toolkit, providing essential strategies for lifelong
@@ -1590,7 +1590,7 @@ const Scheduling = () => {
                         </span>
                       </li>
                       <li>
-                        <span class="icon-aol iconaol-calendar-2"></span>
+                        <span className="icon-aol iconaol-calendar-2"></span>
                         <span>
                           <strong>Flexible</strong> rescheduling options.
                         </span>
@@ -1598,7 +1598,7 @@ const Scheduling = () => {
                     </ul>
                   </div>
                 </div>
-                <div class="course-medical-info">
+                <div className="course-medical-info">
                   <img
                     src="/img/mental_health-vector-icon.svg"
                     width="54"

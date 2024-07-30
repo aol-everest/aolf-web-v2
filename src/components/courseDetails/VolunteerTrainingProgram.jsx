@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import { ABBRS, ALERT_TYPES, WORKSHOP_MODE } from '@constants';
+import {
+  ABBRS,
+  ALERT_TYPES,
+  WORKSHOP_MODE,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { priceCalculation, tConvert } from '@utils';
@@ -148,7 +153,9 @@ export const VolunteerTrainingProgram = ({
             <div className="row">
               <div className="col-lg-7">
                 <div className="about-program__main">
-                  <p className="about-program__main-type">{mode}</p>
+                  <p className="about-program__main-type">
+                    {COURSE_MODES_MAP[mode]}
+                  </p>
 
                   <h1 className="about-program__main-name about-program__main-name_thin">
                     {title}
@@ -179,7 +186,7 @@ export const VolunteerTrainingProgram = ({
               <div className="col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-5 offset-lg-0 offset-xl-1 col-xl-4 d-flex flex-column justify-content-end">
                 <div className="about-program__details about-program__details_small">
                   <h5 className="about-program__details-title about-program__details-title_small">
-                    {mode} course details
+                    {COURSE_MODES_MAP[mode]} course details
                   </h5>
                   <div className="details-info">
                     <div className="details-info__item">
@@ -375,7 +382,9 @@ export const VolunteerTrainingProgram = ({
                     <div className="achivment__logo">
                       <img src="/img/live-online-program.svg" alt="years" />
                     </div>
-                    <h6 className="achivment__title">LIVE {mode} program</h6>
+                    <h6 className="achivment__title">
+                      LIVE {COURSE_MODES_MAP[mode]} program
+                    </h6>
                     <p className="achivment__text">
                       Guided by highly-trained instructors and mentors over two
                       weekends, plus a week of service-learning
@@ -685,7 +694,8 @@ export const VolunteerTrainingProgram = ({
                   Your toolkit for inspired action
                 </h2>
                 <p className="p1 program-meet__text">
-                  {mode} program: two weekends + one week in service
+                  {COURSE_MODES_MAP[mode]} program: two weekends + one week in
+                  service
                 </p>
                 <div className="p1 p1_sb program-meet__quote">
                   You’ll walk away with the skills, experience, and courage to

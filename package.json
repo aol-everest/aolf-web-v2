@@ -6,7 +6,7 @@
     ".next/cache"
   ],
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
     "develop": "cross-env NODE_ENV=development yarn local-run",
@@ -30,7 +30,8 @@
     "fix:lint": "npm run check:lint -- --fix",
     "check:staged": "lint-staged",
     "update-deps": "npm-check-updates -u",
-    "kill": "kill-port 3000"
+    "kill": "kill-port 3000",
+    "coupling-graph": "npx madge --extensions js,jsx,ts,tsx,css,md,scss ./ --exclude '.next|tailwind.config.js|reset.d.ts|prettier.config.js|postcss.config.js|playwright.config.ts|next.config.js|next-env.d.ts|instrumentation.ts|e2e/|README.md|.storybook/|.eslintrc.js' --image graph.svg"
   },
   "dependencies": {
     "@analytics/router-utils": "^0.1.1",
@@ -39,11 +40,12 @@
     "@emotion/react": "^11.11.4",
     "@hookform/devtools": "^4.3.1",
     "@hookform/resolvers": "^3.4.0",
+    "@microlink/react-json-view": "^1.23.0",
     "@next/bundle-analyzer": "^14.2.3",
     "@paypal/react-paypal-js": "^8.3.0",
     "@popperjs/core": "^2.11.8",
     "@sentry/nextjs": "^8",
-    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/react-stripe-js": "^2.7.3",
     "@stripe/stripe-js": "^3.4.0",
     "@tanstack/react-query": "^5.37.1",
     "@tanstack/react-query-devtools": "^5.37.1",
@@ -99,7 +101,8 @@
     "react-select": "^5.8.0",
     "react-select2-wrapper": "^1.0.4-beta6",
     "react-slick": "^0.29.0",
-    "react-tag-input": "^6.9.0",
+    "react-social-media-embed": "^2.5.13",
+    "react-tag-input": "^6.10.3",
     "react-text-mask": "^5.5.0",
     "react-tooltip": "^5.26.4",
     "react-uid": "^2.3.3",
@@ -123,11 +126,11 @@
     "@tanstack/eslint-plugin-query": "^5.35.6",
     "autoprefixer": "^10.4.19",
     "cross-env": "^7.0.3",
-    "cspell": "^8.8.1",
+    "cspell": "^8.9.1",
     "cssnano": "^7.0.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.3",
+    "eslint-config-next": "^14.2.5",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-no-inline-styles": "^1.0.5",
     "eslint-plugin-prettier": "^5.1.3",

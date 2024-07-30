@@ -211,6 +211,51 @@
         &:focus {
           outline: none;
         }
+        .icon-aol:before {
+          color: #98a2b3;
+          font-size: 16px;
+        }
+      }
+      input {
+        &.validate {
+          border-color: #dc3545;
+        }
+      }
+      .showPassBtn.password {
+        .icon-aol:before {
+          content: '\e918';
+        }
+      }
+      .showPassBtn.text {
+        .icon-aol:before {
+          content: '\e939';
+        }
+      }
+    }
+    .validation-input {
+      color: #dc3545;
+      font-size: 12px;
+      padding: 5px 0;
+    }
+    .common-error-message {
+      color: #dc3545;
+      font-size: 13px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .form-action {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      button {
+        outline: none;
+      }
+    }
+    .apple-logo-login {
+      text-align: center;
+      padding: 10px 0;
+      img {
+        width: 70px;
       }
       input {
         &.validate {

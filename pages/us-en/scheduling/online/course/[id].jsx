@@ -191,7 +191,7 @@ const WorkshopSelectModal = React.memo(
                     >
                       <div className="slot-type">
                         <div className="slot-info">
-                          {workshop?.mode === COURSE_MODES.ONLINE.name ? (
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>
@@ -437,7 +437,6 @@ const Scheduling = () => {
     if (response?.data && selectedDates?.length > 0) {
       // const selectedSfids = getGroupedUniqueEventIds(response);
       const finalWorkshops = response?.data;
-      console.log(response?.data);
 
       setTimeout(() => {
         const timeContainer = document.querySelector(
@@ -453,7 +452,7 @@ const Scheduling = () => {
       track('click_calendar', {
         screen_name: 'course_search_scheduling',
         course_type:
-          courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
+          courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
         location_type: 'Online',
         num_results: response?.data.length,
       });
@@ -767,8 +766,8 @@ const Scheduling = () => {
                     onMonthChange={onMonthChangeAction}
                   />
                 </div>
-                <div class="other-calendar-info">
-                  <span class="icon-aol iconaol-clock-bold"></span>Flexible
+                <div className="other-calendar-info">
+                  <span className="icon-aol iconaol-clock-bold"></span>Flexible
                   Rescheduling for All Courses
                 </div>
                 <div className="question-call">
@@ -1117,7 +1116,7 @@ const Scheduling = () => {
                           Location:
                         </div>
                         <div className="value col-7">
-                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.name
+                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.value
                             ? activeWorkshop?.mode
                             : activeWorkshop && (
                                 <>

@@ -11,8 +11,8 @@ body {
     Work Sans,
     sans-serif;
   color: #31364e;
-  scroll-behavior: smooth;
-  overflow: auto;
+  // scroll-behavior: smooth;
+  // overflow: auto;
 }
 body {
   -ms-overflow-style: none; /* for Internet Explorer, Edge */
@@ -148,6 +148,113 @@ main {
       &:active {
         background-color: #ffa180;
         color: #ffffff;
+      }
+    }
+  }
+}
+.search-input-wrap {
+  position: relative;
+  button.search-clear {
+    border: none;
+    background: none;
+    position: absolute;
+    top: 8px;
+    right: 4px;
+    &:focus {
+      outline: none;
+    }
+  }
+  > div {
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #e9e9e9;
+    border-right: 1px solid #e9e9e9;
+    border-left: 1px solid #e9e9e9;
+    margin-top: -13px;
+    padding-top: 2px;
+  }
+  .smart-input--list-item {
+    background: white;
+  }
+}
+.input-search-wrap {
+  .search-input {
+    border: 1px solid #e9e9e9;
+    border-radius: 16px;
+    height: 44px;
+    width: 100%;
+    font-size: 16px;
+    padding-left: 46px;
+    padding-right: 10px;
+    &::placeholder {
+      color: #9598a6;
+      opacity: 1;
+    }
+
+    &::-ms-input-placeholder {
+      color: #9598a6;
+    }
+    // background: url('/img/map-search-input-icon.svg') no-repeat 10px center;
+  }
+  .search-listing {
+    max-height: calc(100% - 64px);
+    margin-top: 20px;
+    overflow: auto;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .search-list-item {
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 18px;
+    flex: 48%;
+    display: flex;
+    flex-direction: column;
+    @media screen and (max-width: 1179px) {
+      flex: 100%;
+    }
+    .title {
+      font-family: Lora;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 26px;
+      margin-bottom: 16px;
+      // display: flex;
+      align-items: center;
+      img.icon {
+        margin-right: 8px;
+      }
+    }
+    img.icon {
+      margin-right: 8px;
+    }
+    .info {
+      margin-bottom: 14px;
+      display: flex;
+      align-items: flex-start;
+      &.email {
+        word-break: break-word;
+        margin-bottom: 34px;
+      }
+    }
+    .action-btn {
+      margin-top: auto;
+      .submit-btn {
+        background: linear-gradient(
+          102.78deg,
+          #ffd16f -37.89%,
+          #ff865b 100.28%
+        );
+        border-radius: 100px;
+        font-weight: 500;
+        font-size: 16px;
+        border: none;
+        width: 100%;
+        height: 40px;
+        color: white;
       }
     }
   }

@@ -15,22 +15,22 @@ export const NewAlert = () => {
   return (
     <>
       <div
-        class="confirmation-message modal fade bd-example-modal-lg show"
+        className="confirmation-message modal fade bd-example-modal-lg show"
         tabindex="-1"
         onClick={handleAlertToggle}
       >
         <div
-          class="modal-dialog modal-dialog-centered modal-lg"
+          className="modal-dialog modal-dialog-centered modal-lg"
           role="document"
         >
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="confirmation-message-info">{children}</div>
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="confirmation-message-info">{children}</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-backdrop fade show"></div>
+      <div className="modal-backdrop fade show"></div>
     </>
   );
 };

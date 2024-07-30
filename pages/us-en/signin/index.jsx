@@ -1,13 +1,9 @@
-import { ALERT_TYPES, MESSAGE_EMAIL_VERIFICATION_SUCCESS } from '@constants';
+import { ALERT_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import { useAnalytics } from 'use-analytics';
-import { FaCheckCircle } from 'react-icons/fa';
-import classNames from 'classnames';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { api } from '@utils';
 import {
-  ChangePasswordForm,
   NewPasswordForm,
   ResetPasswordForm,
   SigninForm,
@@ -21,29 +17,20 @@ import {
   signInWithRedirect,
   resetPassword,
   confirmResetPassword,
-  updatePassword,
   confirmSignIn,
 } from 'aws-amplify/auth';
-import { Hub } from 'aws-amplify/utils';
+import { useAuth } from '@contexts';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
 import { Fido2Toast } from '@components/passwordLessAuth/NewComp';
-
 import 'amazon-cognito-passwordless-auth/passwordless.css';
 
 const SIGN_IN_MODE = 's-in';
 const SIGN_UP_MODE = 's-up';
 const RESET_PASSWORD_REQUEST = 'spr';
 const NEW_PASSWORD_REQUEST = 'npr';
-const CHANGE_PASSWORD_REQUEST = 'cpr';
-
-const encodeFormData = (data) => {
-  return Object.keys(data)
-    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-    .join('&');
-};
 
 const StudentVerificationCodeMessage = () => (
-  <div class="confirmation-message-info">
+  <div className="confirmation-message-info">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="40px"
@@ -51,13 +38,13 @@ const StudentVerificationCodeMessage = () => (
       viewBox="0 0 24 24"
       fill="none"
     >
-      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
       <path
         d="M8.5 12.5L10.5 14.5L15.5 9.5"
         stroke="#ff865b"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
     <br />
@@ -67,7 +54,7 @@ const StudentVerificationCodeMessage = () => (
 );
 
 const VerificationCodeMessage = () => (
-  <div class="confirmation-message-info">
+  <div className="confirmation-message-info">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="40px"
@@ -75,13 +62,13 @@ const VerificationCodeMessage = () => (
       viewBox="0 0 24 24"
       fill="none"
     >
-      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
       <path
         d="M8.5 12.5L10.5 14.5L15.5 9.5"
         stroke="#ff865b"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
     <br />
@@ -90,8 +77,8 @@ const VerificationCodeMessage = () => (
   </div>
 );
 
-const PasswordChangeSuccessMessage = () => (
-  <div class="confirmation-message-info">
+const TemporaryPasswordMessage = () => (
+  <div className="confirmation-message-info">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="40px"
@@ -99,13 +86,37 @@ const PasswordChangeSuccessMessage = () => (
       viewBox="0 0 24 24"
       fill="none"
     >
-      <circle cx="12" cy="12" r="10" stroke="#ff865b" stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
       <path
         d="M8.5 12.5L10.5 14.5L15.5 9.5"
         stroke="#ff865b"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+    <br />
+    <br />A new temporary password has been emailed to you. Please use the
+    temporary password and reset your password.
+  </div>
+);
+
+const PasswordChangeSuccessMessage = () => (
+  <div className="confirmation-message-info">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40px"
+      height="40px"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle cx="12" cy="12" r="10" stroke="#ff865b" strokeWidth="1.5" />
+      <path
+        d="M8.5 12.5L10.5 14.5L15.5 9.5"
+        stroke="#ff865b"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
     <br />
@@ -117,6 +128,7 @@ const PasswordChangeSuccessMessage = () => (
 
 function LoginPage() {
   const router = useRouter();
+  const { fetchCurrentUser } = useAuth();
   // const { identify } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
 
@@ -133,9 +145,6 @@ function LoginPage() {
   const switchView = (view) => (e) => {
     if (e) e.preventDefault();
     setMode(view);
-    if (view === RESET_PASSWORD_REQUEST) {
-      resetPasswordAction();
-    }
   };
 
   const getActualMessage = (message) => {
@@ -150,6 +159,9 @@ function LoginPage() {
   };
 
   const validateStudentEmail = (email) => {
+    if (!email) {
+      return false;
+    }
     const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
     const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
     return isStudentEmail;
@@ -169,14 +181,14 @@ function LoginPage() {
     setShowMessage(false);
     try {
       await signOut({ global: true });
-      const { isSignedIn, nextStep } = await signIn({ username, password });
-      console.log(isSignedIn, nextStep);
+      const { nextStep } = await signIn({ username, password });
       switch (nextStep.signInStep) {
         case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
           setMode(NEW_PASSWORD_REQUEST);
           // Collect the confirmation code from the user and pass to confirmResetPassword.
           break;
         case 'DONE':
+          await fetchCurrentUser();
           if (isStudent) {
             await api.post({
               path: 'verify-email',
@@ -232,10 +244,38 @@ function LoginPage() {
     }
     setLoading(false);
   };
+  const handleTemporaryPassword = async (username) => {
+    let isTemporaryPasswordSucceeded = false;
 
-  const resetPasswordAction = async () => {
-    setLoading(true);
-    setShowMessage(false);
+    try {
+      const {
+        data,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: 'resend-temporary-password',
+        body: { email: username },
+      });
+
+      isTemporaryPasswordSucceeded = true;
+      if (data?.User?.UserStatus === 'FORCE_CHANGE_PASSWORD') {
+        showAlert(
+          ALERT_TYPES.NEW_ALERT,
+          {
+            children: <TemporaryPasswordMessage />,
+          },
+          2000,
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      isTemporaryPasswordSucceeded = false;
+    }
+
+    return isTemporaryPasswordSucceeded;
+  };
+
+  const handleResetPassword = async (username) => {
     try {
       const output = await resetPassword({ username });
       handleResetPasswordNextSteps(output);
@@ -250,6 +290,17 @@ function LoginPage() {
       const { message, statusCode } = data || {};
       setMessage(message ? `Error: ${message} (${statusCode})` : errorMessage);
       setShowMessage(true);
+    }
+  };
+
+  const resetPasswordAction = async () => {
+    setLoading(true);
+    setShowMessage(false);
+    const isTemporaryPasswordSucceeded =
+      await handleTemporaryPassword(username);
+
+    if (isTemporaryPasswordSucceeded === false) {
+      await handleResetPassword(username);
     }
     setLoading(false);
   };
@@ -271,6 +322,7 @@ function LoginPage() {
           },
           2000,
         );
+        setMode(RESET_PASSWORD_REQUEST);
         // Collect the confirmation code from the user and pass to confirmResetPassword.
         break;
       case 'DONE':
@@ -323,7 +375,6 @@ function LoginPage() {
       const { isSignedIn, nextStep } = await confirmSignIn({
         challengeResponse: password,
       });
-      console.log(isSignedIn, nextStep);
       if (isSignedIn && nextStep.signInStep === 'DONE') {
         if (navigateTo) {
           router.push(navigateTo);
@@ -370,7 +421,7 @@ function LoginPage() {
     const isStudentFlowEnabled =
       process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === 'true';
     try {
-      const { isSignUpComplete, userId, nextStep } = await signUp({
+      await signUp({
         username,
         password,
         options: {
@@ -383,7 +434,6 @@ function LoginPage() {
           autoSignIn: true, // or SignInOptions e.g { authFlowType: "USER_SRP_AUTH" }
         },
       });
-      console.log(isSignUpComplete, userId, nextStep);
       // await Auth.signup({ email: username, password, firstName, lastName });
       const isStudent = isStudentFlowEnabled && validateStudentEmail(username);
       await signInAction({ username, password, isStudent });
@@ -404,14 +454,14 @@ function LoginPage() {
 
   const socialLoginRender = () => {
     return (
-      <div class="login-options">
-        <button class="google-icon" onClick={googleLogin}>
+      <div className="login-options">
+        <button className="google-icon" onClick={googleLogin}>
           <img src="/img/google-icon.svg" />
         </button>
-        <button class="facebook-icon" onClick={fbLogin}>
+        <button className="facebook-icon" onClick={fbLogin}>
           <img src="/img/facebook-icon.svg" />
         </button>
-        {/* <button class="apple-icon">
+        {/* <button className="apple-icon">
           <img src="/img/apple-icon.svg" />
         </button> */}
       </div>
@@ -455,7 +505,7 @@ function LoginPage() {
         return (
           <SigninForm
             signIn={signInAction}
-            forgotPassword={switchView(RESET_PASSWORD_REQUEST)}
+            forgotPassword={resetPasswordAction}
             toSignUpMode={switchView(SIGN_UP_MODE)}
             showMessage={showMessage}
             message={getActualMessage(message)}
@@ -472,14 +522,14 @@ function LoginPage() {
   };
 
   return (
-    <main class="login-register-page">
+    <main className="login-register-page">
       {renderForm()}
 
       <Fido2Toast />
       {loading && (
-        <div class="loading-overlay">
-          <div class="overlay-loader"></div>
-          <div class="loading-text">Please wait...</div>
+        <div className="loading-overlay">
+          <div className="overlay-loader"></div>
+          <div className="loading-text">Please wait...</div>
         </div>
       )}
     </main>

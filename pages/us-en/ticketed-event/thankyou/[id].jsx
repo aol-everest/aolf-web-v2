@@ -110,7 +110,7 @@ const TicketCongratulations = () => {
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
     location:
-      mode === COURSE_MODES.IN_PERSON.name
+      mode === COURSE_MODES.IN_PERSON.value
         ? `${locationStreet || ''}, ${locationCity || ''}, ${
             locationProvince || ''
           } ${locationPostalCode || ''}, ${locationCountry || ''}`
@@ -276,8 +276,8 @@ const TicketCongratulations = () => {
                     {timings &&
                       timings.map((time) => {
                         return (
-                          <div class="info-item" key={time.startDate}>
-                            <span class="p2">
+                          <div className="info-item" key={time.startDate}>
+                            <span className="p2">
                               {tConvert(time.startTime)}-
                               {tConvert(time.endTime)}{' '}
                             </span>
@@ -310,11 +310,11 @@ const TicketCongratulations = () => {
                     <li className="event-item">
                       <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
                       <span>Location: </span>
-                      {mode === COURSE_MODES.ONLINE.name
+                      {mode === COURSE_MODES.ONLINE.value
                         ? mode
-                        : (mode === COURSE_MODES.IN_PERSON.name ||
+                        : (mode === COURSE_MODES.IN_PERSON.value ||
                             mode ===
-                              COURSE_MODES.DESTINATION_RETREATS.name) && (
+                              COURSE_MODES.DESTINATION_RETREATS.value) && (
                             <>
                               {!isLocationEmpty && (
                                 <a

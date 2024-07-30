@@ -14,7 +14,13 @@ import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
 import { pushRouteWithUTMQuery } from '@service';
-import { Talkable, api, calculateBusinessDays, tConvert } from '@utils';
+import {
+  Talkable,
+  api,
+  calculateBusinessDays,
+  isMobile,
+  tConvert,
+} from '@utils';
 import { hasCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -27,7 +33,6 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryString } from '@hooks';
 import { useAnalytics } from 'use-analytics';
-import { isMobile } from '@utils/addToCalendar';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -102,7 +107,6 @@ function getLastElement(arr) {
 }
 
 const Thankyou = () => {
-  console.log(isMobile());
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
@@ -357,7 +361,7 @@ const Thankyou = () => {
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
     location:
-      mode === COURSE_MODES.IN_PERSON.name
+      mode === COURSE_MODES.IN_PERSON.value
         ? `${locationStreet || ''}, ${locationCity || ''}, ${
             locationProvince || ''
           } ${locationPostalCode || ''}, ${locationCountry || ''}`
@@ -444,7 +448,7 @@ const Thankyou = () => {
   };
 
   const RenderJourneyContent = () => {
-    if (mode === COURSE_MODES.IN_PERSON.name) {
+    if (mode === COURSE_MODES.IN_PERSON.value) {
       if (isSilentRetreatType) {
         return <SilentRetreat />;
       }
@@ -811,8 +815,8 @@ const Thankyou = () => {
                             })}
                         </ul>
                       )}
-                      {(mode === COURSE_MODES.IN_PERSON.name ||
-                        mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
+                      {(mode === COURSE_MODES.IN_PERSON.value ||
+                        mode === COURSE_MODES.DESTINATION_RETREATS.value) && (
                         <>
                           {!workshop.isLocationEmpty && (
                             <ul className="program-details__list-schedule tw-mt-2">

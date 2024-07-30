@@ -6,6 +6,11 @@ import { number, object, ref, string } from 'yup';
 
 const schema = object().shape({
   password: string()
+    .test(
+      'no-spaces',
+      'Password cannot contain spaces',
+      (value) => !/\s/.test(value),
+    )
     .required('Password is required')
     .min(8, 'Must Contain 8 Characters'),
   passwordConfirmation: string().oneOf(

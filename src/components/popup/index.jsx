@@ -11,8 +11,9 @@ export const Popup = (props) => {
     containerClassName = '',
     showId,
     parentClassName = '',
-    buttonTextclassName = '',
     showList = true,
+    label,
+    hideClearOption = false,
   } = props;
 
   const [visible, setVisibility] = useState(false);
@@ -81,6 +82,7 @@ export const Popup = (props) => {
   return (
     <>
       <div
+        data-filter="event-type"
         ref={referenceRef}
         tabIndex={tabindex}
         className={classNames('courses-filter', parentClassName, {
@@ -88,39 +90,63 @@ export const Popup = (props) => {
           'with-selected': value,
         })}
       >
-        {value && (
+        {value && !hideClearOption && (
           <button
             className="courses-filter__remove"
             data-filter="event-type"
+            data-placeholder="Online"
             onClick={closeHandler(null)}
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
+              width="20"
+              height="21"
+              viewBox="0 0 20 21"
               fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                d="M3.70033 2.87518C3.47252 2.64737 3.10318 2.64737 2.87537 2.87518C2.64756 3.10299 2.64756 3.47233 2.87537 3.70014L10.3 11.1248C10.5278 11.3526 10.8971 11.3526 11.1249 11.1248C11.3528 10.897 11.3528 10.5276 11.1249 10.2998L3.70033 2.87518Z"
-                fill="white"
+              <rect
+                x="0.5"
+                y="1"
+                width="19"
+                height="19"
+                rx="9.5"
+                fill="#ABB1BA"
+              />
+              <rect
+                x="0.5"
+                y="1"
+                width="19"
+                height="19"
+                rx="9.5"
+                stroke="white"
               />
               <path
-                d="M11.1254 3.70014C11.3532 3.47234 11.3532 3.10299 11.1254 2.87519C10.8976 2.64738 10.5282 2.64738 10.3004 2.87519L2.87579 10.2998C2.64798 10.5276 2.64798 10.897 2.87579 11.1248C3.1036 11.3526 3.47294 11.3526 3.70075 11.1248L11.1254 3.70014Z"
-                fill="white"
+                d="M13.5 7L6.5 14"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M13.5 14L6.5 7"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </button>
         )}
-
+        <label>{label}</label>
         <button
-          className="courses-filter__button"
+          className={classNames('courses-filter__button', {
+            '!tw-text-slate-300': !buttonText,
+          })}
           data-filter="event-type"
           onClick={!showList ? handleSelectFilter : handleDropdownClick}
         >
-          {buttonText}
+          {buttonText || 'Select...'}
         </button>
-
         {showList && (
           <div className="courses-filter__wrapper-list">
             <ul

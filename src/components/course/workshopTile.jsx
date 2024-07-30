@@ -1,4 +1,10 @@
-import { ABBRS, COURSE_MODES, COURSE_TYPES, MODAL_TYPES } from '@constants';
+import {
+  ABBRS,
+  COURSE_MODES,
+  COURSE_TYPES,
+  MODAL_TYPES,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { tConvert } from '@utils';
@@ -164,7 +170,7 @@ export const WorkshopTile = ({ data, isAuthenticated }) => {
         />
       )}
       <h3 className="course-card__title">
-        {mode === COURSE_MODES.IN_PERSON.name ? (
+        {mode === COURSE_MODES.IN_PERSON.value ? (
           <span className="course-card__type">
             {locationCity ? (
               <span>
@@ -178,7 +184,7 @@ export const WorkshopTile = ({ data, isAuthenticated }) => {
             )}
           </span>
         ) : (
-          <span className="course-card__type">{mode}</span>
+          <span className="course-card__type">{COURSE_MODES_MAP[mode]}</span>
         )}
 
         <span

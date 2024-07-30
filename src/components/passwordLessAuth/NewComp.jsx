@@ -190,9 +190,9 @@ export const Passwordless = ({ username, children } = {}) => {
   return (
     <>
       {signInStatus === 'NOT_SIGNED_IN' && user && (
-        <div class="form-action">
+        <div className="form-action">
           <button
-            class="submit-btn"
+            className="submit-btn"
             onClick={() => {
               authenticateWithFido2({
                 username: user.username,
@@ -204,7 +204,7 @@ export const Passwordless = ({ username, children } = {}) => {
             Sign in with face or touch
           </button>
           <button
-            class="submit-btn"
+            className="submit-btn"
             onClick={() =>
               requestSignInLink({
                 username: user.username,

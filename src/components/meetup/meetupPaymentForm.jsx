@@ -80,7 +80,8 @@ export const MeetupPaymentForm = ({
     setPriceType({ priceType: event.currentTarget.value });
   };
 
-  const logout = async (event) => {
+  const logout = async (e) => {
+    if (e) e.preventDefault();
     await signOut();
     router.push(
       `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,

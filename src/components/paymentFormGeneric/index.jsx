@@ -30,6 +30,7 @@ import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { COURSE_MODES_MAP } from '@constants';
 
 import { Loader } from '@components';
 import {
@@ -125,7 +126,8 @@ export const PaymentFormGeneric = ({
     }
   }, [programQuestionnaireResult]);
 
-  const logout = async (event) => {
+  const logout = async (e) => {
+    if (e) e.preventDefault();
     await signOut();
     router.push(
       `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
@@ -1482,9 +1484,9 @@ export const PaymentFormGeneric = ({
                               )}
                             >
                               <h6>Location:</h6>
-                              {(mode === COURSE_MODES.IN_PERSON.name ||
+                              {(mode === COURSE_MODES.IN_PERSON.value ||
                                 mode ===
-                                  COURSE_MODES.DESTINATION_RETREATS.name) && (
+                                  COURSE_MODES.DESTINATION_RETREATS.value) && (
                                 <>
                                   {!workshop.isLocationEmpty && (
                                     <ul>
@@ -1548,12 +1550,12 @@ export const PaymentFormGeneric = ({
                                 </>
                               )}
 
-                              {mode === COURSE_MODES.ONLINE.name && (
+                              {mode === COURSE_MODES.ONLINE.value && (
                                 <>
                                   {!workshop.isLocationEmpty && (
                                     <ul>
                                       <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                                        {mode}
+                                        {COURSE_MODES_MAP[mode]}
                                       </li>
                                     </ul>
                                   )}

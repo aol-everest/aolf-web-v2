@@ -437,6 +437,8 @@ export const Header = () => {
     setNavExpanded(false);
     if (router.pathname !== '/us-en/signin') {
       navigateToLogin(router);
+    } else {
+      router.reload();
     }
   };
 

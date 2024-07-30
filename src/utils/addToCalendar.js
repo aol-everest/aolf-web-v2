@@ -1,4 +1,5 @@
 import { SHARE_SITES } from '@constants';
+import { isMobile } from './common';
 /**
  * Converts Date String with UTC timezone to date consumable by calendar
  * apps. Changes +00:00 to Z.
@@ -19,15 +20,6 @@ export const formatDuration = (duration) => {
     parts.map((part) => (part.length === 2 ? part : `0${part}`)).join('')
   );
 };
-
-/**
- * Tests provided UserAgent against Known Mobile User Agents
- * @returns {bool} isMobileDevice
- */
-export const isMobile = () =>
-  /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/.test(
-    window.navigator.userAgent || window.navigator.vendor || window.opera,
-  );
 
 /**
  * Tests userAgent to see if browser is IE

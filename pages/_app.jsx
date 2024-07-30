@@ -44,7 +44,7 @@ Passwordless.configure({
   userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
   cognitoIdpEndpoint: process.env.NEXT_PUBLIC_COGNITO_REGION,
   fido2: {
-    baseUrl: 'https://xd4lrlop5f.execute-api.us-east-2.amazonaws.com/v1/',
+    baseUrl: process.env.NEXT_PUBLIC_PASSWORD_LESS_API_BASE_URL,
     authenticatorSelection: {
       userVerification: 'required',
     },
@@ -84,7 +84,7 @@ Amplify.configure({
 
 function App({ Component, pageProps }) {
   const router = useRouter();
-  const [user, setUser] = useState({ isAuthenticated: false });
+  const [user, setUser] = useState({ isAuthenticated: false, profile: {} });
   const [loading, setLoading] = useState(true);
   const [isReInstateRequired, setIsReInstateRequired] = useState(false);
   // const [pendingSurveyInvite, setPendingSurveyInvite] = useState(null);
@@ -101,10 +101,7 @@ function App({ Component, pageProps }) {
   });
 
   useEffect(() => {
-    console.log('Hub.listen===>');
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
-      console.log(payload.event);
-      console.log('payload.event===>');
       switch (payload.event) {
         case 'customOAuthState':
           if (payload.data && payload.data !== '') {

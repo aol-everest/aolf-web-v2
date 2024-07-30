@@ -171,7 +171,7 @@ const WorkshopSelectModal = React.memo(
                     >
                       <div className="slot-type">
                         <div className="slot-info">
-                          {workshop?.mode === COURSE_MODES.ONLINE.name ? (
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>
@@ -343,12 +343,12 @@ const WorkshopSelectModal = React.memo(
             </div>
             <div className="inPerson">
               <span className="icon-aol iconaol-profile-users"></span>
-              In person
+              In-Person
               <span className="icon-aol iconaol-info-circle"></span>
               <div className="tooltip">
                 <h4>
-                  <span className="icon-aol iconaol-profile-users"></span>In
-                  person{' '}
+                  <span className="icon-aol iconaol-profile-users"></span>
+                  In-Person{' '}
                 </h4>
                 <p>
                   Within a relaxing venue, you’ll leave everyday distractions

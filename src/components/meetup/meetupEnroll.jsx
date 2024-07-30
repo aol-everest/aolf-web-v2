@@ -118,7 +118,7 @@ export const MeetupEnroll = ({
                   <span className="icon-aol iconaol-location"></span>Location:
                 </label>
                 <div className="rsvp-detail-text">
-                  {mode === COURSE_MODES.IN_PERSON.name ? (
+                  {mode === COURSE_MODES.IN_PERSON.value ? (
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${
                         locationStreet || ''

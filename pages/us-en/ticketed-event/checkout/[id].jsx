@@ -436,7 +436,8 @@ const TicketCheckoutForm = ({ event }) => {
     }
   };
 
-  const logout = async (event) => {
+  const logout = async (e) => {
+    if (e) e.preventDefault();
     await signOut();
     router.push(
       `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
@@ -927,12 +928,12 @@ const TicketCheckoutForm = ({ event }) => {
                                 Location:
                               </div>
                               <div className="value col-7">
-                                {mode === COURSE_MODES.ONLINE.name
+                                {mode === COURSE_MODES.ONLINE.value
                                   ? mode
-                                  : (mode === COURSE_MODES.IN_PERSON.name ||
+                                  : (mode === COURSE_MODES.IN_PERSON.value ||
                                       mode ===
                                         COURSE_MODES.DESTINATION_RETREATS
-                                          .name) && (
+                                          .value) && (
                                       <>
                                         {!event.isLocationEmpty && (
                                           <a

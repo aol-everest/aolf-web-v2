@@ -56,7 +56,7 @@ export const COURSE_MODES = {
     value: 'Online',
   },
   IN_PERSON: {
-    name: 'In Person',
+    name: 'In-Person',
     value: 'In Person',
   },
   DESTINATION_RETREATS: {
@@ -65,10 +65,18 @@ export const COURSE_MODES = {
   },
 };
 
+export const COURSE_MODES_MAP = Object.entries(COURSE_MODES).reduce(
+  (accumulator, [keys, value]) => {
+    return { ...accumulator, [value.value]: value.name };
+  },
+  {},
+);
+
 export const MODAL_TYPES = {
   LOGIN_MODAL: 'LOGIN_MODAL',
   CUSTOM_MODAL: 'CUSTOM_MODAL',
   EMPTY_MODAL: 'EMPTY_MODAL',
+  NEW_MODAL: 'NEW_MODAL',
 };
 
 export const ALERT_TYPES = {
@@ -185,10 +193,10 @@ export const COURSE_TYPES_MASTER = {
           slug: 'sahaj-samadhi-meditation',
           name: 'Sahaj Samadhi - Signature Meditation Program',
         },
-        // BE_WELL_SESSIONS: {
-        //   slug: 'be_well',
-        //   name: 'Be Well',
-        // },
+        BE_WELL_SESSIONS: {
+          slug: 'be_well',
+          name: 'Be Well Sessions',
+        },
       },
     },
     {

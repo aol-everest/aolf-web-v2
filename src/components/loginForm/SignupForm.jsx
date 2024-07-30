@@ -5,12 +5,18 @@ import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 import { useState } from 'react';
+import { StyledInput } from '@components/checkout';
 
 const schema = object().shape({
   username: string()
     .email('This type of email does not exist. Please enter a valid one.')
     .required('Email is required'),
   password: string()
+    .test(
+      'no-spaces',
+      'Password cannot contain spaces',
+      (value) => !/\s/.test(value),
+    )
     .required('Password is required')
     .min(8, 'Must Contain 8 Characters'),
   firstName: string().required('First Name is required'),
@@ -44,57 +50,78 @@ export const SignupForm = ({
 
   return (
     <form onSubmit={handleSubmit(signUp)}>
-      <section class="section-login-register">
-        <div class="container">
-          <h1 class="page-title">Create an account</h1>
+      <section className="section-login-register">
+        <div className="container">
+          <h1 className="page-title">Create an account</h1>
           {children}
-          <div class="form-login-register">
-            <div class="form-item">
+          <div className="form-login-register">
+            <div className="form-item">
               <label for="fname">First name</label>
               <input
                 {...register('firstName')}
                 type="text"
-                class="input-field"
+                className="input-field"
                 placeholder="First name"
               />
+              {errors.firstName && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.firstName.message}
+                </div>
+              )}
             </div>
-            <div class="form-item">
+            <div className="form-item">
               <label for="lname">Last name</label>
               <input
                 {...register('lastName')}
                 type="text"
-                class="input-field"
+                className="input-field"
                 placeholder="Last name"
               />
+              {errors.lastName && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.lastName.message}
+                </div>
+              )}
             </div>
-            <div class="form-item">
+
+            <div className="form-item">
               <label for="email">Email address</label>
               <input
                 {...register('username')}
                 type="email"
-                class="input-field"
+                className="input-field"
                 placeholder="Email address"
               />
+
+              {errors.username && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.username.message}
+                </div>
+              )}
             </div>
-            <div class="form-item password">
+            <div className="form-item password">
               <label for="pass">Password</label>
               <input
                 {...register('password')}
                 type={type}
-                class="input-field password"
+                className="input-field password"
                 placeholder="Password"
               />
-              <button class="showPassBtn" type="button" onClick={handleToggle}>
-                <img
-                  src="/img/PasswordEye.svg"
-                  width="16"
-                  height="16"
-                  alt="Show Password"
-                />
+              <button
+                class={classNames('showPassBtn', type)}
+                type="button"
+                onClick={handleToggle}
+              >
+                <span className="icon-aol"></span>
               </button>
+              {errors.password && (
+                <div className="validation-input !tw-mb-0">
+                  {errors.password.message}
+                </div>
+              )}
             </div>
-            <div class="form-item checkbox">
-              <label class="toc" for="toc">
+            <div className="form-item checkbox">
+              <label className="toc" for="toc">
                 By signing up, I agree to{' '}
                 <Link prefetch={false} href="/policy/ppa-course" legacyBehavior>
                   <a target="_blank">Terms of Service</a>
@@ -109,13 +136,15 @@ export const SignupForm = ({
                 </a>
               </label>
             </div>
-            {showMessage && <div class="common-error-message">{message}</div>}
-            <div class="form-action">
-              <button class="submit-btn" type="submit">
+            {showMessage && (
+              <div className="common-error-message">{message}</div>
+            )}
+            <div className="form-action">
+              <button className="submit-btn" type="submit">
                 Sign up
               </button>
             </div>
-            <div class="form-other-info">
+            <div className="form-other-info">
               Already have an account?{' '}
               <a href="#" onClick={toSignInMode}>
                 Log in

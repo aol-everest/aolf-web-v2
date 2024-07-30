@@ -3,12 +3,14 @@ import { GlobalModalContext } from '@contexts';
 import { useState } from 'react';
 import { CustomModal } from './CustomModal';
 import { EmptyModal } from './EmptyModal';
+import { NewModal } from './NewModal';
 import { LoginModal } from './LoginModal';
 
 const MODAL_COMPONENTS = {
   [MODAL_TYPES.LOGIN_MODAL]: LoginModal,
   [MODAL_TYPES.CUSTOM_MODAL]: CustomModal,
   [MODAL_TYPES.EMPTY_MODAL]: EmptyModal,
+  [MODAL_TYPES.NEW_MODAL]: NewModal,
 };
 
 export const GlobalModal = ({ children }) => {
@@ -16,6 +18,7 @@ export const GlobalModal = ({ children }) => {
   const { modalType, modalProps } = store || {};
 
   const showModal = (modalType, modalProps) => {
+    document.body.classList.add('overflow-hidden');
     setStore({
       ...store,
       modalType,
@@ -24,6 +27,7 @@ export const GlobalModal = ({ children }) => {
   };
 
   const hideModal = () => {
+    document.body.classList.remove('overflow-hidden');
     setStore({
       ...store,
       modalType: null,
