@@ -101,7 +101,14 @@
   }
   .disclaimer {
     margin-bottom: 24px;
-    text-align: center;
+    .emptyResults {
+      p {
+        font-weight: 500;
+        font-style: italic;
+        font-size: 18px;
+        color: #6f7283;
+      }
+    }
   }
   .ask-gurudev-main-search {
     .main-search-area {
@@ -263,6 +270,7 @@
         }
       }
     }
+
     .answer-bottom-area {
       display: flex;
       justify-content: space-between;
@@ -297,8 +305,8 @@
           order: 1;
         }
         span {
-          text-decoration: none;
-          color: #6f7283;
+          text-decoration: underline;
+          font-size: 20px;
         }
       }
       .answer-pagination {
