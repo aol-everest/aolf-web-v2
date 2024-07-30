@@ -31,7 +31,6 @@ const SearchOptions = ({
   }, []);
 
   const onSearchChangeQuery = useCallback((event) => {
-    console.log('event.target.value', event.target.value);
     if (!event.target.value) {
       setLocalQuery('');
       queryInputRef.current.value = '';

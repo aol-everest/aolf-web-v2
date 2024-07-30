@@ -117,7 +117,7 @@ const PPACourse = () => {
             <p>
               I acknowledge that I am not authorized to release the contents of
               any programs or any parts thereof provided to me online,
-              electronically or in person by the Organization and/or another
+              electronically or in-person by the Organization and/or another
               program participant to any third party without the prior written
               authorization of the Organization. I confirm that the
               Organization’s techniques and exercises constitute private and

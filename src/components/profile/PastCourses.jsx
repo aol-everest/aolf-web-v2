@@ -41,7 +41,6 @@ export const PastCourses = ({ pastCourses = {} }) => {
         <h2 className="title">History of courses</h2>
         <div className="accordion" id="accordionExample">
           {pastWorkshops.map((workshop, index) => {
-            console.log('workshop.eventStartDate', workshop.eventStartDate);
             return (
               <div className="history-accordion-item" key={workshop.id}>
                 <div className="history-accordion-header">

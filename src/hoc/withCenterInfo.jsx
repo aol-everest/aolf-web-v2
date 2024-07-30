@@ -1,15 +1,7 @@
-import { useAuth, useGlobalModalContext } from '@contexts';
-import { pushRouteWithUTMQuery } from '@service';
-import dynamic from 'next/dynamic';
-import { NextSeo } from 'next-seo';
-import { useQueryState } from 'nuqs';
-import { FaCamera } from 'react-icons/fa';
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import { Loader } from '@components/loader';
-import { MODAL_TYPES } from '@constants';
 import Link from '@components/linkWithUTM';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import { useQuery } from '@tanstack/react-query';
@@ -30,8 +22,6 @@ export const withCenterInfo = (WrappedComponent) => {
   return function CenterInfo(props) {
     const router = useRouter();
     const { id } = router.query;
-    console.log(id);
-    const [loading, setLoading] = useState(false);
     const pathname = usePathname();
     const COURSES_PAGE = `/us-en/centers/courses/${id}`;
     const MEETUPS_PAGE = `/us-en/centers/meetups/${id}`;
@@ -61,7 +51,6 @@ export const withCenterInfo = (WrappedComponent) => {
 
     return (
       <>
-        {loading && <Loader />}
         <main className="page--find-a-course">
           <section className="title-header">
             <h1 className="page-title">

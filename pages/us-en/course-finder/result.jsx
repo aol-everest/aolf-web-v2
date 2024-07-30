@@ -94,7 +94,7 @@ function CourseFinderResult() {
                 <ul className="recommended-course-info">
                   <li>
                     <div className="label">Course format:</div>
-                    <div className="value">Online / In Person</div>
+                    <div className="value">Online / In-Person</div>
                   </li>
                 </ul>
                 <div className="course-payment-options">

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { COURSE_TYPES, WORKSHOP_MODE } from '@constants';
+import { COURSE_TYPES, WORKSHOP_MODE, COURSE_MODES_MAP } from '@constants';
 import { pushRouteWithUTMQuery } from '@service';
 import { priceCalculation } from '@utils';
 import classNames from 'classnames';
@@ -54,7 +54,9 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
             <div className="row">
               <div className="col-lg-6 col-xl-7">
                 <div className="about-program__main">
-                  <p className="about-program__main-type">{mode}</p>
+                  <p className="about-program__main-type">
+                    {COURSE_MODES_MAP[mode]}
+                  </p>
                   <h1 className="about-program__main-name">{title}</h1>
                   <ul className="about-program__main-list">
                     <li>Restore, rebalance, & re-energize your mind-body</li>

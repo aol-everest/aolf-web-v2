@@ -290,11 +290,12 @@ function TicketedEvent() {
                         <div className="info-item">
                           <span className="icon-aol iconaol-location"></span>
                           <span className="p2">
-                            {mode === COURSE_MODES.ONLINE.name
+                            {mode === COURSE_MODES.ONLINE.value
                               ? mode
-                              : (mode === COURSE_MODES.IN_PERSON.name ||
+                              : (mode === COURSE_MODES.IN_PERSON.value ||
                                   mode ===
-                                    COURSE_MODES.DESTINATION_RETREATS.name) && (
+                                    COURSE_MODES.DESTINATION_RETREATS
+                                      .value) && (
                                   <>
                                     {!isLocationEmpty && (
                                       <span>

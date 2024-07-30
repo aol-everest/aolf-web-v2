@@ -49,21 +49,17 @@ const ChangeEmailStep = ({
         </div>
       </div>
       <div className="course-details-card__body">
-        <h3 className="course-join-card__title section-title">
-          Change user name / email
+        <h3 className="course-join-card__title section-title tw-mb-2">
+          Change email
         </h3>
-        <div className="form-group row tw-p-5">
-          <label
-            htmlFor="staticEmail"
-            className="col-sm-2 col-form-label d-none d-md-block"
-          >
-            Email
-          </label>
-          <div className="col-sm-10">
+        <div className="row tw-px-5 tw-pt-5">
+          <div className="col-sm-12">
             <input
               type="text"
               {...register('username')}
-              className={classNames('tw-w-full', { validate: errors.username })}
+              className={classNames('tw-w-full tw-mb-0', {
+                validate: errors.username,
+              })}
               placeholder="Enter new email"
             />
             {errors.username && (
@@ -79,7 +75,7 @@ const ChangeEmailStep = ({
         </div>
       </div>
       <div className="course-join-card__footer">
-        <button className="btn-secondary">Submit new email</button>
+        <button className="btn-secondary">Submit</button>
       </div>
       <DevTool control={control} />
     </form>
@@ -174,7 +170,7 @@ export const ChangeEmail = ({ closeDetailAction, existingEmail }) => {
 
   return (
     <div className="profile-modal active show tw-z-50">
-      <div className="digital-member-join_journey course-join-card show">
+      <div className="digital-member-join_journey course-join-card show tw-mt-8 sm:tw-mt-0">
         <div className="close-modal new-btn-modal" onClick={closeDetailAction}>
           <div className="close-line"></div>
           <div className="close-line"></div>

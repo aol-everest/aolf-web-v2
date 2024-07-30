@@ -209,11 +209,12 @@
     }
 
     .profile-tabs {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       ul {
         display: flex;
         gap: 10px;
         overflow-x: auto;
+        padding-bottom: 10px;
         li {
           display: flex;
         }
@@ -974,6 +975,7 @@
       }
       .number {
         height: 30px;
+        min-width: 30px;
         width: 30px;
         background: linear-gradient(
           102.78deg,

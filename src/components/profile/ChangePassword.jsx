@@ -58,9 +58,19 @@ export const ChangePassword = ({ updateCompleteAction }) => {
         }}
         validationSchema={Yup.object().shape({
           oldPassword: Yup.string()
+            .test(
+              'no-spaces',
+              'Password cannot contain spaces',
+              (value) => !/\s/.test(value),
+            )
             .required('Password is required')
             .min(8, 'Must Contain 8 Characters'),
           password: Yup.string()
+            .test(
+              'no-spaces',
+              'Password cannot contain spaces',
+              (value) => !/\s/.test(value),
+            )
             .required('Password is required')
             .min(8, 'Must Contain 8 Characters')
             .notOneOf(
@@ -68,6 +78,11 @@ export const ChangePassword = ({ updateCompleteAction }) => {
               'New password cannot be the same as the existing password',
             ),
           passwordConfirmation: Yup.string()
+            .test(
+              'no-spaces',
+              'Password cannot contain spaces',
+              (value) => !/\s/.test(value),
+            )
             .required('Password is required')
             .oneOf([Yup.ref('password'), null], 'Passwords must match'),
         })}

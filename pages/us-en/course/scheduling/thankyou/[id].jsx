@@ -229,7 +229,7 @@ const Thankyou = () => {
     duration,
     endDatetime: endDatetime.format('YYYYMMDDTHHmmss'),
     location:
-      mode === COURSE_MODES.IN_PERSON.name
+      mode === COURSE_MODES.IN_PERSON.value
         ? `${locationStreet || ''}, ${locationCity || ''}, ${
             locationProvince || ''
           } ${locationPostalCode || ''}, ${locationCountry || ''}`
@@ -258,7 +258,7 @@ const Thankyou = () => {
   };
 
   const RenderJourneyContent = () => {
-    if (mode === COURSE_MODES.IN_PERSON.name) {
+    if (mode === COURSE_MODES.IN_PERSON.value) {
       if (isSilentRetreatType) {
         return <SilentRetreat />;
       }
@@ -453,8 +453,8 @@ const Thankyou = () => {
                           })}
                       </ul>
 
-                      {(mode === COURSE_MODES.IN_PERSON.name ||
-                        mode === COURSE_MODES.DESTINATION_RETREATS.name) && (
+                      {(mode === COURSE_MODES.IN_PERSON.value ||
+                        mode === COURSE_MODES.DESTINATION_RETREATS.value) && (
                         <>
                           {!workshop.isLocationEmpty && (
                             <ul className="program-details__list-schedule tw-mt-2">

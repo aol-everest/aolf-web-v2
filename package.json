@@ -6,7 +6,7 @@
     ".next/cache"
   ],
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
     "develop": "cross-env NODE_ENV=development yarn local-run",
@@ -30,7 +30,8 @@
     "fix:lint": "npm run check:lint -- --fix",
     "check:staged": "lint-staged",
     "update-deps": "npm-check-updates -u",
-    "kill": "kill-port 3000"
+    "kill": "kill-port 3000",
+    "coupling-graph": "npx madge --extensions js,jsx,ts,tsx,css,md,scss ./ --exclude '.next|tailwind.config.js|reset.d.ts|prettier.config.js|postcss.config.js|playwright.config.ts|next.config.js|next-env.d.ts|instrumentation.ts|e2e/|README.md|.storybook/|.eslintrc.js' --image graph.svg"
   },
   "dependencies": {
     "@analytics/router-utils": "^0.1.1",
@@ -125,7 +126,7 @@
     "@tanstack/eslint-plugin-query": "^5.35.6",
     "autoprefixer": "^10.4.19",
     "cross-env": "^7.0.3",
-    "cspell": "^8.8.1",
+    "cspell": "^8.9.1",
     "cssnano": "^7.0.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.0",

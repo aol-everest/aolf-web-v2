@@ -3,6 +3,7 @@
     &__alert {
       span {
         font-size: 12px;
+        white-space: normal;
 
         img {
           margin-right: 10px;
@@ -53,7 +54,6 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow-y: auto;
-    top: unset;
     height: 0;
 
     .close-modal {
@@ -62,7 +62,7 @@
       right: unset;
       left: unset;
       bottom: unset;
-      margin: 40px 0 0;
+      margin: 70px 0 0;
       box-shadow: $blue-shadow;
     }
 
@@ -73,6 +73,7 @@
 
     &.active {
       height: 100vh;
+      padding-bottom: 100px;
     }
 
     .course-join-card {

@@ -9,7 +9,13 @@ const schema = object().shape({
   username: string()
     .email('This type of email does not exist. Please enter a valid one.')
     .required('Email is required'),
-  password: string().required('Password is required'),
+  password: string()
+    .test(
+      'no-spaces',
+      'Password cannot contain spaces',
+      (value) => !/\s/.test(value),
+    )
+    .required('Password is required'),
 });
 
 export const SigninForm = ({

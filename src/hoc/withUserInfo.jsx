@@ -45,6 +45,7 @@ export const withUserInfo = (WrappedComponent) => {
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
     const elementRef = useRef(null);
+    const tabRefs = useRef([]);
 
     const {
       first_name,
@@ -71,7 +72,7 @@ export const withUserInfo = (WrappedComponent) => {
 
     const toggleTopShowMessage = () => {
       setRequest({
-        request: null,
+        request: undefined,
       });
     };
 
@@ -101,9 +102,32 @@ export const withUserInfo = (WrappedComponent) => {
       }
     };
 
+    useEffect(() => {
+      const activeIndex = tabRefs.current.findIndex(
+        (tab) => tab && tab.classList.contains('active'),
+      );
+      if (activeIndex !== -1) {
+        tabRefs.current[activeIndex].scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'nearest',
+        });
+      }
+    }, [pathname]);
+
     if (!isAuthenticated) {
       return null;
     }
+
+    const tabs = [
+      { href: UPDATE_PROFILE, label: 'Profile' },
+      { href: CARD_DETAILS, label: 'Payment' },
+      { href: CHANGE_PASSWORD, label: 'Change Password' },
+      { href: PAST_COURSES, label: 'Past Courses' },
+      { href: UPCOMING_EVENTS, label: 'Upcoming Courses' },
+      { href: PREFERENCES, label: 'Preferences' },
+      // { href: REFER_A_FRIEND, label: 'Refer a Friend' },
+    ];
 
     // Define the alerts based on the request status
     const renderAlert = () => {
@@ -198,8 +222,6 @@ export const withUserInfo = (WrappedComponent) => {
       }
     };
 
-    console.log('subscriptions', subscriptions);
-
     return (
       <>
         {loading && <Loader />}
@@ -251,105 +273,20 @@ export const withUserInfo = (WrappedComponent) => {
                 <div className="profile-info-box">
                   <div className="profile-tabs">
                     <ul className="tab-links">
-                      <li>
-                        <Link
-                          href={`${UPDATE_PROFILE}`}
-                          scroll={false}
-                          legacyBehavior
-                        >
-                          <a
-                            className={classNames('profile-tab', {
-                              active: pathname === UPDATE_PROFILE,
-                            })}
-                            href="#"
-                          >
-                            Profile
-                          </a>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href={`${CARD_DETAILS}`}
-                          legacyBehavior
-                          scroll={false}
-                        >
-                          <a
-                            className={classNames('profile-tab', {
-                              active: pathname === CARD_DETAILS,
-                            })}
-                          >
-                            Payment
-                          </a>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href={`${CHANGE_PASSWORD}`}
-                          legacyBehavior
-                          scroll={false}
-                        >
-                          <a
-                            className={classNames('profile-tab', {
-                              active: pathname === CHANGE_PASSWORD,
-                            })}
-                          >
-                            Change Password
-                          </a>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href={PAST_COURSES} legacyBehavior scroll={false}>
-                          <a
-                            className={classNames('profile-tab', {
-                              active: pathname === PAST_COURSES,
-                            })}
-                          >
-                            Past Courses
-                          </a>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href={UPCOMING_EVENTS}
-                          legacyBehavior
-                          scroll={false}
-                        >
-                          <a
-                            className={classNames('profile-tab', {
-                              active: pathname === UPCOMING_EVENTS,
-                            })}
-                          >
-                            Upcoming Courses
-                          </a>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href={PREFERENCES} legacyBehavior scroll={false}>
-                          <a
-                            className={classNames('profile-tab', {
-                              active: pathname === PREFERENCES,
-                            })}
-                          >
-                            Preferences
-                          </a>
-                        </Link>
-                      </li>
-
-                      <li>
-                        <Link
-                          href={REFER_A_FRIEND}
-                          legacyBehavior
-                          scroll={false}
-                        >
-                          <a
-                            className={classNames('profile-tab', {
-                              active: pathname === REFER_A_FRIEND,
-                            })}
-                          >
-                            Refer a Friend
-                          </a>
-                        </Link>
-                      </li>
+                      {tabs.map((tab, index) => (
+                        <li key={tab.href}>
+                          <Link href={tab.href} legacyBehavior scroll={false}>
+                            <a
+                              ref={(el) => (tabRefs.current[index] = el)}
+                              className={classNames('profile-tab', {
+                                active: pathname === tab.href,
+                              })}
+                            >
+                              {tab.label}
+                            </a>
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                   <div ref={elementRef}>

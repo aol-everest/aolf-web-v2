@@ -1,5 +1,10 @@
 import { PageLoading } from '@components';
-import { CONTENT_FOLDER_IDS, COURSE_TYPES, MEMBERSHIP_TYPES } from '@constants';
+import {
+  CONTENT_FOLDER_IDS,
+  COURSE_TYPES,
+  MEMBERSHIP_TYPES,
+  COURSE_MODES_MAP,
+} from '@constants';
 import { useAuth } from '@contexts';
 import { withAuth } from '@hoc';
 import { useQueryString } from '@hooks';
@@ -434,7 +439,7 @@ const MembershipThankyou = () => {
                     <img src="/img/journey-card-img-v2.png" alt="card" />
                     <div className="journey-confirmation__course-detail">
                       <h4 className="journey-confirmation__course-type">
-                        {mode}
+                        {COURSE_MODES_MAP[mode]}
                       </h4>
                       <h2 className="journey-confirmation__course-name">
                         {title}
@@ -454,7 +459,7 @@ const MembershipThankyou = () => {
                     {getEventImage()}
                     <div className="journey-confirmation__course-detail ">
                       <h4 className="journey-confirmation__course-type !tw-text-slate-700">
-                        {mode}
+                        {COURSE_MODES_MAP[mode]}
                       </h4>
                       <h2 className="journey-confirmation__course-name !tw-text-slate-700">
                         {meetupTitle}
@@ -530,7 +535,7 @@ const MembershipThankyou = () => {
 
             <div className="journey-confirmation_mobile__course-detail">
               <h4 className="journey-confirmation_mobile__course-type !tw-text-slate-700">
-                {mode}
+                {COURSE_MODES_MAP[mode]}
               </h4>
               <h2 className="journey-confirmation_mobile__course-name !tw-text-slate-700">
                 {title || meetupTitle}

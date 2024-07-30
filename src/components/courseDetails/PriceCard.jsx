@@ -214,7 +214,7 @@ export const PriceCard = ({
             <span className="title">Location</span>
             <br />
             <span className="content">
-              {mode === COURSE_MODES.ONLINE.name ? (
+              {mode === COURSE_MODES.ONLINE.value ? (
                 mode
               ) : (
                 <a
