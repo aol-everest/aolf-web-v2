@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -119,6 +120,7 @@ const SearchResult = React.forwardRef(function SearchResult(
     selectedVotes,
     handleVoteSelect,
     selectedPageIndex,
+    query,
   },
   ref,
 ) {
@@ -144,6 +146,17 @@ const SearchResult = React.forwardRef(function SearchResult(
   };
 
   const isFeedbackSelected = selectedVotes[selectedPageIndex];
+
+  const CustomMessage = () => {
+    return (
+      <div className="emptyResults">
+        <p>
+          Here is a wisdom sheet we found related to your question. It may not
+          be specific to your situation, but we hope it's helpful!
+        </p>
+      </div>
+    );
+  };
 
   return (
     <motion.div
@@ -173,6 +186,7 @@ const SearchResult = React.forwardRef(function SearchResult(
         result.content && (
           <div className="tab-pane active" id="nav-anger" role="tabpanel">
             <div className="tab-content-text">
+              {query && <div className="disclaimer">{<CustomMessage />}</div>}
               <p dangerouslySetInnerHTML={{ __html: getFormattedText() }} />
             </div>
             <div className="tab-content-action">

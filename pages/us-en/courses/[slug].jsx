@@ -635,8 +635,8 @@ const Course = () => {
       return (
         <div className="no-course-found-wrap">
           <h2 className="tw-text-center">
-            The {courseTypeFilter.name} is not available online it is offered In
-            Person only.
+            The {courseTypeFilter.name} is not available online, it is offered
+            In-Person only.
           </h2>
           <p>
             Please check out our{' '}

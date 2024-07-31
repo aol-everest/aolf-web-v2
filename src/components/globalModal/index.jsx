@@ -18,6 +18,7 @@ export const GlobalModal = ({ children }) => {
   const { modalType, modalProps } = store || {};
 
   const showModal = (modalType, modalProps) => {
+    document.body.classList.add('overflow-hidden');
     setStore({
       ...store,
       modalType,
@@ -26,6 +27,7 @@ export const GlobalModal = ({ children }) => {
   };
 
   const hideModal = () => {
+    document.body.classList.remove('overflow-hidden');
     setStore({
       ...store,
       modalType: null,
