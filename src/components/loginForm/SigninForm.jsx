@@ -192,11 +192,12 @@ export const SigninForm = ({
     });
   };
 
-  const signInWithTouch = () => {
-    authenticateWithFido2({
+  const signInWithTouch = async () => {
+    await authenticateWithFido2({
       username: user.username,
       credentials: user.credentials,
-    });
+    }).signedIn;
+    await authObj.fetchCurrentUser();
   };
 
   if (signInStatus === 'SIGNED_IN') {
@@ -245,7 +246,7 @@ export const SigninForm = ({
     );
   }
 
-  if (setLoading) {
+  /* if (setLoading) {
     if (!loading) {
       setLoading(
         signingInStatus === 'REQUESTING_SIGNIN_LINK' ||
@@ -257,7 +258,7 @@ export const SigninForm = ({
     ) {
       setLoading(false);
     }
-  }
+  } */
 
   if (signingInStatus === 'SIGNIN_LINK_REQUESTED') {
     return (

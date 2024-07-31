@@ -129,6 +129,7 @@ const PasswordChangeSuccessMessage = () => (
 function LoginPage() {
   const router = useRouter();
   const authObj = useAuth();
+  console.log(authObj);
   const { fetchCurrentUser, isAuthenticated } = authObj;
   const { busy, authenticateWithPassword } = authObj.passwordLess;
   // const { identify } = useAnalytics();
@@ -193,7 +194,7 @@ function LoginPage() {
     setShowMessage(false);
     try {
       await signOut({ global: true });
-      const dd = await authenticateWithPassword({
+      await authenticateWithPassword({
         username: username,
         password: password,
         newPassword: newPasswordFlow,
