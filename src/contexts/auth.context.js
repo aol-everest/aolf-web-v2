@@ -21,7 +21,10 @@ import {
   authenticateWithFido2,
 } from '@passwordLess/fido2.js';
 import { authenticateWithSRP } from '@passwordLess/srp.js';
-import { authenticateWithPlaintextPassword } from '@passwordLess/plaintext.js';
+import {
+  authenticateWithPlaintextPassword,
+  authenticateWithPassword,
+} from '@passwordLess/plaintext.js';
 import { stepUpAuthenticationWithSmsOtp } from '@passwordLess/sms-otp-stepup.js';
 import { configure } from '@passwordLess/config.js';
 import { retrieveTokens, storeTokens } from '@passwordLess/storage.js';
@@ -85,14 +88,12 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
         case 'customOAuthState':
           // eslint-disable-next-line no-case-declarations
           const state = payload.data; // this will be customState provided on signInWithRedirect function
-          console.log(state);
           console.info('custom state returned from CognitoHosted UI');
           break;
       }
     });
 
     return () => {
-      console.log('hubListenerCancelToken');
       hubListenerCancelToken();
     };
   }, []);
@@ -525,6 +526,28 @@ function _usePasswordless(fetchCurrentUser) {
         clientMetadata,
         statusCb: setSigninInStatus,
         tokensCb: (tokens) => storeTokens(tokens).then(() => setTokens(tokens)),
+      });
+      signinIn.signedIn.catch(setLastError);
+      return signinIn;
+    },
+    /** Sign in with username and password (the password is sent in plaintext over the wire) */
+    authenticateWithPassword: ({
+      username,
+      password,
+      newPassword,
+      clientMetadata,
+    }) => {
+      setLastError(undefined);
+      const signinIn = authenticateWithPassword({
+        username,
+        password,
+        newPassword,
+        clientMetadata,
+        statusCb: setSigninInStatus,
+        tokensCb: (tokens) =>
+          storeTokens(tokens).then(() => {
+            setTokens(tokens);
+          }),
       });
       signinIn.signedIn.catch(setLastError);
       return signinIn;

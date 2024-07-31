@@ -1,7 +1,7 @@
 import { ALERT_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { api } from '@utils';
 import {
   NewPasswordForm,
@@ -128,11 +128,15 @@ const PasswordChangeSuccessMessage = () => (
 
 function LoginPage() {
   const router = useRouter();
-  const { fetchCurrentUser } = useAuth();
+  const authObj = useAuth();
+  const { fetchCurrentUser, isAuthenticated } = authObj;
+  const { busy, authenticateWithPassword } = authObj.passwordLess;
   // const { identify } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
 
+  const [promiseHolder, setPromiseHolder] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isHolding, setHolding] = useState(false);
   const [message, setMessage] = useState(null);
   const [showMessage, setShowMessage] = useState(false);
   const [mode, setMode] = useQueryState(
@@ -175,13 +179,43 @@ function LoginPage() {
       router.push('/us-en');
     }
   };
+  const newPasswordFlow = () => {
+    return new Promise((resolve, reject) => {
+      setMode(NEW_PASSWORD_REQUEST);
+      setHolding(true);
+      // Store the promise resolve method in the state
+      setPromiseHolder({ resolve, reject });
+    });
+  };
 
   const signInAction = async ({ username, password, isStudent = false }) => {
     setLoading(true);
     setShowMessage(false);
     try {
       await signOut({ global: true });
-      const { nextStep } = await signIn({ username, password });
+      const dd = await authenticateWithPassword({
+        username: username,
+        password: password,
+        newPassword: newPasswordFlow,
+      }).signedIn;
+      await fetchCurrentUser();
+      if (isStudent) {
+        await api.post({
+          path: 'verify-email',
+          body: {
+            email: username,
+          },
+        });
+        setLoading(false);
+        showAlert(
+          ALERT_TYPES.NEW_ALERT,
+          {
+            children: <StudentVerificationCodeMessage />,
+          },
+          2000,
+        );
+      }
+      /* const { nextStep } = await signIn({ username, password });
       switch (nextStep.signInStep) {
         case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
           setMode(NEW_PASSWORD_REQUEST);
@@ -205,21 +239,21 @@ function LoginPage() {
               2000,
             );
             setTimeout(() => {
-              if (navigateTo) {
-                router.push(navigateTo);
-              } else {
-                router.push('/us-en');
-              }
+              // if (navigateTo) {
+              //   router.push(navigateTo);
+              // } else {
+              //   router.push('/us-en');
+              // }
             }, 1000);
           } else {
-            if (navigateTo) {
-              router.push(navigateTo);
-            } else {
-              router.push('/us-en');
-            }
+            // if (navigateTo) {
+            //   router.push(navigateTo);
+            // } else {
+            //   router.push('/us-en');
+            // }
           }
           break;
-      }
+      } */
     } catch (ex) {
       console.log(ex);
       const data = ex.response?.data;
@@ -372,7 +406,12 @@ function LoginPage() {
     setLoading(true);
     setShowMessage(false);
     try {
-      const { isSignedIn, nextStep } = await confirmSignIn({
+      if (promiseHolder) {
+        promiseHolder.resolve(password);
+        setHolding(false);
+        setMode(SIGN_IN_MODE);
+      }
+      /* const { isSignedIn, nextStep } = await confirmSignIn({
         challengeResponse: password,
       });
       if (isSignedIn && nextStep.signInStep === 'DONE') {
@@ -381,7 +420,7 @@ function LoginPage() {
         } else {
           router.push('/us-en');
         }
-      }
+      } */
     } catch (ex) {
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {
@@ -469,6 +508,24 @@ function LoginPage() {
   };
 
   const renderForm = () => {
+    if (isAuthenticated) {
+      return (
+        <SigninForm
+          signIn={signInAction}
+          forgotPassword={resetPasswordAction}
+          toSignUpMode={switchView(SIGN_UP_MODE)}
+          showMessage={showMessage}
+          message={getActualMessage(message)}
+          setUsername={setUsername}
+          username={username}
+          setLoading={setLoading}
+          loading={loading}
+          backToFlowAction={backToFlowAction}
+        >
+          {socialLoginRender()}
+        </SigninForm>
+      );
+    }
     switch (mode) {
       case SIGN_UP_MODE:
         return (
@@ -526,7 +583,7 @@ function LoginPage() {
       {renderForm()}
 
       <Fido2Toast />
-      {loading && (
+      {(loading || busy) && !isHolding && (
         <div className="loading-overlay">
           <div className="overlay-loader"></div>
           <div className="loading-text">Please wait...</div>
