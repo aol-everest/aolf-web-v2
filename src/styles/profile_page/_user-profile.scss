@@ -1005,6 +1005,7 @@
         font-size: 20px;
         padding: 0;
         margin-left: auto;
+        color: #31364e;
         &:focus {
           border: none;
           outline: none;
@@ -1455,7 +1456,7 @@
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         min-height: unset;
-        max-height: 95vh;
+        height: 100vh;
         overflow: auto;
       }
     }
@@ -1517,7 +1518,7 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 15px;
         margin-top: 18px;
-        height: calc(100vh - 400px);
+        height: calc(100vh - 300px);
         overflow: auto;
         @media screen and (max-width: 767px) {
           grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -1604,6 +1605,7 @@
           line-height: 18px;
           gap: 16px;
           margin-top: 14px;
+          word-break: break-word;
           .icon-aol {
             font-size: 20px;
             color: #3d8be8;
