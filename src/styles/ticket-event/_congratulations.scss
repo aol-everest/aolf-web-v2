@@ -138,6 +138,9 @@
       @media screen and (max-width: 1199px) {
         padding-right: 2.5rem;
       }
+      @media screen and (min-width: 992px) and (max-width: 1199px) {
+        padding-right: 15px;
+      }
       @media screen and (max-width: 991px) {
         padding: 0rem;
       }
@@ -147,6 +150,9 @@
       padding-left: 4rem;
       @media screen and (max-width: 1199px) {
         padding-right: 2.5rem;
+      }
+      @media screen and (min-width: 992px) and (max-width: 1199px) {
+        padding-left: 15px;
       }
       @media screen and (max-width: 991px) {
         padding: 0rem;
