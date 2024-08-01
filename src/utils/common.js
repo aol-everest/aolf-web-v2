@@ -634,7 +634,7 @@ export const breakAfterTwoWordsArray = (str) => {
 
   words?.reduce((acc, word, index) => {
     if (index === 0) {
-      if (word.length > 9) {
+      if (word.length > 8) {
         result.push(word);
       } else {
         result.push(word + (words.length > 1 ? ' ' + words[1] : ''));
@@ -649,4 +649,11 @@ export const breakAfterTwoWordsArray = (str) => {
   }, '');
 
   return result;
+};
+
+export const timeConvert = (data) => {
+  const minutes = data % 60;
+  const hours = (data - minutes) / 60;
+
+  return String(hours).padStart(2, 0) + ':' + String(minutes).padStart(2, 0);
 };

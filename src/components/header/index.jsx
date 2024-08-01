@@ -199,6 +199,10 @@ const AOL_MENU = [
         link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
       },
       {
+        name: 'Guided Meditations',
+        link: `/us-en/guided-meditation/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+      },
+      {
         name: 'Wisdom',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
       },

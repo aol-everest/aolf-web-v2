@@ -178,8 +178,32 @@ export default function Library() {
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
 
-  const onFilterChange = (value) => {
-    setTopic(value);
+  const onFilterChange = (field) => async (value) => {
+    switch (field) {
+      case 'topic':
+        setTopic(value);
+        break;
+      case 'duration':
+        setDuration(value);
+        break;
+      case 'instructor':
+        setInstructor(value);
+        break;
+    }
+  };
+
+  const onFilterClearEvent = (field) => async () => {
+    switch (field) {
+      case 'topic':
+        setTopic(null);
+        break;
+      case 'duration':
+        setDuration(null);
+        break;
+      case 'instructor':
+        setInstructor(null);
+        break;
+    }
   };
 
   const markFavorite = (meditate) => async (e) => {
@@ -239,12 +263,62 @@ export default function Library() {
     });
   };
 
+  let slidesPerView = 5;
+  if (!isSSR) {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 1600 && screenWidth > 1200) {
+      slidesPerView = 4.3;
+    } else if (screenWidth < 1200 && screenWidth > 981) {
+      slidesPerView = 3.3;
+    } else if (screenWidth < 981 && screenWidth > 767) {
+      slidesPerView = 3;
+    } else if (screenWidth < 767) {
+      slidesPerView = 2.2;
+    }
+  }
+
+  let swiperOption = {
+    modules: [Navigation, Scrollbar, A11y],
+    allowTouchMove: true,
+    slidesPerView: slidesPerView,
+    spaceBetween: 30,
+    preventInteractionOnTransition: true,
+    navigation: true,
+    breakpoints: {
+      320: {
+        slidesPerView: 2.2,
+      },
+      767: {
+        slidesPerView: 3,
+      },
+      981: {
+        slidesPerView: 3.3,
+      },
+      1200: {
+        slidesPerView: 4.3,
+      },
+      1600: {
+        slidesPerView: 5,
+      },
+    },
+  };
+
+  if (typeof window !== 'undefined') {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      swiperOption = {
+        ...swiperOption,
+        navigation: false,
+      };
+    }
+  }
+
   const toggleFilter = () => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
   const params = {
     isAuthenticated,
+    swiperOption,
     pickCategoryImage,
     backgroundIterator,
     markFavorite,
@@ -259,15 +333,33 @@ export default function Library() {
     findMeditation,
     duration,
     favouriteContents,
+    onFilterClearEvent,
   };
 
-  return (
-    <>
-      <NextSeo
-        title="Meditations"
-        description="Relax with a currated colection of guided meditations by Gurudev and senior Art of Living instructors."
-      />
-      <DesignOne data={rootFolder} {...params} />
-    </>
-  );
+  switch (rootFolder.screenDesign) {
+    case 'Design 1':
+      return (
+        <>
+          {loading && <Loader />}
+          <NextSeo
+            title="Meditations"
+            description="Relax with a currated colection of guided meditations by Gurudev and senior Art of Living instructors."
+          />
+          <DesignOne data={rootFolder} {...params} />
+        </>
+      );
+    case 'Design 2':
+      return (
+        <>
+          {loading && <Loader />}
+          <NextSeo
+            title="Wisdom"
+            description="Find inspiration for your life and practice with this growing curated section of inspiring talks by Gurudev!"
+          />
+          <DesignTwo data={rootFolder} {...params} />
+        </>
+      );
+    default:
+      return null;
+  }
 }

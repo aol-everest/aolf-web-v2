@@ -11,14 +11,23 @@ import { useState } from 'react';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import {
   api,
-  breakAfterTwoWords,
   breakAfterTwoWordsArray,
-  isSSR,
+  navigateToLogin,
+  timeConvert,
 } from '@utils';
-import { useQueryString } from '@hooks';
+import { useQueryString, useIntersectionObserver } from '@hooks';
 import AudioPlayerSmall from '@components/audioPlayer/audioPlayerSmall';
-import { PageLoading } from '@components/pageLoading';
 import { CONTENT_FOLDER_IDS } from '@constants';
+import { Loader } from '@components/loader';
+import {
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalAudioPlayerContext,
+  useGlobalVideoPlayerContext,
+} from '@contexts';
+import { meditatePlayEvent } from '@service';
+import HubSpotForm from './HubSpotForm';
+import { useRouter } from 'next/router';
 
 const swiperOption = {
   modules: [Navigation, Scrollbar, A11y, Pagination],
@@ -41,12 +50,16 @@ const swiperOption = {
   },
 };
 
-const rootFolderID = CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID;
-
 const GuidedMeditation = () => {
   const [accordionIndex, setAccordionIndex] = useState(0);
   const [topic, setTopic] = useQueryString('topic');
+  const router = useRouter();
+  const { id: rootFolderID } = router.query;
   const swiperRef = useRef(null);
+  const { isAuthenticated } = useAuth();
+  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
+  const { showVideoPlayer } = useGlobalVideoPlayerContext();
 
   const { data: rootFolder = {} } = useQuery({
     queryKey: ['library'],
@@ -89,16 +102,7 @@ const GuidedMeditation = () => {
     },
   });
 
-  const {
-    status,
-    isSuccess,
-    data,
-    error,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-  } = useInfiniteQuery({
+  const { isLoading: loading, data } = useQuery({
     queryKey: [
       'meditations',
       {
@@ -126,11 +130,6 @@ const GuidedMeditation = () => {
       });
       return res;
     },
-    getNextPageParam: (page) => {
-      return page.currectPage === page.lastPage
-        ? undefined
-        : page.currectPage + 1;
-    },
   });
 
   const onFilterChange = (value) => {
@@ -149,7 +148,23 @@ const GuidedMeditation = () => {
     }
   };
 
+  const meditateClickHandle = async (e, meditate) => {
+    if (e) e.preventDefault();
+    if (!isAuthenticated) {
+      navigateToLogin(router);
+    } else {
+      await meditatePlayEvent({
+        meditate,
+        showAlert,
+        showPlayer,
+        hidePlayer,
+        showVideoPlayer,
+      });
+    }
+  };
+
   const lines = breakAfterTwoWordsArray(randomMeditate.title);
+  console.log('lines', lines);
   const contentFolders = rootFolder?.folder;
 
   let listingFolders = contentFolders?.filter(
@@ -161,11 +176,16 @@ const GuidedMeditation = () => {
       folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
   );
 
-  console.log('popularFolder', popularFolder);
+  console.log('data', data);
+
+  const content =
+    popularFolder?.content?.length > 0
+      ? popularFolder?.content
+      : data?.data || [];
 
   return (
     <main class="guided-meditation">
-      {isLoading && <PageLoading />}
+      {(isLoading || loading) && <Loader />}
       <section class="banner-section">
         <div class="container">
           <div class="banner-title">
@@ -326,191 +346,79 @@ const GuidedMeditation = () => {
                 </a>
               ))}
           </div>
-          <div class="top-picks-container">
-            <div class="top-picks-content top-picks-slider swiper">
-              <div class="top-picks-header">
-                <div class="top-picks-title">Top picks</div>
-                <div class="top-picks-actions">
-                  <div
-                    className="slide-button-prev slide-button"
-                    onClick={handlePrev}
-                  >
-                    <span className="icon-aol iconaol-arrow-long-left"></span>
-                  </div>
-                  <div
-                    className="slide-button-next slide-button"
-                    onClick={handleNext}
-                  >
-                    <span className="icon-aol iconaol-arrow-long-right"></span>
+          {content.length > 0 && (
+            <div class="top-picks-container">
+              <div class="top-picks-content top-picks-slider swiper">
+                <div class="top-picks-header">
+                  <div class="top-picks-title">{topic || 'Top picks'}</div>
+                  <div class="top-picks-actions">
+                    <div
+                      className="slide-button-prev slide-button"
+                      onClick={handlePrev}
+                    >
+                      <span className="icon-aol iconaol-arrow-long-left"></span>
+                    </div>
+                    <div
+                      className="slide-button-next slide-button"
+                      onClick={handleNext}
+                    >
+                      <span className="icon-aol iconaol-arrow-long-right"></span>
+                    </div>
                   </div>
                 </div>
+                <Swiper
+                  {...swiperOption}
+                  className="reviews-slider"
+                  navigation={{
+                    prevEl: '.slide-button-prev',
+                    nextEl: '.slide-button-next',
+                  }}
+                  onInit={(swiper) => {
+                    swiper.params.navigation.prevEl = '.slide-button-prev';
+                    swiper.params.navigation.nextEl = '.slide-button-next';
+                    swiper.navigation.update();
+                  }}
+                >
+                  {content?.map((meditate, index) => {
+                    return (
+                      <SwiperSlide key={index}>
+                        <div
+                          class="swiper-slide"
+                          onClick={(e) => meditateClickHandle(e, meditate)}
+                        >
+                          <div class="top-pick-preview-area">
+                            <img
+                              src="/img/top-pick-preview1.webp"
+                              class="top-pick-img"
+                              alt="top pick"
+                              width="100%"
+                            />
+                            <div class="preview-info">
+                              <div class="play-time">
+                                {timeConvert(meditate.duration)}
+                              </div>
+                              {!meditate.accessible && (
+                                <div class="lock-info">
+                                  <span class="icon-aol iconaol-lock"></span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div class="top-pick-content-info">
+                            <div class="top-pick-title">{meditate.title}</div>
+                            <div class="top-pick-author">
+                              <span class="icon-aol iconaol-profile"></span>
+                              {meditate.primaryTeacherName}
+                            </div>
+                          </div>
+                        </div>
+                      </SwiperSlide>
+                    );
+                  })}
+                </Swiper>
               </div>
-              <Swiper
-                {...swiperOption}
-                className="reviews-slider"
-                navigation={{
-                  prevEl: '.slide-button-prev',
-                  nextEl: '.slide-button-next',
-                }}
-                onInit={(swiper) => {
-                  swiper.params.navigation.prevEl = '.slide-button-prev';
-                  swiper.params.navigation.nextEl = '.slide-button-next';
-                  swiper.navigation.update();
-                }}
-              >
-                <SwiperSlide>
-                  <div class="swiper-slide">
-                    <div class="top-pick-preview-area">
-                      <img
-                        src="/img/top-pick-preview1.webp"
-                        class="top-pick-img"
-                        alt="top pick"
-                        width="100%"
-                      />
-                      <div class="preview-info">
-                        <div class="play-time">05:53</div>
-                        <div class="lock-info">
-                          <span class="icon-aol iconaol-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="top-pick-content-info">
-                      <div class="top-pick-title">Experiencing Contentment</div>
-                      <div class="top-pick-author">
-                        <span class="icon-aol iconaol-profile"></span>
-                        Sri Sri Ravi Shankar
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div class="swiper-slide">
-                    <div class="top-pick-preview-area">
-                      <img
-                        src="/img/top-pick-preview2.webp"
-                        class="top-pick-img"
-                        alt="top pick"
-                        width="100%"
-                      />
-                      <div class="preview-info">
-                        <div class="play-time">07:17</div>
-                        <div class="lock-info">
-                          <span class="icon-aol iconaol-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="top-pick-content-info">
-                      <div class="top-pick-title">Smile that Never Fades</div>
-                      <div class="top-pick-author">
-                        <span class="icon-aol iconaol-profile"></span>
-                        Poonam Tandon
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div class="swiper-slide">
-                    <div class="top-pick-preview-area">
-                      <img
-                        src="/img/top-pick-preview3.webp"
-                        class="top-pick-img"
-                        alt="top pick"
-                        width="100%"
-                      />
-                      <div class="preview-info">
-                        <div class="play-time">16:10</div>
-                        <div class="lock-info">
-                          <span class="icon-aol iconaol-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="top-pick-content-info">
-                      <div class="top-pick-title">Observing Thoughts</div>
-                      <div class="top-pick-author">
-                        <span class="icon-aol iconaol-profile"></span>
-                        Vanitha Thulasiraman
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div class="swiper-slide">
-                    <div class="top-pick-preview-area">
-                      <img
-                        src="/img/top-pick-preview4.webp"
-                        class="top-pick-img"
-                        alt="top pick"
-                        width="100%"
-                      />
-                      <div class="preview-info">
-                        <div class="play-time">04:15</div>
-                        <div class="lock-info">
-                          <span class="icon-aol iconaol-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="top-pick-content-info">
-                      <div class="top-pick-title">Settling thoughts</div>
-                      <div class="top-pick-author">
-                        <span class="icon-aol iconaol-profile"></span>
-                        Bhushan Deodhar
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div class="swiper-slide">
-                    <div class="top-pick-preview-area">
-                      <img
-                        src="/img/top-pick-preview3.webp"
-                        class="top-pick-img"
-                        alt="top pick"
-                        width="100%"
-                      />
-                      <div class="preview-info">
-                        <div class="play-time">16:10</div>
-                        <div class="lock-info">
-                          <span class="icon-aol iconaol-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="top-pick-content-info">
-                      <div class="top-pick-title">Observing Thoughts</div>
-                      <div class="top-pick-author">
-                        <span class="icon-aol iconaol-profile"></span>
-                        Vanitha Thulasiraman
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div class="swiper-slide">
-                    <div class="top-pick-preview-area">
-                      <img
-                        src="/img/top-pick-preview4.webp"
-                        class="top-pick-img"
-                        alt="top pick"
-                        width="100%"
-                      />
-                      <div class="preview-info">
-                        <div class="play-time">04:15</div>
-                        <div class="lock-info">
-                          <span class="icon-aol iconaol-lock"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="top-pick-content-info">
-                      <div class="top-pick-title">Settling thoughts</div>
-                      <div class="top-pick-author">
-                        <span class="icon-aol iconaol-profile"></span>
-                        Bhushan Deodhar
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              </Swiper>
             </div>
-          </div>
+          )}
         </div>
       </section>
       <section class="experience-journey">
@@ -556,34 +464,7 @@ const GuidedMeditation = () => {
               </div>
             </div>
             <div class="journey-form-wrap">
-              <h3 class="form-title">FREE 7-Day Meditation Journey</h3>
-              <div class="form-item">
-                <label>Email address*</label>
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  value="olivia@untitledui.com"
-                />
-              </div>
-              <div class="form-item">
-                <label>First name*</label>
-                <input type="text" placeholder="First name" value="Olivia" />
-              </div>
-              <div class="form-item">
-                <label>Mobile number</label>
-                <input
-                  type="phone"
-                  placeholder="Mobile number"
-                  value="+1 (555) 000-0000"
-                />
-              </div>
-              <div class="form-action">
-                <input
-                  type="submit"
-                  class="btn-primary"
-                  value="Reserve my free spot"
-                />
-              </div>
+              <HubSpotForm />
             </div>
           </div>
         </div>
