@@ -208,6 +208,10 @@ main.all-courses-find {
             text-align: left;
             background: #ffffff url(/img/chevron-down.svg) no-repeat
               calc(100% - 14px) center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 35px;
           }
           .courses-filter__remove {
             background: none;
