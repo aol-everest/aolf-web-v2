@@ -22,7 +22,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
 import { Loader } from '@components';
-import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
@@ -30,7 +29,36 @@ dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = 'both';
 
-const Scheduling = () => {
+export async function getServerSideProps(context) {
+  let initialLocation = {};
+
+  try {
+    const res = await fetch(process.env.NEXT_PUBLIC_IP_INFO_API_URL);
+    const {
+      postal = null,
+      loc = null,
+      city,
+      region,
+      country,
+    } = await res.json();
+    const [lat, lng] = (loc || '').split(',');
+    initialLocation = {
+      lat,
+      lng,
+      postal,
+      locationName: [city, region, country, postal].join(', '),
+    };
+    console.log(initialLocation);
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
+  }
+
+  return {
+    props: { initialLocation },
+  };
+}
+
+const Scheduling = ({ initialLocation = null }) => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
@@ -99,13 +127,10 @@ const Scheduling = () => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
-  });
-
-  useEffect(() => {
-    if (cityFilter || locationFilter?.locationName) {
-      setShowLocationModal(false);
+    if (initialLocation && initialLocation.lat) {
+      setLocationFilter(initialLocation);
     }
-  }, [cityFilter]);
+  });
 
   useEffect(() => {
     if (selectedDates?.length) {
@@ -1354,13 +1379,6 @@ const Scheduling = () => {
             </div>
           </div>
         </section>
-
-        <LocationSearchModal
-          handleModalToggle={handleModalToggle}
-          showLocationModal={showLocationModal}
-          locationFilter={locationFilter}
-          handleLocationFilterChange={handleLocationFilterChange}
-        />
 
         <WorkshopSelectModal
           setShowWorkshopSelectModal={setShowWorkshopSelectModal}

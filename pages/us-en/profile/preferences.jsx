@@ -12,14 +12,17 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import ContentLoader from 'react-content-loader';
 import classNames from 'classnames';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
 
 const MAX_CENTER_PREFERENCE_LIMIT = 3;
 
-const CenterItem = ({ index, center, removeCenterAction }) => {
+const CenterItem = ({ index, center, removeCenterAction, goFindCourse }) => {
   const phoneNumber = joinPhoneNumbers(
     center.centerPhone1,
     center.centerPhone2,
   );
+
   return (
     <div className="center-item">
       <div className="item-top-row">
@@ -46,6 +49,11 @@ const CenterItem = ({ index, center, removeCenterAction }) => {
       <div className="center-other-info">
         <span className="icon-aol iconaol-sms"></span>
         {center.centerEmail}
+      </div>
+      <div class="action-btn">
+        <button class="submit-btn" onClick={goFindCourse}>
+          Find Courses
+        </button>
       </div>
     </div>
   );
@@ -345,6 +353,7 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
 const Preferences = () => {
   const { showModal, hideModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const {
     data = {},
@@ -401,6 +410,13 @@ const Preferences = () => {
       ),
     });
   };
+
+  const goFindCourse = (center) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/courses/${center.locationId}`,
+    });
+  };
+
   return (
     <div>
       {(isLoading || loading) && <Loader />}
@@ -422,6 +438,7 @@ const Preferences = () => {
                       removeCenterAction={removeCenterAction(
                         center.prefLocation,
                       )}
+                      goFindCourse={goFindCourse(center)}
                     ></CenterItem>
                   );
                 })}

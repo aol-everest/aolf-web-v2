@@ -946,6 +946,8 @@
         border-radius: 20px;
         padding: 20px;
         flex: 1;
+        display: flex;
+        flex-direction: column;
         &.add-new {
           display: flex;
           border: #e9e9e9 2px dashed;
@@ -1021,6 +1023,24 @@
         .icon-aol {
           font-size: 20px;
           color: #3d8be8;
+        }
+      }
+      .action-btn {
+        padding-top: 40px;
+        margin-top: auto;
+        .submit-btn {
+          background: linear-gradient(
+            102.78deg,
+            #ffd16f -37.89%,
+            #ff865b 100.28%
+          );
+          border-radius: 100px;
+          font-weight: 500;
+          font-size: 16px;
+          border: none;
+          width: 100%;
+          height: 40px;
+          color: white;
         }
       }
     }

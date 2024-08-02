@@ -20,22 +20,44 @@ import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { useSearchParams } from 'next/navigation';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
-import { useGlobalAlertContext } from '@contexts';
 import Modal from 'react-bootstrap/Modal';
-import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
-function tryJsonParse(jsonString) {
+export async function getServerSideProps(context) {
+  let initialLocation = {};
+  const ip =
+    context.req.headers['x-forwarded-for'] ||
+    context.req.connection.remoteAddress;
+
   try {
-    return JSON.parse(jsonString);
-  } catch (e) {
-    return null;
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_IP_INFO_API_URL}/${ip}?token=${process.env.NEXT_PUBLIC_IP_INFO_API_TOKEN}`,
+    );
+    const {
+      postal = null,
+      loc = null,
+      city,
+      region,
+      country,
+    } = await res.json();
+    const [lat, lng] = (loc || '').split(',');
+    initialLocation = {
+      lat,
+      lng,
+      postal,
+      locationName: [city, region, country, postal].join(', '),
+    };
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
   }
+
+  return {
+    props: { initialLocation },
+  };
 }
 
 // eslint-disable-next-line react/display-name
@@ -372,25 +394,21 @@ const WorkshopSelectModal = React.memo(
   },
 );
 
-const Scheduling = () => {
+const Scheduling = ({ initialLocation = null }) => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
-  const { showAlert } = useGlobalAlertContext();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [showLocationModal, setShowLocationModal] = useState(true);
   const [showWorkshopSelectModal, setShowWorkshopSelectModal] = useState(false);
   const [attendeeId] = useQueryState('aid');
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
     parseAsJson(),
   );
-  const location = searchParams.get('location');
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
-    parseAsJson([]),
+    parseAsJson().withDefault([]),
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
@@ -410,7 +428,6 @@ const Scheduling = () => {
   );
 
   const [teacherFilter] = useQueryState('teacher');
-  const [cityFilter, setCityFilter] = useQueryState('city');
 
   const {
     phone1,
@@ -443,13 +460,10 @@ const Scheduling = () => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
-  });
-
-  useEffect(() => {
-    if (cityFilter || locationFilter?.locationName) {
-      setShowLocationModal(false);
+    if (initialLocation && initialLocation.lat) {
+      setLocationFilter(initialLocation);
     }
-  }, [cityFilter, locationFilter]);
+  });
 
   useEffect(() => {
     if (selectedDates?.length) {
@@ -556,10 +570,8 @@ const Scheduling = () => {
       if (teacherFilter) {
         param = { ...param, teacherId: teacherFilter };
       }
-      if (cityFilter) {
-        param = { ...param, city: cityFilter };
-      }
-      if (locationFilter && !cityFilter) {
+
+      if (locationFilter) {
         const { lat, lng } = locationFilter || {};
         if (lat || lng) {
           param = {
@@ -569,7 +581,7 @@ const Scheduling = () => {
           };
         }
       }
-      if (locationFilter?.lat || cityFilter) {
+      if (locationFilter?.lat) {
         const response = await api.get({
           path: 'workshopMonthCalendar',
           param,
@@ -702,10 +714,8 @@ const Scheduling = () => {
     if (teacherFilter) {
       param = { ...param, teacherId: teacherFilter };
     }
-    if (cityFilter) {
-      param = { ...param, city: cityFilter };
-    }
-    if (locationFilter && !cityFilter) {
+
+    if (locationFilter) {
       const { lat, lng } = locationFilter || {};
       if (lat || lng) {
         param = {
@@ -756,17 +766,12 @@ const Scheduling = () => {
 
   const handleLocationFilterChange = (value) => {
     resetCalender();
-    setCityFilter(null);
+    console.log(value);
     if (value) {
       setLocationFilter(value);
     } else {
-      handleModalToggle();
       setLocationFilter(null);
     }
-  };
-
-  const handleModalToggle = () => {
-    setShowLocationModal(!showLocationModal);
   };
 
   const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
@@ -1673,19 +1678,11 @@ const Scheduling = () => {
           </div>
         </section>
 
-        <LocationSearchModal
-          handleModalToggle={handleModalToggle}
-          showLocationModal={showLocationModal}
-          locationFilter={locationFilter}
-          handleLocationFilterChange={handleLocationFilterChange}
-        />
-
         <WorkshopSelectModal
           setShowWorkshopSelectModal={setShowWorkshopSelectModal}
           getWorkshopDetails={getWorkshopDetails}
           setSelectedWorkshopId={setSelectedWorkshopId}
           setSelectedDates={setSelectedDates}
-          setShowLocationModal={setShowLocationModal}
           dateAvailable={dateAvailable}
           selectedDates={selectedDates}
           showWorkshopSelectModal={showWorkshopSelectModal}
