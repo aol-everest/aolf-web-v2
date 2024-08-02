@@ -26,7 +26,7 @@ import {
   useGlobalVideoPlayerContext,
 } from '@contexts';
 import { meditatePlayEvent } from '@service';
-import HubSpotForm from './HubSpotForm';
+import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
 
 const swiperOption = {
