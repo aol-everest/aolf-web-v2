@@ -29,9 +29,14 @@ dayjs.extend(advancedFormat);
 
 export async function getServerSideProps(context) {
   let initialLocation = {};
+  const ip =
+    context.req.headers['x-forwarded-for'] ||
+    context.req.connection.remoteAddress;
 
   try {
-    const res = await fetch(process.env.NEXT_PUBLIC_IP_INFO_API_URL);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_IP_INFO_API_URL}/${ip}?token=${process.env.NEXT_PUBLIC_IP_INFO_API_TOKEN}`,
+    );
     const {
       postal = null,
       loc = null,
@@ -46,7 +51,6 @@ export async function getServerSideProps(context) {
       postal,
       locationName: [city, region, country, postal].join(', '),
     };
-    console.log(initialLocation);
   } catch (error) {
     console.error('Failed to fetch ZIP code by IP');
   }
