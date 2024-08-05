@@ -1,11 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { getZipCodeByLatLang } from '@utils';
 import { useEffect, useRef, useState } from 'react';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
-
+import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 export const AddressSearch = ({
   filter,
   closeHandler,
@@ -14,24 +9,64 @@ export const AddressSearch = ({
   listClassName = '',
   isDefaultLocation = false,
 }) => {
+  const inputRef = useRef(null);
+
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading,
+  } = usePlacesService({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
+    options: {
+      types: ['(regions)'],
+      componentRestrictions: { country: 'us' },
+    },
+  });
   const [address, setAddress] = useState('');
+  const [isReadyForSelection, setReadyForSelection] = useState(true);
 
   const handleChange = (address) => {
+    setReadyForSelection(true);
     setAddress(address);
   };
 
-  const handleSelect = async (selected) => {
-    try {
-      setAddress(selected);
-      const res = await geocodeByAddress(selected);
-      const [locationResult] = res;
-      const { lat, lng } = await getLatLng(locationResult);
+  const handleSelect = async (selected) => {};
 
-      closeHandler({
-        lat,
-        lng,
-        locationName: locationResult.formatted_address,
-      })();
+  const renderItem = (placePrediction) => {
+    const { structured_formatting } = placePrediction;
+    console.log(placePrediction);
+    return (
+      <>
+        <div
+          class="suggestion-item smart-input--list-item"
+          role="option"
+          onClick={selectAddressAction(placePrediction)}
+        >
+          <strong>{structured_formatting.main_text}</strong>{' '}
+          <small>{structured_formatting.secondary_text}</small>
+        </div>
+      </>
+    );
+  };
+
+  const selectAddressAction = (item) => async () => {
+    try {
+      setReadyForSelection(false);
+      setAddress(item.description);
+      placesService?.getDetails(
+        {
+          fields: ['geometry'],
+          placeId: item.place_id,
+        },
+        (placeDetails) => {
+          closeHandler({
+            lat: placeDetails.geometry.location.lat(),
+            lng: placeDetails.geometry.location.lat(),
+            locationName: item.description,
+          })();
+        },
+      );
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
     }
@@ -39,59 +74,29 @@ export const AddressSearch = ({
 
   return (
     <>
-      <PlacesAutocomplete
-        value={address}
-        onChange={handleChange}
-        onSelect={handleSelect}
-        searchOptions={{
-          types: ['(regions)'],
-          componentRestrictions: { country: 'us' },
-        }}
-      >
-        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-          <div className="smart-input">
-            <input
-              className={[
-                `custom-input tw-mx-auto tw-mb-0 tw-mt-1 ${parentClass}`,
-              ]}
-              {...getInputProps({
-                placeholder,
-              })}
-            />
+      <div className="smart-input">
+        <input
+          className={[`custom-input tw-mx-auto tw-mb-0 tw-mt-1 ${parentClass}`]}
+          value={address}
+          onChange={(evt) => {
+            getPlacePredictions({ input: evt.target.value });
+            handleChange(evt.target.value);
+          }}
+          placeholder={placeholder}
+          loading={isPlacePredictionsLoading}
+        />
 
-            {suggestions.length > 0 && (
-              <div style={{ zIndex: 9 }} className={listClassName}>
-                {suggestions.map((suggestion) => {
-                  const className = suggestion.active
-                    ? 'suggestion-item--active smart-input--list-item'
-                    : 'suggestion-item smart-input--list-item';
-                  // inline style for demonstration purpose
-                  const style = suggestion.active
-                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                  return (
-                    <>
-                      <div
-                        {...getSuggestionItemProps(suggestion, {
-                          className,
-                          style,
-                        })}
-                      >
-                        <strong>
-                          {suggestion.formattedSuggestion.mainText}
-                        </strong>{' '}
-                        <small>
-                          {suggestion.formattedSuggestion.secondaryText}
-                        </small>
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-      </PlacesAutocomplete>
+        <div
+          style={{
+            zIndex: 9,
+          }}
+          className="result-list"
+        >
+          {!isPlacePredictionsLoading &&
+            isReadyForSelection &&
+            placePredictions.map(renderItem)}
+        </div>
+      </div>
     </>
   );
 };

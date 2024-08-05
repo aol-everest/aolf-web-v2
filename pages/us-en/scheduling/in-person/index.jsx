@@ -27,6 +27,24 @@ import Modal from 'react-bootstrap/Modal';
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
 
+function convertUndefinedToNull(obj) {
+  // Check if the input is an object
+  if (obj && typeof obj === 'object') {
+    // Iterate over each key in the object
+    for (const key in obj) {
+      console.log(key, obj[key]);
+      if (obj[key] === undefined) {
+        // Convert undefined to null
+        obj[key] = null;
+      } else if (typeof obj[key] === 'object') {
+        // Recursively call the function for nested objects
+        convertUndefinedToNull(obj[key]);
+      }
+    }
+  }
+  return obj;
+}
+
 export async function getServerSideProps(context) {
   let initialLocation = {};
   const ip =
@@ -40,11 +58,12 @@ export async function getServerSideProps(context) {
     const {
       postal = null,
       loc = null,
-      city,
-      region,
-      country,
-    } = await res.json();
-    const [lat, lng] = (loc || '').split(',');
+      city = null,
+      region = null,
+      country = null,
+    } = convertUndefinedToNull(await res.json());
+
+    const [lat = null, lng = null] = (loc || '').split(',');
     initialLocation = {
       lat,
       lng,
