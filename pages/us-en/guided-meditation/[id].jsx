@@ -130,6 +130,7 @@ const GuidedMeditation = () => {
       });
       return res;
     },
+    enabled: !!topic,
   });
 
   const onFilterChange = (value) => {
@@ -164,7 +165,6 @@ const GuidedMeditation = () => {
   };
 
   const lines = breakAfterTwoWordsArray(randomMeditate.title);
-  console.log('lines', lines);
   const contentFolders = rootFolder?.folder;
 
   let listingFolders = contentFolders?.filter(
@@ -175,8 +175,6 @@ const GuidedMeditation = () => {
     (folder) =>
       folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
   );
-
-  console.log('data', data);
 
   const content =
     popularFolder?.content?.length > 0
