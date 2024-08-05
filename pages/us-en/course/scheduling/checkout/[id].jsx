@@ -853,7 +853,7 @@ const SchedulingPaymentForm = ({
                           </i>
                           <div>
                             Once you're registered, you'll be able to choose a
-                            course date/time to suit you! Coursed are offered
+                            course date/time to suit you! Courses are offered
                             every weekend and throughout the week.
                           </div>
                         </div>

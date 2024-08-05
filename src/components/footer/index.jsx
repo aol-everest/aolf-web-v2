@@ -157,7 +157,7 @@ export function Footer() {
                 />
                 <ul className="nav-details">
                   <li className="nav-item">
-                    <Link href="/about">Art of Living</Link>
+                    <Link href="/us-en/about-us">Art of Living</Link>
                   </li>
                   <li className="nav-item">
                     <Link href="https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya">
