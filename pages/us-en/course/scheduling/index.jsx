@@ -92,12 +92,12 @@ const Scheduling = ({ initialLocation }) => {
   const [attendeeId] = useQueryState('aid');
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson().withDefault(initialLocation),
+    parseAsJson(),
   );
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
-    parseAsJson().withDefault([]),
+    parseAsJson(),
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
@@ -150,9 +150,9 @@ const Scheduling = ({ initialLocation }) => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
-    // if (initialLocation && initialLocation.lat) {
-    //   setLocationFilter(initialLocation);
-    // }
+    if (initialLocation && initialLocation.lat && !locationFilter) {
+      setLocationFilter(initialLocation);
+    }
   });
 
   useEffect(() => {
