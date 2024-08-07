@@ -334,7 +334,7 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
         (placeDetails) => {
           setLocation({
             latitude: placeDetails.geometry.location.lat(),
-            longitude: placeDetails.geometry.location.lat(),
+            longitude: placeDetails.geometry.location.lng(),
             address: item.description,
           });
         },

@@ -60,9 +60,10 @@ export const AddressSearch = ({
           placeId: item.place_id,
         },
         (placeDetails) => {
+          console.log(placeDetails.geometry.location);
           closeHandler({
             lat: placeDetails.geometry.location.lat(),
-            lng: placeDetails.geometry.location.lat(),
+            lng: placeDetails.geometry.location.lng(),
             locationName: item.description,
           })();
         },

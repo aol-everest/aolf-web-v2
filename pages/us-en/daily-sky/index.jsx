@@ -1,127 +1,118 @@
-import React from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@utils';
+import {
+  useAuth,
+  useGlobalAlertContext,
+  useGlobalAudioPlayerContext,
+  useGlobalVideoPlayerContext,
+} from '@contexts';
+import { navigateToLogin } from '@utils';
+import { useRouter } from 'next/router';
+import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
+import { Loader } from '@components';
+
+const timeConvert = (data) => {
+  const minutes = data % 60;
+  const hours = (data - minutes) / 60;
+
+  return String(hours).padStart(2, 0) + ':' + String(minutes).padStart(2, 0);
+};
+
+const RenderItem = ({ practice, meditateClickHandle }) => {
+  const coverImageUrl = practice.coverImage
+    ? practice.coverImage.url
+    : '/img/ds-course-preview-1.webp';
+  return (
+    <div class="ds-course-item" onClick={meditateClickHandle}>
+      <div class="ds-image-wrap">
+        <img src={coverImageUrl} alt="course" />
+      </div>
+      <div class="ds-course-header">
+        <div class="play-time">{timeConvert(practice.duration)}</div>
+        {!practice.accessible && (
+          <div class="lock-info">
+            <span class="icon-aol iconaol-lock"></span>
+          </div>
+        )}
+      </div>
+      <div class="ds-course-info">
+        <div class="ds-course-title">{practice.title}</div>
+        <div class="ds-course-author">{practice.primaryTeacherName}</div>
+      </div>
+    </div>
+  );
+};
 
 const DailySKY = () => {
+  const { isAuthenticated } = useAuth();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
+  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
+  const { showVideoPlayer } = useGlobalVideoPlayerContext();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { data: dailyPractice = [] } = useQuery({
+    queryKey: 'dailyPractice',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'dailyPractice',
+      });
+      return response.data;
+    },
+  });
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'subsciption',
+      });
+      return response.data;
+    },
+  });
+  const purchaseMembershipAction = (id) => (e) => {
+    hideAlert();
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
+  };
+
+  const meditateClickHandle = (meditate) => async (e) => {
+    if (e) e.preventDefault();
+    if (!isAuthenticated) {
+      navigateToLogin(router);
+    } else if (meditate.accessible && meditate.type === 'Course') {
+      pushRouteWithUTMQuery(router, `/us-en/learn/${meditate.sfid}`);
+    } else {
+      setLoading(true);
+      await meditatePlayEvent({
+        meditate,
+        showAlert,
+        showPlayer,
+        hidePlayer,
+        showVideoPlayer,
+        subsciptionCategories,
+        purchaseMembershipAction,
+      });
+      setLoading(false);
+    }
+  };
+
   return (
     <main class="daily-sky">
+      {loading && <Loader />}
       <section class="title-header">
         <h1 class="page-title">Daily SKY</h1>
       </section>
       <section class="section-daily-sky-courses">
         <div class="container">
           <div class="ds-course-listing">
-            <div class="ds-course-item">
-              <div class="ds-image-wrap">
-                <img src="/img/ds-course-preview-1.webp" alt="course" />
-              </div>
-              <div class="ds-course-header">
-                <div class="play-time">00:48:15</div>
-                <div class="lock-info">
-                  <span class="icon-aol iconaol-lock"></span>
-                </div>
-              </div>
-              <div class="ds-course-info">
-                <div class="ds-course-title">
-                  Daily SKY Practice with Annelies
-                </div>
-                <div class="ds-course-author">Annelies Richmond</div>
-              </div>
-            </div>
-            <div class="ds-course-item">
-              <div class="ds-image-wrap">
-                <img src="/img/ds-course-preview-2.webp" alt="course" />
-              </div>
-              <div class="ds-course-header">
-                <div class="play-time">05:53</div>
-                <div class="lock-info">
-                  <span class="icon-aol iconaol-lock"></span>
-                </div>
-              </div>
-              <div class="ds-course-info">
-                <div class="ds-course-title">
-                  Daily SKY Practice with Jim Larsen
-                </div>
-                <div class="ds-course-author">Jim Larsen</div>
-              </div>
-            </div>
-            <div class="ds-course-item">
-              <div class="ds-image-wrap">
-                <img src="/img/ds-course-preview-3.webp" alt="course" />
-              </div>
-              <div class="ds-course-header">
-                <div class="play-time">05:53</div>
-                <div class="lock-info">
-                  <span class="icon-aol iconaol-lock"></span>
-                </div>
-              </div>
-              <div class="ds-course-info">
-                <div class="ds-course-title">
-                  Daily SKY Practice with Diego (Spanish)
-                </div>
-                <div class="ds-course-author">Diego</div>
-              </div>
-            </div>
-            <div class="ds-course-item">
-              <div class="ds-image-wrap">
-                <img src="/img/ds-course-preview-4.webp" alt="course" />
-              </div>
-              <div class="ds-course-header">
-                <div class="play-time">05:53</div>
-                <div class="lock-info">
-                  <span class="icon-aol iconaol-lock"></span>
-                </div>
-              </div>
-              <div class="ds-course-info">
-                <div class="ds-course-title">
-                  Daily SKY Practice with Shobha (Spanish)
-                </div>
-                <div class="ds-course-author">Shobha</div>
-              </div>
-            </div>
-            <div class="ds-course-item">
-              <div class="ds-image-wrap">
-                <img src="/img/ds-course-preview-5.webp" alt="course" />
-              </div>
-              <div class="ds-course-header">
-                <div class="play-time">05:53</div>
-                <div class="lock-info">
-                  <span class="icon-aol iconaol-lock"></span>
-                </div>
-              </div>
-              <div class="ds-course-info">
-                <div class="ds-course-title">3 Stage Pranayama</div>
-                <div class="ds-course-author">Jim Larsen</div>
-              </div>
-            </div>
-            <div class="ds-course-item">
-              <div class="ds-image-wrap">
-                <img src="/img/ds-course-preview-6.webp" alt="course" />
-              </div>
-              <div class="ds-course-header">
-                <div class="play-time">05:53</div>
-                <div class="lock-info">
-                  <span class="icon-aol iconaol-lock"></span>
-                </div>
-              </div>
-              <div class="ds-course-info">
-                <div class="ds-course-title">Bhastrika</div>
-                <div class="ds-course-author">Jim Larsen</div>
-              </div>
-            </div>
-            <div class="ds-course-item">
-              <div class="ds-image-wrap">
-                <img src="/img/ds-course-preview-7.webp" alt="course" />
-              </div>
-              <div class="ds-course-header">
-                <div class="play-time">05:53</div>
-                <div class="lock-info">
-                  <span class="icon-aol iconaol-lock"></span>
-                </div>
-              </div>
-              <div class="ds-course-info">
-                <div class="ds-course-title">Om & SKY Breath</div>
-                <div class="ds-course-author">Jim Larsen</div>
-              </div>
-            </div>
+            {dailyPractice.map((practice) => {
+              return (
+                <RenderItem
+                  practice={practice}
+                  key={practice.sfid}
+                  meditateClickHandle={meditateClickHandle(practice)}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -153,10 +144,16 @@ const DailySKY = () => {
             <div class="app-donwload-details">
               <h4>Download the Journey App</h4>
               <div class="store-list">
-                <a href="#">
+                <a
+                  target="_blank"
+                  href="https://apps.apple.com/us/app/art-of-living-journey/id1469587414"
+                >
                   <img src="/img/mobile-app-store-ios.webp" alt="app store" />
                 </a>
-                <a href="#">
+                <a
+                  target="_blank"
+                  href="https://play.google.com/store/apps/details?id=com.aol.app&hl=en_US"
+                >
                   <img
                     src="/img/mobile-app-store-android.webp"
                     alt="google play"
