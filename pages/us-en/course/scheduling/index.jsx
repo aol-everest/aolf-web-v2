@@ -92,12 +92,12 @@ const Scheduling = ({ initialLocation }) => {
   const [attendeeId] = useQueryState('aid');
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson(initialLocation),
+    parseAsJson().withDefault(initialLocation),
   );
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
-    parseAsJson([]),
+    parseAsJson().withDefault([]),
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
