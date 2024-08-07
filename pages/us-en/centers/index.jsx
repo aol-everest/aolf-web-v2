@@ -11,10 +11,6 @@ import { useRouter } from 'next/router';
 import LinesEllipsis from 'react-lines-ellipsis';
 import Highlighter from 'react-highlight-words';
 import { Loader } from '@components/loader';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
@@ -62,21 +58,6 @@ const STORIES = [
     authorTitle: 'Chef & private caterer, Austin, TX',
     authorPic: '/img/Testimony-Tiffany.webp',
   },
-];
-
-const SEARCH_PARAM = [
-  'postalOrZipCode',
-  'centerName',
-  'streetAddress1',
-  'streetAddress2',
-  'stateProvince',
-  'city',
-];
-const SEARCH_PARAM_WITHOUT_ADDRESS = [
-  'postalOrZipCode',
-  'centerName',
-  'stateProvince',
-  'city',
 ];
 
 function convertUndefinedToNull(obj) {
