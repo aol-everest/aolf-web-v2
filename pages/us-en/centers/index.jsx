@@ -272,7 +272,7 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
   });
   const [isReadyForSelection, setReadyForSelection] = useState(true);
   const [location, setLocation] = useState({
-    address: '',
+    address: initialLocation.locationName,
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
   });
@@ -410,15 +410,18 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
                 </svg>
               </button>
             )}
-            {!isPlacePredictionsLoading && isReadyForSelection && (
-              <div
-                style={{
-                  zIndex: 9,
-                }}
-              >
-                {placePredictions.map(renderItem)}
-              </div>
-            )}
+            {!isPlacePredictionsLoading &&
+              isReadyForSelection &&
+              placePredictions &&
+              placePredictions.length > 0 && (
+                <div
+                  style={{
+                    zIndex: 9,
+                  }}
+                >
+                  {placePredictions.map(renderItem)}
+                </div>
+              )}
           </div>
 
           <div className="search-listing">
