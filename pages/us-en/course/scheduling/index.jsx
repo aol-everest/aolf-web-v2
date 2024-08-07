@@ -29,6 +29,24 @@ dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = 'both';
 
+function convertUndefinedToNull(obj) {
+  // Check if the input is an object
+  if (obj && typeof obj === 'object') {
+    // Iterate over each key in the object
+    for (const key in obj) {
+      console.log(key, obj[key]);
+      if (obj[key] === undefined) {
+        // Convert undefined to null
+        obj[key] = null;
+      } else if (typeof obj[key] === 'object') {
+        // Recursively call the function for nested objects
+        convertUndefinedToNull(obj[key]);
+      }
+    }
+  }
+  return obj;
+}
+
 export async function getServerSideProps(context) {
   let initialLocation = {};
   const ip =
@@ -42,11 +60,12 @@ export async function getServerSideProps(context) {
     const {
       postal = null,
       loc = null,
-      city,
-      region,
-      country,
-    } = await res.json();
-    const [lat, lng] = (loc || '').split(',');
+      city = null,
+      region = null,
+      country = null,
+    } = convertUndefinedToNull(await res.json());
+
+    const [lat = null, lng = null] = (loc || '').split(',');
     initialLocation = {
       lat,
       lng,
@@ -62,7 +81,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Scheduling = ({ initialLocation = null }) => {
+const Scheduling = ({ initialLocation }) => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
@@ -78,7 +97,7 @@ const Scheduling = ({ initialLocation = null }) => {
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
-    parseAsJson([]),
+    parseAsJson(),
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
@@ -131,7 +150,7 @@ const Scheduling = ({ initialLocation = null }) => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
-    if (initialLocation && initialLocation.lat) {
+    if (initialLocation && initialLocation.lat && !locationFilter) {
       setLocationFilter(initialLocation);
     }
   });

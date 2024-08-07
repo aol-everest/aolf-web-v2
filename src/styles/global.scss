@@ -173,9 +173,11 @@ main {
     margin-top: -13px;
     padding-top: 2px;
   }
-  .smart-input--list-item {
-    background: white;
-  }
+}
+.smart-input--list-item {
+  background: white;
+  background-color: rgb(255, 255, 255);
+  cursor: pointer;
 }
 .input-search-wrap {
   .search-input {
