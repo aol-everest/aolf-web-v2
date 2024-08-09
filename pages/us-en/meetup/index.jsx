@@ -956,6 +956,7 @@ const Meetup = () => {
                 }
                 closeEvent={onFilterChange('timeZoneFilter')}
                 label="TimeZone"
+                parentClassName="upward"
               >
                 {({ closeHandler }) => (
                   <>
@@ -998,7 +999,7 @@ const Meetup = () => {
                 buttonText={instructorFilter ? instructorFilter.label : null}
                 closeEvent={onFilterChange('instructorFilter')}
                 label="Instructor"
-                parentClassName="instructor"
+                parentClassName="instructor upward"
               >
                 {({ closeHandler }) => (
                   <SmartInput

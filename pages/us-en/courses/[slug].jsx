@@ -882,6 +882,7 @@ const Course = () => {
                 }
                 closeEvent={onFilterChange('timeZoneFilter')}
                 label="Time Zone"
+                parentClassName="upward"
               >
                 {({ closeHandler }) => (
                   <>
@@ -924,6 +925,7 @@ const Course = () => {
                 buttonText={instructorFilter ? instructorFilter.label : null}
                 closeEvent={onFilterChange('instructorFilter')}
                 label="Instructor"
+                parentClassName="upward"
               >
                 {({ closeHandler }) => (
                   <SmartInput

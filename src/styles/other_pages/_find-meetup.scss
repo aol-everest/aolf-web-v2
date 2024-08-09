@@ -72,13 +72,12 @@ main.find-meetup {
       gap: 12px;
       max-width: 316px;
       flex: 1;
-      /*
       @media screen and (min-width: 992px) {
+        max-height: 90vh;
+        top: 5vh;
         position: sticky;
-        top: 10px;
-        max-height: calc(100vh - 20px);
-        overflow-y: auto;
-      }*/
+        overflow: auto;
+      }
       .filter-cancel-button,
       .filter-save-button {
         display: none;
@@ -197,9 +196,19 @@ main.find-meetup {
             box-shadow:
               0px 8px 8px -4px #10182808,
               0px 20px 24px -4px #10182814;
-            top: calc(100% + 12px);
+            top: 100%;
             &::before {
               display: none;
+            }
+          }
+          &.upward {
+            .courses-filter__wrapper-list {
+              top: auto !important;
+              bottom: 44px;
+              .smart-input--list {
+                order: -1;
+                margin: 0 0 5px 0 !important;
+              }
             }
           }
         }
