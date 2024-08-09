@@ -184,89 +184,91 @@ const GuidedMeditation = (props) => {
       : data?.data || [];
 
   return (
-    <main class="guided-meditation">
+    <main className="guided-meditation">
       {loading && <Loader />}
-      <section class="banner-section">
-        <div class="container">
-          <div class="banner-title">
+      <section className="banner-section">
+        <div className="container">
+          <div className="banner-title">
             {lines.map((line, index) => (
-              <>
+              <span key={index}>
                 {line}
                 {index < lines.length - 1 && <br />}
-              </>
+              </span>
             ))}
           </div>
-          <div class="banner-desc">{randomMeditate.description}</div>
-          <div class="banner-audio">
+          <div className="banner-desc">{randomMeditate.description}</div>
+          <div className="banner-audio">
             <AudioPlayerSmall
               audioSrc={randomMeditate.track?.fields?.file?.url}
             />
           </div>
         </div>
       </section>
-      <section class="benefits-meditation">
-        <div class="container">
-          <h2 class="section-title">Benefits of meditation</h2>
-          <div class="section-desc">
+      <section className="benefits-meditation">
+        <div className="container">
+          <h2 className="section-title">Benefits of meditation</h2>
+          <div className="section-desc">
             Science shows that consistent meditation practice can
           </div>
-          <div class="benefits-list">
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-focus"></span>
+          <div className="benefits-list">
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-focus"></span>
               </div>
-              <div class="benefit-text">Increase focus</div>
+              <div className="benefit-text">Increase focus</div>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-mindfulness"></span>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-mindfulness"></span>
               </div>
-              <div class="benefit-text">Calm the mind</div>
+              <div className="benefit-text">Calm the mind</div>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-sleep"></span>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-sleep"></span>
               </div>
-              <div class="benefit-text">Improve sleep</div>
+              <div className="benefit-text">Improve sleep</div>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-lighting"></span>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-lighting"></span>
               </div>
-              <div class="benefit-text">Boost energy</div>
+              <div className="benefit-text">Boost energy</div>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-reduce-stress"></span>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-reduce-stress"></span>
               </div>
-              <div class="benefit-text">Reduce stress</div>
+              <div className="benefit-text">Reduce stress</div>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-brain"></span>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-brain"></span>
               </div>
-              <div class="benefit-text">Foster greater mindfulness</div>
+              <div className="benefit-text">Foster greater mindfulness</div>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-charity"></span>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-charity"></span>
               </div>
-              <div class="benefit-text">Enhance mind-body health</div>
+              <div className="benefit-text">Enhance mind-body health</div>
             </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">
-                <span class="icon-aol iconaol-emotion"></span>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-emotion"></span>
               </div>
-              <div class="benefit-text">Increase positive emotions</div>
+              <div className="benefit-text">Increase positive emotions</div>
             </div>
           </div>
         </div>
       </section>
-      <section class="section-why-try">
-        <div class="container">
-          <div class="why-try-content-box">
-            <div class="cb-info-container">
-              <h2 class="section-title">Why try Art of Living meditations?</h2>
+      <section className="section-why-try">
+        <div className="container">
+          <div className="why-try-content-box">
+            <div className="cb-info-container">
+              <h2 className="section-title">
+                Why try Art of Living meditations?
+              </h2>
               <p>
                 Gurudev is the founder of Art of Living and a world-renowned
                 master of meditation. Our guided meditations and techniques are
@@ -280,15 +282,15 @@ const GuidedMeditation = (props) => {
                 </strong>
               </p>
             </div>
-            <div class="cb-image-container">
+            <div className="cb-image-container">
               <img src="/img/gurudev-talking.webp" alt="gurudev" width="100%" />
             </div>
           </div>
         </div>
       </section>
-      <section class="section-quote">
-        <div class="container">
-          <div class="quote-top-icon">
+      <section className="section-quote">
+        <div className="container">
+          <div className="quote-top-icon">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={106}
@@ -323,24 +325,24 @@ const GuidedMeditation = (props) => {
               </defs>
             </svg>
           </div>
-          <div class="quote-text">
+          <div className="quote-text">
             "You've been meditating even before your birth, when you were in
             your mother's womb, doing nothing-just being. That is meditation.
             There's a natural tendency in every human being to desire that state
             of absolute comfort."
           </div>
-          <div class="quote-author">Gurudev Sri Sri Ravi Shankar</div>
+          <div className="quote-author">Gurudev Sri Sri Ravi Shankar</div>
         </div>
       </section>
-      <section class="section-top-pics">
-        <div class="container">
-          <h2 class="section-title">Meditation is for everyone</h2>
-          <div class="section-desc">Guided meditations for any mood.</div>
-          <div class="categories-pills">
+      <section className="section-top-pics">
+        <div className="container">
+          <h2 className="section-title">Meditation is for everyone</h2>
+          <div className="section-desc">Guided meditations for any mood.</div>
+          <div className="categories-pills">
             {meditationCategory &&
               meditationCategory.map((category) => (
                 <a
-                  class={`cat-pill ${topic === category ? 'active' : ''}`}
+                  className={`cat-pill ${topic === category ? 'active' : ''}`}
                   key={category}
                   onClick={() =>
                     onFilterChange(topic === category ? '' : category)
@@ -351,11 +353,11 @@ const GuidedMeditation = (props) => {
               ))}
           </div>
           {content.length > 0 && (
-            <div class="top-picks-container">
-              <div class="top-picks-content top-picks-slider swiper">
-                <div class="top-picks-header">
-                  <div class="top-picks-title">{topic || 'Top picks'}</div>
-                  <div class="top-picks-actions">
+            <div className="top-picks-container">
+              <div className="top-picks-content top-picks-slider swiper">
+                <div className="top-picks-header">
+                  <div className="top-picks-title">{topic || 'Top picks'}</div>
+                  <div className="top-picks-actions">
                     <div
                       className="slide-button-prev slide-button"
                       onClick={handlePrev}
@@ -387,34 +389,36 @@ const GuidedMeditation = (props) => {
                     return (
                       <SwiperSlide key={index}>
                         <div
-                          class="swiper-slide"
+                          className="swiper-slide"
                           onClick={(e) => meditateClickHandle(e, meditate)}
                         >
-                          <div class="top-pick-preview-area">
+                          <div className="top-pick-preview-area">
                             <img
                               src={
                                 meditate?.coverImage?.url ||
                                 '/img/top-pick-preview1.webp'
                               }
-                              class="top-pick-img"
+                              className="top-pick-img"
                               alt="top pick"
                               width="100%"
                             />
-                            <div class="preview-info">
-                              <div class="play-time">
+                            <div className="preview-info">
+                              <div className="play-time">
                                 {timeConvert(meditate.duration)}
                               </div>
                               {!meditate.accessible && (
-                                <div class="lock-info">
-                                  <span class="icon-aol iconaol-lock"></span>
+                                <div className="lock-info">
+                                  <span className="icon-aol iconaol-lock"></span>
                                 </div>
                               )}
                             </div>
                           </div>
-                          <div class="top-pick-content-info">
-                            <div class="top-pick-title">{meditate.title}</div>
-                            <div class="top-pick-author">
-                              <span class="icon-aol iconaol-profile"></span>
+                          <div className="top-pick-content-info">
+                            <div className="top-pick-title">
+                              {meditate.title}
+                            </div>
+                            <div className="top-pick-author">
+                              <span className="icon-aol iconaol-profile"></span>
                               {meditate.primaryTeacherName}
                             </div>
                           </div>
@@ -428,96 +432,102 @@ const GuidedMeditation = (props) => {
           )}
         </div>
       </section>
-      <section class="experience-journey">
-        <div class="container">
-          <div class="experience-journey-content-wrap">
-            <div class="ej-content-info">
-              <h2 class="section-title">
+      <section className="experience-journey">
+        <div className="container">
+          <div className="experience-journey-content-wrap">
+            <div className="ej-content-info">
+              <h2 className="section-title">
                 Experience deep calm & inner stillness
               </h2>
-              <div class="section-desc">
+              <div className="section-desc">
                 <strong>Join the 7-day on-demand meditation journey</strong> to
                 deeply relax and reconnect with inner peace, calm, and joy. Dive
                 into a profound restorative experience, guided by world-renowned
                 meditation master, Gurudev.
               </div>
-              <div class="experience-features">
-                <div class="ef-item">
-                  <div class="ef-icon">
-                    <span class="icon-aol iconaol-emotion"></span>
+              <div className="experience-features">
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-emotion"></span>
                   </div>
-                  <div class="ef-text">Receive a new meditation each day</div>
+                  <div className="ef-text">
+                    Receive a new meditation each day
+                  </div>
                 </div>
-                <div class="ef-item">
-                  <div class="ef-icon">
-                    <span class="icon-aol iconaol-sleep"></span>
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-sleep"></span>
                   </div>
-                  <div class="ef-text">Acquire new meditation tips</div>
+                  <div className="ef-text">Acquire new meditation tips</div>
                 </div>
-                <div class="ef-item">
-                  <div class="ef-icon">
-                    <span class="icon-aol iconaol-chat-flower"></span>
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-chat-flower"></span>
                   </div>
-                  <div class="ef-text">
+                  <div className="ef-text">
                     Release stress & reconnect with calm
                   </div>
                 </div>
-                <div class="ef-item">
-                  <div class="ef-icon">
-                    <span class="icon-aol iconaol-key"></span>
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-key"></span>
                   </div>
-                  <div class="ef-text">Gain access to valuable insights</div>
+                  <div className="ef-text">
+                    Gain access to valuable insights
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="journey-form-wrap">
+            <div className="journey-form-wrap">
               <HubSpotForm />
             </div>
           </div>
         </div>
       </section>
-      <section class="featured-in">
-        <div class="container">
-          <h2 class="section-title">Featured In</h2>
-          <div class="featured-listing">
-            <div class="featured-item">
-              <div class="featured-item-logo">
+      <section className="featured-in">
+        <div className="container">
+          <h2 className="section-title">Featured In</h2>
+          <div className="featured-listing">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img src="/img/WP.webp" alt="washington post" />
               </div>
-              <div class="featured-item-text">"Like fresh air to millions"</div>
+              <div className="featured-item-text">
+                "Like fresh air to millions"
+              </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img src="/img/Harvard.webp" alt="Harvard Health Publishing" />
               </div>
-              <div class="featured-item-text">
+              <div className="featured-item-text">
                 "Shows promise in providing relief for depression"
               </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img src="/img/Yoga.webp" alt="Yoga Journal" />
               </div>
-              <div class="featured-item-text">
+              <div className="featured-item-text">
                 "May be the fastest growing spiritual practice on the planet"
               </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img src="/img/CNN.webp" alt="CNN" />
               </div>
-              <div class="featured-item-text">"Life Changing"</div>
+              <div className="featured-item-text">"Life Changing"</div>
             </div>
           </div>
         </div>
       </section>
-      <section class="section-testimonials">
-        <div class="container">
-          <div class="top-text">TESTIMONIALS</div>
-          <h2 class="section-title">What people are sharing</h2>
-          <div class="testimonials-listing">
-            <div class="testimonial-item">
-              <div class="author-picutre">
+      <section className="section-testimonials">
+        <div className="container">
+          <div className="top-text">TESTIMONIALS</div>
+          <h2 className="section-title">What people are sharing</h2>
+          <div className="testimonials-listing">
+            <div className="testimonial-item">
+              <div className="author-picutre">
                 <img
                   src="/img/testimony-adinah.webp"
                   alt="Adinah"
@@ -525,14 +535,14 @@ const GuidedMeditation = (props) => {
                   width="70"
                 />
               </div>
-              <div class="testimony-text">
+              <div className="testimony-text">
                 “Wow. It made a significant impression on me, was very very
                 enjoyable, at times profound, and I plan to keep practicing.”
               </div>
-              <div class="author-name">Adinah</div>
+              <div className="author-name">Adinah</div>
             </div>
-            <div class="testimonial-item">
-              <div class="author-picutre">
+            <div className="testimonial-item">
+              <div className="author-picutre">
                 <img
                   src="/img/testimony-joanna.webp"
                   alt="Joanna"
@@ -540,15 +550,15 @@ const GuidedMeditation = (props) => {
                   width="70"
                 />
               </div>
-              <div class="testimony-text">
+              <div className="testimony-text">
                 “It was awesome! I regained my mental health. And I also feel so
                 much lighter and happier. I got out of my funk that was getting
                 me unmotivated.”
               </div>
-              <div class="author-name">Joanna</div>
+              <div className="author-name">Joanna</div>
             </div>
-            <div class="testimonial-item">
-              <div class="author-picutre">
+            <div className="testimonial-item">
+              <div className="author-picutre">
                 <img
                   src="/img/testimony-vijitha.webp"
                   alt="Vijitha"
@@ -556,28 +566,28 @@ const GuidedMeditation = (props) => {
                   width="70"
                 />
               </div>
-              <div class="testimony-text">
+              <div className="testimony-text">
                 “It was liberating. Any time my mind is wiggling between the
                 past and the future, I notice it and have found a hack to bring
                 myself back to the present.”
               </div>
-              <div class="author-name">Vijitha</div>
+              <div className="author-name">Vijitha</div>
             </div>
           </div>
         </div>
       </section>
-      <section class="section-faq">
-        <div class="container">
-          <h2 class="section-title">Frequently Asked Questions</h2>
-          <div id="accordion" class="accordion">
+      <section className="section-faq">
+        <div className="container">
+          <h2 className="section-title">Frequently Asked Questions</h2>
+          <div id="accordion" className="accordion">
             <div
-              class="card"
+              className="card"
               onClick={() => setAccordionIndex(accordionIndex === 0 ? null : 0)}
             >
-              <div class="card-header" id="headingOne">
-                <h5 class="mb-0">
+              <div className="card-header" id="headingOne">
+                <h5 className="mb-0">
                   <button
-                    class="btn btn-link"
+                    className="btn btn-link"
                     data-toggle="collapse"
                     data-target="#collapseOne"
                     aria-expanded={accordionIndex === 0 ? true : false}
@@ -590,11 +600,11 @@ const GuidedMeditation = (props) => {
 
               <div
                 id="collapseOne"
-                class={`collapse ${accordionIndex === 0 ? 'show' : ''}`}
+                className={`collapse ${accordionIndex === 0 ? 'show' : ''}`}
                 aria-labelledby="headingOne"
                 data-parent="#accordion"
               >
-                <div class="card-body">
+                <div className="card-body">
                   Yes! Everyone benefits from meditation. It is accessible to
                   everyone. There are SO many reasons people start
                   meditating—physical, mental, emotional, and more. The benefits
@@ -604,13 +614,13 @@ const GuidedMeditation = (props) => {
               </div>
             </div>
             <div
-              class="card"
+              className="card"
               onClick={() => setAccordionIndex(accordionIndex === 1 ? null : 1)}
             >
-              <div class="card-header" id="headingThree">
-                <h5 class="mb-0">
+              <div className="card-header" id="headingThree">
+                <h5 className="mb-0">
                   <button
-                    class="btn btn-link collapsed"
+                    className="btn btn-link collapsed"
                     data-toggle="collapse"
                     data-target="#collapseThree"
                     aria-expanded={accordionIndex === 1 ? true : false}
@@ -622,11 +632,11 @@ const GuidedMeditation = (props) => {
               </div>
               <div
                 id="collapseThree"
-                class={`collapse ${accordionIndex === 1 ? 'show' : ''}`}
+                className={`collapse ${accordionIndex === 1 ? 'show' : ''}`}
                 aria-labelledby="headingThree"
                 data-parent="#accordion"
               >
-                <div class="card-body">
+                <div className="card-body">
                   Yes! Everyone benefits from meditation. It is accessible to
                   everyone. There are SO many reasons people start
                   meditating—physical, mental, emotional, and more. The benefits
@@ -636,13 +646,13 @@ const GuidedMeditation = (props) => {
               </div>
             </div>
             <div
-              class="card"
+              className="card"
               onClick={() => setAccordionIndex(accordionIndex === 2 ? null : 2)}
             >
-              <div class="card-header" id="headingFour">
-                <h5 class="mb-0">
+              <div className="card-header" id="headingFour">
+                <h5 className="mb-0">
                   <button
-                    class="btn btn-link collapsed"
+                    className="btn btn-link collapsed"
                     data-toggle="collapse"
                     data-target="#collapseFour"
                     aria-expanded={accordionIndex === 2 ? true : false}
@@ -654,11 +664,11 @@ const GuidedMeditation = (props) => {
               </div>
               <div
                 id="collapseFour"
-                class={`collapse ${accordionIndex === 2 ? 'show' : ''}`}
+                className={`collapse ${accordionIndex === 2 ? 'show' : ''}`}
                 aria-labelledby="headingFour"
                 data-parent="#accordion"
               >
-                <div class="card-body">
+                <div className="card-body">
                   Yes! Everyone benefits from meditation. It is accessible to
                   everyone. There are SO many reasons people start
                   meditating—physical, mental, emotional, and more. The benefits
@@ -668,13 +678,13 @@ const GuidedMeditation = (props) => {
               </div>
             </div>
             <div
-              class="card"
+              className="card"
               onClick={() => setAccordionIndex(accordionIndex === 3 ? null : 3)}
             >
-              <div class="card-header" id="headingFive">
-                <h5 class="mb-0">
+              <div className="card-header" id="headingFive">
+                <h5 className="mb-0">
                   <button
-                    class="btn btn-link collapsed"
+                    className="btn btn-link collapsed"
                     data-toggle="collapse"
                     data-target="#collapseFive"
                     aria-expanded={accordionIndex === 3 ? true : false}
@@ -686,11 +696,11 @@ const GuidedMeditation = (props) => {
               </div>
               <div
                 id="collapseFive"
-                class={`collapse ${accordionIndex === 3 ? 'show' : ''}`}
+                className={`collapse ${accordionIndex === 3 ? 'show' : ''}`}
                 aria-labelledby="headingFive"
                 data-parent="#accordion"
               >
-                <div class="card-body">
+                <div className="card-body">
                   Yes! Everyone benefits from meditation. It is accessible to
                   everyone. There are SO many reasons people start
                   meditating—physical, mental, emotional, and more. The benefits
@@ -700,13 +710,13 @@ const GuidedMeditation = (props) => {
               </div>
             </div>
             <div
-              class="card"
+              className="card"
               onClick={() => setAccordionIndex(accordionIndex === 4 ? null : 4)}
             >
-              <div class="card-header" id="headingSix">
-                <h5 class="mb-0">
+              <div className="card-header" id="headingSix">
+                <h5 className="mb-0">
                   <button
-                    class="btn btn-link collapsed"
+                    className="btn btn-link collapsed"
                     data-toggle="collapse"
                     data-target="#collapseSix"
                     aria-expanded={accordionIndex === 4 ? true : false}
@@ -718,11 +728,11 @@ const GuidedMeditation = (props) => {
               </div>
               <div
                 id="collapseSix"
-                class={`collapse ${accordionIndex === 4 ? 'show' : ''}`}
+                className={`collapse ${accordionIndex === 4 ? 'show' : ''}`}
                 aria-labelledby="headingSix"
                 data-parent="#accordion"
               >
-                <div class="card-body">
+                <div className="card-body">
                   Yes! Everyone benefits from meditation. It is accessible to
                   everyone. There are SO many reasons people start
                   meditating—physical, mental, emotional, and more. The benefits
@@ -734,28 +744,28 @@ const GuidedMeditation = (props) => {
           </div>
         </div>
       </section>
-      <section class="section-key-highlights">
-        <div class="container">
-          <div class="key-highlights">
-            <div class="key-item">
-              <div class="key-item--title">42</div>
-              <div class="key-item--desc">Years of transforming lives</div>
+      <section className="section-key-highlights">
+        <div className="container">
+          <div className="key-highlights">
+            <div className="key-item">
+              <div className="key-item--title">42</div>
+              <div className="key-item--desc">Years of transforming lives</div>
             </div>
-            <div class="key-item">
-              <div class="key-item--title">180</div>
-              <div class="key-item--desc">
+            <div className="key-item">
+              <div className="key-item--title">180</div>
+              <div className="key-item--desc">
                 Countries where our programs made a difference
               </div>
             </div>
-            <div class="key-item">
-              <div class="key-item--title">500M+</div>
-              <div class="key-item--desc">
+            <div className="key-item">
+              <div className="key-item--title">500M+</div>
+              <div className="key-item--desc">
                 Lives touched through our courses & events
               </div>
             </div>
-            <div class="key-item">
-              <div class="key-item--title">10,000+</div>
-              <div class="key-item--desc">Centers worldwide</div>
+            <div className="key-item">
+              <div className="key-item--title">10,000+</div>
+              <div className="key-item--desc">Centers worldwide</div>
             </div>
           </div>
         </div>
