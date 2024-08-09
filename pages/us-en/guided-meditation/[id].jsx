@@ -450,13 +450,13 @@ const GuidedMeditation = (props) => {
                 </div>
                 <div class="ef-item">
                   <div class="ef-icon">
-                    <span class="icon-aol iconaol-chat-flower"></span>
+                    <span class="icon-aol iconaol-sleep"></span>
                   </div>
                   <div class="ef-text">Acquire new meditation tips</div>
                 </div>
                 <div class="ef-item">
                   <div class="ef-icon">
-                    <span class="icon-aol iconaol-sleep"></span>
+                    <span class="icon-aol iconaol-chat-flower"></span>
                   </div>
                   <div class="ef-text">
                     Release stress & reconnect with calm
