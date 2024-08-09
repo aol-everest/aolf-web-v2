@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useState } from 'react';
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   api,
   breakAfterTwoWordsArray,
@@ -56,12 +56,8 @@ export const getServerSideProps = async (context) => {
     path: 'randomMeditation',
   });
 
-  const audioVideoDetails = await fetchContentfulDataDetails(
-    response?.data?.contentfulId || '',
-  );
-
   return {
-    props: { randomMeditate: { ...response.data, ...audioVideoDetails } },
+    props: { randomMeditateData: response.data },
   };
 };
 
@@ -75,7 +71,18 @@ const GuidedMeditation = (props) => {
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
-  const { randomMeditate = {} } = props;
+  const { randomMeditateData = {} } = props;
+  const [randomMeditate, setRandomMeditate] = useState({});
+
+  useEffect(() => {
+    const getContentfulData = async () => {
+      const audioVideoDetails = await fetchContentfulDataDetails(
+        randomMeditateData?.contentfulId || '',
+      );
+      setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
+    };
+    getContentfulData();
+  }, []);
 
   const { data: rootFolder = {} } = useQuery({
     queryKey: ['library'],
