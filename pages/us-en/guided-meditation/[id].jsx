@@ -28,6 +28,7 @@ import {
 import { meditatePlayEvent } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
+import { fetchContentfulDataDetails } from '@components/contentful';
 
 const swiperOption = {
   modules: [Navigation, Scrollbar, A11y, Pagination],
@@ -50,7 +51,21 @@ const swiperOption = {
   },
 };
 
-const GuidedMeditation = () => {
+export const getServerSideProps = async (context) => {
+  const response = await api.get({
+    path: 'randomMeditation',
+  });
+
+  const audioVideoDetails = await fetchContentfulDataDetails(
+    response?.data?.contentfulId || '',
+  );
+
+  return {
+    props: { randomMeditate: { ...response.data, ...audioVideoDetails } },
+  };
+};
+
+const GuidedMeditation = (props) => {
   const [accordionIndex, setAccordionIndex] = useState(0);
   const [topic, setTopic] = useQueryString('topic');
   const router = useRouter();
@@ -60,6 +75,7 @@ const GuidedMeditation = () => {
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
+  const { randomMeditate = {} } = props;
 
   const { data: rootFolder = {} } = useQuery({
     queryKey: ['library'],
@@ -85,20 +101,6 @@ const GuidedMeditation = () => {
         path: 'meditationCategory',
       });
       return response.data;
-    },
-  });
-
-  const { data: randomMeditate = {}, isLoading } = useQuery({
-    queryKey: 'randomMeditation',
-    queryFn: async () => {
-      const response = await api.get({
-        path: 'randomMeditation',
-      });
-      const results = await api.get({
-        path: 'meditationDetail',
-        param: { id: response?.data?.sfid },
-      });
-      return { ...response.data, ...results?.data };
     },
   });
 
@@ -183,7 +185,7 @@ const GuidedMeditation = () => {
 
   return (
     <main class="guided-meditation">
-      {(isLoading || loading) && <Loader />}
+      {loading && <Loader />}
       <section class="banner-section">
         <div class="container">
           <div class="banner-title">
@@ -196,7 +198,9 @@ const GuidedMeditation = () => {
           </div>
           <div class="banner-desc">{randomMeditate.description}</div>
           <div class="banner-audio">
-            <AudioPlayerSmall audioSrc={randomMeditate.track?.url} />
+            <AudioPlayerSmall
+              audioSrc={randomMeditate.track?.fields?.file?.url}
+            />
           </div>
         </div>
       </section>
@@ -338,7 +342,9 @@ const GuidedMeditation = () => {
                 <a
                   class={`cat-pill ${topic === category ? 'active' : ''}`}
                   key={category}
-                  onClick={() => onFilterChange(category)}
+                  onClick={() =>
+                    onFilterChange(topic === category ? '' : category)
+                  }
                 >
                   {category}
                 </a>
@@ -386,7 +392,10 @@ const GuidedMeditation = () => {
                         >
                           <div class="top-pick-preview-area">
                             <img
-                              src="/img/top-pick-preview1.webp"
+                              src={
+                                meditate?.coverImage?.url ||
+                                '/img/top-pick-preview1.webp'
+                              }
                               class="top-pick-img"
                               alt="top pick"
                               width="100%"

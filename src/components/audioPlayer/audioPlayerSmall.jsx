@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { isSSR } from '@utils';
 
 const AudioPlayerSmall = ({ audioSrc }) => {
-  console.log('audioSrc', audioSrc);
-
   const [trackProgress, setTrackProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [dragging, setDragging] = useState(false);
