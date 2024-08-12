@@ -91,6 +91,7 @@ const GuidedMeditation = (props) => {
         path: 'library',
         param: {
           folderId: rootFolderID,
+          accessible: true,
         },
       });
       const [rootFolder] = response.data.folder;
@@ -124,6 +125,7 @@ const GuidedMeditation = (props) => {
         size: 12,
         deviceType: 'Web',
         folderName: 'Meditations',
+        accessible: true,
       };
 
       if (topic) {
