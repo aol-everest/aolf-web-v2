@@ -303,8 +303,8 @@ const WebinarSkyCheckout = () => {
           <aside className="tw-relative tw-whitespace-normal tw-text-center">
             <img src="/img/ic-timer-white.svg" alt="timer" />
             <span>
-              A ${workshop.earlyBirdFeeIncreasing.increasingFee} late fee will
-              apply starting {workshop.earlyBirdFeeIncreasing.increasingBy}
+              Fee increases by ${workshop.earlyBirdFeeIncreasing.increasingFee}{' '}
+              starting {workshop.earlyBirdFeeIncreasing.increasingBy}
             </span>
           </aside>
         )}
