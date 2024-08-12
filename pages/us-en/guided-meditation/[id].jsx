@@ -25,7 +25,7 @@ import {
   useGlobalAudioPlayerContext,
   useGlobalVideoPlayerContext,
 } from '@contexts';
-import { meditatePlayEvent } from '@service';
+import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
 import { fetchContentfulDataDetails } from '@components/contentful';
@@ -158,6 +158,20 @@ const GuidedMeditation = (props) => {
     }
   };
 
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'subsciption',
+      });
+      return response.data;
+    },
+  });
+  const purchaseMembershipAction = (id) => (e) => {
+    hideAlert();
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
+  };
+
   const meditateClickHandle = async (e, meditate) => {
     if (e) e.preventDefault();
     if (!isAuthenticated) {
@@ -169,6 +183,8 @@ const GuidedMeditation = (props) => {
         showPlayer,
         hidePlayer,
         showVideoPlayer,
+        subsciptionCategories,
+        purchaseMembershipAction,
       });
     }
   };
