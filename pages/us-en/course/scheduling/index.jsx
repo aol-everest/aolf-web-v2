@@ -55,7 +55,7 @@ export async function getServerSideProps(context) {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_IP_INFO_API_URL}/${ip}?token=${process.env.NEXT_PUBLIC_IP_INFO_API_TOKEN}`,
+      `${process.env.IP_INFO_API_URL}/${ip}?token=${process.env.IP_INFO_API_TOKEN}`,
     );
     const {
       postal = null,
