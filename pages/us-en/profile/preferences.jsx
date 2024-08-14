@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { withAuth, withUserInfo } from '@hoc';
 import { useQuery } from '@tanstack/react-query';
@@ -5,21 +6,80 @@ import { Loader } from '@components/loader';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import { MODAL_TYPES } from '@constants';
 import { useGlobalModalContext } from '@contexts';
-import { useGeolocation } from '@uidotdev/usehooks';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
 import ContentLoader from 'react-content-loader';
 import classNames from 'classnames';
+import { pushRouteWithUTMQuery } from '@service';
+import { useRouter } from 'next/router';
+import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 
 const MAX_CENTER_PREFERENCE_LIMIT = 3;
 
-const CenterItem = ({ index, center, removeCenterAction }) => {
+function convertUndefinedToNull(obj) {
+  // Check if the input is an object
+  if (obj && typeof obj === 'object') {
+    // Iterate over each key in the object
+    for (const key in obj) {
+      console.log(key, obj[key]);
+      if (obj[key] === undefined) {
+        // Convert undefined to null
+        obj[key] = null;
+      } else if (typeof obj[key] === 'object') {
+        // Recursively call the function for nested objects
+        convertUndefinedToNull(obj[key]);
+      }
+    }
+  }
+  return obj;
+}
+
+export async function getServerSideProps(context) {
+  let initialLocation = {};
+  const ip =
+    context.req.headers['x-forwarded-for'] ||
+    context.req.connection.remoteAddress;
+
+  try {
+    const res = await fetch(
+      `${process.env.IP_INFO_API_URL}/${ip}?token=${process.env.IP_INFO_API_TOKEN}`,
+    );
+    const {
+      postal = null,
+      loc = null,
+      city = null,
+      region = null,
+      country = null,
+    } = convertUndefinedToNull(await res.json());
+
+    const [lat = null, lng = null] = (loc || '').split(',');
+    initialLocation = {
+      lat,
+      lng,
+      postal,
+      locationName: [city, region, country, postal].join(', '),
+    };
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
+  }
+
+  const initialCenters = await api.get({
+    path: 'getAllCenters',
+    param: {
+      lat: initialLocation.lat || 40.73061,
+      lng: initialLocation.lng || -73.935242,
+    },
+  });
+
+  return {
+    props: { initialLocation, initialCenters: initialCenters.data },
+  };
+}
+
+const CenterItem = ({ index, center, removeCenterAction, goFindCourse }) => {
   const phoneNumber = joinPhoneNumbers(
     center.centerPhone1,
     center.centerPhone2,
   );
+
   return (
     <div className="center-item">
       <div className="item-top-row">
@@ -46,6 +106,11 @@ const CenterItem = ({ index, center, removeCenterAction }) => {
       <div className="center-other-info">
         <span className="icon-aol iconaol-sms"></span>
         {center.centerEmail}
+      </div>
+      <div class="action-btn">
+        <button class="submit-btn" onClick={goFindCourse}>
+          Find Courses
+        </button>
       </div>
     </div>
   );
@@ -93,35 +158,44 @@ const AddCenterItem = ({ center, isSelected, selectCenterAction }) => {
   );
 };
 
-const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
-  const { latitude, longitude, loading } = useGeolocation();
+const AddCenterModel = ({
+  hideModal,
+  addCenterAction,
+  oldPreference,
+  initialLocation,
+}) => {
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading,
+  } = usePlacesService({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
+    options: {
+      types: ['(regions)'],
+      componentRestrictions: { country: 'us' },
+    },
+  });
+  const [isReadyForSelection, setReadyForSelection] = useState(true);
   const [selectedCenter, setSelectedCenter] = useState([]);
   const allowedSelectionLimit =
     MAX_CENTER_PREFERENCE_LIMIT - oldPreference.length;
 
   const [location, setLocation] = useState({
-    address: '',
-    latitude: null,
-    longitude: null,
+    address: initialLocation.locationName,
+    latitude: initialLocation?.lat,
+    longitude: initialLocation?.lng,
   });
 
-  useEffect(() => {
-    setLocation((prevState) => ({
-      ...prevState,
-      latitude: latitude || null,
-      longitude: longitude || null,
-    }));
-  }, [latitude, longitude]);
   const placeholder = location.address || 'Search...';
 
   const handleChange = (address) => {
+    setReadyForSelection(true);
     setLocation((prevLocation) => ({
       ...prevLocation,
       address: address,
     }));
   };
-
-  const [isItemSelected, setIsItemSelected] = useState(false);
 
   const selectCenterAction = (id) => () => {
     if (selectedCenter.includes(id)) {
@@ -135,26 +209,11 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
     }
   };
 
-  const handleSelect = (address) => {
-    geocodeByAddress(address)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => {
-        const { lat, lng } = latLng;
-        setLocation((prevLocation) => ({
-          ...prevLocation,
-          address: address,
-          latitude: lat,
-          longitude: lng,
-        }));
-        setIsItemSelected(true);
-      })
-      .catch((error) => console.error('Error', error));
-  };
   const clearSearch = () => {
     setLocation({
       address: '',
-      latitude: latitude || null,
-      longitude: longitude || null,
+      latitude: null,
+      longitude: null,
     });
   };
   const { data: allCenters, isLoading } = useQuery({
@@ -212,6 +271,43 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
     return !oldPreference.some((pc) => pc.locationId === center.sfid);
   });
 
+  const renderItem = (placePrediction) => {
+    const { structured_formatting } = placePrediction;
+    return (
+      <>
+        <div
+          class="suggestion-item smart-input--list-item"
+          role="option"
+          onClick={selectAddressAction(placePrediction)}
+        >
+          <strong>{structured_formatting.main_text}</strong>{' '}
+          <small>{structured_formatting.secondary_text}</small>
+        </div>
+      </>
+    );
+  };
+
+  const selectAddressAction = (item) => async () => {
+    try {
+      setReadyForSelection(false);
+      placesService?.getDetails(
+        {
+          fields: ['geometry'],
+          placeId: item.place_id,
+        },
+        (placeDetails) => {
+          setLocation({
+            latitude: placeDetails.geometry.location.lat(),
+            longitude: placeDetails.geometry.location.lng(),
+            address: item.description,
+          });
+        },
+      );
+    } catch (error) {
+      console.log(error); // eslint-disable-line no-console
+    }
+  };
+
   return (
     <div
       className="modal-dialog modal-dialog-centered modal-lg"
@@ -237,81 +333,52 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
             more
           </div>
           <div className="input-search-wrap">
-            <PlacesAutocomplete
-              value={location.address}
-              onChange={handleChange}
-              onSelect={handleSelect}
-              searchOptions={{
-                types: ['(regions)'],
-                componentRestrictions: { country: 'us' },
-              }}
-            >
-              {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-                <div className="search-input-wrap">
-                  <input
-                    id="search-field"
-                    value={location.address}
-                    className="search-input"
-                    {...getInputProps({
-                      placeholder,
-                    })}
-                  />
-                  {location.address && (
-                    <button className="search-clear" onClick={clearSearch}>
-                      <svg
-                        fill="#9698a6"
-                        height="16px"
-                        width="16px"
-                        version="1.1"
-                        id="Capa_1"
-                        viewBox="0 0 490 490"
-                      >
-                        <polygon
-                          points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
+            <div className="search-input-wrap">
+              <input
+                id="search-field"
+                className="search-input"
+                value={location.address}
+                onChange={(evt) => {
+                  getPlacePredictions({ input: evt.target.value });
+                  handleChange(evt.target.value);
+                }}
+                placeholder={placeholder}
+                loading={isPlacePredictionsLoading}
+              />
+              {location.address && (
+                <button className="search-clear" onClick={clearSearch}>
+                  <svg
+                    fill="#9698a6"
+                    height="16px"
+                    width="16px"
+                    version="1.1"
+                    id="Capa_1"
+                    viewBox="0 0 490 490"
+                  >
+                    <polygon
+                      points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
               489.292,457.678 277.331,245.004 489.292,32.337 "
-                        />
-                      </svg>
-                    </button>
-                  )}
-
-                  {!!suggestions.length && (
-                    <div className="tw-z-10">
-                      {suggestions.map((suggestion) => {
-                        const className = suggestion.active
-                          ? 'suggestion-item--active smart-input--list-item'
-                          : 'suggestion-item smart-input--list-item';
-                        // inline style for demonstration purpose
-                        const style = suggestion.active
-                          ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                          : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                        return (
-                          <>
-                            <div
-                              {...getSuggestionItemProps(suggestion, {
-                                className,
-                                style,
-                              })}
-                            >
-                              <strong>
-                                {suggestion.formattedSuggestion.mainText}
-                              </strong>{' '}
-                              <small>
-                                {suggestion.formattedSuggestion.secondaryText}
-                              </small>
-                            </div>
-                          </>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
+                    />
+                  </svg>
+                </button>
               )}
-            </PlacesAutocomplete>
+              {!isPlacePredictionsLoading &&
+                isReadyForSelection &&
+                placePredictions &&
+                placePredictions.length > 0 && (
+                  <div
+                    style={{
+                      zIndex: 9,
+                    }}
+                  >
+                    {placePredictions.map(renderItem)}
+                  </div>
+                )}
+            </div>
           </div>
           <div className="centers-listing">
-            {(isLoading || loading) && renderLoader()}
+            {isLoading && renderLoader()}
             {!isLoading &&
-              !loading &&
               allCentersFiltered &&
               allCentersFiltered.map((center) => {
                 const isSelected =
@@ -342,9 +409,10 @@ const AddCenterModel = ({ hideModal, addCenterAction, oldPreference }) => {
   );
 };
 
-const Preferences = () => {
+const Preferences = ({ initialLocation = null, initialCenters }) => {
   const { showModal, hideModal } = useGlobalModalContext();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const {
     data = {},
@@ -397,10 +465,19 @@ const Preferences = () => {
           hideModal={hideModal}
           addCenterAction={addCenterAction}
           oldPreference={data.locationPref}
+          initialLocation={initialLocation}
+          initialCenters={initialCenters}
         />
       ),
     });
   };
+
+  const goFindCourse = (center) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/centers/courses/${center.locationId}`,
+    });
+  };
+
   return (
     <div>
       {(isLoading || loading) && <Loader />}
@@ -422,6 +499,7 @@ const Preferences = () => {
                       removeCenterAction={removeCenterAction(
                         center.prefLocation,
                       )}
+                      goFindCourse={goFindCourse(center)}
                     ></CenterItem>
                   );
                 })}

@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-  COURSE_TYPES,
-  COURSE_MODES,
-  MODAL_TYPES,
-  ABBRS,
-  WORKSHOP_MODE,
-} from '@constants';
+import { COURSE_TYPES, COURSE_MODES, ABBRS, WORKSHOP_MODE } from '@constants';
 import { useAuth, useGlobalModalContext } from '@contexts';
 import { pushRouteWithUTMQuery } from '@service';
 import { priceCalculation, tConvert } from '@utils';
@@ -432,8 +426,8 @@ export const PriceCard = ({
           <div className="early-bird-banner">
             {earlyBirdFeeIncreasing && (
               <p>
-                <FaRegClock className="fa" /> A $
-                {earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                <FaRegClock className="fa" />
+                Fee increases by ${earlyBirdFeeIncreasing.increasingFee}{' '}
                 starting{' '}
                 {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)

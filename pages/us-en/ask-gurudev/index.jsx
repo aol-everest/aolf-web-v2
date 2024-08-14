@@ -166,9 +166,8 @@ export default function AskGurudev() {
         return 'Sorry, there is a limited set of topics we can help with and we may not be able to answer this question. Try something else?';
       case 'suicide':
         return "Hi there, below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call <a href='tel:(855) 202-4400'>(855) 202-4400</a>";
-      default: {
-        return `${query ? "Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!" : ''}`;
-      }
+      default:
+        return '';
     }
   };
 
@@ -199,14 +198,16 @@ export default function AskGurudev() {
           <div className="tab-content categories-tab-content" id="nav-anger">
             {isEmpty && query && !loading ? (
               <EmptyResults />
-            ) : !initialPageLoad && query ? (
+            ) : !initialPageLoad && !query ? (
               <div className="disclaimer">{<CustomMessage />}</div>
             ) : (
-              <div className="disclaimer">
-                Hi there 😊 Type a question, press enter, and we’ll match it to
-                wisdom from Gurudev Sri Sri Ravi Shankar. What are you wondering
-                about?
-              </div>
+              initialPageLoad && (
+                <div className="disclaimer">
+                  Hi there 😊 Type a question, press enter, and we’ll match it
+                  to wisdom from Gurudev Sri Sri Ravi Shankar. What are you
+                  wondering about?
+                </div>
+              )
             )}
 
             {loading && <Loader />}
@@ -216,6 +217,7 @@ export default function AskGurudev() {
                 handleVoteSelect={handleVoteSelect}
                 selectedVotes={selectedVotes}
                 selectedPageIndex={selectedPageIndex}
+                query={query}
               />
             )}
           </div>

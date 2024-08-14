@@ -32,7 +32,7 @@ export const meditatePlayEvent = async ({
 }) => {
   try {
     if (!meditate.accessible) {
-      const allSubscriptions = subsciptionCategories.reduce(
+      const allSubscriptions = subsciptionCategories?.reduce(
         (accumulator, currentValue) => {
           return {
             ...accumulator,
@@ -41,7 +41,10 @@ export const meditatePlayEvent = async ({
         },
         {},
       );
-      if (allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]) {
+      if (
+        allSubscriptions &&
+        allSubscriptions[MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value]
+      ) {
         showAlert(ALERT_TYPES.CUSTOM_ALERT, {
           className: 'retreat-prerequisite-big meditation-digital-membership',
           title: 'Go deeper with the Digital Membership',

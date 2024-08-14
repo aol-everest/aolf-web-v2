@@ -49,7 +49,7 @@ Passwordless.configure({
       userVerification: 'required',
     },
   },
-  debug: console.debug,
+  // debug: console.debug,
 });
 Amplify.configure({
   Auth: {

@@ -48,7 +48,7 @@ export const DesignOne = ({
     },
   });
 
-  const { data: dailyPractice = [] } = useQuery({
+  /* const { data: dailyPractice = [] } = useQuery({
     queryKey: 'dailyPractice',
     queryFn: async () => {
       const response = await api.get({
@@ -56,7 +56,7 @@ export const DesignOne = ({
       });
       return response.data;
     },
-  });
+  }); */
 
   let favouriteContentOnly = [];
   const contentFolders = data.folder.map((folder) => {
@@ -291,7 +291,7 @@ export const DesignOne = ({
           </div>
         </div>
       </section>
-      {dailyPractice && dailyPractice.length > 0 && (
+      {/* {dailyPractice && dailyPractice.length > 0 && (
         <section className="browse-category most-popular">
           <p className="title-slider">Daily Practice</p>
           <Swiper {...swiperOption}>
@@ -345,7 +345,7 @@ export const DesignOne = ({
             ))}
           </Swiper>
         </section>
-      )}
+      )} */}
       <section className="browse-category most-popular">
         <p className="title-slider">Browse by Category</p>
         <Swiper {...swiperOption}>

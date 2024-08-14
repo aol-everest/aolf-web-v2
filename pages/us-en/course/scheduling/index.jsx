@@ -22,7 +22,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
 import { Loader } from '@components';
-import LocationSearchModal from '@components/scheduleLocationFilter/LocationSearchModal';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
@@ -30,7 +29,59 @@ dayjs.extend(advancedFormat);
 
 const COURSE_MODES_BOTH = 'both';
 
-const Scheduling = () => {
+function convertUndefinedToNull(obj) {
+  // Check if the input is an object
+  if (obj && typeof obj === 'object') {
+    // Iterate over each key in the object
+    for (const key in obj) {
+      console.log(key, obj[key]);
+      if (obj[key] === undefined) {
+        // Convert undefined to null
+        obj[key] = null;
+      } else if (typeof obj[key] === 'object') {
+        // Recursively call the function for nested objects
+        convertUndefinedToNull(obj[key]);
+      }
+    }
+  }
+  return obj;
+}
+
+export async function getServerSideProps(context) {
+  let initialLocation = {};
+  const ip =
+    context.req.headers['x-forwarded-for'] ||
+    context.req.connection.remoteAddress;
+
+  try {
+    const res = await fetch(
+      `${process.env.IP_INFO_API_URL}/${ip}?token=${process.env.IP_INFO_API_TOKEN}`,
+    );
+    const {
+      postal = null,
+      loc = null,
+      city = null,
+      region = null,
+      country = null,
+    } = convertUndefinedToNull(await res.json());
+
+    const [lat = null, lng = null] = (loc || '').split(',');
+    initialLocation = {
+      lat,
+      lng,
+      postal,
+      locationName: [city, region, country, postal].join(', '),
+    };
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
+  }
+
+  return {
+    props: { initialLocation },
+  };
+}
+
+const Scheduling = ({ initialLocation }) => {
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
@@ -46,7 +97,7 @@ const Scheduling = () => {
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
-    parseAsJson([]),
+    parseAsJson(),
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
@@ -99,13 +150,10 @@ const Scheduling = () => {
       name: 'course_search_scheduling',
       course_type: courseTypeFilter || COURSE_TYPES.SKY_BREATH_MEDITATION.code,
     });
-  });
-
-  useEffect(() => {
-    if (cityFilter || locationFilter?.locationName) {
-      setShowLocationModal(false);
+    if (initialLocation && initialLocation.lat && !locationFilter) {
+      setLocationFilter(initialLocation);
     }
-  }, [cityFilter]);
+  });
 
   useEffect(() => {
     if (selectedDates?.length) {
@@ -1354,13 +1402,6 @@ const Scheduling = () => {
             </div>
           </div>
         </section>
-
-        <LocationSearchModal
-          handleModalToggle={handleModalToggle}
-          showLocationModal={showLocationModal}
-          locationFilter={locationFilter}
-          handleLocationFilterChange={handleLocationFilterChange}
-        />
 
         <WorkshopSelectModal
           setShowWorkshopSelectModal={setShowWorkshopSelectModal}

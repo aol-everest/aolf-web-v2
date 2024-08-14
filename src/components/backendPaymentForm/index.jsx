@@ -794,8 +794,8 @@ export const BackendPaymentForm = ({
                 />
                 {earlyBirdFeeIncreasing && (
                   <p>
-                    A ${earlyBirdFeeIncreasing.increasingFee} late fee will
-                    apply starting {earlyBirdFeeIncreasing.increasingBy}
+                    Fee increases by ${earlyBirdFeeIncreasing.increasingFee}{' '}
+                    starting {earlyBirdFeeIncreasing.increasingBy}
                   </p>
                 )}
                 {isUsableCreditAvailable && (

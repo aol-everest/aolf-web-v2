@@ -7,6 +7,7 @@ const SearchResultsList = ({
   selectedVotes,
   handleVoteSelect,
   selectedPageIndex,
+  query,
 }) => {
   const [playingId, setPlayingId] = useState(null);
   return (
@@ -18,6 +19,7 @@ const SearchResultsList = ({
         handleVoteSelect={handleVoteSelect}
         selectedVotes={selectedVotes}
         selectedPageIndex={selectedPageIndex}
+        query={query}
       />
     </AnimatePresence>
   );

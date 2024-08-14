@@ -19,7 +19,7 @@ const Footer = ({ results, setSelectedPageIndex, selectedPageIndex }) => {
         </a>
       </div>
       <div class="view-other-answers">
-        <span>View more wisdom</span>
+        <span>View other answers</span>
       </div>
       <div className="answer-pagination">
         <ul>

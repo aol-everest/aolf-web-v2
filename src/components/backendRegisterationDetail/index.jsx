@@ -138,7 +138,7 @@ export function BackendRegisterationDetail({
               )}
               {earlyBirdFeeIncreasing && (
                 <p>
-                  A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                  Fee increases by ${earlyBirdFeeIncreasing.increasingFee}{' '}
                   starting {earlyBirdFeeIncreasing.increasingBy}
                 </p>
               )}
