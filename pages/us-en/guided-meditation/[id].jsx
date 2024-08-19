@@ -9,15 +9,9 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import {
-  api,
-  breakAfterTwoWordsArray,
-  navigateToLogin,
-  timeConvert,
-} from '@utils';
+import { api, navigateToLogin, timeConvert } from '@utils';
 import { useQueryString, useIntersectionObserver } from '@hooks';
 import AudioPlayerSmall from '@components/audioPlayer/audioPlayerSmall';
-import { CONTENT_FOLDER_IDS } from '@constants';
 import { Loader } from '@components/loader';
 import {
   useAuth,
@@ -191,7 +185,6 @@ const GuidedMeditation = (props) => {
     }
   };
 
-  const lines = breakAfterTwoWordsArray(randomMeditate.title);
   const contentFolders = rootFolder?.folder;
 
   let listingFolders = contentFolders?.filter(
@@ -245,15 +238,13 @@ const GuidedMeditation = (props) => {
       {loading && <Loader />}
       <section className="banner-section">
         <div className="container">
-          <div className="banner-title">
-            {lines.map((line, index) => (
-              <span key={index}>
-                {line}
-                {index < lines.length - 1 && <br />}
-              </span>
-            ))}
+          <div className="banner-title">{`Your Guide 
+          to Meditation`}</div>
+          <div className="banner-desc">
+            Meditation is the delicate art of doing nothing and letting go of
+            all effort to reconnect with the serenity that is your very nature,
+            to feel revived, refreshed, and restored again
           </div>
-          <div className="banner-desc">{randomMeditate.description}</div>
           <div className="banner-audio">
             <AudioPlayerSmall
               audioSrc={randomMeditate.track?.fields?.file?.url}
@@ -516,15 +507,15 @@ const GuidedMeditation = (props) => {
                   <div className="ef-icon">
                     <span className="icon-aol iconaol-sleep"></span>
                   </div>
-                  <div className="ef-text">Acquire new meditation tips</div>
+                  <div className="ef-text">
+                    Release stress & reconnect with calm
+                  </div>
                 </div>
                 <div className="ef-item">
                   <div className="ef-icon">
                     <span className="icon-aol iconaol-chat-flower"></span>
                   </div>
-                  <div className="ef-text">
-                    Release stress & reconnect with calm
-                  </div>
+                  <div className="ef-text">Acquire new meditation tips</div>
                 </div>
                 <div className="ef-item">
                   <div className="ef-icon">

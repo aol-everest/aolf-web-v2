@@ -477,7 +477,10 @@ const Checkout = () => {
             <img src="/img/ic-timer-white.svg" alt="timer" />
             <span>
               Fee increases by ${workshop.earlyBirdFeeIncreasing.increasingFee}{' '}
-              starting {workshop.earlyBirdFeeIncreasing.increasingBy}
+              starting{' '}
+              {dayjs
+                .utc(workshop.earlyBirdFeeIncreasing.increasingByDate)
+                .format('MMM D, YYYY')}
             </span>
           </aside>
         )}
