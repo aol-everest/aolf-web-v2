@@ -17,7 +17,11 @@ import { RegisterPanel } from './RegisterPanel';
 import { ResearchFindingSource } from './ResearchFindingSource';
 import { ResearchPagination } from './ResearchPagination';
 
-export const SKYHappinessRetreat = ({ data, mode: courseViewMode }) => {
+export const SKYHappinessRetreat = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const { showAlert } = useGlobalAlertContext();
 
   const showResearchModal = (e) => {
@@ -203,7 +207,10 @@ export const SKYHappinessRetreat = ({ data, mode: courseViewMode }) => {
           <div className="container">
             <div className="col-lg-10 p-0 m-auto">
               <Element name="registerNowBlock">
-                <RegisterPanel workshop={data} />
+                <RegisterPanel
+                  workshop={data}
+                  handleRegister={handleRegister()}
+                />
               </Element>
             </div>
           </div>

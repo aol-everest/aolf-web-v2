@@ -11,7 +11,11 @@ import { RegisterPanel } from './RegisterPanel';
 import queryString from 'query-string';
 import { navigateToLogin } from '@utils';
 
-export const SanyamCourse = ({ data, mode: courseViewMode }) => {
+export const SanyamCourse = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const { showModal } = useGlobalModalContext();
   const { isAuthenticated = false } = useAuth();
   const router = useRouter();
@@ -27,26 +31,6 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
         courseType: 'SANYAM_COURSE',
       },
     });
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (isAuthenticated || isGuestCheckoutEnabled) {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
-        query: {
-          ctype: productTypeId,
-          page: 'c-o',
-        },
-      });
-    } else {
-      navigateToLogin(
-        router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-      );
-    }
   };
 
   return (
@@ -93,7 +77,7 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
                     <button
                       type="button"
                       className="btn_box_secondary about-course-button"
-                      onClick={handleRegister}
+                      onClick={handleRegister()}
                     >
                       Register
                     </button>
@@ -414,7 +398,7 @@ export const SanyamCourse = ({ data, mode: courseViewMode }) => {
 
         <section className="offer offer--sanyam sanyam__section">
           <Element name="registerNowBlock">
-            <RegisterPanel workshop={data} />
+            <RegisterPanel workshop={data} handleRegister={handleRegister()} />
           </Element>
         </section>
 

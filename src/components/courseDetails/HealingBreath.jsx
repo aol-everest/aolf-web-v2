@@ -20,7 +20,11 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-export const HealingBreath = ({ data, mode: courseViewMode }) => {
+export const HealingBreath = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const swiperOption = {
     modules: [Pagination, A11y],
     slidesPerView: 1,
@@ -54,26 +58,6 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
     productTypeId,
   } = data || {};
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (isAuthenticated || isGuestCheckoutEnabled) {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
-        query: {
-          ctype: productTypeId,
-          page: 'c-o',
-        },
-      });
-    } else {
-      navigateToLogin(
-        router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-      );
-    }
-  };
-
   return (
     <>
       <main className="the-sky-program">
@@ -97,7 +81,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
                   <div className="registration-wrap">
                     <button
                       className="register-button mt-2"
-                      onClick={handleRegister}
+                      onClick={handleRegister()}
                     >
                       Register Now
                     </button>
@@ -568,7 +552,7 @@ export const HealingBreath = ({ data, mode: courseViewMode }) => {
       <HideOn divID="third" showOnPageInit={false}>
         <CourseBottomCard
           workshop={data}
-          onRegister={handleRegister}
+          onRegister={handleRegister()}
           courseViewMode={courseViewMode}
         />
       </HideOn>

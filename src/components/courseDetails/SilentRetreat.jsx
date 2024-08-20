@@ -44,41 +44,13 @@ const swiperOption = {
   },
 };
 
-export const SilentRetreat = ({ data, mode: courseViewMode }) => {
-  const { sfid, title, mode, productTypeId, isGuestCheckoutEnabled } =
-    data || {};
-  const router = useRouter();
-  const { isAuthenticated = false } = useAuth();
-  const { showModal } = useGlobalModalContext();
+export const SilentRetreat = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
+  const { sfid, title } = data || {};
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (sfid) {
-      if (isAuthenticated || isGuestCheckoutEnabled) {
-        pushRouteWithUTMQuery(router, {
-          pathname: `/us-en/course/checkout/${sfid}`,
-          query: {
-            ctype: productTypeId,
-            page: 'c-o',
-          },
-        });
-      } else {
-        navigateToLogin(
-          router,
-          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-            router.query,
-          )}`,
-        );
-      }
-    } else {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling`,
-        query: {
-          courseType: 'SILENT_RETREAT',
-        },
-      });
-    }
-  };
   return (
     <>
       <main className="course-filter art-of-silence">
@@ -87,6 +59,7 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
             <div className="container">
               <div className="courses-title">Courses</div>
               <div className="banner-title">
+                hhhh
                 {title || 'Art of Living Part 2'}
               </div>
               <div className="banner-description">
@@ -96,7 +69,7 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
                 <div className="hero-register-button-wrapper">
                   <button
                     className="hero-register-button"
-                    onClick={handleRegister}
+                    onClick={handleRegister('SILENT_RETREAT')}
                   >
                     Register Now <FaArrowRightLong className="fa-solid" />
                   </button>
@@ -105,7 +78,11 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
           {sfid && (
-            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+            <PriceCard
+              workshop={data}
+              courseViewMode={courseViewMode}
+              handleRegister={handleRegister('SILENT_RETREAT')}
+            />
           )}
           <div className="container samadhi-featuers">
             <div className="feature-box">
@@ -267,7 +244,10 @@ export const SilentRetreat = ({ data, mode: courseViewMode }) => {
               day is carefully structured to offer a transformative and relaxing
               experience, a true vacation for your body, mind, and soul.
             </div>
-            <button className="enroll-btn" onClick={handleRegister}>
+            <button
+              className="enroll-btn"
+              onClick={handleRegister('SILENT_RETREAT')}
+            >
               Enroll Now →
             </button>
           </div>

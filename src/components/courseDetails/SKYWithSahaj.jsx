@@ -20,7 +20,11 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
+export const SKYWithSahaj = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
   const router = useRouter();
@@ -47,26 +51,6 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
   };
 
   const { title, sfid, productTypeId, isGuestCheckoutEnabled } = data || {};
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (isAuthenticated || isGuestCheckoutEnabled) {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
-        query: {
-          ctype: productTypeId,
-          page: 'c-o',
-        },
-      });
-    } else {
-      navigateToLogin(
-        router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-      );
-    }
-  };
 
   const ContextAwareToggle = ({ children, eventKey, callback }) => {
     const currentEventKey = useContext(AccordionContext);
@@ -109,7 +93,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 <div className="hero-register-button-wrapper">
                   <button
                     className="hero-register-button"
-                    onClick={handleRegister}
+                    onClick={handleRegister()}
                   >
                     Register Now <FaArrowRightLong className="fa-solid" />
                   </button>
@@ -118,7 +102,11 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
           {sfid && (
-            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+            <PriceCard
+              workshop={data}
+              courseViewMode={courseViewMode}
+              handleRegister={handleRegister()}
+            />
           )}
           <div className="container samadhi-featuers">
             <div className="feature-box">
@@ -602,7 +590,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                   <span>${fee}</span>
                 </div>
               </div>
-              <button className="enroll-btn" onClick={handleRegister}>
+              <button className="enroll-btn" onClick={handleRegister()}>
                 Enroll Now →
               </button>
             </div>
@@ -688,7 +676,7 @@ export const SKYWithSahaj = ({ data, mode: courseViewMode }) => {
                 </div>
               </div>
               <div className="bar-right">
-                <button className="register-button" onClick={handleRegister}>
+                <button className="register-button" onClick={handleRegister()}>
                   Register Now <FaArrowRightLong className="fa-solid" />
                 </button>
               </div>

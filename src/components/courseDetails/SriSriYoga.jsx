@@ -11,20 +11,9 @@ import { CourseBottomCard } from './CourseBottomCard';
 import Style from './CourseDetails.module.scss';
 import CourseDetailsCard from './CourseDetailsCard';
 
-export const SriSriYoga = ({ data, mode: courseViewMode }) => {
+export const SriSriYoga = ({ data, mode: courseViewMode, handleRegister }) => {
   const [activeSlider, setActiveSlider] = useState(0);
   const router = useRouter();
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/checkout/${data.sfid}`,
-      query: {
-        ctype: data.productTypeId,
-        page: 'c-o',
-      },
-    });
-  };
 
   const handleSliderBulletClick = (index) => {
     setActiveSlider(index);
@@ -241,7 +230,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                 <button
                   type="button"
                   className="btn-secondary program-banner__button register-button"
-                  onClick={handleRegister}
+                  onClick={handleRegister()}
                 >
                   Register Today
                 </button>
@@ -555,7 +544,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
                   <button
                     type="button"
                     className="btn-secondary program-inspiration__button program-inspiration__button_desktop register-button"
-                    onClick={handleRegister}
+                    onClick={handleRegister()}
                   >
                     Let's Get Started
                   </button>
@@ -634,7 +623,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode }) => {
               <button
                 type="button"
                 className="btn-secondary program-inspiration__button program-inspiration__button_mobile"
-                onClick={handleRegister}
+                onClick={handleRegister()}
               >
                 Let's Get Started
               </button>

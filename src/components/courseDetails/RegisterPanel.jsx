@@ -12,9 +12,8 @@ import { navigateToLogin } from '@utils';
 
 dayjs.extend(utc);
 
-export const RegisterPanel = ({ workshop }) => {
+export const RegisterPanel = ({ workshop, handleRegister }) => {
   const { isAuthenticated = false, profile } = useAuth();
-  const { showModal } = useGlobalModalContext();
   const router = useRouter();
   const { fee, delfee } = priceCalculation({ workshop });
 
@@ -53,26 +52,6 @@ export const RegisterPanel = ({ workshop }) => {
     COURSE_TYPES.SANYAM_COURSE.value.indexOf(workshop.productTypeId) >= 0;
   const isBlessingsCourse =
     COURSE_TYPES.BLESSINGS_COURSE.value.indexOf(workshop.productTypeId) >= 0;
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (isAuthenticated || isGuestCheckoutEnabled) {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
-        query: {
-          ctype: productTypeId,
-          page: 'c-o',
-        },
-      });
-    } else {
-      navigateToLogin(
-        router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-      );
-    }
-  };
 
   const purchaseMembershipAction = (id) => (e) => {
     if (e) e.preventDefault();

@@ -5,7 +5,11 @@ import { CourseBottomCard } from './CourseBottomCard';
 import { RegisterPanel } from './RegisterPanel';
 import { WORKSHOP_MODE } from '@constants';
 
-export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
+export const BlessingsCourse = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const { title, aosCountRequisite, businessRules = [] } = data || {};
 
   const aosCount =
@@ -326,7 +330,10 @@ export const BlessingsCourse = ({ data, mode: courseViewMode }) => {
               </h6>
             </div>
             <Element name="registerNowBlock">
-              <RegisterPanel workshop={data} />
+              <RegisterPanel
+                workshop={data}
+                handleRegister={handleRegister()}
+              />
             </Element>
           </div>
         </section>

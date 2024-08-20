@@ -10,10 +10,6 @@ import {
   COURSE_TYPES,
   WORKSHOP_MODE,
 } from '@constants';
-import { useAuth, useGlobalModalContext } from '@contexts';
-import { pushRouteWithUTMQuery } from '@service';
-import { useRouter } from 'next/router';
-import queryString from 'query-string';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import { priceCalculation } from '@utils';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
@@ -44,41 +40,13 @@ const swiperOption = {
     },
   },
 };
-export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
+export const SahajSamadhi = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
-  const router = useRouter();
-  const { isAuthenticated = false } = useAuth();
-  const { showModal } = useGlobalModalContext();
   const { fee, delfee } = sfid ? priceCalculation({ workshop: data }) : {};
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (sfid) {
-      if (isAuthenticated || isGuestCheckoutEnabled) {
-        pushRouteWithUTMQuery(router, {
-          pathname: `/us-en/course/checkout/${sfid}`,
-          query: {
-            ctype: productTypeId,
-            page: 'c-o',
-          },
-        });
-      } else {
-        navigateToLogin(
-          router,
-          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-            router.query,
-          )}`,
-        );
-      }
-    } else {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling`,
-        query: {
-          courseType: COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.code,
-        },
-      });
-    }
-  };
 
   const ContextAwareToggle = ({ children, eventKey, callback }) => {
     const currentEventKey = useContext(AccordionContext);
@@ -122,7 +90,9 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 <div className="hero-register-button-wrapper">
                   <button
                     className="hero-register-button"
-                    onClick={handleRegister}
+                    onClick={handleRegister(
+                      COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.code,
+                    )}
                   >
                     Register Now <FaArrowRightLong className="fa-solid" />
                   </button>
@@ -131,7 +101,13 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
           {sfid && (
-            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+            <PriceCard
+              workshop={data}
+              courseViewMode={courseViewMode}
+              handleRegister={handleRegister(
+                COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.code,
+              )}
+            />
           )}
           <div className="container samadhi-featuers">
             <div className="feature-box">
@@ -275,7 +251,12 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 Unlock your Inner Peace with this 3-day course for ${fee}
               </div>
               <div className="unlock-register">
-                <button className="register-button" onClick={handleRegister}>
+                <button
+                  className="register-button"
+                  onClick={handleRegister(
+                    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.code,
+                  )}
+                >
                   Register Now <FaArrowRightLong className="fa-solid" />
                 </button>
               </div>
@@ -419,7 +400,12 @@ export const SahajSamadhi = ({ data, mode: courseViewMode }) => {
                 </div>
               </div>
               <div className="bar-right">
-                <button className="register-button" onClick={handleRegister}>
+                <button
+                  className="register-button"
+                  onClick={handleRegister(
+                    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.code,
+                  )}
+                >
                   Register Now <FaArrowRightLong className="fa-solid" />
                 </button>
               </div>
