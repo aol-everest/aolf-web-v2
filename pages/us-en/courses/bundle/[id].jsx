@@ -48,6 +48,21 @@ const AddressSearch = dynamic(() =>
 
 dayjs.extend(utc);
 
+const parseCourseType = (courseTypesOptions) => {
+  return createParser({
+    parse(queryValue) {
+      if (queryValue && courseTypesOptions[queryValue]) {
+        return courseTypesOptions[queryValue];
+      } else {
+        return null;
+      }
+    },
+    serialize(value) {
+      return value;
+    },
+  });
+};
+
 const queryInstructor = async ({ queryKey: [_, term] }) => {
   const response = await api.get({
     path: 'cf/teachers',
@@ -116,7 +131,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, isAuthenticated }) => {
+const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -135,32 +150,34 @@ const CourseTile = ({ data, isAuthenticated }) => {
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
     timings,
-    unitPrice,
-    listPrice,
     isEventFull,
     isPurchased,
     category,
+    bundleInfo,
   } = data || {};
+
+  const { comboUnitPrice, comboListPrice } = bundleInfo || {};
 
   const enrollAction = () => {
     track('allcourses_enroll_click', {
       course_format: data?.productTypeId,
       course_name: data?.title,
       course_id: data?.sfid,
-      course_price: data?.unitPrice,
+      course_price: data?.comboUnitPrice,
     });
     if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
+          bundle: bundleSfid,
           page: 'c-o',
         },
       });
     } else {
       navigateToLogin(
         router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&bundle=${bundleSfid}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
       );
@@ -180,6 +197,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
       pathname: `/us-en/course/${sfid}`,
       query: {
         ctype: productTypeId,
+        bundle: bundleSfid,
       },
     });
   };
@@ -228,11 +246,11 @@ const CourseTile = ({ data, isAuthenticated }) => {
         </div>
         {!isPurchased && (
           <div className="course-price">
-            {listPrice === unitPrice ? (
-              <span>${unitPrice}</span>
+            {comboListPrice === comboUnitPrice ? (
+              <span>${comboUnitPrice}</span>
             ) : (
               <>
-                <s>${listPrice}</s> <span>${unitPrice}</span>
+                <s>${comboListPrice}</s> <span>${comboUnitPrice}</span>
               </>
             )}
           </div>
@@ -305,9 +323,11 @@ const Course = () => {
   const seed = useUIDSeed();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const { slug } = router.query;
-
-  const courseTypeFilter = COURSE_TYPES_OPTIONS[slug];
+  const { id: bundleSfid } = router.query;
+  const [courseTypeFilter, setCourseTypeFilter] = useQueryState(
+    'course-type',
+    parseCourseType(COURSE_TYPES_OPTIONS),
+  );
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
@@ -337,9 +357,10 @@ const Course = () => {
     useInfiniteQuery(
       {
         queryKey: [
-          'workshops',
+          'workshopsWithBundles',
           {
             locationFilter,
+            bundleSfid,
             courseTypeFilter,
             filterStartEndDate,
             timeZoneFilter,
@@ -367,6 +388,12 @@ const Course = () => {
             param = {
               ...param,
               ctype: courseTypeFilter.value,
+            };
+          }
+          if (bundleSfid) {
+            param = {
+              ...param,
+              bundleSfid,
             };
           }
           if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
@@ -417,12 +444,12 @@ const Course = () => {
             };
           }
 
-          if (!courseTypeFilter) {
+          if (!bundleSfid) {
             return { data: null };
           }
 
           const res = await api.get({
-            path: 'workshops',
+            path: 'workshopsWithBundles',
             param,
           });
           return res;
@@ -627,7 +654,7 @@ const Course = () => {
       : null;
 
   const renderCourseList = () => {
-    if (
+    /* if (
       courseTypeFilter.isAvailableInPersonOnly &&
       courseModeFilter &&
       courseModeFilter !== 'IN_PERSON'
@@ -651,7 +678,7 @@ const Course = () => {
           </p>
         </div>
       );
-    }
+    } */
     if (isSuccess && data?.pages[0].data?.length === 0 && !isFetchingNextPage) {
       return (
         <div className="no-course-found-wrap">
@@ -670,6 +697,7 @@ const Course = () => {
                   key={course.sfid}
                   data={course}
                   isAuthenticated={isAuthenticated}
+                  bundleSfid={bundleSfid}
                 />
               ))}
             </React.Fragment>
@@ -693,10 +721,10 @@ const Course = () => {
 
   return (
     <main className="all-courses-find">
-      <NextSeo
+      {/* <NextSeo
         defaultTitle={`${courseTypeFilter.name} - Course Dates and Registration`}
         description={courseTypeFilter.description}
-      />
+      /> */}
       <section className="title-header">
         {courseTypeFilter && (
           <>

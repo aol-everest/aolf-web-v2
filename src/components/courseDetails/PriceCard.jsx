@@ -50,6 +50,7 @@ export const PriceCard = ({
   workshop,
   courseViewMode,
   showCeuCreditsForHbSilent = false,
+  handleRegister,
 }) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
@@ -125,26 +126,6 @@ export const PriceCard = ({
         pathname: '/us-en',
         query,
       });
-    }
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (isAuthenticated || isGuestCheckoutEnabled) {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
-        query: {
-          ctype: productTypeId,
-          page: 'c-o',
-        },
-      });
-    } else {
-      navigateToLogin(
-        router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-      );
     }
   };
 

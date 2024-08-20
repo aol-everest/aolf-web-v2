@@ -44,32 +44,16 @@ const swiperOption = {
   },
 };
 
-export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
+export const HealingBreathSilent = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const { sfid, title, productTypeId, isGuestCheckoutEnabled } = data || {};
   const router = useRouter();
   const { isAuthenticated = false } = useAuth();
   const { showModal } = useGlobalModalContext();
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-
-    if (isAuthenticated || isGuestCheckoutEnabled) {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/checkout/${sfid}`,
-        query: {
-          ctype: productTypeId,
-          page: 'c-o',
-        },
-      });
-    } else {
-      navigateToLogin(
-        router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-          router.query,
-        )}`,
-      );
-    }
-  };
   return (
     <>
       <main className="course-filter art-of-silence ">
@@ -87,7 +71,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
                 <div className="hero-register-button-wrapper">
                   <button
                     className="hero-register-button"
-                    onClick={handleRegister}
+                    onClick={handleRegister()}
                   >
                     Register Now <FaArrowRightLong className="fa-solid" />
                   </button>
@@ -100,6 +84,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
               workshop={data}
               courseViewMode={courseViewMode}
               showCeuCreditsForHbSilent
+              handleRegister={handleRegister()}
             />
           )}
           <div className="container samadhi-featuers">
@@ -268,7 +253,7 @@ export const HealingBreathSilent = ({ data, mode: courseViewMode }) => {
               structured to offer a transformative and relaxing experience, a
               true vacation for your body, mind, and soul.
             </div>
-            <button className="enroll-btn" onClick={handleRegister}>
+            <button className="enroll-btn" onClick={handleRegister()}>
               Enroll Now →
             </button>
           </div>

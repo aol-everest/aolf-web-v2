@@ -1,14 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 import { COURSE_TYPES, MODAL_TYPES } from '@constants';
-import { useAuth, useGlobalModalContext } from '@contexts';
-import { pushRouteWithUTMQuery } from '@service';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { PriceCard } from './PriceCard';
-import queryString from 'query-string';
-import { navigateToLogin } from '@utils';
 
-export const MarmaTraining = ({ data, mode: courseViewMode }) => {
+export const MarmaTraining = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const {
     sfid,
     title,
@@ -18,38 +17,6 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
     aosCountRequisite,
     businessRules = [],
   } = data || {};
-  const router = useRouter();
-  const { isAuthenticated = false } = useAuth();
-  const { showModal } = useGlobalModalContext();
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (sfid) {
-      if (isAuthenticated || isGuestCheckoutEnabled) {
-        pushRouteWithUTMQuery(router, {
-          pathname: `/us-en/course/checkout/${sfid}`,
-          query: {
-            ctype: productTypeId,
-            page: 'c-o',
-          },
-        });
-      } else {
-        navigateToLogin(
-          router,
-          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-            router.query,
-          )}`,
-        );
-      }
-    } else {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling`,
-        query: {
-          courseType: COURSE_TYPES.MARMA_TRAINING.code,
-        },
-      });
-    }
-  };
 
   const aosCount =
     aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
@@ -78,7 +45,10 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
               </ul>
             </div>
             <div className="registration-wrap">
-              <button className="register-button mt-4" onClick={handleRegister}>
+              <button
+                className="register-button mt-4"
+                onClick={handleRegister(COURSE_TYPES.MARMA_TRAINING.code)}
+              >
                 Register Now
               </button>
             </div>
@@ -92,7 +62,11 @@ export const MarmaTraining = ({ data, mode: courseViewMode }) => {
 
         <div className="container marma-training-section pt-5">
           {sfid && (
-            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+            <PriceCard
+              workshop={data}
+              courseViewMode={courseViewMode}
+              handleRegister={handleRegister(COURSE_TYPES.MARMA_TRAINING.code)}
+            />
           )}
         </div>
         <div className="container marma-training-section pb-lg-5">
