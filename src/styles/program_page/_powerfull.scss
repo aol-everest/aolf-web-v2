@@ -173,6 +173,19 @@
           color: #31364e;
         }
 
+        .notes {
+          display: inline-flex;
+          word-wrap: break-word;
+          p {
+            margin: 0;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            padding-left: 4px;
+            word-break: break-all;
+            margin-right: 20px;
+          }
+        }
+
         .btn-outline {
           margin-right: 25px;
         }

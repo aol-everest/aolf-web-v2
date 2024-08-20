@@ -82,6 +82,23 @@ const AOL_MENU = [
     ],
   },
   {
+    name: 'Meditation',
+    submenu: [
+      {
+        name: 'Daily SKY',
+        link: '/us-en/daily-sky',
+      },
+      {
+        name: 'Guided Meditation',
+        link: `/us-en/guided-meditation/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+      },
+      {
+        name: 'Meetups',
+        link: '/us-en/meetup',
+      },
+    ],
+  },
+  {
     name: 'Wisdom',
     submenu: [
       {
@@ -186,7 +203,7 @@ const AOL_MENU = [
         link: '/us-en/lp/theartoflivingretreatcenter',
       },
       {
-        name: 'Local Centers',
+        name: 'Connect Locally',
         link: '/us-en/centers',
       },
     ],
@@ -198,17 +215,9 @@ const AOL_MENU = [
         name: 'Meditations',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
       },
-      // {
-      //   name: 'Guided Meditations',
-      //   link: `/us-en/guided-meditation/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
-      // },
       {
         name: 'Wisdom',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
-      },
-      {
-        name: 'Meetups',
-        link: '/us-en/meetup',
       },
       {
         name: 'App',

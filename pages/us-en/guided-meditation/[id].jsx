@@ -59,6 +59,7 @@ const GuidedMeditation = (props) => {
   const [accordionIndex, setAccordionIndex] = useState(0);
   const [topic, setTopic] = useQueryString('topic');
   const router = useRouter();
+  const scrollToRef = useRef(null);
   const { id: rootFolderID } = router.query;
   const swiperRef = useRef(null);
   const { isAuthenticated } = useAuth();
@@ -182,6 +183,12 @@ const GuidedMeditation = (props) => {
         subsciptionCategories,
         purchaseMembershipAction,
       });
+    }
+  };
+
+  const handleGoToHubSpotForm = () => {
+    if (scrollToRef.current) {
+      scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -483,7 +490,7 @@ const GuidedMeditation = (props) => {
       </section>
       <section className="experience-journey">
         <div className="container">
-          <div className="experience-journey-content-wrap">
+          <div className="experience-journey-content-wrap" ref={scrollToRef}>
             <div className="ej-content-info">
               <h2 className="section-title">
                 Experience deep calm & inner stillness
@@ -773,10 +780,13 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  We recommend starting with our free 7-Day Guided Meditation
-                  Journey. You’ll be guided every step of the way with powerful
-                  daily guided meditations and insight, led by world-renowned
-                  meditation master, Gurudev. Save your FREE spot today
+                  We recommend starting with our{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    free 7-Day Guided Meditation Journey.
+                  </a>{' '}
+                  You’ll be guided every step of the way with powerful daily
+                  guided meditations and insight, led by world-renowned
+                  meditation master, Gurudev. <a>Save your FREE spot today</a>
                 </div>
               </div>
             </div>

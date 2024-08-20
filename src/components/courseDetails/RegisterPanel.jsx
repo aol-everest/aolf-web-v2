@@ -33,6 +33,7 @@ export const RegisterPanel = ({ workshop }) => {
     standardPriceBook,
     aosCountRequisite,
     isGuestCheckoutEnabled = false,
+    notes,
   } = workshop || {};
 
   const isIAHV = orgConfig.name === 'IAHV';
@@ -360,6 +361,15 @@ export const RegisterPanel = ({ workshop }) => {
             {preRequisiteCondition && preRequisiteCondition.length > 0 && (
               <p className="!tw-ml-0 !tw-mt-1 !tw-text-sm">
                 Eligibility: {preRequisiteCondition}
+              </p>
+            )}
+            {notes && (
+              <p className="!tw-ml-0 !tw-mt-2 !tw-mr-0 !tw-text-sm notes">
+                Notes:{' '}
+                <span
+                  className="!tw-m-0 !tw-text-sm"
+                  dangerouslySetInnerHTML={{ __html: notes }}
+                ></span>
               </p>
             )}
           </div>
