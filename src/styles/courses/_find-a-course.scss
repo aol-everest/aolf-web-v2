@@ -287,6 +287,10 @@ main.page--find-a-course {
             background: #ffffff url(/img/chevron-down.svg) no-repeat
               calc(100% - 14px) center;
             color: #9598a6;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 35px;
           }
           .courses-filter__remove {
             background: none;

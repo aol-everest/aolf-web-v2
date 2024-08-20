@@ -6,15 +6,12 @@ import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
 import GoogleMapComponent from '@components/googleMap';
-import { useGeolocation } from '@uidotdev/usehooks';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import LinesEllipsis from 'react-lines-ellipsis';
 import Highlighter from 'react-highlight-words';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
+import { Loader } from '@components/loader';
+import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 
 const GOOGLE_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`;
 
@@ -63,20 +60,65 @@ const STORIES = [
   },
 ];
 
-const SEARCH_PARAM = [
-  'postalOrZipCode',
-  'centerName',
-  'streetAddress1',
-  'streetAddress2',
-  'stateProvince',
-  'city',
-];
-const SEARCH_PARAM_WITHOUT_ADDRESS = [
-  'postalOrZipCode',
-  'centerName',
-  'stateProvince',
-  'city',
-];
+function convertUndefinedToNull(obj) {
+  // Check if the input is an object
+  if (obj && typeof obj === 'object') {
+    // Iterate over each key in the object
+    for (const key in obj) {
+      console.log(key, obj[key]);
+      if (obj[key] === undefined) {
+        // Convert undefined to null
+        obj[key] = null;
+      } else if (typeof obj[key] === 'object') {
+        // Recursively call the function for nested objects
+        convertUndefinedToNull(obj[key]);
+      }
+    }
+  }
+  return obj;
+}
+
+export async function getServerSideProps(context) {
+  let initialLocation = {};
+  const ip =
+    context.req.headers['x-forwarded-for'] ||
+    context.req.connection.remoteAddress;
+
+  try {
+    const res = await fetch(
+      `${process.env.IP_INFO_API_URL}/${ip}?token=${process.env.IP_INFO_API_TOKEN}`,
+    );
+    const {
+      postal = null,
+      loc = null,
+      city = null,
+      region = null,
+      country = null,
+    } = convertUndefinedToNull(await res.json());
+
+    const [lat = null, lng = null] = (loc || '').split(',');
+    initialLocation = {
+      lat,
+      lng,
+      postal,
+      locationName: [city, region, country, postal].join(', '),
+    };
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
+  }
+
+  const initialCenters = await api.get({
+    path: 'getAllCenters',
+    param: {
+      lat: initialLocation.lat || 40.73061,
+      lng: initialLocation.lng || -73.935242,
+    },
+  });
+
+  return {
+    props: { initialLocation, initialCenters: initialCenters.data },
+  };
+}
 
 const CenterListItem = ({ center, search }) => {
   const router = useRouter();
@@ -215,60 +257,85 @@ const StoryComp = ({ story }) => {
   );
 };
 
-const Centers = () => {
-  const { latitude, longitude, loading } = useGeolocation();
-
-  const [location, setLocation] = useState({
-    address: '',
-    latitude: null,
-    longitude: null,
+const Centers = ({ initialLocation = null, initialCenters }) => {
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading,
+  } = usePlacesService({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
+    options: {
+      types: ['(regions)'],
+      componentRestrictions: { country: 'us' },
+    },
   });
-
-  useEffect(() => {
-    setLocation((prevState) => ({
-      ...prevState,
-      latitude: latitude || null,
-      longitude: longitude || null,
-    }));
-  }, [latitude, longitude]);
+  const [isReadyForSelection, setReadyForSelection] = useState(true);
+  const [location, setLocation] = useState({
+    address: initialLocation.locationName,
+    latitude: initialLocation?.lat,
+    longitude: initialLocation?.lng,
+  });
 
   const placeholder = location.address || 'location';
 
   const handleChange = (address) => {
+    setReadyForSelection(true);
     setLocation((prevLocation) => ({
       ...prevLocation,
       address: address,
     }));
   };
 
-  const [isItemSelected, setIsItemSelected] = useState(false);
+  const renderItem = (placePrediction) => {
+    const { structured_formatting } = placePrediction;
+    console.log(placePrediction);
+    return (
+      <>
+        <div
+          class="suggestion-item smart-input--list-item"
+          role="option"
+          onClick={selectAddressAction(placePrediction)}
+        >
+          <strong>{structured_formatting.main_text}</strong>{' '}
+          <small>{structured_formatting.secondary_text}</small>
+        </div>
+      </>
+    );
+  };
 
-  const handleSelect = (address) => {
-    geocodeByAddress(address)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => {
-        const { lat, lng } = latLng;
-        setLocation((prevLocation) => ({
-          ...prevLocation,
-          address: address,
-          latitude: lat,
-          longitude: lng,
-        }));
-        setIsItemSelected(true);
-      })
-      .catch((error) => console.error('Error', error));
+  const selectAddressAction = (item) => async () => {
+    try {
+      setReadyForSelection(false);
+      placesService?.getDetails(
+        {
+          fields: ['geometry'],
+          placeId: item.place_id,
+        },
+        (placeDetails) => {
+          setLocation({
+            latitude: placeDetails.geometry.location.lat(),
+            longitude: placeDetails.geometry.location.lng(),
+            address: item.description,
+          });
+        },
+      );
+    } catch (error) {
+      console.log(error); // eslint-disable-line no-console
+    }
   };
 
   const clearSearch = () => {
+    setReadyForSelection(false);
     setLocation({
       address: '',
-      latitude: latitude || null,
-      longitude: longitude || null,
+      latitude: initialLocation?.lat,
+      longitude: initialLocation?.lng,
     });
   };
 
   const {
-    data: allCenters,
+    data: allCenters = initialCenters,
     isLoading,
     isError,
     error,
@@ -289,28 +356,16 @@ const Centers = () => {
     },
   });
 
-  const search = (items) => {
-    return items?.filter((item) => {
-      if (item.centerMode === 'InPerson') {
-        return SEARCH_PARAM.some((newItem) => {
-          return item[newItem]?.toString().toLowerCase() > -1;
-        });
-      }
-      return SEARCH_PARAM_WITHOUT_ADDRESS.some((newItem) => {
-        return item[newItem]?.toString().toLowerCase() > -1;
-      });
-    });
-  };
-
   const scrollToTop = () => {
     window.scrollTo({ top: 100, left: 0, behavior: 'smooth' });
   };
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
-  if ((!isItemSelected && isLoading) || loading) return <PageLoading />;
+  // if (!isItemSelected && isLoading) return <PageLoading />;
 
   return (
     <main className="local-centers">
+      {isLoading && <Loader />}
       <section className="title-header">
         <h1 className="page-title">
           Connect, Grow, Celebrate. Join The Community
@@ -318,7 +373,7 @@ const Centers = () => {
       </section>
       <section className="map-section">
         <GoogleMapComponent
-          allCenters={search(allCenters)}
+          allCenters={allCenters}
           googleMapURL={GOOGLE_URL}
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div id="map" />}
@@ -326,79 +381,51 @@ const Centers = () => {
         ></GoogleMapComponent>
         <div className="center-search-box" id="mobile-handler">
           <div className="mobile-handler"></div>
-          <PlacesAutocomplete
-            value={location.address}
-            onChange={handleChange}
-            onSelect={handleSelect}
-            searchOptions={{
-              types: ['(regions)'],
-              componentRestrictions: { country: 'us' },
-            }}
-          >
-            {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-              <div className="search-input-wrap">
-                <input
-                  id="search-field"
-                  value={location.address}
-                  className="search-input"
-                  {...getInputProps({
-                    placeholder,
-                  })}
-                />
-                {location.address && (
-                  <button className="search-clear" onClick={clearSearch}>
-                    <svg
-                      fill="#9698a6"
-                      height="16px"
-                      width="16px"
-                      version="1.1"
-                      id="Capa_1"
-                      viewBox="0 0 490 490"
-                    >
-                      <polygon
-                        points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
+          <div className="search-input-wrap">
+            <input
+              id="search-field"
+              className="search-input"
+              value={location.address}
+              onChange={(evt) => {
+                getPlacePredictions({ input: evt.target.value });
+                handleChange(evt.target.value);
+              }}
+              placeholder={placeholder}
+              loading={isPlacePredictionsLoading}
+            />
+            {location.address && (
+              <button className="search-clear" onClick={clearSearch}>
+                <svg
+                  fill="#9698a6"
+                  height="16px"
+                  width="16px"
+                  version="1.1"
+                  id="Capa_1"
+                  viewBox="0 0 490 490"
+                >
+                  <polygon
+                    points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490
               489.292,457.678 277.331,245.004 489.292,32.337 "
-                      />
-                    </svg>
-                  </button>
-                )}
-
-                {!!suggestions.length && (
-                  <div style={{ zIndex: 9 }}>
-                    {suggestions.map((suggestion) => {
-                      const className = suggestion.active
-                        ? 'suggestion-item--active smart-input--list-item'
-                        : 'suggestion-item smart-input--list-item';
-                      // inline style for demonstration purpose
-                      const style = suggestion.active
-                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                      return (
-                        <>
-                          <div
-                            {...getSuggestionItemProps(suggestion, {
-                              className,
-                              style,
-                            })}
-                          >
-                            <strong>
-                              {suggestion.formattedSuggestion.mainText}
-                            </strong>{' '}
-                            <small>
-                              {suggestion.formattedSuggestion.secondaryText}
-                            </small>
-                          </div>
-                        </>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+                  />
+                </svg>
+              </button>
             )}
-          </PlacesAutocomplete>
+            {!isPlacePredictionsLoading &&
+              isReadyForSelection &&
+              placePredictions &&
+              placePredictions.length > 0 && (
+                <div
+                  style={{
+                    zIndex: 9,
+                  }}
+                >
+                  {placePredictions.map(renderItem)}
+                </div>
+              )}
+          </div>
 
           <div className="search-listing">
-            {search(allCenters)?.map((center) => {
+            {allCenters?.map((center) => {
               return <CenterListItem key={center.sfid} center={center} />;
             })}
           </div>

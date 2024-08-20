@@ -75,6 +75,10 @@ jobs:
       matrix:
         node-version: [20.x]
 
+    env: # Env variables needed during build
+      NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN: ${{secrets.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN}}
+      NEXT_PUBLIC_CONTENTFUL_SPACE_ID: ${{secrets.NEXT_PUBLIC_CONTENTFUL_SPACE_ID}}
+
     steps:
       - name: ⬇️ Checkout project
         uses: actions/checkout@v3

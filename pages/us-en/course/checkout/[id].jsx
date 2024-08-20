@@ -476,8 +476,11 @@ const Checkout = () => {
           <aside className="tw-relative tw-whitespace-normal tw-text-center">
             <img src="/img/ic-timer-white.svg" alt="timer" />
             <span>
-              A ${workshop.earlyBirdFeeIncreasing.increasingFee} late fee will
-              apply starting {workshop.earlyBirdFeeIncreasing.increasingBy}
+              Fee increases by ${workshop.earlyBirdFeeIncreasing.increasingFee}{' '}
+              starting{' '}
+              {dayjs
+                .utc(workshop.earlyBirdFeeIncreasing.increasingByDate)
+                .format('MMM D, YYYY')}
             </span>
           </aside>
         )}

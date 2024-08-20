@@ -347,7 +347,7 @@ export const RegisterPanel = ({ workshop }) => {
               <div className="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
-                  A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                  Fee increases by ${earlyBirdFeeIncreasing.increasingFee}{' '}
                   starting{' '}
                   {dayjs
                     .utc(earlyBirdFeeIncreasing.increasingByDate)
@@ -416,7 +416,7 @@ export const RegisterPanel = ({ workshop }) => {
               <div className="!tw-ml-0 tw-flex">
                 <img src="/img/ic-timer-orange.svg" alt="timer" />
                 <p>
-                  A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                  Fee increases by ${earlyBirdFeeIncreasing.increasingFee}{' '}
                   starting{' '}
                   {dayjs
                     .utc(earlyBirdFeeIncreasing.increasingByDate)
@@ -491,7 +491,7 @@ export const RegisterPanel = ({ workshop }) => {
             <div className="!tw-ml-0 tw-flex">
               <img src="/img/ic-timer-orange.svg" alt="timer" />
               <p className="!tw-mt-1 !tw-text-sm">
-                A ${earlyBirdFeeIncreasing.increasingFee} late fee will apply
+                Fee increases by ${earlyBirdFeeIncreasing.increasingFee}{' '}
                 starting{' '}
                 {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)

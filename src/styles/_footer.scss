@@ -159,12 +159,14 @@
           transition: all 150ms;
           transition-property: transform;
           transition-timing-function: ease-in-out;
+          overflow: hidden;
         }
         .nav-item--check:checked + .nav-details {
           display: block;
           height: auto;
           opacity: 1;
           margin-top: 2rem;
+          overflow: unset;
         }
       }
       .last-item-box {

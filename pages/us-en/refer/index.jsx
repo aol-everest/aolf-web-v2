@@ -41,9 +41,9 @@ export default function TalkableRefer() {
               few days of deep calm & peace.
             </li>
           </ol>
-          <div className="tw-mb-2 tw-mt-4">
+          {/* <div className="tw-mb-2 tw-mt-4">
             <CouponStack></CouponStack>
-          </div>
+          </div> */}
           <div id="talkable-offer"></div>
         </article>
       </section>
