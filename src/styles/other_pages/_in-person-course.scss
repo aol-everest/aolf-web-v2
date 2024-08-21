@@ -1087,7 +1087,8 @@
           order: 2;
         }
         .specific-teacher-text {
-          order: 3;
+          order: 5;
+          font-size: 14px;
         }
         .slot-action {
           order: 4;
@@ -1218,13 +1219,12 @@
       }
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
-        height: calc(100vh - 250px);
-        align-items: center;
       }
       .slot-item {
         background: #f7f7f7;
         padding: 12px;
         border-radius: 16px;
+        height: 100%;
       }
       .slot-type {
         display: flex;
@@ -1274,6 +1274,9 @@
   padding-top: 20px;
   @media screen and (max-width: 991px) {
     gap: 6px;
+  }
+  @media screen and (max-width: 767px) {
+    display: none;
   }
   > div {
     border-radius: 32px;
