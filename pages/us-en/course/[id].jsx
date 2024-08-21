@@ -128,6 +128,10 @@ function CourseDetail() {
     },
     enabled: router.isReady,
   });
+  if (data?.bundleInfo) {
+    data.listPrice = data?.bundleInfo.comboListPrice;
+    data.unitPrice = data?.bundleInfo.comboUnitPrice;
+  }
   let checkOutQueryParam = {
     ctype: data?.productTypeId,
     page: 'c-o',

@@ -461,7 +461,10 @@ const Course = () => {
       },
       // { initialData: workshops },
     );
+  //console.log(data.pages[0]);
 
+  const { bundleInfo } = data?.pages[0] || {};
+  const { comboName, comboDescription } = bundleInfo || {};
   let instructorResult = useQuery({
     queryKey: ['instructor', searchKey],
     queryFn: queryInstructor,
@@ -720,20 +723,18 @@ const Course = () => {
 
   return (
     <main className="all-courses-find">
-      {/* <NextSeo
-        defaultTitle={`${courseTypeFilter.name} - Course Dates and Registration`}
-        description={courseTypeFilter.description}
-      /> */}
-      <section className="title-header">
-        {courseTypeFilter && (
-          <>
-            <h1 className="page-title">{courseTypeFilter.name}</h1>
-            <div className="page-description">
-              {courseTypeFilter.description}
-            </div>
-          </>
-        )}
-      </section>
+      {comboName && (
+        <>
+          <NextSeo
+            defaultTitle={`${comboName} - Course Dates and Registration`}
+            description={comboDescription}
+          />
+          <section className="title-header">
+            <h1 className="page-title">{comboName}</h1>
+            <div className="page-description">{comboDescription}</div>
+          </section>
+        </>
+      )}
       <section className="section-course-find">
         <div className="container">
           <div className="course-filter-wrap">

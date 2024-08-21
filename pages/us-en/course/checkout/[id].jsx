@@ -56,7 +56,7 @@ const validateStudentEmail = (email) => {
 const Checkout = () => {
   const router = useRouter();
   const { profile, isAuthenticated } = useAuth();
-  const { id: workshopId, coupon } = router.query;
+  const { id: workshopId, coupon, bundle } = router.query;
   const [mbsy_source] = useQueryString('mbsy_source', {
     defaultValue: null,
   });
@@ -81,12 +81,19 @@ const Checkout = () => {
   } = useQuery({
     queryKey: 'workshopDetail',
     queryFn: async () => {
-      const response = await api.get({
-        path: 'workshopDetail',
-        param: {
+      let param = {
+        id: workshopId,
+      };
+      if (bundle) {
+        param = {
+          ...param,
+          bundleSfid: bundle,
           id: workshopId,
-          rp: 'checkout',
-        },
+        };
+      }
+      const response = await api.get({
+        path: bundle ? 'workshopDetailWithBundles' : 'workshopDetail',
+        param,
       });
       return response.data;
     },

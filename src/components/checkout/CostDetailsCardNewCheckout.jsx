@@ -29,7 +29,7 @@ export const CostDetailsCardNewCheckout = ({
     isInstalmentAllowed,
     premiumRate,
     usableCredit,
-    addOnProducts,
+    addOnProducts = [],
     groupedAddOnProducts,
     instalmentAmount,
     instalmentTenure,
