@@ -806,8 +806,10 @@
 }
 .tickets-modal__photo {
   border-radius: 12px;
-  height: 127px;
   margin-bottom: 16px;
+  object-fit: cover;
+  object-position: 0 0;
+  width: 100%;
 }
 .tickets-modal__cart-empty {
   display: none;
