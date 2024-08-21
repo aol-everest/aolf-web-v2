@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
-import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
+import { CONTENT_FOLDER_IDS } from '@constants';
 import { navigateToLogin } from '@utils';
 
 const HB_MENU = [
