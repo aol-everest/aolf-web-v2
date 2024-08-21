@@ -9,15 +9,9 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import {
-  api,
-  breakAfterTwoWordsArray,
-  navigateToLogin,
-  timeConvert,
-} from '@utils';
+import { api, navigateToLogin, timeConvert } from '@utils';
 import { useQueryString, useIntersectionObserver } from '@hooks';
 import AudioPlayerSmall from '@components/audioPlayer/audioPlayerSmall';
-import { CONTENT_FOLDER_IDS } from '@constants';
 import { Loader } from '@components/loader';
 import {
   useAuth,
@@ -29,6 +23,7 @@ import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
 import { fetchContentfulDataDetails } from '@components/contentful';
+// import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
 const swiperOption = {
   modules: [Navigation, Scrollbar, A11y, Pagination],
@@ -65,6 +60,7 @@ const GuidedMeditation = (props) => {
   const [accordionIndex, setAccordionIndex] = useState(0);
   const [topic, setTopic] = useQueryString('topic');
   const router = useRouter();
+  const scrollToRef = useRef(null);
   const { id: rootFolderID } = router.query;
   const swiperRef = useRef(null);
   const { isAuthenticated } = useAuth();
@@ -81,6 +77,7 @@ const GuidedMeditation = (props) => {
       );
       setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
     };
+
     getContentfulData();
   }, []);
 
@@ -191,7 +188,12 @@ const GuidedMeditation = (props) => {
     }
   };
 
-  const lines = breakAfterTwoWordsArray(randomMeditate.title);
+  const handleGoToHubSpotForm = () => {
+    if (scrollToRef.current) {
+      scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const contentFolders = rootFolder?.folder;
 
   let listingFolders = contentFolders?.filter(
@@ -208,24 +210,65 @@ const GuidedMeditation = (props) => {
       ? popularFolder?.content
       : data?.data || [];
 
+  const meditationHabbit = (
+    <>
+      Everyone can benefit from meditation, yet only those who cultivate a
+      regular habit will experience the cumulative depth and breadth of those
+      benefits—and see lasting positive change.
+      <br />
+      <br />
+      Top tips to creating a habit:
+      <br />
+      <br />
+      <strong>1. Set a time & place</strong>
+      <br />
+      Meditation will more easily integrate into your daily routine.
+      <br />
+      <br />
+      <strong>2. Consistency is key</strong>
+      <br />
+      Even on days when the mind feels really busy, keep going!
+      <br />
+      <br />
+      <strong>3. Choose a realistic duration</strong>
+      <br />
+      Regularity wins over duration.
+      <br />
+      <br />
+      <strong>4. Be kind to yourself</strong>
+      <br />
+      If you miss a day, just begin again. Compare how you feel on days you
+      meditate vs days you don’t. It’s a big motivator!
+    </>
+  );
+
   return (
     <main className="guided-meditation">
       {loading && <Loader />}
       <section className="banner-section">
         <div className="container">
-          <div className="banner-title">
-            {lines.map((line, index) => (
-              <span key={index}>
-                {line}
-                {index < lines.length - 1 && <br />}
-              </span>
-            ))}
+          <div className="banner-title">{`Your Guide 
+          to Meditation`}</div>
+          <div className="banner-desc">
+            Meditation is the delicate art of doing nothing and letting go of
+            all effort to reconnect with the serenity that is your very nature,
+            to feel revived, refreshed, and restored again
           </div>
-          <div className="banner-desc">{randomMeditate.description}</div>
           <div className="banner-audio">
             <AudioPlayerSmall
               audioSrc={randomMeditate.track?.fields?.file?.url}
             />
+            {/* <AudioPlayerOnScreen
+              id="global-player"
+              pageParam={{
+                track: {
+                  title: randomMeditate.title,
+                  artist: randomMeditate.teacher?.name,
+                  image: randomMeditate.coverImage?.url,
+                  audioSrc: randomMeditate.track?.fields?.file?.url,
+                },
+              }}
+            /> */}
           </div>
         </div>
       </section>
@@ -298,7 +341,8 @@ const GuidedMeditation = (props) => {
                 Gurudev is the founder of Art of Living and a world-renowned
                 master of meditation. Our guided meditations and techniques are
                 rooted in an ancient tradition yet modernized for contemporary
-                life.
+                life. They take you directly to the heart of meditation in a
+                deep and effortless way.
               </p>
               <p>
                 <strong>
@@ -459,7 +503,7 @@ const GuidedMeditation = (props) => {
       </section>
       <section className="experience-journey">
         <div className="container">
-          <div className="experience-journey-content-wrap">
+          <div className="experience-journey-content-wrap" ref={scrollToRef}>
             <div className="ej-content-info">
               <h2 className="section-title">
                 Experience deep calm & inner stillness
@@ -483,15 +527,15 @@ const GuidedMeditation = (props) => {
                   <div className="ef-icon">
                     <span className="icon-aol iconaol-sleep"></span>
                   </div>
-                  <div className="ef-text">Acquire new meditation tips</div>
+                  <div className="ef-text">
+                    Release stress & reconnect with calm
+                  </div>
                 </div>
                 <div className="ef-item">
                   <div className="ef-icon">
                     <span className="icon-aol iconaol-chat-flower"></span>
                   </div>
-                  <div className="ef-text">
-                    Release stress & reconnect with calm
-                  </div>
+                  <div className="ef-text">Acquire new meditation tips</div>
                 </div>
                 <div className="ef-item">
                   <div className="ef-icon">
@@ -630,11 +674,11 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  Yes! Everyone benefits from meditation. It is accessible to
-                  everyone. There are SO many reasons people start
-                  meditating—physical, mental, emotional, and more. The benefits
-                  are broad and extensive. Experience is the best way to
-                  discover just how profound the practice is.
+                  {`Yes! Everyone benefits from meditation. It is accessible to everyone. 
+
+                    There are so many reasons people start meditating—the benefits support all aspects of life, wherever you are. 
+
+                    Experience is the best way to discover just how profound the practice is.`}
                 </div>
               </div>
             </div>
@@ -661,13 +705,7 @@ const GuidedMeditation = (props) => {
                 aria-labelledby="headingThree"
                 data-parent="#accordion"
               >
-                <div className="card-body">
-                  Yes! Everyone benefits from meditation. It is accessible to
-                  everyone. There are SO many reasons people start
-                  meditating—physical, mental, emotional, and more. The benefits
-                  are broad and extensive. Experience is the best way to
-                  discover just how profound the practice is.
-                </div>
+                <div className="card-body">{meditationHabbit}</div>
               </div>
             </div>
             <div
@@ -694,11 +732,9 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  Yes! Everyone benefits from meditation. It is accessible to
-                  everyone. There are SO many reasons people start
-                  meditating—physical, mental, emotional, and more. The benefits
-                  are broad and extensive. Experience is the best way to
-                  discover just how profound the practice is.
+                  {`No! Simply find a comfortable seated spot where you’ll be undisturbed and can relax.
+
+                    Get comfortable with your coziest blanket, and feel free to sit back on a chair, sofa, or meditation cushion! Otherwise, it’ll be quite the challenge to relax your mind.`}
                 </div>
               </div>
             </div>
@@ -726,11 +762,10 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  Yes! Everyone benefits from meditation. It is accessible to
-                  everyone. There are SO many reasons people start
-                  meditating—physical, mental, emotional, and more. The benefits
-                  are broad and extensive. Experience is the best way to
-                  discover just how profound the practice is.
+                  {`Morning meditations are often considered best (preferably before breakfast), but choose a time that works for you—building the habit is what matters most.
+
+                    Establishing a daily meditation routine with a set time will really help you stay on track! The body and mind are habitual creatures and will start to expect the practice at that time, so you’ll naturally begin to settle, making it easier to sit and maintain this life-enhancing routine.
+                  `}
                 </div>
               </div>
             </div>
@@ -758,11 +793,16 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  Yes! Everyone benefits from meditation. It is accessible to
-                  everyone. There are SO many reasons people start
-                  meditating—physical, mental, emotional, and more. The benefits
-                  are broad and extensive. Experience is the best way to
-                  discover just how profound the practice is.
+                  We recommend starting with our{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    free 7-Day Guided Meditation Journey.
+                  </a>{' '}
+                  You’ll be guided every step of the way with powerful daily
+                  guided meditations and insight, led by world-renowned
+                  meditation master, Gurudev.{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    Save your FREE spot today
+                  </a>
                 </div>
               </div>
             </div>

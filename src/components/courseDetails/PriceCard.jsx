@@ -426,9 +426,8 @@ export const PriceCard = ({
           <div className="early-bird-banner">
             {earlyBirdFeeIncreasing && (
               <p>
-                <FaRegClock className="fa" />
-                Fee increases by ${earlyBirdFeeIncreasing.increasingFee}{' '}
-                starting{' '}
+                <FaRegClock className="fa" /> Fee increases by $
+                {earlyBirdFeeIncreasing.increasingFee} starting{' '}
                 {dayjs
                   .utc(earlyBirdFeeIncreasing.increasingByDate)
                   .format('MMM D, YYYY')}

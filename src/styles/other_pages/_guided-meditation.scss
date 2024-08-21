@@ -67,6 +67,7 @@ main.guided-meditation {
       line-height: 96px;
       color: #31364e;
       padding-top: 274px;
+      white-space: pre-line;
       @media screen and (max-width: 991px) {
         font-size: 36px;
         line-height: 45px;
@@ -777,6 +778,10 @@ main.guided-meditation {
         line-height: 24px;
         color: #6f7283;
         padding: 16px 0 0 0;
+        white-space: pre-line;
+        a {
+          color: #89beec;
+        }
       }
     }
   }

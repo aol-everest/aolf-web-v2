@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import Link from '@components/linkWithUTM';
 import { orgConfig } from '@org';
+import { CONTENT_FOLDER_IDS } from '@constants';
 
 export function Footer() {
   if (orgConfig.name === 'HB') {
@@ -84,6 +85,53 @@ export function Footer() {
                     <Link href="https://www.artofliving.org/us-en/sri-sri-blog">
                       Blog
                     </Link>
+                  </li>
+                </ul>
+              </div>
+              <div className="nav-item-box">
+                <label htmlFor="Gurudev" className="nav-item--title">
+                  Explore
+                </label>
+                <input
+                  className="nav-item--check"
+                  type="checkbox"
+                  id="Gurudev"
+                />
+                <ul className="nav-details">
+                  <li className="nav-item">
+                    <Link href="https://event.us.artofliving.org/us-en/breathwork2/lp1/">
+                      Breathwork
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="https://event.us.artofliving.org/us-en/secrets-of-meditation2/lp1/">
+                      Meditation
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div className="nav-item-box">
+                <label htmlFor="Gurudev" className="nav-item--title">
+                  Meditation
+                </label>
+                <input
+                  className="nav-item--check"
+                  type="checkbox"
+                  id="Gurudev"
+                />
+                <ul className="nav-details">
+                  <li className="nav-item">
+                    <Link href="/us-en/daily-sky">Daily SKY</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      href={`/us-en/guided-meditation/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`}
+                    >
+                      Guided Meditation
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/us-en/meetup">Meetups</Link>
                   </li>
                 </ul>
               </div>
