@@ -23,6 +23,7 @@ import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
 import { fetchContentfulDataDetails } from '@components/contentful';
+// import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
 const swiperOption = {
   modules: [Navigation, Scrollbar, A11y, Pagination],
@@ -76,6 +77,7 @@ const GuidedMeditation = (props) => {
       );
       setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
     };
+
     getContentfulData();
   }, []);
 
@@ -256,6 +258,17 @@ const GuidedMeditation = (props) => {
             <AudioPlayerSmall
               audioSrc={randomMeditate.track?.fields?.file?.url}
             />
+            {/* <AudioPlayerOnScreen
+              id="global-player"
+              pageParam={{
+                track: {
+                  title: randomMeditate.title,
+                  artist: randomMeditate.teacher?.name,
+                  image: randomMeditate.coverImage?.url,
+                  audioSrc: randomMeditate.track?.fields?.file?.url,
+                },
+              }}
+            /> */}
           </div>
         </div>
       </section>
@@ -786,7 +799,10 @@ const GuidedMeditation = (props) => {
                   </a>{' '}
                   You’ll be guided every step of the way with powerful daily
                   guided meditations and insight, led by world-renowned
-                  meditation master, Gurudev. <a>Save your FREE spot today</a>
+                  meditation master, Gurudev.{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    Save your FREE spot today
+                  </a>
                 </div>
               </div>
             </div>
