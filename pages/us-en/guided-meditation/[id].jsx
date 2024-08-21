@@ -10,7 +10,7 @@ import 'swiper/css/scrollbar';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api, navigateToLogin, timeConvert } from '@utils';
-import { useQueryString, useIntersectionObserver } from '@hooks';
+import { useQueryString } from '@hooks';
 import AudioPlayerSmall from '@components/audioPlayer/audioPlayerSmall';
 import { Loader } from '@components/loader';
 import {
@@ -138,7 +138,6 @@ const GuidedMeditation = (props) => {
       });
       return res;
     },
-    enabled: !!topic,
   });
 
   const onFilterChange = (value) => {
@@ -205,10 +204,11 @@ const GuidedMeditation = (props) => {
       folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
   );
 
-  const content =
-    popularFolder?.content?.length > 0
+  const content = topic
+    ? data?.data
+    : popularFolder?.content?.length > 0
       ? popularFolder?.content
-      : data?.data || [];
+      : [];
 
   const meditationHabbit = (
     <>
@@ -421,7 +421,7 @@ const GuidedMeditation = (props) => {
                 </a>
               ))}
           </div>
-          {content.length > 0 && (
+          {content?.length > 0 && (
             <div className="top-picks-container">
               <div className="top-picks-content top-picks-slider swiper">
                 <div className="top-picks-header">
