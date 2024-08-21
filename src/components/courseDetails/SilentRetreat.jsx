@@ -59,7 +59,6 @@ export const SilentRetreat = ({
             <div className="container">
               <div className="courses-title">Courses</div>
               <div className="banner-title">
-                hhhh
                 {title || 'Art of Living Part 2'}
               </div>
               <div className="banner-description">
