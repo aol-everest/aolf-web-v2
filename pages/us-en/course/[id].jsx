@@ -110,11 +110,19 @@ function CourseDetail() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: 'workshopDetail',
     queryFn: async () => {
-      const response = await api.get({
-        path: 'workshopDetail',
-        param: {
+      let param = {
+        id: workshopId,
+      };
+      if (bundle) {
+        param = {
+          ...param,
+          bundleSfid: bundle,
           id: workshopId,
-        },
+        };
+      }
+      const response = await api.get({
+        path: bundle ? 'workshopDetailWithBundles' : 'workshopDetail',
+        param,
       });
       return response.data;
     },

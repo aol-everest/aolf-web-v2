@@ -153,6 +153,7 @@ const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
     isEventFull,
     isPurchased,
     category,
+    title,
     bundleInfo,
   } = data || {};
 
@@ -232,17 +233,15 @@ const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
     >
       <div className="course-item-header">
         <div className="course-title-duration">
-          <div className="course-title">
+          <div className="course-title">{title}</div>
+          <div
+            class={classNames('course-type in-person', {
+              'in-person': mode === COURSE_MODES.IN_PERSON.value,
+              online: mode === COURSE_MODES.ONLINE.value,
+            })}
+          >
             {COURSE_MODES_MAP[mode]}
-            {category && (
-              <div
-                class={`course-type ${mode === COURSE_MODES.IN_PERSON.value ? 'intensive' : 'days'}`}
-              >
-                {category}
-              </div>
-            )}
           </div>
-          <div className="course-duration">{getCourseDeration()}</div>
         </div>
         {!isPurchased && (
           <div className="course-price">
