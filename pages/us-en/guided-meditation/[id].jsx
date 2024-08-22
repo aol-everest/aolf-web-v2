@@ -22,8 +22,11 @@ import {
 import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
-import { fetchContentfulDataDetails } from '@components/contentful';
-// import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
+import {
+  fetchContentfulBannerDetails,
+  fetchContentfulDataDetails,
+} from '@components/contentful';
+import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
 const swiperOption = {
   modules: [Navigation, Scrollbar, A11y, Pagination],
@@ -76,6 +79,9 @@ const GuidedMeditation = (props) => {
         randomMeditateData?.contentfulId || '',
       );
       setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
+
+      // const banners = await fetchContentfulBannerDetails();
+      // console.log(banners);
     };
 
     getContentfulData();
@@ -258,7 +264,7 @@ const GuidedMeditation = (props) => {
             <AudioPlayerSmall
               audioSrc={randomMeditate.track?.fields?.file?.url}
             />
-            {/* <AudioPlayerOnScreen
+            <AudioPlayerOnScreen
               id="global-player"
               pageParam={{
                 track: {
@@ -268,7 +274,7 @@ const GuidedMeditation = (props) => {
                   audioSrc: randomMeditate.track?.fields?.file?.url,
                 },
               }}
-            /> */}
+            />
           </div>
         </div>
       </section>

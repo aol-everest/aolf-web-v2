@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useGlobalAudioPlayerContext } from '@contexts';
 import { useEffect, useRef, useState } from 'react';
 
 import { isSSR } from '@utils';
