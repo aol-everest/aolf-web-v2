@@ -5,7 +5,7 @@ const HubSpotForm = () => {
   useEffect(() => {
     // Load the HubSpot script
     const script = document.createElement('script');
-    script.src = 'http://js.hsforms.net/forms/embed/v2.js';
+    script.src = 'https://js.hsforms.net/forms/embed/v2.js';
     script.type = 'text/javascript';
     script.charset = 'utf-8';
     script.onload = () => {

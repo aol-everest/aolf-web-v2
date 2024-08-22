@@ -10,7 +10,7 @@ import 'swiper/css/scrollbar';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api, navigateToLogin, timeConvert } from '@utils';
-import { useQueryString, useIntersectionObserver } from '@hooks';
+import { useQueryString } from '@hooks';
 import AudioPlayerSmall from '@components/audioPlayer/audioPlayerSmall';
 import { Loader } from '@components/loader';
 import {
@@ -23,6 +23,7 @@ import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
 import { fetchContentfulDataDetails } from '@components/contentful';
+// import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
 const swiperOption = {
   modules: [Navigation, Scrollbar, A11y, Pagination],
@@ -59,6 +60,7 @@ const GuidedMeditation = (props) => {
   const [accordionIndex, setAccordionIndex] = useState(0);
   const [topic, setTopic] = useQueryString('topic');
   const router = useRouter();
+  const scrollToRef = useRef(null);
   const { id: rootFolderID } = router.query;
   const swiperRef = useRef(null);
   const { isAuthenticated } = useAuth();
@@ -75,6 +77,7 @@ const GuidedMeditation = (props) => {
       );
       setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
     };
+
     getContentfulData();
   }, []);
 
@@ -135,7 +138,6 @@ const GuidedMeditation = (props) => {
       });
       return res;
     },
-    enabled: !!topic,
   });
 
   const onFilterChange = (value) => {
@@ -185,6 +187,12 @@ const GuidedMeditation = (props) => {
     }
   };
 
+  const handleGoToHubSpotForm = () => {
+    if (scrollToRef.current) {
+      scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const contentFolders = rootFolder?.folder;
 
   let listingFolders = contentFolders?.filter(
@@ -196,10 +204,11 @@ const GuidedMeditation = (props) => {
       folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
   );
 
-  const content =
-    popularFolder?.content?.length > 0
+  const content = topic
+    ? data?.data
+    : popularFolder?.content?.length > 0
       ? popularFolder?.content
-      : data?.data || [];
+      : [];
 
   const meditationHabbit = (
     <>
@@ -249,6 +258,17 @@ const GuidedMeditation = (props) => {
             <AudioPlayerSmall
               audioSrc={randomMeditate.track?.fields?.file?.url}
             />
+            {/* <AudioPlayerOnScreen
+              id="global-player"
+              pageParam={{
+                track: {
+                  title: randomMeditate.title,
+                  artist: randomMeditate.teacher?.name,
+                  image: randomMeditate.coverImage?.url,
+                  audioSrc: randomMeditate.track?.fields?.file?.url,
+                },
+              }}
+            /> */}
           </div>
         </div>
       </section>
@@ -401,7 +421,7 @@ const GuidedMeditation = (props) => {
                 </a>
               ))}
           </div>
-          {content.length > 0 && (
+          {content?.length > 0 && (
             <div className="top-picks-container">
               <div className="top-picks-content top-picks-slider swiper">
                 <div className="top-picks-header">
@@ -483,7 +503,7 @@ const GuidedMeditation = (props) => {
       </section>
       <section className="experience-journey">
         <div className="container">
-          <div className="experience-journey-content-wrap">
+          <div className="experience-journey-content-wrap" ref={scrollToRef}>
             <div className="ej-content-info">
               <h2 className="section-title">
                 Experience deep calm & inner stillness
@@ -773,10 +793,16 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  We recommend starting with our free 7-Day Guided Meditation
-                  Journey. You’ll be guided every step of the way with powerful
-                  daily guided meditations and insight, led by world-renowned
-                  meditation master, Gurudev. Save your FREE spot today
+                  We recommend starting with our{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    free 7-Day Guided Meditation Journey.
+                  </a>{' '}
+                  You’ll be guided every step of the way with powerful daily
+                  guided meditations and insight, led by world-renowned
+                  meditation master, Gurudev.{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    Save your FREE spot today
+                  </a>
                 </div>
               </div>
             </div>

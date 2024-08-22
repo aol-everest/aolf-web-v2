@@ -111,6 +111,11 @@ const Checkout = () => {
     }, 2000);
     if (!workshop) return;
 
+    if (workshop?.bundleInfo) {
+      workshop.listPrice = workshop?.bundleInfo.comboListPrice;
+      workshop.unitPrice = workshop?.bundleInfo.comboUnitPrice;
+    }
+
     const {
       title,
       name,
@@ -121,6 +126,7 @@ const Checkout = () => {
       businessRules = [],
       earlyBirdFeeIncreasing,
     } = workshop;
+
     setShowTopMessage(!!earlyBirdFeeIncreasing);
 
     const firstPreRequisiteFailedReason = businessRules.find(

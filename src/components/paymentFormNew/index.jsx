@@ -367,9 +367,7 @@ export const PaymentFormNew = ({
 
       AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
 
-      const isRegularOrder = values.comboDetailId
-        ? values.comboDetailId === productId
-        : true;
+      const isRegularOrder = !workshop.bundleInfo;
 
       const products = isRegularOrder
         ? {
@@ -379,7 +377,7 @@ export const PaymentFormNew = ({
           }
         : {
             productType: 'bundle',
-            productSfId: values.comboDetailId,
+            productSfId: workshop.bundleInfo.comboProductSfid,
             childProduct: {
               productType: 'workshop',
               productSfId: productId,
@@ -554,9 +552,7 @@ export const PaymentFormNew = ({
 
       AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
 
-      const isRegularOrder = values.comboDetailId
-        ? values.comboDetailId === productId
-        : true;
+      const isRegularOrder = !workshop.bundleInfo;
 
       const products = isRegularOrder
         ? {
@@ -566,7 +562,7 @@ export const PaymentFormNew = ({
           }
         : {
             productType: 'bundle',
-            productSfId: values.comboDetailId,
+            productSfId: workshop.bundleInfo.comboProductSfid,
             childProduct: {
               productType: 'workshop',
               productSfId: productId,
@@ -746,9 +742,7 @@ export const PaymentFormNew = ({
 
       AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
 
-      const isRegularOrder = values.comboDetailId
-        ? values.comboDetailId === productId
-        : true;
+      const isRegularOrder = !workshop.bundleInfo;
 
       const products = isRegularOrder
         ? {
@@ -758,7 +752,7 @@ export const PaymentFormNew = ({
           }
         : {
             productType: 'bundle',
-            productSfId: values.comboDetailId,
+            productSfId: workshop.bundleInfo.comboProductSfid,
             childProduct: {
               productType: 'workshop',
               productSfId: productId,
