@@ -84,6 +84,7 @@ export const UserInfoFormNewCheckout = ({
         ></StyledInputNewCheckout>
 
         <PhoneInputNewCheckout
+          label="Mobile Number"
           className="second form-item required"
           containerClass={`scheduling-modal__content-wrapper-form-list-row`}
           formikProps={formikProps}
@@ -91,7 +92,6 @@ export const UserInfoFormNewCheckout = ({
           name="contactPhone"
           placeholder="Mobile Number"
           type="tel"
-          label=""
         ></PhoneInputNewCheckout>
       </div>
     </Fragment>

@@ -48,6 +48,21 @@ const AddressSearch = dynamic(() =>
 
 dayjs.extend(utc);
 
+const parseCourseType = (courseTypesOptions) => {
+  return createParser({
+    parse(queryValue) {
+      if (queryValue && courseTypesOptions[queryValue]) {
+        return courseTypesOptions[queryValue];
+      } else {
+        return null;
+      }
+    },
+    serialize(value) {
+      return value;
+    },
+  });
+};
+
 const queryInstructor = async ({ queryKey: [_, term] }) => {
   const response = await api.get({
     path: 'cf/teachers',
@@ -116,7 +131,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, isAuthenticated }) => {
+const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -135,32 +150,35 @@ const CourseTile = ({ data, isAuthenticated }) => {
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
     timings,
-    unitPrice,
-    listPrice,
     isEventFull,
     isPurchased,
     category,
+    title,
+    bundleInfo,
   } = data || {};
+
+  const { comboUnitPrice, comboListPrice } = bundleInfo || {};
 
   const enrollAction = () => {
     track('allcourses_enroll_click', {
       course_format: data?.productTypeId,
       course_name: data?.title,
       course_id: data?.sfid,
-      course_price: data?.unitPrice,
+      course_price: data?.comboUnitPrice,
     });
     if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
+          bundle: bundleSfid,
           page: 'c-o',
         },
       });
     } else {
       navigateToLogin(
         router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&bundle=${bundleSfid}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
       );
@@ -180,6 +198,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
       pathname: `/us-en/course/${sfid}`,
       query: {
         ctype: productTypeId,
+        bundle: bundleSfid,
       },
     });
   };
@@ -214,25 +233,23 @@ const CourseTile = ({ data, isAuthenticated }) => {
     >
       <div className="course-item-header">
         <div className="course-title-duration">
-          <div className="course-title">
+          <div className="course-title">{title}</div>
+          <div
+            class={classNames('course-type in-person', {
+              'in-person': mode === COURSE_MODES.IN_PERSON.value,
+              online: mode === COURSE_MODES.ONLINE.value,
+            })}
+          >
             {COURSE_MODES_MAP[mode]}
-            {category && (
-              <div
-                class={`course-type ${mode === COURSE_MODES.IN_PERSON.value ? 'intensive' : 'days'}`}
-              >
-                {category}
-              </div>
-            )}
           </div>
-          <div className="course-duration">{getCourseDeration()}</div>
         </div>
         {!isPurchased && (
           <div className="course-price">
-            {listPrice === unitPrice ? (
-              <span>${unitPrice}</span>
+            {comboListPrice === comboUnitPrice ? (
+              <span>${comboUnitPrice}</span>
             ) : (
               <>
-                <s>${listPrice}</s> <span>${unitPrice}</span>
+                <s>${comboListPrice}</s> <span>${comboUnitPrice}</span>
               </>
             )}
           </div>
@@ -305,9 +322,8 @@ const Course = () => {
   const seed = useUIDSeed();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const { slug } = router.query;
+  const { id: bundleSfid } = router.query;
 
-  const courseTypeFilter = COURSE_TYPES_OPTIONS[slug];
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
@@ -322,14 +338,8 @@ const Course = () => {
     parseAsStartEndDate,
   );
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
-  const [instructorFilter, setInstructorFilter] = useQueryState(
-    'instructor',
-    parseAsJson(),
-  );
 
   const [cityFilter] = useQueryState('city');
-  const [centerFilter] = useQueryState('center');
-  const [centerNameFilter] = useQueryState('center-name');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -337,17 +347,15 @@ const Course = () => {
     useInfiniteQuery(
       {
         queryKey: [
-          'workshops',
+          'workshopsWithBundles',
           {
             locationFilter,
-            courseTypeFilter,
+            bundleSfid,
             filterStartEndDate,
             timeZoneFilter,
-            instructorFilter,
             courseModeFilter,
             onlyWeekend,
             cityFilter,
-            centerFilter,
           },
         ],
         queryFn: async ({ pageParam = 1 }) => {
@@ -363,10 +371,11 @@ const Course = () => {
               mode: COURSE_MODES[courseModeFilter].value,
             };
           }
-          if (courseTypeFilter) {
+
+          if (bundleSfid) {
             param = {
               ...param,
-              ctype: courseTypeFilter.value,
+              bundleSfid,
             };
           }
           if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
@@ -375,12 +384,7 @@ const Course = () => {
               timeZone: TIME_ZONE[timeZoneFilter].value,
             };
           }
-          if (instructorFilter && instructorFilter.value) {
-            param = {
-              ...param,
-              teacherId: instructorFilter.value,
-            };
-          }
+
           if (filterStartEndDate) {
             const [startDate, endDate] = filterStartEndDate;
             param = {
@@ -410,19 +414,13 @@ const Course = () => {
               city: cityFilter,
             };
           }
-          if (centerFilter) {
-            param = {
-              ...param,
-              center: centerFilter,
-            };
-          }
 
-          if (!courseTypeFilter) {
+          if (!bundleSfid) {
             return { data: null };
           }
 
           const res = await api.get({
-            path: 'workshops',
+            path: 'workshopsWithBundles',
             param,
           });
           return res;
@@ -435,7 +433,10 @@ const Course = () => {
       },
       // { initialData: workshops },
     );
+  //console.log(data.pages[0]);
 
+  const { bundleInfo } = data?.pages[0] || {};
+  const { comboName, comboDescription } = bundleInfo || {};
   let instructorResult = useQuery({
     queryKey: ['instructor', searchKey],
     queryFn: queryInstructor,
@@ -472,15 +473,11 @@ const Course = () => {
     setOnlyWeekend(null);
     setLocationFilter(null);
     setTimeZoneFilter(null);
-    setInstructorFilter(null);
     setFilterStartEndDate(null);
   };
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
-      case 'courseTypeFilter':
-        //setCourseTypeFilter(value);
-        break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
         break;
@@ -497,22 +494,12 @@ const Course = () => {
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
-      case 'instructorFilter':
-        if (value) {
-          setInstructorFilter(value);
-        } else {
-          setInstructorFilter(null);
-        }
-        break;
     }
   };
 
   const onFilterClearEvent = (field) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
-      case 'courseTypeFilter':
-        // setCourseTypeFilter(null);
-        break;
       case 'courseModeFilter':
         setCourseModeFilter(null);
         break;
@@ -525,18 +512,12 @@ const Course = () => {
       case 'timeZoneFilter':
         setTimeZoneFilter(null);
         break;
-      case 'instructorFilter':
-        setInstructorFilter(null);
-        break;
     }
   };
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
-      case 'courseTypeFilter':
-        // setCourseTypeFilter(value);
-        break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
         break;
@@ -552,13 +533,6 @@ const Course = () => {
         break;
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
-        break;
-      case 'instructorFilter':
-        if (value) {
-          setInstructorFilter(value);
-        } else {
-          setInstructorFilter(null);
-        }
         break;
     }
   };
@@ -607,9 +581,6 @@ const Course = () => {
   if (timeZoneFilter) {
     filterCount++;
   }
-  if (instructorFilter) {
-    filterCount++;
-  }
 
   let instructorList = instructorResult?.data?.map(({ id, name }) => ({
     value: id,
@@ -627,7 +598,7 @@ const Course = () => {
       : null;
 
   const renderCourseList = () => {
-    if (
+    /* if (
       courseTypeFilter.isAvailableInPersonOnly &&
       courseModeFilter &&
       courseModeFilter !== 'IN_PERSON'
@@ -651,7 +622,7 @@ const Course = () => {
           </p>
         </div>
       );
-    }
+    } */
     if (isSuccess && data?.pages[0].data?.length === 0 && !isFetchingNextPage) {
       return (
         <div className="no-course-found-wrap">
@@ -670,6 +641,7 @@ const Course = () => {
                   key={course.sfid}
                   data={course}
                   isAuthenticated={isAuthenticated}
+                  bundleSfid={bundleSfid}
                 />
               ))}
             </React.Fragment>
@@ -693,20 +665,18 @@ const Course = () => {
 
   return (
     <main className="all-courses-find">
-      <NextSeo
-        defaultTitle={`${courseTypeFilter.name} - Course Dates and Registration`}
-        description={courseTypeFilter.description}
-      />
-      <section className="title-header">
-        {courseTypeFilter && (
-          <>
-            <h1 className="page-title">{courseTypeFilter.name}</h1>
-            <div className="page-description">
-              {courseTypeFilter.description}
-            </div>
-          </>
-        )}
-      </section>
+      {comboName && (
+        <>
+          <NextSeo
+            defaultTitle={`${comboName} - Course Dates and Registration`}
+            description={comboDescription}
+          />
+          <section className="title-header">
+            <h1 className="page-title">{comboName}</h1>
+            <div className="page-description">{comboDescription}</div>
+          </section>
+        </>
+      )}
       <section className="section-course-find">
         <div className="container">
           <div className="course-filter-wrap">
@@ -755,37 +725,6 @@ const Course = () => {
                         </li>
                       );
                     })}
-                  </>
-                )}
-              </Popup>
-
-              <Popup
-                tabIndex="3"
-                value={courseTypeFilter}
-                buttonText={
-                  courseTypeFilter && courseTypeFilter.name
-                    ? courseTypeFilter.name
-                    : null
-                }
-                label="Course Type"
-                hideClearOption
-                closeEvent={changeCourseType}
-              >
-                {({ closeHandler }) => (
-                  <>
-                    {Object.values(COURSE_TYPES_OPTIONS).map(
-                      (courseType, index) => {
-                        return (
-                          <li
-                            className="courses-filter__list-item"
-                            key={index}
-                            onClick={closeHandler(courseType)}
-                          >
-                            {courseType.name}
-                          </li>
-                        );
-                      },
-                    )}
                   </>
                 )}
               </Popup>
@@ -912,23 +851,6 @@ const Course = () => {
                   </>
                 )}
               </Popup>
-              <Popup
-                tabIndex="5"
-                value={instructorFilter ? instructorFilter.label : null}
-                buttonText={instructorFilter ? instructorFilter.label : null}
-                closeEvent={onFilterChange('instructorFilter')}
-                label="Instructor"
-                parentClassName="upward"
-              >
-                {({ closeHandler }) => (
-                  <SmartInput
-                    onSearchKeyChange={(value) => setSearchKey(value)}
-                    dataList={instructorList}
-                    closeHandler={closeHandler}
-                    value={searchKey}
-                  ></SmartInput>
-                )}
-              </Popup>
             </div>
             <div className="search_course_form_mobile d-lg-none d-block">
               <div>
@@ -994,14 +916,6 @@ const Course = () => {
                         </div>
                       )}
 
-                      {instructorFilter && (
-                        <div
-                          className="selected-filter-item"
-                          onClick={onFilterClearEvent('instructorFilter')}
-                        >
-                          {instructorFilter.label}
-                        </div>
-                      )}
                       {filterCount > 1 && (
                         <div
                           className="selected-filter-item clear"
@@ -1064,46 +978,6 @@ const Course = () => {
                       </div>
                     </MobileFilterModal>
 
-                    <MobileFilterModal
-                      label="Course Type"
-                      value={
-                        courseTypeFilter && courseTypeFilter.name
-                          ? courseTypeFilter.name
-                          : null
-                      }
-                      hideClearOption
-                      closeEvent={changeCourseType}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={courseTypeFilter}
-                          buttonText={
-                            courseTypeFilter && courseTypeFilter.name
-                              ? courseTypeFilter.name
-                              : null
-                          }
-                          closeEvent={changeCourseType}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              {Object.values(COURSE_TYPES_OPTIONS).map(
-                                (courseType, index) => {
-                                  return (
-                                    <li
-                                      className="dropdown-item"
-                                      key={index}
-                                      onClick={closeHandler(courseType)}
-                                    >
-                                      {courseType.name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
                     <MobileFilterModal
                       label="Dates"
                       value={
@@ -1252,20 +1126,6 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Instructor"
-                      value={instructorFilter ? instructorFilter.label : null}
-                      clearEvent={onFilterClearEvent('instructorFilter')}
-                    >
-                      <SmartInput
-                        containerClassName="smart-input-mobile"
-                        placeholder="Search Instructor"
-                        value={searchKey}
-                        onSearchKeyChange={(value) => setSearchKey(value)}
-                        dataList={instructorList}
-                        closeHandler={onFilterChangeEvent('instructorFilter')}
-                      ></SmartInput>
-                    </MobileFilterModal>
                   </div>
                 )}
                 {showFilterModal && (
@@ -1321,14 +1181,6 @@ const Course = () => {
                 </div>
               )}
 
-              {instructorFilter && (
-                <div
-                  className="selected-filter-item"
-                  onClick={onFilterClearEvent('instructorFilter')}
-                >
-                  {instructorFilter.label}
-                </div>
-              )}
               {filterCount > 1 && (
                 <div
                   className="selected-filter-item clear"

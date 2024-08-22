@@ -13,41 +13,13 @@ import { navigateToLogin } from '@utils';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
+export const SriSriYogaDeepDive = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
   const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
-  const router = useRouter();
-  const { isAuthenticated = false } = useAuth();
-  const { showModal } = useGlobalModalContext();
   const [activeInstructor, setActiveInstructor] = useState('');
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (sfid) {
-      if (isAuthenticated || isGuestCheckoutEnabled) {
-        pushRouteWithUTMQuery(router, {
-          pathname: `/us-en/course/checkout/${sfid}`,
-          query: {
-            ctype: productTypeId,
-            page: 'c-o',
-          },
-        });
-      } else {
-        navigateToLogin(
-          router,
-          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-            router.query,
-          )}`,
-        );
-      }
-    } else {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling`,
-        query: {
-          courseType: COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.code,
-        },
-      });
-    }
-  };
 
   const handleSetActiveInstructor = (instructor = '') => {
     setActiveInstructor(instructor);
@@ -88,7 +60,9 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               <div className="registration-wrap">
                 <button
                   className="register-button mt-4"
-                  onClick={handleRegister}
+                  onClick={handleRegister(
+                    COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.code,
+                  )}
                 >
                   Register for a Retreat
                 </button>
@@ -96,7 +70,15 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
             </div>
           </div>
         </section>
-        {sfid && <PriceCard workshop={data} courseViewMode={courseViewMode} />}
+        {sfid && (
+          <PriceCard
+            workshop={data}
+            courseViewMode={courseViewMode}
+            handleRegister={handleRegister(
+              COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.code,
+            )}
+          />
+        )}
         <section className="deep-dive-first-section">
           <div className="container pb-lg-5 pt-5">
             <div className="row">
@@ -231,7 +213,12 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               of your life to guide you to total health and freedom.
             </div>
             <div className="dd-register-button">
-              <button className="register-button mt-4" onClick={handleRegister}>
+              <button
+                className="register-button mt-4"
+                onClick={handleRegister(
+                  COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.code,
+                )}
+              >
                 Register for a Retreat
               </button>
             </div>
@@ -285,7 +272,12 @@ export const SriSriYogaDeepDive = ({ data, mode: courseViewMode }) => {
               In-person and live online retreat options available
             </div>
             <div className="dd-register-button">
-              <button className="register-button mt-4" onClick={handleRegister}>
+              <button
+                className="register-button mt-4"
+                onClick={handleRegister(
+                  COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.code,
+                )}
+              >
                 Register for a Retreat
               </button>
             </div>
