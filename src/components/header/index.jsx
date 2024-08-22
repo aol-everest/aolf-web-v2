@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
-import { CONTENT_FOLDER_IDS, MODAL_TYPES } from '@constants';
+import { CONTENT_FOLDER_IDS } from '@constants';
 import { navigateToLogin } from '@utils';
 
 const HB_MENU = [
@@ -78,6 +78,23 @@ const AOL_MENU = [
       {
         name: 'Meditation',
         link: 'https://event.us.artofliving.org/us-en/secrets-of-meditation2/lp1/',
+      },
+    ],
+  },
+  {
+    name: 'Meditation',
+    submenu: [
+      {
+        name: 'Daily SKY',
+        link: '/us-en/daily-sky',
+      },
+      {
+        name: 'Guided Meditation',
+        link: `/us-en/guided-meditation/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
+      },
+      {
+        name: 'Meetups',
+        link: '/us-en/meetup',
       },
     ],
   },
@@ -186,7 +203,7 @@ const AOL_MENU = [
         link: '/us-en/lp/theartoflivingretreatcenter',
       },
       {
-        name: 'Local Centers',
+        name: 'Connect Locally',
         link: '/us-en/centers',
       },
     ],
@@ -198,17 +215,9 @@ const AOL_MENU = [
         name: 'Meditations',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
       },
-      // {
-      //   name: 'Guided Meditations',
-      //   link: `/us-en/guided-meditation/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
-      // },
       {
         name: 'Wisdom',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
-      },
-      {
-        name: 'Meetups',
-        link: '/us-en/meetup',
       },
       {
         name: 'App',
