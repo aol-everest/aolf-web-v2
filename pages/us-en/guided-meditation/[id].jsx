@@ -206,9 +206,9 @@ const GuidedMeditation = (props) => {
 
   const content = topic
     ? data?.data
-    : popularFolder?.content?.length > 0
-      ? popularFolder?.content
-      : data?.data || [];
+    : popularFolder?.content?.length
+      ? popularFolder.content
+      : [];
 
   const meditationHabbit = (
     <>
