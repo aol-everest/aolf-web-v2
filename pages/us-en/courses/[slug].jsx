@@ -207,7 +207,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
 
   const { usableCredit } = data;
 
-  const isUsableCreditAvailable = data.usableCredit && !isEmpty(usableCredit);
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
 
   let UpdatedFeeAfterCredits;
   if (
