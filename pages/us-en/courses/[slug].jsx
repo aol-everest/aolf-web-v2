@@ -34,7 +34,7 @@ import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import dynamic from 'next/dynamic';
-import { navigateToLogin } from '@utils';
+import { navigateToLogin, isEmpty } from '@utils';
 import { NextSeo } from 'next-seo';
 import { SmartInput, SmartDropDown, Popup } from '@components';
 import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
@@ -205,6 +205,28 @@ const CourseTile = ({ data, isAuthenticated }) => {
     );
   };
 
+  const { usableCredit } = data;
+
+  const isUsableCreditAvailable = data.usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Amount'
+  ) {
+    if (usableCredit.availableCredit > unitPrice) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = unitPrice - usableCredit.availableCredit;
+    }
+  }
+
   return (
     <div
       className={classNames('course-item', {
@@ -227,15 +249,25 @@ const CourseTile = ({ data, isAuthenticated }) => {
           <div className="course-duration">{getCourseDeration()}</div>
         </div>
         {!isPurchased && (
-          <div className="course-price">
-            {listPrice === unitPrice ? (
-              <span>${unitPrice}</span>
-            ) : (
-              <>
-                <s>${listPrice}</s> <span>${unitPrice}</span>
-              </>
+          <>
+            {isUsableCreditAvailable && (
+              <div className="course-price">
+                <s>${listPrice}</s> <span>${UpdatedFeeAfterCredits}</span>
+              </div>
             )}
-          </div>
+
+            {!isUsableCreditAvailable && (
+              <div className="course-price">
+                {listPrice === unitPrice ? (
+                  <span>${unitPrice}</span>
+                ) : (
+                  <>
+                    <s>${listPrice}</s> <span>${unitPrice}</span>
+                  </>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
       {mode !== 'Online' && locationCity && (
