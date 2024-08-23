@@ -61,7 +61,7 @@ export const getServerSideProps = async (context) => {
 
 const GuidedMeditation = (props) => {
   const [accordionIndex, setAccordionIndex] = useState(0);
-  const [topic, setTopic] = useQueryString('topic');
+  const [categoryId, setCategoryId] = useQueryString('categoryId');
   const router = useRouter();
   const scrollToRef = useRef(null);
   const { id: rootFolderID } = router.query;
@@ -87,6 +87,7 @@ const GuidedMeditation = (props) => {
     getContentfulData();
   }, []);
 
+  // For geting the first load Data with root folder id
   const { data: rootFolder = {} } = useQuery({
     queryKey: ['library'],
     queryFn: async () => {
@@ -105,49 +106,24 @@ const GuidedMeditation = (props) => {
     },
   });
 
-  const { data: meditationCategory = [] } = useQuery({
-    queryKey: 'meditationCategory',
+  // For geting the Category Data
+  const { isLoading: loading, data } = useQuery({
+    queryKey: ['library', categoryId],
     queryFn: async () => {
       const response = await api.get({
-        path: 'meditationCategory',
+        path: 'library',
+        param: {
+          folderId: categoryId,
+        },
       });
-      return response.data;
+      const [contentFolder] = response.data.folder;
+      return contentFolder;
     },
-  });
-
-  const { isLoading: loading, data } = useQuery({
-    queryKey: [
-      'meditations',
-      {
-        topic,
-      },
-    ],
-    queryFn: async ({ pageParam = 1 }) => {
-      let param = {
-        page: pageParam,
-        size: 12,
-        deviceType: 'Web',
-        folderName: 'Meditations',
-        accessible: true,
-      };
-
-      if (topic) {
-        param = {
-          ...param,
-          category: topic,
-        };
-      }
-
-      const res = await api.get({
-        path: 'library/search',
-        param,
-      });
-      return res;
-    },
+    enabled: !!categoryId,
   });
 
   const onFilterChange = (value) => {
-    setTopic(value);
+    setCategoryId(value);
   };
 
   const handlePrev = () => {
@@ -210,8 +186,12 @@ const GuidedMeditation = (props) => {
       folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
   );
 
-  const content = topic
-    ? data?.data
+  const nonListingFolders = contentFolders?.filter(
+    (folder) => !folder.isListingFolder,
+  );
+
+  const categoryContent = categoryId
+    ? data
     : popularFolder?.content?.length > 0
       ? popularFolder?.content
       : [];
@@ -414,24 +394,28 @@ const GuidedMeditation = (props) => {
           <h2 className="section-title">Meditation is for everyone</h2>
           <div className="section-desc">Guided meditations for any mood.</div>
           <div className="categories-pills">
-            {meditationCategory &&
-              meditationCategory.map((category) => (
+            {nonListingFolders &&
+              nonListingFolders.map((category) => (
                 <a
-                  className={`cat-pill ${topic === category ? 'active' : ''}`}
-                  key={category}
+                  className={`cat-pill ${categoryId === category.id ? 'active' : ''}`}
+                  key={category.id}
                   onClick={() =>
-                    onFilterChange(topic === category ? '' : category)
+                    onFilterChange(
+                      categoryId === category.id ? '' : category.id,
+                    )
                   }
                 >
-                  {category}
+                  {category.title}
                 </a>
               ))}
           </div>
-          {content?.length > 0 && (
+          {categoryContent?.content?.length > 0 && (
             <div className="top-picks-container">
               <div className="top-picks-content top-picks-slider swiper">
                 <div className="top-picks-header">
-                  <div className="top-picks-title">{topic || 'Top picks'}</div>
+                  <div className="top-picks-title">
+                    {categoryId ? data.title : 'Top picks'}
+                  </div>
                   <div className="top-picks-actions">
                     <div
                       className="slide-button-prev slide-button"
@@ -460,7 +444,7 @@ const GuidedMeditation = (props) => {
                     swiper.navigation.update();
                   }}
                 >
-                  {content?.map((meditate, index) => {
+                  {categoryContent?.content?.map((meditate, index) => {
                     return (
                       <SwiperSlide key={index}>
                         <div
