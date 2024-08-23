@@ -368,14 +368,16 @@ function TicketedEvent() {
                         {renderSummary()}
                       </div>
 
-                      <div className="tickets-modal__cart">
-                        <div className="tickets-container">
-                          <div className="tickets notes">
-                            <div className="label">Notes</div>
-                            <div className="value">{notes || '-'}</div>
+                      {notes && (
+                        <div className="tickets-modal__cart">
+                          <div className="tickets-container">
+                            <div className="tickets notes">
+                              <div className="label">Notes</div>
+                              <div className="value">{notes || '-'}</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
 
                       <div className="tickets-modal__footer">
                         {false && event && total > 0 && (
