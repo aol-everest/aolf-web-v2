@@ -6,8 +6,7 @@ import { priceCalculation, tConvert } from '@utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
-import queryString from 'query-string';
-import { navigateToLogin } from '@utils';
+import { isEmpty } from '@utils';
 import {
   FaArrowRightLong,
   FaUser,
@@ -79,6 +78,7 @@ export const PriceCard = ({
     aosCountRequisite,
     businessRules = [],
     roomAndBoardRange,
+    usableCredit,
   } = workshop || {};
 
   const aosCount =
@@ -143,6 +143,26 @@ export const PriceCard = ({
     .filter((name) => name && name.trim() !== '')
     .join(', ');
 
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Amount'
+  ) {
+    if (usableCredit.availableCredit > fee) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
+    }
+  }
+
   return (
     <div className="container">
       <div className="registration-widget">
@@ -150,14 +170,26 @@ export const PriceCard = ({
           <div className="col discount-price">
             <span className="title">Course Fee</span>
             <br />
-            <span className="content">
-              ${fee}&nbsp;
-              {delfee && (
-                <span className="actual-price">
-                  <strike>${delfee}</strike>
-                </span>
-              )}
-            </span>
+            {isUsableCreditAvailable && (
+              <span className="content">
+                ${UpdatedFeeAfterCredits}&nbsp;
+                {delfee && (
+                  <span className="actual-price">
+                    <strike>${delfee}</strike>
+                  </span>
+                )}
+              </span>
+            )}
+            {!isUsableCreditAvailable && (
+              <span className="content">
+                ${fee}&nbsp;
+                {delfee && (
+                  <span className="actual-price">
+                    <strike>${delfee}</strike>
+                  </span>
+                )}
+              </span>
+            )}
           </div>
           {roomAndBoardRange && (
             <div className="col dates">
